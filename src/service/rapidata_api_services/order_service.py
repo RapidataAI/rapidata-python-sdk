@@ -1,13 +1,16 @@
 import requests
 
-from src.rapidata_client.order.rapidata_order_configuration import RapidataOrderConfiguration
+from src.rapidata_client.order.rapidata_order_configuration import (
+    RapidataOrderConfiguration,
+)
+from src.service.rapidata_api_services.base_service import BaseRapidataAPIService
 
 
-class OrderService:
-    def __init__(self, api_key: str, endpoint: str):
-        self.api_key = api_key
-        self.endpoint = endpoint
-        self.auth_header = {"Authorization": f"Bearer {api_key}"}
+class OrderService(BaseRapidataAPIService):
+    def __init__(self, client_id: str, client_secret: str, endpoint: str):
+        super().__init__(
+            client_id=client_id, client_secret=client_secret, endpoint=endpoint
+        )
 
     def create_order(self, config: RapidataOrderConfiguration) -> tuple[str, str]:
         """
@@ -20,11 +23,16 @@ class OrderService:
         """
         url = f"{self.endpoint}/Order/CreateDefaultOrder"
 
-        feature_flags = [{"key": flag, "value": "true"} for flag in config.feature_flags]
+        feature_flags = [
+            {"key": flag, "value": "true"} for flag in config.feature_flags
+        ]
 
         if config.alert_on_fast_response > 0:
             feature_flags.append(
-                {"key": "alert_on_fast_response", "value": str(config.alert_on_fast_response)}
+                {
+                    "key": "alert_on_fast_response",
+                    "value": str(config.alert_on_fast_response),
+                }
             )
 
         if config.disable_translation:
@@ -54,18 +62,12 @@ class OrderService:
         self._check_response(response)
 
         return response.json()["orderId"], response.json()["datasetId"]
-    
-    def submit(self, order_id):
+
+    def submit(self, order_id: str):
         url = f"{self.endpoint}/Order/Submit"
         params = {"orderId": order_id}
 
-        submit_response = requests.post(
-            url, params=params, headers=self.auth_header
-        )
+        submit_response = requests.post(url, params=params, headers=self.auth_header)
         self._check_response(submit_response)
 
         return submit_response
-    
-    def _check_response(self, response):
-        if response.status_code != 200:
-            raise Exception(f"Error: {response.status_code} - {response.text}")

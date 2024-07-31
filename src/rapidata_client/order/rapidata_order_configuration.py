@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from src.rapidata_client.order.referee.referee_interface import Referee
+from src.rapidata_client.order.referee.abstract_referee import Referee
 
 
 @dataclass

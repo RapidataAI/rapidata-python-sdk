@@ -1,21 +1,28 @@
 from src.rapidata_client.order.rapidata_order import RapidataOrder
 from src.rapidata_client.order.rapidata_order_configuration import RapidataOrderConfiguration
+from src.rapidata_client.order.referee.abstract_referee import Referee
 from src.rapidata_client.order.referee.naive_referee import NaiveReferee
-from src.service.order_service import OrderService
+from src.service.rapidata_api_services.rapidata_service import RapidataService
 
 
 class RapidataOrderBuilder:
 
-    def __init__(self, order_service: OrderService, name: str, question: str, categories: list[str]):
+    def __init__(
+        self,
+        rapidata_service: RapidataService,
+        name: str,
+        question: str,
+        categories: list[str],
+    ):
         self._name = name
         self._question = question
         self._categories = categories
-        self._alert_on_fast_response = 0
-        self._disable_translation = False
-        self._feature_flags = []
-        self._target_country_codes = []
-        self._referee = NaiveReferee()
-        self._order_service = order_service
+        self._alert_on_fast_response: int = 0
+        self._disable_translation: bool = False
+        self._feature_flags: list[str] = []
+        self._target_country_codes: list[str] = []
+        self._referee: Referee = NaiveReferee()
+        self._rapidata_service = rapidata_service
 
     def create(self) -> RapidataOrder:
         config = RapidataOrderConfiguration(
@@ -29,24 +36,26 @@ class RapidataOrderBuilder:
             referee=self._referee,
         )
 
-        return RapidataOrder(config=config, order_service=self._order_service)
+        return RapidataOrder(
+            config=config, rapidata_service=self._rapidata_service
+        ).create()
 
-    def referee(self, referee):
+    def referee(self, referee: Referee):
         self._referee = referee
         return self
 
-    def target_country_codes(self, target_country_codes):
+    def target_country_codes(self, target_country_codes: list[str]):
         self._target_country_codes = target_country_codes
         return self
 
-    def feature_flags(self, feature_flags):
+    def feature_flags(self, feature_flags: list[str]):
         self._feature_flags = feature_flags
         return self
 
-    def disable_translation(self, disable_translation):
+    def disable_translation(self, disable_translation: bool):
         self._disable_translation = disable_translation
         return self
 
-    def alert_on_fast_response(self, alert_on_fast_response):
+    def alert_on_fast_response(self, alert_on_fast_response: int):
         self._alert_on_fast_response = alert_on_fast_response
         return self
