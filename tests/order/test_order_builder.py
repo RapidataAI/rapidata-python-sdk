@@ -3,38 +3,32 @@ from unittest.mock import Mock
 
 from src.rapidata_client.order.rapidata_order_builder import RapidataOrderBuilder
 from src.rapidata_client.order.referee.naive_referee import NaiveReferee
+from src.rapidata_client.order.workflow.classify_workflow import ClassifyWorkflow
 
 
 class TestOrderBuilder(unittest.TestCase):
     def setUp(self):
-        self.order_service = Mock()
+        self.rapidata_service = Mock()
+        self.rapidata_service.order = Mock()
+        self.rapidata_service.order.create_order.return_value = ("order_id", "dataset_id")
 
-    def test_basic_order_creation(self):
-        order = RapidataOrderBuilder(
-            order_service=self.order_service,
-            name="Test Order",
-            question="What is the capital of France?",
-            categories=["Berlin", "Paris", "London"],
-        ).create()
+    def test_raise_error_if_no_workflow(self):
 
-        self.assertEqual(order.config.name, "Test Order")
-        self.assertEqual(order.config.question, "What is the capital of France?")
-        self.assertEqual(order.config.categories, ["Berlin", "Paris", "London"])
+        with self.assertRaises(ValueError):
+            RapidataOrderBuilder(rapidata_service=self.rapidata_service, name="Test Order").create()
 
-    def test_adding_referee(self):
+    def test_basic_order_build(self):
         order = (
             RapidataOrderBuilder(
-                order_service=self.order_service,
-                name="Test Order",
-                question="What is the capital of France?",
-                categories=["Berlin", "Paris", "London"],
+                rapidata_service=self.rapidata_service, name="Test Order"
             )
-            .referee(NaiveReferee(required_guesses=15))
+            .workflow(ClassifyWorkflow(question="Test Question?", categories=["Yes", "No"]))
             .create()
         )
 
-        # check type of referee is SimpleReferee
-        if not isinstance(order.config.referee, NaiveReferee):
-            raise AssertionError("Referee is not of type SimpleReferee")
+        self.assertEqual(order.config.name, "Test Order")
+        self.assertIsInstance(order.config.workflow, ClassifyWorkflow)
 
-        self.assertEqual(order.config.referee.required_guesses, 15)
+        self.assertEqual(order.config.workflow._question, "Test Question?") # type: ignore
+        self.assertEqual(order.config.workflow._categories, ["Yes", "No"]) # type: ignore
+        
