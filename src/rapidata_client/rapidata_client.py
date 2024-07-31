@@ -13,12 +13,5 @@ class RapidataClient:
             client_id=client_id, client_secret=client_secret, endpoint=endpoint
         )
 
-    def new_order(
-        self, name: str, question: str, categories: list[str]
-    ) -> RapidataOrderBuilder:
-        return RapidataOrderBuilder(
-            rapidata_service=self._rapidata_service,
-            name=name,
-            question=question,
-            categories=categories,
-        )
+    def new_order(self, name: str) -> RapidataOrderBuilder:
+        return RapidataOrderBuilder(rapidata_service=self._rapidata_service, name=name)

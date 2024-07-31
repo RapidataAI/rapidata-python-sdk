@@ -42,19 +42,7 @@ class OrderService(BaseRapidataAPIService):
             "orderName": config.name,
             "datasetName": f"{config.name} dataset",
             "isPublic": False,
-            "workflowConfig": {
-                "_t": "SimpleWorkflowConfig",
-                "featureFlags": feature_flags,
-                "targetCountryCodes": config.target_country_codes,
-                "referee": config.referee.to_dict(),
-                "isFallback": False,
-                "rapidSelectionConfigs": [],
-                "blueprint": {
-                    "_t": "AttachCategoryRapidBlueprint",
-                    "possibleCategories": config.categories,
-                    "title": config.question,
-                },
-            },
+            "workflowConfig": config.workflow.to_dict(),
             "aggregatorType": "Classification",
         }
 
@@ -71,3 +59,12 @@ class OrderService(BaseRapidataAPIService):
         self._check_response(submit_response)
 
         return submit_response
+    
+    def approve(self, order_id: str):
+        url = f"{self.endpoint}/Order/Approve"
+        params = {"orderId": order_id}
+
+        approve_response = requests.post(url, params=params, headers=self.auth_header)
+        self._check_response(approve_response)
+
+        return approve_response

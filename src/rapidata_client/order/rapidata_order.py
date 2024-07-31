@@ -26,6 +26,12 @@ class RapidataOrder:
 
         self.rapidata_service.order.submit(self.order_id)
 
+    def approve(self):
+        if self.order_id is None:
+            raise ValueError("You must create the order before approving it.")
+
+        self.rapidata_service.order.approve(self.order_id)
+
     @property
     def dataset(self):
         if self._dataset is None:
