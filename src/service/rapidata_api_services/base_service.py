@@ -1,4 +1,5 @@
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
+from typing import Any
 import jwt
 import requests
 
@@ -9,6 +10,7 @@ class BaseRapidataAPIService:
         self.client_id = client_id
         self.client_secret = client_secret
         self.endpoint = endpoint
+        self.auth_header = None
         self.token = self._get_auth_token()
 
     def _check_response(self, response: requests.Response):
@@ -25,9 +27,7 @@ class BaseRapidataAPIService:
             exp_timestamp = payload.get("exp")
             if exp_timestamp:
                 expiration_time = datetime.fromtimestamp(exp_timestamp)
-                return (
-                    datetime.now(timezone.utc) + expiration_threshold <= expiration_time
-                )
+                return datetime.now() + expiration_threshold <= expiration_time
         except jwt.DecodeError:
             return False
         return False
@@ -44,3 +44,33 @@ class BaseRapidataAPIService:
         if not self.token:
             raise Exception("No token received")
         self.auth_header = {"Authorization": f"Bearer {self.token}"}
+
+    def _post(
+        self,
+        url: str,
+        params: dict[str, Any] | None = None,
+        data: dict[str, Any] | None = None,
+        json: dict[str, Any] | None = None,
+        files: Any | None = None,
+    ):
+        self._get_new_auth_token_if_outdated()
+        response = requests.post(
+            url,
+            params=params,
+            data=data,
+            json=json,
+            files=files,
+            headers=self.auth_header,
+        )
+        self._check_response(response)
+        return response
+
+    def _get(
+        self,
+        url: str,
+        params: dict[str, Any] | None = None,
+    ):
+        self._get_new_auth_token_if_outdated()
+        response = requests.get(url, params=params, headers=self.auth_header)
+        self._check_response(response)
+        return response

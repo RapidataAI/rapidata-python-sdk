@@ -1,5 +1,3 @@
-import requests
-
 from src.rapidata_client.order.rapidata_order_configuration import (
     RapidataOrderConfiguration,
 )
@@ -46,8 +44,7 @@ class OrderService(BaseRapidataAPIService):
             "aggregatorType": "Classification",
         }
 
-        response = requests.post(url, json=payload, headers=self.auth_header)
-        self._check_response(response)
+        response = self._post(url, json=payload)
 
         return response.json()["orderId"], response.json()["datasetId"]
 
@@ -55,8 +52,7 @@ class OrderService(BaseRapidataAPIService):
         url = f"{self.endpoint}/Order/Submit"
         params = {"orderId": order_id}
 
-        submit_response = requests.post(url, params=params, headers=self.auth_header)
-        self._check_response(submit_response)
+        submit_response = self._post(url, params=params)
 
         return submit_response
     
@@ -64,7 +60,6 @@ class OrderService(BaseRapidataAPIService):
         url = f"{self.endpoint}/Order/Approve"
         params = {"orderId": order_id}
 
-        approve_response = requests.post(url, params=params, headers=self.auth_header)
-        self._check_response(approve_response)
+        approve_response = self._post(url, params=params)
 
         return approve_response

@@ -1,22 +1,25 @@
-import requests
 from PIL import Image
 from src.service.rapidata_api_services.base_service import BaseRapidataAPIService
 from src.utils.image_utils import ImageUtils
 
+
 class DatasetService(BaseRapidataAPIService):
     def __init__(self, client_id: str, client_secret: str, endpoint: str):
-        super().__init__(client_id=client_id, client_secret=client_secret, endpoint=endpoint)
+        super().__init__(
+            client_id=client_id, client_secret=client_secret, endpoint=endpoint
+        )
 
     def upload_text_sources(self, dataset_id: str, text_sources: list[str]):
         url = f"{self.endpoint}/Dataset/UploadTextSourcesToDataset"
         payload = {"datasetId": dataset_id, "textSources": text_sources}
 
-        response = requests.post(url, json=payload, headers=self.auth_header)
-        self._check_response(response)
+        response = self._post(url, json=payload)
 
         return response
 
-    def upload_images(self, dataset_id: str, images: list[Image.Image], image_names: list[str]):
+    def upload_images(
+        self, dataset_id: str, images: list[Image.Image], image_names: list[str]
+    ):
         url = f"{self.endpoint}/Dataset/UploadImagesToDataset"
 
         params = {"datasetId": dataset_id}
@@ -30,10 +33,7 @@ class DatasetService(BaseRapidataAPIService):
             for image_name, image_bytes in zip(image_names, images_bytes)
         ]
 
-        response = requests.post(
-            url, params=params, files=files, headers=self.auth_header
-        )
-        self._check_response(response)
+        response = self._post(url, params=params, files=files)
 
         return response
 
@@ -60,7 +60,6 @@ class DatasetService(BaseRapidataAPIService):
             "clearDataset": clear_dataset,
         }
 
-        response = requests.post(url, json=payload, headers=self.auth_header)
-        self._check_response(response)
+        response = self._post(url, json=payload)
 
         return response
