@@ -1,5 +1,5 @@
 from typing import Any
-from src.rapidata_client.order.workflow.base_workflow import Workflow
+from rapidata.rapidata_client.workflow import Workflow
 
 
 class CompareWorkflow(Workflow):

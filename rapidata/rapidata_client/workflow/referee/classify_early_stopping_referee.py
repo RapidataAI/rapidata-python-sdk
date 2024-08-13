@@ -1,7 +1,7 @@
-from src.rapidata_client.order.referee.base_referee import Referee
+from rapidata.rapidata_client.workflow.referee.base_referee import Referee
 
 
-class ProbabilisticAttachCategoryRefere(Referee):
+class ClassifyEarlyStoppingReferee(Referee):
     """
     The referee defines when a task is considered complete.
     The EarlyStoppingReferee stops the task when the confidence in the winning category is above a threshold.

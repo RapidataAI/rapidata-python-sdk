@@ -1,6 +1,6 @@
 
 from typing import Any
-from src.service.rapidata_api_services.base_service import BaseRapidataAPIService
+from rapidata.service.rapidata_api_services.base_service import BaseRapidataAPIService
 
 
 class OrderService(BaseRapidataAPIService):

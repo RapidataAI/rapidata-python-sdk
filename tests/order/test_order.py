@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import Mock
 
-from src.rapidata_client.order.rapidata_order import RapidataOrder
+from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 
 class TestOrder(unittest.TestCase):
 

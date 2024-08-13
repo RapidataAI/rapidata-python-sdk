@@ -1,7 +1,7 @@
 from io import BufferedReader
 from PIL import Image
-from src.service.rapidata_api_services.base_service import BaseRapidataAPIService
-from src.utils.image_utils import ImageUtils
+from rapidata.service.rapidata_api_services.base_service import BaseRapidataAPIService
+from rapidata.utils.image_utils import ImageUtils
 
 
 class DatasetService(BaseRapidataAPIService):

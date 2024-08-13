@@ -1,9 +1,9 @@
 from abc import ABC
 from typing import Any
 
-from src.rapidata_client.order.feature_flags.feature_flags import FeatureFlags
-from src.rapidata_client.order.referee.base_referee import Referee
-from src.rapidata_client.order.referee.naive_referee import NaiveReferee
+from rapidata.rapidata_client.workflow.feature_flags import FeatureFlags
+from rapidata.rapidata_client.workflow.referee.base_referee import Referee
+from rapidata.rapidata_client.workflow.referee.naive_referee import NaiveReferee
 
 
 class Workflow(ABC):

@@ -1,6 +1,6 @@
-from src.service.rapidata_api_services.base_service import BaseRapidataAPIService
-from src.service.dataset_service import DatasetService
-from src.service.rapidata_api_services.order_service import OrderService
+from rapidata.service.rapidata_api_services.base_service import BaseRapidataAPIService
+from rapidata.service.rapidata_api_services.dataset_service import DatasetService
+from rapidata.service.rapidata_api_services.order_service import OrderService
 
 
 class RapidataService(BaseRapidataAPIService):

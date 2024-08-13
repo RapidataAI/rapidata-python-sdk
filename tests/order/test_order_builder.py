@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import Mock
 
-from src.rapidata_client.order.rapidata_order_builder import RapidataOrderBuilder
-from src.rapidata_client.order.workflow.classify_workflow import ClassifyWorkflow
+from rapidata.rapidata_client.order.rapidata_order_builder import RapidataOrderBuilder
+from rapidata.rapidata_client.workflow import ClassifyWorkflow
 
 
 class TestOrderBuilder(unittest.TestCase):

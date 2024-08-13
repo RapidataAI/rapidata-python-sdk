@@ -1,4 +1,4 @@
-from src.rapidata_client.order.referee.base_referee import Referee
+from rapidata.rapidata_client.workflow.referee.base_referee import Referee
 
 
 class NaiveReferee(Referee):

@@ -33,7 +33,7 @@ class BaseRapidataAPIService:
         return False
 
     def _get_auth_token(self):
-        url = f"{self.endpoint}/Login/GetClientAuthToken"
+        url = f"{self.endpoint}/Identity/GetClientAuthToken"
         params = {
             "clientId": self.client_id,
         }

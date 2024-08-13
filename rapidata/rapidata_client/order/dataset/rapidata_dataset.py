@@ -1,9 +1,9 @@
 import os
-from src.service.local_file_service import LocalFileService
-from src.service.rapidata_api_services.rapidata_service import RapidataService
+from rapidata.service import LocalFileService
+from rapidata.service import RapidataService
 
 
-class RapidataDataset():
+class RapidataDataset:
 
     def __init__(self, dataset_id: str, rapidata_service: RapidataService):
         self.dataset_id = dataset_id
