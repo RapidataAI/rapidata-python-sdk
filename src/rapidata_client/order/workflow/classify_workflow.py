@@ -12,7 +12,7 @@ class ClassifyWorkflow(Workflow):
         return {
             **super().to_dict(),
             "blueprint": {
-                "_t": "AttachCategoryRapidBlueprint",
+                "_t": "ClassifyBlueprint",
                 "title": self._question,
                 "possibleCategories": self._categories,
             }

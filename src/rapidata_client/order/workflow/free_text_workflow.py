@@ -11,7 +11,7 @@ class FreeTextWorkflow(Workflow):
         return {
             **super().to_dict(),
             "blueprint": {
-                "_t": "FreeTextRapidBlueprint",
+                "_t": "FreeTextBlueprint",
                 "question": self._question,
             },
         }
