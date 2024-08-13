@@ -1,6 +1,5 @@
-from src.rapidata_client.order.rapidata_order_configuration import (
-    RapidataOrderConfiguration,
-)
+
+from typing import Any
 from src.service.rapidata_api_services.base_service import BaseRapidataAPIService
 
 
@@ -10,7 +9,7 @@ class OrderService(BaseRapidataAPIService):
             client_id=client_id, client_secret=client_secret, endpoint=endpoint
         )
 
-    def create_order(self, config: RapidataOrderConfiguration) -> tuple[str, str]:
+    def create_order(self, name: str, workflow_config: dict[str, Any]) -> tuple[str, str]:
         """
         order_name: name of the order that will be displayed in the Rapidata dashboard.
         question: The question shown to the labeler in the rapid.
@@ -21,26 +20,11 @@ class OrderService(BaseRapidataAPIService):
         """
         url = f"{self.endpoint}/Order/CreateDefaultOrder"
 
-        feature_flags = [
-            {"key": flag, "value": "true"} for flag in config.feature_flags
-        ]
-
-        if config.alert_on_fast_response > 0:
-            feature_flags.append(
-                {
-                    "key": "alert_on_fast_response",
-                    "value": str(config.alert_on_fast_response),
-                }
-            )
-
-        if config.disable_translation:
-            feature_flags.append({"key": "disable_translation", "value": "true"})
-
         payload = {
-            "orderName": config.name,
-            "datasetName": f"{config.name} dataset",
+            "orderName": name,
+            "datasetName": f"{name} dataset",
             "isPublic": False,
-            "workflowConfig": config.workflow.to_dict(),
+            "workflowConfig": workflow_config,
             "aggregatorType": "Classification",
         }
 

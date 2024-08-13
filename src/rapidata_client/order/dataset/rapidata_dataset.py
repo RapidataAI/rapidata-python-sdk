@@ -18,3 +18,9 @@ class RapidataDataset():
         images = self.local_file_service.load_images(image_paths)
 
         self.rapidata_service.dataset.upload_images(self.dataset_id, images, image_names)
+
+    def add_videos_from_paths(self, video_paths: list[str]):
+        video_names = [os.path.basename(video_path) for video_path in video_paths]
+        videos = self.local_file_service.load_videos(video_paths)
+
+        self.rapidata_service.dataset.upload_videos(self.dataset_id, videos, video_names)

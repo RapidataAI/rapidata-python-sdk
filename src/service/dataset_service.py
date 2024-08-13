@@ -1,3 +1,4 @@
+from io import BufferedReader
 from PIL import Image
 from src.service.rapidata_api_services.base_service import BaseRapidataAPIService
 from src.utils.image_utils import ImageUtils
@@ -31,6 +32,22 @@ class DatasetService(BaseRapidataAPIService):
         files = [
             ("files", (image_name, image_bytes))
             for image_name, image_bytes in zip(image_names, images_bytes)
+        ]
+
+        response = self._post(url, params=params, files=files)
+
+        return response
+
+    def upload_videos(
+        self, dataset_id: str, videos: list[BufferedReader], video_names: list[str]
+    ):
+        url = f"{self.endpoint}/Dataset/UploadImagesToDataset"
+
+        params = {"datasetId": dataset_id}
+
+        files = [
+            ("files", (video_name, video_bytes))
+            for video_name, video_bytes in zip(video_names, videos)
         ]
 
         response = self._post(url, params=params, files=files)

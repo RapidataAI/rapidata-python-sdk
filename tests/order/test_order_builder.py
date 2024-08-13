@@ -2,7 +2,6 @@ import unittest
 from unittest.mock import Mock
 
 from src.rapidata_client.order.rapidata_order_builder import RapidataOrderBuilder
-from src.rapidata_client.order.referee.naive_referee import NaiveReferee
 from src.rapidata_client.order.workflow.classify_workflow import ClassifyWorkflow
 
 
@@ -26,9 +25,9 @@ class TestOrderBuilder(unittest.TestCase):
             .create()
         )
 
-        self.assertEqual(order.config.name, "Test Order")
-        self.assertIsInstance(order.config.workflow, ClassifyWorkflow)
+        self.assertEqual(order.name, "Test Order")
+        self.assertIsInstance(order.workflow, ClassifyWorkflow)
 
-        self.assertEqual(order.config.workflow._question, "Test Question?") # type: ignore
-        self.assertEqual(order.config.workflow._categories, ["Yes", "No"]) # type: ignore
+        self.assertEqual(order.workflow._question, "Test Question?") # type: ignore
+        self.assertEqual(order.workflow._categories, ["Yes", "No"]) # type: ignore
         

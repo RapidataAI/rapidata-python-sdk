@@ -19,6 +19,7 @@ class Workflow(ABC):
             "_t": self._type,
             "referee": self._referee.to_dict(),
             "targetCountryCodes": self._target_country_codes,
+            "featureFlags": self._feature_flags.to_list(),
         }
 
     def referee(self, referee: Referee):
