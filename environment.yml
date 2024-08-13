@@ -1,0 +1,13 @@
+name: rapi-api
+channels:
+  - defaults
+dependencies:
+  - python=3.12
+  - ipykernel
+  - requests
+  - pandas
+  - matplotlib
+  - python-dotenv
+  - pyjwt
+  - sphinx
+prefix: /Users/mari/miniconda3/envs/rapi-api
