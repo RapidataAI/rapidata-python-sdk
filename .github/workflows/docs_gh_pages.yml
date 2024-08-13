@@ -1,4 +1,4 @@
-name: docs_gh_pages
+name: Deploy docs to GitHub pages
 
 on:
   push:
@@ -16,7 +16,7 @@ jobs:
       - uses: actions/setup-python@v5
       - name: Install dependencies
         run: |
-          pip install sphinx sphinx-autoapi furo
+          pip install sphinx sphinx-autoapi furo myst-parser
       - name: Sphinx build
         run: |
           cd docs && make html
