@@ -1,0 +1,68 @@
+name: Release and Publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_part:
+        description: 'Version part to bump (patch, minor, major)'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+        - patch
+        - minor
+        - major
+
+jobs:
+  release-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+    
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+    
+    - name: Configure Git
+      run: |
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+    
+    - name: Update version
+      id: update_version
+      run: |
+        old_version=$(poetry version -s)
+        poetry version ${{ github.event.inputs.version_part }}
+        new_version=$(poetry version -s)
+        echo "::set-output name=new_version::$new_version"
+        echo "::set-output name=old_version::$old_version"
+    
+    - name: Commit and push changes
+      run: |
+        git add pyproject.toml
+        git commit -m "Bump version from ${{ steps.update_version.outputs.old_version }} to ${{ steps.update_version.outputs.new_version }}"
+        git push
+    
+    - name: Create and push tag
+      run: |
+        git tag v${{ steps.update_version.outputs.new_version }}
+        git push origin v${{ steps.update_version.outputs.new_version }}
+    
+    - name: Build and publish
+      env:
+        PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+      run: |
+        poetry config pypi-token.pypi $PYPI_TOKEN
+        poetry build
+        poetry publish
+    
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: v${{ steps.update_version.outputs.new_version }}
+        name: Release v${{ steps.update_version.outputs.new_version }}
+        files: dist/
