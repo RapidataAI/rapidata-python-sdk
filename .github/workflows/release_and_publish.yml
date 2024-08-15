@@ -59,10 +59,15 @@ jobs:
         poetry config pypi-token.pypi $PYPI_TOKEN
         poetry build
         poetry publish
+
+    - name: List dist contents
+      run: ls -l dist/
     
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v2
       with:
         tag_name: v${{ steps.update_version.outputs.new_version }}
         name: Release v${{ steps.update_version.outputs.new_version }}
-        files: dist/
+        files: |
+          dist/*.whl
+          dist/*.tar.gz
