@@ -2,7 +2,7 @@
 name = "rapidata"
 version = "0.1.0"
 description = "Rapidata package containing the Rapidata Python Client to interact with the Rapidata Web API in an easy way."
-authors = ["Marian Kannwischer <marian.kannwischer@t-online.de>"]
+authors = ["Rapidata AG <info@rapidata.ai>"]
 license = "Apache-2.0"
 readme = "README.md"
 
