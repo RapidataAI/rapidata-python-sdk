@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "rapidata"
+version = "0.1.0"
+description = "Rapidata package containing the Rapidata Python Client to interact with the Rapidata Web API in an easy way."
+authors = ["Marian Kannwischer <marian.kannwischer@t-online.de>"]
+license = "Apache-2.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+requests = "^2.32.3"
+PyJWT = "^2.9.0"
+pillow = "^10.4.0"
+
+
+[tool.poetry.group.dev.dependencies]
+python-dotenv = "^1.0.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
