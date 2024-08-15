@@ -38,8 +38,8 @@ jobs:
         old_version=$(poetry version -s)
         poetry version ${{ github.event.inputs.version_part }}
         new_version=$(poetry version -s)
-        echo "::set-output name=new_version::$new_version"
-        echo "::set-output name=old_version::$old_version"
+        echo "new_version=$new_version" >>$GITHUB_OUTPUT
+        echo "old_version=$old_version" >>$GITHUB_OUTPUT
     
     - name: Commit and push changes
       run: |
