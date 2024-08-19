@@ -1,13 +1,13 @@
 {
   "inputs": [
     {
-      "inputFile": "./source/dataset.json"
+      "inputFile": "./spec/dataset.json"
     },
     {
-      "inputFile": "./source/order.json"
+      "inputFile": "./spec/order.json"
     },
     {
-      "inputFile": "./source/identity.json"
+      "inputFile": "./spec/identity.json"
     }
   ],
   "output": "./output.swagger.json"

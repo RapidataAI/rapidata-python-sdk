@@ -1,7 +1,7 @@
 #!/bin/bash
 
-rm -rf spec
-mkdir spec
+rm -rf openapi/spec
+mkdir openapi/spec
 
 # Use a function to simulate an associative array
 url_for() {
@@ -18,8 +18,8 @@ keys=("order" "dataset" "identity")
 
 for key in "${keys[@]}"; do
     url=$(url_for "$key")
-    output_json="spec/${key}.json"
-    output_ts="${key}.zod.ts"
+    output_json="openapi/spec/${key}.json"
+    output_ts="openapi/${key}.zod.ts"
 
     # Download the JSON file using curl
     curl -o "$output_json" "$url"
@@ -28,4 +28,5 @@ for key in "${keys[@]}"; do
 done
 
 # Merge the OpenAPI specs into a single file (output.swagger.json)
+cd openapi
 npx openapi-merge-cli
