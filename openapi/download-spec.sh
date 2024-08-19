@@ -26,3 +26,6 @@ for key in "${keys[@]}"; do
 
     echo "Downloaded $url to $output_json"
 done
+
+# Merge the OpenAPI specs into a single file (output.swagger.json)
+npx openapi-merge-cli

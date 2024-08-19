@@ -1,7 +1,3 @@
-./download-spec.sh
+rm -rf openapi/openapi-client
 
-npx openapi-merge-cli
-
-rm -rf ../rapidata/openapi-client
-
-openapi-generator generate -i output.swagger.json -g python -o openapi-client --skip-validate-spec
+openapi-generator generate -i openapi/output.swagger.json -g python -o openapi/openapi-client --skip-validate-spec
