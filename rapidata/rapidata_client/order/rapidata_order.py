@@ -1,6 +1,12 @@
+from openapi_client.models.create_order_model_referee import CreateOrderModelReferee
+from openapi_client.models.create_order_model_workflow import CreateOrderModelWorkflow
 from rapidata.rapidata_client.order.dataset.rapidata_dataset import RapidataDataset
 from rapidata.rapidata_client.workflow import Workflow
-from rapidata.service import RapidataService
+from openapi_client.api_client import ApiClient
+from openapi_client.api.order_api import OrderApi
+from openapi_client.models.create_order_model import CreateOrderModel
+from rapidata.rapidata_client.referee import Referee
+from rapidata.service.rapidata_api_services.rapidata_service import RapidataService
 
 
 class RapidataOrder:
@@ -15,14 +21,15 @@ class RapidataOrder:
     :type rapidata_service: RapidataService
     """
 
-    def __init__(
-        self, name: str, workflow: Workflow, rapidata_service: RapidataService
-    ):
+    def __init__(self, name: str, workflow: Workflow, referee: Referee, api_client: ApiClient, rapidata_service: RapidataService):
         self.name = name
         self.workflow = workflow
+        self.referee = referee
+        self.api_client = api_client
         self.rapidata_service = rapidata_service
+        self.order_api = OrderApi(api_client)
         self.order_id = None
-        self._dataset = None
+        self._dataset: RapidataDataset | None = None
 
     def create(self):
         """
@@ -31,8 +38,16 @@ class RapidataOrder:
         :return: The created RapidataOrder instance.
         :rtype: RapidataOrder
         """
-        self.order_id, dataset_id = self.rapidata_service.order.create_order(self.name, self.workflow.to_dict())
-        self._dataset = RapidataDataset(dataset_id, self.rapidata_service)
+        order_model = CreateOrderModel(
+            orderName=self.name,
+            workflow=CreateOrderModelWorkflow(self.workflow.to_model()),
+            userFilters=[],
+            referee=CreateOrderModelReferee(self.referee.to_model())
+        )
+
+        result = self.order_api.order_create_post(create_order_model=order_model)
+        self.order_id = result.order_id
+        self._dataset = RapidataDataset(result.dataset_id, self.api_client, self.rapidata_service)
         return self
 
     def submit(self):
@@ -42,9 +57,9 @@ class RapidataOrder:
         :raises ValueError: If the order has not been created.
         """
         if self.order_id is None:
-            raise ValueError("You must create the order before submitting it.")
+            raise ValueError("Order ID is None. Have you created the order?")
 
-        self.rapidata_service.order.submit(self.order_id)
+        self.order_api.order_submit_post(self.order_id)
 
     def approve(self):
         """
@@ -55,7 +70,7 @@ class RapidataOrder:
         if self.order_id is None:
             raise ValueError("You must create the order before approving it.")
 
-        self.rapidata_service.order.approve(self.order_id)
+        self.order_api.order_approve_post(self.order_id)
 
     @property
     def dataset(self):
@@ -67,5 +82,5 @@ class RapidataOrder:
         :rtype: RapidataDataset
         """
         if self._dataset is None:
-            raise ValueError("You must submit the order before accessing the dataset.")
+            raise ValueError("Datset is None. Have you created the order?")
         return self._dataset

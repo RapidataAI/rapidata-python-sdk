@@ -1,4 +1,5 @@
-from rapidata.rapidata_client.workflow.referee.base_referee import Referee
+from openapi_client.models.naive_referee_model import NaiveRefereeModel
+from rapidata.rapidata_client.referee.base_referee import Referee
 
 
 class NaiveReferee(Referee):
@@ -16,3 +17,6 @@ class NaiveReferee(Referee):
             "_t": "NaiveRefereeConfig",
             "guessesRequired": self.required_guesses,
         }
+
+    def to_model(self):
+        return NaiveRefereeModel(_t="NaiveReferee", totalVotes=self.required_guesses)

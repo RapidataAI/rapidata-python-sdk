@@ -1,4 +1,4 @@
-from rapidata.rapidata_client.workflow.referee.base_referee import Referee
+from rapidata.rapidata_client.referee.base_referee import Referee
 
 
 class ClassifyEarlyStoppingReferee(Referee):
