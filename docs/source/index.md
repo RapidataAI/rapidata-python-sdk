@@ -10,5 +10,6 @@ Welcome! The Rapidata Python Client is a convenient way to interact with the Rap
 
 quickstart
 examples/index
+development
 
 ```

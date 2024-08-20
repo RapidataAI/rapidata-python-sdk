@@ -25,6 +25,7 @@ for key in "${keys[@]}"; do
     curl -o "$output_json" "$url"
 
     echo "Downloaded $url to $output_json"
+    
 done
 
 # Merge the OpenAPI specs into a single file (output.swagger.json)
