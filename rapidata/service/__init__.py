@@ -1,2 +1,1 @@
-from .rapidata_api_services.rapidata_service import RapidataService as ApiClient
 from .local_file_service import LocalFileService as LocalFileService

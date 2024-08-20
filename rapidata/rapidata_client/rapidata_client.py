@@ -2,7 +2,6 @@ from openapi_client.api_client import ApiClient
 from openapi_client.configuration import Configuration
 from openapi_client.api.identity_api import IdentityApi
 from rapidata.rapidata_client.order.rapidata_order_builder import RapidataOrderBuilder
-from rapidata.service.rapidata_api_services.rapidata_service import RapidataService
 
 class RapidataClient:
     """
@@ -25,7 +24,6 @@ class RapidataClient:
 
         client_configuration = Configuration(host=endpoint)
         self.api_client = ApiClient(configuration=client_configuration)
-        self.rapidata_service = RapidataService(client_id=client_id, client_secret=client_secret, endpoint=endpoint)
 
         identity_api = IdentityApi(self.api_client)
 
@@ -43,4 +41,4 @@ class RapidataClient:
         :param name: The name of the order.
         :return: A RapidataOrderBuilder instance.
         """
-        return RapidataOrderBuilder(api_client=self.api_client, name=name, rapidata_service=self.rapidata_service)
+        return RapidataOrderBuilder(api_client=self.api_client, name=name)

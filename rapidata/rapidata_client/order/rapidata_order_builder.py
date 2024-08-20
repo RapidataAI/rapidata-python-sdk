@@ -4,7 +4,6 @@ from rapidata.rapidata_client.workflow import Workflow
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 from openapi_client import ApiClient
 from rapidata.rapidata_client.referee import Referee
-from rapidata.service.rapidata_api_services.rapidata_service import RapidataService
 
 
 class RapidataOrderBuilder:
@@ -22,12 +21,10 @@ class RapidataOrderBuilder:
     def __init__(
         self,
         api_client: ApiClient,
-        rapidata_service: RapidataService,
         name: str,
     ):
         self._name = name
         self._api_client = api_client
-        self._rapidata_service = rapidata_service
         self._workflow: Workflow | None = None
         self._referee: Referee | None = None
 
@@ -47,7 +44,7 @@ class RapidataOrderBuilder:
             self._referee = NaiveReferee()
 
         order = RapidataOrder(
-            name=self._name, workflow=self._workflow, referee=self._referee, api_client=self._api_client, rapidata_service=self._rapidata_service
+            name=self._name, workflow=self._workflow, referee=self._referee, api_client=self._api_client
         ).create()
 
         order.dataset.add_images_from_paths(self._image_paths)

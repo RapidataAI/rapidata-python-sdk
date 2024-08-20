@@ -6,8 +6,6 @@ from openapi_client.api_client import ApiClient
 from openapi_client.api.order_api import OrderApi
 from openapi_client.models.create_order_model import CreateOrderModel
 from rapidata.rapidata_client.referee import Referee
-from rapidata.service.rapidata_api_services.rapidata_service import RapidataService
-
 
 class RapidataOrder:
     """
@@ -21,12 +19,11 @@ class RapidataOrder:
     :type rapidata_service: RapidataService
     """
 
-    def __init__(self, name: str, workflow: Workflow, referee: Referee, api_client: ApiClient, rapidata_service: RapidataService):
+    def __init__(self, name: str, workflow: Workflow, referee: Referee, api_client: ApiClient):
         self.name = name
         self.workflow = workflow
         self.referee = referee
         self.api_client = api_client
-        self.rapidata_service = rapidata_service
         self.order_api = OrderApi(api_client)
         self.order_id = None
         self._dataset: RapidataDataset | None = None
@@ -47,7 +44,7 @@ class RapidataOrder:
 
         result = self.order_api.order_create_post(create_order_model=order_model)
         self.order_id = result.order_id
-        self._dataset = RapidataDataset(result.dataset_id, self.api_client, self.rapidata_service)
+        self._dataset = RapidataDataset(result.dataset_id, self.api_client)
         return self
 
     def submit(self):
