@@ -21,14 +21,7 @@ class RapidataDataset:
         model = UploadTextSourcesToDatasetModel(datasetId=self.dataset_id, textSources=texts)
         self.dataset_api.dataset_upload_text_sources_to_dataset_post(model)
 
-    def add_images_from_paths(self, image_paths: list[str]):
+    def add_media_from_paths(self, image_paths: list[str]):
         model = DatapointMetadataModel(datasetId=self.dataset_id, metadata=[])
 
         self.dataset_api.dataset_create_datapoint_post(model=model, files=image_paths) # type: ignore
-
-    def add_videos_from_paths(self, video_paths: list[str]):
-        raise NotImplementedError("This method is not implemented yet")
-        video_names = [os.path.basename(video_path) for video_path in video_paths]
-        videos = self.local_file_service.load_videos(video_paths)
-
-        # self.api_client.dataset.upload_videos(self.dataset_id, videos, video_names)

@@ -8,11 +8,8 @@ from rapidata.rapidata_client.workflow import ClassifyWorkflow
 class TestOrderBuilder(unittest.TestCase):
     def setUp(self):
         self.api_client = Mock()
-        self.api_client.order = Mock()
-        self.api_client.order.create_order.return_value = ("order_id", "dataset_id")
 
     def test_raise_error_if_no_workflow(self):
-
         with self.assertRaises(ValueError):
             RapidataOrderBuilder(api_client=self.api_client, name="Test Order").create()
 

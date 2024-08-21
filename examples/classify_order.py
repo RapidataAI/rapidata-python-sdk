@@ -1,48 +1,31 @@
-import dotenv
-import os
-dotenv.load_dotenv() # type: ignore
-
-from rapidata.rapidata_client import RapidataClient
-from rapidata.rapidata_client.workflow import FeatureFlags
+from examples.setup_client import setup_client
+from rapidata.rapidata_client.feature_flags import FeatureFlags
+from rapidata.rapidata_client.rapidata_client import RapidataClient
 from rapidata.rapidata_client.workflow import ClassifyWorkflow
 from rapidata.rapidata_client.referee import NaiveReferee
 
-CLIENT_ID = os.getenv("CLIENT_ID")
-CLIENT_SECRET = os.getenv("CLIENT_SECRET")
-ENDPOINT = os.getenv("ENDPOINT")
 
-if not CLIENT_ID:
-    raise Exception("CLIENT_ID not found in environment variables")
-
-if not CLIENT_SECRET:
-    raise Exception("CLIENT_SECRET not found in environment variables")
-
-if not ENDPOINT:
-    raise Exception("ENDPOINT not found in environment variables")
-
-rapi = RapidataClient(
-    client_id=CLIENT_ID, client_secret=CLIENT_SECRET, endpoint=ENDPOINT
-)
-
-# Configure order
-order = (
-    rapi.new_order(
-        name="Example Classify Order",
-    )
-    .workflow(
-        ClassifyWorkflow(
-            question="Who should be president?",
-            options=["Kamala Harris", "Donald Trump"],
+def new_classify_order(rapi: RapidataClient):
+    # Configure order
+    order = (
+        rapi.new_order(
+            name="Example Classify Order",
         )
+        .workflow(
+            ClassifyWorkflow(
+                question="Who should be president?",
+                options=["Kamala Harris", "Donald Trump"],
+            )
+        )
+        .media(["examples/data/kamala_trump.jpg"])
         .referee(NaiveReferee(required_guesses=15))
         .feature_flags(FeatureFlags().alert_on_fast_response(3))
+        .create()
     )
-    .create()
-)
 
-# Add data
-order.dataset.add_images_from_paths(["examples/data/kamala_trump.jpg"])
+    # order.approve() admin only: if it doesn't auto approve and you want to manually approve
 
-# Let's go!
-order.submit()
-# order.approve() admin only: if it doesn't auto approve and you want to manually approve
+
+if __name__ == "__main__":
+    rapi = setup_client()
+    new_classify_order(rapi)
