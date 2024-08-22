@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Mapping
-
+from typing import Any, Mapping
 
 class Referee(ABC):
     """
@@ -10,5 +9,12 @@ class Referee(ABC):
     def to_dict(self) -> Mapping[str, str | int | float]:
         """
         Convert the referee to a referee configuration dict.
+        """
+        pass
+
+    @abstractmethod
+    def to_model(self) -> Any:
+        """
+        Convert the referee to a referee configuration model.
         """
         pass

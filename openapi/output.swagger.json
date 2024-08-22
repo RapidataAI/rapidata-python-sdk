@@ -1,0 +1,4906 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Rapidata.Dataset",
+    "version": "v1"
+  },
+  "security": [
+    {
+      "bearer": []
+    }
+  ],
+  "paths": {
+    "/Datapoint/GetById": {
+      "get": {
+        "tags": [
+          "Datapoint"
+        ],
+        "summary": "Get a datapoint by its id.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "The id of the datapoint to get.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Datapoint"
+                    }
+                  ],
+                  "discriminator": {
+                    "propertyName": "_t"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Datapoint"
+                    }
+                  ],
+                  "discriminator": {
+                    "propertyName": "_t"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Datapoint"
+                    }
+                  ],
+                  "discriminator": {
+                    "propertyName": "_t"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Datapoint/GetAllDatapointsByDatasetId": {
+      "get": {
+        "tags": [
+          "Datapoint"
+        ],
+        "summary": "Get all datapoints of a dataset.",
+        "parameters": [
+          {
+            "name": "datasetId",
+            "in": "query",
+            "description": "The id of the dataset to get the datapoints of.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDatapointsByDatasetIdResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDatapointsByDatasetIdResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDatapointsByDatasetIdResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Datapoint/Delete": {
+      "delete": {
+        "tags": [
+          "Datapoint"
+        ],
+        "summary": "Delete a datapoint.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "The id of the datapoint to delete.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Dataset/CreateDatapoint": {
+      "post": {
+        "tags": [
+          "Dataset"
+        ],
+        "summary": "Creates a single datapoint.",
+        "description": "If multiple files are uploaded, a multi asset datapoint will be created.",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  },
+                  "model": {
+                    "$ref": "#/components/schemas/DatapointMetadataModel"
+                  }
+                }
+              },
+              "encoding": {
+                "files": {
+                  "style": "form"
+                },
+                "model": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadDatapointsResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadDatapointsResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadDatapointsResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Dataset/GetById": {
+      "get": {
+        "tags": [
+          "Dataset"
+        ],
+        "summary": "Gets a dataset by its id.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "The id of the dataset to get.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDatasetByIdResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDatasetByIdResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDatasetByIdResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Dataset/UploadDatapoint": {
+      "post": {
+        "tags": [
+          "Dataset"
+        ],
+        "summary": "Creates a new multi asset datapoint.",
+        "parameters": [
+          {
+            "name": "datasetId",
+            "in": "query",
+            "description": "The id of the dataset to upload the datapoint to.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  }
+                }
+              },
+              "encoding": {
+                "files": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadDatapointsResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadDatapointsResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadDatapointsResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Dataset/UploadImagesToDataset": {
+      "post": {
+        "tags": [
+          "Dataset"
+        ],
+        "summary": "Uploads images to a dataset.",
+        "description": "If multiple files are uploaded, a new datapoint will be created for each file.",
+        "parameters": [
+          {
+            "name": "datasetId",
+            "in": "query",
+            "description": "The id of the dataset to upload the images to.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  }
+                }
+              },
+              "encoding": {
+                "files": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Dataset/UploadTextSourcesToDataset": {
+      "post": {
+        "tags": [
+          "Dataset"
+        ],
+        "summary": "Creates new datapoints from text sources.",
+        "description": "If multiple text sources are uploaded, a new datapoint will be created for each text source.",
+        "requestBody": {
+          "description": "The body of the request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadTextSourcesToDatasetModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadTextSourcesToDatasetModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadTextSourcesToDatasetModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadDatapointsResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadDatapointsResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadDatapointsResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Dataset/UploadFilesFromS3": {
+      "post": {
+        "tags": [
+          "Dataset"
+        ],
+        "summary": "Uploads files from an S3 bucket to a dataset.",
+        "description": "A new datapoint will be created for each file in the bucket.",
+        "requestBody": {
+          "description": "The body of the request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadFilesFromS3BucketModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadFilesFromS3BucketModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadFilesFromS3BucketModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadDatapointsResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadDatapointsResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadDatapointsResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Dataset/UpdateName": {
+      "post": {
+        "tags": [
+          "Dataset"
+        ],
+        "summary": "Updates the name of a dataset.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "The id of the dataset to update.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "The new name of the dataset.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Dataset/Import": {
+      "post": {
+        "tags": [
+          "Dataset"
+        ],
+        "summary": "Imports datapoints from a csv file.",
+        "parameters": [
+          {
+            "name": "datasetId",
+            "in": "query",
+            "description": "The id of the dataset to import the datapoints to.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "file": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportFromFileResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportFromFileResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportFromFileResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Order/Query": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Queries orders based on a filter, page, and sort criteria.",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "query",
+            "description": "The parameters for filtering, paging, and sorting",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryOrdersModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerOrderModelPagedResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerOrderModelPagedResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerOrderModelPagedResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Order/GetById": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Retrieves an order by its id.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "The id of the order",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetOrderByIdResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetOrderByIdResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetOrderByIdResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Order/GetPublic": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Retrieves orders that are public and can be cloned by any user.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPublicOrdersResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPublicOrdersResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPublicOrdersResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Order/GetWorkflowConfig": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Retrieves the workflow configuration for an order.",
+        "description": "A workflow configuration defines how rapids are created, processed, and aggregated.",
+        "parameters": [
+          {
+            "name": "OrderId",
+            "in": "query",
+            "description": "The id of the order",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ArtifactIdentifier",
+            "in": "query",
+            "description": "The identifier of the workflow config artifact in the pipeline. If using the default pipeline this is not needed.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetWorkflowConfigResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetWorkflowConfigResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetWorkflowConfigResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Order/Create": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Used to create a new order.",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrderModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrderModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrderModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateOrderResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateOrderResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateOrderResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Order/CreateComplexOrder": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Creates a new order with a custom pipeline.",
+        "requestBody": {
+          "description": "The body content of the request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateComplexOrderModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateComplexOrderModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateComplexOrderModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateComplexOrderResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateComplexOrderResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateComplexOrderResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Order/CreateDefaultOrder": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Creates a new order with a default pipeline.",
+        "requestBody": {
+          "description": "The body content of the request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDefaultOrderModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDefaultOrderModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDefaultOrderModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateLegacyOrderResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateLegacyOrderResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateLegacyOrderResult"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": true
+      }
+    },
+    "/Order/CreateUnsupportedOrder": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Notifies the admins that a user wants to create an order with an unsupported label type or data type.",
+        "requestBody": {
+          "description": "The body content of the request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUnsupportedOrderModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUnsupportedOrderModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUnsupportedOrderModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Order/CloneOrder": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Clones an existing order.",
+        "description": "In order to clone an order, the existing order must be marked as public.",
+        "requestBody": {
+          "description": "The body content of the request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CloneOrderModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CloneOrderModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CloneOrderModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CloneOrderResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CloneOrderResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CloneOrderResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Order/Unlock": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Unlocks a newly cloned order.",
+        "description": "When an order is cloned only the necessary information is copied.\r\nIn order to make changes to the order, it must be unlocked first.\r\nUnlocking the order will clone the entire dataset and its datapoints.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "query",
+            "description": "The id of the order to unlock",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnlockOrderResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnlockOrderResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnlockOrderResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Order/UpdateWorkflowConfig": {
+      "put": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Updates the workflow configuration of an order.",
+        "description": "A workflow configuration defines how rapids are created, processed, and aggregated.",
+        "requestBody": {
+          "description": "The body content of the request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWorkflowConfigModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWorkflowConfigModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWorkflowConfigModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Order/UpdateAccess": {
+      "put": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Updates whether an order is public or not.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "query",
+            "description": "The id of the order to update",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The body content of the request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAccessModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAccessModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAccessModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Order/Submit": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Submits an order for approval.",
+        "description": "Once an order is created its order id and dataset id is returned.\r\nThe dataset id can be used to fill the dataset with data points.\r\nOnce submitted, the order will be locked and no further changes can be made.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "query",
+            "description": "The id of the order to submit",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Order/Approve": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Approves an order that has been submitted for manual approval.",
+        "description": "An order is submitted for manual approval when the automatic approval process could not automatically\r\ndetermine if the order is safe to process.\r\n            \r\nOnce an order is approved, the pipeline will start processing the order.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "query",
+            "description": "The id of the order to approve",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Order/UpdateOrderName": {
+      "put": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Updates the name of an order.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "query",
+            "description": "The id of the order to update",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The body content of the request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateOrderModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateOrderModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateOrderModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Order/GetOrderResults": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Aggregates the results of an order.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "The id of the order",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetOrderResultsResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetOrderResultsResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetOrderResultsResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Order/RetryFailed": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Retries a failed order.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "query",
+            "description": "The id of the order to retry",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Order/Delete": {
+      "delete": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Deletes an order.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "query",
+            "description": "The id of the order to delete",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Order/Feedback": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Submits feedback about our services.",
+        "requestBody": {
+          "description": "The body content of the request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeedbackModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeedbackModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeedbackModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Identity/CreateClient": {
+      "post": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Creates a new client for a customer.",
+        "description": "A client represents an application or project that a customer might use to access the API.\r\nThe clients are used for machine-to-machine communication.",
+        "requestBody": {
+          "description": "The model for creating a new client.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateClientModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateClientModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateClientModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Identity/Logout": {
+      "post": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Logs out the current user by deleting the refresh token cookie.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Identity/Index": {
+      "post": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Logs in a user by username or email and password.",
+        "requestBody": {
+          "description": "The model containing the username or email and password.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Identity/ExternalLoginCallback": {
+      "get": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Logs in a user using after receiving a grant from an external provider.",
+        "parameters": [
+          {
+            "name": "returnUrl",
+            "in": "query",
+            "description": "The URL to redirect to after logging in.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Found"
+          }
+        }
+      }
+    },
+    "/Identity/ExternalLogin": {
+      "post": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Logs in a user using an external provider.",
+        "parameters": [
+          {
+            "name": "provider",
+            "in": "query",
+            "description": "The name of the external provider.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "returnUrl",
+            "in": "query",
+            "description": "The URL to redirect to after logging in.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Found"
+          }
+        }
+      }
+    },
+    "/Identity/GetAuthToken": {
+      "get": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Issues a new auth token using the refresh token.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Identity/GetClientAuthToken": {
+      "post": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Issues a new auth token using the client credentials.",
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "query",
+            "description": "The id of the client to issue the token for.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/IssueClientAuthTokenResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IssueClientAuthTokenResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IssueClientAuthTokenResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Identity/RequestReset": {
+      "post": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Request a password reset for a user.",
+        "requestBody": {
+          "description": "The command containing the user's email.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestPasswordResetCommand"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestPasswordResetCommand"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestPasswordResetCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Identity/SubmitReset": {
+      "post": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Updates the password of a user after a password reset request.",
+        "requestBody": {
+          "description": "The command containing the user's email, the reset token and the new password.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitPasswordResetCommand"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitPasswordResetCommand"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitPasswordResetCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Identity/Confirm": {
+      "get": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Confirms a user's signup by a token.",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "The id of the user to confirm the signup for.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "token",
+            "in": "query",
+            "description": "The confirmation token received by mail.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Identity/Signup": {
+      "post": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Signs up a new user.",
+        "requestBody": {
+          "description": "The body to sign up the user with.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupCustomerModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupCustomerModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupCustomerModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Identity/Temporary": {
+      "post": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Creates a new temporary user.",
+        "requestBody": {
+          "description": "The model to create the temporary user with.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupShadowCustomerModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupShadowCustomerModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupShadowCustomerModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Newsletter": {
+      "post": {
+        "tags": [
+          "Newsletter"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewsletterModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewsletterModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewsletterModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Newsletter/Unsubscribe": {
+      "post": {
+        "tags": [
+          "Newsletter"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewsletterModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewsletterModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewsletterModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BaseError": {
+        "type": "object",
+        "properties": {
+          "errorType": {
+            "$ref": "#/components/schemas/ErrorType"
+          },
+          "errorMessage": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClassificationMetadata": {
+        "title": "ClassificationMetadata",
+        "required": [
+          "_t",
+          "classification"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "ClassificationMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for ClassificationMetadata",
+            "example": "ClassificationMetadata"
+          },
+          "classification": {
+            "type": "string"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CountMetadata": {
+        "title": "CountMetadata",
+        "required": [
+          "_t",
+          "count"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "CountMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for CountMetadata",
+            "example": "CountMetadata"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Datapoint": {
+        "title": "Datapoint",
+        "required": [
+          "_t",
+          "asset",
+          "datasetId"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "Datapoint"
+            ],
+            "type": "string",
+            "description": "Discriminator value for Datapoint",
+            "example": "Datapoint"
+          },
+          "asset": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/FileAsset"
+              },
+              {
+                "$ref": "#/components/schemas/MultiAsset"
+              },
+              {
+                "$ref": "#/components/schemas/NullAsset"
+              },
+              {
+                "$ref": "#/components/schemas/TextAsset"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "datasetId": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "deletionDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "deleterId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DatapointMetadataModel": {
+        "required": [
+          "datasetId",
+          "metadata"
+        ],
+        "type": "object",
+        "properties": {
+          "datasetId": {
+            "type": "string",
+            "description": "The id of the dataset to create the datapoint in."
+          },
+          "metadata": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/PromptMetadataInput"
+                },
+                {
+                  "$ref": "#/components/schemas/PublicTextMetadataInput"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadataInput"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            },
+            "description": "The metadata of the datapoint."
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for creating a datapoint."
+      },
+      "DatapointModel": {
+        "required": [
+          "asset",
+          "datasetId",
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "datasetId": {
+            "type": "string"
+          },
+          "asset": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/FileAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/MultiAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/NullAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/TextAssetModel"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "ErrorType": {
+        "enum": [
+          "Validation",
+          "Authorization",
+          "Runtime",
+          "NotFound",
+          "Timeout"
+        ],
+        "type": "string"
+      },
+      "FileAsset": {
+        "title": "FileAsset",
+        "required": [
+          "_t",
+          "fileName",
+          "originalFileName"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "FileAsset"
+            ],
+            "type": "string",
+            "description": "Discriminator value for FileAsset",
+            "example": "FileAsset"
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "originalFileName": {
+            "type": "string"
+          },
+          "metadata": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/ClassificationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/CountMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageDimensionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/LocationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TextMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadata"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "FileAssetModel": {
+        "title": "FileAssetModel",
+        "required": [
+          "_t",
+          "fileName",
+          "identifier",
+          "metadata"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "FileAssetModel"
+            ],
+            "type": "string",
+            "description": "Discriminator value for FileAssetModel",
+            "example": "FileAssetModel"
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "metadata": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/ClassificationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/CountMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageDimensionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/LocationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TextMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadata"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          },
+          "identifier": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetDatapointsByDatasetIdResult": {
+        "required": [
+          "list"
+        ],
+        "type": "object",
+        "properties": {
+          "list": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DatapointModel"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetDatasetByIdResult": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ImageDimensionMetadata": {
+        "title": "ImageDimensionMetadata",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "ImageDimensionMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for ImageDimensionMetadata",
+            "example": "ImageDimensionMetadata"
+          },
+          "height": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "width": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ImportFromFileResult": {
+        "required": [
+          "datasetId"
+        ],
+        "type": "object",
+        "properties": {
+          "datasetId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LocationMetadata": {
+        "title": "LocationMetadata",
+        "required": [
+          "_t",
+          "x",
+          "y"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "LocationMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for LocationMetadata",
+            "example": "LocationMetadata"
+          },
+          "x": {
+            "type": "number",
+            "format": "float"
+          },
+          "y": {
+            "type": "number",
+            "format": "float"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MetadataVisibilities": {
+        "enum": [
+          "None",
+          "Users",
+          "Customers",
+          "Admins",
+          "All"
+        ],
+        "type": "string"
+      },
+      "MultiAsset": {
+        "title": "MultiAsset",
+        "required": [
+          "_t",
+          "assets"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "MultiAsset"
+            ],
+            "type": "string",
+            "description": "Discriminator value for MultiAsset",
+            "example": "MultiAsset"
+          },
+          "assets": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/FileAsset"
+                },
+                {
+                  "$ref": "#/components/schemas/MultiAsset"
+                },
+                {
+                  "$ref": "#/components/schemas/NullAsset"
+                },
+                {
+                  "$ref": "#/components/schemas/TextAsset"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          },
+          "metadata": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/ClassificationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/CountMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageDimensionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/LocationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TextMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadata"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "MultiAssetModel": {
+        "title": "MultiAssetModel",
+        "required": [
+          "_t",
+          "assets",
+          "identifier",
+          "metadata"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "MultiAssetModel"
+            ],
+            "type": "string",
+            "description": "Discriminator value for MultiAssetModel",
+            "example": "MultiAssetModel"
+          },
+          "assets": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/FileAssetModel"
+                },
+                {
+                  "$ref": "#/components/schemas/MultiAssetModel"
+                },
+                {
+                  "$ref": "#/components/schemas/NullAssetModel"
+                },
+                {
+                  "$ref": "#/components/schemas/TextAssetModel"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          },
+          "metadata": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/ClassificationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/CountMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageDimensionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/LocationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TextMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadata"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          },
+          "identifier": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "NullAsset": {
+        "title": "NullAsset",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "NullAsset"
+            ],
+            "type": "string",
+            "description": "Discriminator value for NullAsset",
+            "example": "NullAsset"
+          },
+          "metadata": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/ClassificationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/CountMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageDimensionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/LocationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TextMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadata"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "NullAssetModel": {
+        "title": "NullAssetModel",
+        "required": [
+          "_t",
+          "identifier",
+          "metadata"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "NullAssetModel"
+            ],
+            "type": "string",
+            "description": "Discriminator value for NullAssetModel",
+            "example": "NullAssetModel"
+          },
+          "metadata": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/ClassificationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/CountMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageDimensionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/LocationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TextMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadata"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          },
+          "identifier": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "OriginalFilenameMetadata": {
+        "title": "OriginalFilenameMetadata",
+        "required": [
+          "_t",
+          "originalFilename"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "OriginalFilenameMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for OriginalFilenameMetadata",
+            "example": "OriginalFilenameMetadata"
+          },
+          "originalFilename": {
+            "type": "string"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PromptMetadata": {
+        "title": "PromptMetadata",
+        "required": [
+          "_t",
+          "prompt"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "PromptMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for PromptMetadata",
+            "example": "PromptMetadata"
+          },
+          "prompt": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PromptMetadataInput": {
+        "title": "PromptMetadataInput",
+        "required": [
+          "_t",
+          "identifier",
+          "prompt"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "PromptMetadataInput"
+            ],
+            "type": "string",
+            "description": "Discriminator value for PromptMetadataInput",
+            "example": "PromptMetadataInput"
+          },
+          "prompt": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PublicTextMetadataInput": {
+        "title": "PublicTextMetadataInput",
+        "required": [
+          "_t",
+          "identifier",
+          "text"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "PublicTextMetadataInput"
+            ],
+            "type": "string",
+            "description": "Discriminator value for PublicTextMetadataInput",
+            "example": "PublicTextMetadataInput"
+          },
+          "text": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TextAsset": {
+        "title": "TextAsset",
+        "required": [
+          "_t",
+          "metadata",
+          "text"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "TextAsset"
+            ],
+            "type": "string",
+            "description": "Discriminator value for TextAsset",
+            "example": "TextAsset"
+          },
+          "metadata": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/ClassificationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/CountMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageDimensionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/LocationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TextMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadata"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TextAssetModel": {
+        "title": "TextAssetModel",
+        "required": [
+          "_t",
+          "identifier",
+          "metadata",
+          "text"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "TextAssetModel"
+            ],
+            "type": "string",
+            "description": "Discriminator value for TextAssetModel",
+            "example": "TextAssetModel"
+          },
+          "text": {
+            "type": "string"
+          },
+          "metadata": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/ClassificationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/CountMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageDimensionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/LocationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TextMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadata"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          },
+          "identifier": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TextMetadata": {
+        "title": "TextMetadata",
+        "required": [
+          "_t",
+          "identifier",
+          "text",
+          "visibilities"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "TextMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for TextMetadata",
+            "example": "TextMetadata"
+          },
+          "text": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TranscriptionMetadata": {
+        "title": "TranscriptionMetadata",
+        "required": [
+          "_t",
+          "identifier",
+          "transcription",
+          "visibilities"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "TranscriptionMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for TranscriptionMetadata",
+            "example": "TranscriptionMetadata"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          },
+          "transcription": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TranscriptionMetadataInput": {
+        "title": "TranscriptionMetadataInput",
+        "required": [
+          "_t",
+          "identifier",
+          "transcription"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "TranscriptionMetadataInput"
+            ],
+            "type": "string",
+            "description": "Discriminator value for TranscriptionMetadataInput",
+            "example": "TranscriptionMetadataInput"
+          },
+          "transcription": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UploadDatapointsResult": {
+        "required": [
+          "createdCount",
+          "errors"
+        ],
+        "type": "object",
+        "properties": {
+          "createdCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BaseError"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "UploadFilesFromS3BucketModel": {
+        "required": [
+          "accessKey",
+          "bucketName",
+          "clearDataset",
+          "datasetId",
+          "region",
+          "secretKey",
+          "sourcePrefix",
+          "useCustomAwsCredentials"
+        ],
+        "type": "object",
+        "properties": {
+          "datasetId": {
+            "type": "string",
+            "description": "The id of the dataset to upload the files to."
+          },
+          "bucketName": {
+            "type": "string",
+            "description": "The name of the S3 bucket to upload the files from."
+          },
+          "region": {
+            "type": "string",
+            "description": "The region of the S3 bucket."
+          },
+          "sourcePrefix": {
+            "type": "string",
+            "description": "The prefix of the files to upload."
+          },
+          "accessKey": {
+            "type": "string",
+            "description": "The access key to use for the S3 bucket."
+          },
+          "secretKey": {
+            "type": "string",
+            "description": "The secret key to use for the S3 bucket."
+          },
+          "useCustomAwsCredentials": {
+            "type": "boolean",
+            "description": "Whether to use custom AWS credentials."
+          },
+          "clearDataset": {
+            "type": "boolean",
+            "description": "Whether to clear the dataset before uploading the files."
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for uploading files from an S3 bucket to a dataset."
+      },
+      "UploadTextSourcesToDatasetModel": {
+        "required": [
+          "datasetId",
+          "textSources"
+        ],
+        "type": "object",
+        "properties": {
+          "datasetId": {
+            "type": "string",
+            "description": "The id of the dataset to upload the text sources to."
+          },
+          "textSources": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The text sources to upload."
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for uploading text sources to a dataset."
+      },
+      "AgeGroup": {
+        "enum": [
+          "0-18",
+          "19-30",
+          "31-50",
+          "51-65",
+          "65+"
+        ],
+        "type": "string",
+        "description": "The valid age groups."
+      },
+      "AgeUserFilterModel": {
+        "title": "AgeFilter",
+        "required": [
+          "_t",
+          "ageGroups"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "AgeFilter"
+            ],
+            "type": "string",
+            "description": "Discriminator value for AgeFilter",
+            "example": "AgeFilter"
+          },
+          "ageGroups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AgeGroup"
+            },
+            "description": "A whitelist for age groups."
+          }
+        },
+        "additionalProperties": false,
+        "description": "The AgeFilter is used to restrict users to age groups."
+      },
+      "AggregatorType": {
+        "enum": [
+          "NonCommittal",
+          "MajorityVote",
+          "SimpleMatchup",
+          "LocateCluster",
+          "Classification",
+          "Locate",
+          "BoundingBox",
+          "Line",
+          "Transcription",
+          "SinglePointLocate",
+          "FreeText"
+        ],
+        "type": "string"
+      },
+      "AttachCategoryRapidBlueprint": {
+        "title": "ClassifyBlueprint",
+        "required": [
+          "_t",
+          "possibleCategories",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "ClassifyBlueprint"
+            ],
+            "type": "string",
+            "description": "Discriminator value for ClassifyBlueprint",
+            "example": "ClassifyBlueprint"
+          },
+          "possibleCategories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "BoundingBoxRapidBlueprint": {
+        "title": "BoundingBoxBlueprint",
+        "required": [
+          "_t",
+          "target"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "BoundingBoxBlueprint"
+            ],
+            "type": "string",
+            "description": "Discriminator value for BoundingBoxBlueprint",
+            "example": "BoundingBoxBlueprint"
+          },
+          "target": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClassificationMetadataFilterConfig": {
+        "title": "ClassificationMetadataFilterConfig",
+        "required": [
+          "_t",
+          "classification"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "ClassificationMetadataFilterConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for ClassificationMetadataFilterConfig",
+            "example": "ClassificationMetadataFilterConfig"
+          },
+          "classification": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CloneDatasetModel": {
+        "title": "CloneDatasetModel",
+        "required": [
+          "_t",
+          "datasetName",
+          "datasetToCloneId"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "CloneDatasetModel"
+            ],
+            "type": "string",
+            "description": "Discriminator value for CloneDatasetModel",
+            "example": "CloneDatasetModel"
+          },
+          "datasetToCloneId": {
+            "type": "string"
+          },
+          "datasetName": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CloneOrderModel": {
+        "required": [
+          "orderName",
+          "orderToCloneId"
+        ],
+        "type": "object",
+        "properties": {
+          "orderName": {
+            "type": "string",
+            "description": "The name of the new order"
+          },
+          "orderToCloneId": {
+            "type": "string",
+            "description": "The id of the order to clone"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for cloning an existing order."
+      },
+      "CloneOrderResult": {
+        "required": [
+          "datasetId",
+          "orderId"
+        ],
+        "type": "object",
+        "properties": {
+          "datasetId": {
+            "type": "string"
+          },
+          "orderId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CompareRapidBlueprint": {
+        "title": "CompareBlueprint",
+        "required": [
+          "_t",
+          "criteria"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "CompareBlueprint"
+            ],
+            "type": "string",
+            "description": "Discriminator value for CompareBlueprint",
+            "example": "CompareBlueprint"
+          },
+          "criteria": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CompareWorkflowConfig": {
+        "title": "CompareWorkflowConfig",
+        "required": [
+          "_t",
+          "criteria",
+          "referee",
+          "targetCountryCodes"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "CompareWorkflowConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for CompareWorkflowConfig",
+            "example": "CompareWorkflowConfig"
+          },
+          "criteria": {
+            "type": "string"
+          },
+          "startingElo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "kFactor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "matchSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "scalingFactor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "matchesUntilCompleted": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "referee": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NaiveRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/NeverEndingRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/ProbabilisticAttachCategoryRefereeConfig"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "targetCountryCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
+          },
+          "priority": {
+            "type": "string",
+            "nullable": true
+          },
+          "isFallback": {
+            "type": "boolean"
+          },
+          "rapidSelectionConfigs": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/OnlyValidationWorkflowRapidSelectionConfig"
+                },
+                {
+                  "$ref": "#/components/schemas/CorrelatedRapidSelectionConfig"
+                },
+                {
+                  "$ref": "#/components/schemas/DemographicRapidSelectionConfig"
+                },
+                {
+                  "$ref": "#/components/schemas/StaticRapidSelectionConfig"
+                },
+                {
+                  "$ref": "#/components/schemas/ValidationRapidSelectionConfig"
+                },
+                {
+                  "$ref": "#/components/schemas/ConditionalValidationRapidSelectionConfig"
+                },
+                {
+                  "$ref": "#/components/schemas/NoValidationWorkflowRapidSelectionConfig"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "ConditionalValidationRapidSelectionConfig": {
+        "title": "ConditionalValidationRapidSelectionConfig",
+        "required": [
+          "_t",
+          "validationChances",
+          "validationSetId"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "ConditionalValidationRapidSelectionConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for ConditionalValidationRapidSelectionConfig",
+            "example": "ConditionalValidationRapidSelectionConfig"
+          },
+          "validationSetId": {
+            "type": "string"
+          },
+          "validationChances": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationChance"
+            }
+          },
+          "amount": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CorrelatedRapidSelectionConfig": {
+        "title": "CorrelatedRapidSelectionConfig",
+        "required": [
+          "_t",
+          "amount",
+          "correlationId"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "CorrelatedRapidSelectionConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for CorrelatedRapidSelectionConfig",
+            "example": "CorrelatedRapidSelectionConfig"
+          },
+          "correlationId": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CountClassificationMetadataFilterConfig": {
+        "title": "CountClassificationMetadataFilterConfig",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "CountClassificationMetadataFilterConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for CountClassificationMetadataFilterConfig",
+            "example": "CountClassificationMetadataFilterConfig"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CountryUserFilterModel": {
+        "title": "CountryFilter",
+        "required": [
+          "_t",
+          "countries"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "CountryFilter"
+            ],
+            "type": "string",
+            "description": "Discriminator value for CountryFilter",
+            "example": "CountryFilter"
+          },
+          "countries": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "A whitelist for countries in the ISO 3166-1 alpha-2 format."
+          }
+        },
+        "additionalProperties": false,
+        "description": "The CountryUserFilter is used to restrict users to specific countries."
+      },
+      "CreateComplexOrderModel": {
+        "required": [
+          "orderName",
+          "pipeline"
+        ],
+        "type": "object",
+        "properties": {
+          "orderName": {
+            "type": "string",
+            "description": "The name of the order"
+          },
+          "pipeline": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CreateSimplePipelineModel"
+              }
+            ],
+            "description": "The pipeline to use",
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "isPublic": {
+            "type": "boolean",
+            "description": "Whether the order is public",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for creating a new order with a custom pipeline."
+      },
+      "CreateComplexOrderResult": {
+        "required": [
+          "datasetId",
+          "orderId"
+        ],
+        "type": "object",
+        "properties": {
+          "datasetId": {
+            "type": "string"
+          },
+          "orderId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateDatasetArtifactModel": {
+        "title": "CreateDatasetArtifactModel",
+        "required": [
+          "_t",
+          "dataset",
+          "identifier"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "CreateDatasetArtifactModel"
+            ],
+            "type": "string",
+            "description": "Discriminator value for CreateDatasetArtifactModel",
+            "example": "CreateDatasetArtifactModel"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "dataset": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CloneDatasetModel"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateDefaultOrderModel": {
+        "required": [
+          "datasetName",
+          "isPublic",
+          "orderName",
+          "workflowConfig"
+        ],
+        "type": "object",
+        "properties": {
+          "orderName": {
+            "type": "string",
+            "description": "The name of the order"
+          },
+          "datasetName": {
+            "type": "string",
+            "description": "The name of the dataset"
+          },
+          "isPublic": {
+            "type": "boolean",
+            "description": "Whether the order is public"
+          },
+          "workflowConfig": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CompareWorkflowConfig"
+              },
+              {
+                "$ref": "#/components/schemas/SimpleWorkflowConfig"
+              }
+            ],
+            "description": "The workflow configuration",
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "aggregatorType": {
+            "$ref": "#/components/schemas/AggregatorType"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for creating a new order with a default pipeline."
+      },
+      "CreateLegacyOrderResult": {
+        "required": [
+          "datasetId",
+          "orderId"
+        ],
+        "type": "object",
+        "properties": {
+          "datasetId": {
+            "type": "string"
+          },
+          "orderId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateOrderModel": {
+        "required": [
+          "orderName",
+          "referee",
+          "userFilters",
+          "workflow"
+        ],
+        "type": "object",
+        "properties": {
+          "orderName": {
+            "type": "string",
+            "description": "The name is used as an identifier for an order and can be freely chosen."
+          },
+          "userFilters": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/CountryUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/AgeUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/GenderUserFilterModel"
+                }
+              ],
+              "description": "The filter model can be used to restrict users to specific demographics.",
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            },
+            "description": "The user filters are used to restrict the order to only collect votes from a specific demographic."
+          },
+          "workflow": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/SimpleWorkflowModel"
+              }
+            ],
+            "description": "The workflow helps to determine the tasks that need to be completed by the users.",
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "referee": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NaiveRefereeModel"
+              }
+            ],
+            "description": "The referee is used to determine how many votes will be collected.",
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "aggregator": {
+            "$ref": "#/components/schemas/AggregatorType"
+          }
+        },
+        "additionalProperties": false,
+        "description": "This model is used to create a simple order"
+      },
+      "CreateOrderResult": {
+        "required": [
+          "datasetId",
+          "orderId"
+        ],
+        "type": "object",
+        "properties": {
+          "datasetId": {
+            "type": "string"
+          },
+          "orderId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateSimplePipelineModel": {
+        "title": "CreateSimplePipelineModel",
+        "required": [
+          "_t",
+          "artifacts",
+          "namePrefix",
+          "pipelineSteps"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "CreateSimplePipelineModel"
+            ],
+            "type": "string",
+            "description": "Discriminator value for CreateSimplePipelineModel",
+            "example": "CreateSimplePipelineModel"
+          },
+          "artifacts": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/CreateDatasetArtifactModel"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          },
+          "pipelineSteps": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/DatasetEvaluationStepModel"
+                },
+                {
+                  "$ref": "#/components/schemas/DatasetLabelingStepModel"
+                },
+                {
+                  "$ref": "#/components/schemas/SendCompletionMailStepModel"
+                },
+                {
+                  "$ref": "#/components/schemas/WorkflowAggregationStepModel"
+                },
+                {
+                  "$ref": "#/components/schemas/WorkflowResultFileCreatorStepModel"
+                },
+                {
+                  "$ref": "#/components/schemas/WorkflowSplitModel"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          },
+          "namePrefix": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateUnsupportedOrderModel": {
+        "required": [
+          "dataType",
+          "labelType",
+          "orderName"
+        ],
+        "type": "object",
+        "properties": {
+          "orderName": {
+            "type": "string",
+            "description": "The name of the order"
+          },
+          "dataType": {
+            "type": "string",
+            "description": "The type of the data that was attempted to be ordered"
+          },
+          "labelType": {
+            "type": "string",
+            "description": "The type of the labels that were attempted to be ordered"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for creating an order with an unsupported label type or data type."
+      },
+      "CustomerOrderModel": {
+        "required": [
+          "id",
+          "isPublic",
+          "orderDate",
+          "orderName",
+          "state"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "orderDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "state": {
+            "type": "string"
+          },
+          "orderName": {
+            "type": "string"
+          },
+          "isPublic": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CustomerOrderModelPagedResult": {
+        "required": [
+          "items",
+          "page",
+          "pageSize",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomerOrderModel"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DatasetEvaluationStepModel": {
+        "title": "DatasetEvaluationStepModel",
+        "required": [
+          "_t",
+          "aggregationResultFileArtifactId",
+          "datasetArtifactId",
+          "evaluationResultFileArtifactId",
+          "receiver"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "DatasetEvaluationStepModel"
+            ],
+            "type": "string",
+            "description": "Discriminator value for DatasetEvaluationStepModel",
+            "example": "DatasetEvaluationStepModel"
+          },
+          "datasetArtifactId": {
+            "type": "string"
+          },
+          "aggregationResultFileArtifactId": {
+            "type": "string"
+          },
+          "evaluationResultFileArtifactId": {
+            "type": "string"
+          },
+          "receiver": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DatasetLabelingStepModel": {
+        "title": "DatasetLabelingStepModel",
+        "required": [
+          "_t",
+          "datasetArtifactId"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "DatasetLabelingStepModel"
+            ],
+            "type": "string",
+            "description": "Discriminator value for DatasetLabelingStepModel",
+            "example": "DatasetLabelingStepModel"
+          },
+          "datasetArtifactId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DemographicRapidSelectionConfig": {
+        "title": "DemographicRapidSelectionConfig",
+        "required": [
+          "_t",
+          "rapidId"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "DemographicRapidSelectionConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for DemographicRapidSelectionConfig",
+            "example": "DemographicRapidSelectionConfig"
+          },
+          "rapidId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FeatureFlag": {
+        "required": [
+          "key",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FeedbackModel": {
+        "required": [
+          "feedback"
+        ],
+        "type": "object",
+        "properties": {
+          "feedback": {
+            "type": "string",
+            "description": "The feedback"
+          },
+          "email": {
+            "type": "string",
+            "description": "The email of the user submitting the feedback",
+            "default": null
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for submitting feedback."
+      },
+      "Filter": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {
+            "nullable": true
+          },
+          "operator": {
+            "$ref": "#/components/schemas/FilterOperator"
+          },
+          "logic": {
+            "$ref": "#/components/schemas/LogicOperator"
+          },
+          "filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "FilterOperator": {
+        "enum": [
+          "Eq",
+          "Neq",
+          "Gt",
+          "Gte",
+          "Lt",
+          "Lte",
+          "Contains",
+          "StartsWith",
+          "EndsWith"
+        ],
+        "type": "string"
+      },
+      "FreeTextRapidBlueprint": {
+        "title": "FreeTextBlueprint",
+        "required": [
+          "_t",
+          "question"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "FreeTextBlueprint"
+            ],
+            "type": "string",
+            "description": "Discriminator value for FreeTextBlueprint",
+            "example": "FreeTextBlueprint"
+          },
+          "question": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Gender": {
+        "enum": [
+          "Male",
+          "Female",
+          "Other"
+        ],
+        "type": "string",
+        "description": "All available Gender options."
+      },
+      "GenderUserFilterModel": {
+        "title": "GenderUserFilterModel",
+        "required": [
+          "_t",
+          "genders"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "GenderUserFilterModel"
+            ],
+            "type": "string",
+            "description": "Discriminator value for GenderUserFilterModel",
+            "example": "GenderUserFilterModel"
+          },
+          "genders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Gender"
+            },
+            "description": "A whitelist of all genders allowed."
+          }
+        },
+        "additionalProperties": false,
+        "description": "The GenderFilter is used to restrict users to specific genders."
+      },
+      "GetOrderByIdResult": {
+        "required": [
+          "customerMail",
+          "isLocked",
+          "orderDate",
+          "orderName",
+          "pipelineId",
+          "state"
+        ],
+        "type": "object",
+        "properties": {
+          "orderName": {
+            "type": "string"
+          },
+          "customerMail": {
+            "type": "string"
+          },
+          "orderDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "state": {
+            "type": "string"
+          },
+          "pipelineId": {
+            "type": "string"
+          },
+          "isLocked": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetOrderResultsResult": {
+        "required": [
+          "contentType",
+          "fileName",
+          "stream"
+        ],
+        "type": "object",
+        "properties": {
+          "stream": {
+            "type": "string",
+            "format": "binary"
+          },
+          "contentType": {
+            "type": "string"
+          },
+          "fileName": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetPublicOrdersResult": {
+        "required": [
+          "orders"
+        ],
+        "type": "object",
+        "properties": {
+          "orders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderModel"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetWorkflowConfigResult": {
+        "required": [
+          "workflowConfig"
+        ],
+        "type": "object",
+        "properties": {
+          "workflowConfig": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CompareWorkflowConfig"
+              },
+              {
+                "$ref": "#/components/schemas/SimpleWorkflowConfig"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "LineRapidBlueprint": {
+        "title": "LineBlueprint",
+        "required": [
+          "_t",
+          "target"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "LineBlueprint"
+            ],
+            "type": "string",
+            "description": "Discriminator value for LineBlueprint",
+            "example": "LineBlueprint"
+          },
+          "target": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LocateRapidBlueprint": {
+        "title": "LocateBlueprint",
+        "required": [
+          "_t",
+          "target"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "LocateBlueprint"
+            ],
+            "type": "string",
+            "description": "Discriminator value for LocateBlueprint",
+            "example": "LocateBlueprint"
+          },
+          "target": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LocationMetadataExistsFilterConfig": {
+        "title": "LocationMetadataExistsFilterConfig",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "LocationMetadataExistsFilterConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for LocationMetadataExistsFilterConfig",
+            "example": "LocationMetadataExistsFilterConfig"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LogicOperator": {
+        "enum": [
+          "And",
+          "Or"
+        ],
+        "type": "string"
+      },
+      "NaiveRefereeConfig": {
+        "title": "NaiveRefereeConfig",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "NaiveRefereeConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for NaiveRefereeConfig",
+            "example": "NaiveRefereeConfig"
+          },
+          "guessesRequired": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "NaiveRefereeModel": {
+        "title": "NaiveReferee",
+        "required": [
+          "_t",
+          "totalVotes"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "NaiveReferee"
+            ],
+            "type": "string",
+            "description": "Discriminator value for NaiveReferee",
+            "example": "NaiveReferee"
+          },
+          "totalVotes": {
+            "type": "integer",
+            "description": "The number of votes that need to be collected as a minimum.",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The NaiveReferee is used to collect a fixed number of votes."
+      },
+      "NamedEntityRapidBlueprint": {
+        "title": "NamedEntityBlueprint",
+        "required": [
+          "_t",
+          "classes",
+          "target"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "NamedEntityBlueprint"
+            ],
+            "type": "string",
+            "description": "Discriminator value for NamedEntityBlueprint",
+            "example": "NamedEntityBlueprint"
+          },
+          "target": {
+            "type": "string"
+          },
+          "classes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "NeverEndingRefereeConfig": {
+        "title": "NeverEndingRefereeConfig",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "NeverEndingRefereeConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for NeverEndingRefereeConfig",
+            "example": "NeverEndingRefereeConfig"
+          }
+        },
+        "additionalProperties": false
+      },
+      "NoValidationWorkflowRapidSelectionConfig": {
+        "title": "NoValidationWorkflowRapidSelectionConfig",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "NoValidationWorkflowRapidSelectionConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for NoValidationWorkflowRapidSelectionConfig",
+            "example": "NoValidationWorkflowRapidSelectionConfig"
+          },
+          "amount": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OnlyValidationWorkflowRapidSelectionConfig": {
+        "title": "OnlyValidationWorkflowRapidSelectionConfig",
+        "required": [
+          "_t",
+          "validationSetId"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "OnlyValidationWorkflowRapidSelectionConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for OnlyValidationWorkflowRapidSelectionConfig",
+            "example": "OnlyValidationWorkflowRapidSelectionConfig"
+          },
+          "validationSetId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "OrderModel": {
+        "required": [
+          "id",
+          "isPublic",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "isPublic": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PageInfo": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PolygonRapidBlueprint": {
+        "title": "PolygonBlueprint",
+        "required": [
+          "_t",
+          "target"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "PolygonBlueprint"
+            ],
+            "type": "string",
+            "description": "Discriminator value for PolygonBlueprint",
+            "example": "PolygonBlueprint"
+          },
+          "target": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProbabilisticAttachCategoryRefereeConfig": {
+        "title": "ProbabilisticAttachCategoryRefereeConfig",
+        "required": [
+          "_t",
+          "maxVotes",
+          "threshold"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "ProbabilisticAttachCategoryRefereeConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for ProbabilisticAttachCategoryRefereeConfig",
+            "example": "ProbabilisticAttachCategoryRefereeConfig"
+          },
+          "threshold": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxVotes": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "QueryOrdersModel": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "$ref": "#/components/schemas/PageInfo"
+          },
+          "filter": {
+            "$ref": "#/components/schemas/RootFilter"
+          },
+          "sortCriteria": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SortCriterion"
+            },
+            "description": "The sorting criteria",
+            "default": null
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for querying orders."
+      },
+      "RootFilter": {
+        "type": "object",
+        "properties": {
+          "filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            }
+          },
+          "logic": {
+            "$ref": "#/components/schemas/LogicOperator"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SendCompletionMailStepModel": {
+        "title": "SendCompletionMailStepModel",
+        "required": [
+          "_t",
+          "receiver",
+          "resultsFileArtifactIdentifier"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "SendCompletionMailStepModel"
+            ],
+            "type": "string",
+            "description": "Discriminator value for SendCompletionMailStepModel",
+            "example": "SendCompletionMailStepModel"
+          },
+          "receiver": {
+            "type": "string"
+          },
+          "resultsFileArtifactIdentifier": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SimpleWorkflowConfig": {
+        "title": "SimpleWorkflowConfig",
+        "required": [
+          "_t",
+          "blueprint",
+          "referee",
+          "targetCountryCodes"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "SimpleWorkflowConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for SimpleWorkflowConfig",
+            "example": "SimpleWorkflowConfig"
+          },
+          "referee": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NaiveRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/NeverEndingRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/ProbabilisticAttachCategoryRefereeConfig"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "blueprint": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranscriptionRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/PolygonRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/NamedEntityRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/LocateRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/LineRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/FreeTextRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/CompareRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/AttachCategoryRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/BoundingBoxRapidBlueprint"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "targetCountryCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
+          },
+          "priority": {
+            "type": "string",
+            "nullable": true
+          },
+          "isFallback": {
+            "type": "boolean"
+          },
+          "rapidSelectionConfigs": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/OnlyValidationWorkflowRapidSelectionConfig"
+                },
+                {
+                  "$ref": "#/components/schemas/CorrelatedRapidSelectionConfig"
+                },
+                {
+                  "$ref": "#/components/schemas/DemographicRapidSelectionConfig"
+                },
+                {
+                  "$ref": "#/components/schemas/StaticRapidSelectionConfig"
+                },
+                {
+                  "$ref": "#/components/schemas/ValidationRapidSelectionConfig"
+                },
+                {
+                  "$ref": "#/components/schemas/ConditionalValidationRapidSelectionConfig"
+                },
+                {
+                  "$ref": "#/components/schemas/NoValidationWorkflowRapidSelectionConfig"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "SimpleWorkflowModel": {
+        "title": "SimpleWorkflow",
+        "required": [
+          "_t",
+          "blueprint"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "SimpleWorkflow"
+            ],
+            "type": "string",
+            "description": "Discriminator value for SimpleWorkflow",
+            "example": "SimpleWorkflow"
+          },
+          "blueprint": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranscriptionRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/PolygonRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/NamedEntityRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/LocateRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/LineRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/FreeTextRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/CompareRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/AttachCategoryRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/BoundingBoxRapidBlueprint"
+              }
+            ],
+            "description": "The blueprint is used to create the tasks that will be shown to the users. They contain the common information\r\nacross all tasks. For example, the tasks question.",
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          }
+        },
+        "additionalProperties": false,
+        "description": "If the SimpleWorkflow is chosen, each datapoint uploaded will correspond to a single task to be solved.\r\nThis is the most commonly chosen workflow."
+      },
+      "SortCriterion": {
+        "required": [
+          "direction",
+          "propertyName"
+        ],
+        "type": "object",
+        "properties": {
+          "propertyName": {
+            "type": "string"
+          },
+          "direction": {
+            "$ref": "#/components/schemas/SortDirection"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SortDirection": {
+        "enum": [
+          "Asc",
+          "Desc"
+        ],
+        "type": "string"
+      },
+      "StaticRapidSelectionConfig": {
+        "title": "StaticRapidSelectionConfig",
+        "required": [
+          "_t",
+          "rapidIds"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "StaticRapidSelectionConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for StaticRapidSelectionConfig",
+            "example": "StaticRapidSelectionConfig"
+          },
+          "rapidIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "TranscriptionRapidBlueprint": {
+        "title": "TranscriptionBlueprint",
+        "required": [
+          "_t",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "TranscriptionBlueprint"
+            ],
+            "type": "string",
+            "description": "Discriminator value for TranscriptionBlueprint",
+            "example": "TranscriptionBlueprint"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UnlockOrderResult": {
+        "required": [
+          "datasetIds"
+        ],
+        "type": "object",
+        "properties": {
+          "datasetIds": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateAccessModel": {
+        "required": [
+          "isPublic"
+        ],
+        "type": "object",
+        "properties": {
+          "isPublic": {
+            "type": "boolean",
+            "description": "Whether the order is public"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for updating the access of an order."
+      },
+      "UpdateOrderModel": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The new name of the order"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for updating the name of an order."
+      },
+      "UpdateWorkflowConfigModel": {
+        "required": [
+          "orderId",
+          "workflowConfig"
+        ],
+        "type": "object",
+        "properties": {
+          "orderId": {
+            "type": "string",
+            "description": "The id of the order"
+          },
+          "workflowConfig": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CompareWorkflowConfig"
+              },
+              {
+                "$ref": "#/components/schemas/SimpleWorkflowConfig"
+              }
+            ],
+            "description": "The new workflow configuration",
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "workflowConfigArtifactId": {
+            "type": "string",
+            "description": "The id of the workflow config artifact in the pipeline. If using the default pipeline this is not needed.",
+            "default": null
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for updating the workflow configuration of an order."
+      },
+      "ValidationChance": {
+        "required": [
+          "chance",
+          "rapidCount",
+          "userScoreThreshold"
+        ],
+        "type": "object",
+        "properties": {
+          "userScoreThreshold": {
+            "type": "number",
+            "format": "double"
+          },
+          "chance": {
+            "type": "number",
+            "format": "double"
+          },
+          "rapidCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ValidationRapidSelectionConfig": {
+        "title": "ValidationRapidSelectionConfig",
+        "required": [
+          "_t",
+          "amount",
+          "validationSetId"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "ValidationRapidSelectionConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for ValidationRapidSelectionConfig",
+            "example": "ValidationRapidSelectionConfig"
+          },
+          "validationSetId": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "WorkflowAggregationStepModel": {
+        "title": "WorkflowAggregationStepModel",
+        "required": [
+          "_t",
+          "datasetArtifactId",
+          "fileUploadedArtifactId"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "WorkflowAggregationStepModel"
+            ],
+            "type": "string",
+            "description": "Discriminator value for WorkflowAggregationStepModel",
+            "example": "WorkflowAggregationStepModel"
+          },
+          "datasetArtifactId": {
+            "type": "string"
+          },
+          "fileUploadedArtifactId": {
+            "type": "string"
+          },
+          "aggregatorType": {
+            "$ref": "#/components/schemas/AggregatorType"
+          }
+        },
+        "additionalProperties": false
+      },
+      "WorkflowResultFileCreatorStepModel": {
+        "title": "WorkflowResultFileCreatorStepModel",
+        "required": [
+          "_t",
+          "datasetArtifactId",
+          "fileUploadedArtifactId"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "WorkflowResultFileCreatorStepModel"
+            ],
+            "type": "string",
+            "description": "Discriminator value for WorkflowResultFileCreatorStepModel",
+            "example": "WorkflowResultFileCreatorStepModel"
+          },
+          "datasetArtifactId": {
+            "type": "string"
+          },
+          "fileUploadedArtifactId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "WorkflowSplitModel": {
+        "title": "WorkflowSplitModel",
+        "required": [
+          "_t",
+          "aggregationResultArtifactId",
+          "destinationDatasetArtifactId",
+          "filterConfigs",
+          "sourceDatasetArtifactId"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "WorkflowSplitModel"
+            ],
+            "type": "string",
+            "description": "Discriminator value for WorkflowSplitModel",
+            "example": "WorkflowSplitModel"
+          },
+          "sourceDatasetArtifactId": {
+            "type": "string"
+          },
+          "destinationDatasetArtifactId": {
+            "type": "string"
+          },
+          "aggregationResultArtifactId": {
+            "type": "string"
+          },
+          "filterConfigs": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/ClassificationMetadataFilterConfig"
+                },
+                {
+                  "$ref": "#/components/schemas/CountClassificationMetadataFilterConfig"
+                },
+                {
+                  "$ref": "#/components/schemas/LocationMetadataExistsFilterConfig"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateClientModel": {
+        "required": [
+          "customerId",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "A human-readable name for the client used for easy identification."
+          },
+          "customerId": {
+            "type": "string",
+            "description": "The id of the customer that owns the client.",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for creating a new client."
+      },
+      "IssueClientAuthTokenResult": {
+        "required": [
+          "authToken"
+        ],
+        "type": "object",
+        "properties": {
+          "authToken": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LoginModel": {
+        "required": [
+          "password",
+          "usernameOrEmail"
+        ],
+        "type": "object",
+        "properties": {
+          "usernameOrEmail": {
+            "type": "string",
+            "description": "The username or email of the user."
+          },
+          "password": {
+            "type": "string",
+            "description": "The password of the user."
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for logging in a user."
+      },
+      "NewsletterModel": {
+        "required": [
+          "email",
+          "token"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RequestPasswordResetCommand": {
+        "title": "RequestPasswordResetCommand",
+        "required": [
+          "_t",
+          "email",
+          "recaptchaToken"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "RequestPasswordResetCommand"
+            ],
+            "type": "string",
+            "description": "Discriminator value for RequestPasswordResetCommand",
+            "example": "RequestPasswordResetCommand"
+          },
+          "email": {
+            "type": "string"
+          },
+          "recaptchaToken": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SignupCustomerModel": {
+        "required": [
+          "email",
+          "password",
+          "passwordRepeated",
+          "token"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "The email of the user to sign up."
+          },
+          "password": {
+            "type": "string",
+            "description": "The password of the user to sign up."
+          },
+          "passwordRepeated": {
+            "type": "string",
+            "description": "The repeated password to confirm the password."
+          },
+          "token": {
+            "type": "string",
+            "description": "A recaptcha token to verify the user is not a bot."
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for signing up a new user."
+      },
+      "SignupShadowCustomerModel": {
+        "required": [
+          "token"
+        ],
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "A recaptcha token to verify the user is not a bot."
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for signing up a new temporary user."
+      },
+      "SubmitPasswordResetCommand": {
+        "title": "SubmitPasswordResetCommand",
+        "required": [
+          "_t",
+          "password",
+          "passwordRepeated",
+          "resetToken",
+          "userId"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "SubmitPasswordResetCommand"
+            ],
+            "type": "string",
+            "description": "Discriminator value for SubmitPasswordResetCommand",
+            "example": "SubmitPasswordResetCommand"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "password": {
+            "type": "string"
+          },
+          "passwordRepeated": {
+            "type": "string"
+          },
+          "resetToken": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "securitySchemes": {
+      "bearer": {
+        "type": "apiKey",
+        "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+        "name": "Authorization",
+        "in": "header"
+      }
+    }
+  }
+}

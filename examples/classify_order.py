@@ -5,7 +5,7 @@ dotenv.load_dotenv() # type: ignore
 from rapidata.rapidata_client import RapidataClient
 from rapidata.rapidata_client.workflow import FeatureFlags
 from rapidata.rapidata_client.workflow import ClassifyWorkflow
-from rapidata.rapidata_client.workflow.referee import NaiveReferee
+from rapidata.rapidata_client.referee import NaiveReferee
 
 CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
@@ -32,7 +32,7 @@ order = (
     .workflow(
         ClassifyWorkflow(
             question="Who should be president?",
-            categories=["Kamala Harris", "Donald Trump"],
+            options=["Kamala Harris", "Donald Trump"],
         )
         .referee(NaiveReferee(required_guesses=15))
         .feature_flags(FeatureFlags().alert_on_fast_response(3))
