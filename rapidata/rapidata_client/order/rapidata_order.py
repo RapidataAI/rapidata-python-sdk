@@ -2,10 +2,10 @@ from openapi_client.models.create_order_model_referee import CreateOrderModelRef
 from openapi_client.models.create_order_model_workflow import CreateOrderModelWorkflow
 from rapidata.rapidata_client.order.dataset.rapidata_dataset import RapidataDataset
 from rapidata.rapidata_client.workflow import Workflow
-from openapi_client.api_client import ApiClient
-from openapi_client.api.order_api import OrderApi
 from openapi_client.models.create_order_model import CreateOrderModel
 from rapidata.rapidata_client.referee import Referee
+from rapidata.service.openapi_service import OpenAPIService
+
 
 class RapidataOrder:
     """
@@ -19,12 +19,17 @@ class RapidataOrder:
     :type rapidata_service: RapidataService
     """
 
-    def __init__(self, name: str, workflow: Workflow, referee: Referee, api_client: ApiClient):
+    def __init__(
+        self,
+        name: str,
+        workflow: Workflow,
+        referee: Referee,
+        openapi_service: OpenAPIService,
+    ):
         self.name = name
         self.workflow = workflow
         self.referee = referee
-        self.api_client = api_client
-        self.order_api = OrderApi(api_client)
+        self.openapi_service = openapi_service
         self.order_id = None
         self._dataset: RapidataDataset | None = None
 
@@ -39,12 +44,12 @@ class RapidataOrder:
             orderName=self.name,
             workflow=CreateOrderModelWorkflow(self.workflow.to_model()),
             userFilters=[],
-            referee=CreateOrderModelReferee(self.referee.to_model())
+            referee=CreateOrderModelReferee(self.referee.to_model()),
         )
 
-        result = self.order_api.order_create_post(create_order_model=order_model)
+        result = self.openapi_service.order_api.order_create_post(create_order_model=order_model)
         self.order_id = result.order_id
-        self._dataset = RapidataDataset(result.dataset_id, self.api_client)
+        self._dataset = RapidataDataset(result.dataset_id, self.openapi_service)
         return self
 
     def submit(self):
@@ -56,7 +61,7 @@ class RapidataOrder:
         if self.order_id is None:
             raise ValueError("Order ID is None. Have you created the order?")
 
-        self.order_api.order_submit_post(self.order_id)
+        self.openapi_service.order_api.order_submit_post(self.order_id)
 
     def approve(self):
         """
@@ -67,7 +72,7 @@ class RapidataOrder:
         if self.order_id is None:
             raise ValueError("You must create the order before approving it.")
 
-        self.order_api.order_approve_post(self.order_id)
+        self.openapi_service.order_api.order_approve_post(self.order_id)
 
     @property
     def dataset(self):

@@ -5,6 +5,7 @@ from rapidata.rapidata_client.workflow import Workflow
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 from openapi_client import ApiClient
 from rapidata.rapidata_client.referee import Referee
+from rapidata.service.openapi_service import OpenAPIService
 
 
 class RapidataOrderBuilder:
@@ -21,11 +22,11 @@ class RapidataOrderBuilder:
 
     def __init__(
         self,
-        api_client: ApiClient,
+        openapi_service: OpenAPIService,
         name: str,
     ):
         self._name = name
-        self._api_client = api_client
+        self._openapi_service = openapi_service
         self._workflow: Workflow | None = None
         self._referee: Referee | None = None
         self._media_paths: list[str] = []
@@ -50,7 +51,7 @@ class RapidataOrderBuilder:
             name=self._name,
             workflow=self._workflow,
             referee=self._referee,
-            api_client=self._api_client,
+            openapi_service=self._openapi_service,
         ).create()
 
         order.dataset.add_media_from_paths(self._media_paths)
