@@ -38,7 +38,6 @@ class RapidataOrder:
         :rtype: RapidataOrder
         """
 
-
     def submit(self):
         """
         Submits the order for processing.
@@ -60,18 +59,23 @@ class RapidataOrder:
         :rtype: str
         """
         return self.openapi_service.order_api.order_get_by_id_get(self.order_id)
-    
+
     def wait_for_done(self):
         """
         Blocking call that waits for the order to be done. Exponential backoff is used to check the status of the order.
         """
         wait_time = 2
+        back_off_factor = 1.5
+        minimum_poll_interval = 60 * 10  # 10 minutes
+
         while True:
             time.sleep(wait_time)
             result = self.get_status()
             if result.state == "Completed":
                 break
-            wait_time *= 2
+            wait_time = max(
+                minimum_poll_interval, wait_time * back_off_factor
+            )  # poll at least every 10 minutes
 
     def get_results(self):
         """
