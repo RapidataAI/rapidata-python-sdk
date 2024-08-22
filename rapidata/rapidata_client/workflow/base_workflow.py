@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Any
 
 from openapi_client.models.simple_workflow_model import SimpleWorkflowModel
-from rapidata.rapidata_client.workflow.feature_flags import FeatureFlags
+from rapidata.rapidata_client.feature_flags import FeatureFlags
 from rapidata.rapidata_client.referee.base_referee import Referee
 from rapidata.rapidata_client.referee.naive_referee import NaiveReferee
 
@@ -11,7 +11,6 @@ class Workflow(ABC):
     
     def __init__(self, type: str):
         self._type = type
-        self._referee = NaiveReferee()
         self._target_country_codes: list[str] = []
         self._feature_flags: FeatureFlags = FeatureFlags()
 
