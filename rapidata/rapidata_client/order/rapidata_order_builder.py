@@ -1,9 +1,11 @@
-from openapi_client.api_client import ApiClient
+from openapi_client.models.create_order_model import CreateOrderModel
+from openapi_client.models.create_order_model_referee import CreateOrderModelReferee
+from openapi_client.models.create_order_model_workflow import CreateOrderModelWorkflow
 from rapidata.rapidata_client.feature_flags import FeatureFlags
+from rapidata.rapidata_client.order.dataset.rapidata_dataset import RapidataDataset
 from rapidata.rapidata_client.referee.naive_referee import NaiveReferee
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
-from openapi_client import ApiClient
 from rapidata.rapidata_client.referee import Referee
 from rapidata.service.openapi_service import OpenAPIService
 
@@ -34,7 +36,7 @@ class RapidataOrderBuilder:
 
     def create(self) -> RapidataOrder:
         """
-        Create a RapidataOrder instance based on the configured settings.
+        Actually makes the API calls to create the order based on how the order builder was configures. Returns a RapidataOrder instance based on the created order with order_id and dataset_id.
 
         :return: The created RapidataOrder instance.
         :rtype: RapidataOrder
@@ -47,12 +49,20 @@ class RapidataOrderBuilder:
             print("No referee provided, using default NaiveReferee.")
             self._referee = NaiveReferee()
 
-        order = RapidataOrder(
-            name=self._name,
-            workflow=self._workflow,
-            referee=self._referee,
-            openapi_service=self._openapi_service,
-        ).create()
+        order_model = CreateOrderModel(
+            orderName=self._name,
+            workflow=CreateOrderModelWorkflow(self._workflow.to_model()),
+            userFilters=[],
+            referee=CreateOrderModelReferee(self._referee.to_model()),
+        )
+
+        result = self._openapi_service.order_api.order_create_post(
+            create_order_model=order_model
+        )
+
+        self.order_id = result.order_id
+        self._dataset = RapidataDataset(result.dataset_id, self._openapi_service)
+        order = RapidataOrder(order_id=self.order_id, dataset=self._dataset, openapi_service=self._openapi_service)
 
         order.dataset.add_media_from_paths(self._media_paths)
 

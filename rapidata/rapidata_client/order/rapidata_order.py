@@ -1,3 +1,4 @@
+import time
 from openapi_client.models.create_order_model_referee import CreateOrderModelReferee
 from openapi_client.models.create_order_model_workflow import CreateOrderModelWorkflow
 from rapidata.rapidata_client.order.dataset.rapidata_dataset import RapidataDataset
@@ -21,17 +22,13 @@ class RapidataOrder:
 
     def __init__(
         self,
-        name: str,
-        workflow: Workflow,
-        referee: Referee,
+        order_id: str,
+        dataset: RapidataDataset,
         openapi_service: OpenAPIService,
     ):
-        self.name = name
-        self.workflow = workflow
-        self.referee = referee
         self.openapi_service = openapi_service
-        self.order_id = None
-        self._dataset: RapidataDataset | None = None
+        self.order_id = order_id
+        self._dataset = dataset
 
     def create(self):
         """
@@ -40,49 +37,57 @@ class RapidataOrder:
         :return: The created RapidataOrder instance.
         :rtype: RapidataOrder
         """
-        order_model = CreateOrderModel(
-            orderName=self.name,
-            workflow=CreateOrderModelWorkflow(self.workflow.to_model()),
-            userFilters=[],
-            referee=CreateOrderModelReferee(self.referee.to_model()),
-        )
 
-        result = self.openapi_service.order_api.order_create_post(create_order_model=order_model)
-        self.order_id = result.order_id
-        self._dataset = RapidataDataset(result.dataset_id, self.openapi_service)
-        return self
 
     def submit(self):
         """
         Submits the order for processing.
-
-        :raises ValueError: If the order has not been created.
         """
-        if self.order_id is None:
-            raise ValueError("Order ID is None. Have you created the order?")
 
         self.openapi_service.order_api.order_submit_post(self.order_id)
 
     def approve(self):
         """
         Approves the order for execution.
-
-        :raises ValueError: If the order has not been created.
         """
-        if self.order_id is None:
-            raise ValueError("You must create the order before approving it.")
-
         self.openapi_service.order_api.order_approve_post(self.order_id)
+
+    def get_status(self):
+        """
+        Gets the status of the order.
+
+        :return: The status of the order.
+        :rtype: str
+        """
+        return self.openapi_service.order_api.order_get_by_id_get(self.order_id)
+    
+    def wait_for_done(self):
+        """
+        Blocking call that waits for the order to be done. Exponential backoff is used to check the status of the order.
+        """
+        wait_time = 2
+        while True:
+            time.sleep(wait_time)
+            result = self.get_status()
+            if result.state == "Completed":
+                break
+            wait_time *= 2
+
+    def get_results(self):
+        """
+        Gets the results of the order.
+
+        :return: The results of the order.
+        :rtype: dict
+        """
+        # return self.openapi_service.order_api.order_get_order_results_get(self.order_id) # throws error
+        raise NotImplementedError("Currently not supported")
 
     @property
     def dataset(self):
         """
         The dataset associated with the order.
-
-        :raises ValueError: If the order has not been submitted.
         :return: The RapidataDataset instance.
         :rtype: RapidataDataset
         """
-        if self._dataset is None:
-            raise ValueError("Datset is None. Have you created the order?")
         return self._dataset

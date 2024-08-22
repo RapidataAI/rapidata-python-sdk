@@ -28,18 +28,17 @@ class TestOrderBuilder(unittest.TestCase):
             ).create()
 
     def test_basic_order_build(self):
-        order = (
+        order_builder = (
             RapidataOrderBuilder(
                 openapi_service=self.mock_openapi_service, name="Test Order"
             )
             .workflow(
                 ClassifyWorkflow(question="Test Question?", options=["Yes", "No"])
             )
-            .create()
         )
 
-        self.assertEqual(order.name, "Test Order")
-        self.assertIsInstance(order.workflow, ClassifyWorkflow)
+        self.assertEqual(order_builder._name, "Test Order")
+        self.assertIsInstance(order_builder._workflow, ClassifyWorkflow)
 
-        self.assertEqual(order.workflow._question, "Test Question?")  # type: ignore
-        self.assertEqual(order.workflow._options, ["Yes", "No"])  # type: ignore
+        self.assertEqual(order_builder._workflow._question, "Test Question?")  # type: ignore
+        self.assertEqual(order_builder._workflow._options, ["Yes", "No"])  # type: ignore

@@ -13,17 +13,18 @@ def new_classify_order(rapi: RapidataClient):
         )
         .workflow(
             ClassifyWorkflow(
-                question="Who should be president?",
-                options=["Kamala Harris", "Donald Trump"],
+                question="What is shown in the image?",
+                options=["Fish", "Cat", "Wallabe", "Airplane"],
             )
         )
-        .media(["examples/data/kamala_trump.jpg"])
+        .media(["examples/data/wallaby.jpg"])
         .referee(NaiveReferee(required_guesses=15))
         .feature_flags(FeatureFlags().alert_on_fast_response(3))
         .create()
     )
 
-    # order.approve() admin only: if it doesn't auto approve and you want to manually approve
+    result = order.get_status()
+    print("Order in state: ", result.state)
 
 
 if __name__ == "__main__":
