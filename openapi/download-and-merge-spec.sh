@@ -9,12 +9,13 @@ url_for() {
         "order") echo "https://api.app.rabbitdata.ch/Order/swagger/v1/swagger.json" ;;
         "dataset") echo "https://api.app.rabbitdata.ch/Dataset/swagger/v1/swagger.json" ;;
         "identity") echo "https://api.app.rabbitdata.ch/Identity/swagger/v1/swagger.json" ;;
+        "validation") echo "https://api.app.rabbitdata.ch/Validation/swagger/v1/swagger.json" ;;
         *) echo "" ;;
     esac
 }
 
 # List of keys
-keys=("order" "dataset" "identity")
+keys=("order" "dataset" "identity" "validation")
 
 for key in "${keys[@]}"; do
     url=$(url_for "$key")
