@@ -13,7 +13,7 @@ class RapidataClient:
         self,
         client_id: str,
         client_secret: str,
-        endpoint: str = "https://api.rapidata.ai",
+        endpoint: str = "https://api.app.rapidata.ai",
     ):
         """
         Initialize the RapidataClient.
