@@ -164,3 +164,7 @@ cython_debug/
 .DS_Store
 
 .env*
+
+openapi/spec/
+openapi/openapi-client/
+customers/

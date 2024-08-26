@@ -13,6 +13,7 @@ class Workflow(ABC):
         self._type = type
         self._target_country_codes: list[str] = []
         self._feature_flags: FeatureFlags = FeatureFlags()
+        self._referee: Referee = NaiveReferee()
 
     def to_dict(self) -> dict[str, Any]:
         return {

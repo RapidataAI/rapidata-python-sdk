@@ -1,7 +1,7 @@
 
-# Rapidata Python Documentation
+# Rapidata Python SDK Documentation
 
-Welcome! The Rapidata Python Client is a convenient way to interact with the Rapidata Web API from python applications.
+Welcome! The Rapidata Python SDK is a convenient way to interact with the Rapidata Web API from python applications.
 
 ## Sections
 

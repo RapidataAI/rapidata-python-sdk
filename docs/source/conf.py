@@ -5,6 +5,7 @@
 
 import sys
 from pathlib import Path
+import toml
 
 # Get the absolute path to the root of your project
 project_root = Path(__file__).parents[2].resolve()
@@ -16,10 +17,14 @@ sys.path.insert(0, str(project_root / "src"))
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = "Rapidata Python"
+project = "Rapidata Python SDK"
 copyright = "2024, Rapidata"
 author = "Rapidata"
-release = "0.1.0"
+
+pyproject_toml_path = project_root / "pyproject.toml"
+with open(pyproject_toml_path, "r") as f:
+    pyproject_toml = toml.load(f)
+    release = pyproject_toml["tool"]["poetry"]["version"]
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
