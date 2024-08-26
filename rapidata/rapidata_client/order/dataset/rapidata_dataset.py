@@ -21,6 +21,10 @@ class RapidataDataset:
         self.openapi_service.dataset_api.dataset_upload_text_sources_to_dataset_post(model)
 
     def add_media_from_paths(self, image_paths: list[str]):
-        model = DatapointMetadataModel(datasetId=self.dataset_id, metadata=[])
 
-        self.openapi_service.dataset_api.dataset_create_datapoint_post(model=model, files=image_paths) # type: ignore
+        for image_path in image_paths:
+            if not os.path.exists(image_path):
+                raise FileNotFoundError(f"File not found: {image_path}")
+            model = DatapointMetadataModel(datasetId=self.dataset_id, metadata=[])
+
+            self.openapi_service.dataset_api.dataset_create_datapoint_post(model=model, files=[image_path]) # type: ignore
