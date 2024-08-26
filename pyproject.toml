@@ -5,13 +5,14 @@ description = "Rapidata SDK containing the Rapidata Python Client to interact wi
 authors = ["Rapidata AG <info@rapidata.ai>"]
 license = "Apache-2.0"
 readme = "README.md"
+include = ["openapi/openapi-client/**/*"]
 
 [tool.poetry.dependencies]
 python = "^3.12"
 requests = "^2.32.3"
 PyJWT = "^2.9.0"
 pillow = "^10.4.0"
-openapi-client = {path = "openapi/openapi-client", develop = true}
+openapi-client = {path = "openapi/openapi-client", develop = false}
 
 [tool.poetry.group.dev.dependencies]
 python-dotenv = "^1.0.1"
