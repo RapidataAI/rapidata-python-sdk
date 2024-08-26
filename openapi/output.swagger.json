@@ -1007,7 +1007,8 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/Order/UpdateAccess": {
@@ -1083,7 +1084,7 @@
           "Order"
         ],
         "summary": "Approves an order that has been submitted for manual approval.",
-        "description": "An order is submitted for manual approval when the automatic approval process could not automatically\r\ndetermine if the order is safe to process.\r\n            \r\nOnce an order is approved, the pipeline will start processing the order.",
+        "description": "An order is submitted for manual approval when the automatic approval process could not automatically\r\ndetermine if the order is safe to process.\r\nOnce an order is approved, the pipeline will start processing the order.",
         "parameters": [
           {
             "name": "orderId",
@@ -1636,7 +1637,9 @@
         "tags": [
           "Newsletter"
         ],
+        "summary": "Signs a user up to the newsletter.",
         "requestBody": {
+          "description": "The model containing the email of a user and recaptcha token.",
           "content": {
             "application/json": {
               "schema": {
@@ -1667,7 +1670,9 @@
         "tags": [
           "Newsletter"
         ],
+        "summary": "Unsubscribes a user from the newsletter.",
         "requestBody": {
+          "description": "The model containing the email of a user and recaptcha token.",
           "content": {
             "application/json": {
               "schema": {
@@ -1698,6 +1703,7 @@
         "tags": [
           "Coco"
         ],
+        "summary": "Uploads a CoCo set to the system.",
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -1705,13 +1711,16 @@
                 "type": "object",
                 "properties": {
                   "Name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "The name to give the newly uploaded CoCo set."
                   },
                   "Title": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "The title to be used when creating rapids from the CoCo set."
                   },
                   "File": {
                     "type": "string",
+                    "description": "The file containing the CoCo set.",
                     "format": "binary"
                   }
                 }
@@ -1732,7 +1741,24 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadCocoResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadCocoResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadCocoResult"
+                }
+              }
+            }
           }
         }
       }
@@ -1742,7 +1768,9 @@
         "tags": [
           "Coco"
         ],
+        "summary": "Creates a new validation set based on a previously uploaded CoCo set.",
         "requestBody": {
+          "description": "The model containing the information needed to create the validation set.",
           "content": {
             "application/json": {
               "schema": {
@@ -1763,7 +1791,24 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitCocoResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitCocoResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitCocoResult"
+                }
+              }
+            }
           }
         }
       }
@@ -1773,10 +1818,12 @@
         "tags": [
           "Validation"
         ],
+        "summary": "Queries validation sets based on the provided filter, paging and sorting criteria.",
         "parameters": [
           {
             "name": "model",
             "in": "query",
+            "description": "The model containing the query parameters.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1788,7 +1835,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationSetPagedResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationSetPagedResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationSetPagedResult"
+                }
+              }
+            }
           }
         }
       }
@@ -1798,9 +1862,27 @@
         "tags": [
           "Validation"
         ],
+        "summary": "Gets the available validation sets for the current user.",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAvailableValidationSetsResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAvailableValidationSetsResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAvailableValidationSetsResult"
+                }
+              }
+            }
           }
         }
       }
@@ -1810,10 +1892,12 @@
         "tags": [
           "Validation"
         ],
+        "summary": "Creates a new empty validation set.",
         "parameters": [
           {
             "name": "name",
             "in": "query",
+            "description": "The name to give the new validation set.",
             "schema": {
               "type": "string"
             }
@@ -1821,7 +1905,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationSet"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationSet"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationSet"
+                }
+              }
+            }
           }
         }
       }
@@ -1831,6 +1932,7 @@
         "tags": [
           "Validation"
         ],
+        "summary": "Adds a new validation rapid to the specified validation set.",
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -1872,6 +1974,7 @@
         "tags": [
           "Validation"
         ],
+        "summary": "Imports a validation set from a zip file.",
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -1908,12 +2011,14 @@
                         "$ref": "#/components/schemas/BoundingBoxRapidBlueprint"
                       }
                     ],
+                    "description": "The blueprint for the rapid to be created.",
                     "discriminator": {
                       "propertyName": "_t"
                     }
                   },
                   "File": {
                     "type": "string",
+                    "description": "The file to use as the asset for the rapid.",
                     "format": "binary"
                   }
                 }
@@ -1931,7 +2036,24 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportValidationSetFromFileResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportValidationSetFromFileResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportValidationSetFromFileResult"
+                }
+              }
+            }
           }
         }
       }
@@ -1941,6 +2063,7 @@
         "tags": [
           "Validation"
         ],
+        "summary": "Imports a compare validation set from a zip file.",
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -1948,10 +2071,12 @@
                 "type": "object",
                 "properties": {
                   "Criteria": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "The criteria to use for the compare rapid."
                   },
                   "File": {
                     "type": "string",
+                    "description": "The file to use as the asset for the rapid.",
                     "format": "binary"
                   }
                 }
@@ -1969,7 +2094,24 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportValidationSetFromFileResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportValidationSetFromFileResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportValidationSetFromFileResult"
+                }
+              }
+            }
           }
         }
       }
@@ -2120,6 +2262,9 @@
             "type": "array",
             "items": {
               "oneOf": [
+                {
+                  "$ref": "#/components/schemas/PrivateTextMetadataInput"
+                },
                 {
                   "$ref": "#/components/schemas/PromptMetadataInput"
                 },
@@ -2714,6 +2859,32 @@
         },
         "additionalProperties": false
       },
+      "PrivateTextMetadataInput": {
+        "title": "PrivateTextMetadataInput",
+        "required": [
+          "_t",
+          "identifier",
+          "text"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "PrivateTextMetadataInput"
+            ],
+            "type": "string",
+            "description": "Discriminator value for PrivateTextMetadataInput",
+            "example": "PrivateTextMetadataInput"
+          },
+          "text": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "PromptMetadata": {
         "title": "PromptMetadata",
         "required": [
@@ -2811,6 +2982,9 @@
             "description": "Discriminator value for TextAsset",
             "example": "TextAsset"
           },
+          "text": {
+            "type": "string"
+          },
           "metadata": {
             "type": "array",
             "items": {
@@ -2844,9 +3018,6 @@
                 "propertyName": "_t"
               }
             }
-          },
-          "text": {
-            "type": "string"
           }
         },
         "additionalProperties": false
@@ -2960,14 +3131,14 @@
             "description": "Discriminator value for TranscriptionMetadata",
             "example": "TranscriptionMetadata"
           },
+          "transcription": {
+            "type": "string"
+          },
           "identifier": {
             "type": "string"
           },
           "visibilities": {
             "$ref": "#/components/schemas/MetadataVisibilities"
-          },
-          "transcription": {
-            "type": "string"
           }
         },
         "additionalProperties": false
@@ -3237,13 +3408,16 @@
             "example": "CloneDatasetModel"
           },
           "datasetToCloneId": {
-            "type": "string"
+            "type": "string",
+            "description": "The id of the dataset to clone"
           },
           "datasetName": {
-            "type": "string"
+            "type": "string",
+            "description": "The name of the new dataset"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Model for cloning a dataset"
       },
       "CloneOrderModel": {
         "required": [
@@ -3383,7 +3557,7 @@
             "items": {
               "oneOf": [
                 {
-                  "$ref": "#/components/schemas/OnlyValidationWorkflowRapidSelectionConfig"
+                  "$ref": "#/components/schemas/ConditionalValidationRapidSelectionConfig"
                 },
                 {
                   "$ref": "#/components/schemas/CorrelatedRapidSelectionConfig"
@@ -3392,16 +3566,16 @@
                   "$ref": "#/components/schemas/DemographicRapidSelectionConfig"
                 },
                 {
+                  "$ref": "#/components/schemas/NoValidationWorkflowRapidSelectionConfig"
+                },
+                {
+                  "$ref": "#/components/schemas/OnlyValidationWorkflowRapidSelectionConfig"
+                },
+                {
                   "$ref": "#/components/schemas/StaticRapidSelectionConfig"
                 },
                 {
                   "$ref": "#/components/schemas/ValidationRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/ConditionalValidationRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/NoValidationWorkflowRapidSelectionConfig"
                 }
               ],
               "discriminator": {
@@ -3411,6 +3585,55 @@
           }
         },
         "additionalProperties": false
+      },
+      "CompareWorkflowModel": {
+        "title": "CompareWorkflow",
+        "required": [
+          "_t",
+          "criteria"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "CompareWorkflow"
+            ],
+            "type": "string",
+            "description": "Discriminator value for CompareWorkflow",
+            "example": "CompareWorkflow"
+          },
+          "criteria": {
+            "type": "string",
+            "description": "The criteria that the datapoints should be compared based on. No default value."
+          },
+          "startingElo": {
+            "type": "integer",
+            "description": "The Starting Elo is the Elo that all datapoints will start with. Default is usually between 1200-1500.",
+            "format": "int32"
+          },
+          "kFactor": {
+            "type": "integer",
+            "description": "The KFactor is used to calculate the Elo change after each match. Per default this is between 20 and 40.",
+            "format": "int32"
+          },
+          "matchSize": {
+            "type": "integer",
+            "description": "The MatchSize determines how many datapoints will be matched together once. Per default this is 2.",
+            "format": "int32"
+          },
+          "scalingFactor": {
+            "type": "integer",
+            "description": "The ScalingFactor is used to calculate the expected outcome before a match. Per default this is 400.",
+            "format": "int32"
+          },
+          "matchesUntilCompleted": {
+            "type": "integer",
+            "description": "The amount of matches that a datapoint should have played until it completes. Per default this is 10.",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "If the SimpleWorkflow is chosen, each datapoint uploaded will correspond to a single task to be solved.\r\nThis is the most commonly chosen workflow."
       },
       "ConditionalValidationRapidSelectionConfig": {
         "title": "ConditionalValidationRapidSelectionConfig",
@@ -3583,7 +3806,8 @@
             "example": "CreateDatasetArtifactModel"
           },
           "identifier": {
-            "type": "string"
+            "type": "string",
+            "description": "The identifier of the artifact"
           },
           "dataset": {
             "oneOf": [
@@ -3591,12 +3815,14 @@
                 "$ref": "#/components/schemas/CloneDatasetModel"
               }
             ],
+            "description": "The model of the dataset",
             "discriminator": {
               "propertyName": "_t"
             }
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Model for creating a dataset artifact"
       },
       "CreateDefaultOrderModel": {
         "required": [
@@ -3694,6 +3920,9 @@
             "oneOf": [
               {
                 "$ref": "#/components/schemas/SimpleWorkflowModel"
+              },
+              {
+                "$ref": "#/components/schemas/CompareWorkflowModel"
               }
             ],
             "description": "The workflow helps to determine the tasks that need to be completed by the users.",
@@ -3761,10 +3990,12 @@
                   "$ref": "#/components/schemas/CreateDatasetArtifactModel"
                 }
               ],
+              "description": "Base interface for artifact models",
               "discriminator": {
                 "propertyName": "_t"
               }
-            }
+            },
+            "description": "The list of static artifacts"
           },
           "pipelineSteps": {
             "type": "array",
@@ -3774,31 +4005,32 @@
                   "$ref": "#/components/schemas/DatasetEvaluationStepModel"
                 },
                 {
-                  "$ref": "#/components/schemas/DatasetLabelingStepModel"
-                },
-                {
                   "$ref": "#/components/schemas/SendCompletionMailStepModel"
                 },
                 {
                   "$ref": "#/components/schemas/WorkflowAggregationStepModel"
                 },
                 {
-                  "$ref": "#/components/schemas/WorkflowResultFileCreatorStepModel"
+                  "$ref": "#/components/schemas/WorkflowLabelingStepModel"
                 },
                 {
                   "$ref": "#/components/schemas/WorkflowSplitModel"
                 }
               ],
+              "description": "Base model for a pipeline step",
               "discriminator": {
                 "propertyName": "_t"
               }
-            }
+            },
+            "description": "The list of pipeline steps"
           },
           "namePrefix": {
-            "type": "string"
+            "type": "string",
+            "description": "The prefix for the pipeline name"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Model for creating a simple pipeline"
       },
       "CreateUnsupportedOrderModel": {
         "required": [
@@ -3909,41 +4141,24 @@
             "example": "DatasetEvaluationStepModel"
           },
           "datasetArtifactId": {
-            "type": "string"
+            "type": "string",
+            "description": "The dataset artifact id"
           },
           "aggregationResultFileArtifactId": {
-            "type": "string"
+            "type": "string",
+            "description": "The identifier of the resulting aggregation file"
           },
           "evaluationResultFileArtifactId": {
-            "type": "string"
+            "type": "string",
+            "description": "The identifier of the resulting evaluation file"
           },
           "receiver": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "DatasetLabelingStepModel": {
-        "title": "DatasetLabelingStepModel",
-        "required": [
-          "_t",
-          "datasetArtifactId"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "DatasetLabelingStepModel"
-            ],
             "type": "string",
-            "description": "Discriminator value for DatasetLabelingStepModel",
-            "example": "DatasetLabelingStepModel"
-          },
-          "datasetArtifactId": {
-            "type": "string"
+            "description": "The email address of the receiver to be notified once the step is completed"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Model for the dataset evaluation step"
       },
       "DemographicRapidSelectionConfig": {
         "title": "DemographicRapidSelectionConfig",
@@ -4539,13 +4754,16 @@
             "example": "SendCompletionMailStepModel"
           },
           "receiver": {
-            "type": "string"
+            "type": "string",
+            "description": "The email address of the receiver"
           },
           "resultsFileArtifactIdentifier": {
-            "type": "string"
+            "type": "string",
+            "description": "The identifier of the results file"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Model for the send completion mail step"
       },
       "SimpleWorkflowConfig": {
         "title": "SimpleWorkflowConfig",
@@ -4639,7 +4857,7 @@
             "items": {
               "oneOf": [
                 {
-                  "$ref": "#/components/schemas/OnlyValidationWorkflowRapidSelectionConfig"
+                  "$ref": "#/components/schemas/ConditionalValidationRapidSelectionConfig"
                 },
                 {
                   "$ref": "#/components/schemas/CorrelatedRapidSelectionConfig"
@@ -4648,16 +4866,16 @@
                   "$ref": "#/components/schemas/DemographicRapidSelectionConfig"
                 },
                 {
+                  "$ref": "#/components/schemas/NoValidationWorkflowRapidSelectionConfig"
+                },
+                {
+                  "$ref": "#/components/schemas/OnlyValidationWorkflowRapidSelectionConfig"
+                },
+                {
                   "$ref": "#/components/schemas/StaticRapidSelectionConfig"
                 },
                 {
                   "$ref": "#/components/schemas/ValidationRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/ConditionalValidationRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/NoValidationWorkflowRapidSelectionConfig"
                 }
               ],
               "discriminator": {
@@ -4926,7 +5144,7 @@
         "required": [
           "_t",
           "campaignArtifactId",
-          "fileUploadedArtifactId",
+          "fileArtifactId",
           "workflowArtifactId"
         ],
         "type": "object",
@@ -4940,45 +5158,47 @@
             "example": "WorkflowAggregationStepModel"
           },
           "campaignArtifactId": {
-            "type": "string"
+            "type": "string",
+            "description": "The campaign artifact id"
           },
           "workflowArtifactId": {
-            "type": "string"
+            "type": "string",
+            "description": "The workflow artifact id"
           },
-          "fileUploadedArtifactId": {
-            "type": "string"
+          "fileArtifactId": {
+            "type": "string",
+            "description": "The file artifact id"
           },
           "aggregatorType": {
             "$ref": "#/components/schemas/AggregatorType"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Model for the workflow aggregation step"
       },
-      "WorkflowResultFileCreatorStepModel": {
-        "title": "WorkflowResultFileCreatorStepModel",
+      "WorkflowLabelingStepModel": {
+        "title": "WorkflowLabelingStepModel",
         "required": [
           "_t",
-          "datasetArtifactId",
-          "fileUploadedArtifactId"
+          "workflowArtifactId"
         ],
         "type": "object",
         "properties": {
           "_t": {
             "enum": [
-              "WorkflowResultFileCreatorStepModel"
+              "WorkflowLabelingStepModel"
             ],
             "type": "string",
-            "description": "Discriminator value for WorkflowResultFileCreatorStepModel",
-            "example": "WorkflowResultFileCreatorStepModel"
+            "description": "Discriminator value for WorkflowLabelingStepModel",
+            "example": "WorkflowLabelingStepModel"
           },
-          "datasetArtifactId": {
-            "type": "string"
-          },
-          "fileUploadedArtifactId": {
-            "type": "string"
+          "workflowArtifactId": {
+            "type": "string",
+            "description": "The id of the workflow artifact to be labeled"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Model for the labeling step"
       },
       "WorkflowSplitModel": {
         "title": "WorkflowSplitModel",
@@ -5000,13 +5220,16 @@
             "example": "WorkflowSplitModel"
           },
           "sourceDatasetArtifactId": {
-            "type": "string"
+            "type": "string",
+            "description": "The source dataset artifact id"
           },
           "destinationDatasetArtifactId": {
-            "type": "string"
+            "type": "string",
+            "description": "The destination dataset artifact id"
           },
           "aggregationResultArtifactId": {
-            "type": "string"
+            "type": "string",
+            "description": "The aggregation result artifact id"
           },
           "filterConfigs": {
             "type": "array",
@@ -5025,10 +5248,12 @@
               "discriminator": {
                 "propertyName": "_t"
               }
-            }
+            },
+            "description": "The filter configurations"
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Model for the workflow split step"
       },
       "CreateClientModel": {
         "required": [
@@ -5103,13 +5328,16 @@
         "type": "object",
         "properties": {
           "email": {
-            "type": "string"
+            "type": "string",
+            "description": "The email of the user to subscribe or unsubscribe."
           },
           "token": {
-            "type": "string"
+            "type": "string",
+            "description": "The recaptcha token to verify the user is not a bot."
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Model for subscribing and unsubscribing to the newsletter."
       },
       "RequestPasswordResetCommand": {
         "title": "RequestPasswordResetCommand",
@@ -5226,7 +5454,8 @@
         "type": "object",
         "properties": {
           "validationSetId": {
-            "type": "string"
+            "type": "string",
+            "description": "The ID of the validation set to add the rapid to."
           },
           "payload": {
             "oneOf": [
@@ -5258,6 +5487,7 @@
                 "$ref": "#/components/schemas/BoundingBoxPayload"
               }
             ],
+            "description": "The payload to use for the rapid.",
             "discriminator": {
               "propertyName": "_t"
             }
@@ -5266,6 +5496,9 @@
             "type": "array",
             "items": {
               "oneOf": [
+                {
+                  "$ref": "#/components/schemas/PrivateTextMetadataInput"
+                },
                 {
                   "$ref": "#/components/schemas/PromptMetadataInput"
                 },
@@ -5279,7 +5512,8 @@
               "discriminator": {
                 "propertyName": "_t"
               }
-            }
+            },
+            "description": "Some metadata to attach to the rapid."
           },
           "truth": {
             "oneOf": [
@@ -5299,6 +5533,9 @@
                 "$ref": "#/components/schemas/LineTruth"
               },
               {
+                "$ref": "#/components/schemas/EmptyValidationTruth"
+              },
+              {
                 "$ref": "#/components/schemas/CompareTruth"
               },
               {
@@ -5306,22 +5543,22 @@
               },
               {
                 "$ref": "#/components/schemas/BoundingBoxTruth"
-              },
-              {
-                "$ref": "#/components/schemas/EmptyValidationTruth"
               }
             ],
+            "description": "The ground truth for the rapid.",
             "discriminator": {
               "propertyName": "_t"
             }
           },
           "randomCorrectProbability": {
             "type": "number",
+            "description": "The probability for an answer to be correct when randomly guessing.",
             "format": "double",
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "The model for adding a validation rapid."
       },
       "AttachCategoryTruth": {
         "title": "AttachCategoryTruth",
@@ -5559,6 +5796,33 @@
         },
         "additionalProperties": false
       },
+      "GetAvailableValidationSetsResult": {
+        "required": [
+          "validationSets"
+        ],
+        "type": "object",
+        "properties": {
+          "validationSets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationSetOverviewModel"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "ImportValidationSetFromFileResult": {
+        "required": [
+          "validationSetId"
+        ],
+        "type": "object",
+        "properties": {
+          "validationSetId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "LinePayload": {
         "title": "LinePayload",
         "required": [
@@ -5786,11 +6050,13 @@
             "items": {
               "$ref": "#/components/schemas/SortCriterion"
             },
+            "description": "The sorting criteria to apply.",
             "default": null,
             "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "The model for querying validation sets."
       },
       "SubmitCocoModel": {
         "required": [
@@ -5801,16 +6067,32 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "The name of the validation set."
           },
           "cocoSetId": {
-            "type": "string"
+            "type": "string",
+            "description": "The ID of the CoCo set to use for validation."
           },
           "categories": {
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "description": "A subset of the categories from the CoCo set to use in the rapids."
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for submitting a CoCo set."
+      },
+      "SubmitCocoResult": {
+        "required": [
+          "validationSetId"
+        ],
+        "type": "object",
+        "properties": {
+          "validationSetId": {
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -5885,6 +6167,124 @@
           "wordIndex": {
             "type": "integer",
             "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UploadCocoResult": {
+        "required": [
+          "categories",
+          "cocoSetId",
+          "dataCount"
+        ],
+        "type": "object",
+        "properties": {
+          "dataCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "cocoSetId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ValidationSet": {
+        "title": "ValidationSet",
+        "required": [
+          "_t",
+          "name",
+          "ownerId",
+          "ownerMail"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "ValidationSet"
+            ],
+            "type": "string",
+            "description": "Discriminator value for ValidationSet",
+            "example": "ValidationSet"
+          },
+          "name": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "id": {
+            "type": "string"
+          },
+          "ownerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ValidationSetOverviewModel": {
+        "required": [
+          "id",
+          "name",
+          "ownerId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "ownerId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ValidationSetPagedResult": {
+        "required": [
+          "items",
+          "page",
+          "pageSize",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationSet"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
           }
         },
         "additionalProperties": false
