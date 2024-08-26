@@ -1,7 +1,11 @@
+from openapi_client.models.aggregator_type import AggregatorType
 from openapi_client.models.create_order_model import CreateOrderModel
 from openapi_client.models.create_order_model_referee import CreateOrderModelReferee
 from openapi_client.models.create_order_model_workflow import CreateOrderModelWorkflow
+from openapi_client.models.datapoint_metadata_model import DatapointMetadataModel
+from openapi_client.models.datapoint_metadata_model_metadata_inner import DatapointMetadataModelMetadataInner
 from rapidata.rapidata_client.feature_flags import FeatureFlags
+from rapidata.rapidata_client.metadata.base_metadata import Metadata
 from rapidata.rapidata_client.order.dataset.rapidata_dataset import RapidataDataset
 from rapidata.rapidata_client.referee.naive_referee import NaiveReferee
 from rapidata.rapidata_client.workflow import Workflow
@@ -32,9 +36,10 @@ class RapidataOrderBuilder:
         self._workflow: Workflow | None = None
         self._referee: Referee | None = None
         self._media_paths: list[str] = []
-        self._feature_flags = FeatureFlags()
+        self._metadata: list[Metadata] | None = None 
+        self._aggregator: AggregatorType | None = None
 
-    def create(self) -> RapidataOrder:
+    def create(self, submit=True) -> RapidataOrder:
         """
         Actually makes the API calls to create the order based on how the order builder was configures. Returns a RapidataOrder instance based on the created order with order_id and dataset_id.
 
@@ -64,9 +69,10 @@ class RapidataOrderBuilder:
         self._dataset = RapidataDataset(result.dataset_id, self._openapi_service)
         order = RapidataOrder(order_id=self.order_id, dataset=self._dataset, openapi_service=self._openapi_service)
 
-        order.dataset.add_media_from_paths(self._media_paths)
+        order.dataset.add_media_from_paths(self._media_paths, self._metadata)
 
-        order.submit()
+        if submit:
+            order.submit()
 
         return order
 
@@ -94,7 +100,8 @@ class RapidataOrderBuilder:
         self._referee = referee
         return self
 
-    def media(self, media_paths: list[str]):
+    def media(
+        self, media_paths: list[str], metadata: list[Metadata] | None = None):
         """
         Set the media assets for the order.
 
@@ -104,6 +111,7 @@ class RapidataOrderBuilder:
         :rtype: RapidataOrderBuilder
         """
         self._media_paths = media_paths
+        self._metadata = metadata
         return self
 
     def feature_flags(self, feature_flags: FeatureFlags):
@@ -133,4 +141,16 @@ class RapidataOrderBuilder:
             )
 
         self._workflow.target_country_codes(country_codes)
+        return self
+
+    def aggregator(self, aggregator: AggregatorType):
+        """
+        Set the aggregator for the order.
+
+        :param aggregator: The aggregator to be set.
+        :type aggregator: AggregatorType
+        :return: The updated RapidataOrderBuilder instance.
+        :rtype: RapidataOrderBuilder
+        """
+        self._aggregator = aggregator
         return self

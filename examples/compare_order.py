@@ -7,7 +7,7 @@ from rapidata.rapidata_client.workflow import CompareWorkflow
 def new_compare_order(rapi: RapidataClient):
     order = (
         rapi.new_order(
-            name="Example Compare Order",
+            name="Example SimpleMatchup Order",
         )
         .workflow(
             CompareWorkflow(
@@ -15,7 +15,12 @@ def new_compare_order(rapi: RapidataClient):
             )
         )
         .referee(NaiveReferee(required_guesses=1))
-        .media(media_paths=["examples/data/rapidata_concept_logo.jpg", "examples/data/rapidata_logo.png"])
+        .media(
+            media_paths=[
+                "examples/data/rapidata_concept_logo.jpg",
+                "examples/data/rapidata_logo.png",
+            ]
+        )
         .create()
     )
 
