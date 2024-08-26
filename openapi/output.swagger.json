@@ -1405,7 +1405,24 @@
         "summary": "Issues a new auth token using the refresh token.",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/IssueAuthTokenResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IssueAuthTokenResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IssueAuthTokenResult"
+                }
+              }
+            }
           }
         }
       }
@@ -1665,6 +1682,287 @@
             "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/NewsletterModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Coco/Upload": {
+      "post": {
+        "tags": [
+          "Coco"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Name": {
+                    "type": "string"
+                  },
+                  "Title": {
+                    "type": "string"
+                  },
+                  "File": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "Name": {
+                  "style": "form"
+                },
+                "Title": {
+                  "style": "form"
+                },
+                "File": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Coco/Submit": {
+      "post": {
+        "tags": [
+          "Coco"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitCocoModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitCocoModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitCocoModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Validation/QueryValidationSets": {
+      "get": {
+        "tags": [
+          "Validation"
+        ],
+        "parameters": [
+          {
+            "name": "model",
+            "in": "query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryValidationSetModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Validation/GetAvailableValidationSets": {
+      "get": {
+        "tags": [
+          "Validation"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Validation/CreateValidationSet": {
+      "post": {
+        "tags": [
+          "Validation"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Validation/AddValidationRapid": {
+      "post": {
+        "tags": [
+          "Validation"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "model": {
+                    "$ref": "#/components/schemas/AddValidationRapidModel"
+                  },
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  }
+                }
+              },
+              "encoding": {
+                "model": {
+                  "style": "form"
+                },
+                "files": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Validation/Import": {
+      "post": {
+        "tags": [
+          "Validation"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Blueprint": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/TranscriptionRapidBlueprint"
+                      },
+                      {
+                        "$ref": "#/components/schemas/PolygonRapidBlueprint"
+                      },
+                      {
+                        "$ref": "#/components/schemas/NamedEntityRapidBlueprint"
+                      },
+                      {
+                        "$ref": "#/components/schemas/LocateRapidBlueprint"
+                      },
+                      {
+                        "$ref": "#/components/schemas/LineRapidBlueprint"
+                      },
+                      {
+                        "$ref": "#/components/schemas/FreeTextRapidBlueprint"
+                      },
+                      {
+                        "$ref": "#/components/schemas/CompareRapidBlueprint"
+                      },
+                      {
+                        "$ref": "#/components/schemas/AttachCategoryRapidBlueprint"
+                      },
+                      {
+                        "$ref": "#/components/schemas/BoundingBoxRapidBlueprint"
+                      }
+                    ],
+                    "discriminator": {
+                      "propertyName": "_t"
+                    }
+                  },
+                  "File": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "Blueprint": {
+                  "style": "form"
+                },
+                "File": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Validation/ImportCompare": {
+      "post": {
+        "tags": [
+          "Validation"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Criteria": {
+                    "type": "string"
+                  },
+                  "File": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "Criteria": {
+                  "style": "form"
+                },
+                "File": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -2743,7 +3041,8 @@
           },
           "region": {
             "type": "string",
-            "description": "The region of the S3 bucket."
+            "description": "The region of the S3 bucket.",
+            "nullable": true
           },
           "sourcePrefix": {
             "type": "string",
@@ -2751,11 +3050,13 @@
           },
           "accessKey": {
             "type": "string",
-            "description": "The access key to use for the S3 bucket."
+            "description": "The access key to use for the S3 bucket.",
+            "nullable": true
           },
           "secretKey": {
             "type": "string",
-            "description": "The secret key to use for the S3 bucket."
+            "description": "The secret key to use for the S3 bucket.",
+            "nullable": true
           },
           "useCustomAwsCredentials": {
             "type": "boolean",
@@ -3695,7 +3996,8 @@
           "email": {
             "type": "string",
             "description": "The email of the user submitting the feedback",
-            "default": null
+            "default": null,
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -3772,7 +4074,7 @@
         "description": "All available Gender options."
       },
       "GenderUserFilterModel": {
-        "title": "GenderUserFilterModel",
+        "title": "GenderFilter",
         "required": [
           "_t",
           "genders"
@@ -3781,11 +4083,11 @@
         "properties": {
           "_t": {
             "enum": [
-              "GenderUserFilterModel"
+              "GenderFilter"
             ],
             "type": "string",
-            "description": "Discriminator value for GenderUserFilterModel",
-            "example": "GenderUserFilterModel"
+            "description": "Discriminator value for GenderFilter",
+            "example": "GenderFilter"
           },
           "genders": {
             "type": "array",
@@ -4197,7 +4499,8 @@
               "$ref": "#/components/schemas/SortCriterion"
             },
             "description": "The sorting criteria",
-            "default": null
+            "default": null,
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -4561,7 +4864,8 @@
           "workflowConfigArtifactId": {
             "type": "string",
             "description": "The id of the workflow config artifact in the pipeline. If using the default pipeline this is not needed.",
-            "default": null
+            "default": null,
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -4621,8 +4925,9 @@
         "title": "WorkflowAggregationStepModel",
         "required": [
           "_t",
-          "datasetArtifactId",
-          "fileUploadedArtifactId"
+          "campaignArtifactId",
+          "fileUploadedArtifactId",
+          "workflowArtifactId"
         ],
         "type": "object",
         "properties": {
@@ -4634,7 +4939,10 @@
             "description": "Discriminator value for WorkflowAggregationStepModel",
             "example": "WorkflowAggregationStepModel"
           },
-          "datasetArtifactId": {
+          "campaignArtifactId": {
+            "type": "string"
+          },
+          "workflowArtifactId": {
             "type": "string"
           },
           "fileUploadedArtifactId": {
@@ -4741,6 +5049,20 @@
         },
         "additionalProperties": false,
         "description": "The model for creating a new client."
+      },
+      "IssueAuthTokenResult": {
+        "required": [
+          "token"
+        ],
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "The issued auth token."
+          }
+        },
+        "additionalProperties": false,
+        "description": "The result of issuing a auth token."
       },
       "IssueClientAuthTokenResult": {
         "required": [
@@ -4889,6 +5211,680 @@
           },
           "resetToken": {
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AddValidationRapidModel": {
+        "required": [
+          "metadata",
+          "payload",
+          "randomCorrectProbability",
+          "truth",
+          "validationSetId"
+        ],
+        "type": "object",
+        "properties": {
+          "validationSetId": {
+            "type": "string"
+          },
+          "payload": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranscriptionPayload"
+              },
+              {
+                "$ref": "#/components/schemas/PolygonPayload"
+              },
+              {
+                "$ref": "#/components/schemas/NamedEntityPayload"
+              },
+              {
+                "$ref": "#/components/schemas/LocatePayload"
+              },
+              {
+                "$ref": "#/components/schemas/LinePayload"
+              },
+              {
+                "$ref": "#/components/schemas/FreeTextPayload"
+              },
+              {
+                "$ref": "#/components/schemas/ComparePayload"
+              },
+              {
+                "$ref": "#/components/schemas/ClassifyPayload"
+              },
+              {
+                "$ref": "#/components/schemas/BoundingBoxPayload"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "metadata": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/PromptMetadataInput"
+                },
+                {
+                  "$ref": "#/components/schemas/PublicTextMetadataInput"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadataInput"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          },
+          "truth": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranscriptionTruth"
+              },
+              {
+                "$ref": "#/components/schemas/PolygonTruth"
+              },
+              {
+                "$ref": "#/components/schemas/NamedEntityTruth"
+              },
+              {
+                "$ref": "#/components/schemas/LocateBoxTruth"
+              },
+              {
+                "$ref": "#/components/schemas/LineTruth"
+              },
+              {
+                "$ref": "#/components/schemas/CompareTruth"
+              },
+              {
+                "$ref": "#/components/schemas/AttachCategoryTruth"
+              },
+              {
+                "$ref": "#/components/schemas/BoundingBoxTruth"
+              },
+              {
+                "$ref": "#/components/schemas/EmptyValidationTruth"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "randomCorrectProbability": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AttachCategoryTruth": {
+        "title": "AttachCategoryTruth",
+        "required": [
+          "_t",
+          "correctCategories"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "AttachCategoryTruth"
+            ],
+            "type": "string",
+            "description": "Discriminator value for AttachCategoryTruth",
+            "example": "AttachCategoryTruth"
+          },
+          "correctCategories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "BoundingBoxPayload": {
+        "title": "BoundingBoxPayload",
+        "required": [
+          "_t",
+          "target"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "BoundingBoxPayload"
+            ],
+            "type": "string",
+            "description": "Discriminator value for BoundingBoxPayload",
+            "example": "BoundingBoxPayload"
+          },
+          "target": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "BoundingBoxTruth": {
+        "title": "BoundingBoxTruth",
+        "required": [
+          "_t",
+          "xMax",
+          "xMin",
+          "yMax",
+          "yMin"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "BoundingBoxTruth"
+            ],
+            "type": "string",
+            "description": "Discriminator value for BoundingBoxTruth",
+            "example": "BoundingBoxTruth"
+          },
+          "xMin": {
+            "type": "number",
+            "format": "double"
+          },
+          "yMin": {
+            "type": "number",
+            "format": "double"
+          },
+          "xMax": {
+            "type": "number",
+            "format": "double"
+          },
+          "yMax": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "BoxShape": {
+        "title": "BoxShape",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "BoxShape"
+            ],
+            "type": "string",
+            "description": "Discriminator value for BoxShape",
+            "example": "BoxShape"
+          },
+          "xMin": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "yMin": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "xMax": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "yMax": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClassifyPayload": {
+        "title": "ClassifyPayload",
+        "required": [
+          "_t",
+          "possibleCategories",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "ClassifyPayload"
+            ],
+            "type": "string",
+            "description": "Discriminator value for ClassifyPayload",
+            "example": "ClassifyPayload"
+          },
+          "possibleCategories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ComparePayload": {
+        "title": "ComparePayload",
+        "required": [
+          "_t",
+          "criteria"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "ComparePayload"
+            ],
+            "type": "string",
+            "description": "Discriminator value for ComparePayload",
+            "example": "ComparePayload"
+          },
+          "criteria": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CompareTruth": {
+        "title": "CompareTruth",
+        "required": [
+          "_t",
+          "winnerId"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "CompareTruth"
+            ],
+            "type": "string",
+            "description": "Discriminator value for CompareTruth",
+            "example": "CompareTruth"
+          },
+          "winnerId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EmptyValidationTruth": {
+        "title": "EmptyValidationTruth",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "EmptyValidationTruth"
+            ],
+            "type": "string",
+            "description": "Discriminator value for EmptyValidationTruth",
+            "example": "EmptyValidationTruth"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FreeTextPayload": {
+        "title": "FreeTextPayload",
+        "required": [
+          "_t",
+          "question"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "FreeTextPayload"
+            ],
+            "type": "string",
+            "description": "Discriminator value for FreeTextPayload",
+            "example": "FreeTextPayload"
+          },
+          "question": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LinePayload": {
+        "title": "LinePayload",
+        "required": [
+          "_t",
+          "target"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "LinePayload"
+            ],
+            "type": "string",
+            "description": "Discriminator value for LinePayload",
+            "example": "LinePayload"
+          },
+          "target": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LineTruth": {
+        "title": "LineTruth",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "LineTruth"
+            ],
+            "type": "string",
+            "description": "Discriminator value for LineTruth",
+            "example": "LineTruth"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LocateBoxTruth": {
+        "title": "LocateBoxTruth",
+        "required": [
+          "_t",
+          "boundingBoxes"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "LocateBoxTruth"
+            ],
+            "type": "string",
+            "description": "Discriminator value for LocateBoxTruth",
+            "example": "LocateBoxTruth"
+          },
+          "boundingBoxes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BoxShape"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "LocatePayload": {
+        "title": "LocatePayload",
+        "required": [
+          "_t",
+          "target"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "LocatePayload"
+            ],
+            "type": "string",
+            "description": "Discriminator value for LocatePayload",
+            "example": "LocatePayload"
+          },
+          "target": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "NamedClassification": {
+        "title": "NamedClassification",
+        "required": [
+          "_t",
+          "classification",
+          "end",
+          "start"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "NamedClassification"
+            ],
+            "type": "string",
+            "description": "Discriminator value for NamedClassification",
+            "example": "NamedClassification"
+          },
+          "start": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "end": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "classification": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "NamedEntityPayload": {
+        "title": "NamedEntityPayload",
+        "required": [
+          "_t",
+          "classes",
+          "target"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "NamedEntityPayload"
+            ],
+            "type": "string",
+            "description": "Discriminator value for NamedEntityPayload",
+            "example": "NamedEntityPayload"
+          },
+          "target": {
+            "type": "string"
+          },
+          "classes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "NamedEntityTruth": {
+        "title": "NamedEntityTruth",
+        "required": [
+          "_t",
+          "classifications"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "NamedEntityTruth"
+            ],
+            "type": "string",
+            "description": "Discriminator value for NamedEntityTruth",
+            "example": "NamedEntityTruth"
+          },
+          "classifications": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NamedClassification"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "PolygonPayload": {
+        "title": "PolygonPayload",
+        "required": [
+          "_t",
+          "target"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "PolygonPayload"
+            ],
+            "type": "string",
+            "description": "Discriminator value for PolygonPayload",
+            "example": "PolygonPayload"
+          },
+          "target": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PolygonTruth": {
+        "title": "PolygonTruth",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "PolygonTruth"
+            ],
+            "type": "string",
+            "description": "Discriminator value for PolygonTruth",
+            "example": "PolygonTruth"
+          }
+        },
+        "additionalProperties": false
+      },
+      "QueryValidationSetModel": {
+        "type": "object",
+        "properties": {
+          "pageInfo": {
+            "$ref": "#/components/schemas/PageInfo"
+          },
+          "filter": {
+            "$ref": "#/components/schemas/RootFilter"
+          },
+          "sortCriteria": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SortCriterion"
+            },
+            "default": null,
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SubmitCocoModel": {
+        "required": [
+          "categories",
+          "cocoSetId",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "cocoSetId": {
+            "type": "string"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "TranscriptionPayload": {
+        "title": "TranscriptionPayload",
+        "required": [
+          "_t",
+          "title",
+          "transcription"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "TranscriptionPayload"
+            ],
+            "type": "string",
+            "description": "Discriminator value for TranscriptionPayload",
+            "example": "TranscriptionPayload"
+          },
+          "title": {
+            "type": "string"
+          },
+          "transcription": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TranscriptionWord"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "TranscriptionTruth": {
+        "title": "TranscriptionTruth",
+        "required": [
+          "_t",
+          "correctWords"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "TranscriptionTruth"
+            ],
+            "type": "string",
+            "description": "Discriminator value for TranscriptionTruth",
+            "example": "TranscriptionTruth"
+          },
+          "correctWords": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TranscriptionWord"
+            }
+          },
+          "strictGrading": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TranscriptionWord": {
+        "required": [
+          "word",
+          "wordIndex"
+        ],
+        "type": "object",
+        "properties": {
+          "word": {
+            "type": "string"
+          },
+          "wordIndex": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false

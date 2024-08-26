@@ -1,6 +1,7 @@
 from openapi_client.api.dataset_api import DatasetApi
 from openapi_client.api.identity_api import IdentityApi
 from openapi_client.api.order_api import OrderApi
+from openapi_client.api.validation_api import ValidationApi
 from openapi_client.api_client import ApiClient
 from openapi_client.configuration import Configuration
 
@@ -27,6 +28,7 @@ class OpenAPIService:
         self._api_client = ApiClient()
         self._order_api = OrderApi(self.api_client)
         self._dataset_api = DatasetApi(self.api_client)
+        self._validation_api = ValidationApi(self.api_client)
 
     @property
     def order_api(self) -> OrderApi:
@@ -35,3 +37,7 @@ class OpenAPIService:
     @property
     def dataset_api(self) -> DatasetApi:
         return self._dataset_api
+    
+    @property
+    def validation_api(self) -> ValidationApi:
+        return self._validation_api
