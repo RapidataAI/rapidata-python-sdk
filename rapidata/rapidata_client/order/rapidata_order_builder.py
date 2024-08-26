@@ -1,3 +1,4 @@
+from openapi_client.models.aggregator_type import AggregatorType
 from openapi_client.models.create_order_model import CreateOrderModel
 from openapi_client.models.create_order_model_referee import CreateOrderModelReferee
 from openapi_client.models.create_order_model_workflow import CreateOrderModelWorkflow
@@ -32,7 +33,7 @@ class RapidataOrderBuilder:
         self._workflow: Workflow | None = None
         self._referee: Referee | None = None
         self._media_paths: list[str] = []
-        self._feature_flags = FeatureFlags()
+        self._aggregator: AggregatorType | None = None
 
     def create(self) -> RapidataOrder:
         """
@@ -54,6 +55,7 @@ class RapidataOrderBuilder:
             workflow=CreateOrderModelWorkflow(self._workflow.to_model()),
             userFilters=[],
             referee=CreateOrderModelReferee(self._referee.to_model()),
+            aggregator=self._aggregator,
         )
 
         result = self._openapi_service.order_api.order_create_post(
@@ -66,7 +68,7 @@ class RapidataOrderBuilder:
 
         order.dataset.add_media_from_paths(self._media_paths)
 
-        order.submit()
+        # order.submit()
 
         return order
 
@@ -115,7 +117,12 @@ class RapidataOrderBuilder:
         :return: The updated RapidataOrderBuilder instance.
         :rtype: RapidataOrderBuilder
         """
-        self._feature_flags = feature_flags
+        if self._workflow is None:
+            raise ValueError(
+                "You must set the workflow before setting the feature flags."
+            )
+
+        self._workflow.feature_flags(feature_flags)
         return self
 
     def target_country_codes(self, country_codes: list[str]):
@@ -133,4 +140,16 @@ class RapidataOrderBuilder:
             )
 
         self._workflow.target_country_codes(country_codes)
+        return self
+    
+    def aggregator(self, aggregator: AggregatorType):
+        """
+        Set the aggregator for the order.
+
+        :param aggregator: The aggregator to be set.
+        :type aggregator: AggregatorType
+        :return: The updated RapidataOrderBuilder instance.
+        :rtype: RapidataOrderBuilder
+        """
+        self._aggregator = aggregator
         return self
