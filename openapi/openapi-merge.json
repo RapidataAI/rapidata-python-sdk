@@ -8,6 +8,9 @@
     },
     {
       "inputFile": "./spec/identity.json"
+    },
+    {
+      "inputFile": "./spec/validation.json"
     }
   ],
   "output": "./output.swagger.json"

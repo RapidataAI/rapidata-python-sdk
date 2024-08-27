@@ -2,8 +2,6 @@ from openapi_client.models.aggregator_type import AggregatorType
 from openapi_client.models.create_order_model import CreateOrderModel
 from openapi_client.models.create_order_model_referee import CreateOrderModelReferee
 from openapi_client.models.create_order_model_workflow import CreateOrderModelWorkflow
-from openapi_client.models.datapoint_metadata_model import DatapointMetadataModel
-from openapi_client.models.datapoint_metadata_model_metadata_inner import DatapointMetadataModelMetadataInner
 from rapidata.rapidata_client.feature_flags import FeatureFlags
 from rapidata.rapidata_client.metadata.base_metadata import Metadata
 from rapidata.rapidata_client.order.dataset.rapidata_dataset import RapidataDataset
@@ -38,6 +36,8 @@ class RapidataOrderBuilder:
         self._media_paths: list[str] = []
         self._metadata: list[Metadata] | None = None 
         self._aggregator: AggregatorType | None = None
+        self._validation_set_id: str | None = None
+        self._feature_flags: FeatureFlags | None = None
 
     def create(self, submit=True) -> RapidataOrder:
         """
@@ -59,6 +59,8 @@ class RapidataOrderBuilder:
             workflow=CreateOrderModelWorkflow(self._workflow.to_model()),
             userFilters=[],
             referee=CreateOrderModelReferee(self._referee.to_model()),
+            validationSetId=self._validation_set_id,
+            featureFlags=self._feature_flags.to_list() if self._feature_flags is not None else None,
         )
 
         result = self._openapi_service.order_api.order_create_post(
@@ -153,4 +155,16 @@ class RapidataOrderBuilder:
         :rtype: RapidataOrderBuilder
         """
         self._aggregator = aggregator
+        return self
+    
+    def validation_set(self, validation_set_id: str):
+        """
+        Set the validation set for the order.
+
+        :param validation_set_id: The validation set ID to be set.
+        :type validation_set_id: str
+        :return: The updated RapidataOrderBuilder instance.
+        :rtype: RapidataOrderBuilder
+        """
+        self._validation_set_id = validation_set_id
         return self

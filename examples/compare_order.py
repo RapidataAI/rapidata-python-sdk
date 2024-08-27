@@ -5,6 +5,18 @@ from rapidata.rapidata_client.workflow import CompareWorkflow
 
 
 def new_compare_order(rapi: RapidataClient):
+    logo_path = "examples/data/rapidata_logo.png"
+    concept_path = "examples/data/rapidata_concept_logo.jpg"
+    # configure validation set
+    validation_set_id = rapi.new_validation_set(
+        name="Example SimpleMatchup Validation Set"
+    ).add_compare_rapid(
+        media_paths=[logo_path, concept_path],
+        question="Which logo is the actual Rapidata logo?",
+        truth=logo_path,
+    ).create()
+
+    # configure order
     order = (
         rapi.new_order(
             name="Example SimpleMatchup Order",
@@ -21,10 +33,12 @@ def new_compare_order(rapi: RapidataClient):
                 "examples/data/rapidata_logo.png",
             ]
         )
+        .validation_set(validation_set_id)
         .create()
     )
 
     return order
+
 
 if __name__ == "__main__":
     rapi = setup_client()
