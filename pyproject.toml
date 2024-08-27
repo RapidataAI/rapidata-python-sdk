@@ -5,6 +5,10 @@ description = "Rapidata package containing the Rapidata Python Client to interac
 authors = ["Rapidata AG <info@rapidata.ai>"]
 license = "Apache-2.0"
 readme = "README.md"
+packages = [
+    { include = "rapidata", from = "." },
+    { include = "openapi/openapi-client", from = "." }
+]
 
 [tool.poetry.dependencies]
 python = "^3.12"
