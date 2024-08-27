@@ -146,16 +146,30 @@ class ValidationSetBuilder:
         self,
         media_path: str,
         question: str,
-        transcription: list[TranscriptionWord],
-        correctWords: list[TranscriptionWord],
+        transcription: list[str],
+        correct_words: list[str],
         strict_grading: bool | None = None,
     ):
+        transcription_words = [
+            TranscriptionWord(word=word, wordIndex=i)
+            for i, word in enumerate(transcription)
+        ]
+
+        correct_transcription_words = []
+        for word in correct_words:
+            if word not in transcription:
+                raise ValueError(f"Correct word '{word}' not found in transcription")
+            correct_transcription_words.append(
+                TranscriptionWord(word=word, wordIndex=transcription.index(word))
+            )
+
         payload = TranscriptionPayload(
-            _t="TranscriptionPayload", title=question, transcription=transcription
+            _t="TranscriptionPayload", title=question, transcription=transcription_words
         )
+
         model_truth = TranscriptionTruth(
             _t="TranscriptionTruth",
-            correctWords=correctWords,
+            correctWords=correct_transcription_words,
             strictGrading=strict_grading,
         )
 
@@ -166,7 +180,7 @@ class ValidationSetBuilder:
                 payload=payload,
                 truths=model_truth,
                 metadata=None,
-                randomCorrectProbability=len(correctWords) / len(transcription),
+                randomCorrectProbability=1 / len(transcription),
             )
         )
 

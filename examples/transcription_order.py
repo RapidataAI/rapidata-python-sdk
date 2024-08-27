@@ -1,3 +1,4 @@
+from examples.setup_client import setup_client
 from openapi_client.models.transcription_word import TranscriptionWord
 from rapidata.rapidata_client.feature_flags.feature_flags import FeatureFlags
 from rapidata.rapidata_client.metadata.transcription_metadata import (
@@ -11,24 +12,14 @@ from rapidata.rapidata_client.workflow.transcription_workflow import (
 
 
 def new_transcription_order(rapi: RapidataClient):
-
-    words = [
-        TranscriptionWord(word="This", wordIndex=0),
-        TranscriptionWord(word="is", wordIndex=1),
-        TranscriptionWord(word="Mr.", wordIndex=2),
-        TranscriptionWord(word="Bean", wordIndex=3),
-    ]
-
-    correct_words = words[2:]
-
     validation_set_id = (
         rapi.new_validation_set(
             name="Example Transcription Validation Set"
         ).add_transcription_rapid(
             media_path="examples/data/waiting.mp4",
             question="Click on 'Mr. Bean'",
-            transcription=words,
-            correctWords=correct_words,
+            transcription=["This", "is", "Mr.", "Bean"],
+            correct_words=["Mr.", "Bean"],
         )
     ).create()
 
@@ -50,3 +41,8 @@ def new_transcription_order(rapi: RapidataClient):
         .validation_set(validation_set_id)
         .create()
     )
+
+
+if __name__ == "__main__":
+    rapi = setup_client()
+    new_transcription_order(rapi)
