@@ -1,6 +1,4 @@
-from openapi_client.api_client import ApiClient
-from openapi_client.configuration import Configuration
-from openapi_client.api.identity_api import IdentityApi
+from rapidata.rapidata_client.order.dataset.validation_set_builder import ValidationSetBuilder
 from rapidata.rapidata_client.order.rapidata_order_builder import RapidataOrderBuilder
 from rapidata.service.openapi_service import OpenAPIService
 
@@ -36,3 +34,13 @@ class RapidataClient:
         :return: A RapidataOrderBuilder instance.
         """
         return RapidataOrderBuilder(openapi_service=self.openapi_service, name=name)
+    
+
+    def new_validation_set(self, name: str) -> ValidationSetBuilder:
+        """
+        Create a new validation set using a ValidationDatasetBuilder instance.
+
+        :param name: The name of the validation set.
+        :return: A ValidationDatasetBuilder instance.
+        """
+        return ValidationSetBuilder(name=name, openapi_service=self.openapi_service)
