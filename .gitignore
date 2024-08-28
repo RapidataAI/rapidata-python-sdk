@@ -166,3 +166,5 @@ cython_debug/
 .env*
 
 customers/
+
+.openapi-generator/

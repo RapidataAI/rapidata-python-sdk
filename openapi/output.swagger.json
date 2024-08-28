@@ -142,6 +142,7 @@
         "summary": "Creates a single datapoint.",
         "description": "If multiple files are uploaded, a multi asset datapoint will be created.",
         "requestBody": {
+          "description": "The image files to upload.",
           "content": {
             "multipart/form-data": {
               "schema": {
@@ -251,6 +252,7 @@
           }
         ],
         "requestBody": {
+          "description": "The image files to create the asset from.",
           "content": {
             "multipart/form-data": {
               "schema": {
@@ -315,6 +317,7 @@
           }
         ],
         "requestBody": {
+          "description": "The image files to upload.",
           "content": {
             "multipart/form-data": {
               "schema": {
@@ -494,6 +497,7 @@
           }
         ],
         "requestBody": {
+          "description": "The csv file to import.",
           "content": {
             "multipart/form-data": {
               "schema": {
@@ -1742,6 +1746,7 @@
         ],
         "summary": "Uploads a CoCo set to the system.",
         "requestBody": {
+          "description": "The name to give the newly uploaded CoCo set.",
           "content": {
             "multipart/form-data": {
               "schema": {
@@ -1971,6 +1976,7 @@
         ],
         "summary": "Adds a new validation rapid to the specified validation set.",
         "requestBody": {
+          "description": "The model containing the information needed to add the validation rapid.",
           "content": {
             "multipart/form-data": {
               "schema": {
@@ -2013,6 +2019,7 @@
         ],
         "summary": "Imports a validation set from a zip file.",
         "requestBody": {
+          "description": "The blueprint for the rapid to be created.",
           "content": {
             "multipart/form-data": {
               "schema": {
@@ -2102,6 +2109,7 @@
         ],
         "summary": "Imports a compare validation set from a zip file.",
         "requestBody": {
+          "description": "The criteria to use for the compare rapid.",
           "content": {
             "multipart/form-data": {
               "schema": {

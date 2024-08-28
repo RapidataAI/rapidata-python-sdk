@@ -1,9 +1,9 @@
 import time
-from openapi_client.models.create_order_model_referee import CreateOrderModelReferee
-from openapi_client.models.create_order_model_workflow import CreateOrderModelWorkflow
+from rapidata.api_client.models.create_order_model_referee import CreateOrderModelReferee
+from rapidata.api_client.models.create_order_model_workflow import CreateOrderModelWorkflow
 from rapidata.rapidata_client.order.dataset.rapidata_dataset import RapidataDataset
 from rapidata.rapidata_client.workflow import Workflow
-from openapi_client.models.create_order_model import CreateOrderModel
+from rapidata.api_client.models.create_order_model import CreateOrderModel
 from rapidata.rapidata_client.referee import Referee
 from rapidata.service.openapi_service import OpenAPIService
 

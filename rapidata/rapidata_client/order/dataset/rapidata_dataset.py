@@ -2,11 +2,11 @@ from itertools import zip_longest
 import os
 from typing import List
 
-from openapi_client.models.datapoint_metadata_model import DatapointMetadataModel
-from openapi_client.models.datapoint_metadata_model_metadata_inner import (
+from rapidata.api_client.models.datapoint_metadata_model import DatapointMetadataModel
+from rapidata.api_client.models.datapoint_metadata_model_metadata_inner import (
     DatapointMetadataModelMetadataInner,
 )
-from openapi_client.models.upload_text_sources_to_dataset_model import (
+from rapidata.api_client.models.upload_text_sources_to_dataset_model import (
     UploadTextSourcesToDatasetModel,
 )
 from rapidata.rapidata_client.metadata.base_metadata import Metadata

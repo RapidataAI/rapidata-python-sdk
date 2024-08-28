@@ -1,3 +1,1 @@
-rm -rf openapi/openapi-client
-
-openapi-generator generate -i openapi/output.swagger.json -g python -o openapi/openapi-client --skip-validate-spec
+openapi-generator generate --global-property modelTests=false,modelDocs=false,apiTests=false,apiDocs=false -i openapi/output.swagger.json -g python -o . -c openapi/config.yaml

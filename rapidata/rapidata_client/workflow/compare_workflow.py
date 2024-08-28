@@ -1,8 +1,8 @@
 from typing import Any
-from openapi_client.models.simple_workflow_model_blueprint import SimpleWorkflowModelBlueprint
+from rapidata.api_client.models.simple_workflow_model_blueprint import SimpleWorkflowModelBlueprint
 from rapidata.rapidata_client.workflow import Workflow
-from openapi_client.models.compare_rapid_blueprint import CompareRapidBlueprint
-from openapi_client.models.simple_workflow_model import SimpleWorkflowModel
+from rapidata.api_client.models.compare_rapid_blueprint import CompareRapidBlueprint
+from rapidata.api_client.models.simple_workflow_model import SimpleWorkflowModel
 
 
 class CompareWorkflow(Workflow):

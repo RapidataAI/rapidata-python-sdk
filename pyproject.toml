@@ -1,14 +1,10 @@
 [tool.poetry]
 name = "rapidata"
-version = "0.1.5"
+version = "0.1.6"
 description = "Rapidata package containing the Rapidata Python Client to interact with the Rapidata Web API in an easy way."
 authors = ["Rapidata AG <info@rapidata.ai>"]
 license = "Apache-2.0"
 readme = "README.md"
-packages = [
-    { include = "rapidata", from = "." },
-    { include = "openapi/openapi-client", from = "." }
-]
 
 [tool.poetry.dependencies]
 python = "^3.12"

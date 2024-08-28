@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any
 
-from openapi_client.models.simple_workflow_model import SimpleWorkflowModel
+from rapidata.api_client.models.simple_workflow_model import SimpleWorkflowModel
 from rapidata.rapidata_client.feature_flags import FeatureFlags
 from rapidata.rapidata_client.referee.base_referee import Referee
 from rapidata.rapidata_client.referee.naive_referee import NaiveReferee

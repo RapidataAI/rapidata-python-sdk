@@ -1,4 +1,4 @@
-from openapi_client.models.naive_referee_model import NaiveRefereeModel
+from rapidata.api_client.models.naive_referee_model import NaiveRefereeModel
 from rapidata.rapidata_client.referee.base_referee import Referee
 
 

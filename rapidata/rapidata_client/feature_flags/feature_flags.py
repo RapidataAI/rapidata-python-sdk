@@ -1,4 +1,4 @@
-from openapi_client.models.feature_flag_model import FeatureFlagModel
+from rapidata.api_client.models.feature_flag_model import FeatureFlagModel
 
 
 class FeatureFlags:
