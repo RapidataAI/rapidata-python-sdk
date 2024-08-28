@@ -7,7 +7,7 @@ from rapidata.rapidata_client.metadata.base_metadata import Metadata
 class TranscriptionMetadata(Metadata):
 
     def __init__(self, transcription: str, identifier: str = "transcription"):
-        super().__init__()
+        super().__init__(identifier=identifier)
         self.identifier = identifier
         self.transcription = transcription
 
