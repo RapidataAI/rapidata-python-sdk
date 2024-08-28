@@ -1,32 +1,32 @@
 from dataclasses import dataclass
 import os
 from typing import Any, Union
-from openapi_client.models.add_validation_rapid_model import AddValidationRapidModel
-from openapi_client.models.add_validation_rapid_model_payload import (
+from rapidata.api_client.models.add_validation_rapid_model import AddValidationRapidModel
+from rapidata.api_client.models.add_validation_rapid_model_payload import (
     AddValidationRapidModelPayload,
 )
-from openapi_client.models.add_validation_rapid_model_truth import (
+from rapidata.api_client.models.add_validation_rapid_model_truth import (
     AddValidationRapidModelTruth,
 )
-from openapi_client.models.attach_category_truth import AttachCategoryTruth
-from openapi_client.models.bounding_box_payload import BoundingBoxPayload
-from openapi_client.models.bounding_box_truth import BoundingBoxTruth
-from openapi_client.models.classify_payload import ClassifyPayload
-from openapi_client.models.compare_payload import ComparePayload
-from openapi_client.models.compare_truth import CompareTruth
-from openapi_client.models.empty_validation_truth import EmptyValidationTruth
-from openapi_client.models.free_text_payload import FreeTextPayload
-from openapi_client.models.line_payload import LinePayload
-from openapi_client.models.line_truth import LineTruth
-from openapi_client.models.locate_box_truth import LocateBoxTruth
-from openapi_client.models.locate_payload import LocatePayload
-from openapi_client.models.named_entity_payload import NamedEntityPayload
-from openapi_client.models.named_entity_truth import NamedEntityTruth
-from openapi_client.models.polygon_payload import PolygonPayload
-from openapi_client.models.polygon_truth import PolygonTruth
-from openapi_client.models.transcription_payload import TranscriptionPayload
-from openapi_client.models.transcription_truth import TranscriptionTruth
-from openapi_client.models.transcription_word import TranscriptionWord
+from rapidata.api_client.models.attach_category_truth import AttachCategoryTruth
+from rapidata.api_client.models.bounding_box_payload import BoundingBoxPayload
+from rapidata.api_client.models.bounding_box_truth import BoundingBoxTruth
+from rapidata.api_client.models.classify_payload import ClassifyPayload
+from rapidata.api_client.models.compare_payload import ComparePayload
+from rapidata.api_client.models.compare_truth import CompareTruth
+from rapidata.api_client.models.empty_validation_truth import EmptyValidationTruth
+from rapidata.api_client.models.free_text_payload import FreeTextPayload
+from rapidata.api_client.models.line_payload import LinePayload
+from rapidata.api_client.models.line_truth import LineTruth
+from rapidata.api_client.models.locate_box_truth import LocateBoxTruth
+from rapidata.api_client.models.locate_payload import LocatePayload
+from rapidata.api_client.models.named_entity_payload import NamedEntityPayload
+from rapidata.api_client.models.named_entity_truth import NamedEntityTruth
+from rapidata.api_client.models.polygon_payload import PolygonPayload
+from rapidata.api_client.models.polygon_truth import PolygonTruth
+from rapidata.api_client.models.transcription_payload import TranscriptionPayload
+from rapidata.api_client.models.transcription_truth import TranscriptionTruth
+from rapidata.api_client.models.transcription_word import TranscriptionWord
 from rapidata.service.openapi_service import OpenAPIService
 
 

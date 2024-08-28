@@ -1,5 +1,5 @@
 from examples.setup_client import setup_client
-from openapi_client.models.transcription_word import TranscriptionWord
+from rapidata.api_client.models.transcription_word import TranscriptionWord
 from rapidata.rapidata_client.feature_flags.feature_flags import FeatureFlags
 from rapidata.rapidata_client.metadata.transcription_metadata import (
     TranscriptionMetadata,

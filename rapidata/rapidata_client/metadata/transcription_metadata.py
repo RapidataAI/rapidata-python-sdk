@@ -1,4 +1,4 @@
-from openapi_client.models.transcription_metadata_input import (
+from rapidata.api_client.models.transcription_metadata_input import (
     TranscriptionMetadataInput,
 )
 from rapidata.rapidata_client.metadata.base_metadata import Metadata
