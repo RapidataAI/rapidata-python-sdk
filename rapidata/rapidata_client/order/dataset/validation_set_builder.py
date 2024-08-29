@@ -119,6 +119,8 @@ class ValidationSetBuilder:
 
     def add_compare_rapid(self, media_paths: list[str], question: str, truth: str):
         payload = ComparePayload(_t="ComparePayload", criteria=question)
+        # take only last part of truth path
+        truth = os.path.basename(truth)
         model_truth = CompareTruth(_t="CompareTruth", winnerId=truth)
 
         if len(media_paths) != 2:
@@ -129,8 +131,6 @@ class ValidationSetBuilder:
             if not os.path.exists(media_path):
                 raise FileNotFoundError(f"File not found: {media_path}")
             
-        # take only last part of truth path
-        truth = os.path.basename(truth)
 
         self._rapid_parts.append(
             ValidatioRapidParts(

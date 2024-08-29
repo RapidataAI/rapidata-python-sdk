@@ -1,17 +1,20 @@
-from rapidata.api_client.api_client import ApiClient
 from rapidata.api_client.models.aggregator_type import AggregatorType
 from rapidata.api_client.models.create_order_model import CreateOrderModel
-from rapidata.api_client.models.create_order_model_referee import CreateOrderModelReferee
-from rapidata.api_client.models.create_order_model_workflow import CreateOrderModelWorkflow
+from rapidata.api_client.models.create_order_model_referee import (
+    CreateOrderModelReferee,
+)
+from rapidata.api_client.models.create_order_model_workflow import (
+    CreateOrderModelWorkflow,
+)
 from rapidata.rapidata_client.feature_flags import FeatureFlags
 from rapidata.rapidata_client.metadata.base_metadata import Metadata
 from rapidata.rapidata_client.order.dataset.rapidata_dataset import RapidataDataset
 from rapidata.rapidata_client.referee.naive_referee import NaiveReferee
+from rapidata.rapidata_client.types import RapidAsset
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 from rapidata.rapidata_client.referee import Referee
 from rapidata.service.openapi_service import OpenAPIService
-
 
 class RapidataOrderBuilder:
     """
@@ -34,8 +37,8 @@ class RapidataOrderBuilder:
         self._openapi_service = openapi_service
         self._workflow: Workflow | None = None
         self._referee: Referee | None = None
-        self._media_paths: list[str] = []
-        self._metadata: list[Metadata] | None = None 
+        self._media_paths: list[RapidAsset] = []
+        self._metadata: list[Metadata] | None = None
         self._aggregator: AggregatorType | None = None
         self._validation_set_id: str | None = None
         self._feature_flags: FeatureFlags | None = None
@@ -61,7 +64,11 @@ class RapidataOrderBuilder:
             userFilters=[],
             referee=CreateOrderModelReferee(self._referee.to_model()),
             validationSetId=self._validation_set_id,
-            featureFlags=self._feature_flags.to_list() if self._feature_flags is not None else None,
+            featureFlags=(
+                self._feature_flags.to_list()
+                if self._feature_flags is not None
+                else None
+            ),
         )
 
         result = self._openapi_service.order_api.order_create_post(
@@ -70,7 +77,11 @@ class RapidataOrderBuilder:
 
         self.order_id = result.order_id
         self._dataset = RapidataDataset(result.dataset_id, self._openapi_service)
-        order = RapidataOrder(order_id=self.order_id, dataset=self._dataset, openapi_service=self._openapi_service)
+        order = RapidataOrder(
+            order_id=self.order_id,
+            dataset=self._dataset,
+            openapi_service=self._openapi_service,
+        )
 
         order.dataset.add_media_from_paths(self._media_paths, self._metadata)
 
@@ -104,7 +115,10 @@ class RapidataOrderBuilder:
         return self
 
     def media(
-        self, media_paths: list[str], metadata: list[Metadata] | None = None):
+        self,
+        media_paths: list[RapidAsset],
+        metadata: list[Metadata] | None = None,
+    ):
         """
         Set the media assets for the order.
 
@@ -157,7 +171,7 @@ class RapidataOrderBuilder:
         """
         self._aggregator = aggregator
         return self
-    
+
     def validation_set(self, validation_set_id: str):
         """
         Set the validation set for the order.
