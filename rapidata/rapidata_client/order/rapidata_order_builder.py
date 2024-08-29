@@ -3,9 +3,13 @@ from rapidata.api_client.models.create_order_model import CreateOrderModel
 from rapidata.api_client.models.create_order_model_referee import (
     CreateOrderModelReferee,
 )
+from rapidata.api_client.models.create_order_model_user_filters_inner import (
+    CreateOrderModelUserFiltersInner,
+)
 from rapidata.api_client.models.create_order_model_workflow import (
     CreateOrderModelWorkflow,
 )
+from rapidata.api_client.models.country_user_filter_model import CountryUserFilterModel
 from rapidata.rapidata_client.feature_flags import FeatureFlags
 from rapidata.rapidata_client.metadata.base_metadata import Metadata
 from rapidata.rapidata_client.dataset.rapidata_dataset import RapidataDataset
@@ -15,6 +19,7 @@ from rapidata.rapidata_client.workflow import Workflow
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 from rapidata.rapidata_client.referee import Referee
 from rapidata.service.openapi_service import OpenAPIService
+
 
 class RapidataOrderBuilder:
     """
@@ -42,6 +47,38 @@ class RapidataOrderBuilder:
         self._aggregator: AggregatorType | None = None
         self._validation_set_id: str | None = None
         self._feature_flags: FeatureFlags | None = None
+        self._country_codes: list[str] | None = None
+
+    def _to_model(self) -> CreateOrderModel:
+        if self._workflow is None:
+            raise ValueError("You must provide a blueprint to create an order.")
+
+        if self._referee is None:
+            print("No referee provided, using default NaiveReferee.")
+            self._referee = NaiveReferee()
+        if self._country_codes is None:
+            country_filter = None
+        else:
+            country_filter = CountryUserFilterModel(
+                _t="CountryFilter", countries=self._country_codes
+            )
+
+        return CreateOrderModel(
+            orderName=self._name,
+            workflow=CreateOrderModelWorkflow(self._workflow.to_model()),
+            userFilters=(
+                [CreateOrderModelUserFiltersInner(country_filter)]
+                if country_filter
+                else []
+            ),
+            referee=CreateOrderModelReferee(self._referee.to_model()),
+            validationSetId=self._validation_set_id,
+            featureFlags=(
+                self._feature_flags.to_list()
+                if self._feature_flags is not None
+                else None
+            ),
+        )
 
     def create(self, submit=True) -> RapidataOrder:
         """
@@ -51,25 +88,7 @@ class RapidataOrderBuilder:
         :rtype: RapidataOrder
         :raises ValueError: If no workflow is provided.
         """
-        if self._workflow is None:
-            raise ValueError("You must provide a blueprint to create an order.")
-
-        if self._referee is None:
-            print("No referee provided, using default NaiveReferee.")
-            self._referee = NaiveReferee()
-
-        order_model = CreateOrderModel(
-            orderName=self._name,
-            workflow=CreateOrderModelWorkflow(self._workflow.to_model()),
-            userFilters=[],
-            referee=CreateOrderModelReferee(self._referee.to_model()),
-            validationSetId=self._validation_set_id,
-            featureFlags=(
-                self._feature_flags.to_list()
-                if self._feature_flags is not None
-                else None
-            ),
-        )
+        order_model = self._to_model()
 
         result = self._openapi_service.order_api.order_create_post(
             create_order_model=order_model
@@ -143,7 +162,7 @@ class RapidataOrderBuilder:
         self._feature_flags = feature_flags
         return self
 
-    def target_country_codes(self, country_codes: list[str]):
+    def country_filter(self, country_codes: list[str]):
         """
         Set the target country codes for the order.
 
@@ -152,12 +171,7 @@ class RapidataOrderBuilder:
         :return: The updated RapidataOrderBuilder instance.
         :rtype: RapidataOrderBuilder
         """
-        if self._workflow is None:
-            raise ValueError(
-                "You must set the workflow before setting the target country codes."
-            )
-
-        self._workflow.target_country_codes(country_codes)
+        self._country_codes = country_codes
         return self
 
     def aggregator(self, aggregator: AggregatorType):
