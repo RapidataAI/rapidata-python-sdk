@@ -14,7 +14,7 @@ def new_classify_order(rapi: RapidataClient):
         .workflow(
             ClassifyWorkflow(
                 question="What is shown in the image?",
-                options=["Fish", "Cat", "Wallabe", "Airplane"],
+                options=["Fish", "Cat", "Wallaby", "Airplane"],
             )
         )
         .media(["examples/data/wallaby.jpg"])

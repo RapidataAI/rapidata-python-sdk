@@ -128,6 +128,9 @@ class ValidationSetBuilder:
         for media_path in media_paths:
             if not os.path.exists(media_path):
                 raise FileNotFoundError(f"File not found: {media_path}")
+            
+        # take only last part of truth path
+        truth = os.path.basename(truth)
 
         self._rapid_parts.append(
             ValidatioRapidParts(

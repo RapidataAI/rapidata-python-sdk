@@ -1,4 +1,6 @@
+from typing import Any
 from rapidata.rapidata_client.referee.base_referee import Referee
+from rapidata.api_client.models.probabilistic_attach_category_referee_config import ProbabilisticAttachCategoryRefereeConfig
 
 
 class ClassifyEarlyStoppingReferee(Referee):
@@ -18,3 +20,10 @@ class ClassifyEarlyStoppingReferee(Referee):
             "threshold": self.threshold,
             "maxVotes": self.max_vote_count,
         }
+    
+    def to_model(self) -> Any:
+        return ProbabilisticAttachCategoryRefereeConfig(
+            _t="ProbabilisticAttachCategoryRefereeConfig",
+            threshold=self.threshold,
+            maxVotes=self.max_vote_count,
+        )

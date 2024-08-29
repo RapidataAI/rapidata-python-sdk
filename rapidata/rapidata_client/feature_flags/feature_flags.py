@@ -7,16 +7,19 @@ class FeatureFlags:
 
     def to_list(self) -> list[FeatureFlagModel]:
         return [FeatureFlagModel(key=name, value=value) for name, value in self._flags.items()]
-    
+
     def alert_on_fast_response(self, value: int):
-        self._flags["alertOnFastResponse"] = str(value)
+        self._flags["aler_on_fast_response"] = str(value)
         return self
-    
-    def disable_translation(self, value: bool):
-        self._flags["disableTranslation"] = str(value)
+
+    def disable_translation(self, value: bool = True):
+        self._flags["disable_translation"] = str(value)
         return self
-    
+
     def free_text_minimum_characters(self, value: int):
-        self._flags["freeTextMinimumCharacters"] = str(value)
+        self._flags["free_text_minimum_characters"] = str(value)
         return self
-    
+
+    def no_shuffle(self, value: bool = True):
+        self._flags["no_shuffle"] = str(value)
+        return self
