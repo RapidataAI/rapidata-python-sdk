@@ -9,7 +9,7 @@ class FeatureFlags:
         return [FeatureFlagModel(key=name, value=value) for name, value in self._flags.items()]
 
     def alert_on_fast_response(self, value: int):
-        self._flags["aler_on_fast_response"] = str(value)
+        self._flags["alert_on_fast_response"] = str(value)
         return self
 
     def disable_translation(self, value: bool = True):
