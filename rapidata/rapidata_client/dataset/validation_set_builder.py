@@ -9,55 +9,18 @@ from rapidata.api_client.models.add_validation_rapid_model_truth import (
     AddValidationRapidModelTruth,
 )
 from rapidata.api_client.models.attach_category_truth import AttachCategoryTruth
-from rapidata.api_client.models.bounding_box_payload import BoundingBoxPayload
-from rapidata.api_client.models.bounding_box_truth import BoundingBoxTruth
 from rapidata.api_client.models.classify_payload import ClassifyPayload
 from rapidata.api_client.models.compare_payload import ComparePayload
 from rapidata.api_client.models.compare_truth import CompareTruth
-from rapidata.api_client.models.empty_validation_truth import EmptyValidationTruth
-from rapidata.api_client.models.free_text_payload import FreeTextPayload
-from rapidata.api_client.models.line_payload import LinePayload
-from rapidata.api_client.models.line_truth import LineTruth
-from rapidata.api_client.models.locate_box_truth import LocateBoxTruth
-from rapidata.api_client.models.locate_payload import LocatePayload
-from rapidata.api_client.models.named_entity_payload import NamedEntityPayload
-from rapidata.api_client.models.named_entity_truth import NamedEntityTruth
-from rapidata.api_client.models.polygon_payload import PolygonPayload
-from rapidata.api_client.models.polygon_truth import PolygonTruth
 from rapidata.api_client.models.transcription_payload import TranscriptionPayload
 from rapidata.api_client.models.transcription_truth import TranscriptionTruth
 from rapidata.api_client.models.transcription_word import TranscriptionWord
+from rapidata.rapidata_client.dataset.rapidata_validation_set import RapidataValidationSet
+from rapidata.rapidata_client.dataset.validation_rapid_parts import ValidatioRapidParts
 from rapidata.service.openapi_service import OpenAPIService
 
 
-@dataclass
-class ValidatioRapidParts:
-    question: str
-    media_paths: str | list[str]
-    payload: Union[
-        BoundingBoxPayload,
-        ClassifyPayload,
-        ComparePayload,
-        FreeTextPayload,
-        LinePayload,
-        LocatePayload,
-        NamedEntityPayload,
-        PolygonPayload,
-        TranscriptionPayload,
-    ]
-    truths: Union[
-        AttachCategoryTruth,
-        BoundingBoxTruth,
-        CompareTruth,
-        EmptyValidationTruth,
-        LineTruth,
-        LocateBoxTruth,
-        NamedEntityTruth,
-        PolygonTruth,
-        TranscriptionTruth,
-    ]
-    metadata: Any
-    randomCorrectProbability: float
+
 
 
 class ValidationSetBuilder:
@@ -79,20 +42,18 @@ class ValidationSetBuilder:
         if self.validation_set_id is None:
             raise ValueError("Failed to create validation set")
 
+        validation_set = RapidataValidationSet(validation_set_id=self.validation_set_id, openapi_service=self.openapi_service)
+
         for rapid_part in self._rapid_parts:
-            model = AddValidationRapidModel(
-                validationSetId=self.validation_set_id,
-                payload=AddValidationRapidModelPayload(rapid_part.payload),
-                truth=AddValidationRapidModelTruth(rapid_part.truths),
-                metadata=rapid_part.metadata or [],
+            validation_set.add_validation_rapid(
+                payload=rapid_part.payload,
+                truths=rapid_part.truths,
+                metadata=rapid_part.metadata,
+                media_paths=rapid_part.media_paths,
                 randomCorrectProbability=rapid_part.randomCorrectProbability,
             )
-
-            self.openapi_service.validation_api.validation_add_validation_rapid_post(
-                model=model, files=rapid_part.media_paths if isinstance(rapid_part.media_paths, list) else [rapid_part.media_paths]  # type: ignore
-            )
-
-        return str(self.validation_set_id)
+            
+        return validation_set
 
     def add_classify_rapid(
         self, media_path: str, question: str, categories: list[str], truths: list[str]

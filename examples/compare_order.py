@@ -10,7 +10,7 @@ def new_compare_order(rapi: RapidataClient):
     concept_path = "examples/data/rapidata_concept_logo.jpg"
 
     # configure validation set
-    validation_set_id = rapi.new_validation_set(
+    validation_set = rapi.new_validation_set(
         name="Example SimpleMatchup Validation Set"
     ).add_compare_rapid(
         media_paths=[logo_path, concept_path],
@@ -35,7 +35,7 @@ def new_compare_order(rapi: RapidataClient):
                 "examples/data/rapidata_logo.png",
             ]]
         )
-        .validation_set(validation_set_id)
+        .validation_set(validation_set.id)
         .feature_flags(FeatureFlags().claire_design().alert_on_fast_response(4))
         .create()
     )

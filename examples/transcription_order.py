@@ -12,7 +12,7 @@ from rapidata.rapidata_client.workflow.transcription_workflow import (
 
 
 def new_transcription_order(rapi: RapidataClient):
-    validation_set_id = (
+    validation_set = (
         rapi.new_validation_set(
             name="Example Transcription Validation Set"
         ).add_transcription_rapid(
@@ -38,7 +38,7 @@ def new_transcription_order(rapi: RapidataClient):
         .referee(NaiveReferee(required_guesses=30))
         .feature_flags(FeatureFlags().alert_on_fast_response(4))
         .media(media_paths=["examples/data/waiting.mp4"], metadata=[transcription])
-        .validation_set(validation_set_id)
+        .validation_set(validation_set.id)
         .create()
     )
 
