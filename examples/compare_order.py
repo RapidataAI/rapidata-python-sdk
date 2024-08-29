@@ -30,12 +30,12 @@ def new_compare_order(rapi: RapidataClient):
         )
         .referee(NaiveReferee(required_guesses=1))
         .media(
-            media_paths=[[ # this is a list of lists of media paths, since each rapid shows two images
+            media_paths=[[ # this is a list of lists of paths, since each rapid shows two images
                 "examples/data/rapidata_concept_logo.jpg",
                 "examples/data/rapidata_logo.png",
             ]]
         )
-        .validation_set(validation_set.id)
+        .validation_set_id(validation_set.id)
         .feature_flags(FeatureFlags().claire_design().alert_on_fast_response(4))
         .create()
     )

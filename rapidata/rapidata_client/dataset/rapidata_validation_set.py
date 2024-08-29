@@ -14,6 +14,7 @@ from rapidata.api_client.models.bounding_box_truth import BoundingBoxTruth
 from rapidata.api_client.models.classify_payload import ClassifyPayload
 from rapidata.api_client.models.compare_payload import ComparePayload
 from rapidata.api_client.models.compare_truth import CompareTruth
+from rapidata.api_client.models.datapoint_metadata_model_metadata_inner import DatapointMetadataModelMetadataInner
 from rapidata.api_client.models.empty_validation_truth import EmptyValidationTruth
 from rapidata.api_client.models.free_text_payload import FreeTextPayload
 from rapidata.api_client.models.line_payload import LinePayload
@@ -27,6 +28,7 @@ from rapidata.api_client.models.polygon_truth import PolygonTruth
 from rapidata.api_client.models.transcription_payload import TranscriptionPayload
 from rapidata.api_client.models.transcription_truth import TranscriptionTruth
 from rapidata.rapidata_client.dataset.validation_rapid_parts import ValidatioRapidParts
+from rapidata.rapidata_client.metadata.base_metadata import Metadata
 from rapidata.rapidata_client.types import RapidAsset
 from rapidata.service.openapi_service import OpenAPIService
 
@@ -61,7 +63,7 @@ class RapidataValidationSet:
             | PolygonTruth
             | TranscriptionTruth
         ),
-        metadata: Any,
+        metadata: list[Metadata],
         media_paths: RapidAsset,
         randomCorrectProbability: float,
     ):
@@ -69,7 +71,7 @@ class RapidataValidationSet:
             validationSetId=self.id,
             payload=AddValidationRapidModelPayload(payload),
             truth=AddValidationRapidModelTruth(truths),
-            metadata=metadata or [],
+            metadata=[DatapointMetadataModelMetadataInner(meta.to_model()) for meta in metadata],
             randomCorrectProbability=randomCorrectProbability,
         )
 

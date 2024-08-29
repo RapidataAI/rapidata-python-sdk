@@ -186,7 +186,7 @@ class RapidataOrderBuilder:
         self._aggregator = aggregator
         return self
 
-    def validation_set(self, validation_set_id: str):
+    def validation_set_id(self, validation_set_id: str):
         """
         Set the validation set for the order.
 
