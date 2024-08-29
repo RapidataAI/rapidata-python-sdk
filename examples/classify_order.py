@@ -3,9 +3,23 @@ from rapidata.rapidata_client.feature_flags import FeatureFlags
 from rapidata.rapidata_client.rapidata_client import RapidataClient
 from rapidata.rapidata_client.workflow import ClassifyWorkflow
 from rapidata.rapidata_client.referee import NaiveReferee
+from rapidata.rapidata_client.metadata.prompt_metadata import PromptMetadata
 
 
 def new_classify_order(rapi: RapidataClient):
+    # Validation set
+    validation_set = (
+        rapi.new_validation_set("Example Validation Set")
+        .add_classify_rapid(
+            media_path="examples/data/wallaby.jpg",
+            question="What kind of animal is this?",
+            categories=["Mammal", "Marsupial", "Bird", "Reptile"],
+            truths=["Marsupial"],
+            metadata=[PromptMetadata(prompt="Hint: It has a pouch")],
+        )
+        .create()
+    )
+
     # Configure order
     order = (
         rapi.new_order(
@@ -20,6 +34,7 @@ def new_classify_order(rapi: RapidataClient):
         .media(["examples/data/wallaby.jpg"])
         .referee(NaiveReferee(required_guesses=15))
         .feature_flags(FeatureFlags().alert_on_fast_response(3))
+        .validation_set_id(validation_set.id)
         .create()
     )
 

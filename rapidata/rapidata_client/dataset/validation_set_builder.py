@@ -1,13 +1,4 @@
-from dataclasses import dataclass
 import os
-from typing import Any, Union
-from rapidata.api_client.models.add_validation_rapid_model import AddValidationRapidModel
-from rapidata.api_client.models.add_validation_rapid_model_payload import (
-    AddValidationRapidModelPayload,
-)
-from rapidata.api_client.models.add_validation_rapid_model_truth import (
-    AddValidationRapidModelTruth,
-)
 from rapidata.api_client.models.attach_category_truth import AttachCategoryTruth
 from rapidata.api_client.models.classify_payload import ClassifyPayload
 from rapidata.api_client.models.compare_payload import ComparePayload
@@ -15,12 +6,12 @@ from rapidata.api_client.models.compare_truth import CompareTruth
 from rapidata.api_client.models.transcription_payload import TranscriptionPayload
 from rapidata.api_client.models.transcription_truth import TranscriptionTruth
 from rapidata.api_client.models.transcription_word import TranscriptionWord
-from rapidata.rapidata_client.dataset.rapidata_validation_set import RapidataValidationSet
+from rapidata.rapidata_client.dataset.rapidata_validation_set import (
+    RapidataValidationSet,
+)
 from rapidata.rapidata_client.dataset.validation_rapid_parts import ValidatioRapidParts
+from rapidata.rapidata_client.metadata.base_metadata import Metadata
 from rapidata.service.openapi_service import OpenAPIService
-
-
-
 
 
 class ValidationSetBuilder:
@@ -42,7 +33,10 @@ class ValidationSetBuilder:
         if self.validation_set_id is None:
             raise ValueError("Failed to create validation set")
 
-        validation_set = RapidataValidationSet(validation_set_id=self.validation_set_id, openapi_service=self.openapi_service)
+        validation_set = RapidataValidationSet(
+            validation_set_id=self.validation_set_id,
+            openapi_service=self.openapi_service,
+        )
 
         for rapid_part in self._rapid_parts:
             validation_set.add_validation_rapid(
@@ -52,14 +46,19 @@ class ValidationSetBuilder:
                 media_paths=rapid_part.media_paths,
                 randomCorrectProbability=rapid_part.randomCorrectProbability,
             )
-            
+
         return validation_set
 
     def add_classify_rapid(
-        self, media_path: str, question: str, categories: list[str], truths: list[str]
+        self,
+        media_path: str,
+        question: str,
+        categories: list[str],
+        truths: list[str],
+        metadata: list[Metadata] = [],
     ):
         payload = ClassifyPayload(
-            _t="ClassifyPaylod", possibleCategories=categories, title=question
+            _t="ClassifyPayload", possibleCategories=categories, title=question
         )
         model_truth = AttachCategoryTruth(
             correctCategories=truths, _t="AttachCategoryTruth"
@@ -71,14 +70,20 @@ class ValidationSetBuilder:
                 media_paths=media_path,
                 payload=payload,
                 truths=model_truth,
-                metadata=None,
+                metadata=metadata,
                 randomCorrectProbability=len(truths) / len(categories),
             )
         )
 
         return self
 
-    def add_compare_rapid(self, media_paths: list[str], question: str, truth: str):
+    def add_compare_rapid(
+        self,
+        media_paths: list[str],
+        question: str,
+        truth: str,
+        metadata: list[Metadata] = [],
+    ):
         payload = ComparePayload(_t="ComparePayload", criteria=question)
         # take only last part of truth path
         truth = os.path.basename(truth)
@@ -91,7 +96,6 @@ class ValidationSetBuilder:
         for media_path in media_paths:
             if not os.path.exists(media_path):
                 raise FileNotFoundError(f"File not found: {media_path}")
-            
 
         self._rapid_parts.append(
             ValidatioRapidParts(
@@ -99,7 +103,7 @@ class ValidationSetBuilder:
                 media_paths=media_paths,
                 payload=payload,
                 truths=model_truth,
-                metadata=None,
+                metadata=metadata,
                 randomCorrectProbability=1 / len(media_paths),
             )
         )
@@ -113,6 +117,7 @@ class ValidationSetBuilder:
         transcription: list[str],
         correct_words: list[str],
         strict_grading: bool | None = None,
+        metadata: list[Metadata] = [],
     ):
         transcription_words = [
             TranscriptionWord(word=word, wordIndex=i)
@@ -143,7 +148,7 @@ class ValidationSetBuilder:
                 media_paths=media_path,
                 payload=payload,
                 truths=model_truth,
-                metadata=None,
+                metadata=metadata,
                 randomCorrectProbability=1 / len(transcription),
             )
         )

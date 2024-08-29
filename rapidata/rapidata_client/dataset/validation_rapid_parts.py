@@ -19,6 +19,7 @@ from rapidata.api_client.models.polygon_payload import PolygonPayload
 from rapidata.api_client.models.polygon_truth import PolygonTruth
 from rapidata.api_client.models.transcription_payload import TranscriptionPayload
 from rapidata.api_client.models.transcription_truth import TranscriptionTruth
+from rapidata.rapidata_client.metadata.base_metadata import Metadata
 from rapidata.rapidata_client.types import RapidAsset
 
 
@@ -48,5 +49,5 @@ class ValidatioRapidParts:
         | PolygonTruth
         | TranscriptionTruth
     )
-    metadata: Any
+    metadata: list[Metadata]
     randomCorrectProbability: float
