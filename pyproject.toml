@@ -11,6 +11,7 @@ python = "^3.12"
 requests = "^2.32.3"
 PyJWT = "^2.9.0"
 pillow = "^10.4.0"
+pydantic = "^2.8.2"
 
 [tool.poetry.group.dev.dependencies]
 python-dotenv = "^1.0.1"
