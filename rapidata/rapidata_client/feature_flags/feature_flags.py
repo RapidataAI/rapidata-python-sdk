@@ -23,3 +23,11 @@ class FeatureFlags:
     def no_shuffle(self, value: bool = True):
         self._flags["no_shuffle"] = str(value)
         return self
+    
+    def claire_design(self, value: bool = True):
+        self._flags["claire"] = str(value)
+        return self
+    
+    def key_value(self, key: str, value: str):
+        self._flags[key] = value
+        return self

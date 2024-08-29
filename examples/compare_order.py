@@ -1,4 +1,5 @@
 from examples.setup_client import setup_client
+from rapidata.rapidata_client.feature_flags.feature_flags import FeatureFlags
 from rapidata.rapidata_client.rapidata_client import RapidataClient
 from rapidata.rapidata_client.referee.naive_referee import NaiveReferee
 from rapidata.rapidata_client.workflow import CompareWorkflow
@@ -35,6 +36,7 @@ def new_compare_order(rapi: RapidataClient):
             ]
         )
         .validation_set(validation_set_id)
+        .feature_flags(FeatureFlags().claire_design().alert_on_fast_response(4))
         .create()
     )
 
