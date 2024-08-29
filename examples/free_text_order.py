@@ -19,7 +19,7 @@ def new_free_text_order(rapi: RapidataClient):
         .feature_flags(
             FeatureFlags().free_text_minimum_characters(15).alert_on_fast_response(5)
         )
-        .target_country_codes(CountryCodes.ENGLISH_SPEAKING)
+        .country_filter(CountryCodes.ENGLISH_SPEAKING)
     ).create()
 
 
