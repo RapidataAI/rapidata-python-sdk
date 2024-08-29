@@ -1,6 +1,10 @@
-from rapidata.rapidata_client.order.dataset.validation_set_builder import ValidationSetBuilder
+from rapidata.rapidata_client.dataset.rapidata_validation_set import (
+    RapidataValidationSet,
+)
+from rapidata.rapidata_client.dataset.validation_set_builder import ValidationSetBuilder
 from rapidata.rapidata_client.order.rapidata_order_builder import RapidataOrderBuilder
 from rapidata.service.openapi_service import OpenAPIService
+
 
 class RapidataClient:
     """
@@ -24,8 +28,6 @@ class RapidataClient:
             client_id=client_id, client_secret=client_secret, endpoint=endpoint
         )
 
-        
-
     def new_order(self, name: str) -> RapidataOrderBuilder:
         """
         Create a new order using a RapidataOrderBuilder instance.
@@ -34,7 +36,6 @@ class RapidataClient:
         :return: A RapidataOrderBuilder instance.
         """
         return RapidataOrderBuilder(openapi_service=self.openapi_service, name=name)
-    
 
     def new_validation_set(self, name: str) -> ValidationSetBuilder:
         """
@@ -44,3 +45,12 @@ class RapidataClient:
         :return: A ValidationDatasetBuilder instance.
         """
         return ValidationSetBuilder(name=name, openapi_service=self.openapi_service)
+
+    def get_validation_set(self, validation_set_id: str) -> RapidataValidationSet:
+        """
+        Get a validation set by ID.
+
+        :param validation_set_id: The ID of the validation set.
+        :return: The ValidationSet instance.
+        """
+        return RapidataValidationSet(validation_set_id, self.openapi_service)

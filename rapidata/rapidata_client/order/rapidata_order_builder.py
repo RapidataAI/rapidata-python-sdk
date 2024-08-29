@@ -8,7 +8,7 @@ from rapidata.api_client.models.create_order_model_workflow import (
 )
 from rapidata.rapidata_client.feature_flags import FeatureFlags
 from rapidata.rapidata_client.metadata.base_metadata import Metadata
-from rapidata.rapidata_client.order.dataset.rapidata_dataset import RapidataDataset
+from rapidata.rapidata_client.dataset.rapidata_dataset import RapidataDataset
 from rapidata.rapidata_client.referee.naive_referee import NaiveReferee
 from rapidata.rapidata_client.types import RapidAsset
 from rapidata.rapidata_client.workflow import Workflow
