@@ -1,10 +1,5 @@
 import time
-from rapidata.api_client.models.create_order_model_referee import CreateOrderModelReferee
-from rapidata.api_client.models.create_order_model_workflow import CreateOrderModelWorkflow
 from rapidata.rapidata_client.dataset.rapidata_dataset import RapidataDataset
-from rapidata.rapidata_client.workflow import Workflow
-from rapidata.api_client.models.create_order_model import CreateOrderModel
-from rapidata.rapidata_client.referee import Referee
 from rapidata.service.openapi_service import OpenAPIService
 
 
@@ -29,14 +24,6 @@ class RapidataOrder:
         self.openapi_service = openapi_service
         self.order_id = order_id
         self._dataset = dataset
-
-    def create(self):
-        """
-        Creates the order using the provided name and workflow.
-
-        :return: The created RapidataOrder instance.
-        :rtype: RapidataOrder
-        """
 
     def submit(self):
         """

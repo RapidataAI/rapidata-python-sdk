@@ -3,6 +3,9 @@ from rapidata.api_client.models.create_order_model import CreateOrderModel
 from rapidata.api_client.models.create_order_model_referee import (
     CreateOrderModelReferee,
 )
+from rapidata.api_client.models.create_order_model_selections_inner import (
+    CreateOrderModelSelectionsInner,
+)
 from rapidata.api_client.models.create_order_model_user_filters_inner import (
     CreateOrderModelUserFiltersInner,
 )
@@ -14,6 +17,8 @@ from rapidata.rapidata_client.feature_flags import FeatureFlags
 from rapidata.rapidata_client.metadata.base_metadata import Metadata
 from rapidata.rapidata_client.dataset.rapidata_dataset import RapidataDataset
 from rapidata.rapidata_client.referee.naive_referee import NaiveReferee
+from rapidata.rapidata_client.selection.base_selection import Selection
+from rapidata.rapidata_client.selection.labeling_selection import LabelingSelection
 from rapidata.rapidata_client.types import RapidAsset
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
@@ -48,6 +53,7 @@ class RapidataOrderBuilder:
         self._validation_set_id: str | None = None
         self._feature_flags: FeatureFlags | None = None
         self._country_codes: list[str] | None = None
+        self._selections: list[Selection] = []
 
     def _to_model(self) -> CreateOrderModel:
         if self._workflow is None:
@@ -78,6 +84,10 @@ class RapidataOrderBuilder:
                 if self._feature_flags is not None
                 else None
             ),
+            selections=[
+                CreateOrderModelSelectionsInner(selection.to_model())
+                for selection in self._selections
+            ],
         )
 
     def create(self, submit=True) -> RapidataOrder:
@@ -197,3 +207,13 @@ class RapidataOrderBuilder:
         """
         self._validation_set_id = validation_set_id
         return self
+
+    def rapids_per_bag(self, amount: int):
+        """
+        Defines the number of tasks a user sees in a single session. The default is 3.
+
+        :param amount: The number of tasks a user sees in a single session.
+        :type amount: int
+        :return: The updated RapidataOrderBuilder instance.
+        """
+        self._selections.append(LabelingSelection(amount))
