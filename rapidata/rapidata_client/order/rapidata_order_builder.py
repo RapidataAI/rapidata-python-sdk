@@ -217,3 +217,4 @@ class RapidataOrderBuilder:
         :return: The updated RapidataOrderBuilder instance.
         """
         self._selections.append(LabelingSelection(amount))
+        return self
