@@ -53,6 +53,7 @@ class RapidataOrderBuilder:
         self._feature_flags: FeatureFlags | None = None
         self._country_codes: list[str] | None = None
         self._selections: list[Selection] = []
+        self._rapids_per_bag: int = 2
 
     def _to_model(self) -> CreateOrderModel:
         if self._workflow is None:
@@ -219,4 +220,4 @@ class RapidataOrderBuilder:
 
     def selections(self, selections: list[Selection]):
         self._selections = selections
-        return self
+        return

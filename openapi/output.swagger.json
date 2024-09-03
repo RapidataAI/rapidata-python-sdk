@@ -2177,6 +2177,180 @@
           }
         }
       }
+    },
+    "/Rapid/AddUserGuess": {
+      "post": {
+        "tags": [
+          "Rapid"
+        ],
+        "summary": "Submits a user guess for a Rapid.",
+        "requestBody": {
+          "description": "The model containing the user guess.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RapidResultModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RapidResultModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RapidResultModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Rapid/SkipUserGuess": {
+      "post": {
+        "tags": [
+          "Rapid"
+        ],
+        "summary": "Skips a Rapid for the user.",
+        "requestBody": {
+          "description": "The model containing the Rapid to skip.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RapidSkippedModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RapidSkippedModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RapidSkippedModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Rapid/CreateDemographicRapid": {
+      "post": {
+        "tags": [
+          "Rapid"
+        ],
+        "summary": "Creates a new Demographic Rapid.",
+        "requestBody": {
+          "description": "The model containing the demographic rapid.",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "model": {
+                    "$ref": "#/components/schemas/CreateDemographicRapidModel"
+                  },
+                  "file": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  }
+                }
+              },
+              "encoding": {
+                "model": {
+                  "style": "form"
+                },
+                "file": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Rapid/ValidateCurrentRapidBag": {
+      "get": {
+        "tags": [
+          "Rapid"
+        ],
+        "summary": "Validates that the rapids associated with the current user are active.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Rapid/QueryValidationRapids": {
+      "get": {
+        "tags": [
+          "Rapid"
+        ],
+        "summary": "Queries the validation rapids for a specific validation set.",
+        "parameters": [
+          {
+            "name": "validationSetId",
+            "in": "query",
+            "description": "The validation set to query.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "model",
+            "in": "query",
+            "description": "The query model.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryValidationRapidsResultPagedResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryValidationRapidsResultPagedResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryValidationRapidsResultPagedResult"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -6768,6 +6942,617 @@
             "type": "integer",
             "format": "int32",
             "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AttachCategoryResult": {
+        "title": "AttachCategoryResult",
+        "required": [
+          "_t",
+          "category",
+          "rapidId"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "AttachCategoryResult"
+            ],
+            "type": "string",
+            "description": "Discriminator value for AttachCategoryResult",
+            "default": "AttachCategoryResult",
+            "example": "AttachCategoryResult"
+          },
+          "category": {
+            "type": "string"
+          },
+          "rapidId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "BoundingBoxResult": {
+        "title": "BoundingBoxResult",
+        "required": [
+          "_t",
+          "boundingBoxes",
+          "rapidId"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "BoundingBoxResult"
+            ],
+            "type": "string",
+            "description": "Discriminator value for BoundingBoxResult",
+            "default": "BoundingBoxResult",
+            "example": "BoundingBoxResult"
+          },
+          "boundingBoxes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BoxShape"
+            }
+          },
+          "rapidId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CompareResult": {
+        "title": "CompareResult",
+        "required": [
+          "_t",
+          "rapidId",
+          "winnerId"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "CompareResult"
+            ],
+            "type": "string",
+            "description": "Discriminator value for CompareResult",
+            "default": "CompareResult",
+            "example": "CompareResult"
+          },
+          "winnerId": {
+            "type": "string"
+          },
+          "rapidId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Coordinate": {
+        "title": "Coordinate",
+        "required": [
+          "_t",
+          "x",
+          "y"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "Coordinate"
+            ],
+            "type": "string",
+            "description": "Discriminator value for Coordinate",
+            "default": "Coordinate",
+            "example": "Coordinate"
+          },
+          "x": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "y": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateDemographicRapidModel": {
+        "required": [
+          "identifier",
+          "payload"
+        ],
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string",
+            "description": "The identifier of the demographic classification."
+          },
+          "payload": {
+            "$ref": "#/components/schemas/ClassifyPayload"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for creating a demographic rapid."
+      },
+      "FreeTextResult": {
+        "title": "FreeTextResult",
+        "required": [
+          "_t",
+          "answer",
+          "rapidId"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "FreeTextResult"
+            ],
+            "type": "string",
+            "description": "Discriminator value for FreeTextResult",
+            "default": "FreeTextResult",
+            "example": "FreeTextResult"
+          },
+          "answer": {
+            "type": "string"
+          },
+          "rapidId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Line": {
+        "title": "Line",
+        "required": [
+          "_t",
+          "points",
+          "size"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "Line"
+            ],
+            "type": "string",
+            "description": "Discriminator value for Line",
+            "default": "Line",
+            "example": "Line"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "points": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LinePoint"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "LinePoint": {
+        "title": "LinePoint",
+        "required": [
+          "_t",
+          "x",
+          "y"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "LinePoint"
+            ],
+            "type": "string",
+            "description": "Discriminator value for LinePoint",
+            "default": "LinePoint",
+            "example": "LinePoint"
+          },
+          "x": {
+            "type": "number",
+            "format": "double"
+          },
+          "y": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LineResult": {
+        "title": "LineResult",
+        "required": [
+          "_t",
+          "lines",
+          "rapidId"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "LineResult"
+            ],
+            "type": "string",
+            "description": "Discriminator value for LineResult",
+            "default": "LineResult",
+            "example": "LineResult"
+          },
+          "lines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Line"
+            }
+          },
+          "rapidId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LocateCoordinate": {
+        "title": "LocateCoordinate",
+        "required": [
+          "_t",
+          "x",
+          "y"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "LocateCoordinate"
+            ],
+            "type": "string",
+            "description": "Discriminator value for LocateCoordinate",
+            "default": "LocateCoordinate",
+            "example": "LocateCoordinate"
+          },
+          "x": {
+            "type": "number",
+            "format": "double"
+          },
+          "y": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LocateResult": {
+        "title": "LocateResult",
+        "required": [
+          "_t",
+          "coordinates",
+          "rapidId"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "LocateResult"
+            ],
+            "type": "string",
+            "description": "Discriminator value for LocateResult",
+            "default": "LocateResult",
+            "example": "LocateResult"
+          },
+          "coordinates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocateCoordinate"
+            }
+          },
+          "rapidId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "NamedEntityResult": {
+        "title": "NamedEntityResult",
+        "required": [
+          "_t",
+          "classifications",
+          "rapidId"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "NamedEntityResult"
+            ],
+            "type": "string",
+            "description": "Discriminator value for NamedEntityResult",
+            "default": "NamedEntityResult",
+            "example": "NamedEntityResult"
+          },
+          "classifications": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NamedClassification"
+            }
+          },
+          "rapidId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PolygonResult": {
+        "title": "PolygonResult",
+        "required": [
+          "_t",
+          "rapidId",
+          "shapes"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "PolygonResult"
+            ],
+            "type": "string",
+            "description": "Discriminator value for PolygonResult",
+            "default": "PolygonResult",
+            "example": "PolygonResult"
+          },
+          "shapes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Shape"
+            }
+          },
+          "rapidId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "QueryModel": {
+        "type": "object",
+        "properties": {
+          "pageInfo": {
+            "$ref": "#/components/schemas/PageInfo"
+          },
+          "filter": {
+            "$ref": "#/components/schemas/RootFilter"
+          },
+          "sortCriteria": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SortCriterion"
+            },
+            "description": "The sort criteria to apply to the query.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for a query."
+      },
+      "QueryValidationRapidsResult": {
+        "required": [
+          "asset",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "asset": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/FileAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/MultiAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/NullAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/TextAssetModel"
+              }
+            ],
+            "nullable": true,
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "QueryValidationRapidsResultPagedResult": {
+        "required": [
+          "items",
+          "page",
+          "pageSize",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryValidationRapidsResult"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RapidResultModel": {
+        "required": [
+          "result",
+          "sessionIndex"
+        ],
+        "type": "object",
+        "properties": {
+          "sessionIndex": {
+            "type": "integer",
+            "description": "The index of the session when the result was submitted.",
+            "format": "int32"
+          },
+          "result": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranscriptionResult"
+              },
+              {
+                "$ref": "#/components/schemas/PolygonResult"
+              },
+              {
+                "$ref": "#/components/schemas/NamedEntityResult"
+              },
+              {
+                "$ref": "#/components/schemas/LocateResult"
+              },
+              {
+                "$ref": "#/components/schemas/LineResult"
+              },
+              {
+                "$ref": "#/components/schemas/FreeTextResult"
+              },
+              {
+                "$ref": "#/components/schemas/CompareResult"
+              },
+              {
+                "$ref": "#/components/schemas/SkipResult"
+              },
+              {
+                "$ref": "#/components/schemas/AttachCategoryResult"
+              },
+              {
+                "$ref": "#/components/schemas/BoundingBoxResult"
+              }
+            ],
+            "description": "The guess that was submitted.",
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for a Rapid result."
+      },
+      "RapidSkippedModel": {
+        "required": [
+          "rapidId",
+          "sessionIndex"
+        ],
+        "type": "object",
+        "properties": {
+          "rapidId": {
+            "type": "string",
+            "description": "The ID of the Rapid that was skipped."
+          },
+          "sessionIndex": {
+            "type": "integer",
+            "description": "The index of the session when the Rapid was skipped.",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for a Rapid skipped."
+      },
+      "Shape": {
+        "title": "Shape",
+        "required": [
+          "_t",
+          "edges"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "Shape"
+            ],
+            "type": "string",
+            "description": "Discriminator value for Shape",
+            "default": "Shape",
+            "example": "Shape"
+          },
+          "edges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Coordinate"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "SkipResult": {
+        "title": "SkipResult",
+        "required": [
+          "_t",
+          "rapidId"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "SkipResult"
+            ],
+            "type": "string",
+            "description": "Discriminator value for SkipResult",
+            "default": "SkipResult",
+            "example": "SkipResult"
+          },
+          "rapidId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TranscriptionResult": {
+        "title": "TranscriptionResult",
+        "required": [
+          "_t",
+          "rapidId",
+          "selectedWords"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "TranscriptionResult"
+            ],
+            "type": "string",
+            "description": "Discriminator value for TranscriptionResult",
+            "default": "TranscriptionResult",
+            "example": "TranscriptionResult"
+          },
+          "selectedWords": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TranscriptionWord"
+            }
+          },
+          "rapidId": {
+            "type": "string"
           }
         },
         "additionalProperties": false
