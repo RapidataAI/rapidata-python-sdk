@@ -220,3 +220,4 @@ class RapidataOrderBuilder:
 
     def selections(self, selections: list[Selection]):
         self._selections = selections
+        return self
