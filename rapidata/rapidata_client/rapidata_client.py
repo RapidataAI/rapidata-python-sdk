@@ -3,6 +3,7 @@ from rapidata.rapidata_client.dataset.rapidata_validation_set import (
 )
 from rapidata.rapidata_client.dataset.validation_set_builder import ValidationSetBuilder
 from rapidata.rapidata_client.order.rapidata_order_builder import RapidataOrderBuilder
+from rapidata.rapidata_client.utils.utils import Utils
 from rapidata.service.openapi_service import OpenAPIService
 
 
@@ -54,3 +55,7 @@ class RapidataClient:
         :return: The ValidationSet instance.
         """
         return RapidataValidationSet(validation_set_id, self.openapi_service)
+
+    @property
+    def utils(self):
+        return Utils(openapi_service=self.openapi_service)

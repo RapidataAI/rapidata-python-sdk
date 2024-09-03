@@ -11,6 +11,9 @@
     },
     {
       "inputFile": "./spec/validation.json"
+    },
+    {
+      "inputFile": "./spec/rapid.json"
     }
   ],
   "output": "./output.swagger.json"
