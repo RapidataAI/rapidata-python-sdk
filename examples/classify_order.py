@@ -1,3 +1,7 @@
+'''
+Classify order with a validation set
+'''
+
 from examples.setup_client import setup_client
 from rapidata.rapidata_client.feature_flags import FeatureFlags
 from rapidata.rapidata_client.rapidata_client import RapidataClient

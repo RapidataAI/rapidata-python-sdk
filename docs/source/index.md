@@ -9,7 +9,7 @@ Welcome! The Rapidata Python Client is a convenient way to interact with the Rap
 :maxdepth: 1
 
 quickstart
-examples/index
+gallery_auto_examples/index
 development
 
 ```

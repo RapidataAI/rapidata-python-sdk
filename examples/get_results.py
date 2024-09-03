@@ -1,3 +1,7 @@
+'''
+Get results from an order
+'''
+
 from examples.compare_order import new_compare_order
 from examples.setup_client import setup_client
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder

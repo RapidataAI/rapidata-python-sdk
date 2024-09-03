@@ -24,7 +24,7 @@ release = "0.1.0"
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ["autoapi.extension", "sphinx.ext.viewcode", "myst_parser"]
+extensions = ["autoapi.extension", "sphinx.ext.viewcode", "myst_parser", "sphinx_gallery.gen_gallery"]
 
 templates_path = ["_templates"]
 exclude_patterns = []
@@ -55,6 +55,13 @@ myst_url_schemes = ["http", "https", "mailto"]
 autoapi_dirs = ['../../rapidata']
 autoapi_type = "python"
 # autoapi_keep_files = True
+
+# -- Options for Sphinx Gallery ----------------------------------------------
+
+sphinx_gallery_conf = {
+    "examples_dirs": "../../examples",  # path to your example scripts
+    "gallery_dirs": "gallery_auto_examples",  # path to where to save gallery generated output
+}
 
 
 # -- Options for HTML output -------------------------------------------------
