@@ -29,10 +29,10 @@ class OrderQueryGet200Response(BaseModel):
     """
     OrderQueryGet200Response
     """
-    # data type: CustomerOrderModelPagedResult
-    oneof_schema_1_validator: Optional[CustomerOrderModelPagedResult] = None
     # data type: AdminOrderModelPagedResult
-    oneof_schema_2_validator: Optional[AdminOrderModelPagedResult] = None
+    oneof_schema_1_validator: Optional[AdminOrderModelPagedResult] = None
+    # data type: CustomerOrderModelPagedResult
+    oneof_schema_2_validator: Optional[CustomerOrderModelPagedResult] = None
     actual_instance: Optional[Union[AdminOrderModelPagedResult, CustomerOrderModelPagedResult]] = None
     one_of_schemas: Set[str] = { "AdminOrderModelPagedResult", "CustomerOrderModelPagedResult" }
 
@@ -57,14 +57,14 @@ class OrderQueryGet200Response(BaseModel):
         instance = OrderQueryGet200Response.model_construct()
         error_messages = []
         match = 0
-        # validate data type: CustomerOrderModelPagedResult
-        if not isinstance(v, CustomerOrderModelPagedResult):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `CustomerOrderModelPagedResult`")
-        else:
-            match += 1
         # validate data type: AdminOrderModelPagedResult
         if not isinstance(v, AdminOrderModelPagedResult):
             error_messages.append(f"Error! Input type `{type(v)}` is not `AdminOrderModelPagedResult`")
+        else:
+            match += 1
+        # validate data type: CustomerOrderModelPagedResult
+        if not isinstance(v, CustomerOrderModelPagedResult):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `CustomerOrderModelPagedResult`")
         else:
             match += 1
         if match > 1:
@@ -87,15 +87,15 @@ class OrderQueryGet200Response(BaseModel):
         error_messages = []
         match = 0
 
-        # deserialize data into CustomerOrderModelPagedResult
-        try:
-            instance.actual_instance = CustomerOrderModelPagedResult.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
         # deserialize data into AdminOrderModelPagedResult
         try:
             instance.actual_instance = AdminOrderModelPagedResult.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into CustomerOrderModelPagedResult
+        try:
+            instance.actual_instance = CustomerOrderModelPagedResult.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))

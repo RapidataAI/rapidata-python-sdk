@@ -29,7 +29,6 @@ from rapidata.api_client.models.transcription_payload import TranscriptionPayloa
 from rapidata.api_client.models.transcription_truth import TranscriptionTruth
 from rapidata.rapidata_client.dataset.validation_rapid_parts import ValidatioRapidParts
 from rapidata.rapidata_client.metadata.base_metadata import Metadata
-from rapidata.rapidata_client.types import RapidAsset
 from rapidata.service.openapi_service import OpenAPIService
 
 
@@ -64,7 +63,7 @@ class RapidataValidationSet:
             | TranscriptionTruth
         ),
         metadata: list[Metadata],
-        media_paths: RapidAsset,
+        media_paths: str | list[str],
         randomCorrectProbability: float,
     ):
         model = AddValidationRapidModel(

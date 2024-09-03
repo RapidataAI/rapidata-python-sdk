@@ -20,13 +20,12 @@ from rapidata.api_client.models.polygon_truth import PolygonTruth
 from rapidata.api_client.models.transcription_payload import TranscriptionPayload
 from rapidata.api_client.models.transcription_truth import TranscriptionTruth
 from rapidata.rapidata_client.metadata.base_metadata import Metadata
-from rapidata.rapidata_client.types import RapidAsset
 
 
 @dataclass
 class ValidatioRapidParts:
     question: str
-    media_paths: RapidAsset
+    media_paths: str | list[str]
     payload: (
         BoundingBoxPayload
         | ClassifyPayload

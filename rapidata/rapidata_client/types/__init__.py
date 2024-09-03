@@ -1,1 +1,0 @@
-type RapidAsset = str | list[str]

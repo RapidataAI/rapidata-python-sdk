@@ -9,7 +9,6 @@ from rapidata.api_client.models.upload_text_sources_to_dataset_model import (
     UploadTextSourcesToDatasetModel,
 )
 from rapidata.rapidata_client.metadata.base_metadata import Metadata
-from rapidata.rapidata_client.types import RapidAsset
 from rapidata.service import LocalFileService
 from rapidata.service.openapi_service import OpenAPIService
 
@@ -31,7 +30,7 @@ class RapidataDataset:
 
     def add_media_from_paths(
         self,
-        image_paths: list[RapidAsset],
+        image_paths: list[str | list[str]],
         metadata: list[Metadata] | None = None,
     ):
         if metadata is not None and len(metadata) != len(image_paths):

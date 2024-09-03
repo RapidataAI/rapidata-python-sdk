@@ -40,16 +40,6 @@ class LocationMetadata(BaseModel):
             raise ValueError("must be one of enum values ('LocationMetadata')")
         return value
 
-    @field_validator('visibilities')
-    def visibilities_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in set(['None', 'Users', 'Customers', 'Admins', 'All']):
-            raise ValueError("must be one of enum values ('None', 'Users', 'Customers', 'Admins', 'All')")
-        return value
-
     model_config = ConfigDict(
         populate_by_name=True,
         validate_assignment=True,

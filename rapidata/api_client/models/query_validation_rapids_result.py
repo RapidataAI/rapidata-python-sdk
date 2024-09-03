@@ -17,27 +17,19 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.query_validation_rapids_result_asset import QueryValidationRapidsResultAsset
 from typing import Optional, Set
 from typing_extensions import Self
 
-class OriginalFilenameMetadata(BaseModel):
+class QueryValidationRapidsResult(BaseModel):
     """
-    OriginalFilenameMetadata
+    QueryValidationRapidsResult
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for OriginalFilenameMetadata", alias="_t")
-    original_filename: StrictStr = Field(alias="originalFilename")
-    visibilities: Optional[StrictStr] = None
-    identifier: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["_t", "originalFilename", "visibilities", "identifier"]
-
-    @field_validator('t')
-    def t_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['OriginalFilenameMetadata']):
-            raise ValueError("must be one of enum values ('OriginalFilenameMetadata')")
-        return value
+    type: StrictStr
+    asset: Optional[QueryValidationRapidsResultAsset]
+    __properties: ClassVar[List[str]] = ["type", "asset"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -57,7 +49,7 @@ class OriginalFilenameMetadata(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of OriginalFilenameMetadata from a JSON string"""
+        """Create an instance of QueryValidationRapidsResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -78,11 +70,19 @@ class OriginalFilenameMetadata(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of asset
+        if self.asset:
+            _dict['asset'] = self.asset.to_dict()
+        # set to None if asset (nullable) is None
+        # and model_fields_set contains the field
+        if self.asset is None and "asset" in self.model_fields_set:
+            _dict['asset'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of OriginalFilenameMetadata from a dict"""
+        """Create an instance of QueryValidationRapidsResult from a dict"""
         if obj is None:
             return None
 
@@ -90,10 +90,8 @@ class OriginalFilenameMetadata(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'OriginalFilenameMetadata',
-            "originalFilename": obj.get("originalFilename"),
-            "visibilities": obj.get("visibilities"),
-            "identifier": obj.get("identifier")
+            "type": obj.get("type"),
+            "asset": QueryValidationRapidsResultAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None
         })
         return _obj
 

@@ -18,25 +18,24 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.coordinate import Coordinate
 from typing import Optional, Set
 from typing_extensions import Self
 
-class OriginalFilenameMetadata(BaseModel):
+class Shape(BaseModel):
     """
-    OriginalFilenameMetadata
+    Shape
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for OriginalFilenameMetadata", alias="_t")
-    original_filename: StrictStr = Field(alias="originalFilename")
-    visibilities: Optional[StrictStr] = None
-    identifier: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["_t", "originalFilename", "visibilities", "identifier"]
+    t: StrictStr = Field(description="Discriminator value for Shape", alias="_t")
+    edges: List[Coordinate]
+    __properties: ClassVar[List[str]] = ["_t", "edges"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['OriginalFilenameMetadata']):
-            raise ValueError("must be one of enum values ('OriginalFilenameMetadata')")
+        if value not in set(['Shape']):
+            raise ValueError("must be one of enum values ('Shape')")
         return value
 
     model_config = ConfigDict(
@@ -57,7 +56,7 @@ class OriginalFilenameMetadata(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of OriginalFilenameMetadata from a JSON string"""
+        """Create an instance of Shape from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -78,11 +77,18 @@ class OriginalFilenameMetadata(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in edges (list)
+        _items = []
+        if self.edges:
+            for _item_edges in self.edges:
+                if _item_edges:
+                    _items.append(_item_edges.to_dict())
+            _dict['edges'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of OriginalFilenameMetadata from a dict"""
+        """Create an instance of Shape from a dict"""
         if obj is None:
             return None
 
@@ -90,10 +96,8 @@ class OriginalFilenameMetadata(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'OriginalFilenameMetadata',
-            "originalFilename": obj.get("originalFilename"),
-            "visibilities": obj.get("visibilities"),
-            "identifier": obj.get("identifier")
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'Shape',
+            "edges": [Coordinate.from_dict(_item) for _item in obj["edges"]] if obj.get("edges") is not None else None
         })
         return _obj
 

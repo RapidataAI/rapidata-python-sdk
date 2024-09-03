@@ -18,25 +18,25 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.locate_coordinate import LocateCoordinate
 from typing import Optional, Set
 from typing_extensions import Self
 
-class OriginalFilenameMetadata(BaseModel):
+class LocateResult(BaseModel):
     """
-    OriginalFilenameMetadata
+    LocateResult
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for OriginalFilenameMetadata", alias="_t")
-    original_filename: StrictStr = Field(alias="originalFilename")
-    visibilities: Optional[StrictStr] = None
-    identifier: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["_t", "originalFilename", "visibilities", "identifier"]
+    t: StrictStr = Field(description="Discriminator value for LocateResult", alias="_t")
+    coordinates: List[LocateCoordinate]
+    rapid_id: StrictStr = Field(alias="rapidId")
+    __properties: ClassVar[List[str]] = ["_t", "coordinates", "rapidId"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['OriginalFilenameMetadata']):
-            raise ValueError("must be one of enum values ('OriginalFilenameMetadata')")
+        if value not in set(['LocateResult']):
+            raise ValueError("must be one of enum values ('LocateResult')")
         return value
 
     model_config = ConfigDict(
@@ -57,7 +57,7 @@ class OriginalFilenameMetadata(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of OriginalFilenameMetadata from a JSON string"""
+        """Create an instance of LocateResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -78,11 +78,18 @@ class OriginalFilenameMetadata(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in coordinates (list)
+        _items = []
+        if self.coordinates:
+            for _item_coordinates in self.coordinates:
+                if _item_coordinates:
+                    _items.append(_item_coordinates.to_dict())
+            _dict['coordinates'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of OriginalFilenameMetadata from a dict"""
+        """Create an instance of LocateResult from a dict"""
         if obj is None:
             return None
 
@@ -90,10 +97,9 @@ class OriginalFilenameMetadata(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'OriginalFilenameMetadata',
-            "originalFilename": obj.get("originalFilename"),
-            "visibilities": obj.get("visibilities"),
-            "identifier": obj.get("identifier")
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'LocateResult',
+            "coordinates": [LocateCoordinate.from_dict(_item) for _item in obj["coordinates"]] if obj.get("coordinates") is not None else None,
+            "rapidId": obj.get("rapidId")
         })
         return _obj
 

@@ -569,10 +569,10 @@
                 "schema": {
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/CustomerOrderModelPagedResult"
+                      "$ref": "#/components/schemas/AdminOrderModelPagedResult"
                     },
                     {
-                      "$ref": "#/components/schemas/AdminOrderModelPagedResult"
+                      "$ref": "#/components/schemas/CustomerOrderModelPagedResult"
                     }
                   ]
                 }
@@ -2007,7 +2007,24 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddValidationRapidResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddValidationRapidResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddValidationRapidResult"
+                }
+              }
+            }
           }
         }
       }
@@ -2197,13 +2214,6 @@
             "type": "string"
           },
           "visibilities": {
-            "enum": [
-              "None",
-              "Users",
-              "Customers",
-              "Admins",
-              "All"
-            ],
             "type": "string"
           },
           "identifier": {
@@ -2237,13 +2247,6 @@
             "type": "string"
           },
           "visibilities": {
-            "enum": [
-              "None",
-              "Users",
-              "Customers",
-              "Admins",
-              "All"
-            ],
             "type": "string"
           }
         },
@@ -2571,13 +2574,6 @@
             "type": "string"
           },
           "visibilities": {
-            "enum": [
-              "None",
-              "Users",
-              "Customers",
-              "Admins",
-              "All"
-            ],
             "type": "string"
           }
         },
@@ -2622,13 +2618,6 @@
             "format": "float"
           },
           "visibilities": {
-            "enum": [
-              "None",
-              "Users",
-              "Customers",
-              "Admins",
-              "All"
-            ],
             "type": "string"
           },
           "identifier": {
@@ -2936,13 +2925,6 @@
             "type": "string"
           },
           "visibilities": {
-            "enum": [
-              "None",
-              "Users",
-              "Customers",
-              "Admins",
-              "All"
-            ],
             "type": "string"
           },
           "identifier": {
@@ -3002,13 +2984,6 @@
             "type": "string"
           },
           "visibilities": {
-            "enum": [
-              "None",
-              "Users",
-              "Customers",
-              "Admins",
-              "All"
-            ],
             "type": "string"
           }
         },
@@ -3214,13 +3189,6 @@
             "type": "string"
           },
           "visibilities": {
-            "enum": [
-              "None",
-              "Users",
-              "Customers",
-              "Admins",
-              "All"
-            ],
             "type": "string"
           }
         },
@@ -3252,13 +3220,6 @@
             "type": "string"
           },
           "visibilities": {
-            "enum": [
-              "None",
-              "Users",
-              "Customers",
-              "Admins",
-              "All"
-            ],
             "type": "string"
           }
         },
@@ -4156,6 +4117,9 @@
             "oneOf": [
               {
                 "$ref": "#/components/schemas/NaiveRefereeModel"
+              },
+              {
+                "$ref": "#/components/schemas/EarlyStoppingRefereeModel"
               }
             ],
             "description": "The referee is used to determine how many votes will be collected.",
@@ -4485,6 +4449,38 @@
         },
         "additionalProperties": false,
         "description": "The demographic selection can be used to show a specific demographic rapid to the users."
+      },
+      "EarlyStoppingRefereeModel": {
+        "title": "EarlyStoppingReferee",
+        "required": [
+          "_t",
+          "maxVotes",
+          "threshold"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "EarlyStoppingReferee"
+            ],
+            "type": "string",
+            "description": "Discriminator value for EarlyStoppingReferee",
+            "default": "EarlyStoppingReferee",
+            "example": "EarlyStoppingReferee"
+          },
+          "maxVotes": {
+            "type": "integer",
+            "description": "The upper limit of votes that will be collected for each task.",
+            "format": "int32"
+          },
+          "threshold": {
+            "type": "number",
+            "description": "The threshold that needs to be reached to stop collecting votes.",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The Early Stopping Referee can currently only be used for classification tasks and will stop once a certain threshold is reached or the maximum number of votes is collected."
       },
       "FeatureFlag": {
         "required": [
@@ -6001,6 +5997,18 @@
         },
         "additionalProperties": false,
         "description": "The model for adding a validation rapid."
+      },
+      "AddValidationRapidResult": {
+        "required": [
+          "rapidId"
+        ],
+        "type": "object",
+        "properties": {
+          "rapidId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
       },
       "AttachCategoryTruth": {
         "title": "AttachCategoryTruth",

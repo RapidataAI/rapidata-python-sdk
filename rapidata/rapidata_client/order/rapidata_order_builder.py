@@ -19,7 +19,6 @@ from rapidata.rapidata_client.dataset.rapidata_dataset import RapidataDataset
 from rapidata.rapidata_client.referee.naive_referee import NaiveReferee
 from rapidata.rapidata_client.selection.base_selection import Selection
 from rapidata.rapidata_client.selection.labeling_selection import LabelingSelection
-from rapidata.rapidata_client.types import RapidAsset
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 from rapidata.rapidata_client.referee import Referee
@@ -47,7 +46,7 @@ class RapidataOrderBuilder:
         self._openapi_service = openapi_service
         self._workflow: Workflow | None = None
         self._referee: Referee | None = None
-        self._media_paths: list[RapidAsset] = []
+        self._media_paths: list[str | list[str]] = []
         self._metadata: list[Metadata] | None = None
         self._aggregator: AggregatorType | None = None
         self._validation_set_id: str | None = None
@@ -145,7 +144,7 @@ class RapidataOrderBuilder:
 
     def media(
         self,
-        media_paths: list[RapidAsset],
+        media_paths: list[str | list[str]],
         metadata: list[Metadata] | None = None,
     ):
         """

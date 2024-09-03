@@ -18,25 +18,25 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.box_shape import BoxShape
 from typing import Optional, Set
 from typing_extensions import Self
 
-class OriginalFilenameMetadata(BaseModel):
+class BoundingBoxResult(BaseModel):
     """
-    OriginalFilenameMetadata
+    BoundingBoxResult
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for OriginalFilenameMetadata", alias="_t")
-    original_filename: StrictStr = Field(alias="originalFilename")
-    visibilities: Optional[StrictStr] = None
-    identifier: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["_t", "originalFilename", "visibilities", "identifier"]
+    t: StrictStr = Field(description="Discriminator value for BoundingBoxResult", alias="_t")
+    bounding_boxes: List[BoxShape] = Field(alias="boundingBoxes")
+    rapid_id: StrictStr = Field(alias="rapidId")
+    __properties: ClassVar[List[str]] = ["_t", "boundingBoxes", "rapidId"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['OriginalFilenameMetadata']):
-            raise ValueError("must be one of enum values ('OriginalFilenameMetadata')")
+        if value not in set(['BoundingBoxResult']):
+            raise ValueError("must be one of enum values ('BoundingBoxResult')")
         return value
 
     model_config = ConfigDict(
@@ -57,7 +57,7 @@ class OriginalFilenameMetadata(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of OriginalFilenameMetadata from a JSON string"""
+        """Create an instance of BoundingBoxResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -78,11 +78,18 @@ class OriginalFilenameMetadata(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in bounding_boxes (list)
+        _items = []
+        if self.bounding_boxes:
+            for _item_bounding_boxes in self.bounding_boxes:
+                if _item_bounding_boxes:
+                    _items.append(_item_bounding_boxes.to_dict())
+            _dict['boundingBoxes'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of OriginalFilenameMetadata from a dict"""
+        """Create an instance of BoundingBoxResult from a dict"""
         if obj is None:
             return None
 
@@ -90,10 +97,9 @@ class OriginalFilenameMetadata(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'OriginalFilenameMetadata',
-            "originalFilename": obj.get("originalFilename"),
-            "visibilities": obj.get("visibilities"),
-            "identifier": obj.get("identifier")
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'BoundingBoxResult',
+            "boundingBoxes": [BoxShape.from_dict(_item) for _item in obj["boundingBoxes"]] if obj.get("boundingBoxes") is not None else None,
+            "rapidId": obj.get("rapidId")
         })
         return _obj
 

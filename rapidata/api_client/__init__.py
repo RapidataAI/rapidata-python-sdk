@@ -40,6 +40,7 @@ from rapidata.api_client.exceptions import ApiException
 from rapidata.api_client.models.add_validation_rapid_model import AddValidationRapidModel
 from rapidata.api_client.models.add_validation_rapid_model_payload import AddValidationRapidModelPayload
 from rapidata.api_client.models.add_validation_rapid_model_truth import AddValidationRapidModelTruth
+from rapidata.api_client.models.add_validation_rapid_result import AddValidationRapidResult
 from rapidata.api_client.models.admin_order_model import AdminOrderModel
 from rapidata.api_client.models.admin_order_model_paged_result import AdminOrderModelPagedResult
 from rapidata.api_client.models.age_group import AgeGroup
@@ -102,6 +103,7 @@ from rapidata.api_client.models.datapoint_model_asset import DatapointModelAsset
 from rapidata.api_client.models.dataset_evaluation_step_model import DatasetEvaluationStepModel
 from rapidata.api_client.models.demographic_rapid_selection_config import DemographicRapidSelectionConfig
 from rapidata.api_client.models.demographic_selection import DemographicSelection
+from rapidata.api_client.models.early_stopping_referee_model import EarlyStoppingRefereeModel
 from rapidata.api_client.models.empty_validation_truth import EmptyValidationTruth
 from rapidata.api_client.models.error_type import ErrorType
 from rapidata.api_client.models.feature_flag import FeatureFlag

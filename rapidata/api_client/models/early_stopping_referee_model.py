@@ -17,26 +17,25 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Union
 from typing import Optional, Set
 from typing_extensions import Self
 
-class OriginalFilenameMetadata(BaseModel):
+class EarlyStoppingRefereeModel(BaseModel):
     """
-    OriginalFilenameMetadata
+    The Early Stopping Referee can currently only be used for classification tasks and will stop once a certain threshold is reached or the maximum number of votes is collected.
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for OriginalFilenameMetadata", alias="_t")
-    original_filename: StrictStr = Field(alias="originalFilename")
-    visibilities: Optional[StrictStr] = None
-    identifier: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["_t", "originalFilename", "visibilities", "identifier"]
+    t: StrictStr = Field(description="Discriminator value for EarlyStoppingReferee", alias="_t")
+    max_votes: StrictInt = Field(description="The upper limit of votes that will be collected for each task.", alias="maxVotes")
+    threshold: Union[StrictFloat, StrictInt] = Field(description="The threshold that needs to be reached to stop collecting votes.")
+    __properties: ClassVar[List[str]] = ["_t", "maxVotes", "threshold"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['OriginalFilenameMetadata']):
-            raise ValueError("must be one of enum values ('OriginalFilenameMetadata')")
+        if value not in set(['EarlyStoppingReferee']):
+            raise ValueError("must be one of enum values ('EarlyStoppingReferee')")
         return value
 
     model_config = ConfigDict(
@@ -57,7 +56,7 @@ class OriginalFilenameMetadata(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of OriginalFilenameMetadata from a JSON string"""
+        """Create an instance of EarlyStoppingRefereeModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -82,7 +81,7 @@ class OriginalFilenameMetadata(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of OriginalFilenameMetadata from a dict"""
+        """Create an instance of EarlyStoppingRefereeModel from a dict"""
         if obj is None:
             return None
 
@@ -90,10 +89,9 @@ class OriginalFilenameMetadata(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'OriginalFilenameMetadata',
-            "originalFilename": obj.get("originalFilename"),
-            "visibilities": obj.get("visibilities"),
-            "identifier": obj.get("identifier")
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'EarlyStoppingReferee',
+            "maxVotes": obj.get("maxVotes"),
+            "threshold": obj.get("threshold")
         })
         return _obj
 

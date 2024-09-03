@@ -17,12 +17,13 @@ import json
 import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
+from rapidata.api_client.models.early_stopping_referee_model import EarlyStoppingRefereeModel
 from rapidata.api_client.models.naive_referee_model import NaiveRefereeModel
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-CREATEORDERMODELREFEREE_ONE_OF_SCHEMAS = ["NaiveRefereeModel"]
+CREATEORDERMODELREFEREE_ONE_OF_SCHEMAS = ["EarlyStoppingRefereeModel", "NaiveRefereeModel"]
 
 class CreateOrderModelReferee(BaseModel):
     """
@@ -30,8 +31,10 @@ class CreateOrderModelReferee(BaseModel):
     """
     # data type: NaiveRefereeModel
     oneof_schema_1_validator: Optional[NaiveRefereeModel] = None
-    actual_instance: Optional[Union[NaiveRefereeModel]] = None
-    one_of_schemas: Set[str] = { "NaiveRefereeModel" }
+    # data type: EarlyStoppingRefereeModel
+    oneof_schema_2_validator: Optional[EarlyStoppingRefereeModel] = None
+    actual_instance: Optional[Union[EarlyStoppingRefereeModel, NaiveRefereeModel]] = None
+    one_of_schemas: Set[str] = { "EarlyStoppingRefereeModel", "NaiveRefereeModel" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -62,12 +65,17 @@ class CreateOrderModelReferee(BaseModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `NaiveRefereeModel`")
         else:
             match += 1
+        # validate data type: EarlyStoppingRefereeModel
+        if not isinstance(v, EarlyStoppingRefereeModel):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `EarlyStoppingRefereeModel`")
+        else:
+            match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in CreateOrderModelReferee with oneOf schemas: NaiveRefereeModel. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in CreateOrderModelReferee with oneOf schemas: EarlyStoppingRefereeModel, NaiveRefereeModel. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in CreateOrderModelReferee with oneOf schemas: NaiveRefereeModel. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in CreateOrderModelReferee with oneOf schemas: EarlyStoppingRefereeModel, NaiveRefereeModel. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -88,13 +96,19 @@ class CreateOrderModelReferee(BaseModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
+        # deserialize data into EarlyStoppingRefereeModel
+        try:
+            instance.actual_instance = EarlyStoppingRefereeModel.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into CreateOrderModelReferee with oneOf schemas: NaiveRefereeModel. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into CreateOrderModelReferee with oneOf schemas: EarlyStoppingRefereeModel, NaiveRefereeModel. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into CreateOrderModelReferee with oneOf schemas: NaiveRefereeModel. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into CreateOrderModelReferee with oneOf schemas: EarlyStoppingRefereeModel, NaiveRefereeModel. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -108,7 +122,7 @@ class CreateOrderModelReferee(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], NaiveRefereeModel]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], EarlyStoppingRefereeModel, NaiveRefereeModel]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None
