@@ -216,5 +216,8 @@ class RapidataOrderBuilder:
         :type amount: int
         :return: The updated RapidataOrderBuilder instance.
         """
-        self._selections.append(LabelingSelection(amount))
+        raise NotImplementedError("Not implemented yet.")
+
+    def selections(self, selections: list[Selection]):
+        self._selections = selections
         return self
