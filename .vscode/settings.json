@@ -7,10 +7,17 @@
         "test_*.py"
     ],
     "python.testing.unittestEnabled": true,
-    "python.analysis.enablePytestSupport": false,
     "python.testing.pytestEnabled": false,
-    "python.analysis.typeCheckingMode": "standard",
+    "python.analysis.typeCheckingMode": "basic",
     "python.analysis.extraPaths": [
-        "./openapi/openapi-client"
-    ]
+        "./src"
+    ],
+    "python.autoComplete.extraPaths": [
+        "./src"
+    ],
+    "editor.formatOnSave": true,
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.formatOnSave": true
+    }
 }

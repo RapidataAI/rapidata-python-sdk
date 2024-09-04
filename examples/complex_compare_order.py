@@ -6,6 +6,9 @@ from examples.setup_client import setup_client
 from src.rapidata.rapidata_client.feature_flags import FeatureFlags
 from src.rapidata.rapidata_client.rapidata_client import RapidataClient
 from src.rapidata.rapidata_client.referee.naive_referee import NaiveReferee
+from src.rapidata.rapidata_client.selection.demographic_selection import DemographicSelection
+from src.rapidata.rapidata_client.selection.labeling_selection import LabelingSelection
+from src.rapidata.rapidata_client.selection.validation_selection import ValidationSelection
 from src.rapidata.rapidata_client.workflow import CompareWorkflow
 
 
@@ -39,8 +42,14 @@ def new_compare_order(rapi: RapidataClient):
                 "examples/data/rapidata_logo.png",
             ]]
         )
-        .validation_set_id(validation_set.id)
         .feature_flags(FeatureFlags().claire_design().alert_on_fast_response(4))
+        .selections(
+            [
+                ValidationSelection(validation_set_id=validation_set.id),
+                DemographicSelection(rapid_id="1234567890"),
+                LabelingSelection(amount=1)
+            ]
+        )
         .create()
     )
 

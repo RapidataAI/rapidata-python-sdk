@@ -15,6 +15,10 @@ from rapidata.service.openapi_service import OpenAPIService
 
 
 class ValidationSetBuilder:
+    """The ValidationSetBuilder is used to build a validation set.
+    Give the validation set a name and then add classify, compare or transcription rapid parts to it.
+    Get a `ValidationSetBuilder` by calling [`rapi.new_validation_set()`](../rapidata_client.md/#rapidata.rapidata_client.rapidata_client.RapidataClient.new_validation_set).
+    """
 
     def __init__(self, name: str, openapi_service: OpenAPIService):
         self.name = name
@@ -23,6 +27,11 @@ class ValidationSetBuilder:
         self._rapid_parts: list[ValidatioRapidParts] = []
 
     def create(self):
+        """This creates the validation set by executing all http requests. This should be the last method called on the builder.
+
+        Returns:
+            RapidataValidationSet: A RapidataValidationSet instance.
+        """
         result = (
             self.openapi_service.validation_api.validation_create_validation_set_post(
                 name=self.name
@@ -57,6 +66,18 @@ class ValidationSetBuilder:
         truths: list[str],
         metadata: list[Metadata] = [],
     ):
+        """Add a classify rapid to the validation set.
+
+        Args:
+            media_path (str): The path to the media file.
+            question (str): The question for the rapid.
+            categories (list[str]): The list of categories for the rapid.
+            truths (list[str]): The list of truths for the rapid.
+            metadata (list[Metadata], optional): The metadata for the rapid.
+
+        Returns:
+            ValidationSetBuilder: The ValidationSetBuilder instance.
+        """
         payload = ClassifyPayload(
             _t="ClassifyPayload", possibleCategories=categories, title=question
         )
@@ -84,6 +105,17 @@ class ValidationSetBuilder:
         truth: str,
         metadata: list[Metadata] = [],
     ):
+        """Add a compare rapid to the validation set.
+
+        Args:
+            media_paths (list[str]): The list of media paths for the rapid.
+            question (str): The question for the rapid.
+            truth (str): The path to the truth file.
+            metadata (list[Metadata], optional): The metadata for the rapid.
+
+        Returns:
+            ValidationSetBuilder: The ValidationSetBuilder instance.
+        """
         payload = ComparePayload(_t="ComparePayload", criteria=question)
         # take only last part of truth path
         truth = os.path.basename(truth)
@@ -119,6 +151,19 @@ class ValidationSetBuilder:
         strict_grading: bool | None = None,
         metadata: list[Metadata] = [],
     ):
+        """Add a transcription rapid to the validation set.
+
+        Args:
+            media_path (str): The path to the media file.
+            question (str): The question for the rapid.
+            transcription (list[str]): The transcription for the rapid.
+            correct_words (list[str]): The list of correct words for the rapid.
+            strict_grading (bool | None, optional): The strict grading for the rapid. Defaults to None.
+            metadata (list[Metadata], optional): The metadata for the rapid.
+
+        Returns:
+            ValidationSetBuilder: The ValidationSetBuilder instance.
+        """
         transcription_words = [
             TranscriptionWord(word=word, wordIndex=i)
             for i, word in enumerate(transcription)
