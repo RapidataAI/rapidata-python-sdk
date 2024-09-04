@@ -3,11 +3,11 @@ Classify order with a validation set
 '''
 
 from examples.setup_client import setup_client
-from rapidata.rapidata_client.feature_flags import FeatureFlags
-from rapidata.rapidata_client.rapidata_client import RapidataClient
-from rapidata.rapidata_client.workflow import ClassifyWorkflow
-from rapidata.rapidata_client.referee import NaiveReferee
-from rapidata.rapidata_client.metadata.prompt_metadata import PromptMetadata
+from src.rapidata.rapidata_client.feature_flags import FeatureFlags
+from src.rapidata.rapidata_client.rapidata_client import RapidataClient
+from src.rapidata.rapidata_client.workflow import ClassifyWorkflow
+from src.rapidata.rapidata_client.referee import NaiveReferee
+from src.rapidata.rapidata_client.metadata.prompt_metadata import PromptMetadata
 
 
 def new_classify_order(rapi: RapidataClient):

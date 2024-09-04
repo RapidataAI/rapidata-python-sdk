@@ -18,7 +18,6 @@ from rapidata.rapidata_client.metadata.base_metadata import Metadata
 from rapidata.rapidata_client.dataset.rapidata_dataset import RapidataDataset
 from rapidata.rapidata_client.referee.naive_referee import NaiveReferee
 from rapidata.rapidata_client.selection.base_selection import Selection
-from rapidata.rapidata_client.selection.labeling_selection import LabelingSelection
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 from rapidata.rapidata_client.referee import Referee
@@ -26,15 +25,13 @@ from rapidata.service.openapi_service import OpenAPIService
 
 
 class RapidataOrderBuilder:
-    """
-    Builder object for creating Rapidata orders.
+    """Builder object for creating Rapidata orders.
 
     Use the fluent interface to set the desired configuration. Add a workflow to the order using `.workflow()` and finally call `.create()` to create the order.
 
-    :param rapidata_service: The RapidataService instance.
-    :type rapidata_service: RapidataService
-    :param name: The name of the order.
-    :type name: str
+    Args:
+        openapi_service (OpenAPIService): The OpenAPIService instance.
+        name (str): The name of the order.
     """
 
     def __init__(
@@ -91,12 +88,16 @@ class RapidataOrderBuilder:
         )
 
     def create(self, submit=True) -> RapidataOrder:
-        """
-        Actually makes the API calls to create the order based on how the order builder was configures. Returns a RapidataOrder instance based on the created order with order_id and dataset_id.
+        """Actually makes the API calls to create the order based on how the order builder was configured.
 
-        :return: The created RapidataOrder instance.
-        :rtype: RapidataOrder
-        :raises ValueError: If no workflow is provided.
+        Args:
+            submit (bool, optional): Whether to submit the order. Defaults to True.
+
+        Returns:
+            RapidataOrder: The created RapidataOrder instance.
+
+        Raises:
+            ValueError: If no workflow is provided.
         """
         order_model = self._to_model()
 
@@ -120,25 +121,25 @@ class RapidataOrderBuilder:
         return order
 
     def workflow(self, workflow: Workflow):
-        """
-        Set the workflow for the order.
+        """Set the workflow for the order.
 
-        :param workflow: The workflow to be set.
-        :type workflow: Workflow
-        :return: The updated RapidataOrderBuilder instance.
-        :rtype: RapidataOrderBuilder
+        Args:
+            workflow (Workflow): The workflow to be set.
+
+        Returns:
+            RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
         """
         self._workflow = workflow
         return self
 
     def referee(self, referee: Referee):
-        """
-        Set the referee for the order.
+        """Set the referee for the order.
 
-        :param referee: The referee to be set.
-        :type referee: Referee
-        :return: The updated RapidataOrderBuilder instance.
-        :rtype: RapidataOrderBuilder
+        Args:
+            referee (Referee): The referee to be set.
+
+        Returns:
+            RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
         """
         self._referee = referee
         return self
@@ -148,76 +149,89 @@ class RapidataOrderBuilder:
         media_paths: list[str | list[str]],
         metadata: list[Metadata] | None = None,
     ):
-        """
-        Set the media assets for the order.
+        """Set the media assets for the order.
 
-        :param media_paths: The paths of the media assets to be set.
-        :type media_paths: list[str]
-        :return: The updated RapidataOrderBuilder instance.
-        :rtype: RapidataOrderBuilder
+        Args:
+            media_paths (list[str | list[str]]): The paths of the media assets to be set.
+            metadata (list[Metadata] | None, optional): Metadata for the media assets. Defaults to None.
+
+        Returns:
+            RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
         """
         self._media_paths = media_paths
         self._metadata = metadata
         return self
 
     def feature_flags(self, feature_flags: FeatureFlags):
-        """
-        Set the feature flags for the order.
+        """Set the feature flags for the order.
 
-        :param feature_flags: The feature flags to be set.
-        :type feature_flags: FeatureFlags
-        :return: The updated RapidataOrderBuilder instance.
-        :rtype: RapidataOrderBuilder
+        Args:
+            feature_flags (FeatureFlags): The feature flags to be set.
+
+        Returns:
+            RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
         """
         self._feature_flags = feature_flags
         return self
 
     def country_filter(self, country_codes: list[str]):
-        """
-        Set the target country codes for the order.
+        """Set the target country codes for the order.
 
-        :param country_codes: The country codes to be set.
-        :type country_codes: list[str]
-        :return: The updated RapidataOrderBuilder instance.
-        :rtype: RapidataOrderBuilder
+        Args:
+            country_codes (list[str]): The country codes to be set.
+
+        Returns:
+            RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
         """
         self._country_codes = country_codes
         return self
 
     def aggregator(self, aggregator: AggregatorType):
-        """
-        Set the aggregator for the order.
+        """Set the aggregator for the order.
 
-        :param aggregator: The aggregator to be set.
-        :type aggregator: AggregatorType
-        :return: The updated RapidataOrderBuilder instance.
-        :rtype: RapidataOrderBuilder
+        Args:
+            aggregator (AggregatorType): The aggregator to be set.
+
+        Returns:
+            RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
         """
         self._aggregator = aggregator
         return self
 
     def validation_set_id(self, validation_set_id: str):
-        """
-        Set the validation set for the order.
+        """Set the validation set for the order.
 
-        :param validation_set_id: The validation set ID to be set.
-        :type validation_set_id: str
-        :return: The updated RapidataOrderBuilder instance.
-        :rtype: RapidataOrderBuilder
+        Args:
+            validation_set_id (str): The validation set ID to be set.
+
+        Returns:
+            RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
         """
         self._validation_set_id = validation_set_id
         return self
 
     def rapids_per_bag(self, amount: int):
-        """
-        Defines the number of tasks a user sees in a single session. The default is 3.
+        """Defines the number of tasks a user sees in a single session.
 
-        :param amount: The number of tasks a user sees in a single session.
-        :type amount: int
-        :return: The updated RapidataOrderBuilder instance.
+        Args:
+            amount (int): The number of tasks a user sees in a single session.
+
+        Returns:
+            RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
+
+        Raises:
+            NotImplementedError: This method is not implemented yet.
         """
         raise NotImplementedError("Not implemented yet.")
 
     def selections(self, selections: list[Selection]):
+        """Set the selections for the order.
+
+        Args:
+            selections (list[Selection]): The selections to be set.
+
+        Returns:
+            RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
+        """
         self._selections = selections
-        return
+        return self

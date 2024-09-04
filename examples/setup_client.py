@@ -3,7 +3,7 @@ Setting up the Rapidata client based on environment variables
 '''
 import dotenv
 import os
-from rapidata.rapidata_client import RapidataClient
+from src.rapidata.rapidata_client.rapidata_client import RapidataClient
 
 
 def setup_client():
