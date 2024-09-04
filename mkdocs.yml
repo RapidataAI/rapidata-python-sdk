@@ -1,11 +1,12 @@
 site_name: Rapidata Python SDK Documentation
 site_url: https://rapidataai.github.io/rapidata-python-sdk
-theme:
-  name: material
+repo_url: https://github.com/RapidataAI/rapidata-python-sdk
+repo_name: RapidataAI/rapidata-python-sdk
 
 plugins:
   - search
-  - autorefs
+  - autorefs:
+      resolve_closest: true
   - mkdocstrings:
       default_handler: python
       handlers:
@@ -21,15 +22,51 @@ plugins:
             signature_crossrefs: true
   - gen-files:
       scripts:
-        - scripts/gen_ref_pages.py 
+        - scripts/gen_ref_pages.py
   - literate-nav:
       nav_file: SUMMARY.md
+  - section-index
 
 markdown_extensions:
   - attr_list
+  - sane_lists
   - toc:
       permalink: "#"
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
 
 nav:
   - quickstart.md
-  - API: api.md
+  - API Documentation: api.md
+
+theme:
+  name: material
+  logo: media/rapidata.svg
+  # Palette toggle for light mode
+  palette:
+    - scheme: default
+      accent: cyan
+      primary: black
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - scheme: slate
+      accent: cyan
+      primary: black
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+  icon:
+    repo: fontawesome/brands/git-alt
+
+  features:
+    - content.code.copy
+    - navigation.instant

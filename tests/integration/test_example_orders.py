@@ -40,6 +40,11 @@ class TestClassifyOrder(unittest.TestCase):
         CLIENT_SECRET = os.getenv("CLIENT_SECRET")
         ENDPOINT = os.getenv("ENDPOINT")
 
+        if not CLIENT_ID or not CLIENT_SECRET or not ENDPOINT:
+            raise ValueError(
+                "Please set CLIENT_ID, CLIENT_SECRET, and ENDPOINT in a .env file"
+            )
+
         from rapidata.rapidata_client import RapidataClient
 
         rapi = RapidataClient(
@@ -51,8 +56,8 @@ class TestClassifyOrder(unittest.TestCase):
         from rapidata.rapidata_client.workflow import ClassifyWorkflow
 
         workflow = ClassifyWorkflow(
-            question="Who should be president?",
-            options=["Kamala Harris", "Donald Trump"],
+            question="What is shown in the image?",
+            options=["Fish", "Cat", "Wallaby", "Airplane"],
         )
 
         order_builder.workflow(workflow)
