@@ -14,9 +14,7 @@ pip install rapidata -U
 
 ## Usage
 
-Rapidata provides an API to millions of users across the globe. The
-
-Orders are managed throught the {py:class}`~rapidata.rapidata_client.RapidataClient`.
+Orders are managed throught the [`RapidataClient`](reference/rapidata/rapidata_client/rapidata_client.md#rapidata_client.rapidata_client.RapidataClient).
 
 One can create client like this:
 
@@ -27,7 +25,7 @@ from rapidata.rapidata_client import RapidataClient
 rapi = RapidataClient(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
 ```
 
-Ask a Rapidata representative for your `CLIENT_ID` and `CLIENT_SECRET` (info@rapidata.ai).
+Ask a Rapidata representative for your `CLIENT_ID` and `CLIENT_SECRET` [info@rapidata.ai](mailto:info@rapidata.ai).
 
 ### Creating an Order
 
@@ -42,6 +40,8 @@ order_builder = rapi.new_order("Quickstart Order")
 2. Configure the order using a workflow, which defines the type of questions asked to the people. For example, the {py:class}`~rapidata.rapidata_client.workflow.classify_workflow.ClassifyWorkflow` asks a question with multiple answer choices:
 
 ```
+from rapidata.rapidata_client.workflow import ClassifyWorkflow
+
 workflow = ClassifyWorkflow(
             question="What is shown in the image?",
             options=["Fish", "Cat", "Wallaby", "Airplane"],

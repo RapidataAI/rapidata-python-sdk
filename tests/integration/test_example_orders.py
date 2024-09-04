@@ -29,3 +29,36 @@ class TestClassifyOrder(unittest.TestCase):
         # order.wait_for_done()
         # order.get_results()
         pass
+
+    def test_quickstart(self):
+        import dotenv
+        import os
+
+        dotenv.load_dotenv()
+
+        CLIENT_ID = os.getenv("CLIENT_ID")
+        CLIENT_SECRET = os.getenv("CLIENT_SECRET")
+        ENDPOINT = os.getenv("ENDPOINT")
+
+        from rapidata.rapidata_client import RapidataClient
+
+        rapi = RapidataClient(
+            client_id=CLIENT_ID, client_secret=CLIENT_SECRET, endpoint=ENDPOINT
+        )
+
+        order_builder = rapi.new_order("Example Order")
+
+        from rapidata.rapidata_client.workflow import ClassifyWorkflow
+
+        workflow = ClassifyWorkflow(
+            question="Who should be president?",
+            options=["Kamala Harris", "Donald Trump"],
+        )
+
+        order_builder.workflow(workflow)
+
+        from rapidata.rapidata_client.referee import NaiveReferee
+
+        order_builder.referee(NaiveReferee(required_guesses=15))
+
+        order_builder.media(["examples/data/wallaby.jpg"])
