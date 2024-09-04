@@ -234,4 +234,4 @@ class RapidataOrderBuilder:
             RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
         """
         self._selections = selections
-        return self
+        return
