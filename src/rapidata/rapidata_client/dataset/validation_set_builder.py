@@ -48,7 +48,7 @@ class ValidationSetBuilder:
         )
 
         for rapid_part in self._rapid_parts:
-            validation_set.add_validation_rapid(
+            validation_set.add_general_validation_rapid(
                 payload=rapid_part.payload,
                 truths=rapid_part.truths,
                 metadata=rapid_part.metadata,
