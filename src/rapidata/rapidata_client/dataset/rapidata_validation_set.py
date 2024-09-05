@@ -36,7 +36,7 @@ from rapidata.service.openapi_service import OpenAPIService
 class RapidataValidationSet:
     """A class for interacting with a Rapidata validation set.
 
-    Get a `ValidatioinSet` either by using [`rapi.get_validation_set(<id>)`](../rapidata_client.md#rapidata_client.rapidata_client.RapidataClient.get_validation_set) to get an exisitng validation set or by using [`rapi.new_validation_set(<name>)`](../rapidata_client.md#rapidata_clientrapidata_client.RapidataClient.new_validation_set) to create a new validation set.
+    Get a `ValidationSet` either by using `rapi.get_validation_set(id)` to get an exisitng validation set or by using `rapi.new_validation_set(name)` to create a new validation set.
     """
 
     def __init__(self, validation_set_id, openapi_service: OpenAPIService):

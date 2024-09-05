@@ -8,7 +8,7 @@ from rapidata.service.openapi_service import OpenAPIService
 
 
 class RapidataClient:
-    """The Rapidata client is the main entry point for interacting with the Rapidata API. It allows you to create orders and validation sets. For creating a new order, check out [`new_order()`][rapidata.rapidata_client.rapidata_client.RapidataClient.new_order]. For creating a new validation set, check out [`new_validation_set()`][rapidata.rapidata_client.rapidata_client.RapidataClient.new_validation_set]."""
+    """The Rapidata client is the main entry point for interacting with the Rapidata API. It allows you to create orders and validation sets. For creating a new order, check out `new_order()`. For creating a new validation set, check out `new_validation_set()`."""
 
     def __init__(
         self,

@@ -29,3 +29,41 @@ class TestClassifyOrder(unittest.TestCase):
         # order.wait_for_done()
         # order.get_results()
         pass
+
+    def test_quickstart(self):
+        import dotenv
+        import os
+
+        dotenv.load_dotenv()
+
+        CLIENT_ID = os.getenv("CLIENT_ID")
+        CLIENT_SECRET = os.getenv("CLIENT_SECRET")
+        ENDPOINT = os.getenv("ENDPOINT")
+
+        if not CLIENT_ID or not CLIENT_SECRET or not ENDPOINT:
+            raise ValueError(
+                "Please set CLIENT_ID, CLIENT_SECRET, and ENDPOINT in a .env file"
+            )
+
+        from rapidata.rapidata_client import RapidataClient
+
+        rapi = RapidataClient(
+            client_id=CLIENT_ID, client_secret=CLIENT_SECRET, endpoint=ENDPOINT
+        )
+
+        order_builder = rapi.new_order("Example Order")
+
+        from rapidata.rapidata_client.workflow import ClassifyWorkflow
+
+        workflow = ClassifyWorkflow(
+            question="What is shown in the image?",
+            options=["Fish", "Cat", "Wallaby", "Airplane"],
+        )
+
+        order_builder.workflow(workflow)
+
+        from rapidata.rapidata_client.referee import NaiveReferee
+
+        order_builder.referee(NaiveReferee(required_guesses=15))
+
+        order_builder.media(["examples/data/wallaby.jpg"])

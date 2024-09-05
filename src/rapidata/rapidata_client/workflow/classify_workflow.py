@@ -6,6 +6,21 @@ from rapidata.rapidata_client.workflow import Workflow
 
 
 class ClassifyWorkflow(Workflow):
+    """
+    A workflow for classification tasks.
+
+    This class represents a classification workflow where a question is presented
+    along with a list of possible options for classification.
+
+    Args:
+        question (str): The classification question to be presented.
+        options (list[str]): A list of possible classification options.
+
+    Attributes:
+        _question (str): The classification question.
+        _options (list[str]): The list of classification options.
+    """
+
     def __init__(self, question: str, options: list[str]):
         super().__init__(type="SimpleWorkflowConfig")
         self._question = question

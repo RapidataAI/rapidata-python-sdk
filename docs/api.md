@@ -1,5 +1,3 @@
-# API Documentation
+[RapidataClient](reference/rapidata/rapidata_client/rapidata_client.md)
 
-## Rapidata Client
-
-::: rapidata.RapidataClient
+[RapidataOrderBuilder](reference/rapidata/rapidata_client/order/rapidata_order_builder.md)
