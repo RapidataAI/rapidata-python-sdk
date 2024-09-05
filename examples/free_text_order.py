@@ -21,7 +21,7 @@ def new_free_text_order(rapi: RapidataClient):
         )
         .media(["examples/data/waiting.mp4"])
         .feature_flags(
-            FeatureFlags().free_text_minimum_characters(15).alert_on_fast_response(5)
+            FeatureFlags().free_text_minimum_characters(15).alert_on_fast_response(5000)
         )
         .country_filter(CountryCodes.ENGLISH_SPEAKING)
     ).create()

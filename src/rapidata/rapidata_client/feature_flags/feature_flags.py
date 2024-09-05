@@ -22,18 +22,31 @@ class FeatureFlags:
             list[FeatureFlagModel]: A list of FeatureFlagModel objects
                 representing the current feature flags.
         """
-        return [FeatureFlagModel(key=name, value=value) for name, value in self._flags.items()]
+        return [
+            FeatureFlagModel(key=name, value=value)
+            for name, value in self._flags.items()
+        ]
 
-    def alert_on_fast_response(self, value: int):
+    def alert_on_fast_response(self, milliseconds: int):
         """Gives an alert as a pop up on the UI when the response time is less than the threshold.
 
         Args:
-            value (int): The threshold value for fast response alerts.
+            milliseconds (int): if the user responds in less than this time, an alert will be shown.
 
         Returns:
             FeatureFlags: The current FeatureFlags instance for method chaining.
         """
-        self._flags["alert_on_fast_response"] = str(value)
+        if milliseconds < 10:
+            print(
+                f"Warning: Are you sure you want to set the threshold so low ({milliseconds} milliseconds)?"
+            )
+
+        if milliseconds > 30000:
+            print(
+                f"Warning: Are you sure you want to set the threshold so high ({milliseconds/1000} seconds)?"
+            )
+
+        self._flags["alert_on_fast_response"] = str(milliseconds)
         return self
 
     def disable_translation(self, value: bool = True):

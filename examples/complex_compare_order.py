@@ -45,7 +45,7 @@ def new_compare_order(rapi: RapidataClient):
             ]
         )
         .feature_flags(
-            FeatureFlags().compare_with_prompt_design().alert_on_fast_response(4)
+            FeatureFlags().compare_with_prompt_design().alert_on_fast_response(4000)
         )
         .selections(
             [

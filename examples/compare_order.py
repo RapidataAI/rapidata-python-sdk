@@ -43,7 +43,7 @@ def new_compare_order(rapi: RapidataClient):
         )
         .validation_set_id(validation_set.id)
         .feature_flags(
-            FeatureFlags().compare_with_prompt_design().alert_on_fast_response(4)
+            FeatureFlags().compare_with_prompt_design().alert_on_fast_response(4000)
         )
         .create()
     )

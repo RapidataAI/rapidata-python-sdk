@@ -37,7 +37,7 @@ def new_classify_order(rapi: RapidataClient):
         )
         .media(["examples/data/wallaby.jpg"])
         .referee(NaiveReferee(required_guesses=15))
-        .feature_flags(FeatureFlags().alert_on_fast_response(3))
+        .feature_flags(FeatureFlags().alert_on_fast_response(3000))
         .validation_set_id(validation_set.id)
         .create()
     )
