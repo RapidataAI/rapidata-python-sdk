@@ -59,7 +59,7 @@ Optionally, you can further configure the order by specifying the number of answ
 ```py
 from rapidata.rapidata_client.referee import NaiveReferee
 
-order_builder = order_builder.referee(NaiveReferee(required_guesses=15))
+order_builder.referee(NaiveReferee(required_guesses=15))
 ```
 
 Now, set the `workflow` on the `order_builder`:
@@ -73,7 +73,7 @@ order_builder.workflow(workflow)
 ![Wallaby](./media/wallaby.jpg)
 
 ```py
-order.dataset.add_images_from_paths(["examples/data/wallaby.jpg"])
+order_builder.media(["examples/data/wallaby.jpg"])
 ```
 
 4. Finally, create the order. This executes all the actual HTTP requests to the Rapidata API. Per default, a created order is directly submitted. If this is not intended, specify `submit=

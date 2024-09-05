@@ -37,17 +37,21 @@ def new_compare_order(rapi: RapidataClient):
         )
         .referee(NaiveReferee(required_guesses=1))
         .media(
-            media_paths=[[ # this is a list of lists of paths, since each rapid shows two images
-                "examples/data/rapidata_concept_logo.jpg",
-                "examples/data/rapidata_logo.png",
-            ]]
+            media_paths=[
+                [  # this is a list of lists of paths, since each rapid shows two images
+                    "examples/data/rapidata_concept_logo.jpg",
+                    "examples/data/rapidata_logo.png",
+                ]
+            ]
         )
-        .feature_flags(FeatureFlags().claire_design().alert_on_fast_response(4))
+        .feature_flags(
+            FeatureFlags().compare_with_prompt_design().alert_on_fast_response(4)
+        )
         .selections(
             [
                 ValidationSelection(validation_set_id=validation_set.id),
                 DemographicSelection(rapid_id="1234567890"),
-                LabelingSelection(amount=1)
+                LabelingSelection(amount=1),
             ]
         )
         .create()

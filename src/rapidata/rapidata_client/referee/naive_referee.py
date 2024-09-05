@@ -3,12 +3,23 @@ from rapidata.rapidata_client.referee.base_referee import Referee
 
 
 class NaiveReferee(Referee):
-    """
-    The referee defines when a task is considered complete.
-    The SimpleReferee is the simplest referee, requiring a fixed number of guesses.
+    """A simple referee that completes a task after a fixed number of guesses.
+
+    This referee implements a straightforward approach to task completion,
+    where the task is considered finished after a predetermined number of
+    guesses have been made, regardless of the content or quality of those guesses.
+
+    Attributes:
+        required_guesses (int): The number of guesses required to complete the task.
     """
 
     def __init__(self, required_guesses: int = 10):
+        """Initialize the NaiveReferee.
+
+        Args:
+            required_guesses (int, optional): The number of guesses required
+                to complete the task. Defaults to 10.
+        """
         super().__init__()
         self.required_guesses = required_guesses
 

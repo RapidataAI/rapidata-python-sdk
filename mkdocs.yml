@@ -20,6 +20,12 @@ plugins:
             separate_signature: true
             show_signature_annotations: true
             signature_crossrefs: true
+            members_order: source
+            filters: ["!^_"]
+            docstring_options:
+              ignore_init_summary: true
+            merge_init_into_class: true
+
   - gen-files:
       scripts:
         - scripts/gen_ref_pages.py
@@ -30,6 +36,7 @@ plugins:
 markdown_extensions:
   - attr_list
   - sane_lists
+  - md_in_html
   - toc:
       permalink: "#"
   - pymdownx.highlight:
@@ -39,9 +46,13 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
 
 nav:
   - quickstart.md
+  - Examples: examples/index.md
   - API Documentation: api.md
 
 theme:
