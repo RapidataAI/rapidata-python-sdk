@@ -1,7 +1,7 @@
 site_name: Rapidata Python SDK Documentation
 site_url: https://rapidataai.github.io/rapidata-python-sdk
 repo_url: https://github.com/RapidataAI/rapidata-python-sdk
-repo_name: RapidataAI/rapidata-python-sdk
+repo_name: rapidata-python-sdk
 
 plugins:
   - search
@@ -65,7 +65,7 @@ theme:
         name: Switch to light mode
 
   icon:
-    repo: fontawesome/brands/git-alt
+    repo: fontawesome/brands/github-alt
 
   features:
     - content.code.copy

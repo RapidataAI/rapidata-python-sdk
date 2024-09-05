@@ -70,7 +70,7 @@ order_builder.workflow(workflow)
 
 3. Upload datapoints for which you want this question to be asked. For this case, we only upload one image:
 
-![Wallaby](./media/wallaby_small.jpg)
+![Wallaby](./media/wallaby.jpg)
 
 ```py
 order.dataset.add_images_from_paths(["examples/data/wallaby.jpg"])

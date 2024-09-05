@@ -1,1 +1,1 @@
-[RapidataClient](../reference/rapidata/rapidata_client/rapidata_client/)
+[RapidataClient](reference/rapidata/rapidata_client/rapidata_client.md)
