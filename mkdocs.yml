@@ -58,6 +58,7 @@ nav:
 theme:
   name: material
   logo: media/rapidata.svg
+  favicon: media/rapidata.svg
   # Palette toggle for light mode
   palette:
     - scheme: default
