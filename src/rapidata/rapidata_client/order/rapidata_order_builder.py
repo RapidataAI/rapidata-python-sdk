@@ -87,7 +87,7 @@ class RapidataOrderBuilder:
             ],
         )
 
-    def create(self, submit=True) -> RapidataOrder:
+    def create(self, submit=True, max_workers=10) -> RapidataOrder:
         """Actually makes the API calls to create the order based on how the order builder was configured.
 
         Args:
@@ -113,7 +113,7 @@ class RapidataOrderBuilder:
             openapi_service=self._openapi_service,
         )
 
-        order.dataset.add_media_from_paths(self._media_paths, self._metadata)
+        order.dataset.add_media_from_paths(self._media_paths, self._metadata, max_workers)
 
         if submit:
             order.submit()

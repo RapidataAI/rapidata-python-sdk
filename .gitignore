@@ -168,3 +168,5 @@ cython_debug/
 customers/
 
 .openapi-generator/
+
+*.ipynb
