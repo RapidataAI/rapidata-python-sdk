@@ -12,7 +12,6 @@ from rapidata.rapidata_client.metadata.base_metadata import Metadata
 from rapidata.service import LocalFileService
 from rapidata.service.openapi_service import OpenAPIService
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import Callable
 from tqdm import tqdm
 
 
