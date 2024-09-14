@@ -115,6 +115,7 @@ Class | Method | HTTP request | Description
 *OrderApi* | [**order_query_get**](rapidata/api_client/docs/OrderApi.md#order_query_get) | **GET** /Order/Query | Queries orders based on a filter, page, and sort criteria.
 *OrderApi* | [**order_result_get**](rapidata/api_client/docs/OrderApi.md#order_result_get) | **GET** /Order/Result | Aggregates the results of an order.
 *OrderApi* | [**order_retry_failed_post**](rapidata/api_client/docs/OrderApi.md#order_retry_failed_post) | **POST** /Order/RetryFailed | Retries a failed order.
+*OrderApi* | [**order_share_put**](rapidata/api_client/docs/OrderApi.md#order_share_put) | **PUT** /Order/Share | Updates whether an order is public or not.
 *OrderApi* | [**order_submit_post**](rapidata/api_client/docs/OrderApi.md#order_submit_post) | **POST** /Order/Submit | Submits an order for approval.
 *OrderApi* | [**order_unlock_post**](rapidata/api_client/docs/OrderApi.md#order_unlock_post) | **POST** /Order/Unlock | Unlocks a newly cloned order.
 *OrderApi* | [**order_update_access_put**](rapidata/api_client/docs/OrderApi.md#order_update_access_put) | **PUT** /Order/UpdateAccess | Updates whether an order is public or not.
@@ -153,6 +154,7 @@ Class | Method | HTTP request | Description
  - [BoundingBoxResult](rapidata/api_client/docs/BoundingBoxResult.md)
  - [BoundingBoxTruth](rapidata/api_client/docs/BoundingBoxTruth.md)
  - [BoxShape](rapidata/api_client/docs/BoxShape.md)
+ - [CampaignUserFilterModel](rapidata/api_client/docs/CampaignUserFilterModel.md)
  - [ClassificationMetadata](rapidata/api_client/docs/ClassificationMetadata.md)
  - [ClassificationMetadataFilterConfig](rapidata/api_client/docs/ClassificationMetadataFilterConfig.md)
  - [ClassifyPayload](rapidata/api_client/docs/ClassifyPayload.md)
@@ -236,6 +238,7 @@ Class | Method | HTTP request | Description
  - [IssueAuthTokenResult](rapidata/api_client/docs/IssueAuthTokenResult.md)
  - [IssueClientAuthTokenResult](rapidata/api_client/docs/IssueClientAuthTokenResult.md)
  - [LabelingSelection](rapidata/api_client/docs/LabelingSelection.md)
+ - [LanguageUserFilterModel](rapidata/api_client/docs/LanguageUserFilterModel.md)
  - [Line](rapidata/api_client/docs/Line.md)
  - [LinePayload](rapidata/api_client/docs/LinePayload.md)
  - [LinePoint](rapidata/api_client/docs/LinePoint.md)
@@ -325,6 +328,7 @@ Class | Method | HTTP request | Description
  - [UploadDatapointsResult](rapidata/api_client/docs/UploadDatapointsResult.md)
  - [UploadFilesFromS3BucketModel](rapidata/api_client/docs/UploadFilesFromS3BucketModel.md)
  - [UploadTextSourcesToDatasetModel](rapidata/api_client/docs/UploadTextSourcesToDatasetModel.md)
+ - [UserScoreUserFilterModel](rapidata/api_client/docs/UserScoreUserFilterModel.md)
  - [ValidationChance](rapidata/api_client/docs/ValidationChance.md)
  - [ValidationImportPostRequestBlueprint](rapidata/api_client/docs/ValidationImportPostRequestBlueprint.md)
  - [ValidationRapidSelectionConfig](rapidata/api_client/docs/ValidationRapidSelectionConfig.md)

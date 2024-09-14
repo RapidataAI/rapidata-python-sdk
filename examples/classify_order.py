@@ -36,8 +36,7 @@ def new_classify_order(rapi: RapidataClient):
             )
         )
         .media(["examples/data/wallaby.jpg"])
-        .referee(NaiveReferee(required_guesses=15))
-        .feature_flags(FeatureFlags().alert_on_fast_response(3000))
+        .referee(NaiveReferee(required_guesses=3))
         .validation_set_id(validation_set.id)
         .create()
     )
@@ -45,7 +44,9 @@ def new_classify_order(rapi: RapidataClient):
     result = order.get_status()
     print("Order in state: ", result.state)
 
+    return order
+
 
 if __name__ == "__main__":
     rapi = setup_client()
-    new_classify_order(rapi)
+    order = new_classify_order(rapi)

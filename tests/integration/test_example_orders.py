@@ -1,3 +1,4 @@
+import time
 import unittest
 from examples.classify_order import new_classify_order
 from examples.compare_order import new_compare_order
@@ -24,6 +25,7 @@ class TestClassifyOrder(unittest.TestCase):
         new_transcription_order(self.rapi)
 
     def test_get_results(self):
+        # order = new_classify_order(self.rapi)
         # time.sleep(1)
         # order.approve()
         # order.wait_for_done()

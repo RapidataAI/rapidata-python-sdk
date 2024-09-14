@@ -5,7 +5,6 @@ import json
 from rapidata.api_client.exceptions import ApiException
 
 
-
 class RapidataOrder:
     """
     Represents a Rapidata order.
@@ -54,14 +53,19 @@ class RapidataOrder:
         """
         Blocking call that waits for the order to be done. Exponential backoff is used to check the status of the order.
         """
-        wait_time = 2
-        back_off_factor = 1.5
-        minimum_poll_interval = 60 * 10  # 10 minutes
+        wait_time = 1
+        back_off_factor = 1.1
+        minimum_poll_interval = 60  # 1 minute
 
         while True:
             time.sleep(wait_time)
             result = self.get_status()
-            if result.state == "Completed":
+            if result.state == "ManualReview":
+                print(
+                    "Order is in manual review. Please contact support for approval. Will continue polling."
+                )
+
+            if result.state == "Completed" or result.state == "Failed":
                 break
             wait_time = max(
                 minimum_poll_interval, wait_time * back_off_factor
