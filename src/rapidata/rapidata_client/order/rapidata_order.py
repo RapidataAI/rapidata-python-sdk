@@ -1,6 +1,9 @@
 import time
 from rapidata.rapidata_client.dataset.rapidata_dataset import RapidataDataset
 from rapidata.service.openapi_service import OpenAPIService
+import json
+from rapidata.api_client.exceptions import ApiException
+
 
 
 class RapidataOrder:
@@ -71,8 +74,17 @@ class RapidataOrder:
         :return: The results of the order.
         :rtype: dict
         """
-        # return self.openapi_service.order_api.order_get_order_results_get(self.order_id) # throws error
-        raise NotImplementedError("Currently not supported")
+        try:
+            # Get the raw result string
+            result_str = self.openapi_service.order_api.order_result_get(id=self.order_id)
+            # Parse the result string as JSON
+            return json.loads(result_str)
+        except ApiException as e:
+            # Handle API exceptions
+            raise Exception(f"Failed to get order results: {str(e)}") from e
+        except json.JSONDecodeError as e:
+            # Handle JSON parsing errors
+            raise Exception(f"Failed to parse order results: {str(e)}") from e
 
     @property
     def dataset(self):

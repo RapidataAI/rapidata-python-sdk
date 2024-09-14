@@ -17,24 +17,26 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetOrderByIdResult(BaseModel):
+class UserScoreUserFilterModel(BaseModel):
     """
-    GetOrderByIdResult
+    The UserScoreFilter is used to restrict users to a specific user score.
     """ # noqa: E501
-    order_name: StrictStr = Field(alias="orderName")
-    customer_mail: StrictStr = Field(alias="customerMail")
-    order_date: datetime = Field(alias="orderDate")
-    state: StrictStr
-    pipeline_id: StrictStr = Field(alias="pipelineId")
-    is_locked: StrictBool = Field(alias="isLocked")
-    is_public: StrictBool = Field(alias="isPublic")
-    __properties: ClassVar[List[str]] = ["orderName", "customerMail", "orderDate", "state", "pipelineId", "isLocked", "isPublic"]
+    t: StrictStr = Field(description="Discriminator value for UserScoreFilter", alias="_t")
+    lowerbound: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The lowerbound of the user score.")
+    upperbound: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The upperbound of the user score.")
+    __properties: ClassVar[List[str]] = ["_t", "lowerbound", "upperbound"]
+
+    @field_validator('t')
+    def t_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['UserScoreFilter']):
+            raise ValueError("must be one of enum values ('UserScoreFilter')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -54,7 +56,7 @@ class GetOrderByIdResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetOrderByIdResult from a JSON string"""
+        """Create an instance of UserScoreUserFilterModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -79,7 +81,7 @@ class GetOrderByIdResult(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetOrderByIdResult from a dict"""
+        """Create an instance of UserScoreUserFilterModel from a dict"""
         if obj is None:
             return None
 
@@ -87,13 +89,9 @@ class GetOrderByIdResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "orderName": obj.get("orderName"),
-            "customerMail": obj.get("customerMail"),
-            "orderDate": obj.get("orderDate"),
-            "state": obj.get("state"),
-            "pipelineId": obj.get("pipelineId"),
-            "isLocked": obj.get("isLocked"),
-            "isPublic": obj.get("isPublic")
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'UserScoreFilter',
+            "lowerbound": obj.get("lowerbound"),
+            "upperbound": obj.get("upperbound")
         })
         return _obj
 

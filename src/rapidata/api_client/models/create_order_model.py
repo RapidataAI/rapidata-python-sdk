@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.create_order_model_referee import CreateOrderModelReferee
 from rapidata.api_client.models.create_order_model_selections_inner import CreateOrderModelSelectionsInner
@@ -39,7 +39,8 @@ class CreateOrderModel(BaseModel):
     validation_set_id: Optional[StrictStr] = Field(default=None, description="The validation set id can be changed to point to a specific validation set. if not provided a sane default will be used.", alias="validationSetId")
     selections: Optional[List[CreateOrderModelSelectionsInner]] = Field(default=None, description="The selections are used to determine which tasks are shown to a user.")
     feature_flags: Optional[List[FeatureFlagModel]] = Field(default=None, description="The feature flags are used to enable or disable certain features.", alias="featureFlags")
-    __properties: ClassVar[List[str]] = ["orderName", "userFilters", "workflow", "referee", "aggregator", "validationSetId", "selections", "featureFlags"]
+    priority: Optional[StrictInt] = Field(default=None, description="The priority is used to prioritize over other orders.")
+    __properties: ClassVar[List[str]] = ["orderName", "userFilters", "workflow", "referee", "aggregator", "validationSetId", "selections", "featureFlags", "priority"]
 
     @field_validator('aggregator')
     def aggregator_validate_enum(cls, value):
@@ -137,6 +138,11 @@ class CreateOrderModel(BaseModel):
         if self.feature_flags is None and "feature_flags" in self.model_fields_set:
             _dict['featureFlags'] = None
 
+        # set to None if priority (nullable) is None
+        # and model_fields_set contains the field
+        if self.priority is None and "priority" in self.model_fields_set:
+            _dict['priority'] = None
+
         return _dict
 
     @classmethod
@@ -156,7 +162,8 @@ class CreateOrderModel(BaseModel):
             "aggregator": obj.get("aggregator"),
             "validationSetId": obj.get("validationSetId"),
             "selections": [CreateOrderModelSelectionsInner.from_dict(_item) for _item in obj["selections"]] if obj.get("selections") is not None else None,
-            "featureFlags": [FeatureFlagModel.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
+            "featureFlags": [FeatureFlagModel.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
+            "priority": obj.get("priority")
         })
         return _obj
 

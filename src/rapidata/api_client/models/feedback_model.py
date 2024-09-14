@@ -28,7 +28,8 @@ class FeedbackModel(BaseModel):
     """ # noqa: E501
     feedback: StrictStr = Field(description="The feedback")
     email: Optional[StrictStr] = Field(default=None, description="The email of the user submitting the feedback")
-    __properties: ClassVar[List[str]] = ["feedback", "email"]
+    token: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = ["feedback", "email", "token"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -74,6 +75,11 @@ class FeedbackModel(BaseModel):
         if self.email is None and "email" in self.model_fields_set:
             _dict['email'] = None
 
+        # set to None if token (nullable) is None
+        # and model_fields_set contains the field
+        if self.token is None and "token" in self.model_fields_set:
+            _dict['token'] = None
+
         return _dict
 
     @classmethod
@@ -87,7 +93,8 @@ class FeedbackModel(BaseModel):
 
         _obj = cls.model_validate({
             "feedback": obj.get("feedback"),
-            "email": obj.get("email")
+            "email": obj.get("email"),
+            "token": obj.get("token")
         })
         return _obj
 

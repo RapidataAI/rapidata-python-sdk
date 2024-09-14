@@ -1055,6 +1055,29 @@
         }
       }
     },
+    "/Order/Share": {
+      "put": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Updates whether an order is public or not.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "query",
+            "description": "The id of the order to update",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/Order/Submit": {
       "post": {
         "tags": [
@@ -3697,6 +3720,34 @@
         },
         "additionalProperties": false
       },
+      "CampaignUserFilterModel": {
+        "title": "CampaignFilter",
+        "required": [
+          "_t",
+          "campaignIds"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "CampaignFilter"
+            ],
+            "type": "string",
+            "description": "Discriminator value for CampaignFilter",
+            "default": "CampaignFilter",
+            "example": "CampaignFilter"
+          },
+          "campaignIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "A whitelist for external DSP campaign ids"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The CampaignFilter is used to restrict users to specific campaigns."
+      },
       "ClassificationMetadataFilterConfig": {
         "title": "ClassificationMetadataFilterConfig",
         "required": [
@@ -4101,7 +4152,7 @@
               "propertyName": "_t"
             }
           },
-          "isPublic": {
+          "isDemo": {
             "type": "boolean",
             "description": "Whether the order is public",
             "default": false
@@ -4257,6 +4308,15 @@
             "items": {
               "oneOf": [
                 {
+                  "$ref": "#/components/schemas/UserScoreUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/LanguageUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/CampaignUserFilterModel"
+                },
+                {
                   "$ref": "#/components/schemas/CountryUserFilterModel"
                 },
                 {
@@ -4352,6 +4412,12 @@
               "$ref": "#/components/schemas/FeatureFlagModel"
             },
             "description": "The feature flags are used to enable or disable certain features.",
+            "nullable": true
+          },
+          "priority": {
+            "type": "integer",
+            "description": "The priority is used to prioritize over other orders.",
+            "format": "int32",
             "nullable": true
           }
         },
@@ -4706,6 +4772,11 @@
             "description": "The email of the user submitting the feedback",
             "default": null,
             "nullable": true
+          },
+          "token": {
+            "type": "string",
+            "default": null,
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -4829,6 +4900,7 @@
         "required": [
           "customerMail",
           "isLocked",
+          "isPublic",
           "orderDate",
           "orderName",
           "pipelineId",
@@ -4853,6 +4925,9 @@
             "type": "string"
           },
           "isLocked": {
+            "type": "boolean"
+          },
+          "isPublic": {
             "type": "boolean"
           }
         },
@@ -4941,6 +5016,34 @@
         },
         "additionalProperties": false,
         "description": "The labeling selection has to be supplied so that the users will be shown the actual labeling tasks"
+      },
+      "LanguageUserFilterModel": {
+        "title": "LanguageFilter",
+        "required": [
+          "_t",
+          "languages"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "LanguageFilter"
+            ],
+            "type": "string",
+            "description": "Discriminator value for LanguageFilter",
+            "default": "LanguageFilter",
+            "example": "LanguageFilter"
+          },
+          "languages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "A whitelist for languages of the users. The languages are in the ISO 639-1 format."
+          }
+        },
+        "additionalProperties": false,
+        "description": "The LanguageFilter is used to restrict users to specific languages."
       },
       "LineRapidBlueprint": {
         "title": "LineBlueprint",
@@ -5648,6 +5751,36 @@
         },
         "additionalProperties": false,
         "description": "The model for updating the workflow configuration of an order."
+      },
+      "UserScoreUserFilterModel": {
+        "title": "UserScoreFilter",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "UserScoreFilter"
+            ],
+            "type": "string",
+            "description": "Discriminator value for UserScoreFilter",
+            "default": "UserScoreFilter",
+            "example": "UserScoreFilter"
+          },
+          "lowerbound": {
+            "type": "number",
+            "description": "The lowerbound of the user score.",
+            "format": "double"
+          },
+          "upperbound": {
+            "type": "number",
+            "description": "The upperbound of the user score.",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The UserScoreFilter is used to restrict users to a specific user score."
       },
       "ValidationChance": {
         "required": [
@@ -7125,8 +7258,8 @@
             "example": "Line"
           },
           "size": {
-            "type": "integer",
-            "format": "int32"
+            "type": "number",
+            "format": "double"
           },
           "points": {
             "type": "array",
