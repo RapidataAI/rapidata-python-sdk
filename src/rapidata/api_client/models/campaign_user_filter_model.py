@@ -17,24 +17,25 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetOrderByIdResult(BaseModel):
+class CampaignUserFilterModel(BaseModel):
     """
-    GetOrderByIdResult
+    The CampaignFilter is used to restrict users to specific campaigns.
     """ # noqa: E501
-    order_name: StrictStr = Field(alias="orderName")
-    customer_mail: StrictStr = Field(alias="customerMail")
-    order_date: datetime = Field(alias="orderDate")
-    state: StrictStr
-    pipeline_id: StrictStr = Field(alias="pipelineId")
-    is_locked: StrictBool = Field(alias="isLocked")
-    is_public: StrictBool = Field(alias="isPublic")
-    __properties: ClassVar[List[str]] = ["orderName", "customerMail", "orderDate", "state", "pipelineId", "isLocked", "isPublic"]
+    t: StrictStr = Field(description="Discriminator value for CampaignFilter", alias="_t")
+    campaign_ids: List[StrictStr] = Field(description="A whitelist for external DSP campaign ids", alias="campaignIds")
+    __properties: ClassVar[List[str]] = ["_t", "campaignIds"]
+
+    @field_validator('t')
+    def t_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['CampaignFilter']):
+            raise ValueError("must be one of enum values ('CampaignFilter')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -54,7 +55,7 @@ class GetOrderByIdResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetOrderByIdResult from a JSON string"""
+        """Create an instance of CampaignUserFilterModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -79,7 +80,7 @@ class GetOrderByIdResult(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetOrderByIdResult from a dict"""
+        """Create an instance of CampaignUserFilterModel from a dict"""
         if obj is None:
             return None
 
@@ -87,13 +88,8 @@ class GetOrderByIdResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "orderName": obj.get("orderName"),
-            "customerMail": obj.get("customerMail"),
-            "orderDate": obj.get("orderDate"),
-            "state": obj.get("state"),
-            "pipelineId": obj.get("pipelineId"),
-            "isLocked": obj.get("isLocked"),
-            "isPublic": obj.get("isPublic")
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'CampaignFilter',
+            "campaignIds": obj.get("campaignIds")
         })
         return _obj
 

@@ -17,8 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Union
 from rapidata.api_client.models.line_point import LinePoint
 from typing import Optional, Set
 from typing_extensions import Self
@@ -28,7 +28,7 @@ class Line(BaseModel):
     Line
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for Line", alias="_t")
-    size: StrictInt
+    size: Union[StrictFloat, StrictInt]
     points: List[LinePoint]
     __properties: ClassVar[List[str]] = ["_t", "size", "points"]
 

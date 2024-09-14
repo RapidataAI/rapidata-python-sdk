@@ -29,8 +29,8 @@ class CreateComplexOrderModel(BaseModel):
     """ # noqa: E501
     order_name: StrictStr = Field(description="The name of the order", alias="orderName")
     pipeline: CreateComplexOrderModelPipeline
-    is_public: Optional[StrictBool] = Field(default=False, description="Whether the order is public", alias="isPublic")
-    __properties: ClassVar[List[str]] = ["orderName", "pipeline", "isPublic"]
+    is_demo: Optional[StrictBool] = Field(default=False, description="Whether the order is public", alias="isDemo")
+    __properties: ClassVar[List[str]] = ["orderName", "pipeline", "isDemo"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -88,7 +88,7 @@ class CreateComplexOrderModel(BaseModel):
         _obj = cls.model_validate({
             "orderName": obj.get("orderName"),
             "pipeline": CreateComplexOrderModelPipeline.from_dict(obj["pipeline"]) if obj.get("pipeline") is not None else None,
-            "isPublic": obj.get("isPublic") if obj.get("isPublic") is not None else False
+            "isDemo": obj.get("isDemo") if obj.get("isDemo") is not None else False
         })
         return _obj
 

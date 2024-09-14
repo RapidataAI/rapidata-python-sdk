@@ -56,6 +56,7 @@ from rapidata.api_client.models.bounding_box_rapid_blueprint import BoundingBoxR
 from rapidata.api_client.models.bounding_box_result import BoundingBoxResult
 from rapidata.api_client.models.bounding_box_truth import BoundingBoxTruth
 from rapidata.api_client.models.box_shape import BoxShape
+from rapidata.api_client.models.campaign_user_filter_model import CampaignUserFilterModel
 from rapidata.api_client.models.classification_metadata import ClassificationMetadata
 from rapidata.api_client.models.classification_metadata_filter_config import ClassificationMetadataFilterConfig
 from rapidata.api_client.models.classify_payload import ClassifyPayload
@@ -139,6 +140,7 @@ from rapidata.api_client.models.import_validation_set_from_file_result import Im
 from rapidata.api_client.models.issue_auth_token_result import IssueAuthTokenResult
 from rapidata.api_client.models.issue_client_auth_token_result import IssueClientAuthTokenResult
 from rapidata.api_client.models.labeling_selection import LabelingSelection
+from rapidata.api_client.models.language_user_filter_model import LanguageUserFilterModel
 from rapidata.api_client.models.line import Line
 from rapidata.api_client.models.line_payload import LinePayload
 from rapidata.api_client.models.line_point import LinePoint
@@ -228,6 +230,7 @@ from rapidata.api_client.models.upload_coco_result import UploadCocoResult
 from rapidata.api_client.models.upload_datapoints_result import UploadDatapointsResult
 from rapidata.api_client.models.upload_files_from_s3_bucket_model import UploadFilesFromS3BucketModel
 from rapidata.api_client.models.upload_text_sources_to_dataset_model import UploadTextSourcesToDatasetModel
+from rapidata.api_client.models.user_score_user_filter_model import UserScoreUserFilterModel
 from rapidata.api_client.models.validation_chance import ValidationChance
 from rapidata.api_client.models.validation_import_post_request_blueprint import ValidationImportPostRequestBlueprint
 from rapidata.api_client.models.validation_rapid_selection_config import ValidationRapidSelectionConfig
