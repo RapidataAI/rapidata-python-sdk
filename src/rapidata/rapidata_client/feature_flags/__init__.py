@@ -1,1 +1,1 @@
-from .feature_flags import FeatureFlags as FeatureFlags
+from .feature_flags import FeatureFlags
