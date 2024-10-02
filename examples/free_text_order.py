@@ -3,10 +3,7 @@ Free Text Order
 '''
 
 from examples.setup_client import setup_client
-from src.rapidata.rapidata_client.rapidata_client import RapidataClient
-from src.rapidata.rapidata_client.feature_flags import FeatureFlags
-from src.rapidata.rapidata_client.workflow import FreeTextWorkflow
-from src.rapidata.rapidata_client.country_codes import CountryCodes
+from rapidata import RapidataClient, FreeTextWorkflow, FeatureFlags, CountryCodes
 
 
 def new_free_text_order(rapi: RapidataClient):
