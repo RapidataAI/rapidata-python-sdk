@@ -5,6 +5,9 @@ from rapidata.rapidata_client.dataset.validation_set_builder import ValidationSe
 from rapidata.rapidata_client.order.rapidata_order_builder import RapidataOrderBuilder
 from rapidata.rapidata_client.utils.utils import Utils
 from rapidata.service.openapi_service import OpenAPIService
+from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
+from rapidata.rapidata_client.dataset.rapidata_dataset import RapidataDataset
+
 
 
 class RapidataClient:
@@ -59,6 +62,25 @@ class RapidataClient:
             RapidataValidationSet: The ValidationSet instance.
         """
         return RapidataValidationSet(validation_set_id, self.openapi_service)
+    
+    def get_order(self, order_id: str) -> RapidataOrder:
+        """Get an order by ID.
+
+        Args:
+            order_id (str): The ID of the order.
+
+        Returns:
+            RapidataOrder: The Order instance.
+        """
+
+        # TODO: check the pipeline for the dataset id - not really necessary atm
+        # order = self.openapi_service.order_api.order_get_by_id_get(order_id)
+        # pipeline = self.openapi_service..pipeline_get_by_id_get(order.pipeline_id)
+        temp_dataset = RapidataDataset("temp", self.openapi_service)
+        return RapidataOrder(
+            dataset=temp_dataset, 
+            order_id=order_id, 
+            openapi_service=self.openapi_service)
 
     @property
     def utils(self) -> Utils:
