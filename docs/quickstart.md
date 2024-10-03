@@ -121,7 +121,7 @@ with open("order_ids.txt", "a") as file:
 
 ### Downloading Results
 
-To download the results, you'll need the order object:
+To download the results, you'll need the order object (this will throw an error if the order is not complete yet):
 
 ```py
 results = order.get_results()
