@@ -2,7 +2,7 @@
 Transcription order with validation set
 '''
 from examples.setup_client import setup_client
-from rapidata import RapidataClient, FeatureFlags, NaiveReferee, TranscriptionWorkflow, TranscriptionMetadata
+from rapidata import RapidataClient, FeatureFlags, NaiveReferee, TranscriptionWorkflow, TranscriptionMetadata, ValidationSelection, LabelingSelection
 
 
 def new_transcription_order(rapi: RapidataClient):
@@ -32,10 +32,14 @@ def new_transcription_order(rapi: RapidataClient):
         .referee(NaiveReferee(required_guesses=30))
         .feature_flags(FeatureFlags().alert_on_fast_response(4000))
         .media(media_paths=["examples/data/waiting.mp4"], metadata=[transcription])
-        .validation_set_id(validation_set.id)
+        .selections([
+            ValidationSelection(amount=1, validation_set_id=validation_set.id),
+            LabelingSelection(amount=2)
+        ])
         .create()
     )
 
+    return order
 
 if __name__ == "__main__":
     rapi = setup_client()

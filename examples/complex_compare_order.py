@@ -3,7 +3,7 @@ Compare order with a validation set
 '''
 
 from examples.setup_client import setup_client
-from rapidata import RapidataClient, FeatureFlags, NaiveReferee, CompareWorkflow, ValidationSelection, DemographicSelection, LabelingSelection
+from rapidata import RapidataClient, FeatureFlags, NaiveReferee, CompareWorkflow, ValidationSelection, LabelingSelection
 
 
 def new_compare_order(rapi: RapidataClient):
@@ -43,8 +43,7 @@ def new_compare_order(rapi: RapidataClient):
         )
         .selections(
             [
-                ValidationSelection(validation_set_id=validation_set.id),
-                DemographicSelection(rapid_id="1234567890"),
+                ValidationSelection(amount=1, validation_set_id=validation_set.id),
                 LabelingSelection(amount=1),
             ]
         )
