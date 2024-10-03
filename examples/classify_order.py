@@ -3,7 +3,7 @@ Classify order with a validation set
 '''
 
 from examples.setup_client import setup_client
-from rapidata import RapidataClient, ClassifyWorkflow, NaiveReferee, PromptMetadata
+from rapidata import RapidataClient, ClassifyWorkflow, NaiveReferee, PromptMetadata, LabelingSelection, ValidationSelection
 
 
 def new_classify_order(rapi: RapidataClient):
@@ -33,7 +33,10 @@ def new_classify_order(rapi: RapidataClient):
         )
         .media(["examples/data/wallaby.jpg"])
         .referee(NaiveReferee(required_guesses=3))
-        .validation_set_id(validation_set.id)
+        .selections([
+            ValidationSelection(amount=1, validation_set_id=validation_set.id),
+            LabelingSelection(amount=3)
+            ])
         .create()
     )
 

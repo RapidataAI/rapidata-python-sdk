@@ -3,7 +3,7 @@ Free Text Order
 '''
 
 from examples.setup_client import setup_client
-from rapidata import RapidataClient, FreeTextWorkflow, FeatureFlags, CountryCodes
+from rapidata import RapidataClient, FreeTextWorkflow, FeatureFlags, CountryCodes, LabelingSelection
 
 
 def new_free_text_order(rapi: RapidataClient):
@@ -20,8 +20,14 @@ def new_free_text_order(rapi: RapidataClient):
         .feature_flags(
             FeatureFlags().free_text_minimum_characters(15).alert_on_fast_response(5000)
         )
-        .country_filter(CountryCodes.ENGLISH_SPEAKING)
+        .selections([
+            LabelingSelection(amount=1)
+            ])
+        # This means that only people in English speaking countries will be able to answer for this order
+        .country_filter(CountryCodes.ENGLISH_SPEAKING) 
     ).create()
+
+    return order
 
 
 if __name__ == "__main__":
