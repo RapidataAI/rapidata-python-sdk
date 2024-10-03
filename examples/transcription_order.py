@@ -2,16 +2,7 @@
 Transcription order with validation set
 '''
 from examples.setup_client import setup_client
-from rapidata.api_client.models.transcription_word import TranscriptionWord
-from rapidata.rapidata_client.feature_flags.feature_flags import FeatureFlags
-from rapidata.rapidata_client.metadata.transcription_metadata import (
-    TranscriptionMetadata,
-)
-from rapidata.rapidata_client.rapidata_client import RapidataClient
-from rapidata.rapidata_client.referee.naive_referee import NaiveReferee
-from rapidata.rapidata_client.workflow.transcription_workflow import (
-    TranscriptionWorkflow,
-)
+from rapidata import RapidataClient, FeatureFlags, NaiveReferee, TranscriptionWorkflow, TranscriptionMetadata
 
 
 def new_transcription_order(rapi: RapidataClient):

@@ -1,1 +1,1 @@
-from .country_codes import CountryCodes as CountryCodes
+from .country_codes import CountryCodes
