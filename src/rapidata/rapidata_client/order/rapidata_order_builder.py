@@ -23,6 +23,8 @@ from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 from rapidata.rapidata_client.referee import Referee
 from rapidata.service.openapi_service import OpenAPIService
 
+from rapidata.rapidata_client.workflow.compare_workflow import CompareWorkflow
+
 
 class RapidataOrderBuilder:
     """Builder object for creating Rapidata orders.
@@ -51,10 +53,11 @@ class RapidataOrderBuilder:
         self._country_codes: list[str] | None = None
         self._selections: list[Selection] = []
         self._rapids_per_bag: int = 2
+        self._priority: int = 50
 
     def _to_model(self) -> CreateOrderModel:
         if self._workflow is None:
-            raise ValueError("You must provide a blueprint to create an order.")
+            raise ValueError("You must provide a workflow to create an order.")
 
         if self._referee is None:
             print("No referee provided, using default NaiveReferee.")
@@ -85,6 +88,7 @@ class RapidataOrderBuilder:
                 CreateOrderModelSelectionsInner(selection.to_model())
                 for selection in self._selections
             ],
+            priority=self._priority,
         )
 
     def create(self, submit=True, max_workers=10) -> RapidataOrder:
@@ -100,6 +104,8 @@ class RapidataOrderBuilder:
             ValueError: If no workflow is provided.
         """
         order_model = self._to_model()
+        if isinstance(self._workflow, CompareWorkflow): # temp fix, will be handeled by backend in the future
+            assert all([len(path) == 2 for path in self._media_paths]), "The media paths must come in pairs for comparison tasks."
 
         result = self._openapi_service.order_api.order_create_post(
             create_order_model=order_model
@@ -114,7 +120,6 @@ class RapidataOrderBuilder:
         )
 
         order.dataset.add_media_from_paths(self._media_paths, self._metadata, max_workers)
-
         if submit:
             order.submit()
 
@@ -234,4 +239,16 @@ class RapidataOrderBuilder:
             RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
         """
         self._selections = selections
+        return self
+    
+    def priority(self, priority: int):
+        """Set the priority for the order.
+
+        Args:
+            priority (int): The priority to be set.
+
+        Returns:
+            RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
+        """
+        self._priority = priority
         return self
