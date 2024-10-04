@@ -7,9 +7,17 @@ jobs:
   do-something:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Do something
-        run: |
-          echo "Action triggered from another repo!"
-          echo "Ref: ${{ github.event.client_payload.ref }}"
-          echo "SHA: ${{ github.event.client_payload.sha }}"
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+
+      - name: Install node packages
+        run: npm i openapi-merge-cli @openapitools/openapi-generator-cli
+
+      - name: Download specs
+        run: ./openapi/download-and-merge-spec.sh
+
+      - name: Generate client
+        run: ./openapi/generate.sh
