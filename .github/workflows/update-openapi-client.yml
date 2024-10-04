@@ -1,0 +1,15 @@
+name: Update OpenAPI Client and make PRs
+on:
+  repository_dispatch:
+    types: [update-openapi-client]
+
+jobs:
+  do-something:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Do something
+        run: |
+          echo "Action triggered from another repo!"
+          echo "Ref: ${{ github.event.client_payload.ref }}"
+          echo "SHA: ${{ github.event.client_payload.sha }}"
