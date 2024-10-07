@@ -43,7 +43,7 @@ jobs:
           # Get latest tag
           git fetch --tags
           BRANCH_NAME="chore/update-openapi-to-${{ github.event.client_payload.latest_tag }}"
-          LATEST_TAG = ${{ github.event.client_payload.latest_tag }}
+          LATEST_TAG=${{ github.event.client_payload.latest_tag }}
           
           # Create a new feature branch for the changes
           git checkout -b $BRANCH_NAME
