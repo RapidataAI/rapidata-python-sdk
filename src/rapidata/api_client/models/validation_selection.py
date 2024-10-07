@@ -24,11 +24,11 @@ from typing_extensions import Self
 
 class ValidationSelection(BaseModel):
     """
-    A validation selection is used to show the validation tasks to the user. note that it is not supported to supply both a validation set id and selection configs.
+    ValidationSelection
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for ValidationSelection", alias="_t")
-    amount: StrictInt = Field(description="The amount of validation tasks that should be shown to the user.")
-    validation_set_id: StrictStr = Field(description="The validation set id can be changed to point to a specific validation set. if not provided a sane default will be used.", alias="validationSetId")
+    amount: StrictInt
+    validation_set_id: StrictStr = Field(alias="validationSetId")
     __properties: ClassVar[List[str]] = ["_t", "amount", "validationSetId"]
 
     @field_validator('t')

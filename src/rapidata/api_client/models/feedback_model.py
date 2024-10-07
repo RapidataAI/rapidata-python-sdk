@@ -28,7 +28,7 @@ class FeedbackModel(BaseModel):
     """ # noqa: E501
     feedback: StrictStr = Field(description="The feedback")
     email: Optional[StrictStr] = Field(default=None, description="The email of the user submitting the feedback")
-    token: Optional[StrictStr] = None
+    token: Optional[StrictStr] = Field(default=None, description="The recaptcha token of the user submitting the feedback")
     __properties: ClassVar[List[str]] = ["feedback", "email", "token"]
 
     model_config = ConfigDict(

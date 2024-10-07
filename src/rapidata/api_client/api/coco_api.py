@@ -17,7 +17,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
 from pydantic import Field, StrictBytes, StrictStr
-from typing import Optional, Tuple, Union
+from typing import Optional, Union
 from typing_extensions import Annotated
 from rapidata.api_client.models.submit_coco_model import SubmitCocoModel
 from rapidata.api_client.models.submit_coco_result import SubmitCocoResult
@@ -253,9 +253,7 @@ class CocoApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
+        _files: Dict[str, Union[str, bytes]] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
@@ -321,7 +319,7 @@ class CocoApi:
         self,
         name: Annotated[Optional[StrictStr], Field(description="The name to give the newly uploaded CoCo set.")] = None,
         title: Annotated[Optional[StrictStr], Field(description="The title to be used when creating rapids from the CoCo set.")] = None,
-        file: Annotated[Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]], Field(description="The file containing the CoCo set.")] = None,
+        file: Annotated[Optional[Union[StrictBytes, StrictStr]], Field(description="The file containing the CoCo set.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -395,7 +393,7 @@ class CocoApi:
         self,
         name: Annotated[Optional[StrictStr], Field(description="The name to give the newly uploaded CoCo set.")] = None,
         title: Annotated[Optional[StrictStr], Field(description="The title to be used when creating rapids from the CoCo set.")] = None,
-        file: Annotated[Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]], Field(description="The file containing the CoCo set.")] = None,
+        file: Annotated[Optional[Union[StrictBytes, StrictStr]], Field(description="The file containing the CoCo set.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -469,7 +467,7 @@ class CocoApi:
         self,
         name: Annotated[Optional[StrictStr], Field(description="The name to give the newly uploaded CoCo set.")] = None,
         title: Annotated[Optional[StrictStr], Field(description="The title to be used when creating rapids from the CoCo set.")] = None,
-        file: Annotated[Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]], Field(description="The file containing the CoCo set.")] = None,
+        file: Annotated[Optional[Union[StrictBytes, StrictStr]], Field(description="The file containing the CoCo set.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -554,9 +552,7 @@ class CocoApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
+        _files: Dict[str, Union[str, bytes]] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters

@@ -25,10 +25,10 @@ from typing_extensions import Self
 
 class AgeUserFilterModel(BaseModel):
     """
-    The AgeFilter is used to restrict users to age groups.
+    AgeUserFilterModel
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for AgeFilter", alias="_t")
-    age_groups: List[AgeGroup] = Field(description="A whitelist for age groups.", alias="ageGroups")
+    age_groups: List[AgeGroup] = Field(alias="ageGroups")
     __properties: ClassVar[List[str]] = ["_t", "ageGroups"]
 
     @field_validator('t')

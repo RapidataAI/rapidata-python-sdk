@@ -17,7 +17,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
 from pydantic import Field, StrictBytes, StrictStr
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional, Union
 from typing_extensions import Annotated
 from rapidata.api_client.models.create_demographic_rapid_model import CreateDemographicRapidModel
 from rapidata.api_client.models.query_model import QueryModel
@@ -255,9 +255,7 @@ class RapidApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
+        _files: Dict[str, Union[str, bytes]] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
@@ -313,7 +311,7 @@ class RapidApi:
     def rapid_create_demographic_rapid_post(
         self,
         model: Optional[CreateDemographicRapidModel] = None,
-        file: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        file: Annotated[Optional[List[Union[StrictBytes, StrictStr]]], Field(description="The file to use as the asset for the rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -332,7 +330,7 @@ class RapidApi:
 
         :param model:
         :type model: CreateDemographicRapidModel
-        :param file:
+        :param file: The file to use as the asset for the rapid.
         :type file: List[bytearray]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -383,7 +381,7 @@ class RapidApi:
     def rapid_create_demographic_rapid_post_with_http_info(
         self,
         model: Optional[CreateDemographicRapidModel] = None,
-        file: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        file: Annotated[Optional[List[Union[StrictBytes, StrictStr]]], Field(description="The file to use as the asset for the rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -402,7 +400,7 @@ class RapidApi:
 
         :param model:
         :type model: CreateDemographicRapidModel
-        :param file:
+        :param file: The file to use as the asset for the rapid.
         :type file: List[bytearray]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -453,7 +451,7 @@ class RapidApi:
     def rapid_create_demographic_rapid_post_without_preload_content(
         self,
         model: Optional[CreateDemographicRapidModel] = None,
-        file: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        file: Annotated[Optional[List[Union[StrictBytes, StrictStr]]], Field(description="The file to use as the asset for the rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -472,7 +470,7 @@ class RapidApi:
 
         :param model:
         :type model: CreateDemographicRapidModel
-        :param file:
+        :param file: The file to use as the asset for the rapid.
         :type file: List[bytearray]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -535,9 +533,7 @@ class RapidApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
+        _files: Dict[str, Union[str, bytes]] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
@@ -814,9 +810,7 @@ class RapidApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
+        _files: Dict[str, Union[str, bytes]] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
@@ -1080,9 +1074,7 @@ class RapidApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
+        _files: Dict[str, Union[str, bytes]] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
@@ -1333,9 +1325,7 @@ class RapidApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
+        _files: Dict[str, Union[str, bytes]] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
