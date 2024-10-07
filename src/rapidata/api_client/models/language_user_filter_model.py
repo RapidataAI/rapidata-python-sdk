@@ -24,10 +24,10 @@ from typing_extensions import Self
 
 class LanguageUserFilterModel(BaseModel):
     """
-    The LanguageFilter is used to restrict users to specific languages.
+    LanguageUserFilterModel
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for LanguageFilter", alias="_t")
-    languages: List[StrictStr] = Field(description="A whitelist for languages of the users. The languages are in the ISO 639-1 format.")
+    languages: List[StrictStr]
     __properties: ClassVar[List[str]] = ["_t", "languages"]
 
     @field_validator('t')

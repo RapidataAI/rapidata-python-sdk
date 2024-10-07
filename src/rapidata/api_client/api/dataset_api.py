@@ -17,7 +17,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
 from pydantic import Field, StrictBytes, StrictStr
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional, Union
 from typing_extensions import Annotated
 from rapidata.api_client.models.datapoint_metadata_model import DatapointMetadataModel
 from rapidata.api_client.models.get_dataset_by_id_result import GetDatasetByIdResult
@@ -47,7 +47,7 @@ class DatasetApi:
     @validate_call
     def dataset_create_datapoint_post(
         self,
-        files: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        files: Annotated[Optional[List[Union[StrictBytes, StrictStr]]], Field(description="The image files to upload.")] = None,
         model: Optional[DatapointMetadataModel] = None,
         _request_timeout: Union[
             None,
@@ -66,7 +66,7 @@ class DatasetApi:
 
         If multiple files are uploaded, a multi asset datapoint will be created.
 
-        :param files:
+        :param files: The image files to upload.
         :type files: List[bytearray]
         :param model:
         :type model: DatapointMetadataModel
@@ -118,7 +118,7 @@ class DatasetApi:
     @validate_call
     def dataset_create_datapoint_post_with_http_info(
         self,
-        files: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        files: Annotated[Optional[List[Union[StrictBytes, StrictStr]]], Field(description="The image files to upload.")] = None,
         model: Optional[DatapointMetadataModel] = None,
         _request_timeout: Union[
             None,
@@ -137,7 +137,7 @@ class DatasetApi:
 
         If multiple files are uploaded, a multi asset datapoint will be created.
 
-        :param files:
+        :param files: The image files to upload.
         :type files: List[bytearray]
         :param model:
         :type model: DatapointMetadataModel
@@ -189,7 +189,7 @@ class DatasetApi:
     @validate_call
     def dataset_create_datapoint_post_without_preload_content(
         self,
-        files: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        files: Annotated[Optional[List[Union[StrictBytes, StrictStr]]], Field(description="The image files to upload.")] = None,
         model: Optional[DatapointMetadataModel] = None,
         _request_timeout: Union[
             None,
@@ -208,7 +208,7 @@ class DatasetApi:
 
         If multiple files are uploaded, a multi asset datapoint will be created.
 
-        :param files:
+        :param files: The image files to upload.
         :type files: List[bytearray]
         :param model:
         :type model: DatapointMetadataModel
@@ -273,9 +273,7 @@ class DatasetApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
+        _files: Dict[str, Union[str, bytes]] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
@@ -548,9 +546,7 @@ class DatasetApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
+        _files: Dict[str, Union[str, bytes]] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
@@ -602,7 +598,7 @@ class DatasetApi:
     def dataset_import_post(
         self,
         dataset_id: Annotated[Optional[StrictStr], Field(description="The id of the dataset to import the datapoints to.")] = None,
-        file: Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]] = None,
+        file: Annotated[Optional[Union[StrictBytes, StrictStr]], Field(description="The csv file to import.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -621,7 +617,7 @@ class DatasetApi:
 
         :param dataset_id: The id of the dataset to import the datapoints to.
         :type dataset_id: str
-        :param file:
+        :param file: The csv file to import.
         :type file: bytearray
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -672,7 +668,7 @@ class DatasetApi:
     def dataset_import_post_with_http_info(
         self,
         dataset_id: Annotated[Optional[StrictStr], Field(description="The id of the dataset to import the datapoints to.")] = None,
-        file: Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]] = None,
+        file: Annotated[Optional[Union[StrictBytes, StrictStr]], Field(description="The csv file to import.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -691,7 +687,7 @@ class DatasetApi:
 
         :param dataset_id: The id of the dataset to import the datapoints to.
         :type dataset_id: str
-        :param file:
+        :param file: The csv file to import.
         :type file: bytearray
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -742,7 +738,7 @@ class DatasetApi:
     def dataset_import_post_without_preload_content(
         self,
         dataset_id: Annotated[Optional[StrictStr], Field(description="The id of the dataset to import the datapoints to.")] = None,
-        file: Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]] = None,
+        file: Annotated[Optional[Union[StrictBytes, StrictStr]], Field(description="The csv file to import.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -761,7 +757,7 @@ class DatasetApi:
 
         :param dataset_id: The id of the dataset to import the datapoints to.
         :type dataset_id: str
-        :param file:
+        :param file: The csv file to import.
         :type file: bytearray
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -823,9 +819,7 @@ class DatasetApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
+        _files: Dict[str, Union[str, bytes]] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
@@ -1113,9 +1107,7 @@ class DatasetApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
+        _files: Dict[str, Union[str, bytes]] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
@@ -1162,7 +1154,7 @@ class DatasetApi:
     def dataset_upload_datapoint_post(
         self,
         dataset_id: Annotated[Optional[StrictStr], Field(description="The id of the dataset to upload the datapoint to.")] = None,
-        files: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        files: Annotated[Optional[List[Union[StrictBytes, StrictStr]]], Field(description="The image files to create the asset from.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1181,7 +1173,7 @@ class DatasetApi:
 
         :param dataset_id: The id of the dataset to upload the datapoint to.
         :type dataset_id: str
-        :param files:
+        :param files: The image files to create the asset from.
         :type files: List[bytearray]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1232,7 +1224,7 @@ class DatasetApi:
     def dataset_upload_datapoint_post_with_http_info(
         self,
         dataset_id: Annotated[Optional[StrictStr], Field(description="The id of the dataset to upload the datapoint to.")] = None,
-        files: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        files: Annotated[Optional[List[Union[StrictBytes, StrictStr]]], Field(description="The image files to create the asset from.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1251,7 +1243,7 @@ class DatasetApi:
 
         :param dataset_id: The id of the dataset to upload the datapoint to.
         :type dataset_id: str
-        :param files:
+        :param files: The image files to create the asset from.
         :type files: List[bytearray]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1302,7 +1294,7 @@ class DatasetApi:
     def dataset_upload_datapoint_post_without_preload_content(
         self,
         dataset_id: Annotated[Optional[StrictStr], Field(description="The id of the dataset to upload the datapoint to.")] = None,
-        files: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        files: Annotated[Optional[List[Union[StrictBytes, StrictStr]]], Field(description="The image files to create the asset from.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1321,7 +1313,7 @@ class DatasetApi:
 
         :param dataset_id: The id of the dataset to upload the datapoint to.
         :type dataset_id: str
-        :param files:
+        :param files: The image files to create the asset from.
         :type files: List[bytearray]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1384,9 +1376,7 @@ class DatasetApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
+        _files: Dict[str, Union[str, bytes]] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
@@ -1664,9 +1654,7 @@ class DatasetApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
+        _files: Dict[str, Union[str, bytes]] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
@@ -1731,7 +1719,7 @@ class DatasetApi:
     def dataset_upload_images_to_dataset_post(
         self,
         dataset_id: Annotated[Optional[StrictStr], Field(description="The id of the dataset to upload the images to.")] = None,
-        files: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        files: Annotated[Optional[List[Union[StrictBytes, StrictStr]]], Field(description="The image files to upload.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1751,7 +1739,7 @@ class DatasetApi:
 
         :param dataset_id: The id of the dataset to upload the images to.
         :type dataset_id: str
-        :param files:
+        :param files: The image files to upload.
         :type files: List[bytearray]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1802,7 +1790,7 @@ class DatasetApi:
     def dataset_upload_images_to_dataset_post_with_http_info(
         self,
         dataset_id: Annotated[Optional[StrictStr], Field(description="The id of the dataset to upload the images to.")] = None,
-        files: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        files: Annotated[Optional[List[Union[StrictBytes, StrictStr]]], Field(description="The image files to upload.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1822,7 +1810,7 @@ class DatasetApi:
 
         :param dataset_id: The id of the dataset to upload the images to.
         :type dataset_id: str
-        :param files:
+        :param files: The image files to upload.
         :type files: List[bytearray]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1873,7 +1861,7 @@ class DatasetApi:
     def dataset_upload_images_to_dataset_post_without_preload_content(
         self,
         dataset_id: Annotated[Optional[StrictStr], Field(description="The id of the dataset to upload the images to.")] = None,
-        files: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        files: Annotated[Optional[List[Union[StrictBytes, StrictStr]]], Field(description="The image files to upload.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1893,7 +1881,7 @@ class DatasetApi:
 
         :param dataset_id: The id of the dataset to upload the images to.
         :type dataset_id: str
-        :param files:
+        :param files: The image files to upload.
         :type files: List[bytearray]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1956,9 +1944,7 @@ class DatasetApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
+        _files: Dict[str, Union[str, bytes]] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
@@ -2227,9 +2213,7 @@ class DatasetApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
+        _files: Dict[str, Union[str, bytes]] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters

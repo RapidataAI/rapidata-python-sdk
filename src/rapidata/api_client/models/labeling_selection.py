@@ -24,10 +24,10 @@ from typing_extensions import Self
 
 class LabelingSelection(BaseModel):
     """
-    The labeling selection has to be supplied so that the users will be shown the actual labeling tasks
+    LabelingSelection
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for LabelingSelection", alias="_t")
-    amount: StrictInt = Field(description="The amount of labeling tasks that should be shown to the user.")
+    amount: StrictInt
     __properties: ClassVar[List[str]] = ["_t", "amount"]
 
     @field_validator('t')

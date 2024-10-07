@@ -28,7 +28,7 @@ CREATEORDERMODELSELECTIONSINNER_ONE_OF_SCHEMAS = ["DemographicSelection", "Label
 
 class CreateOrderModelSelectionsInner(BaseModel):
     """
-    A selection is used to determine which tasks are shown to a user.
+    CreateOrderModelSelectionsInner
     """
     # data type: DemographicSelection
     oneof_schema_1_validator: Optional[DemographicSelection] = None

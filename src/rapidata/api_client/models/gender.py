@@ -20,7 +20,7 @@ from typing_extensions import Self
 
 class Gender(str, Enum):
     """
-    All available Gender options.
+    Gender
     """
 
     """

@@ -24,10 +24,10 @@ from typing_extensions import Self
 
 class DemographicSelection(BaseModel):
     """
-    The demographic selection can be used to show a specific demographic rapid to the users.
+    DemographicSelection
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for DemographicSelection", alias="_t")
-    rapid_id: StrictStr = Field(description="The rapid id is used to determine which rapid is shown to the user.", alias="rapidId")
+    rapid_id: StrictStr = Field(alias="rapidId")
     __properties: ClassVar[List[str]] = ["_t", "rapidId"]
 
     @field_validator('t')

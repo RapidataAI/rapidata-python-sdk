@@ -142,7 +142,6 @@
         "summary": "Creates a single datapoint.",
         "description": "If multiple files are uploaded, a multi asset datapoint will be created.",
         "requestBody": {
-          "description": "The image files to upload.",
           "content": {
             "multipart/form-data": {
               "schema": {
@@ -153,7 +152,8 @@
                     "items": {
                       "type": "string",
                       "format": "binary"
-                    }
+                    },
+                    "description": "The image files to upload."
                   },
                   "model": {
                     "$ref": "#/components/schemas/DatapointMetadataModel"
@@ -252,7 +252,6 @@
           }
         ],
         "requestBody": {
-          "description": "The image files to create the asset from.",
           "content": {
             "multipart/form-data": {
               "schema": {
@@ -263,7 +262,8 @@
                     "items": {
                       "type": "string",
                       "format": "binary"
-                    }
+                    },
+                    "description": "The image files to create the asset from."
                   }
                 }
               },
@@ -317,7 +317,6 @@
           }
         ],
         "requestBody": {
-          "description": "The image files to upload.",
           "content": {
             "multipart/form-data": {
               "schema": {
@@ -328,7 +327,8 @@
                     "items": {
                       "type": "string",
                       "format": "binary"
-                    }
+                    },
+                    "description": "The image files to upload."
                   }
                 }
               },
@@ -497,7 +497,6 @@
           }
         ],
         "requestBody": {
-          "description": "The csv file to import.",
           "content": {
             "multipart/form-data": {
               "schema": {
@@ -505,6 +504,7 @@
                 "properties": {
                   "file": {
                     "type": "string",
+                    "description": "The csv file to import.",
                     "format": "binary"
                   }
                 }
@@ -799,57 +799,6 @@
             }
           }
         }
-      }
-    },
-    "/Order/CreateDefaultOrder": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Creates a new order with a default pipeline.",
-        "requestBody": {
-          "description": "The body content of the request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateDefaultOrderModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateDefaultOrderModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateDefaultOrderModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateLegacyOrderResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateLegacyOrderResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateLegacyOrderResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
       }
     },
     "/Order/CreateUnsupportedOrder": {
@@ -1328,6 +1277,52 @@
         }
       }
     },
+    "/Order/Pause": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Pauses an order that is processing. Meaning all campaigns in the order will be paused.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Order/Resume": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Resumes a paused order. Meaning all campaigns in the order will be resumed.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/Identity/CreateClient": {
       "post": {
         "tags": [
@@ -1769,7 +1764,6 @@
         ],
         "summary": "Uploads a CoCo set to the system.",
         "requestBody": {
-          "description": "The name to give the newly uploaded CoCo set.",
           "content": {
             "multipart/form-data": {
               "schema": {
@@ -1999,7 +1993,6 @@
         ],
         "summary": "Adds a new validation rapid to the specified validation set.",
         "requestBody": {
-          "description": "The model containing the information needed to add the validation rapid.",
           "content": {
             "multipart/form-data": {
               "schema": {
@@ -2013,7 +2006,8 @@
                     "items": {
                       "type": "string",
                       "format": "binary"
-                    }
+                    },
+                    "description": "The files to be used as assets for the validation rapid. Each file will create a new rapid."
                   }
                 }
               },
@@ -2059,7 +2053,6 @@
         ],
         "summary": "Imports a validation set from a zip file.",
         "requestBody": {
-          "description": "The blueprint for the rapid to be created.",
           "content": {
             "multipart/form-data": {
               "schema": {
@@ -2149,7 +2142,6 @@
         ],
         "summary": "Imports a compare validation set from a zip file.",
         "requestBody": {
-          "description": "The criteria to use for the compare rapid.",
           "content": {
             "multipart/form-data": {
               "schema": {
@@ -2274,7 +2266,6 @@
         ],
         "summary": "Creates a new Demographic Rapid.",
         "requestBody": {
-          "description": "The model containing the demographic rapid.",
           "content": {
             "multipart/form-data": {
               "schema": {
@@ -2288,7 +2279,8 @@
                     "items": {
                       "type": "string",
                       "format": "binary"
-                    }
+                    },
+                    "description": "The file to use as the asset for the rapid."
                   }
                 }
               },
@@ -3566,6 +3558,16 @@
             "type": "string"
           },
           "state": {
+            "enum": [
+              "Created",
+              "Submitted",
+              "ManualReview",
+              "Processing",
+              "Paused",
+              "Completed",
+              "Cancelled",
+              "Failed"
+            ],
             "type": "string"
           },
           "orderName": {
@@ -3620,8 +3622,7 @@
           "51-65",
           "65+"
         ],
-        "type": "string",
-        "description": "The valid age groups."
+        "type": "string"
       },
       "AgeUserFilterModel": {
         "title": "AgeFilter",
@@ -3644,12 +3645,10 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/AgeGroup"
-            },
-            "description": "A whitelist for age groups."
+            }
           }
         },
-        "additionalProperties": false,
-        "description": "The AgeFilter is used to restrict users to age groups."
+        "additionalProperties": false
       },
       "AggregatorType": {
         "enum": [
@@ -3741,12 +3740,10 @@
             "type": "array",
             "items": {
               "type": "string"
-            },
-            "description": "A whitelist for external DSP campaign ids"
+            }
           }
         },
-        "additionalProperties": false,
-        "description": "The CampaignFilter is used to restrict users to specific campaigns."
+        "additionalProperties": false
       },
       "ClassificationMetadataFilterConfig": {
         "title": "ClassificationMetadataFilterConfig",
@@ -4123,12 +4120,10 @@
             "type": "array",
             "items": {
               "type": "string"
-            },
-            "description": "A whitelist for countries in the ISO 3166-1 alpha-2 format."
+            }
           }
         },
-        "additionalProperties": false,
-        "description": "The CountryUserFilter is used to restrict users to specific countries."
+        "additionalProperties": false
       },
       "CreateComplexOrderModel": {
         "required": [
@@ -4218,80 +4213,10 @@
         "additionalProperties": false,
         "description": "Model for creating a dataset artifact"
       },
-      "CreateDefaultOrderModel": {
-        "required": [
-          "datasetName",
-          "isPublic",
-          "orderName",
-          "workflowConfig"
-        ],
-        "type": "object",
-        "properties": {
-          "orderName": {
-            "type": "string",
-            "description": "The name of the order"
-          },
-          "datasetName": {
-            "type": "string",
-            "description": "The name of the dataset"
-          },
-          "isPublic": {
-            "type": "boolean",
-            "description": "Whether the order is public"
-          },
-          "workflowConfig": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/CompareWorkflowConfig"
-              },
-              {
-                "$ref": "#/components/schemas/SimpleWorkflowConfig"
-              }
-            ],
-            "description": "The workflow configuration",
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          },
-          "aggregatorType": {
-            "enum": [
-              "NonCommittal",
-              "MajorityVote",
-              "SimpleMatchup",
-              "LocateCluster",
-              "Classification",
-              "Locate",
-              "BoundingBox",
-              "Line",
-              "Transcription",
-              "SinglePointLocate",
-              "FreeText"
-            ],
-            "type": "string",
-            "default": "NonCommittal"
-          }
-        },
-        "additionalProperties": false,
-        "description": "The model for creating a new order with a default pipeline."
-      },
-      "CreateLegacyOrderResult": {
-        "required": [
-          "datasetId",
-          "orderId"
-        ],
-        "type": "object",
-        "properties": {
-          "datasetId": {
-            "type": "string"
-          },
-          "orderId": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "CreateOrderModel": {
+        "title": "CreateOrderModel",
         "required": [
+          "_t",
           "orderName",
           "referee",
           "userFilters",
@@ -4299,39 +4224,18 @@
         ],
         "type": "object",
         "properties": {
+          "_t": {
+            "enum": [
+              "CreateOrderModel"
+            ],
+            "type": "string",
+            "description": "Discriminator value for CreateOrderModel",
+            "default": "CreateOrderModel",
+            "example": "CreateOrderModel"
+          },
           "orderName": {
             "type": "string",
             "description": "The name is used as an identifier for an order and can be freely chosen."
-          },
-          "userFilters": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/UserScoreUserFilterModel"
-                },
-                {
-                  "$ref": "#/components/schemas/LanguageUserFilterModel"
-                },
-                {
-                  "$ref": "#/components/schemas/CampaignUserFilterModel"
-                },
-                {
-                  "$ref": "#/components/schemas/CountryUserFilterModel"
-                },
-                {
-                  "$ref": "#/components/schemas/AgeUserFilterModel"
-                },
-                {
-                  "$ref": "#/components/schemas/GenderUserFilterModel"
-                }
-              ],
-              "description": "The filter model can be used to restrict users to specific demographics.",
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            },
-            "description": "The user filters are used to restrict the order to only collect votes from a specific demographic."
           },
           "workflow": {
             "oneOf": [
@@ -4379,9 +4283,52 @@
             "description": "The aggregator is used to determine how the data will be aggregated. The default behavior is enough for most cases",
             "nullable": true
           },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlagModel"
+            },
+            "description": "The feature flags are used to enable or disable certain features.",
+            "nullable": true
+          },
+          "priority": {
+            "type": "integer",
+            "description": "The priority is used to prioritize over other orders.",
+            "format": "int32",
+            "nullable": true
+          },
+          "userFilters": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AgeUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/CampaignUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/CountryUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/GenderUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/LanguageUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/UserScoreUserFilterModel"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            },
+            "description": "The user filters are used to restrict the order to only collect votes from a specific demographic."
+          },
           "validationSetId": {
             "type": "string",
-            "description": "The validation set id can be changed to point to a specific validation set. if not provided a sane default will be used.",
+            "description": "The validation set id can be changed to point to a specific validation set. if not provided a sane default will be\r\nused.",
             "nullable": true
           },
           "selections": {
@@ -4398,26 +4345,11 @@
                   "$ref": "#/components/schemas/ValidationSelection"
                 }
               ],
-              "description": "A selection is used to determine which tasks are shown to a user.",
               "discriminator": {
                 "propertyName": "_t"
               }
             },
             "description": "The selections are used to determine which tasks are shown to a user.",
-            "nullable": true
-          },
-          "featureFlags": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FeatureFlagModel"
-            },
-            "description": "The feature flags are used to enable or disable certain features.",
-            "nullable": true
-          },
-          "priority": {
-            "type": "integer",
-            "description": "The priority is used to prioritize over other orders.",
-            "format": "int32",
             "nullable": true
           }
         },
@@ -4556,6 +4488,16 @@
             "nullable": true
           },
           "state": {
+            "enum": [
+              "Created",
+              "Submitted",
+              "ManualReview",
+              "Processing",
+              "Paused",
+              "Completed",
+              "Cancelled",
+              "Failed"
+            ],
             "type": "string"
           },
           "orderName": {
@@ -4683,12 +4625,10 @@
             "example": "DemographicSelection"
           },
           "rapidId": {
-            "type": "string",
-            "description": "The rapid id is used to determine which rapid is shown to the user."
+            "type": "string"
           }
         },
-        "additionalProperties": false,
-        "description": "The demographic selection can be used to show a specific demographic rapid to the users."
+        "additionalProperties": false
       },
       "EarlyStoppingRefereeModel": {
         "title": "EarlyStoppingReferee",
@@ -4775,6 +4715,7 @@
           },
           "token": {
             "type": "string",
+            "description": "The recaptcha token of the user submitting the feedback",
             "default": null,
             "nullable": true
           }
@@ -4865,8 +4806,7 @@
           "Female",
           "Other"
         ],
-        "type": "string",
-        "description": "All available Gender options."
+        "type": "string"
       },
       "GenderUserFilterModel": {
         "title": "GenderFilter",
@@ -4889,12 +4829,10 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Gender"
-            },
-            "description": "A whitelist of all genders allowed."
+            }
           }
         },
-        "additionalProperties": false,
-        "description": "The GenderFilter is used to restrict users to specific genders."
+        "additionalProperties": false
       },
       "GetOrderByIdResult": {
         "required": [
@@ -5010,12 +4948,10 @@
           },
           "amount": {
             "type": "integer",
-            "description": "The amount of labeling tasks that should be shown to the user.",
             "format": "int32"
           }
         },
-        "additionalProperties": false,
-        "description": "The labeling selection has to be supplied so that the users will be shown the actual labeling tasks"
+        "additionalProperties": false
       },
       "LanguageUserFilterModel": {
         "title": "LanguageFilter",
@@ -5038,12 +4974,10 @@
             "type": "array",
             "items": {
               "type": "string"
-            },
-            "description": "A whitelist for languages of the users. The languages are in the ISO 639-1 format."
+            }
           }
         },
-        "additionalProperties": false,
-        "description": "The LanguageFilter is used to restrict users to specific languages."
+        "additionalProperties": false
       },
       "LineRapidBlueprint": {
         "title": "LineBlueprint",
@@ -5281,6 +5215,19 @@
           }
         },
         "additionalProperties": false
+      },
+      "OrderState": {
+        "enum": [
+          "Created",
+          "Submitted",
+          "ManualReview",
+          "Processing",
+          "Paused",
+          "Completed",
+          "Cancelled",
+          "Failed"
+        ],
+        "type": "string"
       },
       "PageInfo": {
         "type": "object",
@@ -5770,17 +5717,14 @@
           },
           "lowerbound": {
             "type": "number",
-            "description": "The lowerbound of the user score.",
             "format": "double"
           },
           "upperbound": {
             "type": "number",
-            "description": "The upperbound of the user score.",
             "format": "double"
           }
         },
-        "additionalProperties": false,
-        "description": "The UserScoreFilter is used to restrict users to a specific user score."
+        "additionalProperties": false
       },
       "ValidationChance": {
         "required": [
@@ -5853,16 +5797,13 @@
           },
           "amount": {
             "type": "integer",
-            "description": "The amount of validation tasks that should be shown to the user.",
             "format": "int32"
           },
           "validationSetId": {
-            "type": "string",
-            "description": "The validation set id can be changed to point to a specific validation set. if not provided a sane default will be used."
+            "type": "string"
           }
         },
-        "additionalProperties": false,
-        "description": "A validation selection is used to show the validation tasks to the user. note that it is not supported to supply both a validation set id and selection configs."
+        "additionalProperties": false
       },
       "WorkflowAggregationStepModel": {
         "title": "WorkflowAggregationStepModel",
