@@ -22,11 +22,9 @@ jobs:
 
       - name: Setup node
         uses: actions/setup-node@v4
-        with:
-          node-version: '18'  # Specify a Node.js version
 
       - name: Install node packages
-        run: npm ci  # Use 'ci' instead of 'i' for more deterministic installs
+        run: npm i openapi-merge-cli @openapitools/openapi-generator-cli
 
       - name: Download specs
         run: ./openapi/download-and-merge-spec.sh
