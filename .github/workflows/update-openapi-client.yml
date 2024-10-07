@@ -24,7 +24,7 @@ jobs:
         uses: actions/setup-node@v4
 
       - name: Install node packages
-        run: npm i openapi-merge-cli @openapitools/openapi-generator-cli
+        run: npm i -g openapi-merge-cli @openapitools/openapi-generator-cli
 
       - name: Download specs
         run: ./openapi/download-and-merge-spec.sh
@@ -42,8 +42,7 @@ jobs:
           
           # Get latest tag
           git fetch --tags
-          LATEST_TAG=$(git describe --tags --abbrev=0)
-          BRANCH_NAME="chore/update-openapi-to-$LATEST_TAG"
+          BRANCH_NAME="chore/update-openapi"
           
           # Create a new feature branch for the changes
           git checkout -b $BRANCH_NAME
@@ -56,12 +55,12 @@ jobs:
           
           # Commit and push changes
           git add .
-          git commit -m "chore: update openapi to $LATEST_TAG"
+          git commit -m "chore: update openapi"
           git push --set-upstream origin $BRANCH_NAME
           
           # Create pull request
           gh pr create \
-            --body "This PR updates the OpenAPI client to version $LATEST_TAG" \
-            --title "chore: update OpenAPI client to $LATEST_TAG" \
+            --body "This PR updates the OpenAPI client version" \
+            --title "chore: update OpenAPI client" \
             --head "$BRANCH_NAME" \
             --base "main"
