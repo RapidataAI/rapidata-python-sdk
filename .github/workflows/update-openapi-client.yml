@@ -42,7 +42,8 @@ jobs:
           
           # Get latest tag
           git fetch --tags
-          BRANCH_NAME="chore/update-openapi"
+          BRANCH_NAME="chore/update-openapi-to-${{ github.event.client_payload.latest_tag }}"
+          LATEST_TAG = ${{ github.event.client_payload.latest_tag }}
           
           # Create a new feature branch for the changes
           git checkout -b $BRANCH_NAME
@@ -55,12 +56,12 @@ jobs:
           
           # Commit and push changes
           git add openapi/output.swagger.json src/rapidata/api_client/ src/rapidata/api_client_README.md
-          git commit -m "chore: update openapi"
+          git commit -m "chore: update openapi to $LATEST_TAG"
           git push --set-upstream origin $BRANCH_NAME
           
           # Create pull request
           gh pr create \
-            --body "This PR updates the OpenAPI client version" \
-            --title "chore: update OpenAPI client" \
+            --body "This PR updates the OpenAPI client to version $LATEST_TAG" \
+            --title "chore: update OpenAPI client to $LATEST_TAG" \
             --head "$BRANCH_NAME" \
             --base "main"
