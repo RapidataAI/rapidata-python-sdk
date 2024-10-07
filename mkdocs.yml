@@ -81,4 +81,4 @@ theme:
 
   features:
     - content.code.copy
-    - navigation.instant
+    # - navigation.instant # makes scrolling past the footer stutter on Arc
