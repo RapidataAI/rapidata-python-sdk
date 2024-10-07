@@ -31,20 +31,20 @@ CREATEORDERMODELUSERFILTERSINNER_ONE_OF_SCHEMAS = ["AgeUserFilterModel", "Campai
 
 class CreateOrderModelUserFiltersInner(BaseModel):
     """
-    The filter model can be used to restrict users to specific demographics.
+    CreateOrderModelUserFiltersInner
     """
-    # data type: UserScoreUserFilterModel
-    oneof_schema_1_validator: Optional[UserScoreUserFilterModel] = None
-    # data type: LanguageUserFilterModel
-    oneof_schema_2_validator: Optional[LanguageUserFilterModel] = None
-    # data type: CampaignUserFilterModel
-    oneof_schema_3_validator: Optional[CampaignUserFilterModel] = None
-    # data type: CountryUserFilterModel
-    oneof_schema_4_validator: Optional[CountryUserFilterModel] = None
     # data type: AgeUserFilterModel
-    oneof_schema_5_validator: Optional[AgeUserFilterModel] = None
+    oneof_schema_1_validator: Optional[AgeUserFilterModel] = None
+    # data type: CampaignUserFilterModel
+    oneof_schema_2_validator: Optional[CampaignUserFilterModel] = None
+    # data type: CountryUserFilterModel
+    oneof_schema_3_validator: Optional[CountryUserFilterModel] = None
     # data type: GenderUserFilterModel
-    oneof_schema_6_validator: Optional[GenderUserFilterModel] = None
+    oneof_schema_4_validator: Optional[GenderUserFilterModel] = None
+    # data type: LanguageUserFilterModel
+    oneof_schema_5_validator: Optional[LanguageUserFilterModel] = None
+    # data type: UserScoreUserFilterModel
+    oneof_schema_6_validator: Optional[UserScoreUserFilterModel] = None
     actual_instance: Optional[Union[AgeUserFilterModel, CampaignUserFilterModel, CountryUserFilterModel, GenderUserFilterModel, LanguageUserFilterModel, UserScoreUserFilterModel]] = None
     one_of_schemas: Set[str] = { "AgeUserFilterModel", "CampaignUserFilterModel", "CountryUserFilterModel", "GenderUserFilterModel", "LanguageUserFilterModel", "UserScoreUserFilterModel" }
 
@@ -72,14 +72,9 @@ class CreateOrderModelUserFiltersInner(BaseModel):
         instance = CreateOrderModelUserFiltersInner.model_construct()
         error_messages = []
         match = 0
-        # validate data type: UserScoreUserFilterModel
-        if not isinstance(v, UserScoreUserFilterModel):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `UserScoreUserFilterModel`")
-        else:
-            match += 1
-        # validate data type: LanguageUserFilterModel
-        if not isinstance(v, LanguageUserFilterModel):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `LanguageUserFilterModel`")
+        # validate data type: AgeUserFilterModel
+        if not isinstance(v, AgeUserFilterModel):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `AgeUserFilterModel`")
         else:
             match += 1
         # validate data type: CampaignUserFilterModel
@@ -92,14 +87,19 @@ class CreateOrderModelUserFiltersInner(BaseModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `CountryUserFilterModel`")
         else:
             match += 1
-        # validate data type: AgeUserFilterModel
-        if not isinstance(v, AgeUserFilterModel):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `AgeUserFilterModel`")
-        else:
-            match += 1
         # validate data type: GenderUserFilterModel
         if not isinstance(v, GenderUserFilterModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `GenderUserFilterModel`")
+        else:
+            match += 1
+        # validate data type: LanguageUserFilterModel
+        if not isinstance(v, LanguageUserFilterModel):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `LanguageUserFilterModel`")
+        else:
+            match += 1
+        # validate data type: UserScoreUserFilterModel
+        if not isinstance(v, UserScoreUserFilterModel):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `UserScoreUserFilterModel`")
         else:
             match += 1
         if match > 1:
@@ -122,15 +122,9 @@ class CreateOrderModelUserFiltersInner(BaseModel):
         error_messages = []
         match = 0
 
-        # deserialize data into UserScoreUserFilterModel
+        # deserialize data into AgeUserFilterModel
         try:
-            instance.actual_instance = UserScoreUserFilterModel.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into LanguageUserFilterModel
-        try:
-            instance.actual_instance = LanguageUserFilterModel.from_json(json_str)
+            instance.actual_instance = AgeUserFilterModel.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
@@ -146,15 +140,21 @@ class CreateOrderModelUserFiltersInner(BaseModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # deserialize data into AgeUserFilterModel
-        try:
-            instance.actual_instance = AgeUserFilterModel.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
         # deserialize data into GenderUserFilterModel
         try:
             instance.actual_instance = GenderUserFilterModel.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into LanguageUserFilterModel
+        try:
+            instance.actual_instance = LanguageUserFilterModel.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into UserScoreUserFilterModel
+        try:
+            instance.actual_instance = UserScoreUserFilterModel.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))

@@ -31,16 +31,24 @@ class CreateOrderModel(BaseModel):
     """
     This model is used to create a simple order
     """ # noqa: E501
+    t: StrictStr = Field(description="Discriminator value for CreateOrderModel", alias="_t")
     order_name: StrictStr = Field(description="The name is used as an identifier for an order and can be freely chosen.", alias="orderName")
-    user_filters: List[CreateOrderModelUserFiltersInner] = Field(description="The user filters are used to restrict the order to only collect votes from a specific demographic.", alias="userFilters")
     workflow: CreateOrderModelWorkflow
     referee: CreateOrderModelReferee
     aggregator: Optional[StrictStr] = Field(default=None, description="The aggregator is used to determine how the data will be aggregated. The default behavior is enough for most cases")
-    validation_set_id: Optional[StrictStr] = Field(default=None, description="The validation set id can be changed to point to a specific validation set. if not provided a sane default will be used.", alias="validationSetId")
-    selections: Optional[List[CreateOrderModelSelectionsInner]] = Field(default=None, description="The selections are used to determine which tasks are shown to a user.")
     feature_flags: Optional[List[FeatureFlagModel]] = Field(default=None, description="The feature flags are used to enable or disable certain features.", alias="featureFlags")
     priority: Optional[StrictInt] = Field(default=None, description="The priority is used to prioritize over other orders.")
-    __properties: ClassVar[List[str]] = ["orderName", "userFilters", "workflow", "referee", "aggregator", "validationSetId", "selections", "featureFlags", "priority"]
+    user_filters: List[CreateOrderModelUserFiltersInner] = Field(description="The user filters are used to restrict the order to only collect votes from a specific demographic.", alias="userFilters")
+    validation_set_id: Optional[StrictStr] = Field(default=None, description="The validation set id can be changed to point to a specific validation set. if not provided a sane default will be  used.", alias="validationSetId")
+    selections: Optional[List[CreateOrderModelSelectionsInner]] = Field(default=None, description="The selections are used to determine which tasks are shown to a user.")
+    __properties: ClassVar[List[str]] = ["_t", "orderName", "workflow", "referee", "aggregator", "featureFlags", "priority", "userFilters", "validationSetId", "selections"]
+
+    @field_validator('t')
+    def t_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['CreateOrderModel']):
+            raise ValueError("must be one of enum values ('CreateOrderModel')")
+        return value
 
     @field_validator('aggregator')
     def aggregator_validate_enum(cls, value):
@@ -91,26 +99,12 @@ class CreateOrderModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in user_filters (list)
-        _items = []
-        if self.user_filters:
-            for _item_user_filters in self.user_filters:
-                if _item_user_filters:
-                    _items.append(_item_user_filters.to_dict())
-            _dict['userFilters'] = _items
         # override the default output from pydantic by calling `to_dict()` of workflow
         if self.workflow:
             _dict['workflow'] = self.workflow.to_dict()
         # override the default output from pydantic by calling `to_dict()` of referee
         if self.referee:
             _dict['referee'] = self.referee.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in selections (list)
-        _items = []
-        if self.selections:
-            for _item_selections in self.selections:
-                if _item_selections:
-                    _items.append(_item_selections.to_dict())
-            _dict['selections'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in feature_flags (list)
         _items = []
         if self.feature_flags:
@@ -118,20 +112,24 @@ class CreateOrderModel(BaseModel):
                 if _item_feature_flags:
                     _items.append(_item_feature_flags.to_dict())
             _dict['featureFlags'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each item in user_filters (list)
+        _items = []
+        if self.user_filters:
+            for _item_user_filters in self.user_filters:
+                if _item_user_filters:
+                    _items.append(_item_user_filters.to_dict())
+            _dict['userFilters'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each item in selections (list)
+        _items = []
+        if self.selections:
+            for _item_selections in self.selections:
+                if _item_selections:
+                    _items.append(_item_selections.to_dict())
+            _dict['selections'] = _items
         # set to None if aggregator (nullable) is None
         # and model_fields_set contains the field
         if self.aggregator is None and "aggregator" in self.model_fields_set:
             _dict['aggregator'] = None
-
-        # set to None if validation_set_id (nullable) is None
-        # and model_fields_set contains the field
-        if self.validation_set_id is None and "validation_set_id" in self.model_fields_set:
-            _dict['validationSetId'] = None
-
-        # set to None if selections (nullable) is None
-        # and model_fields_set contains the field
-        if self.selections is None and "selections" in self.model_fields_set:
-            _dict['selections'] = None
 
         # set to None if feature_flags (nullable) is None
         # and model_fields_set contains the field
@@ -142,6 +140,16 @@ class CreateOrderModel(BaseModel):
         # and model_fields_set contains the field
         if self.priority is None and "priority" in self.model_fields_set:
             _dict['priority'] = None
+
+        # set to None if validation_set_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.validation_set_id is None and "validation_set_id" in self.model_fields_set:
+            _dict['validationSetId'] = None
+
+        # set to None if selections (nullable) is None
+        # and model_fields_set contains the field
+        if self.selections is None and "selections" in self.model_fields_set:
+            _dict['selections'] = None
 
         return _dict
 
@@ -155,15 +163,16 @@ class CreateOrderModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'CreateOrderModel',
             "orderName": obj.get("orderName"),
-            "userFilters": [CreateOrderModelUserFiltersInner.from_dict(_item) for _item in obj["userFilters"]] if obj.get("userFilters") is not None else None,
             "workflow": CreateOrderModelWorkflow.from_dict(obj["workflow"]) if obj.get("workflow") is not None else None,
             "referee": CreateOrderModelReferee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
             "aggregator": obj.get("aggregator"),
-            "validationSetId": obj.get("validationSetId"),
-            "selections": [CreateOrderModelSelectionsInner.from_dict(_item) for _item in obj["selections"]] if obj.get("selections") is not None else None,
             "featureFlags": [FeatureFlagModel.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
-            "priority": obj.get("priority")
+            "priority": obj.get("priority"),
+            "userFilters": [CreateOrderModelUserFiltersInner.from_dict(_item) for _item in obj["userFilters"]] if obj.get("userFilters") is not None else None,
+            "validationSetId": obj.get("validationSetId"),
+            "selections": [CreateOrderModelSelectionsInner.from_dict(_item) for _item in obj["selections"]] if obj.get("selections") is not None else None
         })
         return _obj
 

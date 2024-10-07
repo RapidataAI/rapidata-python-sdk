@@ -24,11 +24,11 @@ from typing_extensions import Self
 
 class UserScoreUserFilterModel(BaseModel):
     """
-    The UserScoreFilter is used to restrict users to a specific user score.
+    UserScoreUserFilterModel
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for UserScoreFilter", alias="_t")
-    lowerbound: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The lowerbound of the user score.")
-    upperbound: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The upperbound of the user score.")
+    lowerbound: Optional[Union[StrictFloat, StrictInt]] = None
+    upperbound: Optional[Union[StrictFloat, StrictInt]] = None
     __properties: ClassVar[List[str]] = ["_t", "lowerbound", "upperbound"]
 
     @field_validator('t')

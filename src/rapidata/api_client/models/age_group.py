@@ -20,7 +20,7 @@ from typing_extensions import Self
 
 class AgeGroup(str, Enum):
     """
-    The valid age groups.
+    AgeGroup
     """
 
     """

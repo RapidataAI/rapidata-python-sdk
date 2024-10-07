@@ -17,7 +17,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
 from pydantic import Field, StrictBytes, StrictStr
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional, Union
 from typing_extensions import Annotated
 from rapidata.api_client.models.add_validation_rapid_model import AddValidationRapidModel
 from rapidata.api_client.models.add_validation_rapid_result import AddValidationRapidResult
@@ -50,7 +50,7 @@ class ValidationApi:
     def validation_add_validation_rapid_post(
         self,
         model: Optional[AddValidationRapidModel] = None,
-        files: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        files: Annotated[Optional[List[Union[StrictBytes, StrictStr]]], Field(description="The files to be used as assets for the validation rapid. Each file will create a new rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -69,7 +69,7 @@ class ValidationApi:
 
         :param model:
         :type model: AddValidationRapidModel
-        :param files:
+        :param files: The files to be used as assets for the validation rapid. Each file will create a new rapid.
         :type files: List[bytearray]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -120,7 +120,7 @@ class ValidationApi:
     def validation_add_validation_rapid_post_with_http_info(
         self,
         model: Optional[AddValidationRapidModel] = None,
-        files: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        files: Annotated[Optional[List[Union[StrictBytes, StrictStr]]], Field(description="The files to be used as assets for the validation rapid. Each file will create a new rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -139,7 +139,7 @@ class ValidationApi:
 
         :param model:
         :type model: AddValidationRapidModel
-        :param files:
+        :param files: The files to be used as assets for the validation rapid. Each file will create a new rapid.
         :type files: List[bytearray]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -190,7 +190,7 @@ class ValidationApi:
     def validation_add_validation_rapid_post_without_preload_content(
         self,
         model: Optional[AddValidationRapidModel] = None,
-        files: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        files: Annotated[Optional[List[Union[StrictBytes, StrictStr]]], Field(description="The files to be used as assets for the validation rapid. Each file will create a new rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -209,7 +209,7 @@ class ValidationApi:
 
         :param model:
         :type model: AddValidationRapidModel
-        :param files:
+        :param files: The files to be used as assets for the validation rapid. Each file will create a new rapid.
         :type files: List[bytearray]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -272,9 +272,7 @@ class ValidationApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
+        _files: Dict[str, Union[str, bytes]] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
@@ -547,9 +545,7 @@ class ValidationApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
+        _files: Dict[str, Union[str, bytes]] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
@@ -796,9 +792,7 @@ class ValidationApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
+        _files: Dict[str, Union[str, bytes]] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
@@ -846,7 +840,7 @@ class ValidationApi:
     def validation_import_compare_post(
         self,
         criteria: Annotated[Optional[StrictStr], Field(description="The criteria to use for the compare rapid.")] = None,
-        file: Annotated[Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]], Field(description="The file to use as the asset for the rapid.")] = None,
+        file: Annotated[Optional[Union[StrictBytes, StrictStr]], Field(description="The file to use as the asset for the rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -916,7 +910,7 @@ class ValidationApi:
     def validation_import_compare_post_with_http_info(
         self,
         criteria: Annotated[Optional[StrictStr], Field(description="The criteria to use for the compare rapid.")] = None,
-        file: Annotated[Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]], Field(description="The file to use as the asset for the rapid.")] = None,
+        file: Annotated[Optional[Union[StrictBytes, StrictStr]], Field(description="The file to use as the asset for the rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -986,7 +980,7 @@ class ValidationApi:
     def validation_import_compare_post_without_preload_content(
         self,
         criteria: Annotated[Optional[StrictStr], Field(description="The criteria to use for the compare rapid.")] = None,
-        file: Annotated[Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]], Field(description="The file to use as the asset for the rapid.")] = None,
+        file: Annotated[Optional[Union[StrictBytes, StrictStr]], Field(description="The file to use as the asset for the rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1067,9 +1061,7 @@ class ValidationApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
+        _files: Dict[str, Union[str, bytes]] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
@@ -1134,7 +1126,7 @@ class ValidationApi:
     def validation_import_post(
         self,
         blueprint: Optional[ValidationImportPostRequestBlueprint] = None,
-        file: Annotated[Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]], Field(description="The file to use as the asset for the rapid.")] = None,
+        file: Annotated[Optional[Union[StrictBytes, StrictStr]], Field(description="The file to use as the asset for the rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1204,7 +1196,7 @@ class ValidationApi:
     def validation_import_post_with_http_info(
         self,
         blueprint: Optional[ValidationImportPostRequestBlueprint] = None,
-        file: Annotated[Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]], Field(description="The file to use as the asset for the rapid.")] = None,
+        file: Annotated[Optional[Union[StrictBytes, StrictStr]], Field(description="The file to use as the asset for the rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1274,7 +1266,7 @@ class ValidationApi:
     def validation_import_post_without_preload_content(
         self,
         blueprint: Optional[ValidationImportPostRequestBlueprint] = None,
-        file: Annotated[Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]], Field(description="The file to use as the asset for the rapid.")] = None,
+        file: Annotated[Optional[Union[StrictBytes, StrictStr]], Field(description="The file to use as the asset for the rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1355,9 +1347,7 @@ class ValidationApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
+        _files: Dict[str, Union[str, bytes]] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
@@ -1630,9 +1620,7 @@ class ValidationApi:
         _query_params: List[Tuple[str, str]] = []
         _header_params: Dict[str, Optional[str]] = _headers or {}
         _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
+        _files: Dict[str, Union[str, bytes]] = {}
         _body_params: Optional[bytes] = None
 
         # process the path parameters
