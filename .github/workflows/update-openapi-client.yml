@@ -1,4 +1,4 @@
-name: Update OpenAPI Client and make PRs
+name: Update OpenAPI Client and create a PR
 on:
   repository_dispatch:
     types: [update-openapi-client]
