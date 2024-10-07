@@ -54,7 +54,7 @@ jobs:
           fi
           
           # Commit and push changes
-          git add .
+          git add openapi/output.swagger.json src/rapidata/api_client/ src/rapidata/api_client_README.md
           git commit -m "chore: update openapi"
           git push --set-upstream origin $BRANCH_NAME
           
