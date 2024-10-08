@@ -27,8 +27,8 @@ class DemographicRapidSelectionConfig(BaseModel):
     DemographicRapidSelectionConfig
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for DemographicRapidSelectionConfig", alias="_t")
-    rapid_id: StrictStr = Field(alias="rapidId")
-    __properties: ClassVar[List[str]] = ["_t", "rapidId"]
+    key: StrictStr
+    __properties: ClassVar[List[str]] = ["_t", "key"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -89,7 +89,7 @@ class DemographicRapidSelectionConfig(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'DemographicRapidSelectionConfig',
-            "rapidId": obj.get("rapidId")
+            "key": obj.get("key")
         })
         return _obj
 

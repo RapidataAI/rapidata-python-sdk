@@ -24,10 +24,10 @@ from typing_extensions import Self
 
 class CountryUserFilterModel(BaseModel):
     """
-    The CountryUserFilter is used to restrict users to specific countries.
+    CountryUserFilterModel
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for CountryFilter", alias="_t")
-    countries: List[StrictStr] = Field(description="A whitelist for countries in the ISO 3166-1 alpha-2 format.")
+    countries: List[StrictStr]
     __properties: ClassVar[List[str]] = ["_t", "countries"]
 
     @field_validator('t')

@@ -25,10 +25,10 @@ from typing_extensions import Self
 
 class GenderUserFilterModel(BaseModel):
     """
-    The GenderFilter is used to restrict users to specific genders.
+    GenderUserFilterModel
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for GenderFilter", alias="_t")
-    genders: List[Gender] = Field(description="A whitelist of all genders allowed.")
+    genders: List[Gender]
     __properties: ClassVar[List[str]] = ["_t", "genders"]
 
     @field_validator('t')

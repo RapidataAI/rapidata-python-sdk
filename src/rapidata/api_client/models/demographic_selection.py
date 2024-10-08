@@ -24,11 +24,11 @@ from typing_extensions import Self
 
 class DemographicSelection(BaseModel):
     """
-    The demographic selection can be used to show a specific demographic rapid to the users.
+    DemographicSelection
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for DemographicSelection", alias="_t")
-    rapid_id: StrictStr = Field(description="The rapid id is used to determine which rapid is shown to the user.", alias="rapidId")
-    __properties: ClassVar[List[str]] = ["_t", "rapidId"]
+    key: StrictStr
+    __properties: ClassVar[List[str]] = ["_t", "key"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -89,7 +89,7 @@ class DemographicSelection(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'DemographicSelection',
-            "rapidId": obj.get("rapidId")
+            "key": obj.get("key")
         })
         return _obj
 

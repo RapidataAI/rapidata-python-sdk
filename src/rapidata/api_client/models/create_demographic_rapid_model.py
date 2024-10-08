@@ -27,9 +27,9 @@ class CreateDemographicRapidModel(BaseModel):
     """
     The model for creating a demographic rapid.
     """ # noqa: E501
-    identifier: StrictStr = Field(description="The identifier of the demographic classification.")
+    key: StrictStr = Field(description="The identifier of the demographic classification.")
     payload: ClassifyPayload
-    __properties: ClassVar[List[str]] = ["identifier", "payload"]
+    __properties: ClassVar[List[str]] = ["key", "payload"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -85,7 +85,7 @@ class CreateDemographicRapidModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "identifier": obj.get("identifier"),
+            "key": obj.get("key"),
             "payload": ClassifyPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None
         })
         return _obj
