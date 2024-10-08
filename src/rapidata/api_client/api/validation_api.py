@@ -50,7 +50,7 @@ class ValidationApi:
     def validation_add_validation_rapid_post(
         self,
         model: Optional[AddValidationRapidModel] = None,
-        files: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        files: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The files to be used as assets for the validation rapid. Each file will create a new rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -69,7 +69,7 @@ class ValidationApi:
 
         :param model:
         :type model: AddValidationRapidModel
-        :param files:
+        :param files: The files to be used as assets for the validation rapid. Each file will create a new rapid.
         :type files: List[bytearray]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -120,7 +120,7 @@ class ValidationApi:
     def validation_add_validation_rapid_post_with_http_info(
         self,
         model: Optional[AddValidationRapidModel] = None,
-        files: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        files: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The files to be used as assets for the validation rapid. Each file will create a new rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -139,7 +139,7 @@ class ValidationApi:
 
         :param model:
         :type model: AddValidationRapidModel
-        :param files:
+        :param files: The files to be used as assets for the validation rapid. Each file will create a new rapid.
         :type files: List[bytearray]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -190,7 +190,7 @@ class ValidationApi:
     def validation_add_validation_rapid_post_without_preload_content(
         self,
         model: Optional[AddValidationRapidModel] = None,
-        files: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        files: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The files to be used as assets for the validation rapid. Each file will create a new rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -209,7 +209,7 @@ class ValidationApi:
 
         :param model:
         :type model: AddValidationRapidModel
-        :param files:
+        :param files: The files to be used as assets for the validation rapid. Each file will create a new rapid.
         :type files: List[bytearray]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request

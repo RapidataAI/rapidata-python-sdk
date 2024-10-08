@@ -19,25 +19,28 @@ from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, f
 from typing import Any, List, Optional
 from rapidata.api_client.models.demographic_selection import DemographicSelection
 from rapidata.api_client.models.labeling_selection import LabelingSelection
+from rapidata.api_client.models.static_selection import StaticSelection
 from rapidata.api_client.models.validation_selection import ValidationSelection
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-CREATEORDERMODELSELECTIONSINNER_ONE_OF_SCHEMAS = ["DemographicSelection", "LabelingSelection", "ValidationSelection"]
+CREATEORDERMODELSELECTIONSINNER_ONE_OF_SCHEMAS = ["DemographicSelection", "LabelingSelection", "StaticSelection", "ValidationSelection"]
 
 class CreateOrderModelSelectionsInner(BaseModel):
     """
-    A selection is used to determine which tasks are shown to a user.
+    CreateOrderModelSelectionsInner
     """
     # data type: DemographicSelection
     oneof_schema_1_validator: Optional[DemographicSelection] = None
     # data type: LabelingSelection
     oneof_schema_2_validator: Optional[LabelingSelection] = None
+    # data type: StaticSelection
+    oneof_schema_3_validator: Optional[StaticSelection] = None
     # data type: ValidationSelection
-    oneof_schema_3_validator: Optional[ValidationSelection] = None
-    actual_instance: Optional[Union[DemographicSelection, LabelingSelection, ValidationSelection]] = None
-    one_of_schemas: Set[str] = { "DemographicSelection", "LabelingSelection", "ValidationSelection" }
+    oneof_schema_4_validator: Optional[ValidationSelection] = None
+    actual_instance: Optional[Union[DemographicSelection, LabelingSelection, StaticSelection, ValidationSelection]] = None
+    one_of_schemas: Set[str] = { "DemographicSelection", "LabelingSelection", "StaticSelection", "ValidationSelection" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -73,6 +76,11 @@ class CreateOrderModelSelectionsInner(BaseModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `LabelingSelection`")
         else:
             match += 1
+        # validate data type: StaticSelection
+        if not isinstance(v, StaticSelection):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `StaticSelection`")
+        else:
+            match += 1
         # validate data type: ValidationSelection
         if not isinstance(v, ValidationSelection):
             error_messages.append(f"Error! Input type `{type(v)}` is not `ValidationSelection`")
@@ -80,10 +88,10 @@ class CreateOrderModelSelectionsInner(BaseModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in CreateOrderModelSelectionsInner with oneOf schemas: DemographicSelection, LabelingSelection, ValidationSelection. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in CreateOrderModelSelectionsInner with oneOf schemas: DemographicSelection, LabelingSelection, StaticSelection, ValidationSelection. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in CreateOrderModelSelectionsInner with oneOf schemas: DemographicSelection, LabelingSelection, ValidationSelection. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in CreateOrderModelSelectionsInner with oneOf schemas: DemographicSelection, LabelingSelection, StaticSelection, ValidationSelection. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -110,6 +118,12 @@ class CreateOrderModelSelectionsInner(BaseModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
+        # deserialize data into StaticSelection
+        try:
+            instance.actual_instance = StaticSelection.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
         # deserialize data into ValidationSelection
         try:
             instance.actual_instance = ValidationSelection.from_json(json_str)
@@ -119,10 +133,10 @@ class CreateOrderModelSelectionsInner(BaseModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into CreateOrderModelSelectionsInner with oneOf schemas: DemographicSelection, LabelingSelection, ValidationSelection. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into CreateOrderModelSelectionsInner with oneOf schemas: DemographicSelection, LabelingSelection, StaticSelection, ValidationSelection. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into CreateOrderModelSelectionsInner with oneOf schemas: DemographicSelection, LabelingSelection, ValidationSelection. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into CreateOrderModelSelectionsInner with oneOf schemas: DemographicSelection, LabelingSelection, StaticSelection, ValidationSelection. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -136,7 +150,7 @@ class CreateOrderModelSelectionsInner(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], DemographicSelection, LabelingSelection, ValidationSelection]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], DemographicSelection, LabelingSelection, StaticSelection, ValidationSelection]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

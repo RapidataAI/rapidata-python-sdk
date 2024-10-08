@@ -17,30 +17,18 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class AdminOrderModel(BaseModel):
+class CreateIndependentWorkflowResult(BaseModel):
     """
-    AdminOrderModel
+    CreateIndependentWorkflowResult
     """ # noqa: E501
-    id: StrictStr
-    order_date: Optional[datetime] = Field(alias="orderDate")
-    customer_mail: StrictStr = Field(alias="customerMail")
-    state: StrictStr
-    order_name: StrictStr = Field(alias="orderName")
-    is_public: StrictBool = Field(alias="isPublic")
-    __properties: ClassVar[List[str]] = ["id", "orderDate", "customerMail", "state", "orderName", "isPublic"]
-
-    @field_validator('state')
-    def state_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['Created', 'Submitted', 'ManualReview', 'Processing', 'Paused', 'Completed', 'Cancelled', 'Failed']):
-            raise ValueError("must be one of enum values ('Created', 'Submitted', 'ManualReview', 'Processing', 'Paused', 'Completed', 'Cancelled', 'Failed')")
-        return value
+    workflow_id: StrictStr = Field(alias="workflowId")
+    dataset_id: StrictStr = Field(alias="datasetId")
+    __properties: ClassVar[List[str]] = ["workflowId", "datasetId"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -60,7 +48,7 @@ class AdminOrderModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of AdminOrderModel from a JSON string"""
+        """Create an instance of CreateIndependentWorkflowResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -81,16 +69,11 @@ class AdminOrderModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if order_date (nullable) is None
-        # and model_fields_set contains the field
-        if self.order_date is None and "order_date" in self.model_fields_set:
-            _dict['orderDate'] = None
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of AdminOrderModel from a dict"""
+        """Create an instance of CreateIndependentWorkflowResult from a dict"""
         if obj is None:
             return None
 
@@ -98,12 +81,8 @@ class AdminOrderModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "id": obj.get("id"),
-            "orderDate": obj.get("orderDate"),
-            "customerMail": obj.get("customerMail"),
-            "state": obj.get("state"),
-            "orderName": obj.get("orderName"),
-            "isPublic": obj.get("isPublic")
+            "workflowId": obj.get("workflowId"),
+            "datasetId": obj.get("datasetId")
         })
         return _obj
 

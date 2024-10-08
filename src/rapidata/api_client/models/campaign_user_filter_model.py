@@ -24,10 +24,10 @@ from typing_extensions import Self
 
 class CampaignUserFilterModel(BaseModel):
     """
-    The CampaignFilter is used to restrict users to specific campaigns.
+    CampaignUserFilterModel
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for CampaignFilter", alias="_t")
-    campaign_ids: List[StrictStr] = Field(description="A whitelist for external DSP campaign ids", alias="campaignIds")
+    campaign_ids: List[StrictStr] = Field(alias="campaignIds")
     __properties: ClassVar[List[str]] = ["_t", "campaignIds"]
 
     @field_validator('t')

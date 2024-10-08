@@ -17,30 +17,22 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.page_info import PageInfo
+from rapidata.api_client.models.root_filter import RootFilter
+from rapidata.api_client.models.sort_criterion import SortCriterion
 from typing import Optional, Set
 from typing_extensions import Self
 
-class AdminOrderModel(BaseModel):
+class QueryWorkflowsModel(BaseModel):
     """
-    AdminOrderModel
+    The model for the query request.
     """ # noqa: E501
-    id: StrictStr
-    order_date: Optional[datetime] = Field(alias="orderDate")
-    customer_mail: StrictStr = Field(alias="customerMail")
-    state: StrictStr
-    order_name: StrictStr = Field(alias="orderName")
-    is_public: StrictBool = Field(alias="isPublic")
-    __properties: ClassVar[List[str]] = ["id", "orderDate", "customerMail", "state", "orderName", "isPublic"]
-
-    @field_validator('state')
-    def state_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['Created', 'Submitted', 'ManualReview', 'Processing', 'Paused', 'Completed', 'Cancelled', 'Failed']):
-            raise ValueError("must be one of enum values ('Created', 'Submitted', 'ManualReview', 'Processing', 'Paused', 'Completed', 'Cancelled', 'Failed')")
-        return value
+    page: Optional[PageInfo] = None
+    filter: Optional[RootFilter] = None
+    sort_criteria: Optional[List[SortCriterion]] = Field(default=None, description="The sort criteria.", alias="sortCriteria")
+    __properties: ClassVar[List[str]] = ["page", "filter", "sortCriteria"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -60,7 +52,7 @@ class AdminOrderModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of AdminOrderModel from a JSON string"""
+        """Create an instance of QueryWorkflowsModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -81,16 +73,29 @@ class AdminOrderModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if order_date (nullable) is None
+        # override the default output from pydantic by calling `to_dict()` of page
+        if self.page:
+            _dict['page'] = self.page.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of filter
+        if self.filter:
+            _dict['filter'] = self.filter.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in sort_criteria (list)
+        _items = []
+        if self.sort_criteria:
+            for _item_sort_criteria in self.sort_criteria:
+                if _item_sort_criteria:
+                    _items.append(_item_sort_criteria.to_dict())
+            _dict['sortCriteria'] = _items
+        # set to None if sort_criteria (nullable) is None
         # and model_fields_set contains the field
-        if self.order_date is None and "order_date" in self.model_fields_set:
-            _dict['orderDate'] = None
+        if self.sort_criteria is None and "sort_criteria" in self.model_fields_set:
+            _dict['sortCriteria'] = None
 
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of AdminOrderModel from a dict"""
+        """Create an instance of QueryWorkflowsModel from a dict"""
         if obj is None:
             return None
 
@@ -98,12 +103,9 @@ class AdminOrderModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "id": obj.get("id"),
-            "orderDate": obj.get("orderDate"),
-            "customerMail": obj.get("customerMail"),
-            "state": obj.get("state"),
-            "orderName": obj.get("orderName"),
-            "isPublic": obj.get("isPublic")
+            "page": PageInfo.from_dict(obj["page"]) if obj.get("page") is not None else None,
+            "filter": RootFilter.from_dict(obj["filter"]) if obj.get("filter") is not None else None,
+            "sortCriteria": [SortCriterion.from_dict(_item) for _item in obj["sortCriteria"]] if obj.get("sortCriteria") is not None else None
         })
         return _obj
 

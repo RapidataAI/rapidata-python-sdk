@@ -313,7 +313,7 @@ class RapidApi:
     def rapid_create_demographic_rapid_post(
         self,
         model: Optional[CreateDemographicRapidModel] = None,
-        file: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        file: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The file to use as the asset for the rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -332,7 +332,7 @@ class RapidApi:
 
         :param model:
         :type model: CreateDemographicRapidModel
-        :param file:
+        :param file: The file to use as the asset for the rapid.
         :type file: List[bytearray]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -383,7 +383,7 @@ class RapidApi:
     def rapid_create_demographic_rapid_post_with_http_info(
         self,
         model: Optional[CreateDemographicRapidModel] = None,
-        file: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        file: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The file to use as the asset for the rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -402,7 +402,7 @@ class RapidApi:
 
         :param model:
         :type model: CreateDemographicRapidModel
-        :param file:
+        :param file: The file to use as the asset for the rapid.
         :type file: List[bytearray]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -453,7 +453,7 @@ class RapidApi:
     def rapid_create_demographic_rapid_post_without_preload_content(
         self,
         model: Optional[CreateDemographicRapidModel] = None,
-        file: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        file: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The file to use as the asset for the rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -472,7 +472,7 @@ class RapidApi:
 
         :param model:
         :type model: CreateDemographicRapidModel
-        :param file:
+        :param file: The file to use as the asset for the rapid.
         :type file: List[bytearray]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request

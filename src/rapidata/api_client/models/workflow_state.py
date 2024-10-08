@@ -18,23 +18,24 @@ from enum import Enum
 from typing_extensions import Self
 
 
-class AgeGroup(str, Enum):
+class WorkflowState(str, Enum):
     """
-    AgeGroup
+    WorkflowState
     """
 
     """
     allowed enum values
     """
-    ENUM_0_MINUS_18 = '0-18'
-    ENUM_19_MINUS_30 = '19-30'
-    ENUM_31_MINUS_50 = '31-50'
-    ENUM_51_MINUS_65 = '51-65'
-    ENUM_65_PLUS = '65+'
+    CREATED = 'Created'
+    STARTED = 'Started'
+    LABELING = 'Labeling'
+    PAUSED = 'Paused'
+    DONE = 'Done'
+    FAILED = 'Failed'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of AgeGroup from a JSON string"""
+        """Create an instance of WorkflowState from a JSON string"""
         return cls(json.loads(json_str))
 
 

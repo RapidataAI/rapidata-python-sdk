@@ -14,6 +14,9 @@
     },
     {
       "inputFile": "./spec/rapid.json"
+    },
+    {
+      "inputFile": "./spec/workflow.json"
     }
   ],
   "output": "./output.swagger.json"
