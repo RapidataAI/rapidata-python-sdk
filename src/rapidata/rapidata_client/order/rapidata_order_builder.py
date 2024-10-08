@@ -70,6 +70,7 @@ class RapidataOrderBuilder:
             )
 
         return CreateOrderModel(
+            _t="CreateOrderModel",
             orderName=self._name,
             workflow=CreateOrderModelWorkflow(self._workflow.to_model()),
             userFilters=(
@@ -240,7 +241,7 @@ class RapidataOrderBuilder:
         """
         self._selections = selections
         return self
-    
+
     def priority(self, priority: int):
         """Set the priority for the order.
 
