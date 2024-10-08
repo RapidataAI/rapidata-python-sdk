@@ -7,6 +7,7 @@ from rapidata.rapidata_client.utils.utils import Utils
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 from rapidata.rapidata_client.dataset.rapidata_dataset import RapidataDataset
+from rapidata.rapidata_client.demographic.demographic_rapid import DemographicRapid
 
 
 
@@ -81,6 +82,9 @@ class RapidataClient:
             dataset=temp_dataset, 
             order_id=order_id, 
             openapi_service=self.openapi_service)
+    
+    def _new_demographic_question(self, identifier:str, question: str, options: list[str], image_path: str) -> str:
+        return DemographicRapid.create_demographic_rapid(identifier, question, options, image_path, self.openapi_service)
 
     @property
     def utils(self) -> Utils:

@@ -7,8 +7,8 @@ from rapidata.api_client.models.demographic_selection import DemographicSelectio
 class DemographicSelection(Selection):
     """Demographic selection class."""
 
-    def __init__(self, rapid_id: str):
-        self.rapid_id = rapid_id
+    def __init__(self, key: str):
+        self.key = key
 
     def to_model(self):
-        return DemographicSelectionModel(_t="DemographicSelection", rapidId=self.rapid_id)
+        return DemographicSelectionModel(_t="DemographicSelection", key=self.key)
