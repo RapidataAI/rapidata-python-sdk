@@ -11,8 +11,17 @@ def new_transcription_order(rapi: RapidataClient):
             name="Example Transcription Validation Set"
         ).add_transcription_rapid(
             media_path="examples/data/waiting.mp4",
-            question="Click on 'Mr. Bean'",
-            transcription=["This", "is", "Mr.", "Bean"],
+            question="Click any words that are part of a name",
+            transcription=[
+                "This",
+                "is",
+                "Mr.",
+                "Bean",
+                "waiting",
+                "for",
+                "his",
+                "friends",
+            ],
             correct_words=["Mr.", "Bean"],
         )
     ).create()

@@ -13,7 +13,7 @@ def new_classify_order(rapi: RapidataClient):
         .add_classify_rapid(
             media_path="examples/data/wallaby.jpg",
             question="What kind of animal is this?",
-            categories=["Mammal", "Marsupial", "Bird", "Reptile"],
+            categories=["Fish", "Marsupial", "Bird", "Reptile"],
             truths=["Marsupial"],
             metadata=[PromptMetadata(prompt="Hint: It has a pouch")],
         )
