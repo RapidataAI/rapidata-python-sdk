@@ -2,6 +2,7 @@ name: Update OpenAPI Client and create a PR
 on:
   repository_dispatch:
     types: [update-openapi-client]
+  workflow_dispatch:
 jobs:
   generate_openapi_client:
     runs-on: ubuntu-latest
