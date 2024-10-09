@@ -1,5 +1,3 @@
-
-
 from rapidata.rapidata_client.selection.base_selection import Selection
 from rapidata.api_client.models.demographic_selection import DemographicSelection as DemographicSelectionModel
 
