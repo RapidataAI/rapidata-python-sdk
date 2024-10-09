@@ -17,6 +17,12 @@
     },
     {
       "inputFile": "./spec/workflow.json"
+    },
+    {
+      "inputFile": "./spec/pipeline.json"
+    },
+    {
+      "inputFile": "./spec/campaing.json"
     }
   ],
   "output": "./output.swagger.json"
