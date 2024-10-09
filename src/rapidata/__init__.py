@@ -1,5 +1,5 @@
 from .rapidata_client import (
-    RapidataClient, 
+    RapidataClient,
     ClassifyWorkflow,
     TranscriptionWorkflow,
     CompareWorkflow,
@@ -7,6 +7,7 @@ from .rapidata_client import (
     DemographicSelection,
     LabelingSelection,
     ValidationSelection,
+    ConditionalValidationRapidSelection,
     NaiveReferee,
     ClassifyEarlyStoppingReferee,
     PrivateTextMetadata,
@@ -14,5 +15,5 @@ from .rapidata_client import (
     PromptMetadata,
     TranscriptionMetadata,
     FeatureFlags,
-    CountryCodes
-    )
+    CountryCodes,
+)
