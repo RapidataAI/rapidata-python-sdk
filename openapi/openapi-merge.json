@@ -22,7 +22,7 @@
       "inputFile": "./spec/pipeline.json"
     },
     {
-      "inputFile": "./spec/campaing.json"
+      "inputFile": "./spec/campaign.json"
     }
   ],
   "output": "./output.swagger.json"
