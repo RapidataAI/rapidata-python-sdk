@@ -32,11 +32,11 @@ class RapidataDataset:
 
     def add_media_from_paths(
         self,
-        image_paths: list[str | list[str]],
+        media_paths: list[str | list[str]],
         metadata: list[Metadata] | None = None,
         max_workers: int = 10,
     ):
-        if metadata is not None and len(metadata) != len(image_paths):
+        if metadata is not None and len(metadata) != len(media_paths):
             raise ValueError(
                 "metadata must be None or have the same length as image_paths"
             )
@@ -66,11 +66,11 @@ class RapidataDataset:
                 files=media_paths_rapid if isinstance(media_paths_rapid, list) else [media_paths_rapid] # type: ignore
             )
 
-        total_uploads = len(image_paths)
+        total_uploads = len(media_paths)
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
             futures = [
                 executor.submit(upload_datapoint, media_paths, meta)
-                for media_paths, meta in zip_longest(image_paths, metadata or [])
+                for media_paths, meta in zip_longest(media_paths, metadata or [])
             ]
 
             with tqdm(total=total_uploads, desc="Uploading datapoints") as pbar:

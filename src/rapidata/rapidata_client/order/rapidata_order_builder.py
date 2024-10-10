@@ -120,7 +120,24 @@ class RapidataOrderBuilder:
             openapi_service=self._openapi_service,
         )
 
-        order.dataset.add_media_from_paths(self._media_paths, self._metadata, max_workers)
+        if self._media_paths and self._texts:
+            raise ValueError(
+                "You cannot provide both media paths and texts to the same order."
+            )
+
+        if not self._media_paths and not self._texts:
+            raise ValueError(
+                "You must provide either media paths or texts to the order."
+            )
+
+        if self._texts:
+            order.dataset.add_texts(self._texts)
+
+        if self._media_paths:
+            order.dataset.add_media_from_paths(
+                self._media_paths, self._metadata, max_workers
+            )
+
         if submit:
             order.submit()
 
@@ -166,6 +183,18 @@ class RapidataOrderBuilder:
         """
         self._media_paths = media_paths
         self._metadata = metadata
+        return self
+
+    def texts(self, texts: list[str]):
+        """Set the TextAssets for the order.
+
+        Args:
+            texts (list[str]): The texts to be set.
+
+        Returns:
+            RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
+        """
+        self._texts = texts
         return self
 
     def feature_flags(self, feature_flags: FeatureFlags):
