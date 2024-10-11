@@ -17,26 +17,21 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.update_workflow_config_request_config import UpdateWorkflowConfigRequestConfig
 from typing import Optional, Set
 from typing_extensions import Self
 
-class DemographicRapidSelectionConfig(BaseModel):
+class UpdateWorkflowConfigRequest(BaseModel):
     """
-    DemographicRapidSelectionConfig
+    A request to update the workflow configuration.
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for DemographicRapidSelectionConfig", alias="_t")
-    keys: List[StrictStr]
-    max_rapids: Optional[StrictInt] = Field(default=None, alias="maxRapids")
-    __properties: ClassVar[List[str]] = ["_t", "keys", "maxRapids"]
-
-    @field_validator('t')
-    def t_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['DemographicRapidSelectionConfig']):
-            raise ValueError("must be one of enum values ('DemographicRapidSelectionConfig')")
-        return value
+    pipeline_id: StrictStr = Field(description="The id of the pipeline to update.", alias="pipelineId")
+    artifact_id: Optional[StrictStr] = Field(description="The id of the workflow config artifact to update.", alias="artifactId")
+    config: UpdateWorkflowConfigRequestConfig
+    campaign_artifact_id: Optional[StrictStr] = Field(default=None, description="The id of the campaign artifact to update.", alias="campaignArtifactId")
+    __properties: ClassVar[List[str]] = ["pipelineId", "artifactId", "config", "campaignArtifactId"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -56,7 +51,7 @@ class DemographicRapidSelectionConfig(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of DemographicRapidSelectionConfig from a JSON string"""
+        """Create an instance of UpdateWorkflowConfigRequest from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -77,11 +72,24 @@ class DemographicRapidSelectionConfig(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of config
+        if self.config:
+            _dict['config'] = self.config.to_dict()
+        # set to None if artifact_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.artifact_id is None and "artifact_id" in self.model_fields_set:
+            _dict['artifactId'] = None
+
+        # set to None if campaign_artifact_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.campaign_artifact_id is None and "campaign_artifact_id" in self.model_fields_set:
+            _dict['campaignArtifactId'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of DemographicRapidSelectionConfig from a dict"""
+        """Create an instance of UpdateWorkflowConfigRequest from a dict"""
         if obj is None:
             return None
 
@@ -89,9 +97,10 @@ class DemographicRapidSelectionConfig(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'DemographicRapidSelectionConfig',
-            "keys": obj.get("keys"),
-            "maxRapids": obj.get("maxRapids")
+            "pipelineId": obj.get("pipelineId"),
+            "artifactId": obj.get("artifactId"),
+            "config": UpdateWorkflowConfigRequestConfig.from_dict(obj["config"]) if obj.get("config") is not None else None,
+            "campaignArtifactId": obj.get("campaignArtifactId")
         })
         return _obj
 

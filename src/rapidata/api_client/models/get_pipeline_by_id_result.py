@@ -17,26 +17,18 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict
+from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.get_pipeline_by_id_result_artifacts_value import GetPipelineByIdResultArtifactsValue
 from typing import Optional, Set
 from typing_extensions import Self
 
-class DemographicRapidSelectionConfig(BaseModel):
+class GetPipelineByIdResult(BaseModel):
     """
-    DemographicRapidSelectionConfig
+    GetPipelineByIdResult
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for DemographicRapidSelectionConfig", alias="_t")
-    keys: List[StrictStr]
-    max_rapids: Optional[StrictInt] = Field(default=None, alias="maxRapids")
-    __properties: ClassVar[List[str]] = ["_t", "keys", "maxRapids"]
-
-    @field_validator('t')
-    def t_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['DemographicRapidSelectionConfig']):
-            raise ValueError("must be one of enum values ('DemographicRapidSelectionConfig')")
-        return value
+    artifacts: Dict[str, GetPipelineByIdResultArtifactsValue]
+    __properties: ClassVar[List[str]] = ["artifacts"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -56,7 +48,7 @@ class DemographicRapidSelectionConfig(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of DemographicRapidSelectionConfig from a JSON string"""
+        """Create an instance of GetPipelineByIdResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -77,11 +69,18 @@ class DemographicRapidSelectionConfig(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each value in artifacts (dict)
+        _field_dict = {}
+        if self.artifacts:
+            for _key_artifacts in self.artifacts:
+                if self.artifacts[_key_artifacts]:
+                    _field_dict[_key_artifacts] = self.artifacts[_key_artifacts].to_dict()
+            _dict['artifacts'] = _field_dict
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of DemographicRapidSelectionConfig from a dict"""
+        """Create an instance of GetPipelineByIdResult from a dict"""
         if obj is None:
             return None
 
@@ -89,9 +88,12 @@ class DemographicRapidSelectionConfig(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'DemographicRapidSelectionConfig',
-            "keys": obj.get("keys"),
-            "maxRapids": obj.get("maxRapids")
+            "artifacts": dict(
+                (_k, GetPipelineByIdResultArtifactsValue.from_dict(_v))
+                for _k, _v in obj["artifacts"].items()
+            )
+            if obj.get("artifacts") is not None
+            else None
         })
         return _obj
 

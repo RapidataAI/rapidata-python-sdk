@@ -55,16 +55,13 @@ configuration.api_key['bearer'] = os.environ["API_KEY"]
 # Enter a context with an instance of the API client
 with rapidata.api_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rapidata.api_client.CocoApi(api_client)
-    submit_coco_model = rapidata.api_client.SubmitCocoModel() # SubmitCocoModel | The model containing the information needed to create the validation set. (optional)
+    api_instance = rapidata.api_client.CampaignApi(api_client)
 
     try:
-        # Creates a new validation set based on a previously uploaded CoCo set.
-        api_response = api_instance.coco_submit_post(submit_coco_model=submit_coco_model)
-        print("The response of CocoApi->coco_submit_post:\n")
-        pprint(api_response)
+        # The monitor endpoint is used to monitor the health of the service
+        api_instance.campaign_monitor_get()
     except ApiException as e:
-        print("Exception when calling CocoApi->coco_submit_post: %s\n" % e)
+        print("Exception when calling CampaignApi->campaign_monitor_get: %s\n" % e)
 
 ```
 
@@ -74,6 +71,10 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*CampaignApi* | [**campaign_monitor_get**](rapidata/api_client/docs/CampaignApi.md#campaign_monitor_get) | **GET** /Campaign/Monitor | The monitor endpoint is used to monitor the health of the service
+*CampaignApi* | [**campaign_pause_post**](rapidata/api_client/docs/CampaignApi.md#campaign_pause_post) | **POST** /Campaign/Pause | Pauses a campaign.
+*CampaignApi* | [**campaign_query_get**](rapidata/api_client/docs/CampaignApi.md#campaign_query_get) | **GET** /Campaign/Query | Queries orders based on a filter, page, and sort criteria.
+*CampaignApi* | [**campaign_resume_post**](rapidata/api_client/docs/CampaignApi.md#campaign_resume_post) | **POST** /Campaign/Resume | Resumes a campaign.
 *CocoApi* | [**coco_submit_post**](rapidata/api_client/docs/CocoApi.md#coco_submit_post) | **POST** /Coco/Submit | Creates a new validation set based on a previously uploaded CoCo set.
 *CocoApi* | [**coco_upload_post**](rapidata/api_client/docs/CocoApi.md#coco_upload_post) | **POST** /Coco/Upload | Uploads a CoCo set to the system.
 *CompareWorkflowApi* | [**compare_workflow_get_result_overview_get**](rapidata/api_client/docs/CompareWorkflowApi.md#compare_workflow_get_result_overview_get) | **GET** /CompareWorkflow/GetResultOverview | Get the result overview for a compare workflow.
@@ -124,6 +125,9 @@ Class | Method | HTTP request | Description
 *OrderApi* | [**order_update_access_put**](rapidata/api_client/docs/OrderApi.md#order_update_access_put) | **PUT** /Order/UpdateAccess | Updates whether an order is public or not.
 *OrderApi* | [**order_update_order_name_put**](rapidata/api_client/docs/OrderApi.md#order_update_order_name_put) | **PUT** /Order/UpdateOrderName | Updates the name of an order.
 *OrderApi* | [**order_update_workflow_config_put**](rapidata/api_client/docs/OrderApi.md#order_update_workflow_config_put) | **PUT** /Order/UpdateWorkflowConfig | Updates the workflow configuration of an order.
+*PipelineApi* | [**pipeline_add_campaign_patch**](rapidata/api_client/docs/PipelineApi.md#pipeline_add_campaign_patch) | **PATCH** /Pipeline/AddCampaign | Adds a campaign to a pipeline.
+*PipelineApi* | [**pipeline_id_get**](rapidata/api_client/docs/PipelineApi.md#pipeline_id_get) | **GET** /Pipeline/{id} | Gets a pipeline by its id.
+*PipelineApi* | [**pipeline_update_workflow_config_post**](rapidata/api_client/docs/PipelineApi.md#pipeline_update_workflow_config_post) | **POST** /Pipeline/UpdateWorkflowConfig | Updates the workflow configuration for a pipeline.
 *RapidApi* | [**rapid_add_user_guess_post**](rapidata/api_client/docs/RapidApi.md#rapid_add_user_guess_post) | **POST** /Rapid/AddUserGuess | Submits a user guess for a Rapid.
 *RapidApi* | [**rapid_create_demographic_rapid_post**](rapidata/api_client/docs/RapidApi.md#rapid_create_demographic_rapid_post) | **POST** /Rapid/CreateDemographicRapid | Creates a new Demographic Rapid.
 *RapidApi* | [**rapid_query_validation_rapids_get**](rapidata/api_client/docs/RapidApi.md#rapid_query_validation_rapids_get) | **GET** /Rapid/QueryValidationRapids | Queries the validation rapids for a specific validation set.
@@ -149,6 +153,8 @@ Class | Method | HTTP request | Description
 
 ## Documentation For Models
 
+ - [AddCampaignArtifactResult](rapidata/api_client/docs/AddCampaignArtifactResult.md)
+ - [AddCampaignModel](rapidata/api_client/docs/AddCampaignModel.md)
  - [AddValidationRapidModel](rapidata/api_client/docs/AddValidationRapidModel.md)
  - [AddValidationRapidModelPayload](rapidata/api_client/docs/AddValidationRapidModelPayload.md)
  - [AddValidationRapidModelTruth](rapidata/api_client/docs/AddValidationRapidModelTruth.md)
@@ -167,6 +173,10 @@ Class | Method | HTTP request | Description
  - [BoundingBoxResult](rapidata/api_client/docs/BoundingBoxResult.md)
  - [BoundingBoxTruth](rapidata/api_client/docs/BoundingBoxTruth.md)
  - [BoxShape](rapidata/api_client/docs/BoxShape.md)
+ - [CampaignArtifactModel](rapidata/api_client/docs/CampaignArtifactModel.md)
+ - [CampaignQueryModel](rapidata/api_client/docs/CampaignQueryModel.md)
+ - [CampaignQueryModelPagedResult](rapidata/api_client/docs/CampaignQueryModelPagedResult.md)
+ - [CampaignStatus](rapidata/api_client/docs/CampaignStatus.md)
  - [CampaignUserFilterModel](rapidata/api_client/docs/CampaignUserFilterModel.md)
  - [ClassificationMetadata](rapidata/api_client/docs/ClassificationMetadata.md)
  - [ClassificationMetadataFilterConfig](rapidata/api_client/docs/ClassificationMetadataFilterConfig.md)
@@ -179,6 +189,7 @@ Class | Method | HTTP request | Description
  - [CompareResult](rapidata/api_client/docs/CompareResult.md)
  - [CompareTruth](rapidata/api_client/docs/CompareTruth.md)
  - [CompareWorkflowConfig](rapidata/api_client/docs/CompareWorkflowConfig.md)
+ - [CompareWorkflowConfigModel](rapidata/api_client/docs/CompareWorkflowConfigModel.md)
  - [CompareWorkflowConfigRapidSelectionConfigsInner](rapidata/api_client/docs/CompareWorkflowConfigRapidSelectionConfigsInner.md)
  - [CompareWorkflowConfigReferee](rapidata/api_client/docs/CompareWorkflowConfigReferee.md)
  - [CompareWorkflowGetResultOverviewGet200Response](rapidata/api_client/docs/CompareWorkflowGetResultOverviewGet200Response.md)
@@ -221,6 +232,7 @@ Class | Method | HTTP request | Description
  - [DatapointMetadataModelMetadataInner](rapidata/api_client/docs/DatapointMetadataModelMetadataInner.md)
  - [DatapointModel](rapidata/api_client/docs/DatapointModel.md)
  - [DatapointModelAsset](rapidata/api_client/docs/DatapointModelAsset.md)
+ - [DatasetArtifactModel](rapidata/api_client/docs/DatasetArtifactModel.md)
  - [DatasetEvaluationStepModel](rapidata/api_client/docs/DatasetEvaluationStepModel.md)
  - [DemographicRapidSelectionConfig](rapidata/api_client/docs/DemographicRapidSelectionConfig.md)
  - [DemographicSelection](rapidata/api_client/docs/DemographicSelection.md)
@@ -230,6 +242,7 @@ Class | Method | HTTP request | Description
  - [FeatureFlag](rapidata/api_client/docs/FeatureFlag.md)
  - [FeatureFlagModel](rapidata/api_client/docs/FeatureFlagModel.md)
  - [FeedbackModel](rapidata/api_client/docs/FeedbackModel.md)
+ - [FileArtifactModel](rapidata/api_client/docs/FileArtifactModel.md)
  - [FileAsset](rapidata/api_client/docs/FileAsset.md)
  - [FileAssetMetadataInner](rapidata/api_client/docs/FileAssetMetadataInner.md)
  - [FileAssetModel](rapidata/api_client/docs/FileAssetModel.md)
@@ -248,6 +261,8 @@ Class | Method | HTTP request | Description
  - [GetDatasetByIdResult](rapidata/api_client/docs/GetDatasetByIdResult.md)
  - [GetOrderByIdResult](rapidata/api_client/docs/GetOrderByIdResult.md)
  - [GetOrderResultsResult](rapidata/api_client/docs/GetOrderResultsResult.md)
+ - [GetPipelineByIdResult](rapidata/api_client/docs/GetPipelineByIdResult.md)
+ - [GetPipelineByIdResultArtifactsValue](rapidata/api_client/docs/GetPipelineByIdResultArtifactsValue.md)
  - [GetPublicOrdersResult](rapidata/api_client/docs/GetPublicOrdersResult.md)
  - [GetSimpleWorkflowResultOverviewResult](rapidata/api_client/docs/GetSimpleWorkflowResultOverviewResult.md)
  - [GetWorkflowByIdResult](rapidata/api_client/docs/GetWorkflowByIdResult.md)
@@ -311,6 +326,7 @@ Class | Method | HTTP request | Description
  - [PromptMetadata](rapidata/api_client/docs/PromptMetadata.md)
  - [PromptMetadataInput](rapidata/api_client/docs/PromptMetadataInput.md)
  - [PublicTextMetadataInput](rapidata/api_client/docs/PublicTextMetadataInput.md)
+ - [QueryCampaignsModel](rapidata/api_client/docs/QueryCampaignsModel.md)
  - [QueryModel](rapidata/api_client/docs/QueryModel.md)
  - [QueryOrdersModel](rapidata/api_client/docs/QueryOrdersModel.md)
  - [QueryValidationRapidsResult](rapidata/api_client/docs/QueryValidationRapidsResult.md)
@@ -332,6 +348,8 @@ Class | Method | HTTP request | Description
  - [SignupShadowCustomerModel](rapidata/api_client/docs/SignupShadowCustomerModel.md)
  - [SimpleWorkflowConfig](rapidata/api_client/docs/SimpleWorkflowConfig.md)
  - [SimpleWorkflowConfigBlueprint](rapidata/api_client/docs/SimpleWorkflowConfigBlueprint.md)
+ - [SimpleWorkflowConfigModel](rapidata/api_client/docs/SimpleWorkflowConfigModel.md)
+ - [SimpleWorkflowConfigModelBlueprint](rapidata/api_client/docs/SimpleWorkflowConfigModelBlueprint.md)
  - [SimpleWorkflowGetResultOverviewGet200Response](rapidata/api_client/docs/SimpleWorkflowGetResultOverviewGet200Response.md)
  - [SimpleWorkflowModel](rapidata/api_client/docs/SimpleWorkflowModel.md)
  - [SimpleWorkflowModel1](rapidata/api_client/docs/SimpleWorkflowModel1.md)
@@ -359,6 +377,8 @@ Class | Method | HTTP request | Description
  - [UpdateOrderModel](rapidata/api_client/docs/UpdateOrderModel.md)
  - [UpdateWorkflowConfigModel](rapidata/api_client/docs/UpdateWorkflowConfigModel.md)
  - [UpdateWorkflowConfigModelWorkflowConfig](rapidata/api_client/docs/UpdateWorkflowConfigModelWorkflowConfig.md)
+ - [UpdateWorkflowConfigRequest](rapidata/api_client/docs/UpdateWorkflowConfigRequest.md)
+ - [UpdateWorkflowConfigRequestConfig](rapidata/api_client/docs/UpdateWorkflowConfigRequestConfig.md)
  - [UploadCocoResult](rapidata/api_client/docs/UploadCocoResult.md)
  - [UploadDatapointsResult](rapidata/api_client/docs/UploadDatapointsResult.md)
  - [UploadFilesFromS3BucketModel](rapidata/api_client/docs/UploadFilesFromS3BucketModel.md)
@@ -372,6 +392,8 @@ Class | Method | HTTP request | Description
  - [ValidationSetOverviewModel](rapidata/api_client/docs/ValidationSetOverviewModel.md)
  - [ValidationSetPagedResult](rapidata/api_client/docs/ValidationSetPagedResult.md)
  - [WorkflowAggregationStepModel](rapidata/api_client/docs/WorkflowAggregationStepModel.md)
+ - [WorkflowArtifactModel](rapidata/api_client/docs/WorkflowArtifactModel.md)
+ - [WorkflowConfigArtifactModel](rapidata/api_client/docs/WorkflowConfigArtifactModel.md)
  - [WorkflowLabelingStepModel](rapidata/api_client/docs/WorkflowLabelingStepModel.md)
  - [WorkflowSplitModel](rapidata/api_client/docs/WorkflowSplitModel.md)
  - [WorkflowSplitModelFilterConfigsInner](rapidata/api_client/docs/WorkflowSplitModelFilterConfigsInner.md)

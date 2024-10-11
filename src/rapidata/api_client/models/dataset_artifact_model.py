@@ -17,25 +17,25 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class DemographicRapidSelectionConfig(BaseModel):
+class DatasetArtifactModel(BaseModel):
     """
-    DemographicRapidSelectionConfig
+    DatasetArtifactModel
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for DemographicRapidSelectionConfig", alias="_t")
-    keys: List[StrictStr]
-    max_rapids: Optional[StrictInt] = Field(default=None, alias="maxRapids")
-    __properties: ClassVar[List[str]] = ["_t", "keys", "maxRapids"]
+    t: StrictStr = Field(description="Discriminator value for DatasetArtifactModel", alias="_t")
+    dataset_id: StrictStr = Field(alias="datasetId")
+    identifier: StrictStr
+    __properties: ClassVar[List[str]] = ["_t", "datasetId", "identifier"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['DemographicRapidSelectionConfig']):
-            raise ValueError("must be one of enum values ('DemographicRapidSelectionConfig')")
+        if value not in set(['DatasetArtifactModel']):
+            raise ValueError("must be one of enum values ('DatasetArtifactModel')")
         return value
 
     model_config = ConfigDict(
@@ -56,7 +56,7 @@ class DemographicRapidSelectionConfig(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of DemographicRapidSelectionConfig from a JSON string"""
+        """Create an instance of DatasetArtifactModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -81,7 +81,7 @@ class DemographicRapidSelectionConfig(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of DemographicRapidSelectionConfig from a dict"""
+        """Create an instance of DatasetArtifactModel from a dict"""
         if obj is None:
             return None
 
@@ -89,9 +89,9 @@ class DemographicRapidSelectionConfig(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'DemographicRapidSelectionConfig',
-            "keys": obj.get("keys"),
-            "maxRapids": obj.get("maxRapids")
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'DatasetArtifactModel',
+            "datasetId": obj.get("datasetId"),
+            "identifier": obj.get("identifier")
         })
         return _obj
 
