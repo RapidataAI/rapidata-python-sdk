@@ -77,7 +77,7 @@ with open("order_ids.txt", "a") as file:
 
 ### Short Form
 
-The [`RapidataOrderBuilder`](reference/rapidata/rapidata_client/order/rapidata_order_builder.md/#rapidata.rapidata_client.order.rapidata_order_builder.RapidataOrderBuilder) supports a fluent interface, allowing method call chaining. This enables a more concise order creation:
+The `RapidataSDK` supports a fluent interface, allowing method call chaining. This enables a more concise order creation:
 
 ```py
 order = (rapi.create_classify_order("classifcaiton order")

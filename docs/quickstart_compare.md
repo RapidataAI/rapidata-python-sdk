@@ -71,15 +71,15 @@ with open("order_ids.txt", "a") as file:
 
 ### Short Form
 
-The [`RapidataOrderBuilder`](reference/rapidata/rapidata_client/order/rapidata_order_builder.md/#rapidata.rapidata_client.order.rapidata_order_builder.RapidataOrderBuilder) supports a fluent interface, allowing method call chaining. This enables a more concise order creation:
+The `RapidataSDK` supports a fluent interface, allowing method call chaining. This enables a more concise order creation:
 
 ```py
-order = (rapi.create_classify_order("classifcaiton order")
-         .question("what is this?")
-         .options(["a", "b", "c"])
-         .media(["C:\\Users\\linog\\Pictures\\example_jpg.jpg"])
-         .votes(20)
-         .create())
+order = (rapi.create_compare_order("Simple Compare")
+        .criteria("Which logo looks better?")
+        .media([["examples/data/rapidata_logo.png", 
+                 "examples/data/rapidata_concept_logo.jpg"]])
+        .votes(20)
+        .create())
 print("order id: ", order.order_id)
 # Optionally save the order ID to a file
 with open("order_ids.txt", "a") as file:

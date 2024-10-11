@@ -8,7 +8,7 @@ from rapidata.rapidata_client.selection.labeling_selection import LabelingSelect
 from rapidata.rapidata_client.selection.base_selection import Selection
 
 class CompareOrderBuilder:
-    def __init__(self, name:str, criteria: str, media_paths: list[str], openapi_service: OpenAPIService):
+    def __init__(self, name:str, criteria: str, media_paths: list[list[str]], openapi_service: OpenAPIService):
         self._order_builder = RapidataOrderBuilder(name=name, openapi_service=openapi_service)
         self._name = name
         self._criteria = criteria
@@ -57,7 +57,7 @@ class CompareMediaBuilder:
         self._criteria = criteria
         self._media_paths = None
 
-    def media(self, media_paths: list[str]) -> CompareOrderBuilder:
+    def media(self, media_paths: list[list[str]]) -> CompareOrderBuilder:
         """Set the media assets for the comparison order by providing the local paths to the files."""
         self._media_paths = media_paths
         return self._build()
