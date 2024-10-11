@@ -39,7 +39,7 @@ class ClassificationOrderBuilder:
         self._validation_set_id = validation_set_id
         return self
     
-    def create(self, submit: bool = False, max_upload_workers: int = 10):
+    def create(self, submit: bool = True, max_upload_workers: int = 10):
         if self._probability_threshold and self._votes_required:
             referee = ClassifyEarlyStoppingReferee(
                 max_vote_count=self._votes_required,

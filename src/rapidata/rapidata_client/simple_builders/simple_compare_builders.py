@@ -17,7 +17,7 @@ class CompareOrderBuilder:
         self._metadata = None
         self._validation_set_id = None
 
-    def votes_required(self, votes_required: int) -> 'CompareOrderBuilder':
+    def votes(self, votes_required: int) -> 'CompareOrderBuilder':
         """Set the number of votes required for the comparison order."""
         self._votes_required = votes_required
         return self
@@ -32,7 +32,7 @@ class CompareOrderBuilder:
         self._validation_set_id = validation_set_id
         return self
     
-    def create(self, submit: bool = False, max_upload_workers: int = 10):
+    def create(self, submit: bool = True, max_upload_workers: int = 10):
         selection: list[Selection] = ([ValidationSelection(amount=1, validation_set_id=self._validation_set_id), LabelingSelection(amount=2)] 
                      if self._validation_set_id 
                      else [LabelingSelection(amount=3)])
