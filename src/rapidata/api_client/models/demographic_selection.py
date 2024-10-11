@@ -17,8 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,8 +27,9 @@ class DemographicSelection(BaseModel):
     DemographicSelection
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for DemographicSelection", alias="_t")
-    key: StrictStr
-    __properties: ClassVar[List[str]] = ["_t", "key"]
+    keys: List[StrictStr]
+    max_rapids: Optional[StrictInt] = Field(default=None, alias="maxRapids")
+    __properties: ClassVar[List[str]] = ["_t", "keys", "maxRapids"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -89,7 +90,8 @@ class DemographicSelection(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'DemographicSelection',
-            "key": obj.get("key")
+            "keys": obj.get("keys"),
+            "maxRapids": obj.get("maxRapids")
         })
         return _obj
 

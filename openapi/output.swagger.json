@@ -2786,6 +2786,233 @@
           }
         }
       }
+    },
+    "/Pipeline/UpdateWorkflowConfig": {
+      "post": {
+        "tags": [
+          "Pipeline"
+        ],
+        "summary": "Updates the workflow configuration for a pipeline.",
+        "requestBody": {
+          "description": "The request to update the workflow configuration.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWorkflowConfigRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWorkflowConfigRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWorkflowConfigRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Pipeline/{id}": {
+      "get": {
+        "tags": [
+          "Pipeline"
+        ],
+        "summary": "Gets a pipeline by its id.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the pipeline to get.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPipelineByIdResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPipelineByIdResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPipelineByIdResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Pipeline/AddCampaign": {
+      "patch": {
+        "tags": [
+          "Pipeline"
+        ],
+        "summary": "Adds a campaign to a pipeline.",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddCampaignModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddCampaignModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddCampaignModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddCampaignArtifactResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddCampaignArtifactResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddCampaignArtifactResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Campaign/Monitor": {
+      "get": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "The monitor endpoint is used to monitor the health of the service",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Campaign/Query": {
+      "get": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "Queries orders based on a filter, page, and sort criteria.",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "query",
+            "description": "The parameters for filtering, paging, and sorting",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryCampaignsModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CampaignQueryModelPagedResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CampaignQueryModelPagedResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CampaignQueryModelPagedResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Campaign/Pause": {
+      "post": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "Pauses a campaign.",
+        "parameters": [
+          {
+            "name": "campaignId",
+            "in": "query",
+            "description": "id of the campaign that should be paused",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Campaign/Resume": {
+      "post": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "Resumes a campaign.",
+        "parameters": [
+          {
+            "name": "campaignId",
+            "in": "query",
+            "description": "id of the campaign that should be paused",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -5011,7 +5238,7 @@
         "title": "DemographicRapidSelectionConfig",
         "required": [
           "_t",
-          "key"
+          "keys"
         ],
         "type": "object",
         "properties": {
@@ -5024,8 +5251,15 @@
             "default": "DemographicRapidSelectionConfig",
             "example": "DemographicRapidSelectionConfig"
           },
-          "key": {
-            "type": "string"
+          "keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "maxRapids": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -5034,7 +5268,7 @@
         "title": "DemographicSelection",
         "required": [
           "_t",
-          "key"
+          "keys"
         ],
         "type": "object",
         "properties": {
@@ -5047,8 +5281,15 @@
             "default": "DemographicSelection",
             "example": "DemographicSelection"
           },
-          "key": {
-            "type": "string"
+          "keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "maxRapids": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -8937,6 +9178,699 @@
           "Failed"
         ],
         "type": "string"
+      },
+      "AddCampaignArtifactResult": {
+        "required": [
+          "campaignId"
+        ],
+        "type": "object",
+        "properties": {
+          "campaignId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AddCampaignModel": {
+        "title": "AddCampaignModel",
+        "required": [
+          "_t",
+          "campaignName",
+          "featureFlags",
+          "pipelineId",
+          "priority",
+          "selections",
+          "userFilters"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "AddCampaignModel"
+            ],
+            "type": "string",
+            "description": "Discriminator value for AddCampaignModel",
+            "default": "AddCampaignModel",
+            "example": "AddCampaignModel"
+          },
+          "pipelineId": {
+            "type": "string",
+            "description": "The pipeline the campaign should belong to."
+          },
+          "artifactId": {
+            "type": "string",
+            "description": "The id of the campaign artifact. If not provided a random value will be used.",
+            "nullable": true
+          },
+          "campaignName": {
+            "type": "string",
+            "description": "The name of the campaign."
+          },
+          "userFilters": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AgeUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/CampaignUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/CountryUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/GenderUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/LanguageUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/UserScoreUserFilterModel"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            },
+            "description": "The user filters to apply to the campaign."
+          },
+          "validationSetId": {
+            "type": "string",
+            "description": "A validation set that should be used.",
+            "nullable": true
+          },
+          "selections": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/DemographicSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/LabelingSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/StaticSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/ValidationSelection"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            },
+            "description": "The selections that the campaign should have.",
+            "nullable": true
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            },
+            "description": "The feature flags that should be applied to the campaign."
+          },
+          "priority": {
+            "type": "integer",
+            "description": "The priority of the campaign.",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for adding a campaign to an existing pipeline."
+      },
+      "CampaignArtifactModel": {
+        "title": "CampaignArtifactModel",
+        "required": [
+          "_t",
+          "campaignId",
+          "identifier"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "CampaignArtifactModel"
+            ],
+            "type": "string",
+            "description": "Discriminator value for CampaignArtifactModel",
+            "default": "CampaignArtifactModel",
+            "example": "CampaignArtifactModel"
+          },
+          "campaignId": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CompareWorkflowConfigModel": {
+        "title": "CompareWorkflowConfig",
+        "required": [
+          "_t",
+          "criteria",
+          "referee",
+          "targetCountryCodes"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "CompareWorkflowConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for CompareWorkflowConfig",
+            "default": "CompareWorkflowConfig",
+            "example": "CompareWorkflowConfig"
+          },
+          "criteria": {
+            "type": "string",
+            "description": "The criteria to add to each compare rapid."
+          },
+          "startingElo": {
+            "type": "integer",
+            "description": "The starting ELO score for each datapoint.",
+            "format": "int32"
+          },
+          "kFactor": {
+            "type": "integer",
+            "description": "The K-factor to use in the ELO calculation.\r\nDetermines the maximum possible change in a player's Elo rating after a single match.\r\nHigher K-Factor values result in larger rating changes.",
+            "format": "int32"
+          },
+          "matchSize": {
+            "type": "integer",
+            "description": "The number of datapoints to match against each other in each match.",
+            "format": "int32"
+          },
+          "scalingFactor": {
+            "type": "integer",
+            "description": "Scaling factor to use in the ELO calculation.\r\nAdjusts the sensitivity of the Elo rating system to differences in player ratings.\r\nIt affects how much the rating changes based on the expected outcome versus the actual outcome.",
+            "format": "int32"
+          },
+          "matchesUntilCompleted": {
+            "type": "integer",
+            "description": "The number of matches to run before each datapoint is considered \"completed\".",
+            "format": "int32"
+          },
+          "referee": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NaiveRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/NeverEndingRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/ProbabilisticAttachCategoryRefereeConfig"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "targetCountryCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "A list of country codes that this workflow is targeting."
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
+          },
+          "priority": {
+            "type": "string",
+            "nullable": true
+          },
+          "isFallback": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "rapidSelectionConfigs": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/ConditionalValidationRapidSelectionConfig"
+                },
+                {
+                  "$ref": "#/components/schemas/CorrelatedRapidSelectionConfig"
+                },
+                {
+                  "$ref": "#/components/schemas/DemographicRapidSelectionConfig"
+                },
+                {
+                  "$ref": "#/components/schemas/NoValidationWorkflowRapidSelectionConfig"
+                },
+                {
+                  "$ref": "#/components/schemas/OnlyValidationWorkflowRapidSelectionConfig"
+                },
+                {
+                  "$ref": "#/components/schemas/StaticRapidSelectionConfig"
+                },
+                {
+                  "$ref": "#/components/schemas/ValidationRapidSelectionConfig"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          }
+        },
+        "additionalProperties": false,
+        "description": "The configuration for creating a compare workflow.\r\nA compare workflow is a workflow that continuously matches datapoints against each other and updates their\r\nrespective ELO scores. The ELO scores are used to determine the relative strength of the datapoints,\r\nand datapoints are matched against other datapoints with similar ELO scores.\r\nThe end goal is a ranking of the datapoints based on their relative strength."
+      },
+      "DatasetArtifactModel": {
+        "title": "DatasetArtifactModel",
+        "required": [
+          "_t",
+          "datasetId",
+          "identifier"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "DatasetArtifactModel"
+            ],
+            "type": "string",
+            "description": "Discriminator value for DatasetArtifactModel",
+            "default": "DatasetArtifactModel",
+            "example": "DatasetArtifactModel"
+          },
+          "datasetId": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FileArtifactModel": {
+        "title": "FileArtifactModel",
+        "required": [
+          "_t",
+          "fileName",
+          "identifier"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "FileArtifactModel"
+            ],
+            "type": "string",
+            "description": "Discriminator value for FileArtifactModel",
+            "default": "FileArtifactModel",
+            "example": "FileArtifactModel"
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetPipelineByIdResult": {
+        "required": [
+          "artifacts"
+        ],
+        "type": "object",
+        "properties": {
+          "artifacts": {
+            "type": "object",
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/CampaignArtifactModel"
+                },
+                {
+                  "$ref": "#/components/schemas/DatasetArtifactModel"
+                },
+                {
+                  "$ref": "#/components/schemas/FileArtifactModel"
+                },
+                {
+                  "$ref": "#/components/schemas/WorkflowArtifactModel"
+                },
+                {
+                  "$ref": "#/components/schemas/WorkflowConfigArtifactModel"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "SimpleWorkflowConfigModel": {
+        "title": "SimpleWorkflowConfig",
+        "required": [
+          "_t",
+          "blueprint",
+          "referee",
+          "targetCountryCodes"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "SimpleWorkflowConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for SimpleWorkflowConfig",
+            "default": "SimpleWorkflowConfig",
+            "example": "SimpleWorkflowConfig"
+          },
+          "referee": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NaiveRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/NeverEndingRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/ProbabilisticAttachCategoryRefereeConfig"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "blueprint": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranscriptionRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/PolygonRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/NamedEntityRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/LocateRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/LineRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/FreeTextRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/CompareRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/AttachCategoryRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/BoundingBoxRapidBlueprint"
+              }
+            ],
+            "description": "The blueprint to use when creating rapids for this workflow.\r\nThe blueprint determines what kind of rapids will be created and what data they will contain.",
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "targetCountryCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "A list of country codes that this workflow is targeting."
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
+          },
+          "priority": {
+            "type": "string",
+            "nullable": true
+          },
+          "isFallback": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "rapidSelectionConfigs": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/ConditionalValidationRapidSelectionConfig"
+                },
+                {
+                  "$ref": "#/components/schemas/CorrelatedRapidSelectionConfig"
+                },
+                {
+                  "$ref": "#/components/schemas/DemographicRapidSelectionConfig"
+                },
+                {
+                  "$ref": "#/components/schemas/NoValidationWorkflowRapidSelectionConfig"
+                },
+                {
+                  "$ref": "#/components/schemas/OnlyValidationWorkflowRapidSelectionConfig"
+                },
+                {
+                  "$ref": "#/components/schemas/StaticRapidSelectionConfig"
+                },
+                {
+                  "$ref": "#/components/schemas/ValidationRapidSelectionConfig"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          }
+        },
+        "additionalProperties": false,
+        "description": "The configuration for a simple workflow.\r\nA simple workflow creates a rapid for each datapoint in its dataset.\r\nIt is considered complete when all rapids have been completed."
+      },
+      "UpdateWorkflowConfigRequest": {
+        "required": [
+          "artifactId",
+          "config",
+          "pipelineId"
+        ],
+        "type": "object",
+        "properties": {
+          "pipelineId": {
+            "type": "string",
+            "description": "The id of the pipeline to update."
+          },
+          "artifactId": {
+            "type": "string",
+            "description": "The id of the workflow config artifact to update.",
+            "nullable": true
+          },
+          "config": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CompareWorkflowConfigModel"
+              },
+              {
+                "$ref": "#/components/schemas/SimpleWorkflowConfigModel"
+              }
+            ],
+            "description": "The new workflow configuration.",
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "campaignArtifactId": {
+            "type": "string",
+            "description": "The id of the campaign artifact to update.",
+            "default": null,
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "A request to update the workflow configuration."
+      },
+      "WorkflowArtifactModel": {
+        "title": "WorkflowArtifactModel",
+        "required": [
+          "_t",
+          "identifier",
+          "workflowId"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "WorkflowArtifactModel"
+            ],
+            "type": "string",
+            "description": "Discriminator value for WorkflowArtifactModel",
+            "default": "WorkflowArtifactModel",
+            "example": "WorkflowArtifactModel"
+          },
+          "workflowId": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "WorkflowConfigArtifactModel": {
+        "title": "WorkflowConfigArtifactModel",
+        "required": [
+          "_t",
+          "identifier",
+          "workflowConfig"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "WorkflowConfigArtifactModel"
+            ],
+            "type": "string",
+            "description": "Discriminator value for WorkflowConfigArtifactModel",
+            "default": "WorkflowConfigArtifactModel",
+            "example": "WorkflowConfigArtifactModel"
+          },
+          "workflowConfig": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CompareWorkflowConfig"
+              },
+              {
+                "$ref": "#/components/schemas/SimpleWorkflowConfig"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "identifier": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CampaignQueryModel": {
+        "required": [
+          "createdAt",
+          "id",
+          "name",
+          "owner",
+          "priority",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "Created",
+              "Active",
+              "Paused",
+              "Completed"
+            ],
+            "type": "string"
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CampaignQueryModelPagedResult": {
+        "required": [
+          "items",
+          "page",
+          "pageSize",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CampaignQueryModel"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CampaignStatus": {
+        "enum": [
+          "Created",
+          "Active",
+          "Paused",
+          "Completed"
+        ],
+        "type": "string"
+      },
+      "QueryCampaignsModel": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "$ref": "#/components/schemas/PageInfo"
+          },
+          "filter": {
+            "$ref": "#/components/schemas/RootFilter"
+          },
+          "sortCriteria": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SortCriterion"
+            },
+            "description": "The sorting criteria",
+            "default": null,
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for querying campaigns."
       }
     },
     "securitySchemes": {
