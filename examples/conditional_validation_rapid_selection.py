@@ -9,7 +9,7 @@ from rapidata import (
     NaiveReferee,
     PromptMetadata,
     LabelingSelection,
-    ConditionalValidationRapidSelection,
+    ConditionalValidationSelection,
 )
 
 
@@ -42,7 +42,7 @@ def new_cond_validation_rapid_order(rapi: RapidataClient):
         .referee(NaiveReferee(required_guesses=3))
         .selections(
             [
-                ConditionalValidationRapidSelection(
+                ConditionalValidationSelection(
                     chances=[0.9],
                     thresholds=[0.35],
                     rapid_counts=[1],

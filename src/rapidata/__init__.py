@@ -7,7 +7,7 @@ from .rapidata_client import (
     DemographicSelection,
     LabelingSelection,
     ValidationSelection,
-    ConditionalValidationRapidSelection,
+    ConditionalValidationSelection,
     NaiveReferee,
     ClassifyEarlyStoppingReferee,
     PrivateTextMetadata,
