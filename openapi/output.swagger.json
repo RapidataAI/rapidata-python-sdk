@@ -4308,6 +4308,59 @@
         },
         "additionalProperties": false
       },
+      "CappedSelection": {
+        "title": "CappedSelection",
+        "required": [
+          "_t",
+          "maxRapids",
+          "selections"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "CappedSelection"
+            ],
+            "type": "string",
+            "description": "Discriminator value for CappedSelection",
+            "default": "CappedSelection",
+            "example": "CappedSelection"
+          },
+          "selections": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/CappedSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/ConditionalValidationSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/DemographicSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/LabelingSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/StaticSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/ValidationSelection"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          },
+          "maxRapids": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "ClassificationMetadataFilterConfig": {
         "title": "ClassificationMetadataFilterConfig",
         "required": [
@@ -4754,6 +4807,9 @@
             "type": "array",
             "items": {
               "oneOf": [
+                {
+                  "$ref": "#/components/schemas/CappedSelection"
+                },
                 {
                   "$ref": "#/components/schemas/ConditionalValidationSelection"
                 },
@@ -8900,6 +8956,9 @@
             "type": "array",
             "items": {
               "oneOf": [
+                {
+                  "$ref": "#/components/schemas/CappedSelection"
+                },
                 {
                   "$ref": "#/components/schemas/ConditionalValidationSelection"
                 },
