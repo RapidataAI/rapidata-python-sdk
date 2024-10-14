@@ -54,7 +54,7 @@ order_builder = order_builder.media([["examples/data/rapidata_logo.png", "exampl
 order_builder = order_builder.votes(20)
 ```
 
-5. Finally create the order. This executes all the HTTP requests to the Rapidata API:
+5. Finally create the order. This sends the order off for verification and will start collecting responses.
 
 ```py
 order = order_builder.create()

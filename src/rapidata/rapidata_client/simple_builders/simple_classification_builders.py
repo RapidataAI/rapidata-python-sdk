@@ -14,19 +14,19 @@ class ClassificationOrderBuilder:
         self._question = question
         self._options = options
         self._media_paths = media_paths
-        self._votes_required = 10
+        self._responses_required = 10
         self._probability_threshold = None
         self._metadata = None
         self._validation_set_id = None
 
     def metadata(self, metadata: list[Metadata]):
-        """Set the metadata for the classification order."""
+        """Set the metadata for the classification order. Has to be the same lenght as the media paths."""
         self._metadata = metadata
         return self
 
-    def votes(self, votes_required: int):
-        """Set the number of votes required for the classification order."""
-        self._votes_required = votes_required
+    def responses(self, responses_required: int):
+        """Set the number of responses required for the classification order."""
+        self._responses_required = responses_required
         return self
     
     def probability_threshold(self, probability_threshold: float):
@@ -40,14 +40,14 @@ class ClassificationOrderBuilder:
         return self
     
     def create(self, submit: bool = True, max_upload_workers: int = 10):
-        if self._probability_threshold and self._votes_required:
+        if self._probability_threshold and self._responses_required:
             referee = ClassifyEarlyStoppingReferee(
-                max_vote_count=self._votes_required,
+                max_vote_count=self._responses_required,
                 threshold=self._probability_threshold
             )
             
         else:
-            referee = NaiveReferee(required_guesses=self._votes_required)
+            referee = NaiveReferee(required_guesses=self._responses_required)
         
         selection: list[Selection] = ([ValidationSelection(amount=1, validation_set_id=self._validation_set_id), LabelingSelection(amount=2)] 
                      if self._validation_set_id 

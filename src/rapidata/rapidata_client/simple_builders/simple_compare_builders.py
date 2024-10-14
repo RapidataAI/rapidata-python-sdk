@@ -13,17 +13,17 @@ class CompareOrderBuilder:
         self._name = name
         self._criteria = criteria
         self._media_paths = media_paths
-        self._votes_required = 10
+        self._responses_required = 10
         self._metadata = None
         self._validation_set_id = None
 
-    def votes(self, votes_required: int) -> 'CompareOrderBuilder':
-        """Set the number of votes required for the comparison order."""
-        self._votes_required = votes_required
+    def responses(self, responses_required: int) -> 'CompareOrderBuilder':
+        """Set the number of resoonses required per matchup/pairing for the comparison order."""
+        self._responses_required = responses_required
         return self
     
     def metadata(self, metadata: list[Metadata]) -> 'CompareOrderBuilder':
-        """Set the metadata for the comparison order."""
+        """Set the metadata for the comparison order. Has to be the same shape as the media paths."""
         self._metadata = metadata
         return self
     
@@ -43,7 +43,7 @@ class CompareOrderBuilder:
                     criteria=self._criteria
                 )
             )
-            .referee(NaiveReferee(required_guesses=self._votes_required))
+            .referee(NaiveReferee(required_guesses=self._responses_required))
             .media(self._media_paths, metadata=self._metadata) # type: ignore
             .selections(selection)
             .create(submit=submit, max_workers=max_upload_workers))
