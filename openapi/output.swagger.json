@@ -652,55 +652,6 @@
         }
       }
     },
-    "/Order/GetWorkflowConfig": {
-      "get": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Retrieves the workflow configuration for an order.",
-        "description": "A workflow configuration defines how rapids are created, processed, and aggregated.",
-        "parameters": [
-          {
-            "name": "OrderId",
-            "in": "query",
-            "description": "The id of the order",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "ArtifactIdentifier",
-            "in": "query",
-            "description": "The identifier of the workflow config artifact in the pipeline. If using the default pipeline this is not needed.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetWorkflowConfigResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetWorkflowConfigResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetWorkflowConfigResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/Order/Create": {
       "post": {
         "tags": [
@@ -924,41 +875,6 @@
             }
           }
         }
-      }
-    },
-    "/Order/UpdateWorkflowConfig": {
-      "put": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Updates the workflow configuration of an order.",
-        "description": "A workflow configuration defines how rapids are created, processed, and aggregated.",
-        "requestBody": {
-          "description": "The body content of the request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateWorkflowConfigModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateWorkflowConfigModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateWorkflowConfigModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "deprecated": true
       }
     },
     "/Order/UpdateAccess": {
@@ -4503,117 +4419,6 @@
         },
         "additionalProperties": false
       },
-      "CompareWorkflowConfig": {
-        "title": "CompareWorkflowConfig",
-        "required": [
-          "_t",
-          "criteria",
-          "referee",
-          "targetCountryCodes"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "CompareWorkflowConfig"
-            ],
-            "type": "string",
-            "description": "Discriminator value for CompareWorkflowConfig",
-            "default": "CompareWorkflowConfig",
-            "example": "CompareWorkflowConfig"
-          },
-          "criteria": {
-            "type": "string"
-          },
-          "startingElo": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "kFactor": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "matchSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "scalingFactor": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "matchesUntilCompleted": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "referee": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/NaiveRefereeConfig"
-              },
-              {
-                "$ref": "#/components/schemas/NeverEndingRefereeConfig"
-              },
-              {
-                "$ref": "#/components/schemas/ProbabilisticAttachCategoryRefereeConfig"
-              }
-            ],
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          },
-          "targetCountryCodes": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "featureFlags": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FeatureFlag"
-            }
-          },
-          "priority": {
-            "type": "string",
-            "nullable": true
-          },
-          "isFallback": {
-            "type": "boolean"
-          },
-          "rapidSelectionConfigs": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/ConditionalValidationRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/CorrelatedRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/DemographicRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/NoValidationWorkflowRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/OnlyValidationWorkflowRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/StaticRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/ValidationRapidSelectionConfig"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
-          }
-        },
-        "additionalProperties": false
-      },
       "CompareWorkflowModel": {
         "title": "CompareWorkflow",
         "required": [
@@ -4664,8 +4469,8 @@
         "additionalProperties": false,
         "description": "If the SimpleWorkflow is chosen, each datapoint uploaded will correspond to a single task to be solved.\r\nThis is the most commonly chosen workflow."
       },
-      "ConditionalValidationRapidSelectionConfig": {
-        "title": "ConditionalValidationRapidSelectionConfig",
+      "ConditionalValidationSelection": {
+        "title": "ConditionalValidationSelection",
         "required": [
           "_t",
           "validationChances",
@@ -4675,12 +4480,12 @@
         "properties": {
           "_t": {
             "enum": [
-              "ConditionalValidationRapidSelectionConfig"
+              "ConditionalValidationSelection"
             ],
             "type": "string",
-            "description": "Discriminator value for ConditionalValidationRapidSelectionConfig",
-            "default": "ConditionalValidationRapidSelectionConfig",
-            "example": "ConditionalValidationRapidSelectionConfig"
+            "description": "Discriminator value for ConditionalValidationSelection",
+            "default": "ConditionalValidationSelection",
+            "example": "ConditionalValidationSelection"
           },
           "validationSetId": {
             "type": "string"
@@ -4690,39 +4495,6 @@
             "items": {
               "$ref": "#/components/schemas/ValidationChance"
             }
-          },
-          "amount": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "CorrelatedRapidSelectionConfig": {
-        "title": "CorrelatedRapidSelectionConfig",
-        "required": [
-          "_t",
-          "amount",
-          "correlationId"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "CorrelatedRapidSelectionConfig"
-            ],
-            "type": "string",
-            "description": "Discriminator value for CorrelatedRapidSelectionConfig",
-            "default": "CorrelatedRapidSelectionConfig",
-            "example": "CorrelatedRapidSelectionConfig"
-          },
-          "correlationId": {
-            "type": "string"
-          },
-          "amount": {
-            "type": "integer",
-            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -4983,6 +4755,9 @@
             "items": {
               "oneOf": [
                 {
+                  "$ref": "#/components/schemas/ConditionalValidationSelection"
+                },
+                {
                   "$ref": "#/components/schemas/DemographicSelection"
                 },
                 {
@@ -5234,36 +5009,6 @@
         "additionalProperties": false,
         "description": "Model for the dataset evaluation step"
       },
-      "DemographicRapidSelectionConfig": {
-        "title": "DemographicRapidSelectionConfig",
-        "required": [
-          "_t",
-          "keys"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "DemographicRapidSelectionConfig"
-            ],
-            "type": "string",
-            "description": "Discriminator value for DemographicRapidSelectionConfig",
-            "default": "DemographicRapidSelectionConfig",
-            "example": "DemographicRapidSelectionConfig"
-          },
-          "keys": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "maxRapids": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
       "DemographicSelection": {
         "title": "DemographicSelection",
         "required": [
@@ -5325,22 +5070,6 @@
         },
         "additionalProperties": false,
         "description": "The Early Stopping Referee can currently only be used for classification tasks and will stop once a certain threshold is reached or the maximum number of votes is collected."
-      },
-      "FeatureFlag": {
-        "required": [
-          "key",
-          "value"
-        ],
-        "type": "object",
-        "properties": {
-          "key": {
-            "type": "string"
-          },
-          "value": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
       },
       "FeatureFlagModel": {
         "required": [
@@ -5571,28 +5300,6 @@
         },
         "additionalProperties": false
       },
-      "GetWorkflowConfigResult": {
-        "required": [
-          "workflowConfig"
-        ],
-        "type": "object",
-        "properties": {
-          "workflowConfig": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/CompareWorkflowConfig"
-              },
-              {
-                "$ref": "#/components/schemas/SimpleWorkflowConfig"
-              }
-            ],
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          }
-        },
-        "additionalProperties": false
-      },
       "LabelingSelection": {
         "title": "LabelingSelection",
         "required": [
@@ -5715,29 +5422,6 @@
         ],
         "type": "string"
       },
-      "NaiveRefereeConfig": {
-        "title": "NaiveRefereeConfig",
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "NaiveRefereeConfig"
-            ],
-            "type": "string",
-            "description": "Discriminator value for NaiveRefereeConfig",
-            "default": "NaiveRefereeConfig",
-            "example": "NaiveRefereeConfig"
-          },
-          "guessesRequired": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
       "NaiveRefereeModel": {
         "title": "NaiveReferee",
         "required": [
@@ -5790,72 +5474,6 @@
             "items": {
               "type": "string"
             }
-          }
-        },
-        "additionalProperties": false
-      },
-      "NeverEndingRefereeConfig": {
-        "title": "NeverEndingRefereeConfig",
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "NeverEndingRefereeConfig"
-            ],
-            "type": "string",
-            "description": "Discriminator value for NeverEndingRefereeConfig",
-            "default": "NeverEndingRefereeConfig",
-            "example": "NeverEndingRefereeConfig"
-          }
-        },
-        "additionalProperties": false
-      },
-      "NoValidationWorkflowRapidSelectionConfig": {
-        "title": "NoValidationWorkflowRapidSelectionConfig",
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "NoValidationWorkflowRapidSelectionConfig"
-            ],
-            "type": "string",
-            "description": "Discriminator value for NoValidationWorkflowRapidSelectionConfig",
-            "default": "NoValidationWorkflowRapidSelectionConfig",
-            "example": "NoValidationWorkflowRapidSelectionConfig"
-          },
-          "amount": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "OnlyValidationWorkflowRapidSelectionConfig": {
-        "title": "OnlyValidationWorkflowRapidSelectionConfig",
-        "required": [
-          "_t",
-          "validationSetId"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "OnlyValidationWorkflowRapidSelectionConfig"
-            ],
-            "type": "string",
-            "description": "Discriminator value for OnlyValidationWorkflowRapidSelectionConfig",
-            "default": "OnlyValidationWorkflowRapidSelectionConfig",
-            "example": "OnlyValidationWorkflowRapidSelectionConfig"
-          },
-          "validationSetId": {
-            "type": "string"
           }
         },
         "additionalProperties": false
@@ -5931,35 +5549,6 @@
         },
         "additionalProperties": false
       },
-      "ProbabilisticAttachCategoryRefereeConfig": {
-        "title": "ProbabilisticAttachCategoryRefereeConfig",
-        "required": [
-          "_t",
-          "maxVotes",
-          "threshold"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "ProbabilisticAttachCategoryRefereeConfig"
-            ],
-            "type": "string",
-            "description": "Discriminator value for ProbabilisticAttachCategoryRefereeConfig",
-            "default": "ProbabilisticAttachCategoryRefereeConfig",
-            "example": "ProbabilisticAttachCategoryRefereeConfig"
-          },
-          "threshold": {
-            "type": "number",
-            "format": "double"
-          },
-          "maxVotes": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
       "QueryOrdersModel": {
         "type": "object",
         "properties": {
@@ -6030,128 +5619,6 @@
         },
         "additionalProperties": false,
         "description": "Model for the send completion mail step"
-      },
-      "SimpleWorkflowConfig": {
-        "title": "SimpleWorkflowConfig",
-        "required": [
-          "_t",
-          "blueprint",
-          "referee",
-          "targetCountryCodes"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "SimpleWorkflowConfig"
-            ],
-            "type": "string",
-            "description": "Discriminator value for SimpleWorkflowConfig",
-            "default": "SimpleWorkflowConfig",
-            "example": "SimpleWorkflowConfig"
-          },
-          "referee": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/NaiveRefereeConfig"
-              },
-              {
-                "$ref": "#/components/schemas/NeverEndingRefereeConfig"
-              },
-              {
-                "$ref": "#/components/schemas/ProbabilisticAttachCategoryRefereeConfig"
-              }
-            ],
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          },
-          "blueprint": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/TranscriptionRapidBlueprint"
-              },
-              {
-                "$ref": "#/components/schemas/PolygonRapidBlueprint"
-              },
-              {
-                "$ref": "#/components/schemas/NamedEntityRapidBlueprint"
-              },
-              {
-                "$ref": "#/components/schemas/LocateRapidBlueprint"
-              },
-              {
-                "$ref": "#/components/schemas/LineRapidBlueprint"
-              },
-              {
-                "$ref": "#/components/schemas/FreeTextRapidBlueprint"
-              },
-              {
-                "$ref": "#/components/schemas/CompareRapidBlueprint"
-              },
-              {
-                "$ref": "#/components/schemas/AttachCategoryRapidBlueprint"
-              },
-              {
-                "$ref": "#/components/schemas/BoundingBoxRapidBlueprint"
-              }
-            ],
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          },
-          "targetCountryCodes": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "featureFlags": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FeatureFlag"
-            }
-          },
-          "priority": {
-            "type": "string",
-            "nullable": true
-          },
-          "isFallback": {
-            "type": "boolean"
-          },
-          "rapidSelectionConfigs": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/ConditionalValidationRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/CorrelatedRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/DemographicRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/NoValidationWorkflowRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/OnlyValidationWorkflowRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/StaticRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/ValidationRapidSelectionConfig"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
-          }
-        },
-        "additionalProperties": false
       },
       "SimpleWorkflowModel": {
         "title": "SimpleWorkflow",
@@ -6235,32 +5702,6 @@
           "Desc"
         ],
         "type": "string"
-      },
-      "StaticRapidSelectionConfig": {
-        "title": "StaticRapidSelectionConfig",
-        "required": [
-          "_t",
-          "rapidIds"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "StaticRapidSelectionConfig"
-            ],
-            "type": "string",
-            "description": "Discriminator value for StaticRapidSelectionConfig",
-            "default": "StaticRapidSelectionConfig",
-            "example": "StaticRapidSelectionConfig"
-          },
-          "rapidIds": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        },
-        "additionalProperties": false
       },
       "StaticSelection": {
         "title": "StaticSelection",
@@ -6354,41 +5795,6 @@
         "additionalProperties": false,
         "description": "The model for updating the name of an order."
       },
-      "UpdateWorkflowConfigModel": {
-        "required": [
-          "orderId",
-          "workflowConfig"
-        ],
-        "type": "object",
-        "properties": {
-          "orderId": {
-            "type": "string",
-            "description": "The id of the order"
-          },
-          "workflowConfig": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/CompareWorkflowConfig"
-              },
-              {
-                "$ref": "#/components/schemas/SimpleWorkflowConfig"
-              }
-            ],
-            "description": "The new workflow configuration",
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          },
-          "workflowConfigArtifactId": {
-            "type": "string",
-            "description": "The id of the workflow config artifact in the pipeline. If using the default pipeline this is not needed.",
-            "default": null,
-            "nullable": true
-          }
-        },
-        "additionalProperties": false,
-        "description": "The model for updating the workflow configuration of an order."
-      },
       "UserScoreUserFilterModel": {
         "title": "UserScoreFilter",
         "required": [
@@ -6433,34 +5839,6 @@
             "format": "double"
           },
           "rapidCount": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "ValidationRapidSelectionConfig": {
-        "title": "ValidationRapidSelectionConfig",
-        "required": [
-          "_t",
-          "amount",
-          "validationSetId"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "ValidationRapidSelectionConfig"
-            ],
-            "type": "string",
-            "description": "Discriminator value for ValidationRapidSelectionConfig",
-            "default": "ValidationRapidSelectionConfig",
-            "example": "ValidationRapidSelectionConfig"
-          },
-          "validationSetId": {
-            "type": "string"
-          },
-          "amount": {
             "type": "integer",
             "format": "int32"
           }
@@ -8321,6 +7699,86 @@
         },
         "additionalProperties": false
       },
+      "CompareWorkflowConfig": {
+        "title": "CompareWorkflowConfig",
+        "required": [
+          "_t",
+          "criteria",
+          "referee",
+          "targetCountryCodes"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "CompareWorkflowConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for CompareWorkflowConfig",
+            "default": "CompareWorkflowConfig",
+            "example": "CompareWorkflowConfig"
+          },
+          "criteria": {
+            "type": "string"
+          },
+          "startingElo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "kFactor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "matchSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "scalingFactor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "matchesUntilCompleted": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "referee": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NaiveRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/NeverEndingRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/ProbabilisticAttachCategoryRefereeConfig"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "targetCountryCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
+          },
+          "priority": {
+            "type": "string",
+            "nullable": true
+          },
+          "isFallback": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
       "CompareWorkflowModel1": {
         "title": "CompareWorkflowModel",
         "required": [
@@ -8505,6 +7963,22 @@
             "type": "string"
           },
           "datasetId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FeatureFlag": {
+        "required": [
+          "key",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "value": {
             "type": "string"
           }
         },
@@ -8905,6 +8379,48 @@
         },
         "additionalProperties": false
       },
+      "NaiveRefereeConfig": {
+        "title": "NaiveRefereeConfig",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "NaiveRefereeConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for NaiveRefereeConfig",
+            "default": "NaiveRefereeConfig",
+            "example": "NaiveRefereeConfig"
+          },
+          "guessesRequired": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "NeverEndingRefereeConfig": {
+        "title": "NeverEndingRefereeConfig",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "NeverEndingRefereeConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for NeverEndingRefereeConfig",
+            "default": "NeverEndingRefereeConfig",
+            "example": "NeverEndingRefereeConfig"
+          }
+        },
+        "additionalProperties": false
+      },
       "NotStartedRapidModel": {
         "required": [
           "asset",
@@ -8933,6 +8449,35 @@
             "discriminator": {
               "propertyName": "_t"
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProbabilisticAttachCategoryRefereeConfig": {
+        "title": "ProbabilisticAttachCategoryRefereeConfig",
+        "required": [
+          "_t",
+          "maxVotes",
+          "threshold"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "ProbabilisticAttachCategoryRefereeConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for ProbabilisticAttachCategoryRefereeConfig",
+            "default": "ProbabilisticAttachCategoryRefereeConfig",
+            "example": "ProbabilisticAttachCategoryRefereeConfig"
+          },
+          "threshold": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxVotes": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -9053,6 +8598,97 @@
             "additionalProperties": {
               "type": "string"
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "SimpleWorkflowConfig": {
+        "title": "SimpleWorkflowConfig",
+        "required": [
+          "_t",
+          "blueprint",
+          "referee",
+          "targetCountryCodes"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "SimpleWorkflowConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for SimpleWorkflowConfig",
+            "default": "SimpleWorkflowConfig",
+            "example": "SimpleWorkflowConfig"
+          },
+          "referee": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NaiveRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/NeverEndingRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/ProbabilisticAttachCategoryRefereeConfig"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "blueprint": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranscriptionRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/PolygonRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/NamedEntityRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/LocateRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/LineRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/FreeTextRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/CompareRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/AttachCategoryRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/BoundingBoxRapidBlueprint"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "targetCountryCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
+          },
+          "priority": {
+            "type": "string",
+            "nullable": true
+          },
+          "isFallback": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -9265,6 +8901,9 @@
             "items": {
               "oneOf": [
                 {
+                  "$ref": "#/components/schemas/ConditionalValidationSelection"
+                },
+                {
                   "$ref": "#/components/schemas/DemographicSelection"
                 },
                 {
@@ -9411,37 +9050,6 @@
           "isFallback": {
             "type": "boolean",
             "nullable": true
-          },
-          "rapidSelectionConfigs": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/ConditionalValidationRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/CorrelatedRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/DemographicRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/NoValidationWorkflowRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/OnlyValidationWorkflowRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/StaticRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/ValidationRapidSelectionConfig"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
           }
         },
         "additionalProperties": false,
@@ -9625,37 +9233,6 @@
           "isFallback": {
             "type": "boolean",
             "nullable": true
-          },
-          "rapidSelectionConfigs": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/ConditionalValidationRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/CorrelatedRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/DemographicRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/NoValidationWorkflowRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/OnlyValidationWorkflowRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/StaticRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/ValidationRapidSelectionConfig"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
           }
         },
         "additionalProperties": false,
