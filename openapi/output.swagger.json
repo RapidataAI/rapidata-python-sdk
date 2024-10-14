@@ -652,55 +652,6 @@
         }
       }
     },
-    "/Order/GetWorkflowConfig": {
-      "get": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Retrieves the workflow configuration for an order.",
-        "description": "A workflow configuration defines how rapids are created, processed, and aggregated.",
-        "parameters": [
-          {
-            "name": "OrderId",
-            "in": "query",
-            "description": "The id of the order",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "ArtifactIdentifier",
-            "in": "query",
-            "description": "The identifier of the workflow config artifact in the pipeline. If using the default pipeline this is not needed.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetWorkflowConfigResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetWorkflowConfigResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetWorkflowConfigResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/Order/Create": {
       "post": {
         "tags": [
@@ -924,41 +875,6 @@
             }
           }
         }
-      }
-    },
-    "/Order/UpdateWorkflowConfig": {
-      "put": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Updates the workflow configuration of an order.",
-        "description": "A workflow configuration defines how rapids are created, processed, and aggregated.",
-        "requestBody": {
-          "description": "The body content of the request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateWorkflowConfigModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateWorkflowConfigModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateWorkflowConfigModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "deprecated": true
       }
     },
     "/Order/UpdateAccess": {
@@ -2046,6 +1962,56 @@
         }
       }
     },
+    "/Validation/AddValidationTextRapid": {
+      "post": {
+        "tags": [
+          "Validation"
+        ],
+        "summary": "Adds a new validation rapid to the specified validation set.",
+        "requestBody": {
+          "description": "The model containing the information needed to add the validation rapid.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddValidationTextRapidModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddValidationTextRapidModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddValidationTextRapidModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddValidationRapidResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddValidationRapidResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddValidationRapidResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/Validation/Import": {
       "post": {
         "tags": [
@@ -2775,6 +2741,233 @@
             "name": "id",
             "in": "query",
             "description": "The ID of the workflow to delete.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Pipeline/UpdateWorkflowConfig": {
+      "post": {
+        "tags": [
+          "Pipeline"
+        ],
+        "summary": "Updates the workflow configuration for a pipeline.",
+        "requestBody": {
+          "description": "The request to update the workflow configuration.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWorkflowConfigRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWorkflowConfigRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWorkflowConfigRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Pipeline/{id}": {
+      "get": {
+        "tags": [
+          "Pipeline"
+        ],
+        "summary": "Gets a pipeline by its id.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the pipeline to get.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPipelineByIdResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPipelineByIdResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPipelineByIdResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Pipeline/AddCampaign": {
+      "patch": {
+        "tags": [
+          "Pipeline"
+        ],
+        "summary": "Adds a campaign to a pipeline.",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddCampaignModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddCampaignModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddCampaignModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddCampaignArtifactResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddCampaignArtifactResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddCampaignArtifactResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Campaign/Monitor": {
+      "get": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "The monitor endpoint is used to monitor the health of the service",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Campaign/Query": {
+      "get": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "Queries orders based on a filter, page, and sort criteria.",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "query",
+            "description": "The parameters for filtering, paging, and sorting",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryCampaignsModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CampaignQueryModelPagedResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CampaignQueryModelPagedResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CampaignQueryModelPagedResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Campaign/Pause": {
+      "post": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "Pauses a campaign.",
+        "parameters": [
+          {
+            "name": "campaignId",
+            "in": "query",
+            "description": "id of the campaign that should be paused",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Campaign/Resume": {
+      "post": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "Resumes a campaign.",
+        "parameters": [
+          {
+            "name": "campaignId",
+            "in": "query",
+            "description": "id of the campaign that should be paused",
             "schema": {
               "type": "string"
             }
@@ -4165,6 +4358,59 @@
         },
         "additionalProperties": false
       },
+      "CappedSelection": {
+        "title": "CappedSelection",
+        "required": [
+          "_t",
+          "maxRapids",
+          "selections"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "CappedSelection"
+            ],
+            "type": "string",
+            "description": "Discriminator value for CappedSelection",
+            "default": "CappedSelection",
+            "example": "CappedSelection"
+          },
+          "selections": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/CappedSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/ConditionalValidationSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/DemographicSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/LabelingSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/StaticSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/ValidationSelection"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          },
+          "maxRapids": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "ClassificationMetadataFilterConfig": {
         "title": "ClassificationMetadataFilterConfig",
         "required": [
@@ -4276,117 +4522,6 @@
         },
         "additionalProperties": false
       },
-      "CompareWorkflowConfig": {
-        "title": "CompareWorkflowConfig",
-        "required": [
-          "_t",
-          "criteria",
-          "referee",
-          "targetCountryCodes"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "CompareWorkflowConfig"
-            ],
-            "type": "string",
-            "description": "Discriminator value for CompareWorkflowConfig",
-            "default": "CompareWorkflowConfig",
-            "example": "CompareWorkflowConfig"
-          },
-          "criteria": {
-            "type": "string"
-          },
-          "startingElo": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "kFactor": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "matchSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "scalingFactor": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "matchesUntilCompleted": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "referee": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/NaiveRefereeConfig"
-              },
-              {
-                "$ref": "#/components/schemas/NeverEndingRefereeConfig"
-              },
-              {
-                "$ref": "#/components/schemas/ProbabilisticAttachCategoryRefereeConfig"
-              }
-            ],
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          },
-          "targetCountryCodes": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "featureFlags": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FeatureFlag"
-            }
-          },
-          "priority": {
-            "type": "string",
-            "nullable": true
-          },
-          "isFallback": {
-            "type": "boolean"
-          },
-          "rapidSelectionConfigs": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/ConditionalValidationRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/CorrelatedRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/DemographicRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/NoValidationWorkflowRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/OnlyValidationWorkflowRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/StaticRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/ValidationRapidSelectionConfig"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
-          }
-        },
-        "additionalProperties": false
-      },
       "CompareWorkflowModel": {
         "title": "CompareWorkflow",
         "required": [
@@ -4437,8 +4572,8 @@
         "additionalProperties": false,
         "description": "If the SimpleWorkflow is chosen, each datapoint uploaded will correspond to a single task to be solved.\r\nThis is the most commonly chosen workflow."
       },
-      "ConditionalValidationRapidSelectionConfig": {
-        "title": "ConditionalValidationRapidSelectionConfig",
+      "ConditionalValidationSelection": {
+        "title": "ConditionalValidationSelection",
         "required": [
           "_t",
           "validationChances",
@@ -4448,12 +4583,12 @@
         "properties": {
           "_t": {
             "enum": [
-              "ConditionalValidationRapidSelectionConfig"
+              "ConditionalValidationSelection"
             ],
             "type": "string",
-            "description": "Discriminator value for ConditionalValidationRapidSelectionConfig",
-            "default": "ConditionalValidationRapidSelectionConfig",
-            "example": "ConditionalValidationRapidSelectionConfig"
+            "description": "Discriminator value for ConditionalValidationSelection",
+            "default": "ConditionalValidationSelection",
+            "example": "ConditionalValidationSelection"
           },
           "validationSetId": {
             "type": "string"
@@ -4463,39 +4598,6 @@
             "items": {
               "$ref": "#/components/schemas/ValidationChance"
             }
-          },
-          "amount": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "CorrelatedRapidSelectionConfig": {
-        "title": "CorrelatedRapidSelectionConfig",
-        "required": [
-          "_t",
-          "amount",
-          "correlationId"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "CorrelatedRapidSelectionConfig"
-            ],
-            "type": "string",
-            "description": "Discriminator value for CorrelatedRapidSelectionConfig",
-            "default": "CorrelatedRapidSelectionConfig",
-            "example": "CorrelatedRapidSelectionConfig"
-          },
-          "correlationId": {
-            "type": "string"
-          },
-          "amount": {
-            "type": "integer",
-            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -4756,6 +4858,12 @@
             "items": {
               "oneOf": [
                 {
+                  "$ref": "#/components/schemas/CappedSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/ConditionalValidationSelection"
+                },
+                {
                   "$ref": "#/components/schemas/DemographicSelection"
                 },
                 {
@@ -5007,34 +5115,11 @@
         "additionalProperties": false,
         "description": "Model for the dataset evaluation step"
       },
-      "DemographicRapidSelectionConfig": {
-        "title": "DemographicRapidSelectionConfig",
-        "required": [
-          "_t",
-          "key"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "DemographicRapidSelectionConfig"
-            ],
-            "type": "string",
-            "description": "Discriminator value for DemographicRapidSelectionConfig",
-            "default": "DemographicRapidSelectionConfig",
-            "example": "DemographicRapidSelectionConfig"
-          },
-          "key": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "DemographicSelection": {
         "title": "DemographicSelection",
         "required": [
           "_t",
-          "key"
+          "keys"
         ],
         "type": "object",
         "properties": {
@@ -5047,8 +5132,15 @@
             "default": "DemographicSelection",
             "example": "DemographicSelection"
           },
-          "key": {
-            "type": "string"
+          "keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "maxRapids": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -5084,22 +5176,6 @@
         },
         "additionalProperties": false,
         "description": "The Early Stopping Referee can currently only be used for classification tasks and will stop once a certain threshold is reached or the maximum number of votes is collected."
-      },
-      "FeatureFlag": {
-        "required": [
-          "key",
-          "value"
-        ],
-        "type": "object",
-        "properties": {
-          "key": {
-            "type": "string"
-          },
-          "value": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
       },
       "FeatureFlagModel": {
         "required": [
@@ -5330,28 +5406,6 @@
         },
         "additionalProperties": false
       },
-      "GetWorkflowConfigResult": {
-        "required": [
-          "workflowConfig"
-        ],
-        "type": "object",
-        "properties": {
-          "workflowConfig": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/CompareWorkflowConfig"
-              },
-              {
-                "$ref": "#/components/schemas/SimpleWorkflowConfig"
-              }
-            ],
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          }
-        },
-        "additionalProperties": false
-      },
       "LabelingSelection": {
         "title": "LabelingSelection",
         "required": [
@@ -5474,29 +5528,6 @@
         ],
         "type": "string"
       },
-      "NaiveRefereeConfig": {
-        "title": "NaiveRefereeConfig",
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "NaiveRefereeConfig"
-            ],
-            "type": "string",
-            "description": "Discriminator value for NaiveRefereeConfig",
-            "default": "NaiveRefereeConfig",
-            "example": "NaiveRefereeConfig"
-          },
-          "guessesRequired": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
       "NaiveRefereeModel": {
         "title": "NaiveReferee",
         "required": [
@@ -5549,72 +5580,6 @@
             "items": {
               "type": "string"
             }
-          }
-        },
-        "additionalProperties": false
-      },
-      "NeverEndingRefereeConfig": {
-        "title": "NeverEndingRefereeConfig",
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "NeverEndingRefereeConfig"
-            ],
-            "type": "string",
-            "description": "Discriminator value for NeverEndingRefereeConfig",
-            "default": "NeverEndingRefereeConfig",
-            "example": "NeverEndingRefereeConfig"
-          }
-        },
-        "additionalProperties": false
-      },
-      "NoValidationWorkflowRapidSelectionConfig": {
-        "title": "NoValidationWorkflowRapidSelectionConfig",
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "NoValidationWorkflowRapidSelectionConfig"
-            ],
-            "type": "string",
-            "description": "Discriminator value for NoValidationWorkflowRapidSelectionConfig",
-            "default": "NoValidationWorkflowRapidSelectionConfig",
-            "example": "NoValidationWorkflowRapidSelectionConfig"
-          },
-          "amount": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "OnlyValidationWorkflowRapidSelectionConfig": {
-        "title": "OnlyValidationWorkflowRapidSelectionConfig",
-        "required": [
-          "_t",
-          "validationSetId"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "OnlyValidationWorkflowRapidSelectionConfig"
-            ],
-            "type": "string",
-            "description": "Discriminator value for OnlyValidationWorkflowRapidSelectionConfig",
-            "default": "OnlyValidationWorkflowRapidSelectionConfig",
-            "example": "OnlyValidationWorkflowRapidSelectionConfig"
-          },
-          "validationSetId": {
-            "type": "string"
           }
         },
         "additionalProperties": false
@@ -5690,35 +5655,6 @@
         },
         "additionalProperties": false
       },
-      "ProbabilisticAttachCategoryRefereeConfig": {
-        "title": "ProbabilisticAttachCategoryRefereeConfig",
-        "required": [
-          "_t",
-          "maxVotes",
-          "threshold"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "ProbabilisticAttachCategoryRefereeConfig"
-            ],
-            "type": "string",
-            "description": "Discriminator value for ProbabilisticAttachCategoryRefereeConfig",
-            "default": "ProbabilisticAttachCategoryRefereeConfig",
-            "example": "ProbabilisticAttachCategoryRefereeConfig"
-          },
-          "threshold": {
-            "type": "number",
-            "format": "double"
-          },
-          "maxVotes": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
       "QueryOrdersModel": {
         "type": "object",
         "properties": {
@@ -5789,128 +5725,6 @@
         },
         "additionalProperties": false,
         "description": "Model for the send completion mail step"
-      },
-      "SimpleWorkflowConfig": {
-        "title": "SimpleWorkflowConfig",
-        "required": [
-          "_t",
-          "blueprint",
-          "referee",
-          "targetCountryCodes"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "SimpleWorkflowConfig"
-            ],
-            "type": "string",
-            "description": "Discriminator value for SimpleWorkflowConfig",
-            "default": "SimpleWorkflowConfig",
-            "example": "SimpleWorkflowConfig"
-          },
-          "referee": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/NaiveRefereeConfig"
-              },
-              {
-                "$ref": "#/components/schemas/NeverEndingRefereeConfig"
-              },
-              {
-                "$ref": "#/components/schemas/ProbabilisticAttachCategoryRefereeConfig"
-              }
-            ],
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          },
-          "blueprint": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/TranscriptionRapidBlueprint"
-              },
-              {
-                "$ref": "#/components/schemas/PolygonRapidBlueprint"
-              },
-              {
-                "$ref": "#/components/schemas/NamedEntityRapidBlueprint"
-              },
-              {
-                "$ref": "#/components/schemas/LocateRapidBlueprint"
-              },
-              {
-                "$ref": "#/components/schemas/LineRapidBlueprint"
-              },
-              {
-                "$ref": "#/components/schemas/FreeTextRapidBlueprint"
-              },
-              {
-                "$ref": "#/components/schemas/CompareRapidBlueprint"
-              },
-              {
-                "$ref": "#/components/schemas/AttachCategoryRapidBlueprint"
-              },
-              {
-                "$ref": "#/components/schemas/BoundingBoxRapidBlueprint"
-              }
-            ],
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          },
-          "targetCountryCodes": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "featureFlags": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FeatureFlag"
-            }
-          },
-          "priority": {
-            "type": "string",
-            "nullable": true
-          },
-          "isFallback": {
-            "type": "boolean"
-          },
-          "rapidSelectionConfigs": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/ConditionalValidationRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/CorrelatedRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/DemographicRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/NoValidationWorkflowRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/OnlyValidationWorkflowRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/StaticRapidSelectionConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/ValidationRapidSelectionConfig"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
-          }
-        },
-        "additionalProperties": false
       },
       "SimpleWorkflowModel": {
         "title": "SimpleWorkflow",
@@ -5994,32 +5808,6 @@
           "Desc"
         ],
         "type": "string"
-      },
-      "StaticRapidSelectionConfig": {
-        "title": "StaticRapidSelectionConfig",
-        "required": [
-          "_t",
-          "rapidIds"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "StaticRapidSelectionConfig"
-            ],
-            "type": "string",
-            "description": "Discriminator value for StaticRapidSelectionConfig",
-            "default": "StaticRapidSelectionConfig",
-            "example": "StaticRapidSelectionConfig"
-          },
-          "rapidIds": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        },
-        "additionalProperties": false
       },
       "StaticSelection": {
         "title": "StaticSelection",
@@ -6113,41 +5901,6 @@
         "additionalProperties": false,
         "description": "The model for updating the name of an order."
       },
-      "UpdateWorkflowConfigModel": {
-        "required": [
-          "orderId",
-          "workflowConfig"
-        ],
-        "type": "object",
-        "properties": {
-          "orderId": {
-            "type": "string",
-            "description": "The id of the order"
-          },
-          "workflowConfig": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/CompareWorkflowConfig"
-              },
-              {
-                "$ref": "#/components/schemas/SimpleWorkflowConfig"
-              }
-            ],
-            "description": "The new workflow configuration",
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          },
-          "workflowConfigArtifactId": {
-            "type": "string",
-            "description": "The id of the workflow config artifact in the pipeline. If using the default pipeline this is not needed.",
-            "default": null,
-            "nullable": true
-          }
-        },
-        "additionalProperties": false,
-        "description": "The model for updating the workflow configuration of an order."
-      },
       "UserScoreUserFilterModel": {
         "title": "UserScoreFilter",
         "required": [
@@ -6192,34 +5945,6 @@
             "format": "double"
           },
           "rapidCount": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "ValidationRapidSelectionConfig": {
-        "title": "ValidationRapidSelectionConfig",
-        "required": [
-          "_t",
-          "amount",
-          "validationSetId"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "ValidationRapidSelectionConfig"
-            ],
-            "type": "string",
-            "description": "Discriminator value for ValidationRapidSelectionConfig",
-            "default": "ValidationRapidSelectionConfig",
-            "example": "ValidationRapidSelectionConfig"
-          },
-          "validationSetId": {
-            "type": "string"
-          },
-          "amount": {
             "type": "integer",
             "format": "int32"
           }
@@ -6706,6 +6431,127 @@
           }
         },
         "additionalProperties": false
+      },
+      "AddValidationTextRapidModel": {
+        "required": [
+          "metadata",
+          "payload",
+          "randomCorrectProbability",
+          "text",
+          "truth",
+          "validationSetId"
+        ],
+        "type": "object",
+        "properties": {
+          "validationSetId": {
+            "type": "string",
+            "description": "The ID of the validation set to add the rapid to."
+          },
+          "payload": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranscriptionPayload"
+              },
+              {
+                "$ref": "#/components/schemas/PolygonPayload"
+              },
+              {
+                "$ref": "#/components/schemas/NamedEntityPayload"
+              },
+              {
+                "$ref": "#/components/schemas/LocatePayload"
+              },
+              {
+                "$ref": "#/components/schemas/LinePayload"
+              },
+              {
+                "$ref": "#/components/schemas/FreeTextPayload"
+              },
+              {
+                "$ref": "#/components/schemas/ComparePayload"
+              },
+              {
+                "$ref": "#/components/schemas/ClassifyPayload"
+              },
+              {
+                "$ref": "#/components/schemas/BoundingBoxPayload"
+              }
+            ],
+            "description": "The payload to use for the rapid.",
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "metadata": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/PrivateTextMetadataInput"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptMetadataInput"
+                },
+                {
+                  "$ref": "#/components/schemas/PublicTextMetadataInput"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadataInput"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            },
+            "description": "Some metadata to attach to the rapid."
+          },
+          "truth": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranscriptionTruth"
+              },
+              {
+                "$ref": "#/components/schemas/PolygonTruth"
+              },
+              {
+                "$ref": "#/components/schemas/NamedEntityTruth"
+              },
+              {
+                "$ref": "#/components/schemas/LocateBoxTruth"
+              },
+              {
+                "$ref": "#/components/schemas/LineTruth"
+              },
+              {
+                "$ref": "#/components/schemas/EmptyValidationTruth"
+              },
+              {
+                "$ref": "#/components/schemas/CompareTruth"
+              },
+              {
+                "$ref": "#/components/schemas/AttachCategoryTruth"
+              },
+              {
+                "$ref": "#/components/schemas/BoundingBoxTruth"
+              }
+            ],
+            "description": "The ground truth for the rapid.",
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "text": {
+            "type": "string"
+          },
+          "randomCorrectProbability": {
+            "type": "number",
+            "description": "The probability for an answer to be correct when randomly guessing.",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for adding a validation rapid."
       },
       "AttachCategoryTruth": {
         "title": "AttachCategoryTruth",
@@ -8080,6 +7926,86 @@
         },
         "additionalProperties": false
       },
+      "CompareWorkflowConfig": {
+        "title": "CompareWorkflowConfig",
+        "required": [
+          "_t",
+          "criteria",
+          "referee",
+          "targetCountryCodes"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "CompareWorkflowConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for CompareWorkflowConfig",
+            "default": "CompareWorkflowConfig",
+            "example": "CompareWorkflowConfig"
+          },
+          "criteria": {
+            "type": "string"
+          },
+          "startingElo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "kFactor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "matchSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "scalingFactor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "matchesUntilCompleted": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "referee": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NaiveRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/NeverEndingRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/ProbabilisticAttachCategoryRefereeConfig"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "targetCountryCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
+          },
+          "priority": {
+            "type": "string",
+            "nullable": true
+          },
+          "isFallback": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
       "CompareWorkflowModel1": {
         "title": "CompareWorkflowModel",
         "required": [
@@ -8264,6 +8190,22 @@
             "type": "string"
           },
           "datasetId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FeatureFlag": {
+        "required": [
+          "key",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "value": {
             "type": "string"
           }
         },
@@ -8664,6 +8606,48 @@
         },
         "additionalProperties": false
       },
+      "NaiveRefereeConfig": {
+        "title": "NaiveRefereeConfig",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "NaiveRefereeConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for NaiveRefereeConfig",
+            "default": "NaiveRefereeConfig",
+            "example": "NaiveRefereeConfig"
+          },
+          "guessesRequired": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "NeverEndingRefereeConfig": {
+        "title": "NeverEndingRefereeConfig",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "NeverEndingRefereeConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for NeverEndingRefereeConfig",
+            "default": "NeverEndingRefereeConfig",
+            "example": "NeverEndingRefereeConfig"
+          }
+        },
+        "additionalProperties": false
+      },
       "NotStartedRapidModel": {
         "required": [
           "asset",
@@ -8692,6 +8676,35 @@
             "discriminator": {
               "propertyName": "_t"
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProbabilisticAttachCategoryRefereeConfig": {
+        "title": "ProbabilisticAttachCategoryRefereeConfig",
+        "required": [
+          "_t",
+          "maxVotes",
+          "threshold"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "ProbabilisticAttachCategoryRefereeConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for ProbabilisticAttachCategoryRefereeConfig",
+            "default": "ProbabilisticAttachCategoryRefereeConfig",
+            "example": "ProbabilisticAttachCategoryRefereeConfig"
+          },
+          "threshold": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxVotes": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -8812,6 +8825,97 @@
             "additionalProperties": {
               "type": "string"
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "SimpleWorkflowConfig": {
+        "title": "SimpleWorkflowConfig",
+        "required": [
+          "_t",
+          "blueprint",
+          "referee",
+          "targetCountryCodes"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "SimpleWorkflowConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for SimpleWorkflowConfig",
+            "default": "SimpleWorkflowConfig",
+            "example": "SimpleWorkflowConfig"
+          },
+          "referee": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NaiveRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/NeverEndingRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/ProbabilisticAttachCategoryRefereeConfig"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "blueprint": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranscriptionRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/PolygonRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/NamedEntityRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/LocateRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/LineRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/FreeTextRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/CompareRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/AttachCategoryRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/BoundingBoxRapidBlueprint"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "targetCountryCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
+          },
+          "priority": {
+            "type": "string",
+            "nullable": true
+          },
+          "isFallback": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -8937,6 +9041,643 @@
           "Failed"
         ],
         "type": "string"
+      },
+      "AddCampaignArtifactResult": {
+        "required": [
+          "campaignId"
+        ],
+        "type": "object",
+        "properties": {
+          "campaignId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AddCampaignModel": {
+        "title": "AddCampaignModel",
+        "required": [
+          "_t",
+          "campaignName",
+          "featureFlags",
+          "pipelineId",
+          "priority",
+          "selections",
+          "userFilters"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "AddCampaignModel"
+            ],
+            "type": "string",
+            "description": "Discriminator value for AddCampaignModel",
+            "default": "AddCampaignModel",
+            "example": "AddCampaignModel"
+          },
+          "pipelineId": {
+            "type": "string",
+            "description": "The pipeline the campaign should belong to."
+          },
+          "artifactId": {
+            "type": "string",
+            "description": "The id of the campaign artifact. If not provided a random value will be used.",
+            "nullable": true
+          },
+          "campaignName": {
+            "type": "string",
+            "description": "The name of the campaign."
+          },
+          "userFilters": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AgeUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/CampaignUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/CountryUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/GenderUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/LanguageUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/UserScoreUserFilterModel"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            },
+            "description": "The user filters to apply to the campaign."
+          },
+          "validationSetId": {
+            "type": "string",
+            "description": "A validation set that should be used.",
+            "nullable": true
+          },
+          "selections": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/CappedSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/ConditionalValidationSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/DemographicSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/LabelingSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/StaticSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/ValidationSelection"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            },
+            "description": "The selections that the campaign should have.",
+            "nullable": true
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            },
+            "description": "The feature flags that should be applied to the campaign."
+          },
+          "priority": {
+            "type": "integer",
+            "description": "The priority of the campaign.",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for adding a campaign to an existing pipeline."
+      },
+      "CampaignArtifactModel": {
+        "title": "CampaignArtifactModel",
+        "required": [
+          "_t",
+          "campaignId",
+          "identifier"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "CampaignArtifactModel"
+            ],
+            "type": "string",
+            "description": "Discriminator value for CampaignArtifactModel",
+            "default": "CampaignArtifactModel",
+            "example": "CampaignArtifactModel"
+          },
+          "campaignId": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CompareWorkflowConfigModel": {
+        "title": "CompareWorkflowConfig",
+        "required": [
+          "_t",
+          "criteria",
+          "referee",
+          "targetCountryCodes"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "CompareWorkflowConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for CompareWorkflowConfig",
+            "default": "CompareWorkflowConfig",
+            "example": "CompareWorkflowConfig"
+          },
+          "criteria": {
+            "type": "string",
+            "description": "The criteria to add to each compare rapid."
+          },
+          "startingElo": {
+            "type": "integer",
+            "description": "The starting ELO score for each datapoint.",
+            "format": "int32"
+          },
+          "kFactor": {
+            "type": "integer",
+            "description": "The K-factor to use in the ELO calculation.\r\nDetermines the maximum possible change in a player's Elo rating after a single match.\r\nHigher K-Factor values result in larger rating changes.",
+            "format": "int32"
+          },
+          "matchSize": {
+            "type": "integer",
+            "description": "The number of datapoints to match against each other in each match.",
+            "format": "int32"
+          },
+          "scalingFactor": {
+            "type": "integer",
+            "description": "Scaling factor to use in the ELO calculation.\r\nAdjusts the sensitivity of the Elo rating system to differences in player ratings.\r\nIt affects how much the rating changes based on the expected outcome versus the actual outcome.",
+            "format": "int32"
+          },
+          "matchesUntilCompleted": {
+            "type": "integer",
+            "description": "The number of matches to run before each datapoint is considered \"completed\".",
+            "format": "int32"
+          },
+          "referee": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NaiveRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/NeverEndingRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/ProbabilisticAttachCategoryRefereeConfig"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "targetCountryCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "A list of country codes that this workflow is targeting."
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
+          },
+          "priority": {
+            "type": "string",
+            "nullable": true
+          },
+          "isFallback": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "The configuration for creating a compare workflow.\r\nA compare workflow is a workflow that continuously matches datapoints against each other and updates their\r\nrespective ELO scores. The ELO scores are used to determine the relative strength of the datapoints,\r\nand datapoints are matched against other datapoints with similar ELO scores.\r\nThe end goal is a ranking of the datapoints based on their relative strength."
+      },
+      "DatasetArtifactModel": {
+        "title": "DatasetArtifactModel",
+        "required": [
+          "_t",
+          "datasetId",
+          "identifier"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "DatasetArtifactModel"
+            ],
+            "type": "string",
+            "description": "Discriminator value for DatasetArtifactModel",
+            "default": "DatasetArtifactModel",
+            "example": "DatasetArtifactModel"
+          },
+          "datasetId": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FileArtifactModel": {
+        "title": "FileArtifactModel",
+        "required": [
+          "_t",
+          "fileName",
+          "identifier"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "FileArtifactModel"
+            ],
+            "type": "string",
+            "description": "Discriminator value for FileArtifactModel",
+            "default": "FileArtifactModel",
+            "example": "FileArtifactModel"
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetPipelineByIdResult": {
+        "required": [
+          "artifacts"
+        ],
+        "type": "object",
+        "properties": {
+          "artifacts": {
+            "type": "object",
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/CampaignArtifactModel"
+                },
+                {
+                  "$ref": "#/components/schemas/DatasetArtifactModel"
+                },
+                {
+                  "$ref": "#/components/schemas/FileArtifactModel"
+                },
+                {
+                  "$ref": "#/components/schemas/WorkflowArtifactModel"
+                },
+                {
+                  "$ref": "#/components/schemas/WorkflowConfigArtifactModel"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "SimpleWorkflowConfigModel": {
+        "title": "SimpleWorkflowConfig",
+        "required": [
+          "_t",
+          "blueprint",
+          "referee",
+          "targetCountryCodes"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "SimpleWorkflowConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for SimpleWorkflowConfig",
+            "default": "SimpleWorkflowConfig",
+            "example": "SimpleWorkflowConfig"
+          },
+          "referee": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NaiveRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/NeverEndingRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/ProbabilisticAttachCategoryRefereeConfig"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "blueprint": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranscriptionRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/PolygonRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/NamedEntityRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/LocateRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/LineRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/FreeTextRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/CompareRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/AttachCategoryRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/BoundingBoxRapidBlueprint"
+              }
+            ],
+            "description": "The blueprint to use when creating rapids for this workflow.\r\nThe blueprint determines what kind of rapids will be created and what data they will contain.",
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "targetCountryCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "A list of country codes that this workflow is targeting."
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
+          },
+          "priority": {
+            "type": "string",
+            "nullable": true
+          },
+          "isFallback": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "The configuration for a simple workflow.\r\nA simple workflow creates a rapid for each datapoint in its dataset.\r\nIt is considered complete when all rapids have been completed."
+      },
+      "UpdateWorkflowConfigRequest": {
+        "required": [
+          "artifactId",
+          "config",
+          "pipelineId"
+        ],
+        "type": "object",
+        "properties": {
+          "pipelineId": {
+            "type": "string",
+            "description": "The id of the pipeline to update."
+          },
+          "artifactId": {
+            "type": "string",
+            "description": "The id of the workflow config artifact to update.",
+            "nullable": true
+          },
+          "config": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CompareWorkflowConfigModel"
+              },
+              {
+                "$ref": "#/components/schemas/SimpleWorkflowConfigModel"
+              }
+            ],
+            "description": "The new workflow configuration.",
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "campaignArtifactId": {
+            "type": "string",
+            "description": "The id of the campaign artifact to update.",
+            "default": null,
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "A request to update the workflow configuration."
+      },
+      "WorkflowArtifactModel": {
+        "title": "WorkflowArtifactModel",
+        "required": [
+          "_t",
+          "identifier",
+          "workflowId"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "WorkflowArtifactModel"
+            ],
+            "type": "string",
+            "description": "Discriminator value for WorkflowArtifactModel",
+            "default": "WorkflowArtifactModel",
+            "example": "WorkflowArtifactModel"
+          },
+          "workflowId": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "WorkflowConfigArtifactModel": {
+        "title": "WorkflowConfigArtifactModel",
+        "required": [
+          "_t",
+          "identifier",
+          "workflowConfig"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "WorkflowConfigArtifactModel"
+            ],
+            "type": "string",
+            "description": "Discriminator value for WorkflowConfigArtifactModel",
+            "default": "WorkflowConfigArtifactModel",
+            "example": "WorkflowConfigArtifactModel"
+          },
+          "workflowConfig": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CompareWorkflowConfig"
+              },
+              {
+                "$ref": "#/components/schemas/SimpleWorkflowConfig"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "identifier": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CampaignQueryModel": {
+        "required": [
+          "createdAt",
+          "id",
+          "name",
+          "owner",
+          "priority",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "Created",
+              "Active",
+              "Paused",
+              "Completed"
+            ],
+            "type": "string"
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CampaignQueryModelPagedResult": {
+        "required": [
+          "items",
+          "page",
+          "pageSize",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CampaignQueryModel"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CampaignStatus": {
+        "enum": [
+          "Created",
+          "Active",
+          "Paused",
+          "Completed"
+        ],
+        "type": "string"
+      },
+      "QueryCampaignsModel": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "$ref": "#/components/schemas/PageInfo"
+          },
+          "filter": {
+            "$ref": "#/components/schemas/RootFilter"
+          },
+          "sortCriteria": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SortCriterion"
+            },
+            "description": "The sorting criteria",
+            "default": null,
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for querying campaigns."
       }
     },
     "securitySchemes": {

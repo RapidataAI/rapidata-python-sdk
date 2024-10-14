@@ -17,25 +17,26 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.validation_chance import ValidationChance
 from typing import Optional, Set
 from typing_extensions import Self
 
-class DemographicRapidSelectionConfig(BaseModel):
+class ConditionalValidationSelection(BaseModel):
     """
-    DemographicRapidSelectionConfig
+    ConditionalValidationSelection
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for DemographicRapidSelectionConfig", alias="_t")
-    keys: List[StrictStr]
-    max_rapids: Optional[StrictInt] = Field(default=None, alias="maxRapids")
-    __properties: ClassVar[List[str]] = ["_t", "keys", "maxRapids"]
+    t: StrictStr = Field(description="Discriminator value for ConditionalValidationSelection", alias="_t")
+    validation_set_id: StrictStr = Field(alias="validationSetId")
+    validation_chances: List[ValidationChance] = Field(alias="validationChances")
+    __properties: ClassVar[List[str]] = ["_t", "validationSetId", "validationChances"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['DemographicRapidSelectionConfig']):
-            raise ValueError("must be one of enum values ('DemographicRapidSelectionConfig')")
+        if value not in set(['ConditionalValidationSelection']):
+            raise ValueError("must be one of enum values ('ConditionalValidationSelection')")
         return value
 
     model_config = ConfigDict(
@@ -56,7 +57,7 @@ class DemographicRapidSelectionConfig(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of DemographicRapidSelectionConfig from a JSON string"""
+        """Create an instance of ConditionalValidationSelection from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -77,11 +78,18 @@ class DemographicRapidSelectionConfig(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in validation_chances (list)
+        _items = []
+        if self.validation_chances:
+            for _item_validation_chances in self.validation_chances:
+                if _item_validation_chances:
+                    _items.append(_item_validation_chances.to_dict())
+            _dict['validationChances'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of DemographicRapidSelectionConfig from a dict"""
+        """Create an instance of ConditionalValidationSelection from a dict"""
         if obj is None:
             return None
 
@@ -89,9 +97,9 @@ class DemographicRapidSelectionConfig(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'DemographicRapidSelectionConfig',
-            "keys": obj.get("keys"),
-            "maxRapids": obj.get("maxRapids")
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'ConditionalValidationSelection',
+            "validationSetId": obj.get("validationSetId"),
+            "validationChances": [ValidationChance.from_dict(_item) for _item in obj["validationChances"]] if obj.get("validationChances") is not None else None
         })
         return _obj
 

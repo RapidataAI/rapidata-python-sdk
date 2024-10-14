@@ -24,19 +24,19 @@ from rapidata.api_client.models.feature_flag import FeatureFlag
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CompareWorkflowConfig(BaseModel):
+class CompareWorkflowConfigModel(BaseModel):
     """
-    CompareWorkflowConfig
+    The configuration for creating a compare workflow.  A compare workflow is a workflow that continuously matches datapoints against each other and updates their  respective ELO scores. The ELO scores are used to determine the relative strength of the datapoints,  and datapoints are matched against other datapoints with similar ELO scores.  The end goal is a ranking of the datapoints based on their relative strength.
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for CompareWorkflowConfig", alias="_t")
-    criteria: StrictStr
-    starting_elo: Optional[StrictInt] = Field(default=None, alias="startingElo")
-    k_factor: Optional[StrictInt] = Field(default=None, alias="kFactor")
-    match_size: Optional[StrictInt] = Field(default=None, alias="matchSize")
-    scaling_factor: Optional[StrictInt] = Field(default=None, alias="scalingFactor")
-    matches_until_completed: Optional[StrictInt] = Field(default=None, alias="matchesUntilCompleted")
+    criteria: StrictStr = Field(description="The criteria to add to each compare rapid.")
+    starting_elo: Optional[StrictInt] = Field(default=None, description="The starting ELO score for each datapoint.", alias="startingElo")
+    k_factor: Optional[StrictInt] = Field(default=None, description="The K-factor to use in the ELO calculation.  Determines the maximum possible change in a player's Elo rating after a single match.  Higher K-Factor values result in larger rating changes.", alias="kFactor")
+    match_size: Optional[StrictInt] = Field(default=None, description="The number of datapoints to match against each other in each match.", alias="matchSize")
+    scaling_factor: Optional[StrictInt] = Field(default=None, description="Scaling factor to use in the ELO calculation.  Adjusts the sensitivity of the Elo rating system to differences in player ratings.  It affects how much the rating changes based on the expected outcome versus the actual outcome.", alias="scalingFactor")
+    matches_until_completed: Optional[StrictInt] = Field(default=None, description="The number of matches to run before each datapoint is considered \"completed\".", alias="matchesUntilCompleted")
     referee: CompareWorkflowConfigReferee
-    target_country_codes: List[StrictStr] = Field(alias="targetCountryCodes")
+    target_country_codes: List[StrictStr] = Field(description="A list of country codes that this workflow is targeting.", alias="targetCountryCodes")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
     priority: Optional[StrictStr] = None
     is_fallback: Optional[StrictBool] = Field(default=None, alias="isFallback")
@@ -67,7 +67,7 @@ class CompareWorkflowConfig(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CompareWorkflowConfig from a JSON string"""
+        """Create an instance of CompareWorkflowConfigModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -103,11 +103,16 @@ class CompareWorkflowConfig(BaseModel):
         if self.priority is None and "priority" in self.model_fields_set:
             _dict['priority'] = None
 
+        # set to None if is_fallback (nullable) is None
+        # and model_fields_set contains the field
+        if self.is_fallback is None and "is_fallback" in self.model_fields_set:
+            _dict['isFallback'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CompareWorkflowConfig from a dict"""
+        """Create an instance of CompareWorkflowConfigModel from a dict"""
         if obj is None:
             return None
 

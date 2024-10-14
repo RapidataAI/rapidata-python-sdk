@@ -26,24 +26,26 @@ from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-CREATEORDERMODELSELECTIONSINNER_ONE_OF_SCHEMAS = ["ConditionalValidationSelection", "DemographicSelection", "LabelingSelection", "StaticSelection", "ValidationSelection"]
+CAPPEDSELECTIONSELECTIONSINNER_ONE_OF_SCHEMAS = ["CappedSelection", "ConditionalValidationSelection", "DemographicSelection", "LabelingSelection", "StaticSelection", "ValidationSelection"]
 
-class CreateOrderModelSelectionsInner(BaseModel):
+class CappedSelectionSelectionsInner(BaseModel):
     """
-    CreateOrderModelSelectionsInner
+    CappedSelectionSelectionsInner
     """
+    # data type: CappedSelection
+    oneof_schema_1_validator: Optional[CappedSelection] = None
     # data type: ConditionalValidationSelection
-    oneof_schema_1_validator: Optional[ConditionalValidationSelection] = None
+    oneof_schema_2_validator: Optional[ConditionalValidationSelection] = None
     # data type: DemographicSelection
-    oneof_schema_2_validator: Optional[DemographicSelection] = None
+    oneof_schema_3_validator: Optional[DemographicSelection] = None
     # data type: LabelingSelection
-    oneof_schema_3_validator: Optional[LabelingSelection] = None
+    oneof_schema_4_validator: Optional[LabelingSelection] = None
     # data type: StaticSelection
-    oneof_schema_4_validator: Optional[StaticSelection] = None
+    oneof_schema_5_validator: Optional[StaticSelection] = None
     # data type: ValidationSelection
-    oneof_schema_5_validator: Optional[ValidationSelection] = None
-    actual_instance: Optional[Union[ConditionalValidationSelection, DemographicSelection, LabelingSelection, StaticSelection, ValidationSelection]] = None
-    one_of_schemas: Set[str] = { "ConditionalValidationSelection", "DemographicSelection", "LabelingSelection", "StaticSelection", "ValidationSelection" }
+    oneof_schema_6_validator: Optional[ValidationSelection] = None
+    actual_instance: Optional[Union[CappedSelection, ConditionalValidationSelection, DemographicSelection, LabelingSelection, StaticSelection, ValidationSelection]] = None
+    one_of_schemas: Set[str] = { "CappedSelection", "ConditionalValidationSelection", "DemographicSelection", "LabelingSelection", "StaticSelection", "ValidationSelection" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -66,9 +68,14 @@ class CreateOrderModelSelectionsInner(BaseModel):
 
     @field_validator('actual_instance')
     def actual_instance_must_validate_oneof(cls, v):
-        instance = CreateOrderModelSelectionsInner.model_construct()
+        instance = CappedSelectionSelectionsInner.model_construct()
         error_messages = []
         match = 0
+        # validate data type: CappedSelection
+        if not isinstance(v, CappedSelection):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `CappedSelection`")
+        else:
+            match += 1
         # validate data type: ConditionalValidationSelection
         if not isinstance(v, ConditionalValidationSelection):
             error_messages.append(f"Error! Input type `{type(v)}` is not `ConditionalValidationSelection`")
@@ -96,10 +103,10 @@ class CreateOrderModelSelectionsInner(BaseModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in CreateOrderModelSelectionsInner with oneOf schemas: ConditionalValidationSelection, DemographicSelection, LabelingSelection, StaticSelection, ValidationSelection. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in CappedSelectionSelectionsInner with oneOf schemas: CappedSelection, ConditionalValidationSelection, DemographicSelection, LabelingSelection, StaticSelection, ValidationSelection. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in CreateOrderModelSelectionsInner with oneOf schemas: ConditionalValidationSelection, DemographicSelection, LabelingSelection, StaticSelection, ValidationSelection. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in CappedSelectionSelectionsInner with oneOf schemas: CappedSelection, ConditionalValidationSelection, DemographicSelection, LabelingSelection, StaticSelection, ValidationSelection. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -114,6 +121,12 @@ class CreateOrderModelSelectionsInner(BaseModel):
         error_messages = []
         match = 0
 
+        # deserialize data into CappedSelection
+        try:
+            instance.actual_instance = CappedSelection.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
         # deserialize data into ConditionalValidationSelection
         try:
             instance.actual_instance = ConditionalValidationSelection.from_json(json_str)
@@ -147,10 +160,10 @@ class CreateOrderModelSelectionsInner(BaseModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into CreateOrderModelSelectionsInner with oneOf schemas: ConditionalValidationSelection, DemographicSelection, LabelingSelection, StaticSelection, ValidationSelection. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into CappedSelectionSelectionsInner with oneOf schemas: CappedSelection, ConditionalValidationSelection, DemographicSelection, LabelingSelection, StaticSelection, ValidationSelection. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into CreateOrderModelSelectionsInner with oneOf schemas: ConditionalValidationSelection, DemographicSelection, LabelingSelection, StaticSelection, ValidationSelection. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into CappedSelectionSelectionsInner with oneOf schemas: CappedSelection, ConditionalValidationSelection, DemographicSelection, LabelingSelection, StaticSelection, ValidationSelection. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -164,7 +177,7 @@ class CreateOrderModelSelectionsInner(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], ConditionalValidationSelection, DemographicSelection, LabelingSelection, StaticSelection, ValidationSelection]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], CappedSelection, ConditionalValidationSelection, DemographicSelection, LabelingSelection, StaticSelection, ValidationSelection]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None
@@ -179,4 +192,7 @@ class CreateOrderModelSelectionsInner(BaseModel):
         """Returns the string representation of the actual instance"""
         return pprint.pformat(self.model_dump())
 
+from rapidata.api_client.models.capped_selection import CappedSelection
+# TODO: Rewrite to not use raise_errors
+CappedSelectionSelectionsInner.model_rebuild(raise_errors=False)
 

@@ -17,36 +17,32 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.compare_workflow_config_referee import CompareWorkflowConfigReferee
 from rapidata.api_client.models.feature_flag import FeatureFlag
+from rapidata.api_client.models.simple_workflow_config_model_blueprint import SimpleWorkflowConfigModelBlueprint
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CompareWorkflowConfig(BaseModel):
+class SimpleWorkflowConfigModel(BaseModel):
     """
-    CompareWorkflowConfig
+    The configuration for a simple workflow.  A simple workflow creates a rapid for each datapoint in its dataset.  It is considered complete when all rapids have been completed.
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for CompareWorkflowConfig", alias="_t")
-    criteria: StrictStr
-    starting_elo: Optional[StrictInt] = Field(default=None, alias="startingElo")
-    k_factor: Optional[StrictInt] = Field(default=None, alias="kFactor")
-    match_size: Optional[StrictInt] = Field(default=None, alias="matchSize")
-    scaling_factor: Optional[StrictInt] = Field(default=None, alias="scalingFactor")
-    matches_until_completed: Optional[StrictInt] = Field(default=None, alias="matchesUntilCompleted")
+    t: StrictStr = Field(description="Discriminator value for SimpleWorkflowConfig", alias="_t")
     referee: CompareWorkflowConfigReferee
-    target_country_codes: List[StrictStr] = Field(alias="targetCountryCodes")
+    blueprint: SimpleWorkflowConfigModelBlueprint
+    target_country_codes: List[StrictStr] = Field(description="A list of country codes that this workflow is targeting.", alias="targetCountryCodes")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
     priority: Optional[StrictStr] = None
     is_fallback: Optional[StrictBool] = Field(default=None, alias="isFallback")
-    __properties: ClassVar[List[str]] = ["_t", "criteria", "startingElo", "kFactor", "matchSize", "scalingFactor", "matchesUntilCompleted", "referee", "targetCountryCodes", "featureFlags", "priority", "isFallback"]
+    __properties: ClassVar[List[str]] = ["_t", "referee", "blueprint", "targetCountryCodes", "featureFlags", "priority", "isFallback"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['CompareWorkflowConfig']):
-            raise ValueError("must be one of enum values ('CompareWorkflowConfig')")
+        if value not in set(['SimpleWorkflowConfig']):
+            raise ValueError("must be one of enum values ('SimpleWorkflowConfig')")
         return value
 
     model_config = ConfigDict(
@@ -67,7 +63,7 @@ class CompareWorkflowConfig(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CompareWorkflowConfig from a JSON string"""
+        """Create an instance of SimpleWorkflowConfigModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -91,6 +87,9 @@ class CompareWorkflowConfig(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of referee
         if self.referee:
             _dict['referee'] = self.referee.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of blueprint
+        if self.blueprint:
+            _dict['blueprint'] = self.blueprint.to_dict()
         # override the default output from pydantic by calling `to_dict()` of each item in feature_flags (list)
         _items = []
         if self.feature_flags:
@@ -103,11 +102,16 @@ class CompareWorkflowConfig(BaseModel):
         if self.priority is None and "priority" in self.model_fields_set:
             _dict['priority'] = None
 
+        # set to None if is_fallback (nullable) is None
+        # and model_fields_set contains the field
+        if self.is_fallback is None and "is_fallback" in self.model_fields_set:
+            _dict['isFallback'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CompareWorkflowConfig from a dict"""
+        """Create an instance of SimpleWorkflowConfigModel from a dict"""
         if obj is None:
             return None
 
@@ -115,14 +119,9 @@ class CompareWorkflowConfig(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'CompareWorkflowConfig',
-            "criteria": obj.get("criteria"),
-            "startingElo": obj.get("startingElo"),
-            "kFactor": obj.get("kFactor"),
-            "matchSize": obj.get("matchSize"),
-            "scalingFactor": obj.get("scalingFactor"),
-            "matchesUntilCompleted": obj.get("matchesUntilCompleted"),
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'SimpleWorkflowConfig',
             "referee": CompareWorkflowConfigReferee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
+            "blueprint": SimpleWorkflowConfigModelBlueprint.from_dict(obj["blueprint"]) if obj.get("blueprint") is not None else None,
             "targetCountryCodes": obj.get("targetCountryCodes"),
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "priority": obj.get("priority"),

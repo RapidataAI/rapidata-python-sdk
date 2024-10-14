@@ -8,6 +8,8 @@ from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 from rapidata.rapidata_client.dataset.rapidata_dataset import RapidataDataset
 
+from rapidata.rapidata_client.simple_builders.simple_classification_builders import ClassificationQuestionBuilder
+from rapidata.rapidata_client.simple_builders.simple_compare_builders import CompareCriteriaBuilder
 
 
 class RapidataClient:
@@ -81,6 +83,28 @@ class RapidataClient:
             dataset=temp_dataset, 
             order_id=order_id, 
             openapi_service=self.openapi_service)
+    
+    def create_classify_order(self, name: str) -> ClassificationQuestionBuilder:
+        """Create a new classification order where people are asked to classify an image.
+
+        Args:
+            name (str): The name of the order.
+
+        Returns:
+            ClassificationQuestionBuilder: A ClassificationQuestionBuilder instance.
+        """
+        return ClassificationQuestionBuilder(name=name, openapi_service=self.openapi_service)
+    
+    def create_compare_order(self, name: str) -> CompareCriteriaBuilder:
+        """Create a new comparison order where people are asked to compare two images.
+
+        Args:
+            name (str): The name of the order.
+
+        Returns:
+            CompareQuestionBuilder: A CompareQuestionBuilder instance.
+        """
+        return CompareCriteriaBuilder(name=name, openapi_service=self.openapi_service)
 
     @property
     def utils(self) -> Utils:

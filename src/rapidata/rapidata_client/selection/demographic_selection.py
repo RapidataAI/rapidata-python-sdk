@@ -1,5 +1,3 @@
-
-
 from rapidata.rapidata_client.selection.base_selection import Selection
 from rapidata.api_client.models.demographic_selection import DemographicSelection as DemographicSelectionModel
 
@@ -7,8 +5,8 @@ from rapidata.api_client.models.demographic_selection import DemographicSelectio
 class DemographicSelection(Selection):
     """Demographic selection class."""
 
-    def __init__(self, key: str):
-        self.key = key
+    def __init__(self, keys: list[str]):
+        self.keys = keys
 
     def to_model(self):
-        return DemographicSelectionModel(_t="DemographicSelection", key=self.key)
+        return DemographicSelectionModel(_t="DemographicSelection", keys=self.keys)

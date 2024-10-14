@@ -6,6 +6,9 @@ from examples.free_text_order import new_free_text_order
 from examples.setup_client import setup_client
 from examples.transcription_order import new_transcription_order
 from examples.classify_text_asset_order import new_classify_text_asset_order
+from examples.conditional_validation_rapid_selection import (
+    new_cond_validation_rapid_order,
+)
 
 
 class TestExampleOrders(unittest.TestCase):
@@ -27,6 +30,9 @@ class TestExampleOrders(unittest.TestCase):
 
     def test_transcription_order(self):
         new_transcription_order(self.rapi)
+
+    def test_cond_validation_order(self):
+        new_cond_validation_rapid_order(self.rapi)
 
     def test_get_results(self):
         # order = new_classify_order(self.rapi)

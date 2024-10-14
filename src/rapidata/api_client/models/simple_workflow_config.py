@@ -19,7 +19,6 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.compare_workflow_config_rapid_selection_configs_inner import CompareWorkflowConfigRapidSelectionConfigsInner
 from rapidata.api_client.models.compare_workflow_config_referee import CompareWorkflowConfigReferee
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.simple_workflow_config_blueprint import SimpleWorkflowConfigBlueprint
@@ -37,8 +36,7 @@ class SimpleWorkflowConfig(BaseModel):
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
     priority: Optional[StrictStr] = None
     is_fallback: Optional[StrictBool] = Field(default=None, alias="isFallback")
-    rapid_selection_configs: Optional[List[CompareWorkflowConfigRapidSelectionConfigsInner]] = Field(default=None, alias="rapidSelectionConfigs")
-    __properties: ClassVar[List[str]] = ["_t", "referee", "blueprint", "targetCountryCodes", "featureFlags", "priority", "isFallback", "rapidSelectionConfigs"]
+    __properties: ClassVar[List[str]] = ["_t", "referee", "blueprint", "targetCountryCodes", "featureFlags", "priority", "isFallback"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -99,13 +97,6 @@ class SimpleWorkflowConfig(BaseModel):
                 if _item_feature_flags:
                     _items.append(_item_feature_flags.to_dict())
             _dict['featureFlags'] = _items
-        # override the default output from pydantic by calling `to_dict()` of each item in rapid_selection_configs (list)
-        _items = []
-        if self.rapid_selection_configs:
-            for _item_rapid_selection_configs in self.rapid_selection_configs:
-                if _item_rapid_selection_configs:
-                    _items.append(_item_rapid_selection_configs.to_dict())
-            _dict['rapidSelectionConfigs'] = _items
         # set to None if priority (nullable) is None
         # and model_fields_set contains the field
         if self.priority is None and "priority" in self.model_fields_set:
@@ -129,8 +120,7 @@ class SimpleWorkflowConfig(BaseModel):
             "targetCountryCodes": obj.get("targetCountryCodes"),
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "priority": obj.get("priority"),
-            "isFallback": obj.get("isFallback"),
-            "rapidSelectionConfigs": [CompareWorkflowConfigRapidSelectionConfigsInner.from_dict(_item) for _item in obj["rapidSelectionConfigs"]] if obj.get("rapidSelectionConfigs") is not None else None
+            "isFallback": obj.get("isFallback")
         })
         return _obj
 
