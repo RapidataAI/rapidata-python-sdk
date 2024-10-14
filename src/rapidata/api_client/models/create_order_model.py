@@ -19,8 +19,8 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.capped_selection_selections_inner import CappedSelectionSelectionsInner
 from rapidata.api_client.models.create_order_model_referee import CreateOrderModelReferee
-from rapidata.api_client.models.create_order_model_selections_inner import CreateOrderModelSelectionsInner
 from rapidata.api_client.models.create_order_model_user_filters_inner import CreateOrderModelUserFiltersInner
 from rapidata.api_client.models.create_order_model_workflow import CreateOrderModelWorkflow
 from rapidata.api_client.models.feature_flag_model import FeatureFlagModel
@@ -40,7 +40,7 @@ class CreateOrderModel(BaseModel):
     priority: Optional[StrictInt] = Field(default=None, description="The priority is used to prioritize over other orders.")
     user_filters: List[CreateOrderModelUserFiltersInner] = Field(description="The user filters are used to restrict the order to only collect votes from a specific demographic.", alias="userFilters")
     validation_set_id: Optional[StrictStr] = Field(default=None, description="The validation set id can be changed to point to a specific validation set. if not provided a sane default will be  used.", alias="validationSetId")
-    selections: Optional[List[CreateOrderModelSelectionsInner]] = Field(default=None, description="The selections are used to determine which tasks are shown to a user.")
+    selections: Optional[List[CappedSelectionSelectionsInner]] = Field(default=None, description="The selections are used to determine which tasks are shown to a user.")
     __properties: ClassVar[List[str]] = ["_t", "orderName", "workflow", "referee", "aggregator", "featureFlags", "priority", "userFilters", "validationSetId", "selections"]
 
     @field_validator('t')
@@ -172,7 +172,7 @@ class CreateOrderModel(BaseModel):
             "priority": obj.get("priority"),
             "userFilters": [CreateOrderModelUserFiltersInner.from_dict(_item) for _item in obj["userFilters"]] if obj.get("userFilters") is not None else None,
             "validationSetId": obj.get("validationSetId"),
-            "selections": [CreateOrderModelSelectionsInner.from_dict(_item) for _item in obj["selections"]] if obj.get("selections") is not None else None
+            "selections": [CappedSelectionSelectionsInner.from_dict(_item) for _item in obj["selections"]] if obj.get("selections") is not None else None
         })
         return _obj
 
