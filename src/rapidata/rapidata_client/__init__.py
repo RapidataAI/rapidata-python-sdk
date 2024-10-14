@@ -4,7 +4,7 @@ from .selection import (
     DemographicSelection,
     LabelingSelection,
     ValidationSelection,
-    ConditionalValidationRapidSelection,
+    ConditionalValidationSelection,
 )
 from .referee import NaiveReferee, ClassifyEarlyStoppingReferee
 from .metadata import PrivateTextMetadata, PublicTextMetadata, PromptMetadata, TranscriptionMetadata
