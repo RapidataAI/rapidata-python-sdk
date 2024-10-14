@@ -3,8 +3,11 @@ from rapidata.api_client.models.demographic_selection import (
     DemographicSelection as DemographicSelectionModel,
 )
 from rapidata.api_client.models.conditional_validation_rapid_selection_config import (
-    ConditionalValidationRapidSelectionConfig,
     ValidationChance,
+)
+
+from rapidata.api_client.models.conditional_validation_selection import (
+    ConditionalValidationSelection,
 )
 
 
@@ -24,8 +27,8 @@ class ConditionalValidationRapidSelection(Selection):
         self.rapid_counts = rapid_counts
 
     def to_model(self):
-        return ConditionalValidationRapidSelectionConfig(
-            _t="ConditionalValidationRapidSelectionConfig",
+        return ConditionalValidationSelection(
+            _t="ConditionalValidationSelection",
             validationSetId=self.validation_set_id,
             validationChances=[
                 ValidationChance(
