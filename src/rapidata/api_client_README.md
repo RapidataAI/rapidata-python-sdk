@@ -133,6 +133,7 @@ Class | Method | HTTP request | Description
 *RapidApi* | [**rapid_validate_current_rapid_bag_get**](rapidata/api_client/docs/RapidApi.md#rapid_validate_current_rapid_bag_get) | **GET** /Rapid/ValidateCurrentRapidBag | Validates that the rapids associated with the current user are active.
 *SimpleWorkflowApi* | [**simple_workflow_get_result_overview_get**](rapidata/api_client/docs/SimpleWorkflowApi.md#simple_workflow_get_result_overview_get) | **GET** /SimpleWorkflow/GetResultOverview | Get the result overview for a simple workflow.
 *ValidationApi* | [**validation_add_validation_rapid_post**](rapidata/api_client/docs/ValidationApi.md#validation_add_validation_rapid_post) | **POST** /Validation/AddValidationRapid | Adds a new validation rapid to the specified validation set.
+*ValidationApi* | [**validation_add_validation_text_rapid_post**](rapidata/api_client/docs/ValidationApi.md#validation_add_validation_text_rapid_post) | **POST** /Validation/AddValidationTextRapid | Adds a new validation rapid to the specified validation set.
 *ValidationApi* | [**validation_create_validation_set_post**](rapidata/api_client/docs/ValidationApi.md#validation_create_validation_set_post) | **POST** /Validation/CreateValidationSet | Creates a new empty validation set.
 *ValidationApi* | [**validation_get_available_validation_sets_get**](rapidata/api_client/docs/ValidationApi.md#validation_get_available_validation_sets_get) | **GET** /Validation/GetAvailableValidationSets | Gets the available validation sets for the current user.
 *ValidationApi* | [**validation_import_compare_post**](rapidata/api_client/docs/ValidationApi.md#validation_import_compare_post) | **POST** /Validation/ImportCompare | Imports a compare validation set from a zip file.
@@ -157,6 +158,7 @@ Class | Method | HTTP request | Description
  - [AddValidationRapidModelPayload](rapidata/api_client/docs/AddValidationRapidModelPayload.md)
  - [AddValidationRapidModelTruth](rapidata/api_client/docs/AddValidationRapidModelTruth.md)
  - [AddValidationRapidResult](rapidata/api_client/docs/AddValidationRapidResult.md)
+ - [AddValidationTextRapidModel](rapidata/api_client/docs/AddValidationTextRapidModel.md)
  - [AdminOrderModel](rapidata/api_client/docs/AdminOrderModel.md)
  - [AdminOrderModelPagedResult](rapidata/api_client/docs/AdminOrderModelPagedResult.md)
  - [AgeGroup](rapidata/api_client/docs/AgeGroup.md)

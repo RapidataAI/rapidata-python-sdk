@@ -1962,6 +1962,56 @@
         }
       }
     },
+    "/Validation/AddValidationTextRapid": {
+      "post": {
+        "tags": [
+          "Validation"
+        ],
+        "summary": "Adds a new validation rapid to the specified validation set.",
+        "requestBody": {
+          "description": "The model containing the information needed to add the validation rapid.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddValidationTextRapidModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddValidationTextRapidModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddValidationTextRapidModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddValidationRapidResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddValidationRapidResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddValidationRapidResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/Validation/Import": {
       "post": {
         "tags": [
@@ -6381,6 +6431,127 @@
           }
         },
         "additionalProperties": false
+      },
+      "AddValidationTextRapidModel": {
+        "required": [
+          "metadata",
+          "payload",
+          "randomCorrectProbability",
+          "text",
+          "truth",
+          "validationSetId"
+        ],
+        "type": "object",
+        "properties": {
+          "validationSetId": {
+            "type": "string",
+            "description": "The ID of the validation set to add the rapid to."
+          },
+          "payload": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranscriptionPayload"
+              },
+              {
+                "$ref": "#/components/schemas/PolygonPayload"
+              },
+              {
+                "$ref": "#/components/schemas/NamedEntityPayload"
+              },
+              {
+                "$ref": "#/components/schemas/LocatePayload"
+              },
+              {
+                "$ref": "#/components/schemas/LinePayload"
+              },
+              {
+                "$ref": "#/components/schemas/FreeTextPayload"
+              },
+              {
+                "$ref": "#/components/schemas/ComparePayload"
+              },
+              {
+                "$ref": "#/components/schemas/ClassifyPayload"
+              },
+              {
+                "$ref": "#/components/schemas/BoundingBoxPayload"
+              }
+            ],
+            "description": "The payload to use for the rapid.",
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "metadata": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/PrivateTextMetadataInput"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptMetadataInput"
+                },
+                {
+                  "$ref": "#/components/schemas/PublicTextMetadataInput"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadataInput"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            },
+            "description": "Some metadata to attach to the rapid."
+          },
+          "truth": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranscriptionTruth"
+              },
+              {
+                "$ref": "#/components/schemas/PolygonTruth"
+              },
+              {
+                "$ref": "#/components/schemas/NamedEntityTruth"
+              },
+              {
+                "$ref": "#/components/schemas/LocateBoxTruth"
+              },
+              {
+                "$ref": "#/components/schemas/LineTruth"
+              },
+              {
+                "$ref": "#/components/schemas/EmptyValidationTruth"
+              },
+              {
+                "$ref": "#/components/schemas/CompareTruth"
+              },
+              {
+                "$ref": "#/components/schemas/AttachCategoryTruth"
+              },
+              {
+                "$ref": "#/components/schemas/BoundingBoxTruth"
+              }
+            ],
+            "description": "The ground truth for the rapid.",
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "text": {
+            "type": "string"
+          },
+          "randomCorrectProbability": {
+            "type": "number",
+            "description": "The probability for an answer to be correct when randomly guessing.",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for adding a validation rapid."
       },
       "AttachCategoryTruth": {
         "title": "AttachCategoryTruth",
