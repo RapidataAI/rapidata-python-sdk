@@ -160,8 +160,8 @@ class ValidationSetBuilder:
         self,
         asset: MediaAsset | TextAsset,
         question: str,
-        transcription: list[str],
-        correct_words: list[str],
+        transcription: str,
+        truths: list[int],
         strict_grading: bool | None = None,
         metadata: list[Metadata] = [],
     ):
@@ -171,9 +171,9 @@ class ValidationSetBuilder:
             asset (MediaAsset | TextAsset): The asset for the rapid.
             question (str): The question for the rapid.
             transcription (list[str]): The transcription for the rapid.
-            correct_words (list[str]): The list of correct words for the rapid.
-            strict_grading (bool | None, optional): The strict grading flag for the rapid. Defaults to None.
-            metadata (list[Metadata], optional): The metadata for the rapid. Defaults to an empty list.
+            truths (list[int]): The list of indices of the true word selections.
+            strict_grading (bool | None, optional): The strict grading for the rapid. Defaults to None.
+            metadata (list[Metadata], optional): The metadata for the rapid.
 
         Returns:
             ValidationSetBuilder: The ValidationSetBuilder instance.
@@ -183,16 +183,14 @@ class ValidationSetBuilder:
         """
         transcription_words = [
             TranscriptionWord(word=word, wordIndex=i)
-            for i, word in enumerate(transcription)
+            for i, word in enumerate(transcription.split())
         ]
 
-        correct_transcription_words = []
-        for word in correct_words:
-            if word not in transcription:
-                raise ValueError(f"Correct word '{word}' not found in transcription")
-            correct_transcription_words.append(
-                TranscriptionWord(word=word, wordIndex=transcription.index(word))
-            )
+        true_words = []
+        for idx in truths:
+            if idx > len(transcription_words) - 1:
+                raise ValueError(f"Index {idx} is out of bounds")
+            true_words.append(transcription_words[idx])
 
         payload = TranscriptionPayload(
             _t="TranscriptionPayload", title=question, transcription=transcription_words
@@ -200,7 +198,7 @@ class ValidationSetBuilder:
 
         model_truth = TranscriptionTruth(
             _t="TranscriptionTruth",
-            correctWords=correct_transcription_words,
+            correctWords=true_words,
             strictGrading=strict_grading,
         )
 
