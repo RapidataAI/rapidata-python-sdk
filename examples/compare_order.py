@@ -3,7 +3,16 @@ Compare order with a validation set
 '''
 
 from examples.setup_client import setup_client
-from rapidata import FeatureFlags, NaiveReferee, CompareWorkflow, RapidataClient, LabelingSelection, ValidationSelection
+from rapidata import (
+    FeatureFlags,
+    NaiveReferee,
+    CompareWorkflow,
+    RapidataClient,
+    LabelingSelection,
+    ValidationSelection,
+    MultiAsset,
+    MediaAsset,
+)
 
 
 def new_compare_order(rapi: RapidataClient):
@@ -11,13 +20,15 @@ def new_compare_order(rapi: RapidataClient):
     concept_path = "examples/data/rapidata_concept_logo.jpg"
 
     # configure validation set
-    validation_set = rapi.new_validation_set(
-        name="Example SimpleMatchup Validation Set"
-    ).add_compare_rapid(
-        media_paths=[logo_path, concept_path],
-        question="Which logo is the actual Rapidata logo?",
-        truth=logo_path,
-    ).create()
+    validation_set = (
+        rapi.new_validation_set(name="Example SimpleMatchup Validation Set")
+        .add_compare_rapid(
+            asset=MultiAsset([MediaAsset(logo_path), MediaAsset(concept_path)]),
+            question="Which logo is the actual Rapidata logo?",
+            truth=logo_path,
+        )
+        .create()
+    )
 
     # configure order
     order = (

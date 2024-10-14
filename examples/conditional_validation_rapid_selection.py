@@ -11,6 +11,7 @@ from rapidata import (
     LabelingSelection,
     ConditionalValidationSelection,
 )
+from rapidata.rapidata_client.assets.media_asset import MediaAsset
 
 
 def new_cond_validation_rapid_order(rapi: RapidataClient):
@@ -18,7 +19,7 @@ def new_cond_validation_rapid_order(rapi: RapidataClient):
     validation_set = (
         rapi.new_validation_set("Example Validation Set")
         .add_classify_rapid(
-            media_path="examples/data/wallaby.jpg",
+            asset=MediaAsset(path="examples/data/wallaby.jpg"),
             question="What kind of animal is this?",
             categories=["Fish", "Marsupial", "Bird", "Reptile"],
             truths=["Marsupial"],

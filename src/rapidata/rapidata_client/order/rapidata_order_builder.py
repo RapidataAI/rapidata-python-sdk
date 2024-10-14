@@ -1,10 +1,10 @@
 from rapidata.api_client.models.aggregator_type import AggregatorType
+from rapidata.api_client.models.capped_selection_selections_inner import (
+    CappedSelectionSelectionsInner,
+)
 from rapidata.api_client.models.create_order_model import CreateOrderModel
 from rapidata.api_client.models.create_order_model_referee import (
     CreateOrderModelReferee,
-)
-from rapidata.api_client.models.create_order_model_selections_inner import (
-    CreateOrderModelSelectionsInner,
 )
 from rapidata.api_client.models.create_order_model_user_filters_inner import (
     CreateOrderModelUserFiltersInner,
@@ -41,6 +41,13 @@ class RapidataOrderBuilder:
         openapi_service: OpenAPIService,
         name: str,
     ):
+        """
+        Initialize the RapidataOrderBuilder.
+
+        Args:
+            openapi_service (OpenAPIService): The OpenAPIService instance.
+            name (str): The name of the order.
+        """
         self._name = name
         self._openapi_service = openapi_service
         self._workflow: Workflow | None = None
@@ -54,8 +61,19 @@ class RapidataOrderBuilder:
         self._selections: list[Selection] = []
         self._rapids_per_bag: int = 2
         self._priority: int = 50
+        self._texts: list[str] | None = None
+        self._media_paths: list[str | list[str]] = []
 
     def _to_model(self) -> CreateOrderModel:
+        """
+        Convert the builder configuration to a CreateOrderModel.
+
+        Raises:
+            ValueError: If no workflow is provided.
+
+        Returns:
+            CreateOrderModel: The model representing the order configuration.
+        """
         if self._workflow is None:
             raise ValueError("You must provide a workflow to create an order.")
 
@@ -86,27 +104,34 @@ class RapidataOrderBuilder:
                 else None
             ),
             selections=[
-                CreateOrderModelSelectionsInner(selection.to_model())
+                CappedSelectionSelectionsInner(selection.to_model())
                 for selection in self._selections
             ],
             priority=self._priority,
         )
 
-    def create(self, submit=True, max_workers=10) -> RapidataOrder:
-        """Actually makes the API calls to create the order based on how the order builder was configured.
+    def create(self, submit: bool = True, max_workers: int = 10) -> RapidataOrder:
+        """
+        Create the Rapidata order by making the necessary API calls based on the builder's configuration.
 
         Args:
-            submit (bool, optional): Whether to submit the order. Defaults to True.
+            submit (bool, optional): Whether to submit the order upon creation. Defaults to True.
+            max_workers (int, optional): The maximum number of worker threads for processing media paths. Defaults to 10.
+
+        Raises:
+            ValueError: If both media paths and texts are provided, or if neither is provided.
+            AssertionError: If the workflow is a CompareWorkflow and media paths are not in pairs.
 
         Returns:
             RapidataOrder: The created RapidataOrder instance.
-
-        Raises:
-            ValueError: If no workflow is provided.
         """
         order_model = self._to_model()
-        if isinstance(self._workflow, CompareWorkflow): # temp fix, will be handeled by backend in the future
-            assert all([len(path) == 2 for path in self._media_paths]), "The media paths must come in pairs for comparison tasks."
+        if isinstance(
+            self._workflow, CompareWorkflow
+        ):  # Temporary fix; will be handled by backend in the future
+            assert all(
+                [len(path) == 2 for path in self._media_paths]
+            ), "The media paths must come in pairs for comparison tasks."
 
         result = self._openapi_service.order_api.order_create_post(
             create_order_model=order_model
@@ -120,14 +145,32 @@ class RapidataOrderBuilder:
             openapi_service=self._openapi_service,
         )
 
-        order.dataset.add_media_from_paths(self._media_paths, self._metadata, max_workers)
+        if self._media_paths and self._texts:
+            raise ValueError(
+                "You cannot provide both media paths and texts to the same order."
+            )
+
+        if not self._media_paths and not self._texts:
+            raise ValueError(
+                "You must provide either media paths or texts to the order."
+            )
+
+        if self._texts:
+            order.dataset.add_texts(self._texts)
+
+        if self._media_paths:
+            order.dataset.add_media_from_paths(
+                self._media_paths, self._metadata, max_workers
+            )
+
         if submit:
             order.submit()
 
         return order
 
-    def workflow(self, workflow: Workflow):
-        """Set the workflow for the order.
+    def workflow(self, workflow: Workflow) -> "RapidataOrderBuilder":
+        """
+        Set the workflow for the order.
 
         Args:
             workflow (Workflow): The workflow to be set.
@@ -138,8 +181,9 @@ class RapidataOrderBuilder:
         self._workflow = workflow
         return self
 
-    def referee(self, referee: Referee):
-        """Set the referee for the order.
+    def referee(self, referee: Referee) -> "RapidataOrderBuilder":
+        """
+        Set the referee for the order.
 
         Args:
             referee (Referee): The referee to be set.
@@ -154,8 +198,9 @@ class RapidataOrderBuilder:
         self,
         media_paths: list[str | list[str]],
         metadata: list[Metadata] | None = None,
-    ):
-        """Set the media assets for the order.
+    ) -> "RapidataOrderBuilder":
+        """
+        Set the media assets for the order.
 
         Args:
             media_paths (list[str | list[str]]): The paths of the media assets to be set.
@@ -168,8 +213,22 @@ class RapidataOrderBuilder:
         self._metadata = metadata
         return self
 
-    def feature_flags(self, feature_flags: FeatureFlags):
-        """Set the feature flags for the order.
+    def texts(self, texts: list[str]) -> "RapidataOrderBuilder":
+        """
+        Set the TextAssets for the order.
+
+        Args:
+            texts (list[str]): The texts to be set.
+
+        Returns:
+            RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
+        """
+        self._texts = texts
+        return self
+
+    def feature_flags(self, feature_flags: FeatureFlags) -> "RapidataOrderBuilder":
+        """
+        Set the feature flags for the order.
 
         Args:
             feature_flags (FeatureFlags): The feature flags to be set.
@@ -180,8 +239,9 @@ class RapidataOrderBuilder:
         self._feature_flags = feature_flags
         return self
 
-    def country_filter(self, country_codes: list[str]):
-        """Set the target country codes for the order.
+    def country_filter(self, country_codes: list[str]) -> "RapidataOrderBuilder":
+        """
+        Set the target country codes for the order.
 
         Args:
             country_codes (list[str]): The country codes to be set.
@@ -192,8 +252,9 @@ class RapidataOrderBuilder:
         self._country_codes = country_codes
         return self
 
-    def aggregator(self, aggregator: AggregatorType):
-        """Set the aggregator for the order.
+    def aggregator(self, aggregator: AggregatorType) -> "RapidataOrderBuilder":
+        """
+        Set the aggregator for the order.
 
         Args:
             aggregator (AggregatorType): The aggregator to be set.
@@ -204,8 +265,9 @@ class RapidataOrderBuilder:
         self._aggregator = aggregator
         return self
 
-    def validation_set_id(self, validation_set_id: str):
-        """Set the validation set for the order.
+    def validation_set_id(self, validation_set_id: str) -> "RapidataOrderBuilder":
+        """
+        Set the validation set ID for the order.
 
         Args:
             validation_set_id (str): The validation set ID to be set.
@@ -216,8 +278,9 @@ class RapidataOrderBuilder:
         self._validation_set_id = validation_set_id
         return self
 
-    def rapids_per_bag(self, amount: int):
-        """Defines the number of tasks a user sees in a single session.
+    def rapids_per_bag(self, amount: int) -> "RapidataOrderBuilder":
+        """
+        Define the number of tasks a user sees in a single session.
 
         Args:
             amount (int): The number of tasks a user sees in a single session.
@@ -230,8 +293,9 @@ class RapidataOrderBuilder:
         """
         raise NotImplementedError("Not implemented yet.")
 
-    def selections(self, selections: list[Selection]):
-        """Set the selections for the order.
+    def selections(self, selections: list[Selection]) -> "RapidataOrderBuilder":
+        """
+        Set the selections for the order.
 
         Args:
             selections (list[Selection]): The selections to be set.
@@ -242,8 +306,9 @@ class RapidataOrderBuilder:
         self._selections = selections
         return self
 
-    def priority(self, priority: int):
-        """Set the priority for the order.
+    def priority(self, priority: int) -> "RapidataOrderBuilder":
+        """
+        Set the priority for the order.
 
         Args:
             priority (int): The priority to be set.

@@ -5,18 +5,22 @@ from examples.compare_order import new_compare_order
 from examples.free_text_order import new_free_text_order
 from examples.setup_client import setup_client
 from examples.transcription_order import new_transcription_order
+from examples.classify_text_asset_order import new_classify_text_asset_order
 from examples.conditional_validation_rapid_selection import (
     new_cond_validation_rapid_order,
 )
 
 
-class TestClassifyOrder(unittest.TestCase):
+class TestExampleOrders(unittest.TestCase):
 
     def setUp(self):
         self.rapi = setup_client()
 
     def test_classify_order(self):
         new_classify_order(self.rapi)
+
+    def test_classify_text_asset_order(self):
+        new_classify_text_asset_order(self.rapi)
 
     def test_free_text_input_order(self):
         new_free_text_order(self.rapi)

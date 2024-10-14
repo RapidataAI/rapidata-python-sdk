@@ -16,4 +16,7 @@ from .rapidata_client import (
     TranscriptionMetadata,
     FeatureFlags,
     CountryCodes,
+    MediaAsset,
+    TextAsset,
+    MultiAsset,
 )
