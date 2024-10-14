@@ -3,6 +3,9 @@ from typing import Any
 from rapidata.api_client.models.add_validation_rapid_model import (
     AddValidationRapidModel,
 )
+from rapidata.api_client.models.add_validation_text_rapid_model import (
+    AddValidationTextRapidModel,
+)
 from rapidata.api_client.models.add_validation_rapid_model_payload import (
     AddValidationRapidModelPayload,
 )
@@ -31,6 +34,9 @@ from rapidata.api_client.models.polygon_truth import PolygonTruth
 from rapidata.api_client.models.transcription_payload import TranscriptionPayload
 from rapidata.api_client.models.transcription_truth import TranscriptionTruth
 from rapidata.api_client.models.transcription_word import TranscriptionWord
+from rapidata.rapidata_client.assets.media_asset import MediaAsset
+from rapidata.rapidata_client.assets.multi_asset import MultiAsset
+from rapidata.rapidata_client.assets.text_asset import TextAsset
 from rapidata.rapidata_client.metadata.base_metadata import Metadata
 from rapidata.service.openapi_service import OpenAPIService
 
@@ -38,7 +44,7 @@ from rapidata.service.openapi_service import OpenAPIService
 class RapidataValidationSet:
     """A class for interacting with a Rapidata validation set.
 
-    Get a `ValidationSet` either by using `rapi.get_validation_set(id)` to get an exisitng validation set or by using `rapi.new_validation_set(name)` to create a new validation set.
+    Get a `ValidationSet` either by using `rapi.get_validation_set(id)` to get an existing validation set or by using `rapi.new_validation_set(name)` to create a new validation set.
     """
 
     def __init__(self, validation_set_id, openapi_service: OpenAPIService):
@@ -70,21 +76,25 @@ class RapidataValidationSet:
             | TranscriptionTruth
         ),
         metadata: list[Metadata],
-        media_paths: str | list[str],
+        asset: MediaAsset | TextAsset | MultiAsset,
         randomCorrectProbability: float,
     ) -> None:
         """Add a validation rapid to the validation set.
 
         Args:
-            payload (Union[BoundingBoxPayload, ClassifyPayload, ComparePayload, FreeTextPayload, LinePayload, LocatePayload, NamedEntityPayload, PolygonPayload, TranscriptionPayload]): The payload for the rapid.
-            truths (Union[AttachCategoryTruth, BoundingBoxTruth, CompareTruth, EmptyValidationTruth, LineTruth, LocateBoxTruth, NamedEntityTruth, PolygonTruth, TranscriptionTruth]): The truths for the rapid.
+            payload: The payload for the rapid.
+            truths: The truths for the rapid.
             metadata (list[Metadata]): The metadata for the rapid.
-            media_paths (Union[str, list[str]]): The media paths for the rapid.
+            asset: The asset(s) for the rapid.
             randomCorrectProbability (float): The random correct probability for the rapid.
 
         Returns:
             None
+
+        Raises:
+            ValueError: If an invalid asset type is provided.
         """
+
         model = AddValidationRapidModel(
             validationSetId=self.id,
             payload=AddValidationRapidModelPayload(payload),
@@ -95,14 +105,37 @@ class RapidataValidationSet:
             ],
             randomCorrectProbability=randomCorrectProbability,
         )
+        if isinstance(asset, MediaAsset):
+            self.openapi_service.validation_api.validation_add_validation_rapid_post(
+                model=model, files=[asset.path]
+            )
 
-        self.openapi_service.validation_api.validation_add_validation_rapid_post(
-            model=model, files=media_paths if isinstance(media_paths, list) else [media_paths]  # type: ignore
-        )
+        elif isinstance(asset, MultiAsset):
+            self.openapi_service.validation_api.validation_add_validation_rapid_post(
+                model=model, files=[a.path for a in asset if isinstance(a, MediaAsset)]
+            )
+
+        elif isinstance(asset, TextAsset):
+            model = AddValidationTextRapidModel(
+                validationSetId=self.id,
+                payload=AddValidationRapidModelPayload(payload),
+                truth=AddValidationRapidModelTruth(truths),
+                metadata=[
+                    DatapointMetadataModelMetadataInner(meta.to_model())
+                    for meta in metadata
+                ],
+                randomCorrectProbability=randomCorrectProbability,
+                text=asset.text,
+            )
+            self.openapi_service.validation_api.validation_add_validation_text_rapid_post(
+                add_validation_text_rapid_model=model
+            )
+        else:
+            raise ValueError("Invalid asset type")
 
     def add_classify_validation_rapid(
         self,
-        media_path: str,
+        asset: MediaAsset | TextAsset,
         question: str,
         categories: list[str],
         truths: list[str],
@@ -111,7 +144,7 @@ class RapidataValidationSet:
         """Add a classify rapid to the validation set.
 
         Args:
-            media_path (str): The path to the media file.
+            asset (MediaAsset | TextAsset): The asset for the rapid.
             question (str): The question for the rapid.
             categories (list[str]): The list of categories for the rapid.
             truths (list[str]): The list of truths for the rapid.
@@ -131,13 +164,13 @@ class RapidataValidationSet:
             payload=payload,
             truths=model_truth,
             metadata=metadata,
-            media_paths=media_path,
+            asset=asset,
             randomCorrectProbability=len(truths) / len(categories),
         )
 
     def add_compare_validation_rapid(
         self,
-        media_paths: list[str],
+        asset: MultiAsset,
         question: str,
         truth: str,
         metadata: list[Metadata] = [],
@@ -145,7 +178,7 @@ class RapidataValidationSet:
         """Add a compare rapid to the validation set.
 
         Args:
-            media_paths (list[str]): The list of media paths for the rapid.
+            asset (MultiAsset): The assets for the rapid.
             question (str): The question for the rapid.
             truth (str): The path to the truth file.
             metadata (list[Metadata], optional): The metadata for the rapid. Defaults to an empty list.
@@ -154,33 +187,27 @@ class RapidataValidationSet:
             None
 
         Raises:
-            ValueError: If the number of media paths is not exactly two.
-            FileNotFoundError: If any of the specified files are not found.
+            ValueError: If the number of assets is not exactly two.
         """
         payload = ComparePayload(_t="ComparePayload", criteria=question)
         # take only last part of truth path
         truth = os.path.basename(truth)
         model_truth = CompareTruth(_t="CompareTruth", winnerId=truth)
 
-        if len(media_paths) != 2:
+        if len(asset) != 2:
             raise ValueError("Compare rapid requires exactly two media paths")
-
-        # check that files exist
-        for media_path in media_paths:
-            if not os.path.exists(media_path):
-                raise FileNotFoundError(f"File not found: {media_path}")
 
         self.add_general_validation_rapid(
             payload=payload,
             truths=model_truth,
             metadata=metadata,
-            media_paths=media_paths,
-            randomCorrectProbability=1 / len(media_paths),
+            asset=asset,
+            randomCorrectProbability=1 / len(asset),
         )
 
     def add_transcription_validation_rapid(
         self,
-        media_path: str,
+        asset: MediaAsset | TextAsset,
         question: str,
         transcription: list[str],
         correct_words: list[str],
@@ -190,11 +217,11 @@ class RapidataValidationSet:
         """Add a transcription rapid to the validation set.
 
         Args:
-            media_path (str): The path to the media file.
+            asset (MediaAsset | TextAsset): The asset for the rapid.
             question (str): The question for the rapid.
             transcription (list[str]): The transcription for the rapid.
             correct_words (list[str]): The list of correct words for the rapid.
-            strict_grading (Optional[bool], optional): The strict grading for the rapid. Defaults to None.
+            strict_grading (bool | None, optional): The strict grading for the rapid. Defaults to None.
             metadata (list[Metadata], optional): The metadata for the rapid. Defaults to an empty list.
 
         Returns:
@@ -230,6 +257,6 @@ class RapidataValidationSet:
             payload=payload,
             truths=model_truth,
             metadata=metadata,
-            media_paths=media_path,
+            asset=asset,
             randomCorrectProbability=len(correct_words) / len(transcription),
         )

@@ -2,7 +2,16 @@
 Transcription order with validation set
 '''
 from examples.setup_client import setup_client
-from rapidata import RapidataClient, FeatureFlags, NaiveReferee, TranscriptionWorkflow, TranscriptionMetadata, ValidationSelection, LabelingSelection
+from rapidata import (
+    RapidataClient,
+    FeatureFlags,
+    NaiveReferee,
+    TranscriptionWorkflow,
+    TranscriptionMetadata,
+    ValidationSelection,
+    LabelingSelection,
+    MediaAsset,
+)
 
 
 def new_transcription_order(rapi: RapidataClient):
@@ -10,7 +19,7 @@ def new_transcription_order(rapi: RapidataClient):
         rapi.new_validation_set(
             name="Example Transcription Validation Set"
         ).add_transcription_rapid(
-            media_path="examples/data/waiting.mp4",
+            asset=MediaAsset("examples/data/waiting.mp4"),
             question="Click any words that are part of a name",
             transcription=[
                 "This",

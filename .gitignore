@@ -170,3 +170,5 @@ customers/
 .openapi-generator/
 
 *.ipynb
+
+.idea/

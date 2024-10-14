@@ -3,7 +3,15 @@ Classify order with a validation set
 '''
 
 from examples.setup_client import setup_client
-from rapidata import RapidataClient, ClassifyWorkflow, NaiveReferee, PromptMetadata, LabelingSelection, ValidationSelection
+from rapidata import (
+    RapidataClient,
+    ClassifyWorkflow,
+    NaiveReferee,
+    PromptMetadata,
+    LabelingSelection,
+    ValidationSelection,
+    MediaAsset,
+)
 
 
 def new_classify_order(rapi: RapidataClient):
@@ -11,7 +19,7 @@ def new_classify_order(rapi: RapidataClient):
     validation_set = (
         rapi.new_validation_set("Example Validation Set")
         .add_classify_rapid(
-            media_path="examples/data/wallaby.jpg",
+            asset=MediaAsset(path="examples/data/wallaby.jpg"),
             question="What kind of animal is this?",
             categories=["Fish", "Marsupial", "Bird", "Reptile"],
             truths=["Marsupial"],

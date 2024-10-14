@@ -8,10 +8,25 @@ from rapidata import (
     ClassifyWorkflow,
     NaiveReferee,
     LabelingSelection,
+    ValidationSelection,
+    TextAsset,
 )
 
 
 def new_classify_text_asset_order(rapi: RapidataClient):
+    validation_set = (
+        rapi.new_validation_set(
+            name="Example Validation Set",
+        )
+        .add_classify_rapid(
+            asset=TextAsset("What is love?"),
+            question="How does this song continue? (val)",
+            categories=["Baby don't hurt me", "No more", "Illusions"],
+            truths=["Baby don't hurt me"],
+        )
+        .create()
+    )
+
     # Configure order
     order = (
         rapi.new_order(
@@ -31,6 +46,7 @@ def new_classify_text_asset_order(rapi: RapidataClient):
         .referee(NaiveReferee(required_guesses=3))
         .selections(
             [
+                ValidationSelection(amount=1, validation_set_id=validation_set.id),
                 LabelingSelection(amount=1),
             ]
         )
