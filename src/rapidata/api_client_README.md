@@ -97,6 +97,7 @@ Class | Method | HTTP request | Description
 *IdentityApi* | [**identity_get_client_auth_token_post**](rapidata/api_client/docs/IdentityApi.md#identity_get_client_auth_token_post) | **POST** /Identity/GetClientAuthToken | Issues a new auth token using the client credentials.
 *IdentityApi* | [**identity_index_post**](rapidata/api_client/docs/IdentityApi.md#identity_index_post) | **POST** /Identity/Index | Logs in a user by username or email and password.
 *IdentityApi* | [**identity_logout_post**](rapidata/api_client/docs/IdentityApi.md#identity_logout_post) | **POST** /Identity/Logout | Logs out the current user by deleting the refresh token cookie.
+*IdentityApi* | [**identity_register_temporary_post**](rapidata/api_client/docs/IdentityApi.md#identity_register_temporary_post) | **POST** /Identity/RegisterTemporary | Registers and logs in a temporary customer.
 *IdentityApi* | [**identity_request_reset_post**](rapidata/api_client/docs/IdentityApi.md#identity_request_reset_post) | **POST** /Identity/RequestReset | Request a password reset for a user.
 *IdentityApi* | [**identity_signup_post**](rapidata/api_client/docs/IdentityApi.md#identity_signup_post) | **POST** /Identity/Signup | Signs up a new user.
 *IdentityApi* | [**identity_submit_reset_post**](rapidata/api_client/docs/IdentityApi.md#identity_submit_reset_post) | **POST** /Identity/SubmitReset | Updates the password of a user after a password reset request.
@@ -131,7 +132,9 @@ Class | Method | HTTP request | Description
 *RapidApi* | [**rapid_query_validation_rapids_get**](rapidata/api_client/docs/RapidApi.md#rapid_query_validation_rapids_get) | **GET** /Rapid/QueryValidationRapids | Queries the validation rapids for a specific validation set.
 *RapidApi* | [**rapid_skip_user_guess_post**](rapidata/api_client/docs/RapidApi.md#rapid_skip_user_guess_post) | **POST** /Rapid/SkipUserGuess | Skips a Rapid for the user.
 *RapidApi* | [**rapid_validate_current_rapid_bag_get**](rapidata/api_client/docs/RapidApi.md#rapid_validate_current_rapid_bag_get) | **GET** /Rapid/ValidateCurrentRapidBag | Validates that the rapids associated with the current user are active.
+*RapidataIdentityAPIApi* | [**root_get**](rapidata/api_client/docs/RapidataIdentityAPIApi.md#root_get) | **GET** / | 
 *SimpleWorkflowApi* | [**simple_workflow_get_result_overview_get**](rapidata/api_client/docs/SimpleWorkflowApi.md#simple_workflow_get_result_overview_get) | **GET** /SimpleWorkflow/GetResultOverview | Get the result overview for a simple workflow.
+*UserInfoApi* | [**connect_userinfo_get**](rapidata/api_client/docs/UserInfoApi.md#connect_userinfo_get) | **GET** /connect/userinfo | Retrieves information about the authenticated user.
 *ValidationApi* | [**validation_add_validation_rapid_post**](rapidata/api_client/docs/ValidationApi.md#validation_add_validation_rapid_post) | **POST** /Validation/AddValidationRapid | Adds a new validation rapid to the specified validation set.
 *ValidationApi* | [**validation_add_validation_text_rapid_post**](rapidata/api_client/docs/ValidationApi.md#validation_add_validation_text_rapid_post) | **POST** /Validation/AddValidationTextRapid | Adds a new validation rapid to the specified validation set.
 *ValidationApi* | [**validation_create_validation_set_post**](rapidata/api_client/docs/ValidationApi.md#validation_create_validation_set_post) | **POST** /Validation/CreateValidationSet | Creates a new empty validation set.
@@ -273,9 +276,11 @@ Class | Method | HTTP request | Description
  - [ImportValidationSetFromFileResult](rapidata/api_client/docs/ImportValidationSetFromFileResult.md)
  - [InProgressRapidModel](rapidata/api_client/docs/InProgressRapidModel.md)
  - [IssueAuthTokenResult](rapidata/api_client/docs/IssueAuthTokenResult.md)
- - [IssueClientAuthTokenResult](rapidata/api_client/docs/IssueClientAuthTokenResult.md)
  - [LabelingSelection](rapidata/api_client/docs/LabelingSelection.md)
  - [LanguageUserFilterModel](rapidata/api_client/docs/LanguageUserFilterModel.md)
+ - [LegacyIssueClientAuthTokenResult](rapidata/api_client/docs/LegacyIssueClientAuthTokenResult.md)
+ - [LegacyRequestPasswordResetCommand](rapidata/api_client/docs/LegacyRequestPasswordResetCommand.md)
+ - [LegacySubmitPasswordResetCommand](rapidata/api_client/docs/LegacySubmitPasswordResetCommand.md)
  - [Line](rapidata/api_client/docs/Line.md)
  - [LinePayload](rapidata/api_client/docs/LinePayload.md)
  - [LinePoint](rapidata/api_client/docs/LinePoint.md)
@@ -334,7 +339,6 @@ Class | Method | HTTP request | Description
  - [RapidResultModel](rapidata/api_client/docs/RapidResultModel.md)
  - [RapidResultModelResult](rapidata/api_client/docs/RapidResultModelResult.md)
  - [RapidSkippedModel](rapidata/api_client/docs/RapidSkippedModel.md)
- - [RequestPasswordResetCommand](rapidata/api_client/docs/RequestPasswordResetCommand.md)
  - [RootFilter](rapidata/api_client/docs/RootFilter.md)
  - [SendCompletionMailStepModel](rapidata/api_client/docs/SendCompletionMailStepModel.md)
  - [Shape](rapidata/api_client/docs/Shape.md)
@@ -354,7 +358,6 @@ Class | Method | HTTP request | Description
  - [StaticSelection](rapidata/api_client/docs/StaticSelection.md)
  - [SubmitCocoModel](rapidata/api_client/docs/SubmitCocoModel.md)
  - [SubmitCocoResult](rapidata/api_client/docs/SubmitCocoResult.md)
- - [SubmitPasswordResetCommand](rapidata/api_client/docs/SubmitPasswordResetCommand.md)
  - [TextAsset](rapidata/api_client/docs/TextAsset.md)
  - [TextAssetModel](rapidata/api_client/docs/TextAssetModel.md)
  - [TextMetadata](rapidata/api_client/docs/TextMetadata.md)
@@ -402,6 +405,10 @@ Authentication schemes defined for the API:
 - **Type**: API key
 - **API key parameter name**: Authorization
 - **Location**: HTTP header
+
+<a id="oauth2"></a>
+### oauth2
+
 
 
 ## Author

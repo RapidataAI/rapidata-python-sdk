@@ -7,6 +7,13 @@
   "security": [
     {
       "bearer": []
+    },
+    {
+      "oauth2": [
+        "openid",
+        "profile",
+        "email"
+      ]
     }
   ],
   "paths": {
@@ -1425,17 +1432,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/IssueClientAuthTokenResult"
+                  "$ref": "#/components/schemas/LegacyIssueClientAuthTokenResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/IssueClientAuthTokenResult"
+                  "$ref": "#/components/schemas/LegacyIssueClientAuthTokenResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/IssueClientAuthTokenResult"
+                  "$ref": "#/components/schemas/LegacyIssueClientAuthTokenResult"
                 }
               }
             }
@@ -1454,17 +1461,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RequestPasswordResetCommand"
+                "$ref": "#/components/schemas/LegacyRequestPasswordResetCommand"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/RequestPasswordResetCommand"
+                "$ref": "#/components/schemas/LegacyRequestPasswordResetCommand"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/RequestPasswordResetCommand"
+                "$ref": "#/components/schemas/LegacyRequestPasswordResetCommand"
               }
             }
           }
@@ -1487,17 +1494,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SubmitPasswordResetCommand"
+                "$ref": "#/components/schemas/LegacySubmitPasswordResetCommand"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/SubmitPasswordResetCommand"
+                "$ref": "#/components/schemas/LegacySubmitPasswordResetCommand"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/SubmitPasswordResetCommand"
+                "$ref": "#/components/schemas/LegacySubmitPasswordResetCommand"
               }
             }
           }
@@ -1607,6 +1614,39 @@
         }
       }
     },
+    "/Identity/RegisterTemporary": {
+      "post": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Registers and logs in a temporary customer.",
+        "requestBody": {
+          "description": "The model to register the temporary customer with.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupShadowCustomerModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupShadowCustomerModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupShadowCustomerModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/Newsletter": {
       "post": {
         "tags": [
@@ -1666,6 +1706,31 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "tags": [
+          "Rapidata.Identity.API"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/connect/userinfo": {
+      "get": {
+        "tags": [
+          "UserInfo"
+        ],
+        "summary": "Retrieves information about the authenticated user.",
         "responses": {
           "200": {
             "description": "OK"
@@ -6145,15 +6210,78 @@
           }
         },
         "additionalProperties": false,
-        "description": "The result of issuing a auth token."
+        "description": "The result of issuing an auth token."
       },
-      "IssueClientAuthTokenResult": {
+      "LegacyIssueClientAuthTokenResult": {
         "required": [
           "authToken"
         ],
         "type": "object",
         "properties": {
           "authToken": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LegacyRequestPasswordResetCommand": {
+        "title": "LegacyRequestPasswordResetCommand",
+        "required": [
+          "_t",
+          "email",
+          "recaptchaToken"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "LegacyRequestPasswordResetCommand"
+            ],
+            "type": "string",
+            "description": "Discriminator value for LegacyRequestPasswordResetCommand",
+            "default": "LegacyRequestPasswordResetCommand",
+            "example": "LegacyRequestPasswordResetCommand"
+          },
+          "email": {
+            "type": "string"
+          },
+          "recaptchaToken": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LegacySubmitPasswordResetCommand": {
+        "title": "LegacySubmitPasswordResetCommand",
+        "required": [
+          "_t",
+          "password",
+          "passwordRepeated",
+          "resetToken",
+          "userId"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "LegacySubmitPasswordResetCommand"
+            ],
+            "type": "string",
+            "description": "Discriminator value for LegacySubmitPasswordResetCommand",
+            "default": "LegacySubmitPasswordResetCommand",
+            "example": "LegacySubmitPasswordResetCommand"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "password": {
+            "type": "string"
+          },
+          "passwordRepeated": {
+            "type": "string"
+          },
+          "resetToken": {
             "type": "string"
           }
         },
@@ -6197,33 +6325,6 @@
         "additionalProperties": false,
         "description": "Model for subscribing and unsubscribing to the newsletter."
       },
-      "RequestPasswordResetCommand": {
-        "title": "RequestPasswordResetCommand",
-        "required": [
-          "_t",
-          "email",
-          "recaptchaToken"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "RequestPasswordResetCommand"
-            ],
-            "type": "string",
-            "description": "Discriminator value for RequestPasswordResetCommand",
-            "default": "RequestPasswordResetCommand",
-            "example": "RequestPasswordResetCommand"
-          },
-          "email": {
-            "type": "string"
-          },
-          "recaptchaToken": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "SignupCustomerModel": {
         "required": [
           "email",
@@ -6266,42 +6367,6 @@
         },
         "additionalProperties": false,
         "description": "The model for signing up a new temporary user."
-      },
-      "SubmitPasswordResetCommand": {
-        "title": "SubmitPasswordResetCommand",
-        "required": [
-          "_t",
-          "password",
-          "passwordRepeated",
-          "resetToken",
-          "userId"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "SubmitPasswordResetCommand"
-            ],
-            "type": "string",
-            "description": "Discriminator value for SubmitPasswordResetCommand",
-            "default": "SubmitPasswordResetCommand",
-            "example": "SubmitPasswordResetCommand"
-          },
-          "userId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "password": {
-            "type": "string"
-          },
-          "passwordRepeated": {
-            "type": "string"
-          },
-          "resetToken": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
       },
       "AddValidationRapidModel": {
         "required": [
@@ -9686,6 +9751,10 @@
         "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
         "name": "Authorization",
         "in": "header"
+      },
+      "oauth2": {
+        "type": "openIdConnect",
+        "openIdConnectUrl": "https://api.app.rabbitdata.ch/.well-known/openid-configuration"
       }
     }
   }
