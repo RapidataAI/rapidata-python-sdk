@@ -23,6 +23,8 @@ class MultiAsset(BaseAsset):
         Args:
             assets (List[BaseAsset]): A list of BaseAsset instances to be managed together.
         """
+        if len(assets) != 2:
+            raise ValueError("Assets must come in pairs for comparison tasks.")
         self.assets = assets
 
     def __len__(self) -> int:

@@ -38,10 +38,7 @@ def new_classify_text_asset_order(rapi: RapidataClient):
                 options=["Baby don't hurt me", "No more", "Illusions"],
             )
         )
-        .texts(
-            texts=[
-                "What is love?",
-            ]
+        .media([TextAsset("What is love?")]
         )
         .referee(NaiveReferee(required_guesses=3))
         .selections(

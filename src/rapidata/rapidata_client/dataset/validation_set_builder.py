@@ -209,7 +209,7 @@ class ValidationSetBuilder:
                 payload=payload,
                 truths=model_truth,
                 metadata=metadata,
-                randomCorrectProbability=1 / len(transcription),
+                randomCorrectProbability = 1 / len(transcription_words),
             )
         )
 

@@ -25,6 +25,10 @@ from rapidata.service.openapi_service import OpenAPIService
 
 from rapidata.rapidata_client.workflow.compare_workflow import CompareWorkflow
 
+from rapidata.rapidata_client.assets import MediaAsset, TextAsset, MultiAsset
+
+from typing import cast, Sequence
+
 
 class RapidataOrderBuilder:
     """Builder object for creating Rapidata orders.
@@ -52,7 +56,6 @@ class RapidataOrderBuilder:
         self._openapi_service = openapi_service
         self._workflow: Workflow | None = None
         self._referee: Referee | None = None
-        self._media_paths: list[str | list[str]] = []
         self._metadata: list[Metadata] | None = None
         self._aggregator: AggregatorType | None = None
         self._validation_set_id: str | None = None
@@ -61,8 +64,7 @@ class RapidataOrderBuilder:
         self._selections: list[Selection] = []
         self._rapids_per_bag: int = 2
         self._priority: int = 50
-        self._texts: list[str] | None = None
-        self._media_paths: list[str | list[str]] = []
+        self._assets: list[MediaAsset] | list[TextAsset] | list[MultiAsset] = []
 
     def _to_model(self) -> CreateOrderModel:
         """
@@ -129,8 +131,12 @@ class RapidataOrderBuilder:
         if isinstance(
             self._workflow, CompareWorkflow
         ):  # Temporary fix; will be handled by backend in the future
+            assert all(isinstance(item, MultiAsset) for item in self._assets), (
+                "The media paths must be of type MultiAsset for comparison tasks."
+            )
+            media_paths = cast(list[MultiAsset], self._assets)
             assert all(
-                [len(path) == 2 for path in self._media_paths]
+                [len(path) == 2 for path in media_paths]
             ), "The media paths must come in pairs for comparison tasks."
 
         result = self._openapi_service.order_api.order_create_post(
@@ -145,22 +151,18 @@ class RapidataOrderBuilder:
             openapi_service=self._openapi_service,
         )
 
-        if self._media_paths and self._texts:
+        if not self._assets:
             raise ValueError(
-                "You cannot provide both media paths and texts to the same order."
+                "You must provide assets to start the order."
             )
+        if all(isinstance(item, TextAsset) for item in self._assets):
+            assets = cast(list[TextAsset], self._assets)
+            order.dataset.add_texts(assets)
 
-        if not self._media_paths and not self._texts:
-            raise ValueError(
-                "You must provide either media paths or texts to the order."
-            )
-
-        if self._texts:
-            order.dataset.add_texts(self._texts)
-
-        if self._media_paths:
+        elif all(isinstance(item, (MediaAsset, MultiAsset)) for item in self._assets):
+            assets = cast(list[MediaAsset | MultiAsset], self._assets)
             order.dataset.add_media_from_paths(
-                self._media_paths, self._metadata, max_workers
+                assets, self._metadata, max_workers
             )
 
         if submit:
@@ -196,34 +198,21 @@ class RapidataOrderBuilder:
 
     def media(
         self,
-        media_paths: list[str | list[str]],
-        metadata: list[Metadata] | None = None,
+        asset: list[MediaAsset] | list[TextAsset] | list[MultiAsset],
+        metadata: Sequence[Metadata] | None = None,
     ) -> "RapidataOrderBuilder":
         """
         Set the media assets for the order.
 
         Args:
-            media_paths (list[str | list[str]]): The paths of the media assets to be set.
+            media_paths (list[MediaAsset] | list[TextAsset] | list[MultiAsset]): The paths of the media assets to be set.
             metadata (list[Metadata] | None, optional): Metadata for the media assets. Defaults to None.
 
         Returns:
             RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
         """
-        self._media_paths = media_paths
-        self._metadata = metadata
-        return self
-
-    def texts(self, texts: list[str]) -> "RapidataOrderBuilder":
-        """
-        Set the TextAssets for the order.
-
-        Args:
-            texts (list[str]): The texts to be set.
-
-        Returns:
-            RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
-        """
-        self._texts = texts
+        self._assets = asset
+        self._metadata = metadata # type: ignore
         return self
 
     def feature_flags(self, feature_flags: FeatureFlags) -> "RapidataOrderBuilder":

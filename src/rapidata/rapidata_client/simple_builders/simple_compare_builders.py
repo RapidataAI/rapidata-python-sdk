@@ -1,11 +1,13 @@
 from rapidata.service.openapi_service import OpenAPIService
-from rapidata.rapidata_client.metadata.base_metadata import Metadata
+from rapidata.rapidata_client.metadata import Metadata
 from rapidata.rapidata_client.order.rapidata_order_builder import RapidataOrderBuilder
 from rapidata.rapidata_client.workflow.compare_workflow import CompareWorkflow
 from rapidata.rapidata_client.referee.naive_referee import NaiveReferee
 from rapidata.rapidata_client.selection.validation_selection import ValidationSelection
 from rapidata.rapidata_client.selection.labeling_selection import LabelingSelection
 from rapidata.rapidata_client.selection.base_selection import Selection
+from rapidata.rapidata_client.assets import MultiAsset, MediaAsset
+from typing import Sequence
 
 class CompareOrderBuilder:
     def __init__(self, name:str, criteria: str, media_paths: list[list[str]], openapi_service: OpenAPIService):
@@ -22,7 +24,7 @@ class CompareOrderBuilder:
         self._responses_required = responses_required
         return self
     
-    def metadata(self, metadata: list[Metadata]) -> 'CompareOrderBuilder':
+    def metadata(self, metadata: Sequence[Metadata]) -> 'CompareOrderBuilder':
         """Set the metadata for the comparison order. Has to be the same shape as the media paths."""
         self._metadata = metadata
         return self
@@ -37,6 +39,7 @@ class CompareOrderBuilder:
                      if self._validation_set_id 
                      else [LabelingSelection(amount=3)])
         
+        media_paths = [MultiAsset([MediaAsset(path=path) for path in paths]) for paths in self._media_paths]
         order = (self._order_builder
             .workflow(
                 CompareWorkflow(
@@ -44,7 +47,7 @@ class CompareOrderBuilder:
                 )
             )
             .referee(NaiveReferee(required_guesses=self._responses_required))
-            .media(self._media_paths, metadata=self._metadata) # type: ignore
+            .media(media_paths, metadata=self._metadata) # type: ignore
             .selections(selection)
             .create(submit=submit, max_workers=max_upload_workers))
         
