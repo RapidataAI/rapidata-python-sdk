@@ -21,17 +21,8 @@ def new_transcription_order(rapi: RapidataClient):
         ).add_transcription_rapid(
             asset=MediaAsset("examples/data/waiting.mp4"),
             question="Click any words that are part of a name",
-            transcription=[
-                "This",
-                "is",
-                "Mr.",
-                "Bean",
-                "waiting",
-                "for",
-                "his",
-                "friends",
-            ],
-            correct_words=["Mr.", "Bean"],
+            transcription="This is Mr. Bean waiting for his friends",
+            truths=[2, 3],
         )
     ).create()
 
@@ -49,7 +40,7 @@ def new_transcription_order(rapi: RapidataClient):
         )
         .referee(NaiveReferee(required_guesses=30))
         .feature_flags(FeatureFlags().alert_on_fast_response(4000))
-        .media(media_paths=["examples/data/waiting.mp4"], metadata=[transcription])
+        .media(asset=[MediaAsset("examples/data/waiting.mp4")], metadata=[transcription])
         .selections([
             ValidationSelection(amount=1, validation_set_id=validation_set.id),
             LabelingSelection(amount=2)

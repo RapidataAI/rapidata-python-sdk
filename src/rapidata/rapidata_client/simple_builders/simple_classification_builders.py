@@ -7,6 +7,8 @@ from rapidata.rapidata_client.workflow.classify_workflow import ClassifyWorkflow
 from rapidata.rapidata_client.selection.validation_selection import ValidationSelection
 from rapidata.rapidata_client.selection.labeling_selection import LabelingSelection
 from rapidata.service.openapi_service import OpenAPIService
+from rapidata.rapidata_client.assets import MediaAsset
+from typing import Sequence
 
 class ClassificationOrderBuilder:
     def __init__(self, name: str, question: str, options: list[str], media_paths: list[str], openapi_service: OpenAPIService):
@@ -19,7 +21,7 @@ class ClassificationOrderBuilder:
         self._metadata = None
         self._validation_set_id = None
 
-    def metadata(self, metadata: list[Metadata]):
+    def metadata(self, metadata: Sequence[Metadata]):
         """Set the metadata for the classification order. Has to be the same lenght as the media paths."""
         self._metadata = metadata
         return self
@@ -48,6 +50,8 @@ class ClassificationOrderBuilder:
             
         else:
             referee = NaiveReferee(required_guesses=self._responses_required)
+
+        assets = [MediaAsset(path=media_path) for media_path in self._media_paths]
         
         selection: list[Selection] = ([ValidationSelection(amount=1, validation_set_id=self._validation_set_id), LabelingSelection(amount=2)] 
                      if self._validation_set_id 
@@ -61,7 +65,7 @@ class ClassificationOrderBuilder:
                 )
             )
             .referee(referee)
-            .media(self._media_paths, metadata=self._metadata) # type: ignore
+            .media(assets, metadata=self._metadata) # type: ignore
             .selections(selection)
             .create(submit=submit, max_workers=max_upload_workers))
 

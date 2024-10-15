@@ -48,10 +48,10 @@ order_builder = order_builder.criteria("Which logo looks better?")
 order_builder = order_builder.media([["examples/data/rapidata_logo.png", "examples/data/rapidata_concept_logo.jpg"]])
 ```
 
-4. Optionally add additional specifications, here we're adding a specific amount of votes we want per datapoint, there are other functionalities you can explore:
+4. Optionally add additional specifications, here we're adding a specific amount of responses we want per datapoint, there are other functionalities you can explore:
 
 ```py
-order_builder = order_builder.votes(20)
+order_builder = order_builder.responses(20)
 ```
 
 5. Finally create the order. This sends the order off for verification and will start collecting responses.
@@ -78,7 +78,7 @@ order = (rapi.create_compare_order("Simple Compare")
         .criteria("Which logo looks better?")
         .media([["examples/data/rapidata_logo.png", 
                  "examples/data/rapidata_concept_logo.jpg"]])
-        .votes(20)
+        .responses(20)
         .create())
 print("order id: ", order.order_id)
 # Optionally save the order ID to a file

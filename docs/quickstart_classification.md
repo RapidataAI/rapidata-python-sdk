@@ -54,10 +54,10 @@ order_builder = order_builder.options(["Fish", "Cat", "Wallaby", "Airplane"])
 order_builder = order_builder.media(["examples/data/wallaby.jpg"])
 ```
 
-5. Optionally add additional specifications, here we're adding a specific amount of votes we want per datapoint, there are other functionalities you can explore:
+5. Optionally add additional specifications, here we're adding a specific amount of responses we want per datapoint, there are other functionalities you can explore:
 
 ```py
-order_builder = order_builder.votes(20)
+order_builder = order_builder.responses(20)
 ```
 
 6. Finally create the order. This sends the order off for verification and will start collecting responses.
@@ -84,7 +84,7 @@ order = (rapi.create_classify_order("classifcaiton order")
          .question("what is this?")
          .options(["a", "b", "c"])
          .media(["C:\\Users\\linog\\Pictures\\example_jpg.jpg"])
-         .votes(20)
+         .responses(20)
          .create())
 print("order id: ", order.order_id)
 # Optionally save the order ID to a file

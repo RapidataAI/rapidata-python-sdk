@@ -9,7 +9,7 @@ from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 
 def get_results(order: RapidataOrder):
 
-    order.wait_for_done()
+    order.display_progress_bar()
     order.get_results()
     
 

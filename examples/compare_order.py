@@ -41,13 +41,11 @@ def new_compare_order(rapi: RapidataClient):
             )
         )
         .referee(NaiveReferee(required_guesses=1))
-        .media(
-            media_paths=[
-                [  # this is a list of lists of paths, since each rapid shows two images
-                    "examples/data/rapidata_concept_logo.jpg",
-                    "examples/data/rapidata_logo.png",
-                ]
-            ]
+        .media([
+            MultiAsset([
+                MediaAsset(path="examples/data/rapidata_concept_logo.jpg"), 
+                MediaAsset(path="examples/data/rapidata_logo.png")
+                ])]
         )
         .selections([
             ValidationSelection(amount=1, validation_set_id=validation_set.id),

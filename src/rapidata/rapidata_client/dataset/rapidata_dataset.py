@@ -9,6 +9,7 @@ from rapidata.api_client.models.upload_text_sources_to_dataset_model import (
     UploadTextSourcesToDatasetModel,
 )
 from rapidata.rapidata_client.metadata.base_metadata import Metadata
+from rapidata.rapidata_client.assets import TextAsset, MediaAsset, MultiAsset
 from rapidata.service import LocalFileService
 from rapidata.service.openapi_service import OpenAPIService
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -22,7 +23,8 @@ class RapidataDataset:
         self.openapi_service = openapi_service
         self.local_file_service = LocalFileService()
 
-    def add_texts(self, texts: list[str]):
+    def add_texts(self, text_assets: list[TextAsset]):
+        texts = [text.text for text in text_assets]
         model = UploadTextSourcesToDatasetModel(
             datasetId=self.dataset_id, textSources=texts
         )
@@ -32,24 +34,26 @@ class RapidataDataset:
 
     def add_media_from_paths(
         self,
-        media_paths: list[str | list[str]],
+        media_paths: list[MediaAsset | MultiAsset],
         metadata: list[Metadata] | None = None,
         max_workers: int = 10,
     ):
         if metadata is not None and len(metadata) != len(media_paths):
             raise ValueError(
-                "metadata must be None or have the same length as image_paths"
+                "metadata must be None or have the same length as media_paths"
             )
 
-        def upload_datapoint(media_paths_rapid: str | list[str], meta: Metadata | None) -> None:
-            if isinstance(media_paths_rapid, list) and not all(
-                os.path.exists(media_path) for media_path in media_paths_rapid
-            ):
-                raise FileNotFoundError(f"File not found: {media_paths_rapid}")
-            elif isinstance(media_paths_rapid, str) and not os.path.exists(
-                media_paths_rapid
-            ):
-                raise FileNotFoundError(f"File not found: {media_paths_rapid}")
+        def upload_datapoint(media_asset: MediaAsset | MultiAsset, meta: Metadata | None) -> None:
+            if isinstance(media_asset, MediaAsset):
+                paths = [media_asset.path]
+            elif isinstance(media_asset, MultiAsset):
+                paths = [asset.path for asset in media_asset.assets if isinstance(asset, MediaAsset)]
+            else:
+                raise ValueError(f"Unsupported asset type: {type(media_asset)}")
+            
+            assert all(
+                os.path.exists(media_path) for media_path in paths
+            ), "All media paths must exist on the local filesystem."
 
             meta_model = meta.to_model() if meta else None
             model = DatapointMetadataModel(
@@ -63,14 +67,14 @@ class RapidataDataset:
 
             self.openapi_service.dataset_api.dataset_create_datapoint_post(
                 model=model,
-                files=media_paths_rapid if isinstance(media_paths_rapid, list) else [media_paths_rapid] # type: ignore
+                files=paths # type: ignore
             )
 
         total_uploads = len(media_paths)
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
             futures = [
-                executor.submit(upload_datapoint, media_paths, meta)
-                for media_paths, meta in zip_longest(media_paths, metadata or [])
+                executor.submit(upload_datapoint, media_asset, meta)
+                for media_asset, meta in zip_longest(media_paths, metadata or [])
             ]
 
             with tqdm(total=total_uploads, desc="Uploading datapoints") as pbar:
