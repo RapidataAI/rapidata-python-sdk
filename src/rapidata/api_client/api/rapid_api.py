@@ -288,7 +288,8 @@ class RapidApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer'
+            'bearer', 
+            'oauth2'
         ]
 
         return self.api_client.param_serialize(
@@ -568,7 +569,8 @@ class RapidApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer'
+            'bearer', 
+            'oauth2'
         ]
 
         return self.api_client.param_serialize(
@@ -847,7 +849,8 @@ class RapidApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer'
+            'bearer', 
+            'oauth2'
         ]
 
         return self.api_client.param_serialize(
@@ -1113,7 +1116,8 @@ class RapidApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer'
+            'bearer', 
+            'oauth2'
         ]
 
         return self.api_client.param_serialize(
@@ -1349,7 +1353,8 @@ class RapidApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer'
+            'bearer', 
+            'oauth2'
         ]
 
         return self.api_client.param_serialize(

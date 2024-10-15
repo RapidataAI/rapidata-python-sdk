@@ -22,12 +22,12 @@ from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class IssueAuthTokenResult(BaseModel):
+class LegacyIssueClientAuthTokenResult(BaseModel):
     """
-    The result of issuing an auth token.
+    LegacyIssueClientAuthTokenResult
     """ # noqa: E501
-    token: StrictStr = Field(description="The issued auth token.")
-    __properties: ClassVar[List[str]] = ["token"]
+    auth_token: StrictStr = Field(alias="authToken")
+    __properties: ClassVar[List[str]] = ["authToken"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -47,7 +47,7 @@ class IssueAuthTokenResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of IssueAuthTokenResult from a JSON string"""
+        """Create an instance of LegacyIssueClientAuthTokenResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -72,7 +72,7 @@ class IssueAuthTokenResult(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of IssueAuthTokenResult from a dict"""
+        """Create an instance of LegacyIssueClientAuthTokenResult from a dict"""
         if obj is None:
             return None
 
@@ -80,7 +80,7 @@ class IssueAuthTokenResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "token": obj.get("token")
+            "authToken": obj.get("authToken")
         })
         return _obj
 

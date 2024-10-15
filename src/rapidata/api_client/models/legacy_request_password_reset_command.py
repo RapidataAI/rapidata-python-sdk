@@ -17,17 +17,26 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class IssueAuthTokenResult(BaseModel):
+class LegacyRequestPasswordResetCommand(BaseModel):
     """
-    The result of issuing an auth token.
+    LegacyRequestPasswordResetCommand
     """ # noqa: E501
-    token: StrictStr = Field(description="The issued auth token.")
-    __properties: ClassVar[List[str]] = ["token"]
+    t: StrictStr = Field(description="Discriminator value for LegacyRequestPasswordResetCommand", alias="_t")
+    email: StrictStr
+    recaptcha_token: StrictStr = Field(alias="recaptchaToken")
+    __properties: ClassVar[List[str]] = ["_t", "email", "recaptchaToken"]
+
+    @field_validator('t')
+    def t_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['LegacyRequestPasswordResetCommand']):
+            raise ValueError("must be one of enum values ('LegacyRequestPasswordResetCommand')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -47,7 +56,7 @@ class IssueAuthTokenResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of IssueAuthTokenResult from a JSON string"""
+        """Create an instance of LegacyRequestPasswordResetCommand from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -72,7 +81,7 @@ class IssueAuthTokenResult(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of IssueAuthTokenResult from a dict"""
+        """Create an instance of LegacyRequestPasswordResetCommand from a dict"""
         if obj is None:
             return None
 
@@ -80,7 +89,9 @@ class IssueAuthTokenResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "token": obj.get("token")
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'LegacyRequestPasswordResetCommand',
+            "email": obj.get("email"),
+            "recaptchaToken": obj.get("recaptchaToken")
         })
         return _obj
 

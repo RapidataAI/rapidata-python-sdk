@@ -135,9 +135,11 @@ from rapidata.api_client.models.import_from_file_result import ImportFromFileRes
 from rapidata.api_client.models.import_validation_set_from_file_result import ImportValidationSetFromFileResult
 from rapidata.api_client.models.in_progress_rapid_model import InProgressRapidModel
 from rapidata.api_client.models.issue_auth_token_result import IssueAuthTokenResult
-from rapidata.api_client.models.issue_client_auth_token_result import IssueClientAuthTokenResult
 from rapidata.api_client.models.labeling_selection import LabelingSelection
 from rapidata.api_client.models.language_user_filter_model import LanguageUserFilterModel
+from rapidata.api_client.models.legacy_issue_client_auth_token_result import LegacyIssueClientAuthTokenResult
+from rapidata.api_client.models.legacy_request_password_reset_command import LegacyRequestPasswordResetCommand
+from rapidata.api_client.models.legacy_submit_password_reset_command import LegacySubmitPasswordResetCommand
 from rapidata.api_client.models.line import Line
 from rapidata.api_client.models.line_payload import LinePayload
 from rapidata.api_client.models.line_point import LinePoint
@@ -196,7 +198,6 @@ from rapidata.api_client.models.rapid_answer_result import RapidAnswerResult
 from rapidata.api_client.models.rapid_result_model import RapidResultModel
 from rapidata.api_client.models.rapid_result_model_result import RapidResultModelResult
 from rapidata.api_client.models.rapid_skipped_model import RapidSkippedModel
-from rapidata.api_client.models.request_password_reset_command import RequestPasswordResetCommand
 from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.send_completion_mail_step_model import SendCompletionMailStepModel
 from rapidata.api_client.models.shape import Shape
@@ -216,7 +217,6 @@ from rapidata.api_client.models.sort_direction import SortDirection
 from rapidata.api_client.models.static_selection import StaticSelection
 from rapidata.api_client.models.submit_coco_model import SubmitCocoModel
 from rapidata.api_client.models.submit_coco_result import SubmitCocoResult
-from rapidata.api_client.models.submit_password_reset_command import SubmitPasswordResetCommand
 from rapidata.api_client.models.text_asset import TextAsset
 from rapidata.api_client.models.text_asset_model import TextAssetModel
 from rapidata.api_client.models.text_metadata import TextMetadata
