@@ -1,4 +1,4 @@
-# Quickstart Classification Guide
+# Quickstart Compare Guide
 
 ## Installation
 

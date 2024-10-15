@@ -30,29 +30,29 @@ class ClassificationOrderBuilder:
         """Set the number of responses required for the classification order."""
         self._responses_required = responses_required
         return self
-    
+
     def probability_threshold(self, probability_threshold: float):
         """Set the probability threshold for early stopping."""
         self._probability_threshold = probability_threshold
         return self
-    
+
     def validation_set_id(self, validation_set_id: str):
         """Set the validation set ID for the classification order."""
         self._validation_set_id = validation_set_id
         return self
-    
+
     def create(self, submit: bool = True, max_upload_workers: int = 10):
         if self._probability_threshold and self._responses_required:
             referee = ClassifyEarlyStoppingReferee(
                 max_vote_count=self._responses_required,
                 threshold=self._probability_threshold
             )
-            
+
         else:
             referee = NaiveReferee(required_guesses=self._responses_required)
 
         assets = [MediaAsset(path=media_path) for media_path in self._media_paths]
-        
+
         selection: list[Selection] = ([ValidationSelection(amount=1, validation_set_id=self._validation_set_id), LabelingSelection(amount=2)] 
                      if self._validation_set_id 
                      else [LabelingSelection(amount=3)])
@@ -70,9 +70,10 @@ class ClassificationOrderBuilder:
             .create(submit=submit, max_workers=max_upload_workers))
 
         return order 
-    
+
 
 class ClassificationMediaBuilder:
+    "test"
     def __init__(self, name: str, question: str, options: list[str], openapi_service: OpenAPIService):
         self._openapi_service = openapi_service
         self._name = name
@@ -89,7 +90,7 @@ class ClassificationMediaBuilder:
         if self._media_paths is None:
             raise ValueError("Media paths are required")
         return ClassificationOrderBuilder(self._name, self._question, self._options, self._media_paths, openapi_service=self._openapi_service)
-    
+
 
 class ClassificationOptionsBuilder:
     def __init__(self, name: str, question: str, openapi_service: OpenAPIService):

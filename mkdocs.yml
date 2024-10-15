@@ -51,8 +51,10 @@ markdown_extensions:
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
 
 nav:
-  - quickstart.md
+  - quickstart_classification.md
+  - quickstart_compare.md
   - Examples: examples/index.md
+  - custom_orders.md
   - API Documentation: api.md
 
 theme:
