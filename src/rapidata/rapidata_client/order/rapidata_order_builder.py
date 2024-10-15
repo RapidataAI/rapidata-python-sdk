@@ -13,6 +13,9 @@ from rapidata.api_client.models.create_order_model_workflow import (
     CreateOrderModelWorkflow,
 )
 from rapidata.api_client.models.country_user_filter_model import CountryUserFilterModel
+from rapidata.api_client.models.language_user_filter_model import (
+    LanguageUserFilterModel,
+)
 from rapidata.rapidata_client.feature_flags import FeatureFlags
 from rapidata.rapidata_client.metadata.base_metadata import Metadata
 from rapidata.rapidata_client.dataset.rapidata_dataset import RapidataDataset
@@ -58,6 +61,7 @@ class RapidataOrderBuilder:
         self._validation_set_id: str | None = None
         self._feature_flags: FeatureFlags | None = None
         self._country_codes: list[str] | None = None
+        self._language_codes: list[str] | None = None
         self._selections: list[Selection] = []
         self._rapids_per_bag: int = 2
         self._priority: int = 50
@@ -80,22 +84,32 @@ class RapidataOrderBuilder:
         if self._referee is None:
             print("No referee provided, using default NaiveReferee.")
             self._referee = NaiveReferee()
-        if self._country_codes is None:
-            country_filter = None
-        else:
-            country_filter = CountryUserFilterModel(
-                _t="CountryFilter", countries=self._country_codes
+
+        user_filters = []
+
+        if self._country_codes is not None:
+            user_filters.append(
+                CreateOrderModelUserFiltersInner(
+                    CountryUserFilterModel(
+                        _t="CountryFilter", countries=self._country_codes
+                    )
+                )
+            )
+
+        if self._language_codes is not None:
+            user_filters.append(
+                CreateOrderModelUserFiltersInner(
+                    LanguageUserFilterModel(
+                        _t="LanguageFilter", languages=self._language_codes
+                    )
+                )
             )
 
         return CreateOrderModel(
             _t="CreateOrderModel",
             orderName=self._name,
             workflow=CreateOrderModelWorkflow(self._workflow.to_model()),
-            userFilters=(
-                [CreateOrderModelUserFiltersInner(country_filter)]
-                if country_filter
-                else []
-            ),
+            userFilters=user_filters,
             referee=CreateOrderModelReferee(self._referee.to_model()),
             validationSetId=self._validation_set_id,
             featureFlags=(
@@ -250,6 +264,19 @@ class RapidataOrderBuilder:
             RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
         """
         self._country_codes = country_codes
+        return self
+
+    def language_filter(self, language_codes: list[str]) -> "RapidataOrderBuilder":
+        """
+        Set the target language codes for the order. E.g. `language_codes=["de", "fr", "it"]` for German, French, and Italian.
+
+        Args:
+            language_codes (list[str]): The language codes to be set.
+
+        Returns:
+            RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
+        """
+        self._language_codes = language_codes
         return self
 
     def aggregator(self, aggregator: AggregatorType) -> "RapidataOrderBuilder":
