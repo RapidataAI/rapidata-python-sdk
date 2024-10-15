@@ -8,6 +8,7 @@ from .rapidata_client import (
     LabelingSelection,
     ValidationSelection,
     ConditionalValidationSelection,
+    CappedSelection,
     NaiveReferee,
     ClassifyEarlyStoppingReferee,
     PrivateTextMetadata,
