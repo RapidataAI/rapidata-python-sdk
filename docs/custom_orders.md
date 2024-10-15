@@ -66,7 +66,7 @@ order_builder.referee(NaiveReferee(required_guesses=15))
 4. Upload datapoints for which you want this question to be asked. In this example, we upload one image:
 
 ```py
-order_builder.media(["examples/data/wallaby.jpg"])
+order_builder.media([MediaAsset("examples/data/wallaby.jpg")])
 ```
 
 5. Define the number of tasks you'd like to show in a row. Consider that a person only has 30 seconds to answer all of them. Aim for an expected completion time for ALL tasks of 20-25 seconds. A good default for classification is 3:
