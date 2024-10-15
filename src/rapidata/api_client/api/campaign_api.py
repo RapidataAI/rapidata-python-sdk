@@ -255,7 +255,8 @@ class CampaignApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer'
+            'bearer', 
+            'oauth2'
         ]
 
         return self.api_client.param_serialize(
@@ -508,7 +509,8 @@ class CampaignApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer'
+            'bearer', 
+            'oauth2'
         ]
 
         return self.api_client.param_serialize(
@@ -770,7 +772,8 @@ class CampaignApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer'
+            'bearer', 
+            'oauth2'
         ]
 
         return self.api_client.param_serialize(
@@ -1023,7 +1026,8 @@ class CampaignApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer'
+            'bearer', 
+            'oauth2'
         ]
 
         return self.api_client.param_serialize(
