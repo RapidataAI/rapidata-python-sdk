@@ -241,7 +241,7 @@ class RapidataOrderBuilder:
 
     def country_filter(self, country_codes: list[str]) -> "RapidataOrderBuilder":
         """
-        Set the target country codes for the order.
+        Set the target country codes for the order. E.g. `country_codes=["DE", "CH", "AT"]` for Germany, Switzerland, and Austria.
 
         Args:
             country_codes (list[str]): The country codes to be set.
