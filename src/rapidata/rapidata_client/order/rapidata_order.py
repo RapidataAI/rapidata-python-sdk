@@ -3,7 +3,9 @@ from rapidata.rapidata_client.dataset.rapidata_dataset import RapidataDataset
 from rapidata.service.openapi_service import OpenAPIService
 import json
 from rapidata.api_client.exceptions import ApiException
-
+from typing import cast
+from rapidata.api_client.models.workflow_artifact_model import WorkflowArtifactModel
+from tqdm import tqdm
 
 class RapidataOrder:
     """
@@ -26,6 +28,7 @@ class RapidataOrder:
         self.openapi_service = openapi_service
         self.order_id = order_id
         self._dataset = dataset
+        self._workflow_id = None
 
     def submit(self):
         """
@@ -49,27 +52,55 @@ class RapidataOrder:
         """
         return self.openapi_service.order_api.order_get_by_id_get(self.order_id)
 
-    def wait_for_done(self):
+    def display_progress_bar(self, refresh_rate=5):
         """
-        Blocking call that waits for the order to be done. Exponential backoff is used to check the status of the order.
+        Displays a progress bar for the order processing using tqdm.
+        
+        :param refresh_rate: How often to refresh the progress bar, in seconds.
+        :type refresh_rate: float
         """
-        wait_time = 1
-        back_off_factor = 1.1
-        minimum_poll_interval = 60  # 1 minute
+        total_rapids = self._get_total_rapids()
+        with tqdm(total=total_rapids, desc="Processing order", unit="rapids") as pbar:
+            completed_rapids = 0
+            while True:
+                current_completed = self._get_completed_rapids()
+                if current_completed > completed_rapids:
+                    pbar.update(current_completed - completed_rapids)
+                    completed_rapids = current_completed
+                
+                if completed_rapids >= total_rapids:
+                    break
+                
+                time.sleep(refresh_rate)
 
-        while True:
-            time.sleep(wait_time)
-            result = self.get_status()
-            if result.state == "ManualReview":
-                print(
-                    "Order is in manual review. Please contact support for approval. Will continue polling."
-                )
-
-            if result.state == "Completed" or result.state == "Failed":
+    def _get_workflow_id(self):
+        if self._workflow_id:
+            return self._workflow_id
+        
+        for _ in range(2):
+            try:
+                order_result = self.openapi_service.order_api.order_get_by_id_get(self.order_id)
+                pipeline = self.openapi_service.pipeline_api.pipeline_id_get(order_result.pipeline_id)
+                self._workflow_id = cast(WorkflowArtifactModel, pipeline.artifacts["workflow-artifact"].actual_instance).workflow_id
                 break
-            wait_time = max(
-                minimum_poll_interval, wait_time * back_off_factor
-            )  # poll at least every 10 minutes
+            except Exception:
+                time.sleep(2)
+        if not self._workflow_id:
+            raise Exception("Order has not started yet. Please wait for a few seconds and try again.")
+        return self._workflow_id
+    
+    def _get_total_rapids(self):
+        workflow_id = self._get_workflow_id()
+        return self.openapi_service.workflow_api.workflow_get_progress_get(workflow_id).total
+
+    def _get_completed_rapids(self):
+        workflow_id = self._get_workflow_id()
+        return self.openapi_service.workflow_api.workflow_get_progress_get(workflow_id).completed
+
+    def get_progress_percentage(self):
+        workflow_id = self._get_workflow_id()
+        progress = self.openapi_service.workflow_api.workflow_get_progress_get(workflow_id)
+        return progress.completion_percentage
 
     def get_results(self):
         """

@@ -5,6 +5,9 @@ from rapidata.api_client.api.rapid_api import RapidApi
 from rapidata.api_client.api.validation_api import ValidationApi
 from rapidata.api_client.api_client import ApiClient
 from rapidata.api_client.configuration import Configuration
+from rapidata.api_client.api.campaign_api import CampaignApi
+from rapidata.api_client.api.pipeline_api import PipelineApi
+from rapidata.api_client.api.workflow_api import WorkflowApi
 
 
 class OpenAPIService:
@@ -45,3 +48,15 @@ class OpenAPIService:
     @property
     def rapid_api(self) -> RapidApi:
         return RapidApi(self.api_client)
+    
+    @property
+    def campaign_api(self) -> CampaignApi:
+        return CampaignApi(self.api_client)
+    
+    @property
+    def pipeline_api(self) -> PipelineApi:
+        return PipelineApi(self.api_client)
+    
+    @property
+    def workflow_api(self) -> WorkflowApi:
+        return WorkflowApi(self.api_client)
