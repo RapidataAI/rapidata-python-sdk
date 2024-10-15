@@ -86,13 +86,7 @@ with open("order_ids.txt", "a") as file:
     file.write(f"{order.order_id}\n")
 ```
 
-### Downloading Results
-
-To download the results, you'll need the order object (this will throw an error if the order is not complete yet):
-
-```py
-results = order.get_results()
-```
+### Recover Order
 
 If you've restarted the kernel, you can retrieve the order using the order ID and the `rapi` client:
 
@@ -102,5 +96,21 @@ from rapidata import RapidataClient
 rapi = RapidataClient(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
 order_id = "your_order_id"  # as a string
 order = rapi.get_order(order_id)
+results = order.get_results()
+```
+
+### Monitoring Order Progress
+
+You can monitor the progress of the order by checking how many datapoints are already done labeling (keep in mind that this will be an exponential function since the datapoints get picket at random to be labeled):
+
+```py
+order.display_progress_bar()
+```
+
+### Downloading Results
+
+To download the results after the order is done, you'll need the order object (this will throw an error if the order is not complete yet, or the aggregation hasn't finished):
+
+```py
 results = order.get_results()
 ```
