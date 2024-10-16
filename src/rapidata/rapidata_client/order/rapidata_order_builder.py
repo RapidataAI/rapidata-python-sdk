@@ -141,6 +141,10 @@ class RapidataOrderBuilder:
         Returns:
             RapidataOrder: The created RapidataOrder instance.
         """
+        if not self._workflow or not self._assets:
+            raise ValueError(
+                "You must provide a workflow and assets to create an order. Use the .workflow() and .media() methods respecitvely."
+            )
         order_model = self._to_model()
         if isinstance(
             self._workflow, CompareWorkflow
@@ -148,10 +152,6 @@ class RapidataOrderBuilder:
             assert all(isinstance(item, MultiAsset) for item in self._assets), (
                 "The media paths must be of type MultiAsset for comparison tasks."
             )
-            media_paths = cast(list[MultiAsset], self._assets)
-            assert all(
-                [len(path) == 2 for path in media_paths]
-            ), "The media paths must come in pairs for comparison tasks."
 
         result = self._openapi_service.order_api.order_create_post(
             create_order_model=order_model
@@ -165,10 +165,6 @@ class RapidataOrderBuilder:
             openapi_service=self._openapi_service,
         )
 
-        if not self._assets:
-            raise ValueError(
-                "You must provide assets to start the order."
-            )
         if all(isinstance(item, TextAsset) for item in self._assets):
             assets = cast(list[TextAsset], self._assets)
             order.dataset.add_texts(assets)
@@ -194,6 +190,9 @@ class RapidataOrderBuilder:
         Returns:
             RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
         """
+        if not isinstance(workflow, Workflow):
+            raise TypeError("Workflow must be of type Workflow.")
+        
         self._workflow = workflow
         return self
 
@@ -207,6 +206,9 @@ class RapidataOrderBuilder:
         Returns:
             RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
         """
+        if not isinstance(referee, Referee):
+            raise TypeError("Referee must be of type Referee.")
+        
         self._referee = referee
         return self
 
@@ -225,6 +227,18 @@ class RapidataOrderBuilder:
         Returns:
             RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
         """
+        if not isinstance(asset, list):
+            raise TypeError("Media paths must be provided as a list of paths.")
+
+        for a in asset:
+            if not isinstance(a, (MediaAsset, TextAsset, MultiAsset)):
+                raise TypeError("Media paths must be of type MediaAsset, TextAsset, or MultiAsset.")
+
+        if metadata:
+            for data in metadata:
+                if not isinstance(data, Metadata):
+                    raise TypeError("Metadata must be of type Metadata.")
+        
         self._assets = asset
         self._metadata = metadata # type: ignore
         return self
@@ -239,6 +253,9 @@ class RapidataOrderBuilder:
         Returns:
             RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
         """
+        if not isinstance(feature_flags, FeatureFlags):
+            raise TypeError("Feature flags must be of type FeatureFlags.")
+        
         self._feature_flags = feature_flags
         return self
 
@@ -252,6 +269,13 @@ class RapidataOrderBuilder:
         Returns:
             RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
         """
+        if not isinstance(country_codes, list):
+            raise TypeError("Country codes must be provided as a list of strings.")
+        
+        for code in country_codes:
+            if not isinstance(code, str):
+                raise TypeError("Country codes must be of type str.")
+            
         self._country_codes = country_codes
         return self
 
@@ -265,6 +289,12 @@ class RapidataOrderBuilder:
         Returns:
             RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
         """
+        if not isinstance(language_codes, list):
+            raise TypeError("Language codes must be provided as a list of strings.")
+        
+        if not all(isinstance(code, str) for code in language_codes):
+            raise TypeError("Language codes must be of type str.")
+        
         self._language_codes = language_codes
         return self
 
@@ -278,6 +308,9 @@ class RapidataOrderBuilder:
         Returns:
             RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
         """
+        if not isinstance(aggregator, AggregatorType):
+            raise TypeError("Aggregator must be of type AggregatorType.")
+        
         self._aggregator = aggregator
         return self
 
@@ -291,6 +324,9 @@ class RapidataOrderBuilder:
         Returns:
             RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
         """
+        if not isinstance(validation_set_id, str):
+            raise TypeError("Validation set ID must be of type str.")
+        
         self._validation_set_id = validation_set_id
         return self
 
@@ -309,17 +345,24 @@ class RapidataOrderBuilder:
         """
         raise NotImplementedError("Not implemented yet.")
 
-    def selections(self, selections: list[Selection]) -> "RapidataOrderBuilder":
+    def selections(self, selections: Sequence[Selection]) -> "RapidataOrderBuilder":
         """
         Set the selections for the order.
 
         Args:
-            selections (list[Selection]): The selections to be set.
+            selections (Sequence[Selection]): The selections to be set.
 
         Returns:
             RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
         """
-        self._selections = selections
+        if not isinstance(selections, list):
+            raise TypeError("Selections must be provided as a list of Selection objects.")
+        
+        for selection in selections:
+            if not isinstance(selection, Selection):
+                raise TypeError("Selections must be of type Selection.")
+        
+        self._selections = selections # type: ignore
         return self
 
     def priority(self, priority: int) -> "RapidataOrderBuilder":
@@ -332,5 +375,8 @@ class RapidataOrderBuilder:
         Returns:
             RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
         """
+        if not isinstance(priority, int):
+            raise TypeError("Priority must be of type int.")
+        
         self._priority = priority
         return self

@@ -29,5 +29,5 @@ class MediaAsset(BaseAsset):
             FileNotFoundError: If the provided file path does not exist.
         """
         if not os.path.exists(path):
-            raise FileNotFoundError(f"File not found: {path}")
+            raise FileNotFoundError(f"File not found: {path}, please provide a valid local file path.")
         self.path = path
