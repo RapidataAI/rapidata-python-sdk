@@ -83,7 +83,7 @@ The `RapidataSDK` supports a fluent interface, allowing method call chaining. Th
 order = (rapi.create_classify_order("classifcaiton order")
          .question("what is this?")
          .options(["a", "b", "c"])
-         .media(["C:\\Users\\linog\\Pictures\\example_jpg.jpg"])
+         .media(["examples/data/wallaby.jpg"])
          .responses(20)
          .create())
 print("order id: ", order.order_id)
