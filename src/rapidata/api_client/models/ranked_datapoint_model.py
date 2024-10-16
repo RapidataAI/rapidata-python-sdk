@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.datapoint_model_asset import DatapointModelAsset
+from rapidata.api_client.models.completed_rapid_model_asset import CompletedRapidModelAsset
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,7 +28,7 @@ class RankedDatapointModel(BaseModel):
     RankedDatapointModel
     """ # noqa: E501
     workflow_datapoint_id: StrictStr = Field(alias="workflowDatapointId")
-    asset: DatapointModelAsset
+    asset: CompletedRapidModelAsset
     elo: StrictInt
     __properties: ClassVar[List[str]] = ["workflowDatapointId", "asset", "elo"]
 
@@ -87,7 +87,7 @@ class RankedDatapointModel(BaseModel):
 
         _obj = cls.model_validate({
             "workflowDatapointId": obj.get("workflowDatapointId"),
-            "asset": DatapointModelAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
+            "asset": CompletedRapidModelAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "elo": obj.get("elo")
         })
         return _obj
