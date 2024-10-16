@@ -4,7 +4,8 @@ Defines the MultiAsset class for handling multiple BaseAsset instances.
 """
 
 from rapidata.rapidata_client.assets.base_asset import BaseAsset
-from typing import Iterator, List
+from rapidata.rapidata_client.assets import MediaAsset, TextAsset
+from typing import Iterator, Sequence
 
 
 class MultiAsset(BaseAsset):
@@ -16,7 +17,7 @@ class MultiAsset(BaseAsset):
         assets (List[BaseAsset]): A list of BaseAsset instances to be managed together.
     """
 
-    def __init__(self, assets: list[BaseAsset]):
+    def __init__(self, assets: Sequence[BaseAsset]):
         """
         Initialize a MultiAsset instance.
 
@@ -25,8 +26,16 @@ class MultiAsset(BaseAsset):
         """
         if len(assets) != 2:
             raise ValueError("Assets must come in pairs for comparison tasks.")
+        
+        for asset in assets:
+            if not isinstance(asset, (TextAsset, MediaAsset)):
+                raise TypeError("All assets must be a TextAsset or MediaAsset.")    
+        
+        if not all(isinstance(asset, type(assets[0])) for asset in assets):
+            raise ValueError("All assets must be of the same type.")
+        
         self.assets = assets
-
+        
     def __len__(self) -> int:
         """
         Get the number of assets in the MultiAsset.
