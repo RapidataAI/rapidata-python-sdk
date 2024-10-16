@@ -17,21 +17,28 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.completed_rapid_model_asset import CompletedRapidModelAsset
-from rapidata.api_client.models.rapid_answer import RapidAnswer
+from rapidata.api_client.models.file_asset_model1_metadata_inner import FileAssetModel1MetadataInner
 from typing import Optional, Set
 from typing_extensions import Self
 
-class InProgressRapidModel(BaseModel):
+class MultiAssetModel2(BaseModel):
     """
-    InProgressRapidModel
+    MultiAssetModel2
     """ # noqa: E501
-    rapid_id: StrictStr = Field(alias="rapidId")
-    asset: CompletedRapidModelAsset
-    answers: List[RapidAnswer]
-    __properties: ClassVar[List[str]] = ["rapidId", "asset", "answers"]
+    t: StrictStr = Field(description="Discriminator value for MultiAssetModel", alias="_t")
+    assets: List[CompletedRapidModelAsset]
+    metadata: List[FileAssetModel1MetadataInner]
+    identifier: StrictStr
+    __properties: ClassVar[List[str]] = ["_t", "assets", "metadata", "identifier"]
+
+    @field_validator('t')
+    def t_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['MultiAssetModel']):
+            raise ValueError("must be one of enum values ('MultiAssetModel')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -51,7 +58,7 @@ class InProgressRapidModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of InProgressRapidModel from a JSON string"""
+        """Create an instance of MultiAssetModel2 from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -72,21 +79,25 @@ class InProgressRapidModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of asset
-        if self.asset:
-            _dict['asset'] = self.asset.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in answers (list)
+        # override the default output from pydantic by calling `to_dict()` of each item in assets (list)
         _items = []
-        if self.answers:
-            for _item_answers in self.answers:
-                if _item_answers:
-                    _items.append(_item_answers.to_dict())
-            _dict['answers'] = _items
+        if self.assets:
+            for _item_assets in self.assets:
+                if _item_assets:
+                    _items.append(_item_assets.to_dict())
+            _dict['assets'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each item in metadata (list)
+        _items = []
+        if self.metadata:
+            for _item_metadata in self.metadata:
+                if _item_metadata:
+                    _items.append(_item_metadata.to_dict())
+            _dict['metadata'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of InProgressRapidModel from a dict"""
+        """Create an instance of MultiAssetModel2 from a dict"""
         if obj is None:
             return None
 
@@ -94,10 +105,14 @@ class InProgressRapidModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "rapidId": obj.get("rapidId"),
-            "asset": CompletedRapidModelAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
-            "answers": [RapidAnswer.from_dict(_item) for _item in obj["answers"]] if obj.get("answers") is not None else None
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'MultiAssetModel',
+            "assets": [CompletedRapidModelAsset.from_dict(_item) for _item in obj["assets"]] if obj.get("assets") is not None else None,
+            "metadata": [FileAssetModel1MetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
+            "identifier": obj.get("identifier")
         })
         return _obj
 
+from rapidata.api_client.models.completed_rapid_model_asset import CompletedRapidModelAsset
+# TODO: Rewrite to not use raise_errors
+MultiAssetModel2.model_rebuild(raise_errors=False)
 

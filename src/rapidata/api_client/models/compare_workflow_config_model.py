@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.compare_workflow_config_referee import CompareWorkflowConfigReferee
+from rapidata.api_client.models.compare_workflow_model1_referee import CompareWorkflowModel1Referee
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from typing import Optional, Set
 from typing_extensions import Self
@@ -35,7 +35,7 @@ class CompareWorkflowConfigModel(BaseModel):
     match_size: Optional[StrictInt] = Field(default=None, description="The number of datapoints to match against each other in each match.", alias="matchSize")
     scaling_factor: Optional[StrictInt] = Field(default=None, description="Scaling factor to use in the ELO calculation.  Adjusts the sensitivity of the Elo rating system to differences in player ratings.  It affects how much the rating changes based on the expected outcome versus the actual outcome.", alias="scalingFactor")
     matches_until_completed: Optional[StrictInt] = Field(default=None, description="The number of matches to run before each datapoint is considered \"completed\".", alias="matchesUntilCompleted")
-    referee: CompareWorkflowConfigReferee
+    referee: CompareWorkflowModel1Referee
     target_country_codes: List[StrictStr] = Field(description="A list of country codes that this workflow is targeting.", alias="targetCountryCodes")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
     priority: Optional[StrictStr] = None
@@ -127,7 +127,7 @@ class CompareWorkflowConfigModel(BaseModel):
             "matchSize": obj.get("matchSize"),
             "scalingFactor": obj.get("scalingFactor"),
             "matchesUntilCompleted": obj.get("matchesUntilCompleted"),
-            "referee": CompareWorkflowConfigReferee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
+            "referee": CompareWorkflowModel1Referee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
             "targetCountryCodes": obj.get("targetCountryCodes"),
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "priority": obj.get("priority"),
