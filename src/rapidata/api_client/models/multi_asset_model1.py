@@ -19,24 +19,25 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.file_asset_model_metadata_inner import FileAssetModelMetadataInner
+from rapidata.api_client.models.file_asset_model1_metadata_inner import FileAssetModel1MetadataInner
 from typing import Optional, Set
 from typing_extensions import Self
 
-class NullAssetModel(BaseModel):
+class MultiAssetModel1(BaseModel):
     """
-    NullAssetModel
+    MultiAssetModel1
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for NullAssetModel", alias="_t")
-    metadata: List[FileAssetModelMetadataInner]
+    t: StrictStr = Field(description="Discriminator value for MultiAssetModel", alias="_t")
+    assets: List[MultiAssetModel1AssetsInner]
+    metadata: List[FileAssetModel1MetadataInner]
     identifier: StrictStr
-    __properties: ClassVar[List[str]] = ["_t", "metadata", "identifier"]
+    __properties: ClassVar[List[str]] = ["_t", "assets", "metadata", "identifier"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['NullAssetModel']):
-            raise ValueError("must be one of enum values ('NullAssetModel')")
+        if value not in set(['MultiAssetModel']):
+            raise ValueError("must be one of enum values ('MultiAssetModel')")
         return value
 
     model_config = ConfigDict(
@@ -57,7 +58,7 @@ class NullAssetModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of NullAssetModel from a JSON string"""
+        """Create an instance of MultiAssetModel1 from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -78,6 +79,13 @@ class NullAssetModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in assets (list)
+        _items = []
+        if self.assets:
+            for _item_assets in self.assets:
+                if _item_assets:
+                    _items.append(_item_assets.to_dict())
+            _dict['assets'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in metadata (list)
         _items = []
         if self.metadata:
@@ -89,7 +97,7 @@ class NullAssetModel(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of NullAssetModel from a dict"""
+        """Create an instance of MultiAssetModel1 from a dict"""
         if obj is None:
             return None
 
@@ -97,10 +105,14 @@ class NullAssetModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'NullAssetModel',
-            "metadata": [FileAssetModelMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'MultiAssetModel',
+            "assets": [MultiAssetModel1AssetsInner.from_dict(_item) for _item in obj["assets"]] if obj.get("assets") is not None else None,
+            "metadata": [FileAssetModel1MetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
             "identifier": obj.get("identifier")
         })
         return _obj
 
+from rapidata.api_client.models.multi_asset_model1_assets_inner import MultiAssetModel1AssetsInner
+# TODO: Rewrite to not use raise_errors
+MultiAssetModel1.model_rebuild(raise_errors=False)
 
