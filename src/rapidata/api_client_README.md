@@ -142,15 +142,11 @@ Class | Method | HTTP request | Description
 *ValidationApi* | [**validation_import_compare_post**](rapidata/api_client/docs/ValidationApi.md#validation_import_compare_post) | **POST** /Validation/ImportCompare | Imports a compare validation set from a zip file.
 *ValidationApi* | [**validation_import_post**](rapidata/api_client/docs/ValidationApi.md#validation_import_post) | **POST** /Validation/Import | Imports a validation set from a zip file.
 *ValidationApi* | [**validation_query_validation_sets_get**](rapidata/api_client/docs/ValidationApi.md#validation_query_validation_sets_get) | **GET** /Validation/QueryValidationSets | Queries validation sets based on the provided filter, paging and sorting criteria.
-*WorkflowApi* | [**workflow_create_independent_post**](rapidata/api_client/docs/WorkflowApi.md#workflow_create_independent_post) | **POST** /Workflow/CreateIndependent | Creates an independent workflow.
 *WorkflowApi* | [**workflow_delete_delete**](rapidata/api_client/docs/WorkflowApi.md#workflow_delete_delete) | **DELETE** /Workflow/Delete | Deletes a workflow.
 *WorkflowApi* | [**workflow_get_by_id_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_get_by_id_get) | **GET** /Workflow/GetById | Get a workflow by its ID.
 *WorkflowApi* | [**workflow_get_progress_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_get_progress_get) | **GET** /Workflow/GetProgress | Get the progress of a workflow.
 *WorkflowApi* | [**workflow_get_result_overview_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_get_result_overview_get) | **GET** /Workflow/GetResultOverview | Get the result overview for a workflow.
-*WorkflowApi* | [**workflow_pause_post**](rapidata/api_client/docs/WorkflowApi.md#workflow_pause_post) | **POST** /Workflow/Pause | Pauses a running workflow.
 *WorkflowApi* | [**workflow_query_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_query_get) | **GET** /Workflow/Query | Queries workflows based on the provided filter, page, and sort criteria.
-*WorkflowApi* | [**workflow_resume_post**](rapidata/api_client/docs/WorkflowApi.md#workflow_resume_post) | **POST** /Workflow/Resume | Resumes a paused workflow.
-*WorkflowApi* | [**workflow_start_independent_post**](rapidata/api_client/docs/WorkflowApi.md#workflow_start_independent_post) | **POST** /Workflow/StartIndependent | Starts an independent workflow.
 
 
 ## Documentation For Models
@@ -195,10 +191,10 @@ Class | Method | HTTP request | Description
  - [CompareTruth](rapidata/api_client/docs/CompareTruth.md)
  - [CompareWorkflowConfig](rapidata/api_client/docs/CompareWorkflowConfig.md)
  - [CompareWorkflowConfigModel](rapidata/api_client/docs/CompareWorkflowConfigModel.md)
- - [CompareWorkflowConfigReferee](rapidata/api_client/docs/CompareWorkflowConfigReferee.md)
  - [CompareWorkflowGetResultOverviewGet200Response](rapidata/api_client/docs/CompareWorkflowGetResultOverviewGet200Response.md)
  - [CompareWorkflowModel](rapidata/api_client/docs/CompareWorkflowModel.md)
  - [CompareWorkflowModel1](rapidata/api_client/docs/CompareWorkflowModel1.md)
+ - [CompareWorkflowModel1Referee](rapidata/api_client/docs/CompareWorkflowModel1Referee.md)
  - [CompletedRapidModel](rapidata/api_client/docs/CompletedRapidModel.md)
  - [ConditionalValidationSelection](rapidata/api_client/docs/ConditionalValidationSelection.md)
  - [Coordinate](rapidata/api_client/docs/Coordinate.md)
@@ -213,9 +209,6 @@ Class | Method | HTTP request | Description
  - [CreateDatasetArtifactModelDataset](rapidata/api_client/docs/CreateDatasetArtifactModelDataset.md)
  - [CreateDemographicRapidModel](rapidata/api_client/docs/CreateDemographicRapidModel.md)
  - [CreateEmptyValidationSetResult](rapidata/api_client/docs/CreateEmptyValidationSetResult.md)
- - [CreateIndependentWorkflowModel](rapidata/api_client/docs/CreateIndependentWorkflowModel.md)
- - [CreateIndependentWorkflowModelWorkflowConfig](rapidata/api_client/docs/CreateIndependentWorkflowModelWorkflowConfig.md)
- - [CreateIndependentWorkflowResult](rapidata/api_client/docs/CreateIndependentWorkflowResult.md)
  - [CreateOrderModel](rapidata/api_client/docs/CreateOrderModel.md)
  - [CreateOrderModelReferee](rapidata/api_client/docs/CreateOrderModelReferee.md)
  - [CreateOrderModelUserFiltersInner](rapidata/api_client/docs/CreateOrderModelUserFiltersInner.md)
@@ -345,12 +338,12 @@ Class | Method | HTTP request | Description
  - [SignupCustomerModel](rapidata/api_client/docs/SignupCustomerModel.md)
  - [SignupShadowCustomerModel](rapidata/api_client/docs/SignupShadowCustomerModel.md)
  - [SimpleWorkflowConfig](rapidata/api_client/docs/SimpleWorkflowConfig.md)
- - [SimpleWorkflowConfigBlueprint](rapidata/api_client/docs/SimpleWorkflowConfigBlueprint.md)
  - [SimpleWorkflowConfigModel](rapidata/api_client/docs/SimpleWorkflowConfigModel.md)
  - [SimpleWorkflowConfigModelBlueprint](rapidata/api_client/docs/SimpleWorkflowConfigModelBlueprint.md)
  - [SimpleWorkflowGetResultOverviewGet200Response](rapidata/api_client/docs/SimpleWorkflowGetResultOverviewGet200Response.md)
  - [SimpleWorkflowModel](rapidata/api_client/docs/SimpleWorkflowModel.md)
  - [SimpleWorkflowModel1](rapidata/api_client/docs/SimpleWorkflowModel1.md)
+ - [SimpleWorkflowModel1Blueprint](rapidata/api_client/docs/SimpleWorkflowModel1Blueprint.md)
  - [SimpleWorkflowModelBlueprint](rapidata/api_client/docs/SimpleWorkflowModelBlueprint.md)
  - [SkipResult](rapidata/api_client/docs/SkipResult.md)
  - [SortCriterion](rapidata/api_client/docs/SortCriterion.md)

@@ -2674,127 +2674,6 @@
         }
       }
     },
-    "/Workflow/CreateIndependent": {
-      "post": {
-        "tags": [
-          "Workflow"
-        ],
-        "summary": "Creates an independent workflow.",
-        "description": "An independent workflow can be run without being part of a pipeline.",
-        "requestBody": {
-          "description": "The model for the request.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateIndependentWorkflowModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateIndependentWorkflowModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateIndependentWorkflowModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateIndependentWorkflowResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateIndependentWorkflowResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateIndependentWorkflowResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
-    "/Workflow/StartIndependent": {
-      "post": {
-        "tags": [
-          "Workflow"
-        ],
-        "summary": "Starts an independent workflow.",
-        "parameters": [
-          {
-            "name": "workflowId",
-            "in": "query",
-            "description": "The ID of the independent workflow to start.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/Workflow/Pause": {
-      "post": {
-        "tags": [
-          "Workflow"
-        ],
-        "summary": "Pauses a running workflow.",
-        "parameters": [
-          {
-            "name": "workflowId",
-            "in": "query",
-            "description": "The ID of the workflow to pause.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/Workflow/Resume": {
-      "post": {
-        "tags": [
-          "Workflow"
-        ],
-        "summary": "Resumes a paused workflow.",
-        "parameters": [
-          {
-            "name": "workflowId",
-            "in": "query",
-            "description": "The ID of the workflow to resume.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/Workflow/Delete": {
       "delete": {
         "tags": [
@@ -7991,105 +7870,22 @@
         },
         "additionalProperties": false
       },
-      "CompareWorkflowConfig": {
-        "title": "CompareWorkflowConfig",
-        "required": [
-          "_t",
-          "criteria",
-          "referee",
-          "targetCountryCodes"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "CompareWorkflowConfig"
-            ],
-            "type": "string",
-            "description": "Discriminator value for CompareWorkflowConfig",
-            "default": "CompareWorkflowConfig",
-            "example": "CompareWorkflowConfig"
-          },
-          "criteria": {
-            "type": "string"
-          },
-          "startingElo": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "kFactor": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "matchSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "scalingFactor": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "matchesUntilCompleted": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "referee": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/NaiveRefereeConfig"
-              },
-              {
-                "$ref": "#/components/schemas/NeverEndingRefereeConfig"
-              },
-              {
-                "$ref": "#/components/schemas/ProbabilisticAttachCategoryRefereeConfig"
-              }
-            ],
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          },
-          "targetCountryCodes": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "featureFlags": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FeatureFlag"
-            }
-          },
-          "priority": {
-            "type": "string",
-            "nullable": true
-          },
-          "isFallback": {
-            "type": "boolean"
-          }
-        },
-        "additionalProperties": false
-      },
       "CompareWorkflowModel1": {
         "title": "CompareWorkflowModel",
         "required": [
           "_t",
           "criteria",
           "datasetId",
-          "featureFlags",
           "id",
           "kFactor",
           "matchesUntilCompleted",
           "matchSize",
           "name",
           "ownerMail",
-          "priority",
           "referee",
           "scalingFactor",
           "startingElo",
-          "state",
-          "targetCountryCodes"
+          "state"
         ],
         "type": "object",
         "properties": {
@@ -8109,18 +7905,6 @@
             "type": "string",
             "nullable": true
           },
-          "targetCountryCodes": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "featureFlags": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FeatureFlag"
-            }
-          },
           "referee": {
             "oneOf": [
               {
@@ -8138,9 +7922,6 @@
             }
           },
           "state": {
-            "type": "string"
-          },
-          "priority": {
             "type": "string"
           },
           "criteria": {
@@ -8211,67 +7992,6 @@
             "items": {
               "$ref": "#/components/schemas/RapidAnswer"
             }
-          }
-        },
-        "additionalProperties": false
-      },
-      "CreateIndependentWorkflowModel": {
-        "required": [
-          "workflowConfig",
-          "workflowName"
-        ],
-        "type": "object",
-        "properties": {
-          "workflowName": {
-            "type": "string",
-            "description": "The name of the workflow."
-          },
-          "workflowConfig": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/CompareWorkflowConfig"
-              },
-              {
-                "$ref": "#/components/schemas/SimpleWorkflowConfig"
-              }
-            ],
-            "description": "The configuration of the workflow.",
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          }
-        },
-        "additionalProperties": false,
-        "description": "Model for creating an independent workflow."
-      },
-      "CreateIndependentWorkflowResult": {
-        "required": [
-          "datasetId",
-          "workflowId"
-        ],
-        "type": "object",
-        "properties": {
-          "workflowId": {
-            "type": "string"
-          },
-          "datasetId": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "FeatureFlag": {
-        "required": [
-          "key",
-          "value"
-        ],
-        "type": "object",
-        "properties": {
-          "key": {
-            "type": "string"
-          },
-          "value": {
-            "type": "string"
           }
         },
         "additionalProperties": false
@@ -8894,111 +8614,17 @@
         },
         "additionalProperties": false
       },
-      "SimpleWorkflowConfig": {
-        "title": "SimpleWorkflowConfig",
-        "required": [
-          "_t",
-          "blueprint",
-          "referee",
-          "targetCountryCodes"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "SimpleWorkflowConfig"
-            ],
-            "type": "string",
-            "description": "Discriminator value for SimpleWorkflowConfig",
-            "default": "SimpleWorkflowConfig",
-            "example": "SimpleWorkflowConfig"
-          },
-          "referee": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/NaiveRefereeConfig"
-              },
-              {
-                "$ref": "#/components/schemas/NeverEndingRefereeConfig"
-              },
-              {
-                "$ref": "#/components/schemas/ProbabilisticAttachCategoryRefereeConfig"
-              }
-            ],
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          },
-          "blueprint": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/TranscriptionRapidBlueprint"
-              },
-              {
-                "$ref": "#/components/schemas/PolygonRapidBlueprint"
-              },
-              {
-                "$ref": "#/components/schemas/NamedEntityRapidBlueprint"
-              },
-              {
-                "$ref": "#/components/schemas/LocateRapidBlueprint"
-              },
-              {
-                "$ref": "#/components/schemas/LineRapidBlueprint"
-              },
-              {
-                "$ref": "#/components/schemas/FreeTextRapidBlueprint"
-              },
-              {
-                "$ref": "#/components/schemas/CompareRapidBlueprint"
-              },
-              {
-                "$ref": "#/components/schemas/AttachCategoryRapidBlueprint"
-              },
-              {
-                "$ref": "#/components/schemas/BoundingBoxRapidBlueprint"
-              }
-            ],
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          },
-          "targetCountryCodes": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "featureFlags": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FeatureFlag"
-            }
-          },
-          "priority": {
-            "type": "string",
-            "nullable": true
-          },
-          "isFallback": {
-            "type": "boolean"
-          }
-        },
-        "additionalProperties": false
-      },
       "SimpleWorkflowModel1": {
         "title": "SimpleWorkflowModel",
         "required": [
           "_t",
           "blueprint",
           "datasetId",
-          "featureFlags",
           "id",
           "name",
           "ownerMail",
-          "priority",
           "referee",
-          "state",
-          "targetCountryCodes"
+          "state"
         ],
         "type": "object",
         "properties": {
@@ -9018,22 +8644,7 @@
             "type": "string",
             "nullable": true
           },
-          "targetCountryCodes": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "featureFlags": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FeatureFlag"
-            }
-          },
           "state": {
-            "type": "string"
-          },
-          "priority": {
             "type": "string"
           },
           "blueprint": {
@@ -9261,6 +8872,86 @@
         },
         "additionalProperties": false
       },
+      "CompareWorkflowConfig": {
+        "title": "CompareWorkflowConfig",
+        "required": [
+          "_t",
+          "criteria",
+          "referee",
+          "targetCountryCodes"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "CompareWorkflowConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for CompareWorkflowConfig",
+            "default": "CompareWorkflowConfig",
+            "example": "CompareWorkflowConfig"
+          },
+          "criteria": {
+            "type": "string"
+          },
+          "startingElo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "kFactor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "matchSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "scalingFactor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "matchesUntilCompleted": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "referee": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NaiveRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/NeverEndingRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/ProbabilisticAttachCategoryRefereeConfig"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "targetCountryCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
+          },
+          "priority": {
+            "type": "string",
+            "nullable": true
+          },
+          "isFallback": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
       "CompareWorkflowConfigModel": {
         "title": "CompareWorkflowConfig",
         "required": [
@@ -9377,6 +9068,22 @@
         },
         "additionalProperties": false
       },
+      "FeatureFlag": {
+        "required": [
+          "key",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "FileArtifactModel": {
         "title": "FileArtifactModel",
         "required": [
@@ -9434,6 +9141,97 @@
                 "propertyName": "_t"
               }
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "SimpleWorkflowConfig": {
+        "title": "SimpleWorkflowConfig",
+        "required": [
+          "_t",
+          "blueprint",
+          "referee",
+          "targetCountryCodes"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "SimpleWorkflowConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for SimpleWorkflowConfig",
+            "default": "SimpleWorkflowConfig",
+            "example": "SimpleWorkflowConfig"
+          },
+          "referee": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NaiveRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/NeverEndingRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/ProbabilisticAttachCategoryRefereeConfig"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "blueprint": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranscriptionRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/PolygonRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/NamedEntityRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/LocateRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/LineRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/FreeTextRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/CompareRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/AttachCategoryRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/BoundingBoxRapidBlueprint"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "targetCountryCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
+          },
+          "priority": {
+            "type": "string",
+            "nullable": true
+          },
+          "isFallback": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
