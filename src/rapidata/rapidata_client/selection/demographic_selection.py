@@ -5,8 +5,9 @@ from rapidata.api_client.models.demographic_selection import DemographicSelectio
 class DemographicSelection(Selection):
     """Demographic selection class."""
 
-    def __init__(self, keys: list[str]):
+    def __init__(self, keys: list[str], maxRapids: int):
         self.keys = keys
+        self.maxRapids = maxRapids
 
     def to_model(self):
-        return DemographicSelectionModel(_t="DemographicSelection", keys=self.keys)
+        return DemographicSelectionModel(_t="DemographicSelection", keys=self.keys, maxRapids=self.maxRapids)

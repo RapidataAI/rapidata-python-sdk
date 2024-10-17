@@ -39,7 +39,7 @@ def new_cond_validation_rapid_order(rapi: RapidataClient):
                 options=["Fish", "Cat", "Wallaby", "Airplane"],
             )
         )
-        .media(["examples/data/wallaby.jpg"])
+        .media([MediaAsset("examples/data/wallaby.jpg")])
         .referee(NaiveReferee(required_guesses=3))
         .selections(
             [

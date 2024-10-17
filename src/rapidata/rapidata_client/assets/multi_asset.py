@@ -17,7 +17,7 @@ class MultiAsset(BaseAsset):
         assets (List[BaseAsset]): A list of BaseAsset instances to be managed together.
     """
 
-    def __init__(self, assets: Sequence[BaseAsset]):
+    def __init__(self, assets: Sequence[BaseAsset]) -> None:
         """
         Initialize a MultiAsset instance.
 
