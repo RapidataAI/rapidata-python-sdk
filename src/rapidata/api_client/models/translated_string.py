@@ -17,21 +17,20 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.completed_rapid_model_asset import CompletedRapidModelAsset
-from rapidata.api_client.models.rapid_answer import RapidAnswer
 from typing import Optional, Set
 from typing_extensions import Self
 
-class InProgressRapidModel(BaseModel):
+class TranslatedString(BaseModel):
     """
-    InProgressRapidModel
+    TranslatedString
     """ # noqa: E501
-    rapid_id: StrictStr = Field(alias="rapidId")
-    asset: CompletedRapidModelAsset
-    answers: List[RapidAnswer]
-    __properties: ClassVar[List[str]] = ["rapidId", "asset", "answers"]
+    was_translated: StrictBool = Field(alias="wasTranslated")
+    english_text: StrictStr = Field(alias="englishText")
+    text: StrictStr
+    target_language: StrictStr = Field(alias="targetLanguage")
+    __properties: ClassVar[List[str]] = ["wasTranslated", "englishText", "text", "targetLanguage"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -51,7 +50,7 @@ class InProgressRapidModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of InProgressRapidModel from a JSON string"""
+        """Create an instance of TranslatedString from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -72,21 +71,11 @@ class InProgressRapidModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of asset
-        if self.asset:
-            _dict['asset'] = self.asset.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in answers (list)
-        _items = []
-        if self.answers:
-            for _item_answers in self.answers:
-                if _item_answers:
-                    _items.append(_item_answers.to_dict())
-            _dict['answers'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of InProgressRapidModel from a dict"""
+        """Create an instance of TranslatedString from a dict"""
         if obj is None:
             return None
 
@@ -94,9 +83,10 @@ class InProgressRapidModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "rapidId": obj.get("rapidId"),
-            "asset": CompletedRapidModelAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
-            "answers": [RapidAnswer.from_dict(_item) for _item in obj["answers"]] if obj.get("answers") is not None else None
+            "wasTranslated": obj.get("wasTranslated"),
+            "englishText": obj.get("englishText"),
+            "text": obj.get("text"),
+            "targetLanguage": obj.get("targetLanguage")
         })
         return _obj
 

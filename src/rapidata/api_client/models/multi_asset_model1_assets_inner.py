@@ -18,18 +18,17 @@ import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
 from rapidata.api_client.models.file_asset_model1 import FileAssetModel1
-from rapidata.api_client.models.multi_asset_model1 import MultiAssetModel1
 from rapidata.api_client.models.null_asset_model1 import NullAssetModel1
 from rapidata.api_client.models.text_asset_model1 import TextAssetModel1
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-QUERYVALIDATIONRAPIDSRESULTASSET_ONE_OF_SCHEMAS = ["FileAssetModel1", "MultiAssetModel1", "NullAssetModel1", "TextAssetModel1"]
+MULTIASSETMODEL1ASSETSINNER_ONE_OF_SCHEMAS = ["FileAssetModel1", "MultiAssetModel1", "NullAssetModel1", "TextAssetModel1"]
 
-class QueryValidationRapidsResultAsset(BaseModel):
+class MultiAssetModel1AssetsInner(BaseModel):
     """
-    QueryValidationRapidsResultAsset
+    MultiAssetModel1AssetsInner
     """
     # data type: FileAssetModel1
     oneof_schema_1_validator: Optional[FileAssetModel1] = None
@@ -63,10 +62,7 @@ class QueryValidationRapidsResultAsset(BaseModel):
 
     @field_validator('actual_instance')
     def actual_instance_must_validate_oneof(cls, v):
-        if v is None:
-            return v
-
-        instance = QueryValidationRapidsResultAsset.model_construct()
+        instance = MultiAssetModel1AssetsInner.model_construct()
         error_messages = []
         match = 0
         # validate data type: FileAssetModel1
@@ -91,10 +87,10 @@ class QueryValidationRapidsResultAsset(BaseModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in QueryValidationRapidsResultAsset with oneOf schemas: FileAssetModel1, MultiAssetModel1, NullAssetModel1, TextAssetModel1. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in MultiAssetModel1AssetsInner with oneOf schemas: FileAssetModel1, MultiAssetModel1, NullAssetModel1, TextAssetModel1. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in QueryValidationRapidsResultAsset with oneOf schemas: FileAssetModel1, MultiAssetModel1, NullAssetModel1, TextAssetModel1. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in MultiAssetModel1AssetsInner with oneOf schemas: FileAssetModel1, MultiAssetModel1, NullAssetModel1, TextAssetModel1. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -103,12 +99,9 @@ class QueryValidationRapidsResultAsset(BaseModel):
         return cls.from_json(json.dumps(obj))
 
     @classmethod
-    def from_json(cls, json_str: Optional[str]) -> Self:
+    def from_json(cls, json_str: str) -> Self:
         """Returns the object represented by the json string"""
         instance = cls.model_construct()
-        if json_str is None:
-            return instance
-
         error_messages = []
         match = 0
 
@@ -139,10 +132,10 @@ class QueryValidationRapidsResultAsset(BaseModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into QueryValidationRapidsResultAsset with oneOf schemas: FileAssetModel1, MultiAssetModel1, NullAssetModel1, TextAssetModel1. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into MultiAssetModel1AssetsInner with oneOf schemas: FileAssetModel1, MultiAssetModel1, NullAssetModel1, TextAssetModel1. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into QueryValidationRapidsResultAsset with oneOf schemas: FileAssetModel1, MultiAssetModel1, NullAssetModel1, TextAssetModel1. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into MultiAssetModel1AssetsInner with oneOf schemas: FileAssetModel1, MultiAssetModel1, NullAssetModel1, TextAssetModel1. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -171,4 +164,7 @@ class QueryValidationRapidsResultAsset(BaseModel):
         """Returns the string representation of the actual instance"""
         return pprint.pformat(self.model_dump())
 
+from rapidata.api_client.models.multi_asset_model1 import MultiAssetModel1
+# TODO: Rewrite to not use raise_errors
+MultiAssetModel1AssetsInner.model_rebuild(raise_errors=False)
 
