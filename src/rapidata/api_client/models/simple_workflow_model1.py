@@ -19,8 +19,9 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.compare_workflow_model1_referee import CompareWorkflowModel1Referee
-from rapidata.api_client.models.simple_workflow_model1_blueprint import SimpleWorkflowModel1Blueprint
+from rapidata.api_client.models.compare_workflow_config_referee import CompareWorkflowConfigReferee
+from rapidata.api_client.models.feature_flag import FeatureFlag
+from rapidata.api_client.models.simple_workflow_config_blueprint import SimpleWorkflowConfigBlueprint
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -31,12 +32,15 @@ class SimpleWorkflowModel1(BaseModel):
     t: StrictStr = Field(description="Discriminator value for SimpleWorkflowModel", alias="_t")
     id: StrictStr
     dataset_id: Optional[StrictStr] = Field(alias="datasetId")
+    target_country_codes: List[StrictStr] = Field(alias="targetCountryCodes")
+    feature_flags: List[FeatureFlag] = Field(alias="featureFlags")
     state: StrictStr
-    blueprint: SimpleWorkflowModel1Blueprint
-    referee: CompareWorkflowModel1Referee
+    priority: StrictStr
+    blueprint: SimpleWorkflowConfigBlueprint
+    referee: CompareWorkflowConfigReferee
     name: StrictStr
     owner_mail: Optional[StrictStr] = Field(alias="ownerMail")
-    __properties: ClassVar[List[str]] = ["_t", "id", "datasetId", "state", "blueprint", "referee", "name", "ownerMail"]
+    __properties: ClassVar[List[str]] = ["_t", "id", "datasetId", "targetCountryCodes", "featureFlags", "state", "priority", "blueprint", "referee", "name", "ownerMail"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -84,6 +88,13 @@ class SimpleWorkflowModel1(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in feature_flags (list)
+        _items = []
+        if self.feature_flags:
+            for _item_feature_flags in self.feature_flags:
+                if _item_feature_flags:
+                    _items.append(_item_feature_flags.to_dict())
+            _dict['featureFlags'] = _items
         # override the default output from pydantic by calling `to_dict()` of blueprint
         if self.blueprint:
             _dict['blueprint'] = self.blueprint.to_dict()
@@ -115,9 +126,12 @@ class SimpleWorkflowModel1(BaseModel):
             "_t": obj.get("_t") if obj.get("_t") is not None else 'SimpleWorkflowModel',
             "id": obj.get("id"),
             "datasetId": obj.get("datasetId"),
+            "targetCountryCodes": obj.get("targetCountryCodes"),
+            "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "state": obj.get("state"),
-            "blueprint": SimpleWorkflowModel1Blueprint.from_dict(obj["blueprint"]) if obj.get("blueprint") is not None else None,
-            "referee": CompareWorkflowModel1Referee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
+            "priority": obj.get("priority"),
+            "blueprint": SimpleWorkflowConfigBlueprint.from_dict(obj["blueprint"]) if obj.get("blueprint") is not None else None,
+            "referee": CompareWorkflowConfigReferee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
             "name": obj.get("name"),
             "ownerMail": obj.get("ownerMail")
         })

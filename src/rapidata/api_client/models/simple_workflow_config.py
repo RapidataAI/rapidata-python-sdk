@@ -19,9 +19,9 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.compare_workflow_model1_referee import CompareWorkflowModel1Referee
+from rapidata.api_client.models.compare_workflow_config_referee import CompareWorkflowConfigReferee
 from rapidata.api_client.models.feature_flag import FeatureFlag
-from rapidata.api_client.models.simple_workflow_model1_blueprint import SimpleWorkflowModel1Blueprint
+from rapidata.api_client.models.simple_workflow_config_blueprint import SimpleWorkflowConfigBlueprint
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -30,8 +30,8 @@ class SimpleWorkflowConfig(BaseModel):
     SimpleWorkflowConfig
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for SimpleWorkflowConfig", alias="_t")
-    referee: CompareWorkflowModel1Referee
-    blueprint: SimpleWorkflowModel1Blueprint
+    referee: CompareWorkflowConfigReferee
+    blueprint: SimpleWorkflowConfigBlueprint
     target_country_codes: List[StrictStr] = Field(alias="targetCountryCodes")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
     priority: Optional[StrictStr] = None
@@ -115,8 +115,8 @@ class SimpleWorkflowConfig(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'SimpleWorkflowConfig',
-            "referee": CompareWorkflowModel1Referee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
-            "blueprint": SimpleWorkflowModel1Blueprint.from_dict(obj["blueprint"]) if obj.get("blueprint") is not None else None,
+            "referee": CompareWorkflowConfigReferee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
+            "blueprint": SimpleWorkflowConfigBlueprint.from_dict(obj["blueprint"]) if obj.get("blueprint") is not None else None,
             "targetCountryCodes": obj.get("targetCountryCodes"),
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "priority": obj.get("priority"),

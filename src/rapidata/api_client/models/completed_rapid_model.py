@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.completed_rapid_model_asset import CompletedRapidModelAsset
+from rapidata.api_client.models.datapoint_model_asset import DatapointModelAsset
 from rapidata.api_client.models.rapid_answer import RapidAnswer
 from typing import Optional, Set
 from typing_extensions import Self
@@ -29,7 +29,7 @@ class CompletedRapidModel(BaseModel):
     CompletedRapidModel
     """ # noqa: E501
     rapid_id: StrictStr = Field(alias="rapidId")
-    asset: CompletedRapidModelAsset
+    asset: DatapointModelAsset
     answers: List[RapidAnswer]
     __properties: ClassVar[List[str]] = ["rapidId", "asset", "answers"]
 
@@ -95,7 +95,7 @@ class CompletedRapidModel(BaseModel):
 
         _obj = cls.model_validate({
             "rapidId": obj.get("rapidId"),
-            "asset": CompletedRapidModelAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
+            "asset": DatapointModelAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "answers": [RapidAnswer.from_dict(_item) for _item in obj["answers"]] if obj.get("answers") is not None else None
         })
         return _obj
