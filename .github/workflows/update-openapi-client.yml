@@ -3,6 +3,12 @@ on:
   repository_dispatch:
     types: [update-openapi-client]
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version string for the update'
+        required: true
+        type: string
+    
 jobs:
   generate_openapi_client:
     runs-on: ubuntu-latest
@@ -11,7 +17,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Fetch all history for all tags and branches
-
       - name: Create Github App Token
         uses: actions/create-github-app-token@v1
         id: app-token
@@ -20,19 +25,14 @@ jobs:
           private-key: ${{ secrets.RAPIDATA_OPENAPI_GENERATOR_PRIVATE_KEY }}
           owner: "RapidataAI"
           repositories: "rapidata-python-sdk"
-
       - name: Setup node
         uses: actions/setup-node@v4
-
       - name: Install node packages
         run: npm i -g openapi-merge-cli @openapitools/openapi-generator-cli
-
       - name: Download specs
         run: ./openapi/download-and-merge-spec.sh
-
       - name: Generate client
         run: ./openapi/generate.sh
-
       - name: Make GitHub PR
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
@@ -42,9 +42,16 @@ jobs:
           git config user.name "Rudolf the Rabbit"
           
           # Get latest tag
-          git fetch --tags
-          BRANCH_NAME="chore/update-openapi-to-${{ github.event.client_payload.latest_tag }}"
-          LATEST_TAG=${{ github.event.client_payload.latest_tag }}
+          if [[ "${{ github.event_name }}" == "repository_dispatch" ]]; then
+            LATEST_TAG="${{ github.event.client_payload.latest_tag }}"
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            LATEST_TAG="${{ github.event.inputs.version }}"
+          else
+            echo "Unexpected event type. Exiting."
+            exit 1
+          fi
+          
+          BRANCH_NAME="chore/update-openapi-to-$LATEST_TAG"
           
           # Create a new feature branch for the changes
           git checkout -b $BRANCH_NAME
