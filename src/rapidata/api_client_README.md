@@ -376,6 +376,7 @@ Class | Method | HTTP request | Description
  - [TextMetadataModel](rapidata/api_client/docs/TextMetadataModel.md)
  - [TranscriptionMetadata](rapidata/api_client/docs/TranscriptionMetadata.md)
  - [TranscriptionMetadataInput](rapidata/api_client/docs/TranscriptionMetadataInput.md)
+ - [TranscriptionMetadataModel](rapidata/api_client/docs/TranscriptionMetadataModel.md)
  - [TranscriptionPayload](rapidata/api_client/docs/TranscriptionPayload.md)
  - [TranscriptionRapidBlueprint](rapidata/api_client/docs/TranscriptionRapidBlueprint.md)
  - [TranscriptionResult](rapidata/api_client/docs/TranscriptionResult.md)
