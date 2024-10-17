@@ -36,7 +36,7 @@ class ValidationSetBuilder:
         self.validation_set_id: str | None = None
         self._rapid_parts: list[ValidatioRapidParts] = []
 
-    def create(self):
+    def create(self) -> RapidataValidationSet:
         """Create the validation set by executing all HTTP requests. This should be the last method called on the builder.
 
         Returns:
