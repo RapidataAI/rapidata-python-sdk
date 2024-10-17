@@ -270,6 +270,7 @@ from rapidata.api_client.models.text_metadata import TextMetadata
 from rapidata.api_client.models.text_metadata_model import TextMetadataModel
 from rapidata.api_client.models.transcription_metadata import TranscriptionMetadata
 from rapidata.api_client.models.transcription_metadata_input import TranscriptionMetadataInput
+from rapidata.api_client.models.transcription_metadata_model import TranscriptionMetadataModel
 from rapidata.api_client.models.transcription_payload import TranscriptionPayload
 from rapidata.api_client.models.transcription_rapid_blueprint import TranscriptionRapidBlueprint
 from rapidata.api_client.models.transcription_result import TranscriptionResult

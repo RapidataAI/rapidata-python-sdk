@@ -25,12 +25,13 @@ from rapidata.api_client.models.location_metadata_model import LocationMetadataM
 from rapidata.api_client.models.original_filename_metadata_model import OriginalFilenameMetadataModel
 from rapidata.api_client.models.prompt_metadata_model import PromptMetadataModel
 from rapidata.api_client.models.text_metadata_model import TextMetadataModel
+from rapidata.api_client.models.transcription_metadata_model import TranscriptionMetadataModel
 from rapidata.api_client.models.translated_prompt_metadata_model import TranslatedPromptMetadataModel
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-FILEASSETMODEL1METADATAINNER_ONE_OF_SCHEMAS = ["ClassificationMetadataModel", "CountMetadataModel", "DemographicMetadataModel", "ImageDimensionMetadataModel", "LocationMetadataModel", "OriginalFilenameMetadataModel", "PromptMetadataModel", "TextMetadataModel", "TranslatedPromptMetadataModel"]
+FILEASSETMODEL1METADATAINNER_ONE_OF_SCHEMAS = ["ClassificationMetadataModel", "CountMetadataModel", "DemographicMetadataModel", "ImageDimensionMetadataModel", "LocationMetadataModel", "OriginalFilenameMetadataModel", "PromptMetadataModel", "TextMetadataModel", "TranscriptionMetadataModel", "TranslatedPromptMetadataModel"]
 
 class FileAssetModel1MetadataInner(BaseModel):
     """
@@ -54,8 +55,10 @@ class FileAssetModel1MetadataInner(BaseModel):
     oneof_schema_8_validator: Optional[PromptMetadataModel] = None
     # data type: TextMetadataModel
     oneof_schema_9_validator: Optional[TextMetadataModel] = None
-    actual_instance: Optional[Union[ClassificationMetadataModel, CountMetadataModel, DemographicMetadataModel, ImageDimensionMetadataModel, LocationMetadataModel, OriginalFilenameMetadataModel, PromptMetadataModel, TextMetadataModel, TranslatedPromptMetadataModel]] = None
-    one_of_schemas: Set[str] = { "ClassificationMetadataModel", "CountMetadataModel", "DemographicMetadataModel", "ImageDimensionMetadataModel", "LocationMetadataModel", "OriginalFilenameMetadataModel", "PromptMetadataModel", "TextMetadataModel", "TranslatedPromptMetadataModel" }
+    # data type: TranscriptionMetadataModel
+    oneof_schema_10_validator: Optional[TranscriptionMetadataModel] = None
+    actual_instance: Optional[Union[ClassificationMetadataModel, CountMetadataModel, DemographicMetadataModel, ImageDimensionMetadataModel, LocationMetadataModel, OriginalFilenameMetadataModel, PromptMetadataModel, TextMetadataModel, TranscriptionMetadataModel, TranslatedPromptMetadataModel]] = None
+    one_of_schemas: Set[str] = { "ClassificationMetadataModel", "CountMetadataModel", "DemographicMetadataModel", "ImageDimensionMetadataModel", "LocationMetadataModel", "OriginalFilenameMetadataModel", "PromptMetadataModel", "TextMetadataModel", "TranscriptionMetadataModel", "TranslatedPromptMetadataModel" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -126,12 +129,17 @@ class FileAssetModel1MetadataInner(BaseModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `TextMetadataModel`")
         else:
             match += 1
+        # validate data type: TranscriptionMetadataModel
+        if not isinstance(v, TranscriptionMetadataModel):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `TranscriptionMetadataModel`")
+        else:
+            match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in FileAssetModel1MetadataInner with oneOf schemas: ClassificationMetadataModel, CountMetadataModel, DemographicMetadataModel, ImageDimensionMetadataModel, LocationMetadataModel, OriginalFilenameMetadataModel, PromptMetadataModel, TextMetadataModel, TranslatedPromptMetadataModel. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in FileAssetModel1MetadataInner with oneOf schemas: ClassificationMetadataModel, CountMetadataModel, DemographicMetadataModel, ImageDimensionMetadataModel, LocationMetadataModel, OriginalFilenameMetadataModel, PromptMetadataModel, TextMetadataModel, TranscriptionMetadataModel, TranslatedPromptMetadataModel. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in FileAssetModel1MetadataInner with oneOf schemas: ClassificationMetadataModel, CountMetadataModel, DemographicMetadataModel, ImageDimensionMetadataModel, LocationMetadataModel, OriginalFilenameMetadataModel, PromptMetadataModel, TextMetadataModel, TranslatedPromptMetadataModel. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in FileAssetModel1MetadataInner with oneOf schemas: ClassificationMetadataModel, CountMetadataModel, DemographicMetadataModel, ImageDimensionMetadataModel, LocationMetadataModel, OriginalFilenameMetadataModel, PromptMetadataModel, TextMetadataModel, TranscriptionMetadataModel, TranslatedPromptMetadataModel. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -200,13 +208,19 @@ class FileAssetModel1MetadataInner(BaseModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
+        # deserialize data into TranscriptionMetadataModel
+        try:
+            instance.actual_instance = TranscriptionMetadataModel.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into FileAssetModel1MetadataInner with oneOf schemas: ClassificationMetadataModel, CountMetadataModel, DemographicMetadataModel, ImageDimensionMetadataModel, LocationMetadataModel, OriginalFilenameMetadataModel, PromptMetadataModel, TextMetadataModel, TranslatedPromptMetadataModel. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into FileAssetModel1MetadataInner with oneOf schemas: ClassificationMetadataModel, CountMetadataModel, DemographicMetadataModel, ImageDimensionMetadataModel, LocationMetadataModel, OriginalFilenameMetadataModel, PromptMetadataModel, TextMetadataModel, TranscriptionMetadataModel, TranslatedPromptMetadataModel. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into FileAssetModel1MetadataInner with oneOf schemas: ClassificationMetadataModel, CountMetadataModel, DemographicMetadataModel, ImageDimensionMetadataModel, LocationMetadataModel, OriginalFilenameMetadataModel, PromptMetadataModel, TextMetadataModel, TranslatedPromptMetadataModel. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into FileAssetModel1MetadataInner with oneOf schemas: ClassificationMetadataModel, CountMetadataModel, DemographicMetadataModel, ImageDimensionMetadataModel, LocationMetadataModel, OriginalFilenameMetadataModel, PromptMetadataModel, TextMetadataModel, TranscriptionMetadataModel, TranslatedPromptMetadataModel. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -220,7 +234,7 @@ class FileAssetModel1MetadataInner(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], ClassificationMetadataModel, CountMetadataModel, DemographicMetadataModel, ImageDimensionMetadataModel, LocationMetadataModel, OriginalFilenameMetadataModel, PromptMetadataModel, TextMetadataModel, TranslatedPromptMetadataModel]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], ClassificationMetadataModel, CountMetadataModel, DemographicMetadataModel, ImageDimensionMetadataModel, LocationMetadataModel, OriginalFilenameMetadataModel, PromptMetadataModel, TextMetadataModel, TranscriptionMetadataModel, TranslatedPromptMetadataModel]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None
