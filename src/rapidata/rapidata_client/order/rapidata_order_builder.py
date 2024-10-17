@@ -1,3 +1,5 @@
+from warnings import warn
+
 from rapidata.api_client.models.aggregator_type import AggregatorType
 from rapidata.api_client.models.capped_selection_selections_inner import (
     CappedSelectionSelectionsInner,
@@ -21,6 +23,7 @@ from rapidata.rapidata_client.metadata.base_metadata import Metadata
 from rapidata.rapidata_client.dataset.rapidata_dataset import RapidataDataset
 from rapidata.rapidata_client.referee.naive_referee import NaiveReferee
 from rapidata.rapidata_client.selection.base_selection import Selection
+from rapidata.rapidata_client.filter import Filter, CountryFilter, LanguageFilter
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 from rapidata.rapidata_client.referee import Referee
@@ -63,8 +66,7 @@ class RapidataOrderBuilder:
         self._aggregator: AggregatorType | None = None
         self._validation_set_id: str | None = None
         self._feature_flags: FeatureFlags | None = None
-        self._country_codes: list[str] | None = None
-        self._language_codes: list[str] | None = None
+        self._user_filters: list[Filter] = []
         self._selections: list[Selection] = []
         self._rapids_per_bag: int = 2
         self._priority: int = 50
@@ -87,31 +89,14 @@ class RapidataOrderBuilder:
             print("No referee provided, using default NaiveReferee.")
             self._referee = NaiveReferee()
 
-        user_filters = []
-
-        if self._country_codes is not None:
-            user_filters.append(
-                CreateOrderModelUserFiltersInner(
-                    CountryUserFilterModel(
-                        _t="CountryFilter", countries=self._country_codes
-                    )
-                )
-            )
-
-        if self._language_codes is not None:
-            user_filters.append(
-                CreateOrderModelUserFiltersInner(
-                    LanguageUserFilterModel(
-                        _t="LanguageFilter", languages=self._language_codes
-                    )
-                )
-            )
-
         return CreateOrderModel(
             _t="CreateOrderModel",
             orderName=self._name,
             workflow=CreateOrderModelWorkflow(self._workflow.to_model()),
-            userFilters=user_filters,
+            userFilters=[
+                CreateOrderModelUserFiltersInner(user_filter.to_model())
+                for user_filter in self._user_filters
+            ],
             referee=CreateOrderModelReferee(self._referee.to_model()),
             validationSetId=self._validation_set_id,
             featureFlags=(
@@ -149,9 +134,9 @@ class RapidataOrderBuilder:
         if isinstance(
             self._workflow, CompareWorkflow
         ):  # Temporary fix; will be handled by backend in the future
-            assert all(isinstance(item, MultiAsset) for item in self._assets), (
-                "The media paths must be of type MultiAsset for comparison tasks."
-            )
+            assert all(
+                isinstance(item, MultiAsset) for item in self._assets
+            ), "The media paths must be of type MultiAsset for comparison tasks."
 
         result = self._openapi_service.order_api.order_create_post(
             create_order_model=order_model
@@ -167,22 +152,26 @@ class RapidataOrderBuilder:
 
         if all(isinstance(item, MediaAsset) for item in self._assets):
             assets = cast(list[MediaAsset], self._assets)
-            order.dataset.add_media_from_paths(
-                assets, self._metadata, max_workers
-            )
-        
+            order.dataset.add_media_from_paths(assets, self._metadata, max_workers)
+
         elif all(isinstance(item, TextAsset) for item in self._assets):
             assets = cast(list[TextAsset], self._assets)
             order.dataset.add_texts(assets)
 
         elif all(isinstance(item, MultiAsset) for item in self._assets):
             multi_assets = cast(list[MultiAsset], self._assets)
-            
+
             # Check if all MultiAssets contain the same type of assets
             first_asset_type = type(multi_assets[0].assets[0])
-            if not all(isinstance(asset, first_asset_type) for multi_asset in multi_assets for asset in multi_asset.assets):
-                raise ValueError("All MultiAssets must contain the same type of assets (either all MediaAssets or all TextAssets).")
-            
+            if not all(
+                isinstance(asset, first_asset_type)
+                for multi_asset in multi_assets
+                for asset in multi_asset.assets
+            ):
+                raise ValueError(
+                    "All MultiAssets must contain the same type of assets (either all MediaAssets or all TextAssets)."
+                )
+
             # Process based on the asset type
             if issubclass(first_asset_type, MediaAsset):
                 order.dataset.add_media_from_paths(
@@ -193,10 +182,14 @@ class RapidataOrderBuilder:
                 order.dataset.add_texts(multi_assets)
 
             else:
-                raise ValueError("MultiAsset must contain MediaAssets or TextAssets objects.")
-        
+                raise ValueError(
+                    "MultiAsset must contain MediaAssets or TextAssets objects."
+                )
+
         else:
-            raise ValueError("Media paths must be of type MediaAsset, TextAsset, or MultiAsset.")
+            raise ValueError(
+                "Media paths must be of type MediaAsset, TextAsset, or MultiAsset."
+            )
 
         if submit:
             order.submit()
@@ -215,7 +208,7 @@ class RapidataOrderBuilder:
         """
         if not isinstance(workflow, Workflow):
             raise TypeError("Workflow must be of type Workflow.")
-        
+
         self._workflow = workflow
         return self
 
@@ -231,7 +224,7 @@ class RapidataOrderBuilder:
         """
         if not isinstance(referee, Referee):
             raise TypeError("Referee must be of type Referee.")
-        
+
         self._referee = referee
         return self
 
@@ -255,15 +248,17 @@ class RapidataOrderBuilder:
 
         for a in asset:
             if not isinstance(a, (MediaAsset, TextAsset, MultiAsset)):
-                raise TypeError("Media paths must be of type MediaAsset, TextAsset, or MultiAsset.")
+                raise TypeError(
+                    "Media paths must be of type MediaAsset, TextAsset, or MultiAsset."
+                )
 
         if metadata:
             for data in metadata:
                 if not isinstance(data, Metadata):
                     raise TypeError("Metadata must be of type Metadata.")
-        
+
         self._assets = asset
-        self._metadata = metadata # type: ignore
+        self._metadata = metadata  # type: ignore
         return self
 
     def feature_flags(self, feature_flags: FeatureFlags) -> "RapidataOrderBuilder":
@@ -278,8 +273,31 @@ class RapidataOrderBuilder:
         """
         if not isinstance(feature_flags, FeatureFlags):
             raise TypeError("Feature flags must be of type FeatureFlags.")
-        
+
         self._feature_flags = feature_flags
+        return self
+
+    def filters(self, filters: Sequence[Filter]) -> "RapidataOrderBuilder":
+        """
+        Set the filters for the order, e.g., country, language, userscore, etc.
+
+        Args:
+            filters (Sequence[Filters]): The user filters to be set.
+
+        Returns:
+            RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
+        """
+        if not isinstance(filters, list):
+            raise TypeError("Filters must be provided as a list of Filter objects.")
+
+        for f in filters:
+            if not isinstance(f, Filter):
+                raise TypeError("Filters must be of type Filter.")
+
+        if len(self._user_filters) > 0:
+            print("Overwriting existing user filters.")
+
+        self._user_filters = filters
         return self
 
     def country_filter(self, country_codes: list[str]) -> "RapidataOrderBuilder":
@@ -292,14 +310,18 @@ class RapidataOrderBuilder:
         Returns:
             RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
         """
+        warn(
+            "The country_filter method is deprecated. Use the filters method instead.",
+            DeprecationWarning,
+        )
         if not isinstance(country_codes, list):
             raise TypeError("Country codes must be provided as a list of strings.")
-        
+
         for code in country_codes:
             if not isinstance(code, str):
                 raise TypeError("Country codes must be of type str.")
-            
-        self._country_codes = country_codes
+
+        self._user_filters.append(CountryFilter(country_codes))
         return self
 
     def language_filter(self, language_codes: list[str]) -> "RapidataOrderBuilder":
@@ -312,13 +334,17 @@ class RapidataOrderBuilder:
         Returns:
             RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
         """
+        warn(
+            "The language_filter method is deprecated. Use the filters method instead.",
+            DeprecationWarning,
+        )
         if not isinstance(language_codes, list):
             raise TypeError("Language codes must be provided as a list of strings.")
-        
+
         if not all(isinstance(code, str) for code in language_codes):
             raise TypeError("Language codes must be of type str.")
-        
-        self._language_codes = language_codes
+
+        self._user_filters.append(LanguageFilter(language_codes))
         return self
 
     def aggregator(self, aggregator: AggregatorType) -> "RapidataOrderBuilder":
@@ -333,7 +359,7 @@ class RapidataOrderBuilder:
         """
         if not isinstance(aggregator, AggregatorType):
             raise TypeError("Aggregator must be of type AggregatorType.")
-        
+
         self._aggregator = aggregator
         return self
 
@@ -349,7 +375,7 @@ class RapidataOrderBuilder:
         """
         if not isinstance(validation_set_id, str):
             raise TypeError("Validation set ID must be of type str.")
-        
+
         self._validation_set_id = validation_set_id
         return self
 
@@ -379,13 +405,15 @@ class RapidataOrderBuilder:
             RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
         """
         if not isinstance(selections, list):
-            raise TypeError("Selections must be provided as a list of Selection objects.")
-        
+            raise TypeError(
+                "Selections must be provided as a list of Selection objects."
+            )
+
         for selection in selections:
             if not isinstance(selection, Selection):
                 raise TypeError("Selections must be of type Selection.")
-        
-        self._selections = selections # type: ignore
+
+        self._selections = selections  # type: ignore
         return self
 
     def priority(self, priority: int) -> "RapidataOrderBuilder":
@@ -400,6 +428,6 @@ class RapidataOrderBuilder:
         """
         if not isinstance(priority, int):
             raise TypeError("Priority must be of type int.")
-        
+
         self._priority = priority
         return self
