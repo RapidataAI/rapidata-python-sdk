@@ -6715,7 +6715,7 @@
           "metadata",
           "payload",
           "randomCorrectProbability",
-          "text",
+          "texts",
           "truth",
           "validationSetId"
         ],
@@ -6818,8 +6818,11 @@
               "propertyName": "_t"
             }
           },
-          "text": {
-            "type": "string"
+          "texts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "randomCorrectProbability": {
             "type": "number",

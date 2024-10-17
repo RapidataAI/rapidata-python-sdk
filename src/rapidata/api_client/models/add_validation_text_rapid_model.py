@@ -33,9 +33,9 @@ class AddValidationTextRapidModel(BaseModel):
     payload: AddValidationRapidModelPayload
     metadata: List[DatapointMetadataModelMetadataInner] = Field(description="Some metadata to attach to the rapid.")
     truth: AddValidationRapidModelTruth
-    text: StrictStr
+    texts: List[StrictStr]
     random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(description="The probability for an answer to be correct when randomly guessing.", alias="randomCorrectProbability")
-    __properties: ClassVar[List[str]] = ["validationSetId", "payload", "metadata", "truth", "text", "randomCorrectProbability"]
+    __properties: ClassVar[List[str]] = ["validationSetId", "payload", "metadata", "truth", "texts", "randomCorrectProbability"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -110,7 +110,7 @@ class AddValidationTextRapidModel(BaseModel):
             "payload": AddValidationRapidModelPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
             "metadata": [DatapointMetadataModelMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
             "truth": AddValidationRapidModelTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
-            "text": obj.get("text"),
+            "texts": obj.get("texts"),
             "randomCorrectProbability": obj.get("randomCorrectProbability")
         })
         return _obj
