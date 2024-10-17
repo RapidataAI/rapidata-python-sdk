@@ -17,30 +17,30 @@ import json
 import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
-from rapidata.api_client.models.file_asset_model1 import FileAssetModel1
-from rapidata.api_client.models.multi_asset_model1 import MultiAssetModel1
-from rapidata.api_client.models.null_asset_model1 import NullAssetModel1
-from rapidata.api_client.models.text_asset_model1 import TextAssetModel1
+from rapidata.api_client.models.file_asset_model import FileAssetModel
+from rapidata.api_client.models.multi_asset_model import MultiAssetModel
+from rapidata.api_client.models.null_asset_model import NullAssetModel
+from rapidata.api_client.models.text_asset_model import TextAssetModel
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-QUERYVALIDATIONRAPIDSRESULTASSET_ONE_OF_SCHEMAS = ["FileAssetModel1", "MultiAssetModel1", "NullAssetModel1", "TextAssetModel1"]
+QUERYVALIDATIONRAPIDSRESULTASSET_ONE_OF_SCHEMAS = ["FileAssetModel", "MultiAssetModel", "NullAssetModel", "TextAssetModel"]
 
 class QueryValidationRapidsResultAsset(BaseModel):
     """
     QueryValidationRapidsResultAsset
     """
-    # data type: FileAssetModel1
-    oneof_schema_1_validator: Optional[FileAssetModel1] = None
-    # data type: MultiAssetModel1
-    oneof_schema_2_validator: Optional[MultiAssetModel1] = None
-    # data type: NullAssetModel1
-    oneof_schema_3_validator: Optional[NullAssetModel1] = None
-    # data type: TextAssetModel1
-    oneof_schema_4_validator: Optional[TextAssetModel1] = None
-    actual_instance: Optional[Union[FileAssetModel1, MultiAssetModel1, NullAssetModel1, TextAssetModel1]] = None
-    one_of_schemas: Set[str] = { "FileAssetModel1", "MultiAssetModel1", "NullAssetModel1", "TextAssetModel1" }
+    # data type: FileAssetModel
+    oneof_schema_1_validator: Optional[FileAssetModel] = None
+    # data type: MultiAssetModel
+    oneof_schema_2_validator: Optional[MultiAssetModel] = None
+    # data type: NullAssetModel
+    oneof_schema_3_validator: Optional[NullAssetModel] = None
+    # data type: TextAssetModel
+    oneof_schema_4_validator: Optional[TextAssetModel] = None
+    actual_instance: Optional[Union[FileAssetModel, MultiAssetModel, NullAssetModel, TextAssetModel]] = None
+    one_of_schemas: Set[str] = { "FileAssetModel", "MultiAssetModel", "NullAssetModel", "TextAssetModel" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -69,32 +69,32 @@ class QueryValidationRapidsResultAsset(BaseModel):
         instance = QueryValidationRapidsResultAsset.model_construct()
         error_messages = []
         match = 0
-        # validate data type: FileAssetModel1
-        if not isinstance(v, FileAssetModel1):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `FileAssetModel1`")
+        # validate data type: FileAssetModel
+        if not isinstance(v, FileAssetModel):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `FileAssetModel`")
         else:
             match += 1
-        # validate data type: MultiAssetModel1
-        if not isinstance(v, MultiAssetModel1):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `MultiAssetModel1`")
+        # validate data type: MultiAssetModel
+        if not isinstance(v, MultiAssetModel):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `MultiAssetModel`")
         else:
             match += 1
-        # validate data type: NullAssetModel1
-        if not isinstance(v, NullAssetModel1):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `NullAssetModel1`")
+        # validate data type: NullAssetModel
+        if not isinstance(v, NullAssetModel):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `NullAssetModel`")
         else:
             match += 1
-        # validate data type: TextAssetModel1
-        if not isinstance(v, TextAssetModel1):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `TextAssetModel1`")
+        # validate data type: TextAssetModel
+        if not isinstance(v, TextAssetModel):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `TextAssetModel`")
         else:
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in QueryValidationRapidsResultAsset with oneOf schemas: FileAssetModel1, MultiAssetModel1, NullAssetModel1, TextAssetModel1. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in QueryValidationRapidsResultAsset with oneOf schemas: FileAssetModel, MultiAssetModel, NullAssetModel, TextAssetModel. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in QueryValidationRapidsResultAsset with oneOf schemas: FileAssetModel1, MultiAssetModel1, NullAssetModel1, TextAssetModel1. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in QueryValidationRapidsResultAsset with oneOf schemas: FileAssetModel, MultiAssetModel, NullAssetModel, TextAssetModel. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -112,37 +112,37 @@ class QueryValidationRapidsResultAsset(BaseModel):
         error_messages = []
         match = 0
 
-        # deserialize data into FileAssetModel1
+        # deserialize data into FileAssetModel
         try:
-            instance.actual_instance = FileAssetModel1.from_json(json_str)
+            instance.actual_instance = FileAssetModel.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # deserialize data into MultiAssetModel1
+        # deserialize data into MultiAssetModel
         try:
-            instance.actual_instance = MultiAssetModel1.from_json(json_str)
+            instance.actual_instance = MultiAssetModel.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # deserialize data into NullAssetModel1
+        # deserialize data into NullAssetModel
         try:
-            instance.actual_instance = NullAssetModel1.from_json(json_str)
+            instance.actual_instance = NullAssetModel.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # deserialize data into TextAssetModel1
+        # deserialize data into TextAssetModel
         try:
-            instance.actual_instance = TextAssetModel1.from_json(json_str)
+            instance.actual_instance = TextAssetModel.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into QueryValidationRapidsResultAsset with oneOf schemas: FileAssetModel1, MultiAssetModel1, NullAssetModel1, TextAssetModel1. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into QueryValidationRapidsResultAsset with oneOf schemas: FileAssetModel, MultiAssetModel, NullAssetModel, TextAssetModel. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into QueryValidationRapidsResultAsset with oneOf schemas: FileAssetModel1, MultiAssetModel1, NullAssetModel1, TextAssetModel1. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into QueryValidationRapidsResultAsset with oneOf schemas: FileAssetModel, MultiAssetModel, NullAssetModel, TextAssetModel. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -156,7 +156,7 @@ class QueryValidationRapidsResultAsset(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], FileAssetModel1, MultiAssetModel1, NullAssetModel1, TextAssetModel1]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], FileAssetModel, MultiAssetModel, NullAssetModel, TextAssetModel]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None
