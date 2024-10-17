@@ -110,11 +110,6 @@ class RapidataValidationSet:
                 model=model, files=[asset.path]
             )
 
-        elif isinstance(asset, MultiAsset):
-            self.openapi_service.validation_api.validation_add_validation_rapid_post(
-                model=model, files=[a.path for a in asset if isinstance(a, MediaAsset)]
-            )
-
         elif isinstance(asset, TextAsset):
             model = AddValidationTextRapidModel(
                 validationSetId=self.id,
@@ -125,11 +120,36 @@ class RapidataValidationSet:
                     for meta in metadata
                 ],
                 randomCorrectProbability=randomCorrectProbability,
-                text=asset.text,
+                texts=[asset.text],
             )
             self.openapi_service.validation_api.validation_add_validation_text_rapid_post(
                 add_validation_text_rapid_model=model
             )
+
+        elif isinstance(asset, MultiAsset):
+            files = [a.path for a in asset if isinstance(a, MediaAsset)]
+            texts = [a.text for a in asset if isinstance(a, TextAsset)]
+            if files:
+                self.openapi_service.validation_api.validation_add_validation_rapid_post(
+                    model=model, files=files # type: ignore
+                )
+            if texts:
+                model = AddValidationTextRapidModel(
+                    validationSetId=self.id,
+                    payload=AddValidationRapidModelPayload(payload),
+                    truth=AddValidationRapidModelTruth(truths),
+                    metadata=[
+                        DatapointMetadataModelMetadataInner(meta.to_model())
+                        for meta in metadata
+                    ],
+                    randomCorrectProbability=randomCorrectProbability,
+                    texts=texts,
+                )
+                self.openapi_service.validation_api.validation_add_validation_text_rapid_post(
+                    add_validation_text_rapid_model=model
+                )
+
+
         else:
             raise ValueError("Invalid asset type")
 
