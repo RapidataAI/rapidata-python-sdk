@@ -165,15 +165,38 @@ class RapidataOrderBuilder:
             openapi_service=self._openapi_service,
         )
 
-        if all(isinstance(item, TextAsset) for item in self._assets):
-            assets = cast(list[TextAsset], self._assets)
-            order.dataset.add_texts(assets)
-
-        elif all(isinstance(item, (MediaAsset, MultiAsset)) for item in self._assets):
-            assets = cast(list[MediaAsset | MultiAsset], self._assets)
+        if all(isinstance(item, MediaAsset) for item in self._assets):
+            assets = cast(list[MediaAsset], self._assets)
             order.dataset.add_media_from_paths(
                 assets, self._metadata, max_workers
             )
+        
+        elif all(isinstance(item, TextAsset) for item in self._assets):
+            assets = cast(list[TextAsset], self._assets)
+            order.dataset.add_texts(assets)
+
+        elif all(isinstance(item, MultiAsset) for item in self._assets):
+            multi_assets = cast(list[MultiAsset], self._assets)
+            
+            # Check if all MultiAssets contain the same type of assets
+            first_asset_type = type(multi_assets[0].assets[0])
+            if not all(isinstance(asset, first_asset_type) for multi_asset in multi_assets for asset in multi_asset.assets):
+                raise ValueError("All MultiAssets must contain the same type of assets (either all MediaAssets or all TextAssets).")
+            
+            # Process based on the asset type
+            if issubclass(first_asset_type, MediaAsset):
+                order.dataset.add_media_from_paths(
+                    multi_assets, self._metadata, max_workers
+                )
+
+            elif issubclass(first_asset_type, TextAsset):
+                order.dataset.add_texts(multi_assets)
+
+            else:
+                raise ValueError("MultiAsset must contain MediaAssets or TextAssets objects.")
+        
+        else:
+            raise ValueError("Media paths must be of type MediaAsset, TextAsset, or MultiAsset.")
 
         if submit:
             order.submit()
