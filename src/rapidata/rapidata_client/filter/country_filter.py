@@ -12,5 +12,5 @@ class CountryFilter(Filter):
 
         self.country_codes = country_codes
 
-    def to_model(self) -> Any:
+    def to_model(self):
         return CountryUserFilterModel(_t="CountryFilter", countries=self.country_codes)

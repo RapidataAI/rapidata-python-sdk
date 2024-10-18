@@ -14,5 +14,5 @@ class LanguageFilter(Filter):
 
         self.languages = language_codes
 
-    def to_model(self) -> Any:
+    def to_model(self):
         return LanguageUserFilterModel(_t="LanguageFilter", languages=self.languages)

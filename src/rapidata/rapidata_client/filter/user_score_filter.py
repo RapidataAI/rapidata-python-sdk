@@ -7,11 +7,11 @@ from rapidata.api_client.models.user_score_user_filter_model import (
 
 class UserScoreFilter(Filter):
 
-    def __init__(self, upper_bound: int, lower_bound: int):
+    def __init__(self, lower_bound: int = 0, upper_bound: int = 1):
         self.upper_bound = upper_bound
         self.lower_bound = lower_bound
 
-    def to_model(self) -> Any:
+    def to_model(self):
         return UserScoreUserFilterModel(
             _t="UserScoreFilter",
             upperbound=self.upper_bound,

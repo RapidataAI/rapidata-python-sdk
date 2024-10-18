@@ -6,17 +6,10 @@ from rapidata.api_client.models.gender import Gender
 
 class GenderFilter(Filter):
 
-    def __init__(self, genders: list[str]):
-        # check that all the age groups exist in the AgeGroup enum
-        for gender in genders:
-            if gender not in Gender:
-                raise ValueError(
-                    f"Invalid gender {Gender}, available gender groups are {[g.value for g in Gender]}"
-                )
+    def __init__(self, genders: list[Gender]):
+        self.genders = genders
 
-        self.genders = [Gender(gender) for gender in Gender]
-
-    def to_model(self) -> Any:
+    def to_model(self):
         return GenderUserFilterModel(
             _t="GenderFilter",
             genders=self.genders,
