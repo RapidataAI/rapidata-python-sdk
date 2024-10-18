@@ -20,4 +20,8 @@ from .rapidata_client import (
     MediaAsset,
     TextAsset,
     MultiAsset,
+    CountryFilter,
+    LanguageFilter,
+    UserScoreFilter,
+    CampaignFilter,
 )
