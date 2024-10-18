@@ -21,12 +21,12 @@ from typing import Optional
 from typing_extensions import Annotated
 from rapidata.api_client.models.create_client_model import CreateClientModel
 from rapidata.api_client.models.issue_auth_token_result import IssueAuthTokenResult
-from rapidata.api_client.models.legacy_issue_client_auth_token_result import LegacyIssueClientAuthTokenResult
-from rapidata.api_client.models.legacy_request_password_reset_command import LegacyRequestPasswordResetCommand
-from rapidata.api_client.models.legacy_submit_password_reset_command import LegacySubmitPasswordResetCommand
+from rapidata.api_client.models.issue_client_auth_token_result import IssueClientAuthTokenResult
 from rapidata.api_client.models.login_model import LoginModel
+from rapidata.api_client.models.request_password_reset_command import RequestPasswordResetCommand
 from rapidata.api_client.models.signup_customer_model import SignupCustomerModel
 from rapidata.api_client.models.signup_shadow_customer_model import SignupShadowCustomerModel
+from rapidata.api_client.models.submit_password_reset_command import SubmitPasswordResetCommand
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -295,8 +295,7 @@ class IdentityApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
-            'oauth2'
+            'bearer'
         ]
 
         return self.api_client.param_serialize(
@@ -565,8 +564,7 @@ class IdentityApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
-            'oauth2'
+            'bearer'
         ]
 
         return self.api_client.param_serialize(
@@ -819,8 +817,7 @@ class IdentityApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
-            'oauth2'
+            'bearer'
         ]
 
         return self.api_client.param_serialize(
@@ -1090,8 +1087,7 @@ class IdentityApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
-            'oauth2'
+            'bearer'
         ]
 
         return self.api_client.param_serialize(
@@ -1336,8 +1332,7 @@ class IdentityApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
-            'oauth2'
+            'bearer'
         ]
 
         return self.api_client.param_serialize(
@@ -1374,7 +1369,7 @@ class IdentityApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> LegacyIssueClientAuthTokenResult:
+    ) -> IssueClientAuthTokenResult:
         """Issues a new auth token using the client credentials.
 
 
@@ -1411,7 +1406,7 @@ class IdentityApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "LegacyIssueClientAuthTokenResult",
+            '200': "IssueClientAuthTokenResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1440,7 +1435,7 @@ class IdentityApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[LegacyIssueClientAuthTokenResult]:
+    ) -> ApiResponse[IssueClientAuthTokenResult]:
         """Issues a new auth token using the client credentials.
 
 
@@ -1477,7 +1472,7 @@ class IdentityApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "LegacyIssueClientAuthTokenResult",
+            '200': "IssueClientAuthTokenResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1543,7 +1538,7 @@ class IdentityApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "LegacyIssueClientAuthTokenResult",
+            '200': "IssueClientAuthTokenResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1599,8 +1594,7 @@ class IdentityApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
-            'oauth2'
+            'bearer'
         ]
 
         return self.api_client.param_serialize(
@@ -1866,8 +1860,7 @@ class IdentityApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
-            'oauth2'
+            'bearer'
         ]
 
         return self.api_client.param_serialize(
@@ -2103,8 +2096,7 @@ class IdentityApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
-            'oauth2'
+            'bearer'
         ]
 
         return self.api_client.param_serialize(
@@ -2126,276 +2118,9 @@ class IdentityApi:
 
 
     @validate_call
-    def identity_register_temporary_post(
-        self,
-        signup_shadow_customer_model: Annotated[Optional[SignupShadowCustomerModel], Field(description="The model to register the temporary customer with.")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> None:
-        """Registers and logs in a temporary customer.
-
-
-        :param signup_shadow_customer_model: The model to register the temporary customer with.
-        :type signup_shadow_customer_model: SignupShadowCustomerModel
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._identity_register_temporary_post_serialize(
-            signup_shadow_customer_model=signup_shadow_customer_model,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def identity_register_temporary_post_with_http_info(
-        self,
-        signup_shadow_customer_model: Annotated[Optional[SignupShadowCustomerModel], Field(description="The model to register the temporary customer with.")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
-        """Registers and logs in a temporary customer.
-
-
-        :param signup_shadow_customer_model: The model to register the temporary customer with.
-        :type signup_shadow_customer_model: SignupShadowCustomerModel
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._identity_register_temporary_post_serialize(
-            signup_shadow_customer_model=signup_shadow_customer_model,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def identity_register_temporary_post_without_preload_content(
-        self,
-        signup_shadow_customer_model: Annotated[Optional[SignupShadowCustomerModel], Field(description="The model to register the temporary customer with.")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Registers and logs in a temporary customer.
-
-
-        :param signup_shadow_customer_model: The model to register the temporary customer with.
-        :type signup_shadow_customer_model: SignupShadowCustomerModel
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._identity_register_temporary_post_serialize(
-            signup_shadow_customer_model=signup_shadow_customer_model,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _identity_register_temporary_post_serialize(
-        self,
-        signup_shadow_customer_model,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-        if signup_shadow_customer_model is not None:
-            _body_params = signup_shadow_customer_model
-
-
-
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
-
-        # authentication setting
-        _auth_settings: List[str] = [
-            'bearer', 
-            'oauth2'
-        ]
-
-        return self.api_client.param_serialize(
-            method='POST',
-            resource_path='/Identity/RegisterTemporary',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
     def identity_request_reset_post(
         self,
-        legacy_request_password_reset_command: Annotated[Optional[LegacyRequestPasswordResetCommand], Field(description="The command containing the user's email.")] = None,
+        request_password_reset_command: Annotated[Optional[RequestPasswordResetCommand], Field(description="The command containing the user's email.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2412,8 +2137,8 @@ class IdentityApi:
         """Request a password reset for a user.
 
 
-        :param legacy_request_password_reset_command: The command containing the user's email.
-        :type legacy_request_password_reset_command: LegacyRequestPasswordResetCommand
+        :param request_password_reset_command: The command containing the user's email.
+        :type request_password_reset_command: RequestPasswordResetCommand
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2437,7 +2162,7 @@ class IdentityApi:
         """ # noqa: E501
 
         _param = self._identity_request_reset_post_serialize(
-            legacy_request_password_reset_command=legacy_request_password_reset_command,
+            request_password_reset_command=request_password_reset_command,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2461,7 +2186,7 @@ class IdentityApi:
     @validate_call
     def identity_request_reset_post_with_http_info(
         self,
-        legacy_request_password_reset_command: Annotated[Optional[LegacyRequestPasswordResetCommand], Field(description="The command containing the user's email.")] = None,
+        request_password_reset_command: Annotated[Optional[RequestPasswordResetCommand], Field(description="The command containing the user's email.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2478,8 +2203,8 @@ class IdentityApi:
         """Request a password reset for a user.
 
 
-        :param legacy_request_password_reset_command: The command containing the user's email.
-        :type legacy_request_password_reset_command: LegacyRequestPasswordResetCommand
+        :param request_password_reset_command: The command containing the user's email.
+        :type request_password_reset_command: RequestPasswordResetCommand
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2503,7 +2228,7 @@ class IdentityApi:
         """ # noqa: E501
 
         _param = self._identity_request_reset_post_serialize(
-            legacy_request_password_reset_command=legacy_request_password_reset_command,
+            request_password_reset_command=request_password_reset_command,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2527,7 +2252,7 @@ class IdentityApi:
     @validate_call
     def identity_request_reset_post_without_preload_content(
         self,
-        legacy_request_password_reset_command: Annotated[Optional[LegacyRequestPasswordResetCommand], Field(description="The command containing the user's email.")] = None,
+        request_password_reset_command: Annotated[Optional[RequestPasswordResetCommand], Field(description="The command containing the user's email.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2544,8 +2269,8 @@ class IdentityApi:
         """Request a password reset for a user.
 
 
-        :param legacy_request_password_reset_command: The command containing the user's email.
-        :type legacy_request_password_reset_command: LegacyRequestPasswordResetCommand
+        :param request_password_reset_command: The command containing the user's email.
+        :type request_password_reset_command: RequestPasswordResetCommand
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2569,7 +2294,7 @@ class IdentityApi:
         """ # noqa: E501
 
         _param = self._identity_request_reset_post_serialize(
-            legacy_request_password_reset_command=legacy_request_password_reset_command,
+            request_password_reset_command=request_password_reset_command,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2588,7 +2313,7 @@ class IdentityApi:
 
     def _identity_request_reset_post_serialize(
         self,
-        legacy_request_password_reset_command,
+        request_password_reset_command,
         _request_auth,
         _content_type,
         _headers,
@@ -2614,8 +2339,8 @@ class IdentityApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if legacy_request_password_reset_command is not None:
-            _body_params = legacy_request_password_reset_command
+        if request_password_reset_command is not None:
+            _body_params = request_password_reset_command
 
 
 
@@ -2637,8 +2362,7 @@ class IdentityApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
-            'oauth2'
+            'bearer'
         ]
 
         return self.api_client.param_serialize(
@@ -2904,8 +2628,7 @@ class IdentityApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
-            'oauth2'
+            'bearer'
         ]
 
         return self.api_client.param_serialize(
@@ -2929,7 +2652,7 @@ class IdentityApi:
     @validate_call
     def identity_submit_reset_post(
         self,
-        legacy_submit_password_reset_command: Annotated[Optional[LegacySubmitPasswordResetCommand], Field(description="The command containing the user's email, the reset token and the new password.")] = None,
+        submit_password_reset_command: Annotated[Optional[SubmitPasswordResetCommand], Field(description="The command containing the user's email, the reset token and the new password.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2946,8 +2669,8 @@ class IdentityApi:
         """Updates the password of a user after a password reset request.
 
 
-        :param legacy_submit_password_reset_command: The command containing the user's email, the reset token and the new password.
-        :type legacy_submit_password_reset_command: LegacySubmitPasswordResetCommand
+        :param submit_password_reset_command: The command containing the user's email, the reset token and the new password.
+        :type submit_password_reset_command: SubmitPasswordResetCommand
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2971,7 +2694,7 @@ class IdentityApi:
         """ # noqa: E501
 
         _param = self._identity_submit_reset_post_serialize(
-            legacy_submit_password_reset_command=legacy_submit_password_reset_command,
+            submit_password_reset_command=submit_password_reset_command,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2995,7 +2718,7 @@ class IdentityApi:
     @validate_call
     def identity_submit_reset_post_with_http_info(
         self,
-        legacy_submit_password_reset_command: Annotated[Optional[LegacySubmitPasswordResetCommand], Field(description="The command containing the user's email, the reset token and the new password.")] = None,
+        submit_password_reset_command: Annotated[Optional[SubmitPasswordResetCommand], Field(description="The command containing the user's email, the reset token and the new password.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3012,8 +2735,8 @@ class IdentityApi:
         """Updates the password of a user after a password reset request.
 
 
-        :param legacy_submit_password_reset_command: The command containing the user's email, the reset token and the new password.
-        :type legacy_submit_password_reset_command: LegacySubmitPasswordResetCommand
+        :param submit_password_reset_command: The command containing the user's email, the reset token and the new password.
+        :type submit_password_reset_command: SubmitPasswordResetCommand
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3037,7 +2760,7 @@ class IdentityApi:
         """ # noqa: E501
 
         _param = self._identity_submit_reset_post_serialize(
-            legacy_submit_password_reset_command=legacy_submit_password_reset_command,
+            submit_password_reset_command=submit_password_reset_command,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3061,7 +2784,7 @@ class IdentityApi:
     @validate_call
     def identity_submit_reset_post_without_preload_content(
         self,
-        legacy_submit_password_reset_command: Annotated[Optional[LegacySubmitPasswordResetCommand], Field(description="The command containing the user's email, the reset token and the new password.")] = None,
+        submit_password_reset_command: Annotated[Optional[SubmitPasswordResetCommand], Field(description="The command containing the user's email, the reset token and the new password.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3078,8 +2801,8 @@ class IdentityApi:
         """Updates the password of a user after a password reset request.
 
 
-        :param legacy_submit_password_reset_command: The command containing the user's email, the reset token and the new password.
-        :type legacy_submit_password_reset_command: LegacySubmitPasswordResetCommand
+        :param submit_password_reset_command: The command containing the user's email, the reset token and the new password.
+        :type submit_password_reset_command: SubmitPasswordResetCommand
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3103,7 +2826,7 @@ class IdentityApi:
         """ # noqa: E501
 
         _param = self._identity_submit_reset_post_serialize(
-            legacy_submit_password_reset_command=legacy_submit_password_reset_command,
+            submit_password_reset_command=submit_password_reset_command,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3122,7 +2845,7 @@ class IdentityApi:
 
     def _identity_submit_reset_post_serialize(
         self,
-        legacy_submit_password_reset_command,
+        submit_password_reset_command,
         _request_auth,
         _content_type,
         _headers,
@@ -3148,8 +2871,8 @@ class IdentityApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if legacy_submit_password_reset_command is not None:
-            _body_params = legacy_submit_password_reset_command
+        if submit_password_reset_command is not None:
+            _body_params = submit_password_reset_command
 
 
 
@@ -3171,8 +2894,7 @@ class IdentityApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
-            'oauth2'
+            'bearer'
         ]
 
         return self.api_client.param_serialize(
@@ -3438,8 +3160,7 @@ class IdentityApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
-            'oauth2'
+            'bearer'
         ]
 
         return self.api_client.param_serialize(

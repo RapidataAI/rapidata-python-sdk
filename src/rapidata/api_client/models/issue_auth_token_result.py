@@ -24,7 +24,7 @@ from typing_extensions import Self
 
 class IssueAuthTokenResult(BaseModel):
     """
-    The result of issuing an auth token.
+    The result of issuing a auth token.
     """ # noqa: E501
     token: StrictStr = Field(description="The issued auth token.")
     __properties: ClassVar[List[str]] = ["token"]

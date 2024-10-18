@@ -284,8 +284,7 @@ class NewsletterApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
-            'oauth2'
+            'bearer'
         ]
 
         return self.api_client.param_serialize(
@@ -551,8 +550,7 @@ class NewsletterApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
-            'oauth2'
+            'bearer'
         ]
 
         return self.api_client.param_serialize(

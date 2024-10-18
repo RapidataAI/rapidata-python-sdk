@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.file_asset_model_metadata_inner import FileAssetModelMetadataInner
+from rapidata.api_client.models.file_asset_metadata_inner import FileAssetMetadataInner
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -29,7 +29,7 @@ class FileAssetModel(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for FileAssetModel", alias="_t")
     file_name: StrictStr = Field(alias="fileName")
-    metadata: List[FileAssetModelMetadataInner]
+    metadata: List[FileAssetMetadataInner]
     identifier: StrictStr
     __properties: ClassVar[List[str]] = ["_t", "fileName", "metadata", "identifier"]
 
@@ -100,7 +100,7 @@ class FileAssetModel(BaseModel):
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'FileAssetModel',
             "fileName": obj.get("fileName"),
-            "metadata": [FileAssetModelMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
+            "metadata": [FileAssetMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
             "identifier": obj.get("identifier")
         })
         return _obj
