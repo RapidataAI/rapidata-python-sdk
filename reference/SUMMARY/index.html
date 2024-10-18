@@ -1,0 +1,832 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://rapidataai.github.io/rapidata-python-sdk/reference/SUMMARY/">
+      
+      
+      
+      
+      <link rel="icon" href="../../media/rapidata.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.34">
+    
+    
+      
+        <title>SUMMARY - Rapidata Python SDK Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.35f28582.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Rapidata Python SDK Documentation" class="md-header__button md-logo" aria-label="Rapidata Python SDK Documentation" data-md-component="logo">
+      
+  <img src="../../media/rapidata.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Rapidata Python SDK Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              SUMMARY
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="cyan"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="cyan"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/RapidataAI/rapidata-python-sdk" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M186.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1M480 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2m-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3m-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rapidata-python-sdk
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Rapidata Python SDK Documentation" class="md-nav__button md-logo" aria-label="Rapidata Python SDK Documentation" data-md-component="logo">
+      
+  <img src="../../media/rapidata.svg" alt="logo">
+
+    </a>
+    Rapidata Python SDK Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/RapidataAI/rapidata-python-sdk" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M186.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1M480 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2m-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3m-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rapidata-python-sdk
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quickstart_classification/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Quickstart Classification Guide
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quickstart_compare/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Quickstart Compare Guide
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Examples
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../custom_orders/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Custom orders
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Documentation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  <h1>SUMMARY</h1>
+
+<ul>
+<li><a href="../rapidata/">rapidata</a><ul>
+<li><a href="../rapidata/api_client/">api_client</a><ul>
+<li><a href="../rapidata/api_client/api/">api</a><ul>
+<li><a href="../rapidata/api_client/api/campaign_api/">campaign_api</a></li>
+<li><a href="../rapidata/api_client/api/coco_api/">coco_api</a></li>
+<li><a href="../rapidata/api_client/api/compare_workflow_api/">compare_workflow_api</a></li>
+<li><a href="../rapidata/api_client/api/datapoint_api/">datapoint_api</a></li>
+<li><a href="../rapidata/api_client/api/dataset_api/">dataset_api</a></li>
+<li><a href="../rapidata/api_client/api/identity_api/">identity_api</a></li>
+<li><a href="../rapidata/api_client/api/newsletter_api/">newsletter_api</a></li>
+<li><a href="../rapidata/api_client/api/order_api/">order_api</a></li>
+<li><a href="../rapidata/api_client/api/pipeline_api/">pipeline_api</a></li>
+<li><a href="../rapidata/api_client/api/rapid_api/">rapid_api</a></li>
+<li><a href="../rapidata/api_client/api/rapidata_identity_api_api/">rapidata_identity_api_api</a></li>
+<li><a href="../rapidata/api_client/api/simple_workflow_api/">simple_workflow_api</a></li>
+<li><a href="../rapidata/api_client/api/user_info_api/">user_info_api</a></li>
+<li><a href="../rapidata/api_client/api/validation_api/">validation_api</a></li>
+<li><a href="../rapidata/api_client/api/workflow_api/">workflow_api</a></li>
+</ul>
+</li>
+<li><a href="../rapidata/api_client/api_client/">api_client</a></li>
+<li><a href="../rapidata/api_client/api_response/">api_response</a></li>
+<li><a href="../rapidata/api_client/configuration/">configuration</a></li>
+<li><a href="../rapidata/api_client/exceptions/">exceptions</a></li>
+<li><a href="../rapidata/api_client/models/">models</a><ul>
+<li><a href="../rapidata/api_client/models/add_campaign_artifact_result/">add_campaign_artifact_result</a></li>
+<li><a href="../rapidata/api_client/models/add_campaign_model/">add_campaign_model</a></li>
+<li><a href="../rapidata/api_client/models/add_validation_rapid_model/">add_validation_rapid_model</a></li>
+<li><a href="../rapidata/api_client/models/add_validation_rapid_model_payload/">add_validation_rapid_model_payload</a></li>
+<li><a href="../rapidata/api_client/models/add_validation_rapid_model_truth/">add_validation_rapid_model_truth</a></li>
+<li><a href="../rapidata/api_client/models/add_validation_rapid_result/">add_validation_rapid_result</a></li>
+<li><a href="../rapidata/api_client/models/add_validation_text_rapid_model/">add_validation_text_rapid_model</a></li>
+<li><a href="../rapidata/api_client/models/admin_order_model/">admin_order_model</a></li>
+<li><a href="../rapidata/api_client/models/admin_order_model_paged_result/">admin_order_model_paged_result</a></li>
+<li><a href="../rapidata/api_client/models/age_group/">age_group</a></li>
+<li><a href="../rapidata/api_client/models/age_user_filter_model/">age_user_filter_model</a></li>
+<li><a href="../rapidata/api_client/models/aggregator_type/">aggregator_type</a></li>
+<li><a href="../rapidata/api_client/models/attach_category_rapid_blueprint/">attach_category_rapid_blueprint</a></li>
+<li><a href="../rapidata/api_client/models/attach_category_result/">attach_category_result</a></li>
+<li><a href="../rapidata/api_client/models/attach_category_truth/">attach_category_truth</a></li>
+<li><a href="../rapidata/api_client/models/base_error/">base_error</a></li>
+<li><a href="../rapidata/api_client/models/bounding_box_payload/">bounding_box_payload</a></li>
+<li><a href="../rapidata/api_client/models/bounding_box_rapid_blueprint/">bounding_box_rapid_blueprint</a></li>
+<li><a href="../rapidata/api_client/models/bounding_box_result/">bounding_box_result</a></li>
+<li><a href="../rapidata/api_client/models/bounding_box_truth/">bounding_box_truth</a></li>
+<li><a href="../rapidata/api_client/models/box_shape/">box_shape</a></li>
+<li><a href="../rapidata/api_client/models/campaign_artifact_model/">campaign_artifact_model</a></li>
+<li><a href="../rapidata/api_client/models/campaign_query_model/">campaign_query_model</a></li>
+<li><a href="../rapidata/api_client/models/campaign_query_model_paged_result/">campaign_query_model_paged_result</a></li>
+<li><a href="../rapidata/api_client/models/campaign_status/">campaign_status</a></li>
+<li><a href="../rapidata/api_client/models/campaign_user_filter_model/">campaign_user_filter_model</a></li>
+<li><a href="../rapidata/api_client/models/capped_selection/">capped_selection</a></li>
+<li><a href="../rapidata/api_client/models/capped_selection_selections_inner/">capped_selection_selections_inner</a></li>
+<li><a href="../rapidata/api_client/models/classification_metadata/">classification_metadata</a></li>
+<li><a href="../rapidata/api_client/models/classification_metadata_filter_config/">classification_metadata_filter_config</a></li>
+<li><a href="../rapidata/api_client/models/classification_metadata_model/">classification_metadata_model</a></li>
+<li><a href="../rapidata/api_client/models/classify_payload/">classify_payload</a></li>
+<li><a href="../rapidata/api_client/models/clone_dataset_model/">clone_dataset_model</a></li>
+<li><a href="../rapidata/api_client/models/clone_order_model/">clone_order_model</a></li>
+<li><a href="../rapidata/api_client/models/clone_order_result/">clone_order_result</a></li>
+<li><a href="../rapidata/api_client/models/compare_payload/">compare_payload</a></li>
+<li><a href="../rapidata/api_client/models/compare_rapid_blueprint/">compare_rapid_blueprint</a></li>
+<li><a href="../rapidata/api_client/models/compare_result/">compare_result</a></li>
+<li><a href="../rapidata/api_client/models/compare_truth/">compare_truth</a></li>
+<li><a href="../rapidata/api_client/models/compare_workflow_config/">compare_workflow_config</a></li>
+<li><a href="../rapidata/api_client/models/compare_workflow_config_model/">compare_workflow_config_model</a></li>
+<li><a href="../rapidata/api_client/models/compare_workflow_config_rapid_selection_configs_inner/">compare_workflow_config_rapid_selection_configs_inner</a></li>
+<li><a href="../rapidata/api_client/models/compare_workflow_config_referee/">compare_workflow_config_referee</a></li>
+<li><a href="../rapidata/api_client/models/compare_workflow_get_result_overview_get200_response/">compare_workflow_get_result_overview_get200_response</a></li>
+<li><a href="../rapidata/api_client/models/compare_workflow_model/">compare_workflow_model</a></li>
+<li><a href="../rapidata/api_client/models/compare_workflow_model1/">compare_workflow_model1</a></li>
+<li><a href="../rapidata/api_client/models/compare_workflow_model1_referee/">compare_workflow_model1_referee</a></li>
+<li><a href="../rapidata/api_client/models/completed_rapid_model/">completed_rapid_model</a></li>
+<li><a href="../rapidata/api_client/models/completed_rapid_model_asset/">completed_rapid_model_asset</a></li>
+<li><a href="../rapidata/api_client/models/conditional_validation_rapid_selection_config/">conditional_validation_rapid_selection_config</a></li>
+<li><a href="../rapidata/api_client/models/conditional_validation_selection/">conditional_validation_selection</a></li>
+<li><a href="../rapidata/api_client/models/coordinate/">coordinate</a></li>
+<li><a href="../rapidata/api_client/models/correlated_rapid_selection_config/">correlated_rapid_selection_config</a></li>
+<li><a href="../rapidata/api_client/models/count_classification_metadata_filter_config/">count_classification_metadata_filter_config</a></li>
+<li><a href="../rapidata/api_client/models/count_metadata/">count_metadata</a></li>
+<li><a href="../rapidata/api_client/models/count_metadata_model/">count_metadata_model</a></li>
+<li><a href="../rapidata/api_client/models/country_user_filter_model/">country_user_filter_model</a></li>
+<li><a href="../rapidata/api_client/models/create_client_model/">create_client_model</a></li>
+<li><a href="../rapidata/api_client/models/create_complex_order_model/">create_complex_order_model</a></li>
+<li><a href="../rapidata/api_client/models/create_complex_order_model_pipeline/">create_complex_order_model_pipeline</a></li>
+<li><a href="../rapidata/api_client/models/create_complex_order_result/">create_complex_order_result</a></li>
+<li><a href="../rapidata/api_client/models/create_dataset_artifact_model/">create_dataset_artifact_model</a></li>
+<li><a href="../rapidata/api_client/models/create_dataset_artifact_model_dataset/">create_dataset_artifact_model_dataset</a></li>
+<li><a href="../rapidata/api_client/models/create_default_order_model/">create_default_order_model</a></li>
+<li><a href="../rapidata/api_client/models/create_default_order_model_workflow_config/">create_default_order_model_workflow_config</a></li>
+<li><a href="../rapidata/api_client/models/create_demographic_rapid_model/">create_demographic_rapid_model</a></li>
+<li><a href="../rapidata/api_client/models/create_empty_validation_set_result/">create_empty_validation_set_result</a></li>
+<li><a href="../rapidata/api_client/models/create_independent_workflow_model/">create_independent_workflow_model</a></li>
+<li><a href="../rapidata/api_client/models/create_independent_workflow_model_workflow_config/">create_independent_workflow_model_workflow_config</a></li>
+<li><a href="../rapidata/api_client/models/create_independent_workflow_result/">create_independent_workflow_result</a></li>
+<li><a href="../rapidata/api_client/models/create_legacy_order_result/">create_legacy_order_result</a></li>
+<li><a href="../rapidata/api_client/models/create_order_model/">create_order_model</a></li>
+<li><a href="../rapidata/api_client/models/create_order_model_referee/">create_order_model_referee</a></li>
+<li><a href="../rapidata/api_client/models/create_order_model_selections_inner/">create_order_model_selections_inner</a></li>
+<li><a href="../rapidata/api_client/models/create_order_model_user_filters_inner/">create_order_model_user_filters_inner</a></li>
+<li><a href="../rapidata/api_client/models/create_order_model_workflow/">create_order_model_workflow</a></li>
+<li><a href="../rapidata/api_client/models/create_order_result/">create_order_result</a></li>
+<li><a href="../rapidata/api_client/models/create_simple_pipeline_model/">create_simple_pipeline_model</a></li>
+<li><a href="../rapidata/api_client/models/create_simple_pipeline_model_artifacts_inner/">create_simple_pipeline_model_artifacts_inner</a></li>
+<li><a href="../rapidata/api_client/models/create_simple_pipeline_model_pipeline_steps_inner/">create_simple_pipeline_model_pipeline_steps_inner</a></li>
+<li><a href="../rapidata/api_client/models/create_unsupported_order_model/">create_unsupported_order_model</a></li>
+<li><a href="../rapidata/api_client/models/customer_order_model/">customer_order_model</a></li>
+<li><a href="../rapidata/api_client/models/customer_order_model_paged_result/">customer_order_model_paged_result</a></li>
+<li><a href="../rapidata/api_client/models/datapoint/">datapoint</a></li>
+<li><a href="../rapidata/api_client/models/datapoint_asset/">datapoint_asset</a></li>
+<li><a href="../rapidata/api_client/models/datapoint_get_by_id_get200_response/">datapoint_get_by_id_get200_response</a></li>
+<li><a href="../rapidata/api_client/models/datapoint_metadata_model/">datapoint_metadata_model</a></li>
+<li><a href="../rapidata/api_client/models/datapoint_metadata_model_metadata_inner/">datapoint_metadata_model_metadata_inner</a></li>
+<li><a href="../rapidata/api_client/models/datapoint_model/">datapoint_model</a></li>
+<li><a href="../rapidata/api_client/models/datapoint_model_asset/">datapoint_model_asset</a></li>
+<li><a href="../rapidata/api_client/models/dataset_artifact_model/">dataset_artifact_model</a></li>
+<li><a href="../rapidata/api_client/models/dataset_evaluation_step_model/">dataset_evaluation_step_model</a></li>
+<li><a href="../rapidata/api_client/models/demographic_metadata_model/">demographic_metadata_model</a></li>
+<li><a href="../rapidata/api_client/models/demographic_rapid_selection_config/">demographic_rapid_selection_config</a></li>
+<li><a href="../rapidata/api_client/models/demographic_selection/">demographic_selection</a></li>
+<li><a href="../rapidata/api_client/models/early_stopping_referee_model/">early_stopping_referee_model</a></li>
+<li><a href="../rapidata/api_client/models/empty_validation_truth/">empty_validation_truth</a></li>
+<li><a href="../rapidata/api_client/models/error_type/">error_type</a></li>
+<li><a href="../rapidata/api_client/models/feature_flag/">feature_flag</a></li>
+<li><a href="../rapidata/api_client/models/feature_flag_model/">feature_flag_model</a></li>
+<li><a href="../rapidata/api_client/models/feedback_model/">feedback_model</a></li>
+<li><a href="../rapidata/api_client/models/file_artifact_model/">file_artifact_model</a></li>
+<li><a href="../rapidata/api_client/models/file_asset/">file_asset</a></li>
+<li><a href="../rapidata/api_client/models/file_asset_metadata_inner/">file_asset_metadata_inner</a></li>
+<li><a href="../rapidata/api_client/models/file_asset_model/">file_asset_model</a></li>
+<li><a href="../rapidata/api_client/models/file_asset_model1/">file_asset_model1</a></li>
+<li><a href="../rapidata/api_client/models/file_asset_model1_metadata_inner/">file_asset_model1_metadata_inner</a></li>
+<li><a href="../rapidata/api_client/models/file_asset_model2/">file_asset_model2</a></li>
+<li><a href="../rapidata/api_client/models/file_asset_model_metadata_inner/">file_asset_model_metadata_inner</a></li>
+<li><a href="../rapidata/api_client/models/filter/">filter</a></li>
+<li><a href="../rapidata/api_client/models/filter_operator/">filter_operator</a></li>
+<li><a href="../rapidata/api_client/models/free_text_payload/">free_text_payload</a></li>
+<li><a href="../rapidata/api_client/models/free_text_rapid_blueprint/">free_text_rapid_blueprint</a></li>
+<li><a href="../rapidata/api_client/models/free_text_result/">free_text_result</a></li>
+<li><a href="../rapidata/api_client/models/gender/">gender</a></li>
+<li><a href="../rapidata/api_client/models/gender_user_filter_model/">gender_user_filter_model</a></li>
+<li><a href="../rapidata/api_client/models/get_attach_category_workflow_result_overview_result/">get_attach_category_workflow_result_overview_result</a></li>
+<li><a href="../rapidata/api_client/models/get_available_validation_sets_result/">get_available_validation_sets_result</a></li>
+<li><a href="../rapidata/api_client/models/get_compare_workflow_result_overview_result/">get_compare_workflow_result_overview_result</a></li>
+<li><a href="../rapidata/api_client/models/get_compare_workflow_result_overview_small_result/">get_compare_workflow_result_overview_small_result</a></li>
+<li><a href="../rapidata/api_client/models/get_datapoints_by_dataset_id_result/">get_datapoints_by_dataset_id_result</a></li>
+<li><a href="../rapidata/api_client/models/get_dataset_by_id_result/">get_dataset_by_id_result</a></li>
+<li><a href="../rapidata/api_client/models/get_order_by_id_result/">get_order_by_id_result</a></li>
+<li><a href="../rapidata/api_client/models/get_order_results_result/">get_order_results_result</a></li>
+<li><a href="../rapidata/api_client/models/get_pipeline_by_id_result/">get_pipeline_by_id_result</a></li>
+<li><a href="../rapidata/api_client/models/get_pipeline_by_id_result_artifacts_value/">get_pipeline_by_id_result_artifacts_value</a></li>
+<li><a href="../rapidata/api_client/models/get_public_orders_result/">get_public_orders_result</a></li>
+<li><a href="../rapidata/api_client/models/get_simple_workflow_result_overview_result/">get_simple_workflow_result_overview_result</a></li>
+<li><a href="../rapidata/api_client/models/get_workflow_by_id_result/">get_workflow_by_id_result</a></li>
+<li><a href="../rapidata/api_client/models/get_workflow_by_id_result_workflow/">get_workflow_by_id_result_workflow</a></li>
+<li><a href="../rapidata/api_client/models/get_workflow_config_result/">get_workflow_config_result</a></li>
+<li><a href="../rapidata/api_client/models/get_workflow_config_result_workflow_config/">get_workflow_config_result_workflow_config</a></li>
+<li><a href="../rapidata/api_client/models/get_workflow_progress_result/">get_workflow_progress_result</a></li>
+<li><a href="../rapidata/api_client/models/get_workflow_result_overview_result/">get_workflow_result_overview_result</a></li>
+<li><a href="../rapidata/api_client/models/i_workflow_model_paged_result/">i_workflow_model_paged_result</a></li>
+<li><a href="../rapidata/api_client/models/image_dimension_metadata/">image_dimension_metadata</a></li>
+<li><a href="../rapidata/api_client/models/image_dimension_metadata_model/">image_dimension_metadata_model</a></li>
+<li><a href="../rapidata/api_client/models/import_from_file_result/">import_from_file_result</a></li>
+<li><a href="../rapidata/api_client/models/import_validation_set_from_file_result/">import_validation_set_from_file_result</a></li>
+<li><a href="../rapidata/api_client/models/in_progress_rapid_model/">in_progress_rapid_model</a></li>
+<li><a href="../rapidata/api_client/models/issue_auth_token_result/">issue_auth_token_result</a></li>
+<li><a href="../rapidata/api_client/models/issue_client_auth_token_result/">issue_client_auth_token_result</a></li>
+<li><a href="../rapidata/api_client/models/labeling_selection/">labeling_selection</a></li>
+<li><a href="../rapidata/api_client/models/language_user_filter_model/">language_user_filter_model</a></li>
+<li><a href="../rapidata/api_client/models/legacy_issue_client_auth_token_result/">legacy_issue_client_auth_token_result</a></li>
+<li><a href="../rapidata/api_client/models/legacy_request_password_reset_command/">legacy_request_password_reset_command</a></li>
+<li><a href="../rapidata/api_client/models/legacy_submit_password_reset_command/">legacy_submit_password_reset_command</a></li>
+<li><a href="../rapidata/api_client/models/line/">line</a></li>
+<li><a href="../rapidata/api_client/models/line_payload/">line_payload</a></li>
+<li><a href="../rapidata/api_client/models/line_point/">line_point</a></li>
+<li><a href="../rapidata/api_client/models/line_rapid_blueprint/">line_rapid_blueprint</a></li>
+<li><a href="../rapidata/api_client/models/line_result/">line_result</a></li>
+<li><a href="../rapidata/api_client/models/line_truth/">line_truth</a></li>
+<li><a href="../rapidata/api_client/models/locate_box_truth/">locate_box_truth</a></li>
+<li><a href="../rapidata/api_client/models/locate_coordinate/">locate_coordinate</a></li>
+<li><a href="../rapidata/api_client/models/locate_payload/">locate_payload</a></li>
+<li><a href="../rapidata/api_client/models/locate_rapid_blueprint/">locate_rapid_blueprint</a></li>
+<li><a href="../rapidata/api_client/models/locate_result/">locate_result</a></li>
+<li><a href="../rapidata/api_client/models/location_metadata/">location_metadata</a></li>
+<li><a href="../rapidata/api_client/models/location_metadata_exists_filter_config/">location_metadata_exists_filter_config</a></li>
+<li><a href="../rapidata/api_client/models/location_metadata_model/">location_metadata_model</a></li>
+<li><a href="../rapidata/api_client/models/logic_operator/">logic_operator</a></li>
+<li><a href="../rapidata/api_client/models/login_model/">login_model</a></li>
+<li><a href="../rapidata/api_client/models/metadata_visibilities/">metadata_visibilities</a></li>
+<li><a href="../rapidata/api_client/models/multi_asset/">multi_asset</a></li>
+<li><a href="../rapidata/api_client/models/multi_asset_model/">multi_asset_model</a></li>
+<li><a href="../rapidata/api_client/models/multi_asset_model1/">multi_asset_model1</a></li>
+<li><a href="../rapidata/api_client/models/multi_asset_model1_assets_inner/">multi_asset_model1_assets_inner</a></li>
+<li><a href="../rapidata/api_client/models/multi_asset_model2/">multi_asset_model2</a></li>
+<li><a href="../rapidata/api_client/models/naive_referee_config/">naive_referee_config</a></li>
+<li><a href="../rapidata/api_client/models/naive_referee_model/">naive_referee_model</a></li>
+<li><a href="../rapidata/api_client/models/named_classification/">named_classification</a></li>
+<li><a href="../rapidata/api_client/models/named_entity_payload/">named_entity_payload</a></li>
+<li><a href="../rapidata/api_client/models/named_entity_rapid_blueprint/">named_entity_rapid_blueprint</a></li>
+<li><a href="../rapidata/api_client/models/named_entity_result/">named_entity_result</a></li>
+<li><a href="../rapidata/api_client/models/named_entity_truth/">named_entity_truth</a></li>
+<li><a href="../rapidata/api_client/models/never_ending_referee_config/">never_ending_referee_config</a></li>
+<li><a href="../rapidata/api_client/models/newsletter_model/">newsletter_model</a></li>
+<li><a href="../rapidata/api_client/models/no_validation_workflow_rapid_selection_config/">no_validation_workflow_rapid_selection_config</a></li>
+<li><a href="../rapidata/api_client/models/not_started_rapid_model/">not_started_rapid_model</a></li>
+<li><a href="../rapidata/api_client/models/null_asset/">null_asset</a></li>
+<li><a href="../rapidata/api_client/models/null_asset_model/">null_asset_model</a></li>
+<li><a href="../rapidata/api_client/models/null_asset_model1/">null_asset_model1</a></li>
+<li><a href="../rapidata/api_client/models/null_asset_model2/">null_asset_model2</a></li>
+<li><a href="../rapidata/api_client/models/only_validation_workflow_rapid_selection_config/">only_validation_workflow_rapid_selection_config</a></li>
+<li><a href="../rapidata/api_client/models/order_model/">order_model</a></li>
+<li><a href="../rapidata/api_client/models/order_query_get200_response/">order_query_get200_response</a></li>
+<li><a href="../rapidata/api_client/models/order_state/">order_state</a></li>
+<li><a href="../rapidata/api_client/models/original_filename_metadata/">original_filename_metadata</a></li>
+<li><a href="../rapidata/api_client/models/original_filename_metadata_model/">original_filename_metadata_model</a></li>
+<li><a href="../rapidata/api_client/models/page_info/">page_info</a></li>
+<li><a href="../rapidata/api_client/models/polygon_payload/">polygon_payload</a></li>
+<li><a href="../rapidata/api_client/models/polygon_rapid_blueprint/">polygon_rapid_blueprint</a></li>
+<li><a href="../rapidata/api_client/models/polygon_result/">polygon_result</a></li>
+<li><a href="../rapidata/api_client/models/polygon_truth/">polygon_truth</a></li>
+<li><a href="../rapidata/api_client/models/private_text_metadata_input/">private_text_metadata_input</a></li>
+<li><a href="../rapidata/api_client/models/probabilistic_attach_category_referee_config/">probabilistic_attach_category_referee_config</a></li>
+<li><a href="../rapidata/api_client/models/prompt_metadata/">prompt_metadata</a></li>
+<li><a href="../rapidata/api_client/models/prompt_metadata_input/">prompt_metadata_input</a></li>
+<li><a href="../rapidata/api_client/models/prompt_metadata_model/">prompt_metadata_model</a></li>
+<li><a href="../rapidata/api_client/models/public_text_metadata_input/">public_text_metadata_input</a></li>
+<li><a href="../rapidata/api_client/models/query_campaigns_model/">query_campaigns_model</a></li>
+<li><a href="../rapidata/api_client/models/query_model/">query_model</a></li>
+<li><a href="../rapidata/api_client/models/query_orders_model/">query_orders_model</a></li>
+<li><a href="../rapidata/api_client/models/query_validation_rapids_result/">query_validation_rapids_result</a></li>
+<li><a href="../rapidata/api_client/models/query_validation_rapids_result_asset/">query_validation_rapids_result_asset</a></li>
+<li><a href="../rapidata/api_client/models/query_validation_rapids_result_paged_result/">query_validation_rapids_result_paged_result</a></li>
+<li><a href="../rapidata/api_client/models/query_validation_set_model/">query_validation_set_model</a></li>
+<li><a href="../rapidata/api_client/models/query_workflows_model/">query_workflows_model</a></li>
+<li><a href="../rapidata/api_client/models/ranked_datapoint_model/">ranked_datapoint_model</a></li>
+<li><a href="../rapidata/api_client/models/rapid_answer/">rapid_answer</a></li>
+<li><a href="../rapidata/api_client/models/rapid_answer_result/">rapid_answer_result</a></li>
+<li><a href="../rapidata/api_client/models/rapid_result_model/">rapid_result_model</a></li>
+<li><a href="../rapidata/api_client/models/rapid_result_model_result/">rapid_result_model_result</a></li>
+<li><a href="../rapidata/api_client/models/rapid_skipped_model/">rapid_skipped_model</a></li>
+<li><a href="../rapidata/api_client/models/request_password_reset_command/">request_password_reset_command</a></li>
+<li><a href="../rapidata/api_client/models/root_filter/">root_filter</a></li>
+<li><a href="../rapidata/api_client/models/send_completion_mail_step_model/">send_completion_mail_step_model</a></li>
+<li><a href="../rapidata/api_client/models/shape/">shape</a></li>
+<li><a href="../rapidata/api_client/models/signup_customer_model/">signup_customer_model</a></li>
+<li><a href="../rapidata/api_client/models/signup_shadow_customer_model/">signup_shadow_customer_model</a></li>
+<li><a href="../rapidata/api_client/models/simple_workflow_config/">simple_workflow_config</a></li>
+<li><a href="../rapidata/api_client/models/simple_workflow_config_blueprint/">simple_workflow_config_blueprint</a></li>
+<li><a href="../rapidata/api_client/models/simple_workflow_config_model/">simple_workflow_config_model</a></li>
+<li><a href="../rapidata/api_client/models/simple_workflow_config_model_blueprint/">simple_workflow_config_model_blueprint</a></li>
+<li><a href="../rapidata/api_client/models/simple_workflow_get_result_overview_get200_response/">simple_workflow_get_result_overview_get200_response</a></li>
+<li><a href="../rapidata/api_client/models/simple_workflow_model/">simple_workflow_model</a></li>
+<li><a href="../rapidata/api_client/models/simple_workflow_model1/">simple_workflow_model1</a></li>
+<li><a href="../rapidata/api_client/models/simple_workflow_model1_blueprint/">simple_workflow_model1_blueprint</a></li>
+<li><a href="../rapidata/api_client/models/simple_workflow_model_blueprint/">simple_workflow_model_blueprint</a></li>
+<li><a href="../rapidata/api_client/models/skip_result/">skip_result</a></li>
+<li><a href="../rapidata/api_client/models/sort_criterion/">sort_criterion</a></li>
+<li><a href="../rapidata/api_client/models/sort_direction/">sort_direction</a></li>
+<li><a href="../rapidata/api_client/models/static_rapid_selection_config/">static_rapid_selection_config</a></li>
+<li><a href="../rapidata/api_client/models/static_selection/">static_selection</a></li>
+<li><a href="../rapidata/api_client/models/submit_coco_model/">submit_coco_model</a></li>
+<li><a href="../rapidata/api_client/models/submit_coco_result/">submit_coco_result</a></li>
+<li><a href="../rapidata/api_client/models/submit_password_reset_command/">submit_password_reset_command</a></li>
+<li><a href="../rapidata/api_client/models/text_asset/">text_asset</a></li>
+<li><a href="../rapidata/api_client/models/text_asset_model/">text_asset_model</a></li>
+<li><a href="../rapidata/api_client/models/text_asset_model1/">text_asset_model1</a></li>
+<li><a href="../rapidata/api_client/models/text_asset_model2/">text_asset_model2</a></li>
+<li><a href="../rapidata/api_client/models/text_metadata/">text_metadata</a></li>
+<li><a href="../rapidata/api_client/models/text_metadata_model/">text_metadata_model</a></li>
+<li><a href="../rapidata/api_client/models/transcription_metadata/">transcription_metadata</a></li>
+<li><a href="../rapidata/api_client/models/transcription_metadata_input/">transcription_metadata_input</a></li>
+<li><a href="../rapidata/api_client/models/transcription_metadata_model/">transcription_metadata_model</a></li>
+<li><a href="../rapidata/api_client/models/transcription_payload/">transcription_payload</a></li>
+<li><a href="../rapidata/api_client/models/transcription_rapid_blueprint/">transcription_rapid_blueprint</a></li>
+<li><a href="../rapidata/api_client/models/transcription_result/">transcription_result</a></li>
+<li><a href="../rapidata/api_client/models/transcription_truth/">transcription_truth</a></li>
+<li><a href="../rapidata/api_client/models/transcription_word/">transcription_word</a></li>
+<li><a href="../rapidata/api_client/models/translated_prompt_metadata_model/">translated_prompt_metadata_model</a></li>
+<li><a href="../rapidata/api_client/models/translated_string/">translated_string</a></li>
+<li><a href="../rapidata/api_client/models/unlock_order_result/">unlock_order_result</a></li>
+<li><a href="../rapidata/api_client/models/update_access_model/">update_access_model</a></li>
+<li><a href="../rapidata/api_client/models/update_order_model/">update_order_model</a></li>
+<li><a href="../rapidata/api_client/models/update_workflow_config_model/">update_workflow_config_model</a></li>
+<li><a href="../rapidata/api_client/models/update_workflow_config_model_workflow_config/">update_workflow_config_model_workflow_config</a></li>
+<li><a href="../rapidata/api_client/models/update_workflow_config_request/">update_workflow_config_request</a></li>
+<li><a href="../rapidata/api_client/models/update_workflow_config_request_config/">update_workflow_config_request_config</a></li>
+<li><a href="../rapidata/api_client/models/upload_coco_result/">upload_coco_result</a></li>
+<li><a href="../rapidata/api_client/models/upload_datapoints_result/">upload_datapoints_result</a></li>
+<li><a href="../rapidata/api_client/models/upload_files_from_s3_bucket_model/">upload_files_from_s3_bucket_model</a></li>
+<li><a href="../rapidata/api_client/models/upload_text_sources_to_dataset_model/">upload_text_sources_to_dataset_model</a></li>
+<li><a href="../rapidata/api_client/models/user_score_user_filter_model/">user_score_user_filter_model</a></li>
+<li><a href="../rapidata/api_client/models/validation_chance/">validation_chance</a></li>
+<li><a href="../rapidata/api_client/models/validation_import_post_request_blueprint/">validation_import_post_request_blueprint</a></li>
+<li><a href="../rapidata/api_client/models/validation_rapid_selection_config/">validation_rapid_selection_config</a></li>
+<li><a href="../rapidata/api_client/models/validation_selection/">validation_selection</a></li>
+<li><a href="../rapidata/api_client/models/validation_set/">validation_set</a></li>
+<li><a href="../rapidata/api_client/models/validation_set_overview_model/">validation_set_overview_model</a></li>
+<li><a href="../rapidata/api_client/models/validation_set_paged_result/">validation_set_paged_result</a></li>
+<li><a href="../rapidata/api_client/models/workflow_aggregation_step_model/">workflow_aggregation_step_model</a></li>
+<li><a href="../rapidata/api_client/models/workflow_artifact_model/">workflow_artifact_model</a></li>
+<li><a href="../rapidata/api_client/models/workflow_config_artifact_model/">workflow_config_artifact_model</a></li>
+<li><a href="../rapidata/api_client/models/workflow_config_artifact_model_workflow_config/">workflow_config_artifact_model_workflow_config</a></li>
+<li><a href="../rapidata/api_client/models/workflow_labeling_step_model/">workflow_labeling_step_model</a></li>
+<li><a href="../rapidata/api_client/models/workflow_split_model/">workflow_split_model</a></li>
+<li><a href="../rapidata/api_client/models/workflow_split_model_filter_configs_inner/">workflow_split_model_filter_configs_inner</a></li>
+<li><a href="../rapidata/api_client/models/workflow_state/">workflow_state</a></li>
+</ul>
+</li>
+<li><a href="../rapidata/api_client/rest/">rest</a></li>
+</ul>
+</li>
+<li><a href="../rapidata/rapidata_client/">rapidata_client</a><ul>
+<li><a href="../rapidata/rapidata_client/assets/">assets</a><ul>
+<li><a href="../rapidata/rapidata_client/assets/base_asset/">base_asset</a></li>
+<li><a href="../rapidata/rapidata_client/assets/media_asset/">media_asset</a></li>
+<li><a href="../rapidata/rapidata_client/assets/multi_asset/">multi_asset</a></li>
+<li><a href="../rapidata/rapidata_client/assets/text_asset/">text_asset</a></li>
+</ul>
+</li>
+<li><a href="../rapidata/rapidata_client/config/">config</a></li>
+<li><a href="../rapidata/rapidata_client/country_codes/">country_codes</a><ul>
+<li><a href="../rapidata/rapidata_client/country_codes/country_codes/">country_codes</a></li>
+</ul>
+</li>
+<li><a href="../rapidata/rapidata_client/dataset/">dataset</a><ul>
+<li><a href="../rapidata/rapidata_client/dataset/rapidata_dataset/">rapidata_dataset</a></li>
+<li><a href="../rapidata/rapidata_client/dataset/rapidata_validation_set/">rapidata_validation_set</a></li>
+<li><a href="../rapidata/rapidata_client/dataset/validation_rapid_parts/">validation_rapid_parts</a></li>
+<li><a href="../rapidata/rapidata_client/dataset/validation_set_builder/">validation_set_builder</a></li>
+</ul>
+</li>
+<li><a href="../rapidata/rapidata_client/feature_flags/">feature_flags</a><ul>
+<li><a href="../rapidata/rapidata_client/feature_flags/feature_flags/">feature_flags</a></li>
+</ul>
+</li>
+<li><a href="../rapidata/rapidata_client/filter/">filter</a><ul>
+<li><a href="../rapidata/rapidata_client/filter/age_filter/">age_filter</a></li>
+<li><a href="../rapidata/rapidata_client/filter/base_filter/">base_filter</a></li>
+<li><a href="../rapidata/rapidata_client/filter/campaign_filter/">campaign_filter</a></li>
+<li><a href="../rapidata/rapidata_client/filter/country_filter/">country_filter</a></li>
+<li><a href="../rapidata/rapidata_client/filter/gender_filter/">gender_filter</a></li>
+<li><a href="../rapidata/rapidata_client/filter/language_filter/">language_filter</a></li>
+<li><a href="../rapidata/rapidata_client/filter/user_score_filter/">user_score_filter</a></li>
+</ul>
+</li>
+<li><a href="../rapidata/rapidata_client/metadata/">metadata</a><ul>
+<li><a href="../rapidata/rapidata_client/metadata/base_metadata/">base_metadata</a></li>
+<li><a href="../rapidata/rapidata_client/metadata/private_text_metadata/">private_text_metadata</a></li>
+<li><a href="../rapidata/rapidata_client/metadata/prompt_metadata/">prompt_metadata</a></li>
+<li><a href="../rapidata/rapidata_client/metadata/public_text_metadata/">public_text_metadata</a></li>
+<li><a href="../rapidata/rapidata_client/metadata/transcription_metadata/">transcription_metadata</a></li>
+</ul>
+</li>
+<li><a href="../rapidata/rapidata_client/order/">order</a><ul>
+<li><a href="../rapidata/rapidata_client/order/rapidata_order/">rapidata_order</a></li>
+<li><a href="../rapidata/rapidata_client/order/rapidata_order_builder/">rapidata_order_builder</a></li>
+</ul>
+</li>
+<li><a href="../rapidata/rapidata_client/rapidata_client/">rapidata_client</a></li>
+<li><a href="../rapidata/rapidata_client/referee/">referee</a><ul>
+<li><a href="../rapidata/rapidata_client/referee/base_referee/">base_referee</a></li>
+<li><a href="../rapidata/rapidata_client/referee/classify_early_stopping_referee/">classify_early_stopping_referee</a></li>
+<li><a href="../rapidata/rapidata_client/referee/naive_referee/">naive_referee</a></li>
+</ul>
+</li>
+<li><a href="../rapidata/rapidata_client/selection/">selection</a><ul>
+<li><a href="../rapidata/rapidata_client/selection/base_selection/">base_selection</a></li>
+<li><a href="../rapidata/rapidata_client/selection/capped_selection/">capped_selection</a></li>
+<li><a href="../rapidata/rapidata_client/selection/conditional_validation_selection/">conditional_validation_selection</a></li>
+<li><a href="../rapidata/rapidata_client/selection/demographic_selection/">demographic_selection</a></li>
+<li><a href="../rapidata/rapidata_client/selection/labeling_selection/">labeling_selection</a></li>
+<li><a href="../rapidata/rapidata_client/selection/validation_selection/">validation_selection</a></li>
+</ul>
+</li>
+<li><a href="../rapidata/rapidata_client/simple_builders/">simple_builders</a><ul>
+<li><a href="../rapidata/rapidata_client/simple_builders/simple_classification_builders/">simple_classification_builders</a></li>
+<li><a href="../rapidata/rapidata_client/simple_builders/simple_compare_builders/">simple_compare_builders</a></li>
+</ul>
+</li>
+<li><a href="../rapidata/rapidata_client/utils/">utils</a><ul>
+<li><a href="../rapidata/rapidata_client/utils/utils/">utils</a></li>
+</ul>
+</li>
+<li><a href="../rapidata/rapidata_client/workflow/">workflow</a><ul>
+<li><a href="../rapidata/rapidata_client/workflow/base_workflow/">base_workflow</a></li>
+<li><a href="../rapidata/rapidata_client/workflow/classify_workflow/">classify_workflow</a></li>
+<li><a href="../rapidata/rapidata_client/workflow/compare_workflow/">compare_workflow</a></li>
+<li><a href="../rapidata/rapidata_client/workflow/free_text_workflow/">free_text_workflow</a></li>
+<li><a href="../rapidata/rapidata_client/workflow/transcription_workflow/">transcription_workflow</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="../rapidata/service/">service</a><ul>
+<li><a href="../rapidata/service/local_file_service/">local_file_service</a></li>
+<li><a href="../rapidata/service/openapi_service/">openapi_service</a></li>
+</ul>
+</li>
+<li><a href="../rapidata/utils/">utils</a><ul>
+<li><a href="../rapidata/utils/image_utils/">image_utils</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.code.copy"], "search": "../../assets/javascripts/workers/search.07f07601.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.56dfad97.min.js"></script>
+      
+    
+  </body>
+</html>
