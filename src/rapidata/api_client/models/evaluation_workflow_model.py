@@ -17,19 +17,25 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateComplexOrderResult(BaseModel):
+class EvaluationWorkflowModel(BaseModel):
     """
-    CreateComplexOrderResult
+    If the EvaluationWorkflow is chosen a validation set will be used as a source for all tasks.  It functions similarly to the SimpleWorkflow as there is a 1:1 mapping between validation rapids and tasks.
     """ # noqa: E501
-    dataset_id: Optional[StrictStr] = Field(default=None, alias="datasetId")
-    order_id: StrictStr = Field(alias="orderId")
-    campaign_id: Optional[StrictStr] = Field(default=None, alias="campaignId")
-    __properties: ClassVar[List[str]] = ["datasetId", "orderId", "campaignId"]
+    t: StrictStr = Field(description="Discriminator value for EvaluationWorkflow", alias="_t")
+    validation_set_id: StrictStr = Field(description="The Validation Set Id is used to as a source for the tasks that will be sent to the user.", alias="validationSetId")
+    __properties: ClassVar[List[str]] = ["_t", "validationSetId"]
+
+    @field_validator('t')
+    def t_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['EvaluationWorkflow']):
+            raise ValueError("must be one of enum values ('EvaluationWorkflow')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -49,7 +55,7 @@ class CreateComplexOrderResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateComplexOrderResult from a JSON string"""
+        """Create an instance of EvaluationWorkflowModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -70,21 +76,11 @@ class CreateComplexOrderResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if dataset_id (nullable) is None
-        # and model_fields_set contains the field
-        if self.dataset_id is None and "dataset_id" in self.model_fields_set:
-            _dict['datasetId'] = None
-
-        # set to None if campaign_id (nullable) is None
-        # and model_fields_set contains the field
-        if self.campaign_id is None and "campaign_id" in self.model_fields_set:
-            _dict['campaignId'] = None
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateComplexOrderResult from a dict"""
+        """Create an instance of EvaluationWorkflowModel from a dict"""
         if obj is None:
             return None
 
@@ -92,9 +88,8 @@ class CreateComplexOrderResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "datasetId": obj.get("datasetId"),
-            "orderId": obj.get("orderId"),
-            "campaignId": obj.get("campaignId")
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'EvaluationWorkflow',
+            "validationSetId": obj.get("validationSetId")
         })
         return _obj
 

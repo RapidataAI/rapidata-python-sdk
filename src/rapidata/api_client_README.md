@@ -240,6 +240,8 @@ Class | Method | HTTP request | Description
  - [EarlyStoppingRefereeModel](rapidata/api_client/docs/EarlyStoppingRefereeModel.md)
  - [EmptyValidationTruth](rapidata/api_client/docs/EmptyValidationTruth.md)
  - [ErrorType](rapidata/api_client/docs/ErrorType.md)
+ - [EvaluationWorkflowConfig](rapidata/api_client/docs/EvaluationWorkflowConfig.md)
+ - [EvaluationWorkflowModel](rapidata/api_client/docs/EvaluationWorkflowModel.md)
  - [FeatureFlag](rapidata/api_client/docs/FeatureFlag.md)
  - [FeatureFlagModel](rapidata/api_client/docs/FeatureFlagModel.md)
  - [FeedbackModel](rapidata/api_client/docs/FeedbackModel.md)

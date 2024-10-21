@@ -5008,13 +5008,13 @@
       },
       "CreateComplexOrderResult": {
         "required": [
-          "datasetId",
           "orderId"
         ],
         "type": "object",
         "properties": {
           "datasetId": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "orderId": {
             "type": "string"
@@ -5089,6 +5089,9 @@
           },
           "workflow": {
             "oneOf": [
+              {
+                "$ref": "#/components/schemas/EvaluationWorkflowModel"
+              },
               {
                 "$ref": "#/components/schemas/SimpleWorkflowModel"
               },
@@ -5504,6 +5507,31 @@
         },
         "additionalProperties": false,
         "description": "The Early Stopping Referee can currently only be used for classification tasks and will stop once a certain threshold is reached or the maximum number of votes is collected."
+      },
+      "EvaluationWorkflowModel": {
+        "title": "EvaluationWorkflow",
+        "required": [
+          "_t",
+          "validationSetId"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "EvaluationWorkflow"
+            ],
+            "type": "string",
+            "description": "Discriminator value for EvaluationWorkflow",
+            "default": "EvaluationWorkflow",
+            "example": "EvaluationWorkflow"
+          },
+          "validationSetId": {
+            "type": "string",
+            "description": "The Validation Set Id is used to as a source for the tasks that will be sent to the user."
+          }
+        },
+        "additionalProperties": false,
+        "description": "If the EvaluationWorkflow is chosen a validation set will be used as a source for all tasks.\r\nIt functions similarly to the SimpleWorkflow as there is a 1:1 mapping between validation rapids and tasks."
       },
       "FeatureFlagModel": {
         "required": [
@@ -10058,6 +10086,46 @@
         },
         "additionalProperties": false
       },
+      "EvaluationWorkflowConfig": {
+        "title": "EvaluationWorkflowConfig",
+        "required": [
+          "_t",
+          "referee",
+          "validationSetId"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "EvaluationWorkflowConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for EvaluationWorkflowConfig",
+            "default": "EvaluationWorkflowConfig",
+            "example": "EvaluationWorkflowConfig"
+          },
+          "validationSetId": {
+            "type": "string"
+          },
+          "referee": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NaiveRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/NeverEndingRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/ProbabilisticAttachCategoryRefereeConfig"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
       "FeatureFlag": {
         "required": [
           "key",
@@ -10411,6 +10479,9 @@
             "oneOf": [
               {
                 "$ref": "#/components/schemas/CompareWorkflowConfig"
+              },
+              {
+                "$ref": "#/components/schemas/EvaluationWorkflowConfig"
               },
               {
                 "$ref": "#/components/schemas/SimpleWorkflowConfig"
