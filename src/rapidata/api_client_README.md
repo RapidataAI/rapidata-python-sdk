@@ -90,7 +90,8 @@ Class | Method | HTTP request | Description
 *DatasetApi* | [**dataset_upload_files_from_s3_post**](rapidata/api_client/docs/DatasetApi.md#dataset_upload_files_from_s3_post) | **POST** /Dataset/UploadFilesFromS3 | Uploads files from an S3 bucket to a dataset.
 *DatasetApi* | [**dataset_upload_images_to_dataset_post**](rapidata/api_client/docs/DatasetApi.md#dataset_upload_images_to_dataset_post) | **POST** /Dataset/UploadImagesToDataset | Uploads images to a dataset.
 *IdentityApi* | [**identity_confirm_get**](rapidata/api_client/docs/IdentityApi.md#identity_confirm_get) | **GET** /Identity/Confirm | Confirms a user&#39;s signup by a token.
-*IdentityApi* | [**identity_create_client_post**](rapidata/api_client/docs/IdentityApi.md#identity_create_client_post) | **POST** /Identity/CreateClient | Creates a new client for a customer.
+*IdentityApi* | [**identity_create_client_post**](rapidata/api_client/docs/IdentityApi.md#identity_create_client_post) | **POST** /Identity/CreateClient | Creates a new client for the current customer.
+*IdentityApi* | [**identity_create_legacy_client_post**](rapidata/api_client/docs/IdentityApi.md#identity_create_legacy_client_post) | **POST** /Identity/CreateLegacyClient | Creates a new client for a customer.
 *IdentityApi* | [**identity_external_login_callback_get**](rapidata/api_client/docs/IdentityApi.md#identity_external_login_callback_get) | **GET** /Identity/ExternalLoginCallback | Logs in a user using after receiving a grant from an external provider.
 *IdentityApi* | [**identity_external_login_post**](rapidata/api_client/docs/IdentityApi.md#identity_external_login_post) | **POST** /Identity/ExternalLogin | Logs in a user using an external provider.
 *IdentityApi* | [**identity_get_auth_token_get**](rapidata/api_client/docs/IdentityApi.md#identity_get_auth_token_get) | **GET** /Identity/GetAuthToken | Issues a new auth token using the refresh token.
@@ -205,6 +206,7 @@ Class | Method | HTTP request | Description
  - [CountMetadataModel](rapidata/api_client/docs/CountMetadataModel.md)
  - [CountryUserFilterModel](rapidata/api_client/docs/CountryUserFilterModel.md)
  - [CreateClientModel](rapidata/api_client/docs/CreateClientModel.md)
+ - [CreateClientResult](rapidata/api_client/docs/CreateClientResult.md)
  - [CreateComplexOrderModel](rapidata/api_client/docs/CreateComplexOrderModel.md)
  - [CreateComplexOrderModelPipeline](rapidata/api_client/docs/CreateComplexOrderModelPipeline.md)
  - [CreateComplexOrderResult](rapidata/api_client/docs/CreateComplexOrderResult.md)
@@ -212,6 +214,7 @@ Class | Method | HTTP request | Description
  - [CreateDatasetArtifactModelDataset](rapidata/api_client/docs/CreateDatasetArtifactModelDataset.md)
  - [CreateDemographicRapidModel](rapidata/api_client/docs/CreateDemographicRapidModel.md)
  - [CreateEmptyValidationSetResult](rapidata/api_client/docs/CreateEmptyValidationSetResult.md)
+ - [CreateLegacyClientModel](rapidata/api_client/docs/CreateLegacyClientModel.md)
  - [CreateOrderModel](rapidata/api_client/docs/CreateOrderModel.md)
  - [CreateOrderModelReferee](rapidata/api_client/docs/CreateOrderModelReferee.md)
  - [CreateOrderModelUserFiltersInner](rapidata/api_client/docs/CreateOrderModelUserFiltersInner.md)

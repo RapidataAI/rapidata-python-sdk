@@ -18,16 +18,17 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateClientModel(BaseModel):
+class CreateClientResult(BaseModel):
     """
-    The model for creating a new client.
+    CreateClientResult
     """ # noqa: E501
-    display_name: Optional[StrictStr] = Field(default=None, description="An optional display name for the client.", alias="displayName")
-    __properties: ClassVar[List[str]] = ["displayName"]
+    client_id: StrictStr = Field(alias="clientId")
+    client_secret: StrictStr = Field(alias="clientSecret")
+    __properties: ClassVar[List[str]] = ["clientId", "clientSecret"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -47,7 +48,7 @@ class CreateClientModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateClientModel from a JSON string"""
+        """Create an instance of CreateClientResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -68,16 +69,11 @@ class CreateClientModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if display_name (nullable) is None
-        # and model_fields_set contains the field
-        if self.display_name is None and "display_name" in self.model_fields_set:
-            _dict['displayName'] = None
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateClientModel from a dict"""
+        """Create an instance of CreateClientResult from a dict"""
         if obj is None:
             return None
 
@@ -85,7 +81,8 @@ class CreateClientModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "displayName": obj.get("displayName")
+            "clientId": obj.get("clientId"),
+            "clientSecret": obj.get("clientSecret")
         })
         return _obj
 
