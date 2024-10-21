@@ -18,23 +18,26 @@ import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
 from rapidata.api_client.models.compare_workflow_model import CompareWorkflowModel
+from rapidata.api_client.models.evaluation_workflow_model import EvaluationWorkflowModel
 from rapidata.api_client.models.simple_workflow_model import SimpleWorkflowModel
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-CREATEORDERMODELWORKFLOW_ONE_OF_SCHEMAS = ["CompareWorkflowModel", "SimpleWorkflowModel"]
+CREATEORDERMODELWORKFLOW_ONE_OF_SCHEMAS = ["CompareWorkflowModel", "EvaluationWorkflowModel", "SimpleWorkflowModel"]
 
 class CreateOrderModelWorkflow(BaseModel):
     """
     The workflow helps to determine the tasks that need to be completed by the users.
     """
+    # data type: EvaluationWorkflowModel
+    oneof_schema_1_validator: Optional[EvaluationWorkflowModel] = None
     # data type: SimpleWorkflowModel
-    oneof_schema_1_validator: Optional[SimpleWorkflowModel] = None
+    oneof_schema_2_validator: Optional[SimpleWorkflowModel] = None
     # data type: CompareWorkflowModel
-    oneof_schema_2_validator: Optional[CompareWorkflowModel] = None
-    actual_instance: Optional[Union[CompareWorkflowModel, SimpleWorkflowModel]] = None
-    one_of_schemas: Set[str] = { "CompareWorkflowModel", "SimpleWorkflowModel" }
+    oneof_schema_3_validator: Optional[CompareWorkflowModel] = None
+    actual_instance: Optional[Union[CompareWorkflowModel, EvaluationWorkflowModel, SimpleWorkflowModel]] = None
+    one_of_schemas: Set[str] = { "CompareWorkflowModel", "EvaluationWorkflowModel", "SimpleWorkflowModel" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -60,6 +63,11 @@ class CreateOrderModelWorkflow(BaseModel):
         instance = CreateOrderModelWorkflow.model_construct()
         error_messages = []
         match = 0
+        # validate data type: EvaluationWorkflowModel
+        if not isinstance(v, EvaluationWorkflowModel):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `EvaluationWorkflowModel`")
+        else:
+            match += 1
         # validate data type: SimpleWorkflowModel
         if not isinstance(v, SimpleWorkflowModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `SimpleWorkflowModel`")
@@ -72,10 +80,10 @@ class CreateOrderModelWorkflow(BaseModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in CreateOrderModelWorkflow with oneOf schemas: CompareWorkflowModel, SimpleWorkflowModel. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in CreateOrderModelWorkflow with oneOf schemas: CompareWorkflowModel, EvaluationWorkflowModel, SimpleWorkflowModel. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in CreateOrderModelWorkflow with oneOf schemas: CompareWorkflowModel, SimpleWorkflowModel. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in CreateOrderModelWorkflow with oneOf schemas: CompareWorkflowModel, EvaluationWorkflowModel, SimpleWorkflowModel. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -90,6 +98,12 @@ class CreateOrderModelWorkflow(BaseModel):
         error_messages = []
         match = 0
 
+        # deserialize data into EvaluationWorkflowModel
+        try:
+            instance.actual_instance = EvaluationWorkflowModel.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
         # deserialize data into SimpleWorkflowModel
         try:
             instance.actual_instance = SimpleWorkflowModel.from_json(json_str)
@@ -105,10 +119,10 @@ class CreateOrderModelWorkflow(BaseModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into CreateOrderModelWorkflow with oneOf schemas: CompareWorkflowModel, SimpleWorkflowModel. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into CreateOrderModelWorkflow with oneOf schemas: CompareWorkflowModel, EvaluationWorkflowModel, SimpleWorkflowModel. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into CreateOrderModelWorkflow with oneOf schemas: CompareWorkflowModel, SimpleWorkflowModel. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into CreateOrderModelWorkflow with oneOf schemas: CompareWorkflowModel, EvaluationWorkflowModel, SimpleWorkflowModel. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -122,7 +136,7 @@ class CreateOrderModelWorkflow(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], CompareWorkflowModel, SimpleWorkflowModel]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], CompareWorkflowModel, EvaluationWorkflowModel, SimpleWorkflowModel]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

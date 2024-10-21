@@ -102,6 +102,8 @@ from rapidata.api_client.models.demographic_selection import DemographicSelectio
 from rapidata.api_client.models.early_stopping_referee_model import EarlyStoppingRefereeModel
 from rapidata.api_client.models.empty_validation_truth import EmptyValidationTruth
 from rapidata.api_client.models.error_type import ErrorType
+from rapidata.api_client.models.evaluation_workflow_config import EvaluationWorkflowConfig
+from rapidata.api_client.models.evaluation_workflow_model import EvaluationWorkflowModel
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.feature_flag_model import FeatureFlagModel
 from rapidata.api_client.models.feedback_model import FeedbackModel
