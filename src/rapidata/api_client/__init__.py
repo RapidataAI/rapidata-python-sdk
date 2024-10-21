@@ -99,6 +99,7 @@ from rapidata.api_client.models.count_metadata import CountMetadata
 from rapidata.api_client.models.count_metadata_model import CountMetadataModel
 from rapidata.api_client.models.country_user_filter_model import CountryUserFilterModel
 from rapidata.api_client.models.create_client_model import CreateClientModel
+from rapidata.api_client.models.create_client_result import CreateClientResult
 from rapidata.api_client.models.create_complex_order_model import CreateComplexOrderModel
 from rapidata.api_client.models.create_complex_order_model_pipeline import CreateComplexOrderModelPipeline
 from rapidata.api_client.models.create_complex_order_result import CreateComplexOrderResult
@@ -106,6 +107,7 @@ from rapidata.api_client.models.create_dataset_artifact_model import CreateDatas
 from rapidata.api_client.models.create_dataset_artifact_model_dataset import CreateDatasetArtifactModelDataset
 from rapidata.api_client.models.create_demographic_rapid_model import CreateDemographicRapidModel
 from rapidata.api_client.models.create_empty_validation_set_result import CreateEmptyValidationSetResult
+from rapidata.api_client.models.create_legacy_client_model import CreateLegacyClientModel
 from rapidata.api_client.models.create_order_model import CreateOrderModel
 from rapidata.api_client.models.create_order_model_referee import CreateOrderModelReferee
 from rapidata.api_client.models.create_order_model_user_filters_inner import CreateOrderModelUserFiltersInner

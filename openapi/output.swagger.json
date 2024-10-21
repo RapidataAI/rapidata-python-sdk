@@ -1246,7 +1246,7 @@
         }
       }
     },
-    "/Identity/CreateClient": {
+    "/Identity/CreateLegacyClient": {
       "post": {
         "tags": [
           "Identity"
@@ -1258,17 +1258,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateClientModel"
+                "$ref": "#/components/schemas/CreateLegacyClientModel"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateClientModel"
+                "$ref": "#/components/schemas/CreateLegacyClientModel"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateClientModel"
+                "$ref": "#/components/schemas/CreateLegacyClientModel"
               }
             }
           }
@@ -1643,6 +1643,56 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/Identity/CreateClient": {
+      "post": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Creates a new client for the current customer.",
+        "requestBody": {
+          "description": "The model for creating a new client.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateClientModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateClientModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateClientModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateClientResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateClientResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateClientResult"
+                }
+              }
+            }
           }
         }
       }
@@ -6392,6 +6442,35 @@
         "description": "Model for the workflow split step"
       },
       "CreateClientModel": {
+        "type": "object",
+        "properties": {
+          "displayName": {
+            "type": "string",
+            "description": "An optional display name for the client.",
+            "default": null,
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for creating a new client."
+      },
+      "CreateClientResult": {
+        "required": [
+          "clientId",
+          "clientSecret"
+        ],
+        "type": "object",
+        "properties": {
+          "clientId": {
+            "type": "string"
+          },
+          "clientSecret": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateLegacyClientModel": {
         "required": [
           "customerId",
           "name"
