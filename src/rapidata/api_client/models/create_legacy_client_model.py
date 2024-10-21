@@ -18,16 +18,17 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateClientModel(BaseModel):
+class CreateLegacyClientModel(BaseModel):
     """
     The model for creating a new client.
     """ # noqa: E501
-    display_name: Optional[StrictStr] = Field(default=None, description="An optional display name for the client.", alias="displayName")
-    __properties: ClassVar[List[str]] = ["displayName"]
+    name: StrictStr = Field(description="A human-readable name for the client used for easy identification.")
+    customer_id: StrictStr = Field(description="The id of the customer that owns the client.", alias="customerId")
+    __properties: ClassVar[List[str]] = ["name", "customerId"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -47,7 +48,7 @@ class CreateClientModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateClientModel from a JSON string"""
+        """Create an instance of CreateLegacyClientModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -68,16 +69,11 @@ class CreateClientModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if display_name (nullable) is None
-        # and model_fields_set contains the field
-        if self.display_name is None and "display_name" in self.model_fields_set:
-            _dict['displayName'] = None
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateClientModel from a dict"""
+        """Create an instance of CreateLegacyClientModel from a dict"""
         if obj is None:
             return None
 
@@ -85,7 +81,8 @@ class CreateClientModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "displayName": obj.get("displayName")
+            "name": obj.get("name"),
+            "customerId": obj.get("customerId")
         })
         return _obj
 
