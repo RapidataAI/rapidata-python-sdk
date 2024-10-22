@@ -77,4 +77,6 @@ class OpenAPIService:
             raise Exception(f"Failed to fetch token: {e}")
         except json.JSONDecodeError as e:
             raise Exception(f"Failed to parse token response: {e}")
+        except KeyError as e:
+            raise Exception(f"Failed to extract token from response: {e}")
 
