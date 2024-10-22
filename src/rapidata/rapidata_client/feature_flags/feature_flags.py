@@ -1,4 +1,10 @@
 from rapidata.api_client.models.feature_flag_model import FeatureFlagModel
+from enum import StrEnum
+
+class TranslationBehaviour(StrEnum):
+    BOTH = "both"
+    ONLY_ORIGINAL = "only original"
+    ONLY_TRANSLATED = "only translated"
 
 
 class FeatureFlags:
@@ -49,16 +55,22 @@ class FeatureFlags:
         self._flags["alert_on_fast_response"] = str(milliseconds)
         return self
 
-    def disable_translation(self, value: bool = True):
-        """Disable automatic translation of all texts in the UI.
+
+    def translation_behaviour(self, behaviour: TranslationBehaviour = TranslationBehaviour.BOTH):
+        """Defines what's the behaviour of the translation in the UI.
+
+        The behaviour can be set to:
+            - TranslationBehaviour.BOTH: Show both the original and the translated text.
+            - TranslationBehaviour.ONLY_ORIGINAL: Show only the original text.
+            - TranslationBehaviour.ONLY_TRANSLATED: Show only the translated text.
 
         Args:
-            value (bool, optional): Whether to disable translation. Defaults to True.
+            behaviour (TranslationBehaviour): The translation behaviour. Defaults to TranslationBehaviour.BOTH.
 
         Returns:
             FeatureFlags: The current FeatureFlags instance for method chaining.
         """
-        self._flags["disable_translation"] = str(value)
+        self._flags["translation_behaviour"] = behaviour
         return self
 
     def free_text_minimum_characters(self, value: int):
