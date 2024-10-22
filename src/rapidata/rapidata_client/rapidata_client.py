@@ -11,7 +11,6 @@ from rapidata.rapidata_client.dataset.rapidata_dataset import RapidataDataset
 from rapidata.rapidata_client.simple_builders.simple_classification_builders import ClassificationQuestionBuilder
 from rapidata.rapidata_client.simple_builders.simple_compare_builders import CompareCriteriaBuilder
 
-
 class RapidataClient:
     """The Rapidata client is the main entry point for interacting with the Rapidata API. It allows you to create orders and validation sets. For creating a new order, check out `new_order()`. For creating a new validation set, check out `new_validation_set()`."""
 
@@ -20,6 +19,9 @@ class RapidataClient:
         client_id: str,
         client_secret: str,
         endpoint: str = "https://api.app.rapidata.ai",
+        token_url: str = "https://api.app.rapidata.ai/connect/token",
+        oauth_scope: str = "openid",
+        cert_path: str | None = None,
     ):
         """Initialize the RapidataClient. Best practice is to store the client ID and client secret in environment variables. Ask your Rapidata representative for the client ID and client secret.
 
@@ -29,7 +31,12 @@ class RapidataClient:
             endpoint (str, optional): The API endpoint URL.
         """
         self.openapi_service = OpenAPIService(
-            client_id=client_id, client_secret=client_secret, endpoint=endpoint
+            client_id=client_id,
+            client_secret=client_secret,
+            endpoint=endpoint,
+            token_url=token_url,
+            oauth_scope=oauth_scope,
+            cert_path=cert_path
         )
 
     def new_order(self, name: str) -> RapidataOrderBuilder:
@@ -64,7 +71,7 @@ class RapidataClient:
             RapidataValidationSet: The ValidationSet instance.
         """
         return RapidataValidationSet(validation_set_id, self.openapi_service)
-    
+
     def get_order(self, order_id: str) -> RapidataOrder:
         """Get an order by ID.
 
