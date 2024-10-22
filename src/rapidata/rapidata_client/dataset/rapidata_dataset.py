@@ -41,7 +41,7 @@ class RapidataDataset:
                 texts = [asset.text for asset in text_asset.assets if isinstance(asset, TextAsset)]
             else:
                 raise ValueError(f"Unsupported asset type: {type(text_asset)}")
-            
+
             model = UploadTextSourcesToDatasetModel(
                 datasetId=self.dataset_id,
                 textSources=texts
@@ -53,6 +53,7 @@ class RapidataDataset:
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
             futures = [
                 executor.submit(upload_text_datapoint, text_asset)
+                for text_asset in text_assets
             ]
 
             with tqdm(total=total_uploads, desc="Uploading text datapoints") as pbar:
@@ -70,7 +71,7 @@ class RapidataDataset:
             raise ValueError(
                 "metadata must be None or have the same length as media_paths"
             )
-        
+
         for media_path in media_paths:
             if isinstance(media_path, MultiAsset):
                 assert all(
@@ -84,7 +85,7 @@ class RapidataDataset:
                 paths = [asset.path for asset in media_asset.assets if isinstance(asset, MediaAsset)]
             else:
                 raise ValueError(f"Unsupported asset type: {type(media_asset)}")
-            
+
             assert all(
                 os.path.exists(media_path) for media_path in paths
             ), "All media paths must exist on the local filesystem."
