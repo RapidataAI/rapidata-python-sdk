@@ -20,7 +20,7 @@ class RapidataClient:
         client_secret: str,
         endpoint: str = "https://api.app.rapidata.ai",
         token_url: str = "https://api.app.rapidata.ai/connect/token",
-        oauth_scope: str = "openid email",
+        oauth_scope: str = "openid",
         cert_path: str | None = None,
     ):
         """Initialize the RapidataClient. Best practice is to store the client ID and client secret in environment variables. Ask your Rapidata representative for the client ID and client secret.
