@@ -35,11 +35,10 @@ def new_classify_text_asset_order(rapi: RapidataClient):
         .workflow(
             ClassifyWorkflow(
                 question="How does this song continue?",
-                options=["Baby don't hurt me", "No more", "Illusions"],
+                options=["Baby don't hurt me", "No more", "Illusions", "Submarine"],
             )
         )
-        .media([TextAsset("What is love?")]
-        )
+        .media([TextAsset("What is love?"), TextAsset("We all live in a yellow ...")])
         .referee(NaiveReferee(required_guesses=3))
         .selections(
             [
