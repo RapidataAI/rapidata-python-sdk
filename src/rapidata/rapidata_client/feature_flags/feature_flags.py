@@ -59,8 +59,13 @@ class FeatureFlags:
     def translation_behaviour(self, behaviour: TranslationBehaviour = TranslationBehaviour.BOTH):
         """Defines what's the behaviour of the translation in the UI.
 
+        The behaviour can be set to:
+            - TranslationBehaviour.BOTH: Show both the original and the translated text.
+            - TranslationBehaviour.ONLY_ORIGINAL: Show only the original text.
+            - TranslationBehaviour.ONLY_TRANSLATED: Show only the translated text.
+
         Args:
-            behaviour (TranslationBehaviour): The translation behaviour.
+            behaviour (TranslationBehaviour): The translation behaviour. Defaults to TranslationBehaviour.BOTH.
 
         Returns:
             FeatureFlags: The current FeatureFlags instance for method chaining.
