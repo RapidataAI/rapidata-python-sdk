@@ -5220,13 +5220,13 @@
       },
       "CreateOrderResult": {
         "required": [
-          "datasetId",
           "orderId"
         ],
         "type": "object",
         "properties": {
           "datasetId": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "orderId": {
             "type": "string"
@@ -6475,6 +6475,12 @@
           "displayName": {
             "type": "string",
             "description": "An optional display name for the client.",
+            "default": null,
+            "nullable": true
+          },
+          "customerId": {
+            "type": "string",
+            "format": "uuid",
             "default": null,
             "nullable": true
           }
