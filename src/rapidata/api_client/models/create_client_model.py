@@ -27,7 +27,8 @@ class CreateClientModel(BaseModel):
     The model for creating a new client.
     """ # noqa: E501
     display_name: Optional[StrictStr] = Field(default=None, description="An optional display name for the client.", alias="displayName")
-    __properties: ClassVar[List[str]] = ["displayName"]
+    customer_id: Optional[StrictStr] = Field(default=None, alias="customerId")
+    __properties: ClassVar[List[str]] = ["displayName", "customerId"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -73,6 +74,11 @@ class CreateClientModel(BaseModel):
         if self.display_name is None and "display_name" in self.model_fields_set:
             _dict['displayName'] = None
 
+        # set to None if customer_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.customer_id is None and "customer_id" in self.model_fields_set:
+            _dict['customerId'] = None
+
         return _dict
 
     @classmethod
@@ -85,7 +91,8 @@ class CreateClientModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "displayName": obj.get("displayName")
+            "displayName": obj.get("displayName"),
+            "customerId": obj.get("customerId")
         })
         return _obj
 
