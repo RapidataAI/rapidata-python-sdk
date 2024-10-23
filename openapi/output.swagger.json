@@ -6477,6 +6477,12 @@
             "description": "An optional display name for the client.",
             "default": null,
             "nullable": true
+          },
+          "customerId": {
+            "type": "string",
+            "format": "uuid",
+            "default": null,
+            "nullable": true
           }
         },
         "additionalProperties": false,
