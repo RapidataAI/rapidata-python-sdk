@@ -26,7 +26,7 @@ class CreateOrderResult(BaseModel):
     """
     CreateOrderResult
     """ # noqa: E501
-    dataset_id: StrictStr = Field(alias="datasetId")
+    dataset_id: Optional[StrictStr] = Field(default=None, alias="datasetId")
     order_id: StrictStr = Field(alias="orderId")
     campaign_id: Optional[StrictStr] = Field(default=None, alias="campaignId")
     __properties: ClassVar[List[str]] = ["datasetId", "orderId", "campaignId"]
@@ -70,6 +70,11 @@ class CreateOrderResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if dataset_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.dataset_id is None and "dataset_id" in self.model_fields_set:
+            _dict['datasetId'] = None
+
         # set to None if campaign_id (nullable) is None
         # and model_fields_set contains the field
         if self.campaign_id is None and "campaign_id" in self.model_fields_set:
