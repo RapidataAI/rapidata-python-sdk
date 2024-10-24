@@ -51,8 +51,10 @@ class TestExampleOrders(unittest.TestCase):
         CLIENT_ID = os.getenv("CLIENT_ID")
         CLIENT_SECRET = os.getenv("CLIENT_SECRET")
         ENDPOINT = os.getenv("ENDPOINT")
+        CERT_PATH = os.getenv("CERT_PATH")
+        TOKEN_URL = os.getenv("TOKEN_URL")
 
-        if not CLIENT_ID or not CLIENT_SECRET or not ENDPOINT:
+        if not CLIENT_ID or not CLIENT_SECRET or not ENDPOINT or not TOKEN_URL:
             raise ValueError(
                 "Please set CLIENT_ID, CLIENT_SECRET, and ENDPOINT in a .env file"
             )
@@ -60,7 +62,11 @@ class TestExampleOrders(unittest.TestCase):
         from rapidata.rapidata_client import RapidataClient
 
         rapi = RapidataClient(
-            client_id=CLIENT_ID, client_secret=CLIENT_SECRET, endpoint=ENDPOINT
+            client_id=CLIENT_ID,
+            client_secret=CLIENT_SECRET,
+            endpoint=ENDPOINT,
+            cert_path=CERT_PATH,
+            token_url=TOKEN_URL,
         )
 
         order_builder = rapi.new_order("Example Order")
@@ -74,8 +80,8 @@ class TestExampleOrders(unittest.TestCase):
 
         order_builder.workflow(workflow)
 
-        from rapidata.rapidata_client.referee import NaiveReferee
+        from rapidata import NaiveReferee, MediaAsset
 
         order_builder.referee(NaiveReferee(required_guesses=15))
 
-        order_builder.media(["examples/data/wallaby.jpg"])
+        order_builder.media([MediaAsset("examples/data/wallaby.jpg")])
