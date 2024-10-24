@@ -63,3 +63,19 @@
     [:octicons-arrow-right-24: Let's go](./transcription_order.md)
 
 </div>
+
+<div class="grid cards" markdown>
+
+-   __Preference Data for RLHF__
+
+    ---
+
+    Longer, more detailed blog post on how to use a compare-style setup to collect human preference data, e.g. for Reinforcement Learning from Human Feedback (RLHF).
+
+    <figure markdown="span">
+    ![Preference Example](../media/order-types/glass_on_dog_1.png){ width="80%" }
+    </figure>
+
+    [:octicons-arrow-right-24: Let's go](https://rapidata.ai/blog/preference-dataset-demo)
+
+</div>
