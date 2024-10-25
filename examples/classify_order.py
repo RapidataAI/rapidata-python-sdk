@@ -22,7 +22,7 @@ def new_classify_order(rapi: RapidataClient):
             asset=MediaAsset(path="examples/data/wallaby.jpg"),
             question="What kind of animal is this?",
             categories=["Fish", "Marsupial", "Bird", "Reptile"],
-            truths=["Marsupial"],
+            truths=["Marsupial"], # multiple correct answers are supported as well
             metadata=[PromptMetadata(prompt="Hint: It has a pouch")],
         )
         .create()
