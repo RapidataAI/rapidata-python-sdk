@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.order_model import OrderModel
+from rapidata.api_client.models.public_order_model import PublicOrderModel
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,7 +27,7 @@ class GetPublicOrdersResult(BaseModel):
     """
     GetPublicOrdersResult
     """ # noqa: E501
-    orders: List[OrderModel]
+    orders: List[PublicOrderModel]
     __properties: ClassVar[List[str]] = ["orders"]
 
     model_config = ConfigDict(
@@ -88,7 +88,7 @@ class GetPublicOrdersResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "orders": [OrderModel.from_dict(_item) for _item in obj["orders"]] if obj.get("orders") is not None else None
+            "orders": [PublicOrderModel.from_dict(_item) for _item in obj["orders"]] if obj.get("orders") is not None else None
         })
         return _obj
 

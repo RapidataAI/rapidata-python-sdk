@@ -52,8 +52,6 @@ from rapidata.api_client.models.add_validation_rapid_model_payload import AddVal
 from rapidata.api_client.models.add_validation_rapid_model_truth import AddValidationRapidModelTruth
 from rapidata.api_client.models.add_validation_rapid_result import AddValidationRapidResult
 from rapidata.api_client.models.add_validation_text_rapid_model import AddValidationTextRapidModel
-from rapidata.api_client.models.admin_order_model import AdminOrderModel
-from rapidata.api_client.models.admin_order_model_paged_result import AdminOrderModelPagedResult
 from rapidata.api_client.models.age_group import AgeGroup
 from rapidata.api_client.models.age_user_filter_model import AgeUserFilterModel
 from rapidata.api_client.models.aggregator_type import AggregatorType
@@ -117,8 +115,6 @@ from rapidata.api_client.models.create_simple_pipeline_model import CreateSimple
 from rapidata.api_client.models.create_simple_pipeline_model_artifacts_inner import CreateSimplePipelineModelArtifactsInner
 from rapidata.api_client.models.create_simple_pipeline_model_pipeline_steps_inner import CreateSimplePipelineModelPipelineStepsInner
 from rapidata.api_client.models.create_unsupported_order_model import CreateUnsupportedOrderModel
-from rapidata.api_client.models.customer_order_model import CustomerOrderModel
-from rapidata.api_client.models.customer_order_model_paged_result import CustomerOrderModelPagedResult
 from rapidata.api_client.models.datapoint import Datapoint
 from rapidata.api_client.models.datapoint_asset import DatapointAsset
 from rapidata.api_client.models.datapoint_get_by_id_get200_response import DatapointGetByIdGet200Response
@@ -218,7 +214,7 @@ from rapidata.api_client.models.null_asset_model import NullAssetModel
 from rapidata.api_client.models.null_asset_model1 import NullAssetModel1
 from rapidata.api_client.models.null_asset_model2 import NullAssetModel2
 from rapidata.api_client.models.order_model import OrderModel
-from rapidata.api_client.models.order_query_get200_response import OrderQueryGet200Response
+from rapidata.api_client.models.order_model_paged_result import OrderModelPagedResult
 from rapidata.api_client.models.order_state import OrderState
 from rapidata.api_client.models.original_filename_metadata import OriginalFilenameMetadata
 from rapidata.api_client.models.original_filename_metadata_model import OriginalFilenameMetadataModel
@@ -232,6 +228,7 @@ from rapidata.api_client.models.probabilistic_attach_category_referee_config imp
 from rapidata.api_client.models.prompt_metadata import PromptMetadata
 from rapidata.api_client.models.prompt_metadata_input import PromptMetadataInput
 from rapidata.api_client.models.prompt_metadata_model import PromptMetadataModel
+from rapidata.api_client.models.public_order_model import PublicOrderModel
 from rapidata.api_client.models.public_text_metadata_input import PublicTextMetadataInput
 from rapidata.api_client.models.query_campaigns_model import QueryCampaignsModel
 from rapidata.api_client.models.query_model import QueryModel

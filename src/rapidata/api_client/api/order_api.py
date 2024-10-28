@@ -30,7 +30,7 @@ from rapidata.api_client.models.feedback_model import FeedbackModel
 from rapidata.api_client.models.get_order_by_id_result import GetOrderByIdResult
 from rapidata.api_client.models.get_order_results_result import GetOrderResultsResult
 from rapidata.api_client.models.get_public_orders_result import GetPublicOrdersResult
-from rapidata.api_client.models.order_query_get200_response import OrderQueryGet200Response
+from rapidata.api_client.models.order_model_paged_result import OrderModelPagedResult
 from rapidata.api_client.models.query_orders_model import QueryOrdersModel
 from rapidata.api_client.models.unlock_order_result import UnlockOrderResult
 from rapidata.api_client.models.update_access_model import UpdateAccessModel
@@ -2972,7 +2972,7 @@ class OrderApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> OrderQueryGet200Response:
+    ) -> OrderModelPagedResult:
         """Queries orders based on a filter, page, and sort criteria.
 
 
@@ -3009,7 +3009,7 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "OrderQueryGet200Response",
+            '200': "OrderModelPagedResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3038,7 +3038,7 @@ class OrderApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[OrderQueryGet200Response]:
+    ) -> ApiResponse[OrderModelPagedResult]:
         """Queries orders based on a filter, page, and sort criteria.
 
 
@@ -3075,7 +3075,7 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "OrderQueryGet200Response",
+            '200': "OrderModelPagedResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3141,7 +3141,7 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "OrderQueryGet200Response",
+            '200': "OrderModelPagedResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3188,7 +3188,9 @@ class OrderApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'application/json'
+                    'text/plain', 
+                    'application/json', 
+                    'text/json'
                 ]
             )
 
