@@ -148,6 +148,7 @@ class RapidataOrderBuilder:
             order_id=self.order_id,
             dataset=self._dataset,
             openapi_service=self._openapi_service,
+            name=self._name,
         )
 
         if all(isinstance(item, MediaAsset) for item in self._assets):
