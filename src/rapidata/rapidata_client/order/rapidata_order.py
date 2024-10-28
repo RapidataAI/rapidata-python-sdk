@@ -3,7 +3,7 @@ from rapidata.rapidata_client.dataset.rapidata_dataset import RapidataDataset
 from rapidata.service.openapi_service import OpenAPIService
 import json
 from rapidata.api_client.exceptions import ApiException
-from typing import cast
+from typing import Optional, cast
 from rapidata.api_client.models.workflow_artifact_model import WorkflowArtifactModel
 from tqdm import tqdm
 
@@ -22,7 +22,7 @@ class RapidataOrder:
     def __init__(
         self,
         order_id: str,
-        dataset: RapidataDataset,
+        dataset: Optional[RapidataDataset],
         openapi_service: OpenAPIService,
         name: str,
     ):
@@ -69,16 +69,16 @@ class RapidataOrder:
                 if current_completed > completed_rapids:
                     pbar.update(current_completed - completed_rapids)
                     completed_rapids = current_completed
-                
+
                 if completed_rapids >= total_rapids:
                     break
-                
+
                 time.sleep(refresh_rate)
 
     def _get_workflow_id(self):
         if self._workflow_id:
             return self._workflow_id
-        
+
         for _ in range(2):
             try:
                 order_result = self.openapi_service.order_api.order_get_by_id_get(self.order_id)
@@ -90,7 +90,7 @@ class RapidataOrder:
         if not self._workflow_id:
             raise Exception("Order has not started yet. Please wait for a few seconds and try again.")
         return self._workflow_id
-    
+
     def _get_total_rapids(self):
         workflow_id = self._get_workflow_id()
         return self.openapi_service.workflow_api.workflow_get_progress_get(workflow_id).total

@@ -33,7 +33,7 @@ from rapidata.rapidata_client.workflow.compare_workflow import CompareWorkflow
 
 from rapidata.rapidata_client.assets import MediaAsset, TextAsset, MultiAsset
 
-from typing import cast, Sequence
+from typing import Optional, cast, Sequence
 
 
 class RapidataOrderBuilder:
@@ -60,6 +60,7 @@ class RapidataOrderBuilder:
         """
         self._name = name
         self._openapi_service = openapi_service
+        self._dataset: Optional[RapidataDataset]
         self._workflow: Workflow | None = None
         self._referee: Referee | None = None
         self._metadata: list[Metadata] | None = None
@@ -126,10 +127,6 @@ class RapidataOrderBuilder:
         Returns:
             RapidataOrder: The created RapidataOrder instance.
         """
-        if not self._workflow or not self._assets:
-            raise ValueError(
-                "You must provide a workflow and assets to create an order. Use the .workflow() and .media() methods respecitvely."
-            )
         order_model = self._to_model()
         if isinstance(
             self._workflow, CompareWorkflow
@@ -143,7 +140,13 @@ class RapidataOrderBuilder:
         )
 
         self.order_id = result.order_id
-        self._dataset = RapidataDataset(result.dataset_id, self._openapi_service)
+
+        self._dataset = (
+            RapidataDataset(result.dataset_id, self._openapi_service)
+            if result.dataset_id
+            else None
+        )
+
         order = RapidataOrder(
             order_id=self.order_id,
             dataset=self._dataset,
@@ -151,15 +154,19 @@ class RapidataOrderBuilder:
             name=self._name,
         )
 
-        if all(isinstance(item, MediaAsset) for item in self._assets):
+        if all(isinstance(item, MediaAsset) for item in self._assets) and order.dataset:
             assets = cast(list[MediaAsset], self._assets)
             order.dataset.add_media_from_paths(assets, self._metadata, max_workers)
 
-        elif all(isinstance(item, TextAsset) for item in self._assets):
+        elif (
+            all(isinstance(item, TextAsset) for item in self._assets) and order.dataset
+        ):
             assets = cast(list[TextAsset], self._assets)
             order.dataset.add_texts(assets)
 
-        elif all(isinstance(item, MultiAsset) for item in self._assets):
+        elif (
+            all(isinstance(item, MultiAsset) for item in self._assets) and order.dataset
+        ):
             multi_assets = cast(list[MultiAsset], self._assets)
 
             # Check if all MultiAssets contain the same type of assets
@@ -187,7 +194,7 @@ class RapidataOrderBuilder:
                     "MultiAsset must contain MediaAssets or TextAssets objects."
                 )
 
-        else:
+        elif order.dataset:
             raise ValueError(
                 "Media paths must be of type MediaAsset, TextAsset, or MultiAsset."
             )
