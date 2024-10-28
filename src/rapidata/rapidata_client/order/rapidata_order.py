@@ -24,10 +24,12 @@ class RapidataOrder:
         order_id: str,
         dataset: RapidataDataset,
         openapi_service: OpenAPIService,
+        name: str,
     ):
         self.openapi_service = openapi_service
         self.order_id = order_id
         self._dataset = dataset
+        self.name = name
         self._workflow_id = None
 
     def submit(self):

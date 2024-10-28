@@ -11,6 +11,12 @@ from rapidata.rapidata_client.dataset.rapidata_dataset import RapidataDataset
 from rapidata.rapidata_client.simple_builders.simple_classification_builders import ClassificationQuestionBuilder
 from rapidata.rapidata_client.simple_builders.simple_compare_builders import CompareCriteriaBuilder
 
+from rapidata.api_client.models.query_orders_model import QueryOrdersModel
+from rapidata.api_client.models.page_info import PageInfo
+from rapidata.api_client.models.root_filter import RootFilter
+from rapidata.api_client.models.filter import Filter
+
+
 class RapidataClient:
     """The Rapidata client is the main entry point for interacting with the Rapidata API. It allows you to create orders and validation sets. For creating a new order, check out `new_order()`. For creating a new validation set, check out `new_validation_set()`."""
 
@@ -85,11 +91,37 @@ class RapidataClient:
         # TODO: check the pipeline for the dataset id - not really necessary atm
         # order = self.openapi_service.order_api.order_get_by_id_get(order_id)
         # pipeline = self.openapi_service..pipeline_get_by_id_get(order.pipeline_id)
+        try:
+            order = self.openapi_service.order_api.order_get_by_id_get(order_id)
+        except Exception:
+            raise ValueError(f"Order with ID {order_id} not found.")
+
         temp_dataset = RapidataDataset("temp", self.openapi_service)
         return RapidataOrder(
             dataset=temp_dataset, 
             order_id=order_id, 
+            name=order.order_name,
             openapi_service=self.openapi_service)
+    
+    def find_orders(self, name: str = "", amount: int = 1) -> list[RapidataOrder]:
+        """Find orders by name. If name is not provided, it will return the most recent order.
+
+        Args:
+            name (str, optional): The name of the order - matching order will contain the name. Defaults to "" for any order.
+            amount (int, optional): The amount of orders to return. Defaults to 1.
+
+        Returns:
+            list[RapidataOrder]: A list of RapidataOrder instances.
+        """
+        try:
+            order_page_result = self.openapi_service.order_api.order_query_get(QueryOrdersModel(
+                page=PageInfo(index=1, size=amount),
+                filter=RootFilter(filters=[Filter(field="OrderName", operator="Contains", value=name)])))
+        except Exception:
+            raise ValueError(f"Failed to find orders with name {name}.")
+        
+        orders = [self.get_order(order.id) for order in order_page_result.items]
+        return orders
     
     def create_classify_order(self, name: str) -> ClassificationQuestionBuilder:
         """Create a new classification order where people are asked to classify an image.
