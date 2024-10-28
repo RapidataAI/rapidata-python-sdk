@@ -143,7 +143,7 @@ class RapidataOrderBuilder:
         )
 
         self.order_id = result.order_id
-        self._dataset = RapidataDataset(result.dataset_id, self._openapi_service) # type: ignore - should only be None if order is evaluation order
+        self._dataset = RapidataDataset(result.dataset_id, self._openapi_service)
         order = RapidataOrder(
             order_id=self.order_id,
             dataset=self._dataset,
