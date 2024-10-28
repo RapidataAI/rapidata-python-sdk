@@ -127,10 +127,6 @@ class RapidataOrderBuilder:
         Returns:
             RapidataOrder: The created RapidataOrder instance.
         """
-        if not self._workflow or not self._assets:
-            raise ValueError(
-                "You must provide a workflow and assets to create an order. Use the .workflow() and .media() methods respecitvely."
-            )
         order_model = self._to_model()
         if isinstance(
             self._workflow, CompareWorkflow

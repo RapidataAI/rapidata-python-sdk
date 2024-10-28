@@ -26,7 +26,6 @@ class TestExampleOrders(unittest.TestCase):
         order = (
             self.rapi.new_order("Test Evaluation Order")
             .workflow(EvaluationWorkflow(validation_set_id=validation_set.id))
-            .media([MediaAsset(path="examples/data/wallaby.jpg")])
             .selections([LabelingSelection(amount=1)])
             .create()
         )
