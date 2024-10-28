@@ -570,18 +570,21 @@
         ],
         "responses": {
           "200": {
-            "description": null,
+            "description": "OK",
             "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderModelPagedResult"
+                }
+              },
               "application/json": {
                 "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/AdminOrderModelPagedResult"
-                    },
-                    {
-                      "$ref": "#/components/schemas/CustomerOrderModelPagedResult"
-                    }
-                  ]
+                  "$ref": "#/components/schemas/OrderModelPagedResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderModelPagedResult"
                 }
               }
             }
@@ -4476,85 +4479,6 @@
         "additionalProperties": false,
         "description": "The model for uploading text sources to a dataset."
       },
-      "AdminOrderModel": {
-        "required": [
-          "customerMail",
-          "id",
-          "isPublic",
-          "orderDate",
-          "orderName",
-          "state"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "orderDate": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "customerMail": {
-            "type": "string"
-          },
-          "state": {
-            "enum": [
-              "Created",
-              "Submitted",
-              "ManualReview",
-              "Processing",
-              "Paused",
-              "Completed",
-              "Cancelled",
-              "Failed"
-            ],
-            "type": "string"
-          },
-          "orderName": {
-            "type": "string"
-          },
-          "isPublic": {
-            "type": "boolean"
-          }
-        },
-        "additionalProperties": false
-      },
-      "AdminOrderModelPagedResult": {
-        "required": [
-          "items",
-          "page",
-          "pageSize",
-          "total"
-        ],
-        "type": "object",
-        "properties": {
-          "total": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AdminOrderModel"
-            }
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false
-      },
       "AgeGroup": {
         "enum": [
           "0-18",
@@ -5331,81 +5255,6 @@
         "additionalProperties": false,
         "description": "The model for creating an order with an unsupported label type or data type."
       },
-      "CustomerOrderModel": {
-        "required": [
-          "id",
-          "isPublic",
-          "orderDate",
-          "orderName",
-          "state"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "orderDate": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "state": {
-            "enum": [
-              "Created",
-              "Submitted",
-              "ManualReview",
-              "Processing",
-              "Paused",
-              "Completed",
-              "Cancelled",
-              "Failed"
-            ],
-            "type": "string"
-          },
-          "orderName": {
-            "type": "string"
-          },
-          "isPublic": {
-            "type": "boolean"
-          }
-        },
-        "additionalProperties": false
-      },
-      "CustomerOrderModelPagedResult": {
-        "required": [
-          "items",
-          "page",
-          "pageSize",
-          "total"
-        ],
-        "type": "object",
-        "properties": {
-          "total": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CustomerOrderModel"
-            }
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false
-      },
       "DatasetEvaluationStepModel": {
         "title": "DatasetEvaluationStepModel",
         "required": [
@@ -5756,7 +5605,7 @@
           "orders": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/OrderModel"
+              "$ref": "#/components/schemas/PublicOrderModel"
             }
           }
         },
@@ -5942,20 +5791,79 @@
       },
       "OrderModel": {
         "required": [
+          "customerMail",
           "id",
           "isPublic",
-          "name"
+          "orderDate",
+          "orderName",
+          "state"
         ],
         "type": "object",
         "properties": {
           "id": {
             "type": "string"
           },
-          "name": {
+          "orderDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "customerMail": {
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "Created",
+              "Submitted",
+              "ManualReview",
+              "Processing",
+              "Paused",
+              "Completed",
+              "Cancelled",
+              "Failed"
+            ],
+            "type": "string"
+          },
+          "orderName": {
             "type": "string"
           },
           "isPublic": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "OrderModelPagedResult": {
+        "required": [
+          "items",
+          "page",
+          "pageSize",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderModel"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
           }
         },
         "additionalProperties": false
@@ -6007,6 +5915,26 @@
           },
           "target": {
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PublicOrderModel": {
+        "required": [
+          "id",
+          "isPublic",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "isPublic": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
