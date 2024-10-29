@@ -107,13 +107,12 @@ class RapidataClient:
             name=order.order_name,
             openapi_service=self.openapi_service)
     
-    def find_orders(self, name: str = "", amount: int = 1, latest=True) -> list[RapidataOrder]:
-        """Find your orders given criteria. If nothing is provided, it will return the most recent order.
+    def find_orders(self, name: str = "", amount: int = 1) -> list[RapidataOrder]:
+        """Find your recent orders given criteria. If nothing is provided, it will return the most recent order.
 
         Args:
             name (str, optional): The name of the order - matching order will contain the name. Defaults to "" for any order.
             amount (int, optional): The amount of orders to return. Defaults to 1.
-            latest (bool, optional): If True, the most recent orders will be returned. If False, the oldest orders will be returned. Defaults to True.
 
         Returns:
             list[RapidataOrder]: A list of RapidataOrder instances.
@@ -122,7 +121,7 @@ class RapidataClient:
             order_page_result = self.openapi_service.order_api.order_query_get(QueryOrdersModel(
                 page=PageInfo(index=1, size=amount),
                 filter=RootFilter(filters=[Filter(field="OrderName", operator="Contains", value=name)]),
-                sortCriteria=[SortCriterion(direction="Desc" if latest else "Asc", propertyName="OrderDate")]
+                sortCriteria=[SortCriterion(direction="Desc", propertyName="OrderDate")]
                 ))
             
         except BadRequestException as e:
