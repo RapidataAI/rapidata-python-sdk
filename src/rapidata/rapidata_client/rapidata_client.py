@@ -108,7 +108,7 @@ class RapidataClient:
             openapi_service=self.openapi_service)
     
     def find_orders(self, name: str = "", amount: int = 1, latest=True) -> list[RapidataOrder]:
-        """Find your orders with criterias. If nothing is provided, it will return the most recent order.
+        """Find your orders given criteria. If nothing is provided, it will return the most recent order.
 
         Args:
             name (str, optional): The name of the order - matching order will contain the name. Defaults to "" for any order.
