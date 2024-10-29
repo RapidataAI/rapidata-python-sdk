@@ -18,6 +18,7 @@ from rapidata.api_client.models.query_orders_model import QueryOrdersModel
 from rapidata.api_client.models.page_info import PageInfo
 from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.filter import Filter
+from rapidata.api_client.models.sort_criterion import SortCriterion
 
 
 class RapidataClient:
@@ -106,12 +107,13 @@ class RapidataClient:
             name=order.order_name,
             openapi_service=self.openapi_service)
     
-    def find_orders(self, name: str = "", amount: int = 1) -> list[RapidataOrder]:
-        """Find orders by name. If name is not provided, it will return the most recent order.
+    def find_orders(self, name: str = "", amount: int = 1, latest=True) -> list[RapidataOrder]:
+        """Find your orders given criteria. If nothing is provided, it will return the most recent order.
 
         Args:
             name (str, optional): The name of the order - matching order will contain the name. Defaults to "" for any order.
             amount (int, optional): The amount of orders to return. Defaults to 1.
+            latest (bool, optional): If True, the most recent orders will be returned. If False, the oldest orders will be returned. Defaults to True.
 
         Returns:
             list[RapidataOrder]: A list of RapidataOrder instances.
@@ -119,7 +121,9 @@ class RapidataClient:
         try:
             order_page_result = self.openapi_service.order_api.order_query_get(QueryOrdersModel(
                 page=PageInfo(index=1, size=amount),
-                filter=RootFilter(filters=[Filter(field="OrderName", operator="Contains", value=name)])))
+                filter=RootFilter(filters=[Filter(field="OrderName", operator="Contains", value=name)]),
+                sortCriteria=[SortCriterion(direction="Desc" if latest else "Asc", propertyName="OrderDate")]
+                ))
             
         except BadRequestException as e:
             raise ValueError(f"Error occured during request. \nError: {e.body} \nTraceid: {e.headers.get('X-Trace-Id') if isinstance(e.headers, HTTPHeaderDict) else 'Unknown'}")
