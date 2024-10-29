@@ -11,6 +11,9 @@ from rapidata.rapidata_client.dataset.rapidata_dataset import RapidataDataset
 from rapidata.rapidata_client.simple_builders.simple_classification_builders import ClassificationQuestionBuilder
 from rapidata.rapidata_client.simple_builders.simple_compare_builders import CompareCriteriaBuilder
 
+from rapidata.api_client.exceptions import BadRequestException
+from urllib3._collections import HTTPHeaderDict
+
 from rapidata.api_client.models.query_orders_model import QueryOrdersModel
 from rapidata.api_client.models.page_info import PageInfo
 from rapidata.api_client.models.root_filter import RootFilter
@@ -117,8 +120,12 @@ class RapidataClient:
             order_page_result = self.openapi_service.order_api.order_query_get(QueryOrdersModel(
                 page=PageInfo(index=1, size=amount),
                 filter=RootFilter(filters=[Filter(field="OrderName", operator="Contains", value=name)])))
-        except Exception:
-            raise ValueError(f"Failed to find orders with name {name}.")
+            
+        except BadRequestException as e:
+            raise ValueError(f"Error occured during request. \nError: {e.body} \nTraceid: {e.headers.get('X-Trace-Id') if isinstance(e.headers, HTTPHeaderDict) else 'Unknown'}")
+
+        except Exception as e:
+            raise ValueError(f"Unknown error occured: {e}")
         
         orders = [self.get_order(order.id) for order in order_page_result.items]
         return orders
