@@ -98,7 +98,7 @@ class RapidataOrder:
             try:
                 progress = self.openapi_service.workflow_api.workflow_get_progress_get(workflow_id)
                 break
-            except Exception as e:
+            except Exception:
                 sleep(5)
 
         if not progress:
