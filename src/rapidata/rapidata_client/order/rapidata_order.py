@@ -110,12 +110,12 @@ class RapidataOrder:
     def get_results(self):
         """
         Gets the results of the order. 
-        If the order is not completed, this method will block until the order is completed and then return the results.
+        If the order is still processing, this method will block until the order is completed and then return the results.
 
         :return: The results of the order.
         :rtype: dict
         """
-        while self.get_status().state != "Completed":
+        while self.get_status().state == "Processing":
             sleep(5)
 
         try:
