@@ -1,4 +1,4 @@
-import time
+from time import sleep
 from rapidata.rapidata_client.dataset.rapidata_dataset import RapidataDataset
 from rapidata.service.openapi_service import OpenAPIService
 import json
@@ -61,11 +61,11 @@ class RapidataOrder:
         :param refresh_rate: How often to refresh the progress bar, in seconds.
         :type refresh_rate: float
         """
-        total_rapids = self._get_total_rapids()
+        total_rapids = self._get_workflow_progress().total
         with tqdm(total=total_rapids, desc="Processing order", unit="rapids") as pbar:
             completed_rapids = 0
             while True:
-                current_completed = self._get_completed_rapids()
+                current_completed = self._get_workflow_progress().completed
                 if current_completed > completed_rapids:
                     pbar.update(current_completed - completed_rapids)
                     completed_rapids = current_completed
@@ -73,7 +73,7 @@ class RapidataOrder:
                 if completed_rapids >= total_rapids:
                     break
 
-                time.sleep(refresh_rate)
+                sleep(refresh_rate)
 
     def _get_workflow_id(self):
         if self._workflow_id:
@@ -86,31 +86,38 @@ class RapidataOrder:
                 self._workflow_id = cast(WorkflowArtifactModel, pipeline.artifacts["workflow-artifact"].actual_instance).workflow_id
                 break
             except Exception:
-                time.sleep(2)
+                sleep(2)
         if not self._workflow_id:
-            raise Exception("Order has not started yet. Please wait for a few seconds and try again.")
+            raise Exception("Order has not started yet. Please start it or wait for a few seconds and try again.")
         return self._workflow_id
-
-    def _get_total_rapids(self):
+    
+    def _get_workflow_progress(self):
         workflow_id = self._get_workflow_id()
-        return self.openapi_service.workflow_api.workflow_get_progress_get(workflow_id).total
+        progress = None
+        for _ in range(2):
+            try:
+                progress = self.openapi_service.workflow_api.workflow_get_progress_get(workflow_id)
+                break
+            except Exception:
+                sleep(5)
 
-    def _get_completed_rapids(self):
-        workflow_id = self._get_workflow_id()
-        return self.openapi_service.workflow_api.workflow_get_progress_get(workflow_id).completed
+        if not progress:
+            raise Exception(f"Failed to get progress. Please try again in a few seconds.")
+        
+        return progress
 
-    def get_progress_percentage(self):
-        workflow_id = self._get_workflow_id()
-        progress = self.openapi_service.workflow_api.workflow_get_progress_get(workflow_id)
-        return progress.completion_percentage
-
+        
     def get_results(self):
         """
-        Gets the results of the order.
+        Gets the results of the order. 
+        If the order is still processing, this method will block until the order is completed and then return the results.
 
         :return: The results of the order.
         :rtype: dict
         """
+        while self.get_status().state == "Processing":
+            sleep(5)
+
         try:
             # Get the raw result string
             result_str = self.openapi_service.order_api.order_result_get(id=self.order_id)
