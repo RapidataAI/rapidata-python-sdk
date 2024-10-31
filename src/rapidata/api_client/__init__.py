@@ -105,7 +105,6 @@ from rapidata.api_client.models.create_dataset_artifact_model import CreateDatas
 from rapidata.api_client.models.create_dataset_artifact_model_dataset import CreateDatasetArtifactModelDataset
 from rapidata.api_client.models.create_demographic_rapid_model import CreateDemographicRapidModel
 from rapidata.api_client.models.create_empty_validation_set_result import CreateEmptyValidationSetResult
-from rapidata.api_client.models.create_legacy_client_model import CreateLegacyClientModel
 from rapidata.api_client.models.create_order_model import CreateOrderModel
 from rapidata.api_client.models.create_order_model_referee import CreateOrderModelReferee
 from rapidata.api_client.models.create_order_model_user_filters_inner import CreateOrderModelUserFiltersInner
@@ -171,12 +170,8 @@ from rapidata.api_client.models.image_dimension_metadata_model import ImageDimen
 from rapidata.api_client.models.import_from_file_result import ImportFromFileResult
 from rapidata.api_client.models.import_validation_set_from_file_result import ImportValidationSetFromFileResult
 from rapidata.api_client.models.in_progress_rapid_model import InProgressRapidModel
-from rapidata.api_client.models.issue_auth_token_result import IssueAuthTokenResult
 from rapidata.api_client.models.labeling_selection import LabelingSelection
 from rapidata.api_client.models.language_user_filter_model import LanguageUserFilterModel
-from rapidata.api_client.models.legacy_issue_client_auth_token_result import LegacyIssueClientAuthTokenResult
-from rapidata.api_client.models.legacy_request_password_reset_command import LegacyRequestPasswordResetCommand
-from rapidata.api_client.models.legacy_submit_password_reset_command import LegacySubmitPasswordResetCommand
 from rapidata.api_client.models.line import Line
 from rapidata.api_client.models.line_payload import LinePayload
 from rapidata.api_client.models.line_point import LinePoint
@@ -192,7 +187,6 @@ from rapidata.api_client.models.location_metadata import LocationMetadata
 from rapidata.api_client.models.location_metadata_exists_filter_config import LocationMetadataExistsFilterConfig
 from rapidata.api_client.models.location_metadata_model import LocationMetadataModel
 from rapidata.api_client.models.logic_operator import LogicOperator
-from rapidata.api_client.models.login_model import LoginModel
 from rapidata.api_client.models.metadata_visibilities import MetadataVisibilities
 from rapidata.api_client.models.multi_asset import MultiAsset
 from rapidata.api_client.models.multi_asset_model import MultiAssetModel
@@ -244,11 +238,10 @@ from rapidata.api_client.models.rapid_answer_result import RapidAnswerResult
 from rapidata.api_client.models.rapid_result_model import RapidResultModel
 from rapidata.api_client.models.rapid_result_model_result import RapidResultModelResult
 from rapidata.api_client.models.rapid_skipped_model import RapidSkippedModel
+from rapidata.api_client.models.register_temporary_customer_model import RegisterTemporaryCustomerModel
 from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.send_completion_mail_step_model import SendCompletionMailStepModel
 from rapidata.api_client.models.shape import Shape
-from rapidata.api_client.models.signup_customer_model import SignupCustomerModel
-from rapidata.api_client.models.signup_shadow_customer_model import SignupShadowCustomerModel
 from rapidata.api_client.models.simple_workflow_config import SimpleWorkflowConfig
 from rapidata.api_client.models.simple_workflow_config_model import SimpleWorkflowConfigModel
 from rapidata.api_client.models.simple_workflow_config_model_blueprint import SimpleWorkflowConfigModelBlueprint
