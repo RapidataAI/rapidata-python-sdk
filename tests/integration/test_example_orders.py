@@ -82,6 +82,6 @@ class TestExampleOrders(unittest.TestCase):
 
         from rapidata import NaiveReferee, MediaAsset
 
-        order_builder.referee(NaiveReferee(required_guesses=15))
+        order_builder.referee(NaiveReferee(responses=15))
 
         order_builder.media([MediaAsset("examples/data/wallaby.jpg")])

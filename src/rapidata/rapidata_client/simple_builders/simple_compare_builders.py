@@ -48,7 +48,7 @@ class CompareOrderBuilder:
             )
 
         else:
-            referee = NaiveReferee(required_guesses=self._responses_required)
+            referee = NaiveReferee(responses=self._responses_required)
         selection: list[Selection] = ([ValidationSelection(amount=1, validation_set_id=self._validation_set_id), LabelingSelection(amount=2)] 
                      if self._validation_set_id 
                      else [LabelingSelection(amount=3)])

@@ -60,7 +60,7 @@ order_builder.workflow(workflow)
 ```py
 from rapidata import NaiveReferee
 
-order_builder.referee(NaiveReferee(required_guesses=15))
+order_builder.referee(NaiveReferee(responses=15))
 ```
 
 4. Upload datapoints for which you want this question to be asked. In this example, we upload one image:
@@ -107,7 +107,7 @@ order = (
             options=["Fish", "Cat", "Wallaby", "Airplane"],
         )
     )
-    .referee(NaiveReferee(required_guesses=15))
+    .referee(NaiveReferee(responses=15))
     .media(["examples/data/wallaby.jpg"])
     .selections([LabelingSelection(amount=1)])
     .create()

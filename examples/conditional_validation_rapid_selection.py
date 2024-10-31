@@ -40,7 +40,7 @@ def new_cond_validation_rapid_order(rapi: RapidataClient):
             )
         )
         .media([MediaAsset("examples/data/wallaby.jpg")])
-        .referee(NaiveReferee(required_guesses=3))
+        .referee(NaiveReferee(responses=3))
         .selections(
             [
                 ConditionalValidationSelection(

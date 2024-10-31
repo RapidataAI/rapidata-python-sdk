@@ -49,7 +49,7 @@ class ClassificationOrderBuilder:
             )
 
         else:
-            referee = NaiveReferee(required_guesses=self._responses_required)
+            referee = NaiveReferee(responses=self._responses_required)
 
         assets = [MediaAsset(path=media_path) for media_path in self._media_paths]
 

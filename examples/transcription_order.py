@@ -38,7 +38,7 @@ def new_transcription_order(rapi: RapidataClient):
                 instruction="Listen to the audio. Select only the words that you hear. Tap icon to replay"
             )
         )
-        .referee(NaiveReferee(required_guesses=30))
+        .referee(NaiveReferee(responses=30))
         .feature_flags(FeatureFlags().alert_on_fast_response(4000))
         .media(asset=[MediaAsset("examples/data/waiting.mp4")], metadata=[transcription])
         .selections([
