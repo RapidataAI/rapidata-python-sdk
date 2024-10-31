@@ -132,6 +132,12 @@ order = rapi.get_order(order_id)
 results = order.get_results()
 ```
 
+It is also possible to retrieve your most recent orders. With the find_orders method you can optionally specify a order name and the amount of recent orders you want to retrieve:
+
+```py
+most_recent_order = rapi.find_orders()[0]
+```
+
 ### Monitoring Order Progress
 
 You can monitor the progress of the order by checking how many datapoints are already done labeling (keep in mind that this will be an exponential function since the datapoints get picket at random to be labeled):

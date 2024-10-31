@@ -81,8 +81,8 @@ The `RapidataSDK` supports a fluent interface, allowing method call chaining. Th
 
 ```py
 order = (rapi.create_classify_order("classifcaiton order")
-         .question("what is this?")
-         .options(["a", "b", "c"])
+         .question("What is shown in the image?")
+         .options(["Fish", "Cat", "Wallaby", "Airplane"])
          .media(["examples/data/wallaby.jpg"])
          .responses(20)
          .create())
@@ -103,6 +103,12 @@ rapi = RapidataClient(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
 order_id = "your_order_id"  # as a string
 order = rapi.get_order(order_id)
 results = order.get_results()
+```
+
+It is also possible to retrieve your most recent orders. With the find_orders method you can optionally specify a order name and the amount of recent orders you want to retrieve:
+
+```py
+most_recent_order = rapi.find_orders()[0]
 ```
 
 ### Monitoring Order Progress

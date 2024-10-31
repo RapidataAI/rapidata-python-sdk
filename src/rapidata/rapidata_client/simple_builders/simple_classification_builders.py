@@ -1,7 +1,7 @@
 from rapidata.rapidata_client.order.rapidata_order_builder import RapidataOrderBuilder
 from rapidata.rapidata_client.metadata.base_metadata import Metadata
 from rapidata.rapidata_client.referee.naive_referee import NaiveReferee
-from rapidata.rapidata_client.referee.classify_early_stopping_referee import ClassifyEarlyStoppingReferee
+from rapidata.rapidata_client.referee.early_stopping_referee import EarlyStoppingReferee
 from rapidata.rapidata_client.selection.base_selection import Selection
 from rapidata.rapidata_client.workflow.classify_workflow import ClassifyWorkflow
 from rapidata.rapidata_client.selection.validation_selection import ValidationSelection
@@ -43,7 +43,7 @@ class ClassificationOrderBuilder:
 
     def create(self, submit: bool = True, max_upload_workers: int = 10):
         if self._probability_threshold and self._responses_required:
-            referee = ClassifyEarlyStoppingReferee(
+            referee = EarlyStoppingReferee(
                 max_vote_count=self._responses_required,
                 threshold=self._probability_threshold
             )

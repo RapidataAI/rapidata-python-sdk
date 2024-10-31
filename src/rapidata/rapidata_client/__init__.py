@@ -12,7 +12,7 @@ from .selection import (
     ConditionalValidationSelection,
     CappedSelection,
 )
-from .referee import NaiveReferee, ClassifyEarlyStoppingReferee
+from .referee import NaiveReferee, EarlyStoppingReferee
 from .metadata import (
     PrivateTextMetadata,
     PublicTextMetadata,
