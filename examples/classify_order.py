@@ -40,7 +40,7 @@ def new_classify_order(rapi: RapidataClient):
             )
         )
         .media([MediaAsset("examples/data/wallaby.jpg")])
-        .referee(NaiveReferee(required_guesses=3))
+        .referee(NaiveReferee(responses=3))
         .selections([
             ValidationSelection(amount=1, validation_set_id=validation_set.id),
             LabelingSelection(amount=3)

@@ -5,7 +5,7 @@ from rapidata.api_client.models.early_stopping_referee_model import (
 )
 
 
-class ClassifyEarlyStoppingReferee(Referee):
+class EarlyStoppingReferee(Referee):
     """A referee that stops the task when confidence in the winning category exceeds a threshold.
 
     This referee implements an early stopping mechanism for classification tasks.
@@ -14,6 +14,8 @@ class ClassifyEarlyStoppingReferee(Referee):
 
     The threshold behaves logarithmically, meaning small increments (e.g., from 0.99
     to 0.999) can significantly impact the stopping criteria.
+
+    This referee is supported for the classification and compare tasks.
 
     Attributes:
         threshold (float): The confidence threshold for early stopping.

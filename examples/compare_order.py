@@ -40,7 +40,7 @@ def new_compare_order(rapi: RapidataClient):
                 criteria="Which logo is better?",
             )
         )
-        .referee(NaiveReferee(required_guesses=1))
+        .referee(NaiveReferee(responses=1))
         .media([
             MultiAsset([
                 MediaAsset(path="examples/data/rapidata_concept_logo.jpg"), 

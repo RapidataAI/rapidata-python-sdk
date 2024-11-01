@@ -10,7 +10,7 @@ from .rapidata_client import (
     ConditionalValidationSelection,
     CappedSelection,
     NaiveReferee,
-    ClassifyEarlyStoppingReferee,
+    EarlyStoppingReferee,
     PrivateTextMetadata,
     PublicTextMetadata,
     PromptMetadata,

@@ -2,7 +2,7 @@ from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.metadata import Metadata
 from rapidata.rapidata_client.order.rapidata_order_builder import RapidataOrderBuilder
 from rapidata.rapidata_client.workflow.compare_workflow import CompareWorkflow
-from rapidata.rapidata_client.referee.naive_referee import NaiveReferee
+from rapidata.rapidata_client.referee import NaiveReferee, EarlyStoppingReferee
 from rapidata.rapidata_client.selection.validation_selection import ValidationSelection
 from rapidata.rapidata_client.selection.labeling_selection import LabelingSelection
 from rapidata.rapidata_client.selection.base_selection import Selection
@@ -18,6 +18,7 @@ class CompareOrderBuilder:
         self._responses_required = 10
         self._metadata = None
         self._validation_set_id = None
+        self._probability_threshold = None
 
     def responses(self, responses_required: int) -> 'CompareOrderBuilder':
         """Set the number of resoonses required per matchup/pairing for the comparison order."""
@@ -34,7 +35,20 @@ class CompareOrderBuilder:
         self._validation_set_id = validation_set_id
         return self
     
+    def probability_threshold(self, probability_threshold: float) -> 'CompareOrderBuilder':
+        """Set the probability threshold for early stopping."""
+        self._probability_threshold = probability_threshold
+        return self
+    
     def create(self, submit: bool = True, max_upload_workers: int = 10):
+        if self._probability_threshold and self._responses_required:
+            referee = EarlyStoppingReferee(
+                max_vote_count=self._responses_required,
+                threshold=self._probability_threshold
+            )
+
+        else:
+            referee = NaiveReferee(responses=self._responses_required)
         selection: list[Selection] = ([ValidationSelection(amount=1, validation_set_id=self._validation_set_id), LabelingSelection(amount=2)] 
                      if self._validation_set_id 
                      else [LabelingSelection(amount=3)])
@@ -46,7 +60,7 @@ class CompareOrderBuilder:
                     criteria=self._criteria
                 )
             )
-            .referee(NaiveReferee(required_guesses=self._responses_required))
+            .referee(referee)
             .media(media_paths, metadata=self._metadata) # type: ignore
             .selections(selection)
             .create(submit=submit, max_workers=max_upload_workers))

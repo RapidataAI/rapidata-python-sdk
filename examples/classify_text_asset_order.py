@@ -39,7 +39,7 @@ def new_classify_text_asset_order(rapi: RapidataClient):
             )
         )
         .media([TextAsset("What is love?"), TextAsset("We all live in a yellow ...")])
-        .referee(NaiveReferee(required_guesses=3))
+        .referee(NaiveReferee(responses=3))
         .selections(
             [
                 ValidationSelection(amount=1, validation_set_id=validation_set.id),

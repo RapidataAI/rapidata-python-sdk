@@ -60,7 +60,7 @@ order_builder.workflow(workflow)
 ```py
 from rapidata import NaiveReferee
 
-order_builder.referee(NaiveReferee(required_guesses=15))
+order_builder.referee(NaiveReferee(responses=15))
 ```
 
 4. Upload datapoints for which you want this question to be asked. In this example, we upload one image:
@@ -107,7 +107,7 @@ order = (
             options=["Fish", "Cat", "Wallaby", "Airplane"],
         )
     )
-    .referee(NaiveReferee(required_guesses=15))
+    .referee(NaiveReferee(responses=15))
     .media(["examples/data/wallaby.jpg"])
     .selections([LabelingSelection(amount=1)])
     .create()
@@ -130,6 +130,12 @@ rapi = RapidataClient(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
 order_id = "your_order_id"  # as a string
 order = rapi.get_order(order_id)
 results = order.get_results()
+```
+
+It is also possible to retrieve your most recent orders. With the find_orders method you can optionally specify a order name and the amount of recent orders you want to retrieve:
+
+```py
+most_recent_order = rapi.find_orders()[0]
 ```
 
 ### Monitoring Order Progress
