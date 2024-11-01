@@ -1,7 +1,7 @@
 from rapidata.api_client.models.feature_flag_model import FeatureFlagModel
-from enum import StrEnum
+from enum import Enum
 
-class TranslationBehaviour(StrEnum):
+class TranslationBehaviour(Enum):
     BOTH = "both"
     ONLY_ORIGINAL = "only original"
     ONLY_TRANSLATED = "only translated"
@@ -70,7 +70,7 @@ class FeatureFlags:
         Returns:
             FeatureFlags: The current FeatureFlags instance for method chaining.
         """
-        self._flags["translation_behaviour"] = behaviour
+        self._flags["translation_behaviour"] = behaviour.value
         return self
 
     def free_text_minimum_characters(self, value: int):
