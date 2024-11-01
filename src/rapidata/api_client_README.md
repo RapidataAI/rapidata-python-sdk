@@ -89,20 +89,8 @@ Class | Method | HTTP request | Description
 *DatasetApi* | [**dataset_upload_datapoint_post**](rapidata/api_client/docs/DatasetApi.md#dataset_upload_datapoint_post) | **POST** /Dataset/UploadDatapoint | Creates a new multi asset datapoint.
 *DatasetApi* | [**dataset_upload_files_from_s3_post**](rapidata/api_client/docs/DatasetApi.md#dataset_upload_files_from_s3_post) | **POST** /Dataset/UploadFilesFromS3 | Uploads files from an S3 bucket to a dataset.
 *DatasetApi* | [**dataset_upload_images_to_dataset_post**](rapidata/api_client/docs/DatasetApi.md#dataset_upload_images_to_dataset_post) | **POST** /Dataset/UploadImagesToDataset | Uploads images to a dataset.
-*IdentityApi* | [**identity_confirm_get**](rapidata/api_client/docs/IdentityApi.md#identity_confirm_get) | **GET** /Identity/Confirm | Confirms a user&#39;s signup by a token.
 *IdentityApi* | [**identity_create_client_post**](rapidata/api_client/docs/IdentityApi.md#identity_create_client_post) | **POST** /Identity/CreateClient | Creates a new client for the current customer.
-*IdentityApi* | [**identity_create_legacy_client_post**](rapidata/api_client/docs/IdentityApi.md#identity_create_legacy_client_post) | **POST** /Identity/CreateLegacyClient | Creates a new client for a customer.
-*IdentityApi* | [**identity_external_login_callback_get**](rapidata/api_client/docs/IdentityApi.md#identity_external_login_callback_get) | **GET** /Identity/ExternalLoginCallback | Logs in a user using after receiving a grant from an external provider.
-*IdentityApi* | [**identity_external_login_post**](rapidata/api_client/docs/IdentityApi.md#identity_external_login_post) | **POST** /Identity/ExternalLogin | Logs in a user using an external provider.
-*IdentityApi* | [**identity_get_auth_token_get**](rapidata/api_client/docs/IdentityApi.md#identity_get_auth_token_get) | **GET** /Identity/GetAuthToken | Issues a new auth token using the refresh token.
-*IdentityApi* | [**identity_get_client_auth_token_post**](rapidata/api_client/docs/IdentityApi.md#identity_get_client_auth_token_post) | **POST** /Identity/GetClientAuthToken | Issues a new auth token using the client credentials.
-*IdentityApi* | [**identity_index_post**](rapidata/api_client/docs/IdentityApi.md#identity_index_post) | **POST** /Identity/Index | Logs in a user by username or email and password.
-*IdentityApi* | [**identity_logout_post**](rapidata/api_client/docs/IdentityApi.md#identity_logout_post) | **POST** /Identity/Logout | Logs out the current user by deleting the refresh token cookie.
 *IdentityApi* | [**identity_register_temporary_post**](rapidata/api_client/docs/IdentityApi.md#identity_register_temporary_post) | **POST** /Identity/RegisterTemporary | Registers and logs in a temporary customer.
-*IdentityApi* | [**identity_request_reset_post**](rapidata/api_client/docs/IdentityApi.md#identity_request_reset_post) | **POST** /Identity/RequestReset | Request a password reset for a user.
-*IdentityApi* | [**identity_signup_post**](rapidata/api_client/docs/IdentityApi.md#identity_signup_post) | **POST** /Identity/Signup | Signs up a new user.
-*IdentityApi* | [**identity_submit_reset_post**](rapidata/api_client/docs/IdentityApi.md#identity_submit_reset_post) | **POST** /Identity/SubmitReset | Updates the password of a user after a password reset request.
-*IdentityApi* | [**identity_temporary_post**](rapidata/api_client/docs/IdentityApi.md#identity_temporary_post) | **POST** /Identity/Temporary | Creates a new temporary user.
 *NewsletterApi* | [**newsletter_post**](rapidata/api_client/docs/NewsletterApi.md#newsletter_post) | **POST** /Newsletter | Signs a user up to the newsletter.
 *NewsletterApi* | [**newsletter_unsubscribe_post**](rapidata/api_client/docs/NewsletterApi.md#newsletter_unsubscribe_post) | **POST** /Newsletter/Unsubscribe | Unsubscribes a user from the newsletter.
 *OrderApi* | [**order_approve_post**](rapidata/api_client/docs/OrderApi.md#order_approve_post) | **POST** /Order/Approve | Approves an order that has been submitted for manual approval.
@@ -212,7 +200,6 @@ Class | Method | HTTP request | Description
  - [CreateDatasetArtifactModelDataset](rapidata/api_client/docs/CreateDatasetArtifactModelDataset.md)
  - [CreateDemographicRapidModel](rapidata/api_client/docs/CreateDemographicRapidModel.md)
  - [CreateEmptyValidationSetResult](rapidata/api_client/docs/CreateEmptyValidationSetResult.md)
- - [CreateLegacyClientModel](rapidata/api_client/docs/CreateLegacyClientModel.md)
  - [CreateOrderModel](rapidata/api_client/docs/CreateOrderModel.md)
  - [CreateOrderModelReferee](rapidata/api_client/docs/CreateOrderModelReferee.md)
  - [CreateOrderModelUserFiltersInner](rapidata/api_client/docs/CreateOrderModelUserFiltersInner.md)
@@ -278,12 +265,8 @@ Class | Method | HTTP request | Description
  - [ImportFromFileResult](rapidata/api_client/docs/ImportFromFileResult.md)
  - [ImportValidationSetFromFileResult](rapidata/api_client/docs/ImportValidationSetFromFileResult.md)
  - [InProgressRapidModel](rapidata/api_client/docs/InProgressRapidModel.md)
- - [IssueAuthTokenResult](rapidata/api_client/docs/IssueAuthTokenResult.md)
  - [LabelingSelection](rapidata/api_client/docs/LabelingSelection.md)
  - [LanguageUserFilterModel](rapidata/api_client/docs/LanguageUserFilterModel.md)
- - [LegacyIssueClientAuthTokenResult](rapidata/api_client/docs/LegacyIssueClientAuthTokenResult.md)
- - [LegacyRequestPasswordResetCommand](rapidata/api_client/docs/LegacyRequestPasswordResetCommand.md)
- - [LegacySubmitPasswordResetCommand](rapidata/api_client/docs/LegacySubmitPasswordResetCommand.md)
  - [Line](rapidata/api_client/docs/Line.md)
  - [LinePayload](rapidata/api_client/docs/LinePayload.md)
  - [LinePoint](rapidata/api_client/docs/LinePoint.md)
@@ -299,7 +282,6 @@ Class | Method | HTTP request | Description
  - [LocationMetadataExistsFilterConfig](rapidata/api_client/docs/LocationMetadataExistsFilterConfig.md)
  - [LocationMetadataModel](rapidata/api_client/docs/LocationMetadataModel.md)
  - [LogicOperator](rapidata/api_client/docs/LogicOperator.md)
- - [LoginModel](rapidata/api_client/docs/LoginModel.md)
  - [MetadataVisibilities](rapidata/api_client/docs/MetadataVisibilities.md)
  - [MultiAsset](rapidata/api_client/docs/MultiAsset.md)
  - [MultiAssetModel](rapidata/api_client/docs/MultiAssetModel.md)
@@ -351,11 +333,10 @@ Class | Method | HTTP request | Description
  - [RapidResultModel](rapidata/api_client/docs/RapidResultModel.md)
  - [RapidResultModelResult](rapidata/api_client/docs/RapidResultModelResult.md)
  - [RapidSkippedModel](rapidata/api_client/docs/RapidSkippedModel.md)
+ - [RegisterTemporaryCustomerModel](rapidata/api_client/docs/RegisterTemporaryCustomerModel.md)
  - [RootFilter](rapidata/api_client/docs/RootFilter.md)
  - [SendCompletionMailStepModel](rapidata/api_client/docs/SendCompletionMailStepModel.md)
  - [Shape](rapidata/api_client/docs/Shape.md)
- - [SignupCustomerModel](rapidata/api_client/docs/SignupCustomerModel.md)
- - [SignupShadowCustomerModel](rapidata/api_client/docs/SignupShadowCustomerModel.md)
  - [SimpleWorkflowConfig](rapidata/api_client/docs/SimpleWorkflowConfig.md)
  - [SimpleWorkflowConfigModel](rapidata/api_client/docs/SimpleWorkflowConfigModel.md)
  - [SimpleWorkflowConfigModelBlueprint](rapidata/api_client/docs/SimpleWorkflowConfigModelBlueprint.md)
