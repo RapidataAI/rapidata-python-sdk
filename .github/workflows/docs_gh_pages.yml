@@ -1,12 +1,7 @@
-name: Deploy MkDocs to GitHub Pages
+name: Manual Deploy MkDocs to GitHub Pages
 
 on:
-  push:
-    branches:
-      - 'main'
-  pull_request:
-    types:
-      - closed
+  workflow_dispatch:
 
 permissions:
   contents: write
