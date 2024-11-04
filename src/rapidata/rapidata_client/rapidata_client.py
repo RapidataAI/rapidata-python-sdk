@@ -28,8 +28,8 @@ class RapidataClient:
         self,
         client_id: str,
         client_secret: str,
-        endpoint: str = "https://api.app.rapidata.ai",
-        token_url: str = "https://api.app.rapidata.ai/connect/token",
+        endpoint: str = "https://auth.rapidata.ai",
+        token_url: str = "https://auth.rapidata.ai/connect/token",
         oauth_scope: str = "openid",
         cert_path: str | None = None,
     ):
