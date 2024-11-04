@@ -28,7 +28,7 @@ class RapidataClient:
         self,
         client_id: str,
         client_secret: str,
-        endpoint: str = "https://auth.rapidata.ai",
+        endpoint: str = "https://api.rapidata.ai",
         token_url: str = "https://auth.rapidata.ai/connect/token",
         oauth_scope: str = "openid",
         cert_path: str | None = None,
@@ -106,7 +106,7 @@ class RapidataClient:
             order_id=order_id, 
             name=order.order_name,
             openapi_service=self.openapi_service)
-    
+
     def find_orders(self, name: str = "", amount: int = 1) -> list[RapidataOrder]:
         """Find your recent orders given criteria. If nothing is provided, it will return the most recent order.
 
@@ -123,16 +123,16 @@ class RapidataClient:
                 filter=RootFilter(filters=[Filter(field="OrderName", operator="Contains", value=name)]),
                 sortCriteria=[SortCriterion(direction="Desc", propertyName="OrderDate")]
                 ))
-            
+
         except BadRequestException as e:
             raise ValueError(f"Error occured during request. \nError: {e.body} \nTraceid: {e.headers.get('X-Trace-Id') if isinstance(e.headers, HTTPHeaderDict) else 'Unknown'}")
 
         except Exception as e:
             raise ValueError(f"Unknown error occured: {e}")
-        
+
         orders = [self.get_order(order.id) for order in order_page_result.items]
         return orders
-    
+
     def create_classify_order(self, name: str) -> ClassificationQuestionBuilder:
         """Create a new classification order where people are asked to classify an image.
 
@@ -143,7 +143,7 @@ class RapidataClient:
             ClassificationQuestionBuilder: A ClassificationQuestionBuilder instance.
         """
         return ClassificationQuestionBuilder(name=name, openapi_service=self.openapi_service)
-    
+
     def create_compare_order(self, name: str) -> CompareCriteriaBuilder:
         """Create a new comparison order where people are asked to compare two images.
 

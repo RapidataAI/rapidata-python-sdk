@@ -26,17 +26,11 @@ def setup_client():
     if not ENDPOINT:
         raise Exception("ENDPOINT not found in environment variables")
 
-    if not TOKEN_URL:
-        raise Exception("TOKEN_URL not found in environment variables")
-
-    if not OAUTH_SCOPE:
-        raise Exception("OAUTH_SCOPE not found in environment variables")
-
     return RapidataClient(
         client_id=CLIENT_ID,
         client_secret=CLIENT_SECRET,
         endpoint=ENDPOINT,
-        token_url=TOKEN_URL,
-        oauth_scope=OAUTH_SCOPE,
+        token_url=TOKEN_URL if TOKEN_URL else f"https://auth.rapidata.ai/connect/token",
+        oauth_scope=OAUTH_SCOPE if OAUTH_SCOPE else "openid",
         cert_path=CERT_PATH,
     )
