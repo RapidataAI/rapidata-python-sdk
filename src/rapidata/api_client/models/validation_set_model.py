@@ -17,22 +17,22 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Union
-from rapidata.api_client.models.rapid_answer_result import RapidAnswerResult
+from datetime import datetime
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class RapidAnswer(BaseModel):
+class ValidationSetModel(BaseModel):
     """
-    RapidAnswer
+    ValidationSetModel
     """ # noqa: E501
     id: StrictStr
-    country: StrictStr
-    result: RapidAnswerResult
-    user_score: Union[StrictFloat, StrictInt] = Field(alias="userScore")
-    demographic_information: Dict[str, StrictStr] = Field(alias="demographicInformation")
-    __properties: ClassVar[List[str]] = ["id", "country", "result", "userScore", "demographicInformation"]
+    name: StrictStr
+    owner_id: StrictStr = Field(alias="ownerId")
+    owner_mail: StrictStr = Field(alias="ownerMail")
+    created_at: datetime = Field(alias="createdAt")
+    __properties: ClassVar[List[str]] = ["id", "name", "ownerId", "ownerMail", "createdAt"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -52,7 +52,7 @@ class RapidAnswer(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of RapidAnswer from a JSON string"""
+        """Create an instance of ValidationSetModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,14 +73,11 @@ class RapidAnswer(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of result
-        if self.result:
-            _dict['result'] = self.result.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of RapidAnswer from a dict"""
+        """Create an instance of ValidationSetModel from a dict"""
         if obj is None:
             return None
 
@@ -89,10 +86,10 @@ class RapidAnswer(BaseModel):
 
         _obj = cls.model_validate({
             "id": obj.get("id"),
-            "country": obj.get("country"),
-            "result": RapidAnswerResult.from_dict(obj["result"]) if obj.get("result") is not None else None,
-            "userScore": obj.get("userScore"),
-            "demographicInformation": obj.get("demographicInformation")
+            "name": obj.get("name"),
+            "ownerId": obj.get("ownerId"),
+            "ownerMail": obj.get("ownerMail"),
+            "createdAt": obj.get("createdAt")
         })
         return _obj
 
