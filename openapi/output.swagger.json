@@ -1564,17 +1564,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ValidationSetPagedResult"
+                  "$ref": "#/components/schemas/ValidationSetModelPagedResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ValidationSetPagedResult"
+                  "$ref": "#/components/schemas/ValidationSetModelPagedResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ValidationSetPagedResult"
+                  "$ref": "#/components/schemas/ValidationSetModelPagedResult"
                 }
               }
             }
@@ -7017,33 +7017,20 @@
         },
         "additionalProperties": false
       },
-      "ValidationSet": {
-        "title": "ValidationSet",
+      "ValidationSetModel": {
         "required": [
-          "_t",
+          "createdAt",
+          "id",
           "name",
           "ownerId",
           "ownerMail"
         ],
         "type": "object",
         "properties": {
-          "_t": {
-            "enum": [
-              "ValidationSet"
-            ],
-            "type": "string",
-            "description": "Discriminator value for ValidationSet",
-            "default": "ValidationSet",
-            "example": "ValidationSet"
-          },
-          "name": {
+          "id": {
             "type": "string"
           },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "id": {
+          "name": {
             "type": "string"
           },
           "ownerId": {
@@ -7052,32 +7039,15 @@
           },
           "ownerMail": {
             "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "ValidationSetOverviewModel": {
-        "required": [
-          "id",
-          "name",
-          "ownerId"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
           },
-          "name": {
-            "type": "string"
-          },
-          "ownerId": {
+          "createdAt": {
             "type": "string",
-            "format": "uuid"
+            "format": "date-time"
           }
         },
         "additionalProperties": false
       },
-      "ValidationSetPagedResult": {
+      "ValidationSetModelPagedResult": {
         "required": [
           "items",
           "page",
@@ -7101,13 +7071,34 @@
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ValidationSet"
+              "$ref": "#/components/schemas/ValidationSetModel"
             }
           },
           "totalPages": {
             "type": "integer",
             "format": "int32",
             "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ValidationSetOverviewModel": {
+        "required": [
+          "id",
+          "name",
+          "ownerId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "ownerId": {
+            "type": "string",
+            "format": "uuid"
           }
         },
         "additionalProperties": false
