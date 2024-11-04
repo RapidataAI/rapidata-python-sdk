@@ -27,7 +27,7 @@ from rapidata.api_client.models.get_available_validation_sets_result import GetA
 from rapidata.api_client.models.import_validation_set_from_file_result import ImportValidationSetFromFileResult
 from rapidata.api_client.models.query_validation_set_model import QueryValidationSetModel
 from rapidata.api_client.models.validation_import_post_request_blueprint import ValidationImportPostRequestBlueprint
-from rapidata.api_client.models.validation_set_paged_result import ValidationSetPagedResult
+from rapidata.api_client.models.validation_set_model_paged_result import ValidationSetModelPagedResult
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -1716,7 +1716,7 @@ class ValidationApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ValidationSetPagedResult:
+    ) -> ValidationSetModelPagedResult:
         """Queries validation sets based on the provided filter, paging and sorting criteria.
 
 
@@ -1753,7 +1753,7 @@ class ValidationApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ValidationSetPagedResult",
+            '200': "ValidationSetModelPagedResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1782,7 +1782,7 @@ class ValidationApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[ValidationSetPagedResult]:
+    ) -> ApiResponse[ValidationSetModelPagedResult]:
         """Queries validation sets based on the provided filter, paging and sorting criteria.
 
 
@@ -1819,7 +1819,7 @@ class ValidationApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ValidationSetPagedResult",
+            '200': "ValidationSetModelPagedResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1885,7 +1885,7 @@ class ValidationApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ValidationSetPagedResult",
+            '200': "ValidationSetModelPagedResult",
         }
         response_data = self.api_client.call_api(
             *_param,
