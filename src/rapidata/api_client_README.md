@@ -128,6 +128,7 @@ Class | Method | HTTP request | Description
 *ValidationApi* | [**validation_add_validation_text_rapid_post**](rapidata/api_client/docs/ValidationApi.md#validation_add_validation_text_rapid_post) | **POST** /Validation/AddValidationTextRapid | Adds a new validation rapid to the specified validation set.
 *ValidationApi* | [**validation_create_validation_set_post**](rapidata/api_client/docs/ValidationApi.md#validation_create_validation_set_post) | **POST** /Validation/CreateValidationSet | Creates a new empty validation set.
 *ValidationApi* | [**validation_get_available_validation_sets_get**](rapidata/api_client/docs/ValidationApi.md#validation_get_available_validation_sets_get) | **GET** /Validation/GetAvailableValidationSets | Gets the available validation sets for the current user.
+*ValidationApi* | [**validation_get_by_id_get**](rapidata/api_client/docs/ValidationApi.md#validation_get_by_id_get) | **GET** /Validation/GetById | Gets a validation set by the id.
 *ValidationApi* | [**validation_import_compare_post**](rapidata/api_client/docs/ValidationApi.md#validation_import_compare_post) | **POST** /Validation/ImportCompare | Imports a compare validation set from a zip file.
 *ValidationApi* | [**validation_import_post**](rapidata/api_client/docs/ValidationApi.md#validation_import_post) | **POST** /Validation/Import | Imports a validation set from a zip file.
 *ValidationApi* | [**validation_query_validation_sets_get**](rapidata/api_client/docs/ValidationApi.md#validation_query_validation_sets_get) | **GET** /Validation/QueryValidationSets | Queries validation sets based on the provided filter, paging and sorting criteria.
@@ -380,9 +381,9 @@ Class | Method | HTTP request | Description
  - [ValidationChance](rapidata/api_client/docs/ValidationChance.md)
  - [ValidationImportPostRequestBlueprint](rapidata/api_client/docs/ValidationImportPostRequestBlueprint.md)
  - [ValidationSelection](rapidata/api_client/docs/ValidationSelection.md)
- - [ValidationSet](rapidata/api_client/docs/ValidationSet.md)
+ - [ValidationSetModel](rapidata/api_client/docs/ValidationSetModel.md)
+ - [ValidationSetModelPagedResult](rapidata/api_client/docs/ValidationSetModelPagedResult.md)
  - [ValidationSetOverviewModel](rapidata/api_client/docs/ValidationSetOverviewModel.md)
- - [ValidationSetPagedResult](rapidata/api_client/docs/ValidationSetPagedResult.md)
  - [WorkflowAggregationStepModel](rapidata/api_client/docs/WorkflowAggregationStepModel.md)
  - [WorkflowArtifactModel](rapidata/api_client/docs/WorkflowArtifactModel.md)
  - [WorkflowConfigArtifactModel](rapidata/api_client/docs/WorkflowConfigArtifactModel.md)
