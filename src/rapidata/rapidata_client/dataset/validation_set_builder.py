@@ -58,6 +58,7 @@ class ValidationSetBuilder:
         validation_set = RapidataValidationSet(
             validation_set_id=self.validation_set_id,
             openapi_service=self.openapi_service,
+            name=self.name,
         )
 
         for rapid_part in self._rapid_parts:

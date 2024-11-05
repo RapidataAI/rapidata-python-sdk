@@ -47,9 +47,10 @@ class RapidataValidationSet:
     Get a `ValidationSet` either by using `rapi.get_validation_set(id)` to get an existing validation set or by using `rapi.new_validation_set(name)` to create a new validation set.
     """
 
-    def __init__(self, validation_set_id, openapi_service: OpenAPIService):
+    def __init__(self, validation_set_id, openapi_service: OpenAPIService, name: str):
         self.id = validation_set_id
         self.openapi_service = openapi_service
+        self.name = name
 
     def add_general_validation_rapid(
         self,
@@ -153,7 +154,7 @@ class RapidataValidationSet:
         else:
             raise ValueError("Invalid asset type")
 
-    def add_classify_validation_rapid(
+    def add_classify_rapid(
         self,
         asset: MediaAsset | TextAsset,
         question: str,
@@ -188,7 +189,7 @@ class RapidataValidationSet:
             randomCorrectProbability=len(truths) / len(categories),
         )
 
-    def add_compare_validation_rapid(
+    def add_compare_rapid(
         self,
         asset: MultiAsset,
         question: str,
@@ -225,7 +226,7 @@ class RapidataValidationSet:
             randomCorrectProbability=1 / len(asset),
         )
 
-    def add_transcription_validation_rapid(
+    def add_transcription_rapid(
         self,
         asset: MediaAsset | TextAsset,
         question: str,

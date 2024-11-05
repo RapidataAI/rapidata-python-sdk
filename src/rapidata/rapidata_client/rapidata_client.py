@@ -20,6 +20,8 @@ from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.filter import Filter
 from rapidata.api_client.models.sort_criterion import SortCriterion
 
+from rapidata.api_client.models.query_validation_set_model import QueryValidationSetModel
+
 
 class RapidataClient:
     """The Rapidata client is the main entry point for interacting with the Rapidata API. It allows you to create orders and validation sets. For creating a new order, check out `new_order()`. For creating a new validation set, check out `new_validation_set()`."""
@@ -71,17 +73,6 @@ class RapidataClient:
         """
         return ValidationSetBuilder(name=name, openapi_service=self.openapi_service)
 
-    def get_validation_set(self, validation_set_id: str) -> RapidataValidationSet:
-        """Get a validation set by ID.
-
-        Args:
-            validation_set_id (str): The ID of the validation set.
-
-        Returns:
-            RapidataValidationSet: The ValidationSet instance.
-        """
-        return RapidataValidationSet(validation_set_id, self.openapi_service)
-
     def get_order(self, order_id: str) -> RapidataOrder:
         """Get an order by ID.
 
@@ -131,6 +122,39 @@ class RapidataClient:
             raise ValueError(f"Unknown error occured: {e}")
 
         orders = [self.get_order(order.id) for order in order_page_result.items]
+        return orders
+    
+    def get_validation_set(self, validation_set_id: str) -> RapidataValidationSet:
+        """Get a validation set by ID.
+
+        Args:
+            validation_set_id (str): The ID of the validation set.
+
+        Returns:
+            RapidataValidationSet: The ValidationSet instance.
+        """
+        try:
+            validation_set = self.openapi_service.validation_api.validation_get_by_id_get(id=validation_set_id)
+        except Exception:
+            raise ValueError(f"ValidationSet with ID {validation_set_id} not found.")
+        
+        return RapidataValidationSet(validation_set_id, self.openapi_service, validation_set.name)
+    
+    def find_validation_sets(self, name: str = "", amount: int = 1) -> list[RapidataValidationSet]:
+        try:
+            validation_page_result = self.openapi_service.validation_api.validation_query_validation_sets_get(QueryValidationSetModel(
+                pageInfo=PageInfo(index=1, size=amount),
+                filter=RootFilter(filters=[Filter(field="Name", operator="Contains", value=name)]),
+                sortCriteria=[SortCriterion(direction="Desc", propertyName="CreatedAt")]
+                ))
+
+        except BadRequestException as e:
+            raise ValueError(f"Error occured during request. \nError: {e.body} \nTraceid: {e.headers.get('X-Trace-Id') if isinstance(e.headers, HTTPHeaderDict) else 'Unknown'}")
+
+        except Exception as e:
+            raise ValueError(f"Unknown error occured: {e}")
+
+        orders = [self.get_validation_set(validation_set.id) for validation_set in validation_page_result.items] # type: ignore # will be fixed with the next backend deployment
         return orders
 
     def create_classify_order(self, name: str) -> ClassificationQuestionBuilder:
