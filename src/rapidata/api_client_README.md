@@ -256,6 +256,7 @@ Class | Method | HTTP request | Description
  - [GetPipelineByIdResultArtifactsValue](rapidata/api_client/docs/GetPipelineByIdResultArtifactsValue.md)
  - [GetPublicOrdersResult](rapidata/api_client/docs/GetPublicOrdersResult.md)
  - [GetSimpleWorkflowResultOverviewResult](rapidata/api_client/docs/GetSimpleWorkflowResultOverviewResult.md)
+ - [GetValidationSetByIdResult](rapidata/api_client/docs/GetValidationSetByIdResult.md)
  - [GetWorkflowByIdResult](rapidata/api_client/docs/GetWorkflowByIdResult.md)
  - [GetWorkflowByIdResultWorkflow](rapidata/api_client/docs/GetWorkflowByIdResultWorkflow.md)
  - [GetWorkflowProgressResult](rapidata/api_client/docs/GetWorkflowProgressResult.md)

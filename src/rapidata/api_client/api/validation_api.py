@@ -24,6 +24,7 @@ from rapidata.api_client.models.add_validation_rapid_result import AddValidation
 from rapidata.api_client.models.add_validation_text_rapid_model import AddValidationTextRapidModel
 from rapidata.api_client.models.create_empty_validation_set_result import CreateEmptyValidationSetResult
 from rapidata.api_client.models.get_available_validation_sets_result import GetAvailableValidationSetsResult
+from rapidata.api_client.models.get_validation_set_by_id_result import GetValidationSetByIdResult
 from rapidata.api_client.models.import_validation_set_from_file_result import ImportValidationSetFromFileResult
 from rapidata.api_client.models.query_validation_set_model import QueryValidationSetModel
 from rapidata.api_client.models.validation_import_post_request_blueprint import ValidationImportPostRequestBlueprint
@@ -1138,7 +1139,7 @@ class ValidationApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetAvailableValidationSetsResult:
+    ) -> GetValidationSetByIdResult:
         """Gets a validation set by the id.
 
 
@@ -1175,7 +1176,7 @@ class ValidationApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetAvailableValidationSetsResult",
+            '200': "GetValidationSetByIdResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1204,7 +1205,7 @@ class ValidationApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetAvailableValidationSetsResult]:
+    ) -> ApiResponse[GetValidationSetByIdResult]:
         """Gets a validation set by the id.
 
 
@@ -1241,7 +1242,7 @@ class ValidationApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetAvailableValidationSetsResult",
+            '200': "GetValidationSetByIdResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1307,7 +1308,7 @@ class ValidationApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetAvailableValidationSetsResult",
+            '200': "GetValidationSetByIdResult",
         }
         response_data = self.api_client.call_api(
             *_param,
