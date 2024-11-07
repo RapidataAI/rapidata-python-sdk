@@ -1,5 +1,7 @@
 import json
+import time
 import requests
+import threading
 from rapidata.api_client.api.campaign_api import CampaignApi
 from rapidata.api_client.api.dataset_api import DatasetApi
 from rapidata.api_client.api.order_api import OrderApi
@@ -13,6 +15,8 @@ from rapidata.api_client.configuration import Configuration
 
 class OpenAPIService:
 
+    _TOKEN_EXPIRATION_MINUTES = 30
+
     def __init__(
         self,
         client_id: str,
@@ -20,17 +24,40 @@ class OpenAPIService:
         endpoint: str,
         token_url: str,
         oauth_scope: str,
-        cert_path: str | None = None,
+        cert_path: str | None = None
     ):
         client_configuration = Configuration(host=endpoint, ssl_ca_cert=cert_path)
         self.api_client = ApiClient(configuration=client_configuration)
 
-        token = self.__fetch_token(client_id, client_secret, oauth_scope, token_url, cert_path)
+        self._client_id = client_id
+        self._client_secret = client_secret
+        self._oauth_scope = oauth_scope
+        self._token_url = token_url
+        self._cert_path = cert_path
 
-        client_configuration.api_key["bearer"] = f"Bearer {token}"
         self._api_client = ApiClient()
         self._order_api = OrderApi(self.api_client)
         self._dataset_api = DatasetApi(self.api_client)
+
+        api_token = self.__fetch_token(
+            self._client_id, self._client_secret, self._oauth_scope, self._token_url, self._cert_path
+        )
+        self.api_client.configuration.api_key["bearer"] = f"Bearer {api_token}"
+
+        refresh_thread = threading.Thread(
+            target=lambda: self.__refresh_token_periodically(self._TOKEN_EXPIRATION_MINUTES - 1)
+        )
+        refresh_thread.daemon = True
+        refresh_thread.start()
+
+    def __refresh_token_periodically(self, refresh_interval):
+        while True:
+            new_token = self.__fetch_token(
+                self._client_id, self._client_secret, self._oauth_scope, self._token_url, self._cert_path
+            )
+            self.api_client.configuration.api_key["bearer"] = f"Bearer {new_token}"
+
+            time.sleep(refresh_interval)
 
     @property
     def order_api(self) -> OrderApi:
