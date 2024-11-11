@@ -51,7 +51,8 @@ order_builder = order_builder.options(["Fish", "Cat", "Wallaby", "Airplane"])
 4. Add the paths to the images you want to classify:
 
 ```py
-order_builder = order_builder.media(["examples/data/wallaby.jpg"])
+from rapidata import MediaAsset
+order_builder = order_builder.media([MediaAsset("examples/data/wallaby.jpg")])
 ```
 
 5. Optionally add additional specifications, here we're adding a specific amount of responses we want per datapoint, there are other functionalities you can explore:
@@ -83,7 +84,7 @@ The `RapidataSDK` supports a fluent interface, allowing method call chaining. Th
 order = (rapi.create_classify_order("classifcaiton order")
          .question("What is shown in the image?")
          .options(["Fish", "Cat", "Wallaby", "Airplane"])
-         .media(["examples/data/wallaby.jpg"])
+         .media([MediaAsset("examples/data/wallaby.jpg")])
          .responses(20)
          .create())
 print("order id: ", order.order_id)
