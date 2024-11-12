@@ -548,50 +548,6 @@
         }
       }
     },
-    "/Order/Query": {
-      "get": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Queries orders based on a filter, page, and sort criteria.",
-        "parameters": [
-          {
-            "name": "request",
-            "in": "query",
-            "description": "The parameters for filtering, paging, and sorting",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryOrdersModel"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderModelPagedResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderModelPagedResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderModelPagedResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/Order/GetById": {
       "get": {
         "tags": [
@@ -625,36 +581,6 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetOrderByIdResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/Order/GetPublic": {
-      "get": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Retrieves orders that are public and can be cloned by any user.",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetPublicOrdersResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetPublicOrdersResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetPublicOrdersResult"
                 }
               }
             }
@@ -712,247 +638,6 @@
         }
       }
     },
-    "/Order/CreateComplexOrder": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Creates a new order with a custom pipeline.",
-        "requestBody": {
-          "description": "The body content of the request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateComplexOrderModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateComplexOrderModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateComplexOrderModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateComplexOrderResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateComplexOrderResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateComplexOrderResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/Order/CreateUnsupportedOrder": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Notifies the admins that a user wants to create an order with an unsupported label type or data type.",
-        "requestBody": {
-          "description": "The body content of the request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateUnsupportedOrderModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateUnsupportedOrderModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateUnsupportedOrderModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/Order/CloneOrder": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Clones an existing order.",
-        "description": "In order to clone an order, the existing order must be marked as public.",
-        "requestBody": {
-          "description": "The body content of the request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CloneOrderModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CloneOrderModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CloneOrderModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CloneOrderResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CloneOrderResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CloneOrderResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/Order/Unlock": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Unlocks a newly cloned order.",
-        "description": "When an order is cloned only the necessary information is copied.\r\nIn order to make changes to the order, it must be unlocked first.\r\nUnlocking the order will clone the entire dataset and its datapoints.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "query",
-            "description": "The id of the order to unlock",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnlockOrderResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnlockOrderResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnlockOrderResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/Order/UpdateAccess": {
-      "put": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Updates whether an order is public or not.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "query",
-            "description": "The id of the order to update",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The body content of the request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateAccessModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateAccessModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateAccessModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/Order/Share": {
-      "put": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Updates whether an order is public or not.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "query",
-            "description": "The id of the order to update",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/Order/Submit": {
       "post": {
         "tags": [
@@ -965,30 +650,6 @@
             "name": "orderId",
             "in": "query",
             "description": "The id of the order to submit",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/Order/Approve": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Approves an order that has been submitted for manual approval.",
-        "description": "An order is submitted for manual approval when the automatic approval process could not automatically\r\ndetermine if the order is safe to process.\r\nOnce an order is approved, the pipeline will start processing the order.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "query",
-            "description": "The id of the order to approve",
             "schema": {
               "type": "string"
             }
@@ -1084,19 +745,23 @@
         }
       }
     },
-    "/Order/GetOrderResults": {
+    "/Client/Query": {
       "get": {
         "tags": [
-          "Order"
+          "Client"
         ],
-        "summary": "Aggregates the results of an order.",
+        "summary": "Gets the clients for the current customer.",
+        "description": "A client allows a customer to authenticate with the APIs without using their own credentials.\r\nThis is useful for creating service accounts or other automated processes,\r\nas when using the Rapidata Python SDK.",
         "parameters": [
           {
-            "name": "id",
+            "name": "request",
             "in": "query",
-            "description": "The id of the order",
-            "schema": {
-              "type": "string"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
+              }
             }
           }
         ],
@@ -1106,17 +771,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetOrderResultsResult"
+                  "$ref": "#/components/schemas/ClientsQueryResultPagedResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetOrderResultsResult"
+                  "$ref": "#/components/schemas/ClientsQueryResultPagedResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetOrderResultsResult"
+                  "$ref": "#/components/schemas/ClientsQueryResultPagedResult"
                 }
               }
             }
@@ -1124,168 +789,10 @@
         }
       }
     },
-    "/Order/RetryFailed": {
+    "/Client/CreateClient": {
       "post": {
         "tags": [
-          "Order"
-        ],
-        "summary": "Retries a failed order.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "query",
-            "description": "The id of the order to retry",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/Order/Delete": {
-      "delete": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Deletes an order.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "query",
-            "description": "The id of the order to delete",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/Order/Feedback": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Submits feedback about our services.",
-        "requestBody": {
-          "description": "The body content of the request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FeedbackModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FeedbackModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/FeedbackModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/Order/Pause": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Pauses an order that is processing. Meaning all campaigns in the order will be paused.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "query",
-            "description": "",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/Order/Resume": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Resumes a paused order. Meaning all campaigns in the order will be resumed.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "query",
-            "description": "",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/Identity/RegisterTemporary": {
-      "post": {
-        "tags": [
-          "Identity"
-        ],
-        "summary": "Registers and logs in a temporary customer.",
-        "requestBody": {
-          "description": "The model to register the temporary customer with.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterTemporaryCustomerModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterTemporaryCustomerModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterTemporaryCustomerModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/Identity/CreateClient": {
-      "post": {
-        "tags": [
-          "Identity"
+          "Client"
         ],
         "summary": "Creates a new client for the current customer.",
         "requestBody": {
@@ -1328,6 +835,63 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/Client/{clientId}": {
+      "delete": {
+        "tags": [
+          "Client"
+        ],
+        "summary": "Deletes a customers client.",
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "path",
+            "description": "The id of the client to delete.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/Identity/RegisterTemporary": {
+      "post": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Registers and logs in a temporary customer.",
+        "requestBody": {
+          "description": "The model to register the temporary customer with.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterTemporaryCustomerModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterTemporaryCustomerModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterTemporaryCustomerModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -2093,7 +1657,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/QueryModel"
+                  "$ref": "#/components/schemas/QueryModel1"
                 }
               }
             }
@@ -5611,7 +5175,7 @@
         },
         "additionalProperties": false
       },
-      "QueryOrdersModel": {
+      "QueryModel": {
         "type": "object",
         "properties": {
           "page": {
@@ -5625,13 +5189,11 @@
             "items": {
               "$ref": "#/components/schemas/SortCriterion"
             },
-            "description": "The sorting criteria",
             "default": null,
             "nullable": true
           }
         },
-        "additionalProperties": false,
-        "description": "The model for querying orders."
+        "additionalProperties": false
       },
       "RootFilter": {
         "type": "object",
@@ -6069,6 +5631,65 @@
         "additionalProperties": false,
         "description": "Model for the workflow split step"
       },
+      "ClientsQueryResult": {
+        "required": [
+          "clientId",
+          "createdAt",
+          "displayName"
+        ],
+        "type": "object",
+        "properties": {
+          "clientId": {
+            "type": "string",
+            "nullable": true
+          },
+          "displayName": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClientsQueryResultPagedResult": {
+        "required": [
+          "items",
+          "page",
+          "pageSize",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientsQueryResult"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
       "CreateClientModel": {
         "type": "object",
         "properties": {
@@ -6080,6 +5701,7 @@
           },
           "customerId": {
             "type": "string",
+            "description": "An optional customer ID to create the client for.",
             "format": "uuid",
             "default": null,
             "nullable": true
@@ -7756,7 +7378,7 @@
         },
         "additionalProperties": false
       },
-      "QueryModel": {
+      "QueryModel1": {
         "type": "object",
         "properties": {
           "pageInfo": {

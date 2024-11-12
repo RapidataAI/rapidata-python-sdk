@@ -75,6 +75,9 @@ Class | Method | HTTP request | Description
 *CampaignApi* | [**campaign_pause_post**](rapidata/api_client/docs/CampaignApi.md#campaign_pause_post) | **POST** /Campaign/Pause | Pauses a campaign.
 *CampaignApi* | [**campaign_query_get**](rapidata/api_client/docs/CampaignApi.md#campaign_query_get) | **GET** /Campaign/Query | Queries orders based on a filter, page, and sort criteria.
 *CampaignApi* | [**campaign_resume_post**](rapidata/api_client/docs/CampaignApi.md#campaign_resume_post) | **POST** /Campaign/Resume | Resumes a campaign.
+*ClientApi* | [**client_client_id_delete**](rapidata/api_client/docs/ClientApi.md#client_client_id_delete) | **DELETE** /Client/{clientId} | Deletes a customers client.
+*ClientApi* | [**client_create_client_post**](rapidata/api_client/docs/ClientApi.md#client_create_client_post) | **POST** /Client/CreateClient | Creates a new client for the current customer.
+*ClientApi* | [**client_query_get**](rapidata/api_client/docs/ClientApi.md#client_query_get) | **GET** /Client/Query | Gets the clients for the current customer.
 *CocoApi* | [**coco_submit_post**](rapidata/api_client/docs/CocoApi.md#coco_submit_post) | **POST** /Coco/Submit | Creates a new validation set based on a previously uploaded CoCo set.
 *CocoApi* | [**coco_upload_post**](rapidata/api_client/docs/CocoApi.md#coco_upload_post) | **POST** /Coco/Upload | Uploads a CoCo set to the system.
 *CompareWorkflowApi* | [**compare_workflow_get_result_overview_get**](rapidata/api_client/docs/CompareWorkflowApi.md#compare_workflow_get_result_overview_get) | **GET** /CompareWorkflow/GetResultOverview | Get the result overview for a compare workflow.
@@ -89,29 +92,13 @@ Class | Method | HTTP request | Description
 *DatasetApi* | [**dataset_upload_datapoint_post**](rapidata/api_client/docs/DatasetApi.md#dataset_upload_datapoint_post) | **POST** /Dataset/UploadDatapoint | Creates a new multi asset datapoint.
 *DatasetApi* | [**dataset_upload_files_from_s3_post**](rapidata/api_client/docs/DatasetApi.md#dataset_upload_files_from_s3_post) | **POST** /Dataset/UploadFilesFromS3 | Uploads files from an S3 bucket to a dataset.
 *DatasetApi* | [**dataset_upload_images_to_dataset_post**](rapidata/api_client/docs/DatasetApi.md#dataset_upload_images_to_dataset_post) | **POST** /Dataset/UploadImagesToDataset | Uploads images to a dataset.
-*IdentityApi* | [**identity_create_client_post**](rapidata/api_client/docs/IdentityApi.md#identity_create_client_post) | **POST** /Identity/CreateClient | Creates a new client for the current customer.
 *IdentityApi* | [**identity_register_temporary_post**](rapidata/api_client/docs/IdentityApi.md#identity_register_temporary_post) | **POST** /Identity/RegisterTemporary | Registers and logs in a temporary customer.
 *NewsletterApi* | [**newsletter_post**](rapidata/api_client/docs/NewsletterApi.md#newsletter_post) | **POST** /Newsletter | Signs a user up to the newsletter.
 *NewsletterApi* | [**newsletter_unsubscribe_post**](rapidata/api_client/docs/NewsletterApi.md#newsletter_unsubscribe_post) | **POST** /Newsletter/Unsubscribe | Unsubscribes a user from the newsletter.
-*OrderApi* | [**order_approve_post**](rapidata/api_client/docs/OrderApi.md#order_approve_post) | **POST** /Order/Approve | Approves an order that has been submitted for manual approval.
-*OrderApi* | [**order_clone_order_post**](rapidata/api_client/docs/OrderApi.md#order_clone_order_post) | **POST** /Order/CloneOrder | Clones an existing order.
-*OrderApi* | [**order_create_complex_order_post**](rapidata/api_client/docs/OrderApi.md#order_create_complex_order_post) | **POST** /Order/CreateComplexOrder | Creates a new order with a custom pipeline.
 *OrderApi* | [**order_create_post**](rapidata/api_client/docs/OrderApi.md#order_create_post) | **POST** /Order/Create | Used to create a new order.
-*OrderApi* | [**order_create_unsupported_order_post**](rapidata/api_client/docs/OrderApi.md#order_create_unsupported_order_post) | **POST** /Order/CreateUnsupportedOrder | Notifies the admins that a user wants to create an order with an unsupported label type or data type.
-*OrderApi* | [**order_delete_delete**](rapidata/api_client/docs/OrderApi.md#order_delete_delete) | **DELETE** /Order/Delete | Deletes an order.
-*OrderApi* | [**order_feedback_post**](rapidata/api_client/docs/OrderApi.md#order_feedback_post) | **POST** /Order/Feedback | Submits feedback about our services.
 *OrderApi* | [**order_get_by_id_get**](rapidata/api_client/docs/OrderApi.md#order_get_by_id_get) | **GET** /Order/GetById | Retrieves an order by its id.
-*OrderApi* | [**order_get_order_results_get**](rapidata/api_client/docs/OrderApi.md#order_get_order_results_get) | **GET** /Order/GetOrderResults | Aggregates the results of an order.
-*OrderApi* | [**order_get_public_get**](rapidata/api_client/docs/OrderApi.md#order_get_public_get) | **GET** /Order/GetPublic | Retrieves orders that are public and can be cloned by any user.
-*OrderApi* | [**order_pause_post**](rapidata/api_client/docs/OrderApi.md#order_pause_post) | **POST** /Order/Pause | Pauses an order that is processing. Meaning all campaigns in the order will be paused.
-*OrderApi* | [**order_query_get**](rapidata/api_client/docs/OrderApi.md#order_query_get) | **GET** /Order/Query | Queries orders based on a filter, page, and sort criteria.
 *OrderApi* | [**order_result_get**](rapidata/api_client/docs/OrderApi.md#order_result_get) | **GET** /Order/Result | Aggregates the results of an order.
-*OrderApi* | [**order_resume_post**](rapidata/api_client/docs/OrderApi.md#order_resume_post) | **POST** /Order/Resume | Resumes a paused order. Meaning all campaigns in the order will be resumed.
-*OrderApi* | [**order_retry_failed_post**](rapidata/api_client/docs/OrderApi.md#order_retry_failed_post) | **POST** /Order/RetryFailed | Retries a failed order.
-*OrderApi* | [**order_share_put**](rapidata/api_client/docs/OrderApi.md#order_share_put) | **PUT** /Order/Share | Updates whether an order is public or not.
 *OrderApi* | [**order_submit_post**](rapidata/api_client/docs/OrderApi.md#order_submit_post) | **POST** /Order/Submit | Submits an order for approval.
-*OrderApi* | [**order_unlock_post**](rapidata/api_client/docs/OrderApi.md#order_unlock_post) | **POST** /Order/Unlock | Unlocks a newly cloned order.
-*OrderApi* | [**order_update_access_put**](rapidata/api_client/docs/OrderApi.md#order_update_access_put) | **PUT** /Order/UpdateAccess | Updates whether an order is public or not.
 *OrderApi* | [**order_update_order_name_put**](rapidata/api_client/docs/OrderApi.md#order_update_order_name_put) | **PUT** /Order/UpdateOrderName | Updates the name of an order.
 *PipelineApi* | [**pipeline_add_campaign_patch**](rapidata/api_client/docs/PipelineApi.md#pipeline_add_campaign_patch) | **PATCH** /Pipeline/AddCampaign | Adds a campaign to a pipeline.
 *PipelineApi* | [**pipeline_id_get**](rapidata/api_client/docs/PipelineApi.md#pipeline_id_get) | **GET** /Pipeline/{id} | Gets a pipeline by its id.
@@ -171,6 +158,8 @@ Class | Method | HTTP request | Description
  - [ClassificationMetadataFilterConfig](rapidata/api_client/docs/ClassificationMetadataFilterConfig.md)
  - [ClassificationMetadataModel](rapidata/api_client/docs/ClassificationMetadataModel.md)
  - [ClassifyPayload](rapidata/api_client/docs/ClassifyPayload.md)
+ - [ClientsQueryResult](rapidata/api_client/docs/ClientsQueryResult.md)
+ - [ClientsQueryResultPagedResult](rapidata/api_client/docs/ClientsQueryResultPagedResult.md)
  - [CloneDatasetModel](rapidata/api_client/docs/CloneDatasetModel.md)
  - [CloneOrderModel](rapidata/api_client/docs/CloneOrderModel.md)
  - [CloneOrderResult](rapidata/api_client/docs/CloneOrderResult.md)
@@ -323,7 +312,7 @@ Class | Method | HTTP request | Description
  - [PublicTextMetadataInput](rapidata/api_client/docs/PublicTextMetadataInput.md)
  - [QueryCampaignsModel](rapidata/api_client/docs/QueryCampaignsModel.md)
  - [QueryModel](rapidata/api_client/docs/QueryModel.md)
- - [QueryOrdersModel](rapidata/api_client/docs/QueryOrdersModel.md)
+ - [QueryModel1](rapidata/api_client/docs/QueryModel1.md)
  - [QueryValidationRapidsResult](rapidata/api_client/docs/QueryValidationRapidsResult.md)
  - [QueryValidationRapidsResultAsset](rapidata/api_client/docs/QueryValidationRapidsResultAsset.md)
  - [QueryValidationRapidsResultPagedResult](rapidata/api_client/docs/QueryValidationRapidsResultPagedResult.md)
