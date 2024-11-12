@@ -25,14 +25,14 @@ from rapidata.api_client.models.sort_criterion import SortCriterion
 from typing import Optional, Set
 from typing_extensions import Self
 
-class QueryModel(BaseModel):
+class QueryModel1(BaseModel):
     """
-    QueryModel
+    The model for a query.
     """ # noqa: E501
-    page: Optional[PageInfo] = None
+    page_info: Optional[PageInfo] = Field(default=None, alias="pageInfo")
     filter: Optional[RootFilter] = None
-    sort_criteria: Optional[List[SortCriterion]] = Field(default=None, alias="sortCriteria")
-    __properties: ClassVar[List[str]] = ["page", "filter", "sortCriteria"]
+    sort_criteria: Optional[List[SortCriterion]] = Field(default=None, description="The sort criteria to apply to the query.", alias="sortCriteria")
+    __properties: ClassVar[List[str]] = ["pageInfo", "filter", "sortCriteria"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -52,7 +52,7 @@ class QueryModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of QueryModel from a JSON string"""
+        """Create an instance of QueryModel1 from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,9 +73,9 @@ class QueryModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of page
-        if self.page:
-            _dict['page'] = self.page.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of page_info
+        if self.page_info:
+            _dict['pageInfo'] = self.page_info.to_dict()
         # override the default output from pydantic by calling `to_dict()` of filter
         if self.filter:
             _dict['filter'] = self.filter.to_dict()
@@ -95,7 +95,7 @@ class QueryModel(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of QueryModel from a dict"""
+        """Create an instance of QueryModel1 from a dict"""
         if obj is None:
             return None
 
@@ -103,7 +103,7 @@ class QueryModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "page": PageInfo.from_dict(obj["page"]) if obj.get("page") is not None else None,
+            "pageInfo": PageInfo.from_dict(obj["pageInfo"]) if obj.get("pageInfo") is not None else None,
             "filter": RootFilter.from_dict(obj["filter"]) if obj.get("filter") is not None else None,
             "sortCriteria": [SortCriterion.from_dict(_item) for _item in obj["sortCriteria"]] if obj.get("sortCriteria") is not None else None
         })

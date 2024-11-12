@@ -18,6 +18,7 @@ __version__ = "1.0.0"
 
 # import apis into sdk package
 from rapidata.api_client.api.campaign_api import CampaignApi
+from rapidata.api_client.api.client_api import ClientApi
 from rapidata.api_client.api.coco_api import CocoApi
 from rapidata.api_client.api.compare_workflow_api import CompareWorkflowApi
 from rapidata.api_client.api.datapoint_api import DatapointApi
@@ -75,6 +76,8 @@ from rapidata.api_client.models.classification_metadata import ClassificationMet
 from rapidata.api_client.models.classification_metadata_filter_config import ClassificationMetadataFilterConfig
 from rapidata.api_client.models.classification_metadata_model import ClassificationMetadataModel
 from rapidata.api_client.models.classify_payload import ClassifyPayload
+from rapidata.api_client.models.clients_query_result import ClientsQueryResult
+from rapidata.api_client.models.clients_query_result_paged_result import ClientsQueryResultPagedResult
 from rapidata.api_client.models.clone_dataset_model import CloneDatasetModel
 from rapidata.api_client.models.clone_order_model import CloneOrderModel
 from rapidata.api_client.models.clone_order_result import CloneOrderResult
@@ -227,7 +230,7 @@ from rapidata.api_client.models.public_order_model import PublicOrderModel
 from rapidata.api_client.models.public_text_metadata_input import PublicTextMetadataInput
 from rapidata.api_client.models.query_campaigns_model import QueryCampaignsModel
 from rapidata.api_client.models.query_model import QueryModel
-from rapidata.api_client.models.query_orders_model import QueryOrdersModel
+from rapidata.api_client.models.query_model1 import QueryModel1
 from rapidata.api_client.models.query_validation_rapids_result import QueryValidationRapidsResult
 from rapidata.api_client.models.query_validation_rapids_result_asset import QueryValidationRapidsResultAsset
 from rapidata.api_client.models.query_validation_rapids_result_paged_result import QueryValidationRapidsResultPagedResult

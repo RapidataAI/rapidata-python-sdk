@@ -31,7 +31,7 @@ from rapidata.api_client.models.get_order_by_id_result import GetOrderByIdResult
 from rapidata.api_client.models.get_order_results_result import GetOrderResultsResult
 from rapidata.api_client.models.get_public_orders_result import GetPublicOrdersResult
 from rapidata.api_client.models.order_model_paged_result import OrderModelPagedResult
-from rapidata.api_client.models.query_orders_model import QueryOrdersModel
+from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.unlock_order_result import UnlockOrderResult
 from rapidata.api_client.models.update_access_model import UpdateAccessModel
 from rapidata.api_client.models.update_order_model import UpdateOrderModel
@@ -2959,7 +2959,7 @@ class OrderApi:
     @validate_call
     def order_query_get(
         self,
-        request: Annotated[Optional[QueryOrdersModel], Field(description="The parameters for filtering, paging, and sorting")] = None,
+        request: Annotated[Optional[QueryModel], Field(description="The parameters for filtering, paging, and sorting")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2977,7 +2977,7 @@ class OrderApi:
 
 
         :param request: The parameters for filtering, paging, and sorting
-        :type request: QueryOrdersModel
+        :type request: QueryModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3025,7 +3025,7 @@ class OrderApi:
     @validate_call
     def order_query_get_with_http_info(
         self,
-        request: Annotated[Optional[QueryOrdersModel], Field(description="The parameters for filtering, paging, and sorting")] = None,
+        request: Annotated[Optional[QueryModel], Field(description="The parameters for filtering, paging, and sorting")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3043,7 +3043,7 @@ class OrderApi:
 
 
         :param request: The parameters for filtering, paging, and sorting
-        :type request: QueryOrdersModel
+        :type request: QueryModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3091,7 +3091,7 @@ class OrderApi:
     @validate_call
     def order_query_get_without_preload_content(
         self,
-        request: Annotated[Optional[QueryOrdersModel], Field(description="The parameters for filtering, paging, and sorting")] = None,
+        request: Annotated[Optional[QueryModel], Field(description="The parameters for filtering, paging, and sorting")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3109,7 +3109,7 @@ class OrderApi:
 
 
         :param request: The parameters for filtering, paging, and sorting
-        :type request: QueryOrdersModel
+        :type request: QueryModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
