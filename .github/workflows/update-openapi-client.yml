@@ -6,6 +6,7 @@ on:
     inputs:
       version:
         description: 'Version string for the update'
+        default: 'latest'
         required: true
         type: string
     
@@ -34,7 +35,7 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           base: 'main'
-          branch: 'zod-generation'
+          branch: 'openapi-generation'
           title: 'Update OpenAPI Schemas'
           committer: Rudolf the Rabbit <login@rapidata.ai>
           author: Rudolf the Rabbit <login@rapidata.ai>
