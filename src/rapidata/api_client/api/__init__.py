@@ -2,6 +2,7 @@
 
 # import apis into api package
 from rapidata.api_client.api.campaign_api import CampaignApi
+from rapidata.api_client.api.client_api import ClientApi
 from rapidata.api_client.api.coco_api import CocoApi
 from rapidata.api_client.api.compare_workflow_api import CompareWorkflowApi
 from rapidata.api_client.api.datapoint_api import DatapointApi
