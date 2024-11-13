@@ -25,6 +25,7 @@ plugins:
             docstring_options:
               ignore_init_summary: true
             merge_init_into_class: true
+            paths_exclude: ["src/rapidata/api_client"]
 
   - gen-files:
       scripts:
