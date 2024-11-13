@@ -1,4 +1,5 @@
 name: Release and Publish
+
 on:
   workflow_dispatch:
     inputs:
@@ -17,15 +18,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.x'
-    
+
     - name: Install Poetry
       uses: snok/install-poetry@v1
-    
+
     - name: Configure Git
       run: |
         git config user.name github-actions
@@ -58,10 +59,9 @@ jobs:
         poetry config pypi-token.pypi $PYPI_TOKEN
         poetry build
         poetry publish
-    
     - name: List dist contents
       run: ls -l dist/
-    
+
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v2
       with:
@@ -70,9 +70,29 @@ jobs:
         files: |
           dist/*.whl
           dist/*.tar.gz
-
-    - name: Trigger Docs Deployment
-      uses: peter-evans/repository-dispatch@v2
-      with:
-        event-type: trigger-docs-deploy
-        token: ${{ secrets.GITHUB_TOKEN }}
+  deploy-docs:
+    runs-on: ubuntu-latest
+    # Only run on push to main or when a PR is merged
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Install dependencies
+        run: |
+          poetry install --with docs
+      - name: Build MkDocs site
+        run: |
+          poetry run mkdocs build
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        if: github.ref == 'refs/heads/main'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
+          force_orphan: true
