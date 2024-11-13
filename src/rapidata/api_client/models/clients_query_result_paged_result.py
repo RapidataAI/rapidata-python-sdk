@@ -17,22 +17,22 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, StrictInt
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.page_info import PageInfo
-from rapidata.api_client.models.root_filter import RootFilter
-from rapidata.api_client.models.sort_criterion import SortCriterion
+from rapidata.api_client.models.clients_query_result import ClientsQueryResult
 from typing import Optional, Set
 from typing_extensions import Self
 
-class QueryModel(BaseModel):
+class ClientsQueryResultPagedResult(BaseModel):
     """
-    QueryModel
+    ClientsQueryResultPagedResult
     """ # noqa: E501
-    page: Optional[PageInfo] = None
-    filter: Optional[RootFilter] = None
-    sort_criteria: Optional[List[SortCriterion]] = Field(default=None, alias="sortCriteria")
-    __properties: ClassVar[List[str]] = ["page", "filter", "sortCriteria"]
+    total: StrictInt
+    page: StrictInt
+    page_size: StrictInt = Field(alias="pageSize")
+    items: List[ClientsQueryResult]
+    total_pages: Optional[StrictInt] = Field(default=None, alias="totalPages")
+    __properties: ClassVar[List[str]] = ["total", "page", "pageSize", "items", "totalPages"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -52,7 +52,7 @@ class QueryModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of QueryModel from a JSON string"""
+        """Create an instance of ClientsQueryResultPagedResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -64,8 +64,10 @@ class QueryModel(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * OpenAPI `readOnly` fields are excluded.
         """
         excluded_fields: Set[str] = set([
+            "total_pages",
         ])
 
         _dict = self.model_dump(
@@ -73,29 +75,18 @@ class QueryModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of page
-        if self.page:
-            _dict['page'] = self.page.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of filter
-        if self.filter:
-            _dict['filter'] = self.filter.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in sort_criteria (list)
+        # override the default output from pydantic by calling `to_dict()` of each item in items (list)
         _items = []
-        if self.sort_criteria:
-            for _item_sort_criteria in self.sort_criteria:
-                if _item_sort_criteria:
-                    _items.append(_item_sort_criteria.to_dict())
-            _dict['sortCriteria'] = _items
-        # set to None if sort_criteria (nullable) is None
-        # and model_fields_set contains the field
-        if self.sort_criteria is None and "sort_criteria" in self.model_fields_set:
-            _dict['sortCriteria'] = None
-
+        if self.items:
+            for _item_items in self.items:
+                if _item_items:
+                    _items.append(_item_items.to_dict())
+            _dict['items'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of QueryModel from a dict"""
+        """Create an instance of ClientsQueryResultPagedResult from a dict"""
         if obj is None:
             return None
 
@@ -103,9 +94,11 @@ class QueryModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "page": PageInfo.from_dict(obj["page"]) if obj.get("page") is not None else None,
-            "filter": RootFilter.from_dict(obj["filter"]) if obj.get("filter") is not None else None,
-            "sortCriteria": [SortCriterion.from_dict(_item) for _item in obj["sortCriteria"]] if obj.get("sortCriteria") is not None else None
+            "total": obj.get("total"),
+            "page": obj.get("page"),
+            "pageSize": obj.get("pageSize"),
+            "items": [ClientsQueryResult.from_dict(_item) for _item in obj["items"]] if obj.get("items") is not None else None,
+            "totalPages": obj.get("totalPages")
         })
         return _obj
 
