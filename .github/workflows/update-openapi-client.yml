@@ -13,18 +13,15 @@ jobs:
   generate_openapi_client:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Fetch all history for all tags and branches
-      - name: Create Github App Token
-        uses: actions/create-github-app-token@v1
-        id: app-token
+      - uses: actions/create-github-app-token@v1
+        id: generate-token
         with:
           app-id: ${{ vars.RAPIDATA_OPENAPI_GENERATOR_APP_ID }}
           private-key: ${{ secrets.RAPIDATA_OPENAPI_GENERATOR_PRIVATE_KEY }}
-          owner: "RapidataAI"
-          repositories: "rapidata-python-sdk"
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with: 
+          token: ${{ steps.generate-token.outputs.token }}
       - name: Setup node
         uses: actions/setup-node@v4
       - name: Install node packages
@@ -33,43 +30,14 @@ jobs:
         run: ./openapi/download-and-merge-spec.sh
       - name: Generate client
         run: ./openapi/generate.sh
-      - name: Make GitHub PR
-        env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-        run: |
-          # Setup the committer's identity
-          git config user.email "login@rapidata.ai"
-          git config user.name "Rudolf the Rabbit"
-          
-          # Get latest tag
-          if [[ "${{ github.event_name }}" == "repository_dispatch" ]]; then
-            LATEST_TAG="${{ github.event.client_payload.latest_tag }}"
-          elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            LATEST_TAG="${{ github.event.inputs.version }}"
-          else
-            echo "Unexpected event type. Exiting."
-            exit 1
-          fi
-          
-          BRANCH_NAME="chore/update-openapi-to-$LATEST_TAG"
-          
-          # Create a new feature branch for the changes
-          git checkout -b $BRANCH_NAME
-          
-          # Check for changes
-          if [[ -z $(git status --porcelain) ]]; then
-              echo "No changes detected. Exiting."
-              exit 0
-          fi
-          
-          # Commit and push changes
-          git add openapi/output.swagger.json src/rapidata/api_client/ src/rapidata/api_client_README.md
-          git commit -m "chore: update openapi to $LATEST_TAG"
-          git push --set-upstream origin $BRANCH_NAME
-          
-          # Create pull request
-          gh pr create \
-            --body "This PR updates the OpenAPI client to version $LATEST_TAG" \
-            --title "chore: update OpenAPI client to $LATEST_TAG" \
-            --head "$BRANCH_NAME" \
-            --base "main"
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          base: 'main'
+          branch: 'zod-generation'
+          title: 'Update OpenAPI Schemas'
+          committer: Rudolf the Rabbit <login@rapidata.ai>
+          author: Rudolf the Rabbit <login@rapidata.ai>
+          delete-branch: true
+          commit-message: 'chore: update OpenAPI client to ${{ inputs.version || github.event.client_payload.latest_tag }}'
+          token: ${{ steps.generate-token.outputs.token }}
