@@ -20,7 +20,7 @@ from pydantic import Field, StrictBytes, StrictStr
 from typing import List, Optional, Tuple, Union
 from typing_extensions import Annotated
 from rapidata.api_client.models.create_demographic_rapid_model import CreateDemographicRapidModel
-from rapidata.api_client.models.query_model import QueryModel
+from rapidata.api_client.models.query_model1 import QueryModel1
 from rapidata.api_client.models.query_validation_rapids_result_paged_result import QueryValidationRapidsResultPagedResult
 from rapidata.api_client.models.rapid_result_model import RapidResultModel
 from rapidata.api_client.models.rapid_skipped_model import RapidSkippedModel
@@ -595,7 +595,7 @@ class RapidApi:
     def rapid_query_validation_rapids_get(
         self,
         validation_set_id: Annotated[Optional[StrictStr], Field(description="The validation set to query.")] = None,
-        model: Annotated[Optional[QueryModel], Field(description="The query model.")] = None,
+        model: Annotated[Optional[QueryModel1], Field(description="The query model.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -615,7 +615,7 @@ class RapidApi:
         :param validation_set_id: The validation set to query.
         :type validation_set_id: str
         :param model: The query model.
-        :type model: QueryModel
+        :type model: QueryModel1
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -665,7 +665,7 @@ class RapidApi:
     def rapid_query_validation_rapids_get_with_http_info(
         self,
         validation_set_id: Annotated[Optional[StrictStr], Field(description="The validation set to query.")] = None,
-        model: Annotated[Optional[QueryModel], Field(description="The query model.")] = None,
+        model: Annotated[Optional[QueryModel1], Field(description="The query model.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -685,7 +685,7 @@ class RapidApi:
         :param validation_set_id: The validation set to query.
         :type validation_set_id: str
         :param model: The query model.
-        :type model: QueryModel
+        :type model: QueryModel1
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -735,7 +735,7 @@ class RapidApi:
     def rapid_query_validation_rapids_get_without_preload_content(
         self,
         validation_set_id: Annotated[Optional[StrictStr], Field(description="The validation set to query.")] = None,
-        model: Annotated[Optional[QueryModel], Field(description="The query model.")] = None,
+        model: Annotated[Optional[QueryModel1], Field(description="The query model.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -755,7 +755,7 @@ class RapidApi:
         :param validation_set_id: The validation set to query.
         :type validation_set_id: str
         :param model: The query model.
-        :type model: QueryModel
+        :type model: QueryModel1
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
