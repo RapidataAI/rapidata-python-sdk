@@ -1,14 +1,7 @@
 name: Deploy Documentation
 on:
-  workflow_dispatch:  # Manual trigger
-  repository_dispatch:
-    types: [trigger-docs-deploy]  # Triggered by the release workflow
-  push:
-    branches:
-      - main  # Deploy on push to main
-  pull_request:
-    types: [closed]  # Deploy when PR is merged
-
+  workflow_dispatch:
+  
 jobs:
   deploy-docs:
     if: github.event_name != 'pull_request' || github.event.pull_request.merged == true
