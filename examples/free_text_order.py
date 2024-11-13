@@ -3,7 +3,7 @@ Free Text Order
 '''
 
 from examples.setup_client import setup_client
-from rapidata import RapidataClient, FreeTextWorkflow, FeatureFlags, CountryCodes, LabelingSelection
+from rapidata import RapidataClient, FreeTextWorkflow, Settings, CountryCodes, LabelingSelection, MediaAsset
 
 
 def new_free_text_order(rapi: RapidataClient):
@@ -16,9 +16,9 @@ def new_free_text_order(rapi: RapidataClient):
                 question="Describe this video!",
             )
         )
-        .media(["examples/data/waiting.mp4"])
-        .feature_flags(
-            FeatureFlags().free_text_minimum_characters(15).alert_on_fast_response(5000)
+        .media([MediaAsset("examples/data/waiting.mp4")])
+        .settings(
+            Settings().free_text_minimum_characters(15).alert_on_fast_response(5000)
         )
         .selections([
             LabelingSelection(amount=1)

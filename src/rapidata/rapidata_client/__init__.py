@@ -19,7 +19,7 @@ from .metadata import (
     PromptMetadata,
     TranscriptionMetadata,
 )
-from .feature_flags import FeatureFlags
+from .settings import Settings, FeatureFlags # remove FeatureFlags next major version
 from .country_codes import CountryCodes
 from .assets import MediaAsset, TextAsset, MultiAsset
 from .filter import (

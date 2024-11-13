@@ -15,7 +15,8 @@ from .rapidata_client import (
     PublicTextMetadata,
     PromptMetadata,
     TranscriptionMetadata,
-    FeatureFlags,
+    Settings,
+    FeatureFlags, # remove next major version
     CountryCodes,
     MediaAsset,
     TextAsset,
