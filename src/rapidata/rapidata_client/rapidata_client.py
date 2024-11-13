@@ -3,7 +3,6 @@ from rapidata.rapidata_client.dataset.rapidata_validation_set import (
 )
 from rapidata.rapidata_client.dataset.validation_set_builder import ValidationSetBuilder
 from rapidata.rapidata_client.order.rapidata_order_builder import RapidataOrderBuilder
-from rapidata.rapidata_client.utils.utils import Utils
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 from rapidata.rapidata_client.dataset.rapidata_dataset import RapidataDataset
@@ -178,12 +177,3 @@ class RapidataClient:
             CompareQuestionBuilder: A CompareQuestionBuilder instance.
         """
         return CompareCriteriaBuilder(name=name, openapi_service=self.openapi_service)
-
-    @property
-    def utils(self) -> Utils:
-        """Get the Utils instance.
-
-        Returns:
-            Utils: The Utils instance associated with this client.
-        """
-        return Utils(openapi_service=self.openapi_service)
