@@ -74,7 +74,6 @@ jobs:
 
   deploy-docs:
     runs-on: ubuntu-latest
-    # Only run on push to main or when a PR is merged
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
     steps:
       - uses: actions/checkout@v4
