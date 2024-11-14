@@ -1,4 +1,4 @@
-# Example Classify Order
+# Example Compare Order
 
 ```python
 --8<-- "examples/compare_order.py"
