@@ -3,7 +3,7 @@ from rapidata.rapidata_client.dataset.rapidata_dataset import RapidataDataset
 from rapidata.service.openapi_service import OpenAPIService
 import json
 from rapidata.api_client.exceptions import ApiException
-from typing import Optional, cast
+from typing import Optional, cast, Any
 from rapidata.api_client.models.workflow_artifact_model import WorkflowArtifactModel
 from tqdm import tqdm
 
@@ -36,30 +36,23 @@ class RapidataOrder:
         """
         Submits the order for processing.
         """
-
         self.openapi_service.order_api.order_submit_post(self.order_id)
 
-    def approve(self):
-        """
-        Approves the order for execution.
-        """
-        self.openapi_service.order_api.order_approve_post(self.order_id)
-
-    def get_status(self):
+    def get_status(self) -> str:
         """
         Gets the status of the order.
-
-        :return: The status of the order.
-        :rtype: str
+        
+        Returns: 
+            The status of the order.
         """
-        return self.openapi_service.order_api.order_get_by_id_get(self.order_id)
+        return self.openapi_service.order_api.order_get_by_id_get(self.order_id).state
 
     def display_progress_bar(self, refresh_rate=5):
         """
         Displays a progress bar for the order processing using tqdm.
         
-        :param refresh_rate: How often to refresh the progress bar, in seconds.
-        :type refresh_rate: float
+        Prameter: 
+            How often to refresh the progress bar, in seconds.
         """
         total_rapids = self._get_workflow_progress().total
         with tqdm(total=total_rapids, desc="Processing order", unit="rapids") as pbar:
@@ -107,15 +100,15 @@ class RapidataOrder:
         return progress
 
         
-    def get_results(self):
+    def get_results(self) -> dict[str, Any]:
         """
         Gets the results of the order. 
         If the order is still processing, this method will block until the order is completed and then return the results.
 
-        :return: The results of the order.
-        :rtype: dict
+        Returns: 
+            The results of the order.
         """
-        while self.get_status().state == "Processing":
+        while self.get_status() == "Processing":
             sleep(5)
 
         try:
@@ -131,10 +124,10 @@ class RapidataOrder:
             raise Exception(f"Failed to parse order results: {str(e)}") from e
 
     @property
-    def dataset(self):
+    def dataset(self) -> RapidataDataset | None:
         """
         The dataset associated with the order.
-        :return: The RapidataDataset instance.
-        :rtype: RapidataDataset
+        Returns: 
+            The RapidataDataset instance.
         """
         return self._dataset
