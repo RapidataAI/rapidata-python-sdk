@@ -3,7 +3,7 @@ Compare order with a validation set
 '''
 
 from examples.setup_client import setup_client
-from rapidata import RapidataClient, FeatureFlags, NaiveReferee, CompareWorkflow, ValidationSelection, LabelingSelection, MultiAsset, MediaAsset
+from rapidata import RapidataClient, Settings, NaiveReferee, CompareWorkflow, ValidationSelection, LabelingSelection, MultiAsset, MediaAsset
 
 
 def new_compare_order(rapi: RapidataClient):
@@ -39,8 +39,8 @@ def new_compare_order(rapi: RapidataClient):
                 )
             ]
         )
-        .feature_flags(
-            FeatureFlags().compare_with_prompt_design().alert_on_fast_response(4000)
+        .settings(
+            Settings().compare_with_prompt_design().alert_on_fast_response(4000)
         )
         .selections(
             [

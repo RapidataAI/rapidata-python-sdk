@@ -4,7 +4,7 @@ Transcription order with validation set
 from examples.setup_client import setup_client
 from rapidata import (
     RapidataClient,
-    FeatureFlags,
+    Settings,
     NaiveReferee,
     TranscriptionWorkflow,
     TranscriptionMetadata,
@@ -39,7 +39,7 @@ def new_transcription_order(rapi: RapidataClient):
             )
         )
         .referee(NaiveReferee(responses=30))
-        .feature_flags(FeatureFlags().alert_on_fast_response(4000))
+        .settings(Settings().alert_on_fast_response(4000))
         .media(asset=[MediaAsset("examples/data/waiting.mp4")], metadata=[transcription])
         .selections([
             ValidationSelection(amount=1, validation_set_id=validation_set.id),

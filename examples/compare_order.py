@@ -4,7 +4,7 @@ Compare order with a validation set
 
 from examples.setup_client import setup_client
 from rapidata import (
-    FeatureFlags,
+    Settings,
     NaiveReferee,
     CompareWorkflow,
     RapidataClient,
@@ -51,8 +51,8 @@ def new_compare_order(rapi: RapidataClient):
             ValidationSelection(amount=1, validation_set_id=validation_set.id),
             LabelingSelection(amount=1)
             ])
-        .feature_flags( # This means that if someone tries to answer before 2 seconds, they will be warned. use with caution. should be the bare minimum.
-            FeatureFlags().alert_on_fast_response(2000) 
+        .settings( # This means that if someone tries to answer before 2 seconds, they will be warned. use with caution. should be the bare minimum.
+            Settings().alert_on_fast_response(2000) 
         )
         .create()
     )

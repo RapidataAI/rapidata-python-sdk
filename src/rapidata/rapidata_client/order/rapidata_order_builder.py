@@ -14,11 +14,7 @@ from rapidata.api_client.models.create_order_model_user_filters_inner import (
 from rapidata.api_client.models.create_order_model_workflow import (
     CreateOrderModelWorkflow,
 )
-from rapidata.api_client.models.country_user_filter_model import CountryUserFilterModel
-from rapidata.api_client.models.language_user_filter_model import (
-    LanguageUserFilterModel,
-)
-from rapidata.rapidata_client.feature_flags import FeatureFlags
+from rapidata.rapidata_client.settings import FeatureFlags, Settings
 from rapidata.rapidata_client.metadata.base_metadata import Metadata
 from rapidata.rapidata_client.dataset.rapidata_dataset import RapidataDataset
 from rapidata.rapidata_client.referee.naive_referee import NaiveReferee
@@ -34,6 +30,8 @@ from rapidata.rapidata_client.workflow.compare_workflow import CompareWorkflow
 from rapidata.rapidata_client.assets import MediaAsset, TextAsset, MultiAsset
 
 from typing import Optional, cast, Sequence
+
+from deprecated import deprecated
 
 
 class RapidataOrderBuilder:
@@ -66,7 +64,7 @@ class RapidataOrderBuilder:
         self._metadata: list[Metadata] | None = None
         self._aggregator: AggregatorType | None = None
         self._validation_set_id: str | None = None
-        self._feature_flags: FeatureFlags | None = None
+        self._settings: Settings | FeatureFlags | None = None # remove featureflag next big release
         self._user_filters: list[Filter] = []
         self._selections: list[Selection] = []
         self._rapids_per_bag: int = 2
@@ -101,8 +99,8 @@ class RapidataOrderBuilder:
             referee=CreateOrderModelReferee(self._referee.to_model()),
             validationSetId=self._validation_set_id,
             featureFlags=(
-                self._feature_flags.to_list()
-                if self._feature_flags is not None
+                self._settings.to_list()
+                if self._settings is not None
                 else None
             ),
             selections=[
@@ -269,6 +267,26 @@ class RapidataOrderBuilder:
         self._metadata = metadata  # type: ignore
         return self
 
+    def settings(self, settings: Settings) -> "RapidataOrderBuilder":
+        """
+        Set the settings for the order.
+
+        Args:
+            settings (Settings): The settings to be set.
+
+        Returns:
+            RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
+        """
+        if not isinstance(settings, Settings):
+            raise TypeError("Settings must be of type Settings.")
+
+        self._settings = settings
+        return self
+
+    @deprecated(
+        version="1.6.0",
+        reason="The feature_flags method is deprecated, use settings instead.",
+    )
     def feature_flags(self, feature_flags: FeatureFlags) -> "RapidataOrderBuilder":
         """
         Set the feature flags for the order.
@@ -282,7 +300,7 @@ class RapidataOrderBuilder:
         if not isinstance(feature_flags, FeatureFlags):
             raise TypeError("Feature flags must be of type FeatureFlags.")
 
-        self._feature_flags = feature_flags
+        self._settings = feature_flags
         return self
 
     def filters(self, filters: Sequence[Filter]) -> "RapidataOrderBuilder":

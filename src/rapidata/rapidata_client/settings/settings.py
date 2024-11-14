@@ -7,30 +7,30 @@ class TranslationBehaviour(Enum):
     ONLY_TRANSLATED = "only translated"
 
 
-class FeatureFlags:
-    """A class to manage feature flags.
+class Settings:
+    """A class to manage settings.
 
-    This class provides methods to set and manage various feature flags
+    This class provides methods to set and manage various settings
     used in the application.
 
     Attributes:
-        _flags (dict[str, str]): A dictionary to store feature flags.
+        _settings (dict[str, str]): A dictionary to store settings.
     """
 
     def __init__(self):
-        """Initialize the FeatureFlags object with an empty flags dictionary."""
-        self._flags: dict[str, str] = {}
+        """Initialize the Settings object with an empty flags dictionary."""
+        self._settings: dict[str, str] = {}
 
     def to_list(self) -> list[FeatureFlagModel]:
-        """Convert the feature flags to a list of FeatureFlagModel objects.
+        """Convert the settings to a list of FeatureFlagModel objects.
 
         Returns:
             list[FeatureFlagModel]: A list of FeatureFlagModel objects
-                representing the current feature flags.
+                representing the current settings.
         """
         return [
             FeatureFlagModel(key=name, value=value)
-            for name, value in self._flags.items()
+            for name, value in self._settings.items()
         ]
 
     def alert_on_fast_response(self, milliseconds: int):
@@ -40,7 +40,7 @@ class FeatureFlags:
             milliseconds (int): if the user responds in less than this time, an alert will be shown.
 
         Returns:
-            FeatureFlags: The current FeatureFlags instance for method chaining.
+            Settings: The current Settings instance for method chaining.
         """
         if milliseconds < 10:
             print(
@@ -52,7 +52,7 @@ class FeatureFlags:
                 f"Warning: Are you sure you want to set the threshold so high ({milliseconds/1000} seconds)?"
             )
 
-        self._flags["alert_on_fast_response"] = str(milliseconds)
+        self._settings["alert_on_fast_response"] = str(milliseconds)
         return self
 
 
@@ -68,9 +68,9 @@ class FeatureFlags:
             behaviour (TranslationBehaviour): The translation behaviour. Defaults to TranslationBehaviour.BOTH.
 
         Returns:
-            FeatureFlags: The current FeatureFlags instance for method chaining.
+            Settings: The current Settings instance for method chaining.
         """
-        self._flags["translation_behaviour"] = behaviour.value
+        self._settings["translation_behaviour"] = behaviour.value
         return self
 
     def free_text_minimum_characters(self, value: int):
@@ -80,9 +80,9 @@ class FeatureFlags:
             value (int): The minimum number of characters for free text.
 
         Returns:
-            FeatureFlags: The current FeatureFlags instance for method chaining.
+            Settings: The current Settings instance for method chaining.
         """
-        self._flags["free_text_minimum_characters"] = str(value)
+        self._settings["free_text_minimum_characters"] = str(value)
         return self
 
     def no_shuffle(self, value: bool = True):
@@ -92,9 +92,9 @@ class FeatureFlags:
             value (bool, optional): Whether to disable shuffling. Defaults to True.
 
         Returns:
-            FeatureFlags: The current FeatureFlags instance for method chaining.
+            Settings: The current Settings instance for method chaining.
         """
-        self._flags["no_shuffle"] = str(value)
+        self._settings["no_shuffle"] = str(value)
         return self
 
     def compare_with_prompt_design(self, value: bool = True):
@@ -104,20 +104,20 @@ class FeatureFlags:
             value (bool, optional): Whether to enable compare with prompt design. Defaults to True.
 
         Returns:
-            FeatureFlags: The current FeatureFlags instance for method chaining.
+            Settings: The current Settings instance for method chaining.
         """
-        self._flags["claire"] = str(value)
+        self._settings["claire"] = str(value)
         return self
 
     def key_value(self, key: str, value: str):
-        """Set a custom feature flag with the given key and value. Use this to enable features that do not have a dedicated method (yet).
+        """Set a custom setting with the given key and value. Use this to enable features that do not have a dedicated method (yet).
 
         Args:
-            key (str): The key for the custom feature flag.
-            value (str): The value for the custom feature flag.
+            key (str): The key for the custom setting.
+            value (str): The value for the custom setting.
 
         Returns:
-            FeatureFlags: The current FeatureFlags instance for method chaining.
+            Settings: The current Settings instance for method chaining.
         """
-        self._flags[key] = value
+        self._settings[key] = value
         return self

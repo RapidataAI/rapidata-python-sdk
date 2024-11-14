@@ -4,7 +4,7 @@ from typing import Any
 from rapidata.api_client.models.simple_workflow_model import SimpleWorkflowModel
 from rapidata.api_client.models.evaluation_workflow_model import EvaluationWorkflowModel
 from rapidata.api_client.models.compare_workflow_model import CompareWorkflowModel
-from rapidata.rapidata_client.feature_flags import FeatureFlags
+from rapidata.rapidata_client.settings import Settings
 from rapidata.rapidata_client.referee.base_referee import Referee
 
 
@@ -13,7 +13,7 @@ class Workflow(ABC):
     def __init__(self, type: str):
         self._type = type
         self._target_country_codes: list[str] = []
-        self._feature_flags: FeatureFlags = FeatureFlags()
+        self._feature_flags: Settings = Settings()
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -37,6 +37,6 @@ class Workflow(ABC):
         self._target_country_codes = target_country_codes
         return self
 
-    def feature_flags(self, feature_flags: FeatureFlags):
+    def feature_flags(self, feature_flags: Settings):
         self._feature_flags = feature_flags
         return self
