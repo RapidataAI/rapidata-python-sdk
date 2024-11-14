@@ -18,6 +18,10 @@ jobs:
       - name: Install dependencies
         run: |
           poetry install --with docs
+      - name: Clean docs
+        run: |
+          rm -rf site/
+          poetry run mkdocs build --clean
       - name: Build MkDocs site
         run: |
           poetry run mkdocs build
