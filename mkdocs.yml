@@ -7,15 +7,11 @@ plugins:
   - search
   - autorefs:
       resolve_closest: true
-  - exclude:
-      glob:
-        - src/rapidata/api_client/*
   - mkdocstrings:
       default_handler: python
       handlers:
         python:
-          paths: [src]
-          paths_exclude: ["src/rapidata/api_client"]
+          paths: [src/rapidata/rapidata_client]
           rendering:
             show_source: true
           selection:

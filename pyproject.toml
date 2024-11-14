@@ -29,7 +29,6 @@ mkdocs-gen-files = "^0.5.0"
 mkdocs-literate-nav = "^0.6.1"
 pygments = "^2.18.0"
 mkdocs-section-index = "^0.3.9"
-mkdocs-exclude = "^1.0.2" 
 
 [build-system]
 requires = ["poetry-core"]
