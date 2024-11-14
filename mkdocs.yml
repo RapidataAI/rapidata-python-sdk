@@ -7,6 +7,9 @@ plugins:
   - search
   - autorefs:
       resolve_closest: true
+  - exclude:
+      glob:
+        - src/rapidata/api_client/*
   - mkdocstrings:
       default_handler: python
       handlers:
@@ -26,9 +29,6 @@ plugins:
             docstring_options:
               ignore_init_summary: true
             merge_init_into_class: true
-  - exclude:
-      glob:
-        - src/rapidata/api_client/*
   - gen-files:
       scripts:
         - scripts/gen_ref_pages.py
