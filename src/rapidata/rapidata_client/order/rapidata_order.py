@@ -11,12 +11,11 @@ class RapidataOrder:
     """
     Represents a Rapidata order.
 
-    :param name: The name of the order.
-    :type name: str
-    :param workflow: The workflow associated with the order.
-    :type workflow: Workflow
-    :param rapidata_service: The Rapidata service used to create and manage the order.
-    :type rapidata_service: RapidataService
+    Args:
+        The ID of the order.
+        The optional Dataset associated with the order.
+        The OpenAPIService instance used to interact with the Rapidata API.
+        The name of the order.
     """
 
     def __init__(
