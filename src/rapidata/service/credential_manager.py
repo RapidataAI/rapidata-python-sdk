@@ -205,7 +205,7 @@ class CredentialManager:
         if not bridge_endpoint:
             return None
 
-        auth_url = f"{self.endpoint}/connect/authorize/external?clientId=rapidata-cli&scope=openid profile email&writeKey={bridge_endpoint.write_key}"
+        auth_url = f"{self.endpoint}/connect/authorize/external?clientId=rapidata-cli&scope=openid profile email roles&writeKey={bridge_endpoint.write_key}"
         webbrowser.open(auth_url)
 
         access_token = self._poll_read_key(bridge_endpoint.read_key)
