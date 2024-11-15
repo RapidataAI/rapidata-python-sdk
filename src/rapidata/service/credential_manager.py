@@ -182,7 +182,7 @@ class CredentialManager:
         """Create a new client using the access token."""
         try:
             # set the display name to the hostname
-            display_name = f"{gethostname()} - CLI"
+            display_name = f"{gethostname()} - Python API Client"
             response = requests.post(
                 f"{self.endpoint}/Client",
                 headers={
