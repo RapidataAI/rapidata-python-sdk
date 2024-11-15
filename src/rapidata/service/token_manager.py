@@ -39,7 +39,7 @@ class TokenManager:
         oauth_scope: str = "openid profile email",
         cert_path: str | None = None,
         refresh_threshold: float = 0.8,
-        max_sleep_time: float = 4.5,
+        max_sleep_time: float = 30,
     ):
         self._client_id = client_id
         self._client_secret = client_secret
