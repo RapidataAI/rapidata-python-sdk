@@ -25,10 +25,14 @@ class OpenAPIService:
             client_secret=client_secret,
             endpoint=token_url,
             oauth_scope=oauth_scope,
-            cert_path=cert_path
+            cert_path=cert_path,
         )
         client_configuration = Configuration(host=endpoint, ssl_ca_cert=cert_path)
         self.api_client = ApiClient(configuration=client_configuration)
+
+        self.api_client.configuration.api_key["bearer"] = (
+            f"Bearer {token_manager.fetch_token().access_token}"
+        )
 
         self._client_id = client_id
         self._client_secret = client_secret
