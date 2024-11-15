@@ -7,7 +7,7 @@ Our annotators will then label the data according to the criteria we provided.
 
 They see the following screen:
 
-<img src="./media/order-types/compare-screen.png"  height="300" alt="Description">
+![Compare Example](./media/order-types/compare-screen.png){ width="40%" }
 
 ## Installation
 

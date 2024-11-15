@@ -8,7 +8,7 @@ Our annotators will then label the data according to the question and answer opt
 
 They see the following screen:
 
-<img src="./media/order-types/classify-screen.png"  height="300" alt="Description">
+![Classify Example](./media/order-types/classify-screen.png){ width="40%" }
 
 ## Installation
 
@@ -111,6 +111,7 @@ To download the results simply call the `get_results` method on the order:
 ```py
 results = order.get_results()
 ```
----
+
+------------------
 
 <sup>1</sup> Due to the possibility of multiple people answering at the same time, this number is treated as a minimum. The actual number of responses may be higher. The overshoot per datapoint will be lower the more datapoints are added.

@@ -1,9 +1,9 @@
 import time
 import unittest
+from rapidata import RapidataClient
 from examples.classify_order import new_classify_order
 from examples.compare_order import new_compare_order
 from examples.free_text_order import new_free_text_order
-from examples.setup_client import setup_client
 from examples.transcription_order import new_transcription_order
 from examples.classify_text_asset_order import new_classify_text_asset_order
 from examples.conditional_validation_rapid_selection import (
@@ -14,7 +14,7 @@ from examples.conditional_validation_rapid_selection import (
 class TestExampleOrders(unittest.TestCase):
 
     def setUp(self):
-        self.rapi = setup_client()
+        self.rapi = RapidataClient()
 
     def test_classify_order(self):
         new_classify_order(self.rapi)

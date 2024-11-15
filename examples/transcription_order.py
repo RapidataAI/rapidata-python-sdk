@@ -1,7 +1,6 @@
 '''
 Transcription order with validation set
 '''
-from examples.setup_client import setup_client
 from rapidata import (
     RapidataClient,
     Settings,
@@ -15,6 +14,8 @@ from rapidata import (
 
 
 def new_transcription_order(rapi: RapidataClient):
+    # Validation set
+    # This will be shown as defined in the ValidationSelection and will make our annotators understand the task better
     validation_set = (
         rapi.new_validation_set(
             name="Example Transcription Validation Set"
@@ -51,5 +52,4 @@ def new_transcription_order(rapi: RapidataClient):
     return order
 
 if __name__ == "__main__":
-    rapi = setup_client()
-    new_transcription_order(rapi)
+    new_transcription_order(RapidataClient())

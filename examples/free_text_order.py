@@ -2,7 +2,6 @@
 Free Text Order
 '''
 
-from examples.setup_client import setup_client
 from rapidata import RapidataClient, FreeTextWorkflow, Settings, CountryCodes, LabelingSelection, MediaAsset
 
 
@@ -31,5 +30,4 @@ def new_free_text_order(rapi: RapidataClient):
 
 
 if __name__ == "__main__":
-    rapi = setup_client()
-    new_free_text_order(rapi)
+    new_free_text_order(RapidataClient())

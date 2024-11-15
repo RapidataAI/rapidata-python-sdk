@@ -71,7 +71,7 @@ class RapidataOrder:
         if self._workflow_id:
             return self._workflow_id
 
-        for _ in range(2):
+        for _ in range(10):
             try:
                 order_result = self.openapi_service.order_api.order_get_by_id_get(self.order_id)
                 pipeline = self.openapi_service.pipeline_api.pipeline_id_get(order_result.pipeline_id)

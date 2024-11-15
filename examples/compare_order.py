@@ -1,8 +1,6 @@
 '''
 Compare order with a validation set
 '''
-
-from examples.setup_client import setup_client
 from rapidata import (
     Settings,
     NaiveReferee,
@@ -18,8 +16,8 @@ from rapidata import (
 def new_compare_order(rapi: RapidataClient):
     logo_path = "examples/data/rapidata_logo.png"
     concept_path = "examples/data/rapidata_concept_logo.jpg"
-
-    # configure validation set
+    # Validation set
+    # This will be shown as defined in the ValidationSelection and will make our annotators understand the task better
     validation_set = (
         rapi.new_validation_set(name="Example SimpleMatchup Validation Set")
         .add_compare_rapid(
@@ -61,5 +59,4 @@ def new_compare_order(rapi: RapidataClient):
 
 
 if __name__ == "__main__":
-    rapi = setup_client()
-    new_compare_order(rapi)
+    new_compare_order(RapidataClient())
