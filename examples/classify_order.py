@@ -49,7 +49,7 @@ def new_classify_order(rapi: RapidataClient):
     )
 
     result = order.get_status()
-    print("Order in state: ", result.state)
+    print("Order in state: ", result)
 
     return order
 
