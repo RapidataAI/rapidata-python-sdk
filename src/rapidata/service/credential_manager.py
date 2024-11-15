@@ -4,6 +4,7 @@ import time
 import webbrowser
 from datetime import datetime, timezone
 from pathlib import Path
+from socket import gethostname
 from typing import Dict, List, Optional, Tuple
 
 import requests
@@ -181,7 +182,7 @@ class CredentialManager:
         """Create a new client using the access token."""
         try:
             # set the display name to the hostname
-            display_name = f"{os.uname().nodename} - CLI"
+            display_name = f"{gethostname()} - CLI"
             response = requests.post(
                 f"{self.endpoint}/Client",
                 headers={
