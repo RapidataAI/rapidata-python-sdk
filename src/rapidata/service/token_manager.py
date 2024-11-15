@@ -1,16 +1,15 @@
 import json
 import threading
-from dataclasses import dataclass
 from datetime import datetime, timedelta
 from typing import Optional, Callable
 
 import requests
+from pydantic import BaseModel
 
 from rapidata.service.credential_manager import CredentialManager
 
 
-@dataclass
-class TokenInfo:
+class TokenInfo(BaseModel):
     access_token: str
     expires_at: datetime
     token_type: str = "Bearer"

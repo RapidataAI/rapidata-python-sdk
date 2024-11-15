@@ -1,7 +1,3 @@
-import json
-import time
-import requests
-import threading
 from rapidata.api_client.api.campaign_api import CampaignApi
 from rapidata.api_client.api.dataset_api import DatasetApi
 from rapidata.api_client.api.order_api import OrderApi
@@ -17,8 +13,8 @@ from rapidata.service.token_manager import TokenManager, TokenInfo
 class OpenAPIService:
     def __init__(
         self,
-        client_id: str,
-        client_secret: str,
+        client_id: str | None,
+        client_secret: str | None,
         endpoint: str,
         token_url: str,
         oauth_scope: str,

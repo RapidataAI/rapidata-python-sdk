@@ -2,17 +2,16 @@ import json
 import os
 import time
 import webbrowser
-from dataclasses import dataclass
 from datetime import datetime, timezone
 from io import TextIOWrapper
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 import requests
+from pydantic import BaseModel
 
 
-@dataclass
-class ClientCredential:
+class ClientCredential(BaseModel):
     display_name: str
     client_id: str
     client_secret: str
@@ -45,8 +44,7 @@ class ClientCredential:
         return f"{self.display_name} - Client ID: {self.client_id} (Created: {self.created_at.strftime('%Y-%m-%d %H:%M:%S')})"
 
 
-@dataclass
-class BridgeToken:
+class BridgeToken(BaseModel):
     read_key: str
     write_key: str
 
