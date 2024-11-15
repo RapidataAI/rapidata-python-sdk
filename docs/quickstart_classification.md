@@ -1,5 +1,15 @@
 # Quickstart Classification Guide
 
+Directly ask real humans to classify your data. This guide will show you how to create a classification order using the Rapidata API.
+
+We will create an order, specify what question and answer options we want to have, as well as upload the data we want to classify.
+
+Our annotators will then label the data according to the question and answer options we provided.
+
+They see the following screen:
+
+<img src="./media/order-types/classify-screen.png"  height="300" alt="Description">
+
 ## Installation
 
 Install Rapidata using pip:
@@ -35,7 +45,7 @@ order_builder = rapi.create_classify_order("Example Classification Order")
 order_builder = order_builder.question("What is shown in the image?")
 ```
 
-3. add the different answer options:
+3. add the different answer options (order will be randomized):
 
 ```py
 order_builder = order_builder.options(["Fish", "Cat", "Wallaby", "Airplane"])

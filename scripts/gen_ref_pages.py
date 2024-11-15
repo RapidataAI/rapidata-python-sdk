@@ -4,7 +4,7 @@ from pathlib import Path
 
 import mkdocs_gen_files
 
-nav = mkdocs_gen_files.Nav()
+nav = mkdocs_gen_files.Nav() # type: ignore
 
 root = Path(__file__).parent.parent
 src = root / "src"

@@ -4,7 +4,7 @@ import mkdocs_gen_files
 import importlib
 import inspect
 
-nav = mkdocs_gen_files.Nav()
+nav = mkdocs_gen_files.Nav() # type: ignore
 
 root = Path(__file__).parent.parent
 src = root / "src"

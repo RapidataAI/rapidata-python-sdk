@@ -1,4 +1,13 @@
 # Quickstart Compare Guide
+Directly ask real humans to compare your data. This guide will show you how to create a compare order using the Rapidata API.
+
+We will create an order, specify the compare critery we want to have, as well as upload the data we want to compare.
+
+Our annotators will then label the data according to the criteria we provided.
+
+They see the following screen:
+
+<img src="./media/order-types/compare-screen.png"  height="300" alt="Description">
 
 ## Installation
 
@@ -35,7 +44,7 @@ order_builder = rapi.create_compare_order("Example Compare Order")
 order_builder = order_builder.criteria("Which logo looks better?")
 ```
 
-3. Add the paths to the images you want to classify:
+3. Add the paths to the images you want to classify (order will be randomized):
 
 ```py
 order_builder = order_builder.media([["examples/data/rapidata_logo.png","examples/data/rapidata_concept_logo.jpg"]])

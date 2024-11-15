@@ -78,7 +78,7 @@ class CompareMediaBuilder:
         if not isinstance(media_paths, list) \
                 or not all([isinstance(matchup_paths, list) for matchup_paths in media_paths]) \
                 or not all([isinstance(path, str) for matchup_paths in media_paths for path in matchup_paths]):
-            raise ValueError("Media paths must be a list of lists.")
+            raise ValueError("Media paths must be a list of lists. The inner list is a pair of file paths that will be shown together in a matchup.")
         
         self._media_assets = [MultiAsset([MediaAsset(path=path) for path in paths]) for paths in media_paths]
         return self._build()
