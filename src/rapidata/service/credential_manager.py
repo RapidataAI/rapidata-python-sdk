@@ -3,7 +3,6 @@ import os
 import time
 import webbrowser
 from datetime import datetime, timezone
-from io import TextIOWrapper
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
@@ -91,7 +90,7 @@ class CredentialManager:
             for env, creds in credentials.items()
         }
 
-        with open(self.config_path, "w") as f:  # type: TextIOWrapper
+        with open(self.config_path, "w") as f:
             json.dump(data, f, indent=2)
 
         # Ensure file is only readable by the user
@@ -212,7 +211,12 @@ class CredentialManager:
         if not access_token:
             return None
 
-        client_id, client_secret, display_name = self._create_client(access_token)
+        client_state = self._create_client(access_token)
+
+        if not client_state:
+            raise ValueError("Failed to create client")
+
+        client_id, client_secret, display_name = client_state
 
         credential = ClientCredential(
             client_id=client_id,
