@@ -1,4 +1,5 @@
 import json
+import logging
 import threading
 from datetime import datetime, timedelta
 from typing import Optional, Callable
@@ -8,10 +9,13 @@ from pydantic import BaseModel
 
 from rapidata.service.credential_manager import CredentialManager
 
+logger = logging.getLogger(__name__)
+
 
 class TokenInfo(BaseModel):
     access_token: str
-    expires_at: datetime
+    expires_in: int
+    issued_at: datetime
     token_type: str = "Bearer"
 
     @property
@@ -19,12 +23,11 @@ class TokenInfo(BaseModel):
         return f"{self.token_type} {self.access_token}"
 
     @property
-    def time_until_refresh(self) -> float:
-        return (self.expires_at - datetime.now()).total_seconds()
-
-    @property
-    def is_expired(self) -> bool:
-        return datetime.now() > self.expires_at
+    def time_remaining(self):
+        remaining = (
+            (self.issued_at + timedelta(seconds=self.expires_in)) - datetime.now()
+        ).total_seconds()
+        return max(0.0, remaining)
 
 
 class TokenManager:
@@ -36,12 +39,15 @@ class TokenManager:
         oauth_scope: str = "openid profile email",
         cert_path: str | None = None,
         refresh_threshold: float = 0.8,
+        max_sleep_time: float = 4.5,
     ):
         self._client_id = client_id
         self._client_secret = client_secret
 
         if not client_id or not client_secret:
-            credential_manager = CredentialManager(endpoint=endpoint, cert_path=cert_path)
+            credential_manager = CredentialManager(
+                endpoint=endpoint, cert_path=cert_path
+            )
             credentials = credential_manager.get_client_credentials()
             if not credentials:
                 raise ValueError("Failed to fetch client credentials")
@@ -52,6 +58,7 @@ class TokenManager:
         self._oauth_scope = oauth_scope
         self._cert_path = cert_path
         self._refresh_threshold = refresh_threshold
+        self._max_sleep_time = max_sleep_time
 
         self._token_lock = threading.Lock()
         self._current_token: Optional[TokenInfo] = None
@@ -75,7 +82,9 @@ class TokenManager:
                 data = response.json()
                 return TokenInfo(
                     access_token=data["access_token"],
-                    expires_at=datetime.now() + timedelta(seconds=data["expires_in"]),
+                    token_type=data["token_type"],
+                    expires_in=data["expires_in"],
+                    issued_at=datetime.now(),
                 )
 
             else:
@@ -95,23 +104,38 @@ class TokenManager:
 
     def start_token_refresh(self, token_callback: Callable[[TokenInfo], None]) -> None:
         if self._refresh_thread and self._refresh_thread.is_alive():
-            raise RuntimeError("Token refresh thread is already running")
+            logger.error("Token refresh thread is already running")
+            return
 
         def refresh_loop():
             while not self._should_stop.is_set():
                 try:
                     with self._token_lock:
-                        if not self._current_token or self._current_token.is_expired or self._current_token.time_until_refresh < self._current_token.time_until_refresh * self._refresh_threshold:
+                        if self._should_refresh_token(self._current_token):
+                            logger.debug("Refreshing token")
                             self._current_token = self.fetch_token()
                             token_callback(self._current_token)
 
                     if self._current_token:
-                        sleep_time = min(30, int(self._current_token.time_until_refresh * (1 - self._refresh_threshold)))
-                        self._should_stop.wait(timeout=max(1, sleep_time))
+                        time_until_refresh_threshold = (
+                            self._current_token.time_remaining
+                            - (
+                                self._current_token.expires_in
+                                * (1 - self._refresh_threshold)
+                            )
+                        )
+                        logger.debug("Time until refresh threshold: %s", time_until_refresh_threshold)
+                        sleep_time = min(
+                            self._max_sleep_time, time_until_refresh_threshold
+                        )
+                        logger.debug(
+                            f"Sleeping for {sleep_time} until checking the token again"
+                        )
+                        self._should_stop.wait(timeout=max(1.0, sleep_time))
                     else:
-                        self._should_stop.wait(timeout=30)
+                        self._should_stop.wait(timeout=self._max_sleep_time)
                 except Exception as e:
-                    print(f"Failed to refresh token: {e}")
+                    logger.error("Failed to refresh token: %s", e)
                     self._should_stop.wait(timeout=5)
 
         self._should_stop.clear()
@@ -127,6 +151,21 @@ class TokenManager:
     def get_current_token(self) -> Optional[TokenInfo]:
         with self._token_lock:
             return self._current_token
+
+    def _should_refresh_token(self, token: TokenInfo | None) -> bool:
+        if not token:
+            return True
+
+        limit = token.expires_in * (1 - self._refresh_threshold)
+
+        logger.debug(
+            "The token was issued at %s, it expires in %s. It has %s seconds remaining and we refresh the token when it has %s seconds remaining",
+            token.issued_at,
+            token.expires_in,
+            token.time_remaining,
+            limit,
+        )
+        return token.time_remaining < limit
 
     def __enter__(self):
         return self

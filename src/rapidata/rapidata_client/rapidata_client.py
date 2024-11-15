@@ -27,8 +27,8 @@ class RapidataClient:
 
     def __init__(
         self,
-        client_id: str | None,
-        client_secret: str | None,
+        client_id: str | None = None,
+        client_secret: str | None = None,
         endpoint: str = "https://api.rapidata.ai",
         token_url: str = "https://auth.rapidata.ai",
         oauth_scope: str = "openid",
