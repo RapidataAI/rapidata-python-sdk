@@ -5,40 +5,32 @@
 Install Rapidata using pip:
 
 ```
-pip install rapidata
-```
-
-To update an existing installation:
-
-```
-pip install rapidata -U
+pip install -U rapidata
 ```
 
 ## Usage
 
-Orders are managed through the [`RapidataClient`](reference/rapidata/rapidata_client/rapidata_client.md#rapidata.rapidata_client.rapidata_client.RapidataClient).
+Orders are managed through the `RapidataClient`.
 
 Create a client as follows:
 
 ```py
 from rapidata import RapidataClient
 
-rapi = RapidataClient(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
+#first time executing it on a machine will require you to log in
+rapi = RapidataClient()
 ```
-
-Contact a Rapidata representative at [info@rapidata.ai](mailto:info@rapidata.ai) to obtain your `CLIENT_ID` and `CLIENT_SECRET`.
-
 ### Creating an Order
 
 Each request to humans begins with creating an order. Use the `rapi` client to configure the order according to your needs.
 
-1. Create a new [`RapidataOrderBuilder`](reference/rapidata/rapidata_client/order/rapidata_order_builder.md/#rapidata.rapidata_client.order.rapidata_order_builder.RapidataOrderBuilder) and specify the name:
+1. Create a new `RapidataOrderBuilder` and specify the name:
 
 ```py
-order_builder = rapi.new_order("Quickstart Order")
+order_builder = rapi.new_order("Example Custom Order")
 ```
 
-2. Configure the order using a workflow, which defines the type of questions asked to people. For example, the [`ClassifyWorkflow`](reference/rapidata/rapidata_client/workflow/classify_workflow.md) asks a question with multiple answer choices:
+2. Configure the order using a workflow, which defines the type of questions asked to people. For example, the `ClassifyWorkflow` asks a question with multiple answer choices:
 
 ```py
 from rapidata import ClassifyWorkflow
@@ -55,7 +47,7 @@ Set the `workflow` on the `order_builder`:
 order_builder.workflow(workflow)
 ```
 
-3. (Optional) Further configure the order by specifying the number of answers desired for each datapoint (default is 10). Choose either a [`NaiveReferee`](reference/rapidata/rapidata_client/referee/naive_referee.md/#rapidata.rapidata_client.referee.naive_referee.NaiveReferee) or a [`ClassifyEarlyStoppingReferee`](reference/rapidata/rapidata_client/referee/classify_early_stopping_referee.md/#rapidata.rapidata_client.referee.classify_early_stopping_referee.ClassifyEarlyStoppingReferee):
+3. (Optional) Further configure the order by specifying the number of responses<sup>1</sup> desired for each datapoint (default is 10). Choose either a `NaiveReferee` or a `EarlyStoppingReferee`:
 
 ```py
 from rapidata import NaiveReferee
@@ -66,6 +58,7 @@ order_builder.referee(NaiveReferee(responses=15))
 4. Upload datapoints for which you want this question to be asked. In this example, we upload one image:
 
 ```py
+from rapidata import MediaAsset
 order_builder.media([MediaAsset("examples/data/wallaby.jpg")])
 ```
 
@@ -79,28 +72,21 @@ order_builder.selections([
 ])
 ```
 
-6. Create the order. This executes all the HTTP requests to the Rapidata API:
+6. Create the order. This sends off all the datapoints to be verified and starts collecting responses:
 
 ```py
 order = order_builder.create()
 ```
 
-7. Save the order ID for future reference, especially if you need to download results later after restarting the kernel:
-
-```py
-print("order id: ", order.order_id)
-# Optionally save the order ID to a file
-with open("order_ids.txt", "a") as file:
-    file.write(f"{order.order_id}\n")
-```
+7. You can see your orders on the [Rapidata Dashboard](https://app.rapidata.ai/dashboard/orders).
 
 ### Short Form
 
-The [`RapidataOrderBuilder`](reference/rapidata/rapidata_client/order/rapidata_order_builder.md/#rapidata.rapidata_client.order.rapidata_order_builder.RapidataOrderBuilder) supports a fluent interface, allowing method call chaining. This enables a more concise order creation:
+The `RapidataOrderBuilder` supports a fluent interface, allowing method call chaining. This enables a more concise order creation:
 
 ```py
 order = (
-    rapi.new_order(name="Example Classify Order")
+    rapi.new_order(name="Example Custom Order")
     .workflow(
         ClassifyWorkflow(
             question="What is shown in the image?",
@@ -112,35 +98,22 @@ order = (
     .selections([LabelingSelection(amount=1)])
     .create()
 )
-
-print("order id: ", order.order_id)
-# Optionally save the order ID to a file
-with open("order_ids.txt", "a") as file:
-    file.write(f"{order.order_id}\n")
 ```
 
-### Recover Order
+### Retrieve Orders
 
-If you've restarted the kernel, you can retrieve the order using the order ID and the `rapi` client:
-
-```py
-from rapidata import RapidataClient
-
-rapi = RapidataClient(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
-order_id = "your_order_id"  # as a string
-order = rapi.get_order(order_id)
-results = order.get_results()
-```
-
-It is also possible to retrieve your most recent orders. With the find_orders method you can optionally specify a order name and the amount of recent orders you want to retrieve:
+To Retrieve old orders, you can use the `find_orders` method. This method allows you to filder by name and amount of orders to retrieve:
 
 ```py
+example_orders = rapi.find_orders("Example Custom Order")
+
+# if no name is provided it will just return the most recent one
 most_recent_order = rapi.find_orders()[0]
 ```
 
 ### Monitoring Order Progress
 
-You can monitor the progress of the order by checking how many datapoints are already done labeling (keep in mind that this will be an exponential function since the datapoints get picket at random to be labeled):
+You can monitor the progress of the order on the [Rapidata Dashboard](https://app.rapidata.ai/dashboard/orders) or by checking how many datapoints are already done labeling (keep in mind that this will be an exponential function since the datapoints get picket at random to be labeled):
 
 ```py
 order.display_progress_bar()
@@ -148,8 +121,11 @@ order.display_progress_bar()
 
 ### Downloading Results
 
-To download the results after the order is done, you'll need the order object (this will throw an error if the order is not complete yet, or the aggregation hasn't finished):
+To download the results simply call the `get_results` method on the order:
 
 ```py
 results = order.get_results()
 ```
+---
+
+<sup>1</sup> Due to the possibility of multiple people answering at the same time, this number is treated as a minimum. The actual number of responses may be higher. The overshoot per datapoint will be lower the more datapoints are added.

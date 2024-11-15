@@ -5,35 +5,28 @@
 Install Rapidata using pip:
 
 ```
-pip install rapidata
-```
-
-To update an existing installation:
-
-```
-pip install rapidata -U
+pip install -U rapidata
 ```
 
 ## Usage
 
-Orders are managed through the [`RapidataClient`](reference/rapidata/rapidata_client/rapidata_client.md#rapidata.rapidata_client.rapidata_client.RapidataClient).
+Orders are managed through the `RapidataClient`.
 
 Create a client as follows:
 
 ```py
 from rapidata import RapidataClient
 
-rapi = RapidataClient(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
+#first time executing it on a machine will require you to log in
+rapi = RapidataClient()
 ```
-
-Contact a Rapidata representative at [info@rapidata.ai](mailto:info@rapidata.ai) to obtain your `CLIENT_ID` and `CLIENT_SECRET`.
 
 ### Creating an Order
 
 1. Create a new `Compare Order` and specify the name:
 
 ```py
-order_builder = rapi.create_compare_order("Simple Compare")
+order_builder = rapi.create_compare_order("Example Compare Order")
 ```
 
 2. Add the criteria for the comparison.
@@ -45,11 +38,10 @@ order_builder = order_builder.criteria("Which logo looks better?")
 3. Add the paths to the images you want to classify:
 
 ```py
-from rapidata improt MultiAsset, MediaAsset
-order_builder = order_builder.media(MultiAsset([MediaAsset("examples/data/rapidata_logo.png"), MediaAsset("examples/data/rapidata_concept_logo.jpg")]))
+order_builder = order_builder.media([["examples/data/rapidata_logo.png","examples/data/rapidata_concept_logo.jpg"]])
 ```
 
-4. Optionally add additional specifications, here we're adding a specific amount of responses we want per datapoint, there are other functionalities you can explore:
+4. Optionally add additional specifications, here we're adding a specific amount of responses<sup>1</sup> we want per datapoint, there are other functionalities you can explore:
 
 ```py
 order_builder = order_builder.responses(20)
@@ -61,53 +53,34 @@ order_builder = order_builder.responses(20)
 order = order_builder.create()
 ```
 
-6. Save the order ID for future reference, especially if you need to download results later after restarting the kernel:
-
-```py
-print("order id: ", order.order_id)
-# Optionally save the order ID to a file
-with open("order_ids.txt", "a") as file:
-    file.write(f"{order.order_id}\n")
-```
+6. You can see your orders on the [Rapidata Dashboard](https://app.rapidata.ai/dashboard/orders).
 
 ### Short Form
 
 The `RapidataSDK` supports a fluent interface, allowing method call chaining. This enables a more concise order creation:
 
 ```py
-order = (rapi.create_compare_order("Simple Compare")
+order = (rapi.create_compare_order("Example Compare Order")
         .criteria("Which logo looks better?")
-        .media(MultiAsset([MediaAsset("examples/data/rapidata_logo.png"), MediaAsset("examples/data/rapidata_concept_logo.jpg")]))
+        .media([["examples/data/rapidata_logo.png", "examples/data/rapidata_concept_logo.jpg"]])
         .responses(20)
         .create())
-print("order id: ", order.order_id)
-# Optionally save the order ID to a file
-with open("order_ids.txt", "a") as file:
-    file.write(f"{order.order_id}\n")
 ```
 
-### Recover Order
+### Retrieve Orders
 
-If you've restarted the kernel, you can retrieve the order using the order ID and the `rapi` client:
-
-```py
-from rapidata import RapidataClient
-
-rapi = RapidataClient(client_id=CLIENT_ID, client_secret=CLIENT_SECRET)
-order_id = "your_order_id"  # as a string
-order = rapi.get_order(order_id)
-results = order.get_results()
-```
-
-It is also possible to retrieve your most recent orders. With the find_orders method you can optionally specify a order name and the amount of recent orders you want to retrieve:
+To Retrieve old orders, you can use the `find_orders` method. This method allows you to filder by name and amount of orders to retrieve:
 
 ```py
+example_orders = rapi.find_orders("Example Compare Order")
+
+# if no name is provided it will just return the most recent one
 most_recent_order = rapi.find_orders()[0]
 ```
 
 ### Monitoring Order Progress
 
-You can monitor the progress of the order by checking how many datapoints are already done labeling (keep in mind that this will be an exponential function since the datapoints get picket at random to be labeled):
+You can monitor the progress of the order on the [Rapidata Dashboard](https://app.rapidata.ai/dashboard/orders) or by checking how many datapoints are already done labeling (keep in mind that this will be an exponential function since the datapoints get picket at random to be labeled):
 
 ```py
 order.display_progress_bar()
@@ -115,8 +88,12 @@ order.display_progress_bar()
 
 ### Downloading Results
 
-To download the results after the order is done, you'll need the order object (this will throw an error if the order is not complete yet, or the aggregation hasn't finished):
+To download the results simply call the `get_results` method on the order:
 
 ```py
 results = order.get_results()
 ```
+
+---
+
+<sup>1</sup> Due to the possibility of multiple people answering at the same time, this number is treated as a minimum. The actual number of responses may be higher. The overshoot per datapoint will be lower the more datapoints are added.
