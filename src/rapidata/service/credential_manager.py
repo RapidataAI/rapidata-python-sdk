@@ -54,7 +54,7 @@ class CredentialManager:
         self,
         endpoint: str,
         cert_path: str | None = None,
-        poll_timeout: int = 60,
+        poll_timeout: int = 300,
         poll_interval: int = 1,
     ):
         self.endpoint = endpoint
