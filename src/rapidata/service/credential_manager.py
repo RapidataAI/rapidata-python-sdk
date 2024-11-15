@@ -62,7 +62,7 @@ class CredentialManager:
         self.poll_timeout = poll_timeout
         self.poll_interval = poll_interval
 
-        self.config_dir = Path.home() / ".config" / ".rapidata"
+        self.config_dir = Path.home() / ".config" / "rapidata"
         self.config_path = self.config_dir / "credentials.json"
 
         # Ensure config directory exists
