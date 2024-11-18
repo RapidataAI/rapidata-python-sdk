@@ -130,3 +130,9 @@ class RapidataOrder:
             The RapidataDataset instance.
         """
         return self._dataset
+    
+    def __str__(self) -> str:
+        return f"name: '{self.name}' order id: {self.order_id}"
+    
+    def __repr__(self) -> str:
+        return f"name: '{self.name}' order id: {self.order_id}"
