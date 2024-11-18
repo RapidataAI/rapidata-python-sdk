@@ -72,7 +72,7 @@ class CompareMediaBuilder:
         self._openapi_service = openapi_service
         self._name = name
         self._criteria = criteria
-        self._media_assets = None
+        self._media_assets = []
 
     def media(self, media_paths: list[list[str]]) -> CompareOrderBuilder:
         """Set the media assets for the comparison order by providing the local paths to the files."""
@@ -81,11 +81,27 @@ class CompareMediaBuilder:
                 or not all([isinstance(path, str) for matchup_paths in media_paths for path in matchup_paths]):
             raise ValueError("Media paths must be a list of lists. The inner list is a pair of file paths that will be shown together in a matchup.")
         
-        self._media_assets = [MultiAsset([MediaAsset(path=path) for path in paths]) for paths in media_paths]
+        invalid_paths = []
+        for matchup_idx, matchup_paths in enumerate(media_paths):
+            matchup_assets = []
+            for path in matchup_paths:
+                try:
+                    matchup_assets.append(MediaAsset(path=path))
+                except FileNotFoundError:
+                    invalid_paths.append((matchup_idx, path))
+            
+            if not invalid_paths:
+                self._media_assets.append(MultiAsset(matchup_assets))
+                
+        if invalid_paths:
+            error_msg = "Could not find the following files:\n"
+            for matchup_idx, path in invalid_paths:
+                error_msg += f"  Matchup {matchup_idx + 1}: {path}\n"
+            raise FileNotFoundError(error_msg.rstrip())
         return self._build()
     
     def _build(self) -> CompareOrderBuilder:
-        if self._media_assets is None:
+        if not self._media_assets:
             raise ValueError("Media paths are required")
         assert all([len(path) == 2 for path in self._media_assets]), "The media paths must come in pairs for comparison tasks."
         return CompareOrderBuilder(self._name, self._criteria, self._media_assets, self._openapi_service)

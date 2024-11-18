@@ -71,24 +71,30 @@ class ClassificationOrderBuilder:
 
 
 class ClassificationMediaBuilder:
-    "test"
     def __init__(self, name: str, question: str, options: list[str], openapi_service: OpenAPIService):
         self._openapi_service = openapi_service
         self._name = name
         self._question = question
         self._options = options
-        self._media_assets = None
+        self._media_assets = []
 
     def media(self, media_paths: list[str]) -> ClassificationOrderBuilder:
         """Set the media assets for the classification order by providing the local paths to the files."""
         if not isinstance(media_paths, list) or not all(isinstance(path, str) for path in media_paths):
             raise ValueError("Media paths must be a list of strings, the strings being file paths")
         
-        self._media_assets = [MediaAsset(path) for path in media_paths]
+        invalid_paths = []
+        for path in media_paths:
+            try:
+                self._media_assets.append(MediaAsset(path))
+            except FileNotFoundError:
+                invalid_paths.append(path)
+        if invalid_paths:
+            raise FileNotFoundError(f"Could not find the following files: {invalid_paths}")
         return self._build()
 
     def _build(self) -> ClassificationOrderBuilder:
-        if self._media_assets is None:
+        if not self._media_assets:
             raise ValueError("Media paths are required")
         return ClassificationOrderBuilder(self._name, self._question, self._options, self._media_assets, openapi_service=self._openapi_service)
 
