@@ -47,7 +47,15 @@ order_builder = order_builder.criteria("Which logo looks better?")
 3. Add the paths to the images you want to compare. Note that this is a list of lists, where the inner list represents the images that will be compared. The order of those 2 images will be randomized:
 
 ```py
-order_builder = order_builder.media([["examples/data/rapidata_logo.png","examples/data/rapidata_concept_logo.jpg"]])
+# URL
+order_builder = order_builder.media([
+        ["https://assets.rapidata.ai/rapidata_logo.png",
+        "https://assets.rapidata.ai/rapidata_concept_logo.jpg"]])
+```
+```py
+# Local file
+order_builder = order_builder.media([
+        ["examples/data/rapidata_logo.png","examples/data/rapidata_concept_logo.jpg"]])
 ```
 
 4. Optionally add additional specifications. Here we're adding a specific amount of responses<sup>1</sup> we want per datapoint, there are other functionalities you can explore by looking at the order_builder methods:
@@ -71,7 +79,9 @@ The `RapidataSDK` supports a fluent interface, allowing method call chaining. Th
 ```py
 order = (rapi.create_compare_order("Example Compare Order")
         .criteria("Which logo looks better?")
-        .media([["examples/data/rapidata_logo.png", "examples/data/rapidata_concept_logo.jpg"]])
+        .media([
+        ["https://assets.rapidata.ai/rapidata_logo.png",
+        "https://assets.rapidata.ai/rapidata_concept_logo.jpg"]])
         .responses(20)
         .create())
 ```
