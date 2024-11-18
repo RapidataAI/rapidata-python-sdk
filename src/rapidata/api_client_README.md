@@ -75,6 +75,9 @@ Class | Method | HTTP request | Description
 *CampaignApi* | [**campaign_pause_post**](rapidata/api_client/docs/CampaignApi.md#campaign_pause_post) | **POST** /Campaign/Pause | Pauses a campaign.
 *CampaignApi* | [**campaign_query_get**](rapidata/api_client/docs/CampaignApi.md#campaign_query_get) | **GET** /Campaign/Query | Queries orders based on a filter, page, and sort criteria.
 *CampaignApi* | [**campaign_resume_post**](rapidata/api_client/docs/CampaignApi.md#campaign_resume_post) | **POST** /Campaign/Resume | Resumes a campaign.
+*ClientApi* | [**client_client_id_delete**](rapidata/api_client/docs/ClientApi.md#client_client_id_delete) | **DELETE** /Client/{clientId} | Deletes a customers client.
+*ClientApi* | [**client_post**](rapidata/api_client/docs/ClientApi.md#client_post) | **POST** /Client | Creates a new client for the current customer.
+*ClientApi* | [**client_query_get**](rapidata/api_client/docs/ClientApi.md#client_query_get) | **GET** /Client/Query | Gets the clients for the current customer.
 *CocoApi* | [**coco_submit_post**](rapidata/api_client/docs/CocoApi.md#coco_submit_post) | **POST** /Coco/Submit | Creates a new validation set based on a previously uploaded CoCo set.
 *CocoApi* | [**coco_upload_post**](rapidata/api_client/docs/CocoApi.md#coco_upload_post) | **POST** /Coco/Upload | Uploads a CoCo set to the system.
 *CompareWorkflowApi* | [**compare_workflow_get_result_overview_get**](rapidata/api_client/docs/CompareWorkflowApi.md#compare_workflow_get_result_overview_get) | **GET** /CompareWorkflow/GetResultOverview | Get the result overview for a compare workflow.
@@ -89,7 +92,8 @@ Class | Method | HTTP request | Description
 *DatasetApi* | [**dataset_upload_datapoint_post**](rapidata/api_client/docs/DatasetApi.md#dataset_upload_datapoint_post) | **POST** /Dataset/UploadDatapoint | Creates a new multi asset datapoint.
 *DatasetApi* | [**dataset_upload_files_from_s3_post**](rapidata/api_client/docs/DatasetApi.md#dataset_upload_files_from_s3_post) | **POST** /Dataset/UploadFilesFromS3 | Uploads files from an S3 bucket to a dataset.
 *DatasetApi* | [**dataset_upload_images_to_dataset_post**](rapidata/api_client/docs/DatasetApi.md#dataset_upload_images_to_dataset_post) | **POST** /Dataset/UploadImagesToDataset | Uploads images to a dataset.
-*IdentityApi* | [**identity_create_client_post**](rapidata/api_client/docs/IdentityApi.md#identity_create_client_post) | **POST** /Identity/CreateClient | Creates a new client for the current customer.
+*IdentityApi* | [**identity_create_bridge_token_post**](rapidata/api_client/docs/IdentityApi.md#identity_create_bridge_token_post) | **POST** /Identity/CreateBridgeToken | Creates a pair of read and write keys for a client.  The write key is used to store the authentication result.  The read key is used to retrieve the authentication result.
+*IdentityApi* | [**identity_read_bridge_token_get**](rapidata/api_client/docs/IdentityApi.md#identity_read_bridge_token_get) | **GET** /Identity/ReadBridgeToken | Tries to read the bridge token keys for a given read key.  The read key is used to retrieve the authentication result written by the write key.
 *IdentityApi* | [**identity_register_temporary_post**](rapidata/api_client/docs/IdentityApi.md#identity_register_temporary_post) | **POST** /Identity/RegisterTemporary | Registers and logs in a temporary customer.
 *NewsletterApi* | [**newsletter_post**](rapidata/api_client/docs/NewsletterApi.md#newsletter_post) | **POST** /Newsletter | Signs a user up to the newsletter.
 *NewsletterApi* | [**newsletter_unsubscribe_post**](rapidata/api_client/docs/NewsletterApi.md#newsletter_unsubscribe_post) | **POST** /Newsletter/Unsubscribe | Unsubscribes a user from the newsletter.
@@ -171,6 +175,8 @@ Class | Method | HTTP request | Description
  - [ClassificationMetadataFilterConfig](rapidata/api_client/docs/ClassificationMetadataFilterConfig.md)
  - [ClassificationMetadataModel](rapidata/api_client/docs/ClassificationMetadataModel.md)
  - [ClassifyPayload](rapidata/api_client/docs/ClassifyPayload.md)
+ - [ClientsQueryResult](rapidata/api_client/docs/ClientsQueryResult.md)
+ - [ClientsQueryResultPagedResult](rapidata/api_client/docs/ClientsQueryResultPagedResult.md)
  - [CloneDatasetModel](rapidata/api_client/docs/CloneDatasetModel.md)
  - [CloneOrderModel](rapidata/api_client/docs/CloneOrderModel.md)
  - [CloneOrderResult](rapidata/api_client/docs/CloneOrderResult.md)
@@ -192,6 +198,7 @@ Class | Method | HTTP request | Description
  - [CountMetadata](rapidata/api_client/docs/CountMetadata.md)
  - [CountMetadataModel](rapidata/api_client/docs/CountMetadataModel.md)
  - [CountryUserFilterModel](rapidata/api_client/docs/CountryUserFilterModel.md)
+ - [CreateBridgeTokenResult](rapidata/api_client/docs/CreateBridgeTokenResult.md)
  - [CreateClientModel](rapidata/api_client/docs/CreateClientModel.md)
  - [CreateClientResult](rapidata/api_client/docs/CreateClientResult.md)
  - [CreateComplexOrderModel](rapidata/api_client/docs/CreateComplexOrderModel.md)
@@ -316,6 +323,7 @@ Class | Method | HTTP request | Description
  - [PolygonTruth](rapidata/api_client/docs/PolygonTruth.md)
  - [PrivateTextMetadataInput](rapidata/api_client/docs/PrivateTextMetadataInput.md)
  - [ProbabilisticAttachCategoryRefereeConfig](rapidata/api_client/docs/ProbabilisticAttachCategoryRefereeConfig.md)
+ - [ProblemDetails](rapidata/api_client/docs/ProblemDetails.md)
  - [PromptMetadata](rapidata/api_client/docs/PromptMetadata.md)
  - [PromptMetadataInput](rapidata/api_client/docs/PromptMetadataInput.md)
  - [PromptMetadataModel](rapidata/api_client/docs/PromptMetadataModel.md)
@@ -323,7 +331,7 @@ Class | Method | HTTP request | Description
  - [PublicTextMetadataInput](rapidata/api_client/docs/PublicTextMetadataInput.md)
  - [QueryCampaignsModel](rapidata/api_client/docs/QueryCampaignsModel.md)
  - [QueryModel](rapidata/api_client/docs/QueryModel.md)
- - [QueryOrdersModel](rapidata/api_client/docs/QueryOrdersModel.md)
+ - [QueryModel1](rapidata/api_client/docs/QueryModel1.md)
  - [QueryValidationRapidsResult](rapidata/api_client/docs/QueryValidationRapidsResult.md)
  - [QueryValidationRapidsResultAsset](rapidata/api_client/docs/QueryValidationRapidsResultAsset.md)
  - [QueryValidationRapidsResultPagedResult](rapidata/api_client/docs/QueryValidationRapidsResultPagedResult.md)
@@ -335,6 +343,7 @@ Class | Method | HTTP request | Description
  - [RapidResultModel](rapidata/api_client/docs/RapidResultModel.md)
  - [RapidResultModelResult](rapidata/api_client/docs/RapidResultModelResult.md)
  - [RapidSkippedModel](rapidata/api_client/docs/RapidSkippedModel.md)
+ - [ReadBridgeTokenKeysResult](rapidata/api_client/docs/ReadBridgeTokenKeysResult.md)
  - [RegisterTemporaryCustomerModel](rapidata/api_client/docs/RegisterTemporaryCustomerModel.md)
  - [RootFilter](rapidata/api_client/docs/RootFilter.md)
  - [SendCompletionMailStepModel](rapidata/api_client/docs/SendCompletionMailStepModel.md)
