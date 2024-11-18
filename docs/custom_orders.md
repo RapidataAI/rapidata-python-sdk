@@ -132,4 +132,4 @@ results = order.get_results()
 
 <sup>1</sup> Due to the possibility of multiple people answering at the same time, this number is treated as a minimum. The actual number of responses may be higher. The overshoot per datapoint will be lower the more datapoints are added.
 
-<sup>2</sup> The Referee is responsible for deciding when to stop collecting responses. The `NaiveReferee` will stop collecting responses after the specified number of responses is reached. The `EarlyStoppingReferee` will stop collecting responses if either the confidence threshold is reached or the max votes have been collected - This is valuable if there is a clear correct answer but less so if it's an oppionion based question.
+<sup>2</sup> The Referee is responsible for deciding when to stop collecting responses. The `NaiveReferee` will stop collecting responses after the specified number of responses is reached. The `EarlyStoppingReferee` will stop collecting responses if either the confidence threshold is reached or the max votes have been collected - This is valuable if there is a clear correct answer but less so if it's an opinion  based question.

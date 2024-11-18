@@ -50,7 +50,7 @@ order_builder = order_builder.criteria("Which logo looks better?")
 order_builder = order_builder.media([["examples/data/rapidata_logo.png","examples/data/rapidata_concept_logo.jpg"]])
 ```
 
-4. Optionally add additional specifications. here we're adding a specific amount of responses<sup>1</sup> we want per datapoint, there are other functionalities you can explore by looking at the order_builder methods:
+4. Optionally add additional specifications. Here we're adding a specific amount of responses<sup>1</sup> we want per datapoint, there are other functionalities you can explore by looking at the order_builder methods:
 
 ```py
 order_builder = order_builder.responses(20)
