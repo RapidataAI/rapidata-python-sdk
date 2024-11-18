@@ -7,6 +7,7 @@ from rapidata.rapidata_client.selection.validation_selection import ValidationSe
 from rapidata.rapidata_client.selection.labeling_selection import LabelingSelection
 from rapidata.rapidata_client.selection.base_selection import Selection
 from rapidata.rapidata_client.assets import MultiAsset, MediaAsset
+from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 from typing import Sequence
 
 class CompareOrderBuilder:
@@ -40,7 +41,7 @@ class CompareOrderBuilder:
         self._probability_threshold = probability_threshold
         return self
     
-    def create(self, submit: bool = True, max_upload_workers: int = 10):
+    def create(self, submit: bool = True, max_upload_workers: int = 10) -> RapidataOrder:
         if self._probability_threshold and self._responses_required:
             referee = EarlyStoppingReferee(
                 max_vote_count=self._responses_required,
