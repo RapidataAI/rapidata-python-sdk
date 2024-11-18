@@ -59,6 +59,13 @@ order_builder.referee(NaiveReferee(responses=15))
 4. Upload datapoints for which you want this question to be asked. In this example, we upload one image:
 
 ```py
+# URL
+from rapidata import MediaAsset
+order_builder.media([MediaAsset("https://assets.rapidata.ai/wallaby.jpg")])
+```
+
+```py
+# Local file
 from rapidata import MediaAsset
 order_builder.media([MediaAsset("examples/data/wallaby.jpg")])
 ```
@@ -95,7 +102,7 @@ order = (
         )
     )
     .referee(NaiveReferee(responses=15))
-    .media(["examples/data/wallaby.jpg"])
+    .media([MediaAsset("https://assets.rapidata.ai/wallaby.jpg")])
     .selections([LabelingSelection(amount=1)])
     .create()
 )

@@ -54,6 +54,12 @@ order_builder = order_builder.options(["Fish", "Cat", "Wallaby", "Airplane"])
 4. Add the paths to the images you want to classify:
 
 ```py
+# URL
+order_builder = order_builder.media(["https://assets.rapidata.ai/wallaby.jpg"])
+```
+
+```py
+# Local file path
 order_builder = order_builder.media(["examples/data/wallaby.jpg"])
 ```
 
@@ -80,7 +86,7 @@ The `RapidataSDK` supports a fluent interface, allowing method call chaining. Th
 order = (rapi.create_classify_order("Example Classification Order")
          .question("What is shown in the image?")
          .options(["Fish", "Cat", "Wallaby", "Airplane"])
-         .media(["examples/data/wallaby.jpg"])
+         .media(["https://assets.rapidata.ai/wallaby.jpg"])
          .responses(20)
          .create())
 ```

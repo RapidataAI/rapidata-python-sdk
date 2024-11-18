@@ -15,6 +15,8 @@ from rapidata.service.openapi_service import OpenAPIService
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
 
+from typing import cast
+
 
 class RapidataDataset:
 
@@ -86,10 +88,6 @@ class RapidataDataset:
             else:
                 raise ValueError(f"Unsupported asset type: {type(media_asset)}")
 
-            assert all(
-                os.path.exists(media_path) for media_path in paths
-            ), "All media paths must exist on the local filesystem."
-
             meta_model = meta.to_model() if meta else None
             model = DatapointMetadataModel(
                 datasetId=self.dataset_id,
@@ -100,9 +98,16 @@ class RapidataDataset:
                 ),
             )
 
+            files: list[tuple[str, bytes] | str] = []
+            for file_path in paths:
+                if isinstance(file_path, bytes):
+                    files.append(("file.png", file_path))
+                else:
+                    files.append(cast(str, file_path))
+
             self.openapi_service.dataset_api.dataset_create_datapoint_post(
                 model=model,
-                files=paths # type: ignore
+                files=files # type: ignore
             )
 
         total_uploads = len(media_paths)
