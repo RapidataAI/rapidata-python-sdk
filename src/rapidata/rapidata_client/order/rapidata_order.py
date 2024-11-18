@@ -53,16 +53,15 @@ class RapidataOrder:
         Prameter: 
             How often to refresh the progress bar, in seconds.
         """
-        total_rapids = self._get_workflow_progress().total
-        with tqdm(total=total_rapids, desc="Processing order", unit="rapids") as pbar:
-            completed_rapids = 0
+        with tqdm(total=100, desc="Processing order", unit="%", bar_format="{desc}: {percentage:3.0f}%|{bar}| completed [{elapsed}<{remaining}, {rate_fmt}]") as pbar:
+            last_percentage = 0
             while True:
-                current_completed = self._get_workflow_progress().completed
-                if current_completed > completed_rapids:
-                    pbar.update(current_completed - completed_rapids)
-                    completed_rapids = current_completed
+                current_percentage = self._get_workflow_progress().completion_percentage
+                if current_percentage > last_percentage:
+                    pbar.update(current_percentage - last_percentage)
+                    last_percentage = current_percentage
 
-                if completed_rapids >= total_rapids:
+                if current_percentage >= 100:
                     break
 
                 sleep(refresh_rate)
