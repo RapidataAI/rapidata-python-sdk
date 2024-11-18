@@ -45,7 +45,7 @@ order_builder = rapi.create_classify_order("Example Classification Order")
 order_builder = order_builder.question("What is shown in the image?")
 ```
 
-3. add the different answer options (order will be randomized):
+3. add the different answer options (the order of the options will be randomized when displayed to the user):
 
 ```py
 order_builder = order_builder.options(["Fish", "Cat", "Wallaby", "Airplane"])
@@ -57,7 +57,7 @@ order_builder = order_builder.options(["Fish", "Cat", "Wallaby", "Airplane"])
 order_builder = order_builder.media(["examples/data/wallaby.jpg"])
 ```
 
-5. Optionally add additional specifications, here we're adding a specific amount of responses<sup>1</sup> we want per datapoint, there are other functionalities you can explore:
+5. Optionally add additional specifications. here we're adding a specific amount of responses<sup>1</sup> we want per datapoint, there are other functionalities you can explore by looking at the order_builder methods:
 
 ```py
 order_builder = order_builder.responses(20)

@@ -22,7 +22,7 @@ def new_classify_text_asset_order(rapi: RapidataClient):
         .add_classify_rapid(
             asset=TextAsset("What is love?"),
             question="How does this song continue? (val)",
-            categories=["Baby don't hurt me", "No more", "Rock you"],
+            categories=["Baby don't hurt me", "No more", "Illusions", "Submarine", "Rock you"],
             truths=["Baby don't hurt me"],
         )
         .create()

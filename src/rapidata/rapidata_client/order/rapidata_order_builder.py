@@ -117,6 +117,7 @@ class RapidataOrderBuilder:
         Args:
             submit (bool, optional): Whether to submit the order upon creation. Defaults to True.
             max_workers (int, optional): The maximum number of worker threads for processing media paths. Defaults to 10.
+            disable_link (bool, optional): Whether to disable the link to the order. Defaults to False.
 
         Raises:
             ValueError: If both media paths and texts are provided, or if neither is provided.

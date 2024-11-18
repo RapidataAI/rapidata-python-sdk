@@ -9,14 +9,6 @@ They see the following screen:
 
 ![Classify Example](./media/order-types/classify-screen.png){ width="40%" }
 
-## Installation
-
-Install Rapidata using pip:
-
-```
-pip install -U rapidata
-```
-
 ## Usage
 
 Orders are managed through the `RapidataClient`.
@@ -56,7 +48,7 @@ Set the `workflow` on the `order_builder`:
 order_builder.workflow(workflow)
 ```
 
-3. (Optional) Further configure the order by specifying the number of responses<sup>1</sup> desired for each datapoint (default is 10). Choose either a `NaiveReferee` or a `EarlyStoppingReferee`:
+3. (Optional) Further configure the order by specifying the number of responses<sup>1</sup> desired for each datapoint (default is 10). Choose either a `NaiveReferee` or a `EarlyStoppingReferee`<sup>2</sup>:
 
 ```py
 from rapidata import NaiveReferee
@@ -111,7 +103,7 @@ order = (
 
 ### Retrieve Orders
 
-To Retrieve old orders, you can use the `find_orders` method. This method allows you to filder by name and amount of orders to retrieve:
+To Retrieve old orders, you can use the `find_orders` method. This method allows you to filter by name and amount of orders to retrieve:
 
 ```py
 example_orders = rapi.find_orders("Example Custom Order")
@@ -139,3 +131,5 @@ results = order.get_results()
 -------
 
 <sup>1</sup> Due to the possibility of multiple people answering at the same time, this number is treated as a minimum. The actual number of responses may be higher. The overshoot per datapoint will be lower the more datapoints are added.
+
+<sup>2</sup> The Referee is responsible for deciding when to stop collecting responses. The `NaiveReferee` will stop collecting responses after the specified number of responses is reached. The `EarlyStoppingReferee` will stop collecting responses if either the confidence threshold is reached or the max votes have been collected - This is valuable if there is a clear correct answer but less so if it's an oppionion based question.
