@@ -11,11 +11,11 @@ from rapidata.rapidata_client.assets import MediaAsset
 from typing import Sequence
 
 class ClassificationOrderBuilder:
-    def __init__(self, name: str, question: str, options: list[str], media_paths: list[str], openapi_service: OpenAPIService):
+    def __init__(self, name: str, question: str, options: list[str], media_assets: list[MediaAsset], openapi_service: OpenAPIService):
         self._order_builder = RapidataOrderBuilder(name=name, openapi_service=openapi_service)
         self._question = question
         self._options = options
-        self._media_paths = media_paths
+        self._media_assets = media_assets
         self._responses_required = 10
         self._probability_threshold = None
         self._metadata = None
@@ -51,8 +51,6 @@ class ClassificationOrderBuilder:
         else:
             referee = NaiveReferee(responses=self._responses_required)
 
-        assets = [MediaAsset(path=media_path) for media_path in self._media_paths]
-
         selection: list[Selection] = ([ValidationSelection(amount=1, validation_set_id=self._validation_set_id), LabelingSelection(amount=2)] 
                      if self._validation_set_id 
                      else [LabelingSelection(amount=3)])
@@ -65,7 +63,7 @@ class ClassificationOrderBuilder:
                 )
             )
             .referee(referee)
-            .media(assets, metadata=self._metadata) # type: ignore
+            .media(self._media_assets, metadata=self._metadata)
             .selections(selection)
             .create(submit=submit, max_workers=max_upload_workers))
 
@@ -79,17 +77,20 @@ class ClassificationMediaBuilder:
         self._name = name
         self._question = question
         self._options = options
-        self._media_paths = None
+        self._media_assets = None
 
     def media(self, media_paths: list[str]) -> ClassificationOrderBuilder:
         """Set the media assets for the classification order by providing the local paths to the files."""
-        self._media_paths = media_paths
+        if not isinstance(media_paths, list) or not all(isinstance(path, str) for path in media_paths):
+            raise ValueError("Media paths must be a list of strings, the strings being file paths")
+        
+        self._media_assets = [MediaAsset(path) for path in media_paths]
         return self._build()
 
     def _build(self) -> ClassificationOrderBuilder:
-        if self._media_paths is None:
+        if self._media_assets is None:
             raise ValueError("Media paths are required")
-        return ClassificationOrderBuilder(self._name, self._question, self._options, self._media_paths, openapi_service=self._openapi_service)
+        return ClassificationOrderBuilder(self._name, self._question, self._options, self._media_assets, openapi_service=self._openapi_service)
 
 
 class ClassificationOptionsBuilder:

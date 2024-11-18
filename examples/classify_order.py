@@ -2,7 +2,6 @@
 Classify order with a validation set
 '''
 
-from examples.setup_client import setup_client
 from rapidata import (
     RapidataClient,
     ClassifyWorkflow,
@@ -16,13 +15,14 @@ from rapidata import (
 
 def new_classify_order(rapi: RapidataClient):
     # Validation set
+    # This will be shown as defined in the ValidationSelection and will make our annotators understand the task better
     validation_set = (
         rapi.new_validation_set("Example Validation Set")
         .add_classify_rapid(
             asset=MediaAsset(path="examples/data/wallaby.jpg"),
             question="What kind of animal is this?",
             categories=["Fish", "Marsupial", "Bird", "Reptile"],
-            truths=["Marsupial"], # multiple correct answers are supported as well
+            truths=["Marsupial"], # multiple correct answers are supported
             metadata=[PromptMetadata(prompt="Hint: It has a pouch")],
         )
         .create()
@@ -55,5 +55,4 @@ def new_classify_order(rapi: RapidataClient):
 
 
 if __name__ == "__main__":
-    rapi = setup_client()
-    order = new_classify_order(rapi)
+    order = new_classify_order(RapidataClient())

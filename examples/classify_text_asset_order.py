@@ -2,7 +2,6 @@
 Classify order with a validation set
 """
 
-from examples.setup_client import setup_client
 from rapidata import (
     RapidataClient,
     ClassifyWorkflow,
@@ -14,6 +13,8 @@ from rapidata import (
 
 
 def new_classify_text_asset_order(rapi: RapidataClient):
+    # Validation set
+    # This will be shown as defined in the ValidationSelection and will make our annotators understand the task better
     validation_set = (
         rapi.new_validation_set(
             name="Example Validation Set",
@@ -21,7 +22,7 @@ def new_classify_text_asset_order(rapi: RapidataClient):
         .add_classify_rapid(
             asset=TextAsset("What is love?"),
             question="How does this song continue? (val)",
-            categories=["Baby don't hurt me", "No more", "Illusions"],
+            categories=["Baby don't hurt me", "No more", "Illusions", "Submarine", "Rock you"],
             truths=["Baby don't hurt me"],
         )
         .create()
@@ -35,10 +36,10 @@ def new_classify_text_asset_order(rapi: RapidataClient):
         .workflow(
             ClassifyWorkflow(
                 question="How does this song continue?",
-                options=["Baby don't hurt me", "No more", "Illusions", "Submarine"],
+                options=["Baby don't hurt me", "No more", "Illusions", "Submarine", "Rock you"],
             )
         )
-        .media([TextAsset("What is love?"), TextAsset("We all live in a yellow ...")])
+        .media([TextAsset("We will, we will ..."), TextAsset("We all live in a yellow ...")])
         .referee(NaiveReferee(responses=3))
         .selections(
             [
@@ -56,5 +57,4 @@ def new_classify_text_asset_order(rapi: RapidataClient):
 
 
 if __name__ == "__main__":
-    rapi = setup_client()
-    order = new_classify_text_asset_order(rapi)
+    order = new_classify_text_asset_order(RapidataClient())

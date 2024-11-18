@@ -1,13 +1,12 @@
 import unittest
-from examples.setup_client import setup_client
-from rapidata import MediaAsset, PromptMetadata, LabelingSelection
+from rapidata import MediaAsset, PromptMetadata, LabelingSelection, RapidataClient
 from rapidata.rapidata_client.workflow import EvaluationWorkflow
 
 
 class TestExampleOrders(unittest.TestCase):
 
     def setUp(self):
-        self.rapi = setup_client()
+        self.rapi = RapidataClient()
 
     def test_evaluation_order(self):
         # Validation set

@@ -53,7 +53,8 @@ nav:
   - quickstart_classification.md
   - quickstart_compare.md
   - Examples: examples/index.md
-  - custom_orders.md
+  - Customization:
+    - Custom orders: custom_orders.md
   - API Documentation: api.md
 
 theme:

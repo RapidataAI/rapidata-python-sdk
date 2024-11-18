@@ -110,13 +110,14 @@ class RapidataOrderBuilder:
             priority=self._priority,
         )
 
-    def create(self, submit: bool = True, max_workers: int = 10) -> RapidataOrder:
+    def create(self, submit: bool = True, max_workers: int = 10, disable_link=False) -> RapidataOrder:
         """
         Create the Rapidata order by making the necessary API calls based on the builder's configuration.
 
         Args:
             submit (bool, optional): Whether to submit the order upon creation. Defaults to True.
             max_workers (int, optional): The maximum number of worker threads for processing media paths. Defaults to 10.
+            disable_link (bool, optional): Whether to disable the link to the order. Defaults to False.
 
         Raises:
             ValueError: If both media paths and texts are provided, or if neither is provided.
@@ -199,6 +200,9 @@ class RapidataOrderBuilder:
 
         if submit:
             order.submit()
+
+        if not disable_link:
+            print(f"Order '{self._name}' is now viewable under https://app.rapidata.ai/order/detail/{order.order_id}.")
 
         return order
 

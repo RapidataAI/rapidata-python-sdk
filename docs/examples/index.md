@@ -1,19 +1,5 @@
 <div class="grid cards" markdown>
 
--   __Client Setup__
-
-    ---
-
-    The recommended way to set up the Rapidata Client from environment variables
-
-    [:octicons-arrow-right-24: Let's go](./setup_client.md)
-
-</div>
-
-
-
-<div class="grid cards" markdown>
-
 -   __Classify Order__
 
     ---

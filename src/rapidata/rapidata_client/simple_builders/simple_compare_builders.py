@@ -7,14 +7,15 @@ from rapidata.rapidata_client.selection.validation_selection import ValidationSe
 from rapidata.rapidata_client.selection.labeling_selection import LabelingSelection
 from rapidata.rapidata_client.selection.base_selection import Selection
 from rapidata.rapidata_client.assets import MultiAsset, MediaAsset
+from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 from typing import Sequence
 
 class CompareOrderBuilder:
-    def __init__(self, name:str, criteria: str, media_paths: list[list[str]], openapi_service: OpenAPIService):
+    def __init__(self, name:str, criteria: str, media_assets: list[MultiAsset], openapi_service: OpenAPIService):
         self._order_builder = RapidataOrderBuilder(name=name, openapi_service=openapi_service)
         self._name = name
         self._criteria = criteria
-        self._media_paths = media_paths
+        self._media_assets = media_assets
         self._responses_required = 10
         self._metadata = None
         self._validation_set_id = None
@@ -40,7 +41,7 @@ class CompareOrderBuilder:
         self._probability_threshold = probability_threshold
         return self
     
-    def create(self, submit: bool = True, max_upload_workers: int = 10):
+    def create(self, submit: bool = True, max_upload_workers: int = 10) -> RapidataOrder:
         if self._probability_threshold and self._responses_required:
             referee = EarlyStoppingReferee(
                 max_vote_count=self._responses_required,
@@ -53,7 +54,6 @@ class CompareOrderBuilder:
                      if self._validation_set_id 
                      else [LabelingSelection(amount=3)])
         
-        media_paths = [MultiAsset([MediaAsset(path=path) for path in paths]) for paths in self._media_paths]
         order = (self._order_builder
             .workflow(
                 CompareWorkflow(
@@ -61,7 +61,7 @@ class CompareOrderBuilder:
                 )
             )
             .referee(referee)
-            .media(media_paths, metadata=self._metadata) # type: ignore
+            .media(self._media_assets, metadata=self._metadata)
             .selections(selection)
             .create(submit=submit, max_workers=max_upload_workers))
         
@@ -72,18 +72,23 @@ class CompareMediaBuilder:
         self._openapi_service = openapi_service
         self._name = name
         self._criteria = criteria
-        self._media_paths = None
+        self._media_assets = None
 
     def media(self, media_paths: list[list[str]]) -> CompareOrderBuilder:
         """Set the media assets for the comparison order by providing the local paths to the files."""
-        self._media_paths = media_paths
+        if not isinstance(media_paths, list) \
+                or not all([isinstance(matchup_paths, list) for matchup_paths in media_paths]) \
+                or not all([isinstance(path, str) for matchup_paths in media_paths for path in matchup_paths]):
+            raise ValueError("Media paths must be a list of lists. The inner list is a pair of file paths that will be shown together in a matchup.")
+        
+        self._media_assets = [MultiAsset([MediaAsset(path=path) for path in paths]) for paths in media_paths]
         return self._build()
     
     def _build(self) -> CompareOrderBuilder:
-        if self._media_paths is None:
+        if self._media_assets is None:
             raise ValueError("Media paths are required")
-        assert all([len(path) == 2 for path in self._media_paths]), "The media paths must come in pairs for comparison tasks."
-        return CompareOrderBuilder(self._name, self._criteria, self._media_paths, self._openapi_service)
+        assert all([len(path) == 2 for path in self._media_assets]), "The media paths must come in pairs for comparison tasks."
+        return CompareOrderBuilder(self._name, self._criteria, self._media_assets, self._openapi_service)
 
 class CompareCriteriaBuilder:
     def __init__(self, name: str, openapi_service: OpenAPIService):
