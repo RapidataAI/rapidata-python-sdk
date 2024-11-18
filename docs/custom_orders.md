@@ -11,7 +11,7 @@ They see the following screen:
 
 ## Usage
 
-Orders are managed through the `RapidataClient`.
+Orders are managed through the [`RapidataClient`](reference/rapidata/rapidata_client/rapidata_client.md#rapidata.rapidata_client.rapidata_client.RapidataClient).
 
 Create a client as follows:
 
@@ -25,13 +25,13 @@ rapi = RapidataClient()
 
 Each request to humans begins with creating an order. Use the `rapi` client to configure the order according to your needs.
 
-1. Create a new `RapidataOrderBuilder` and specify the name:
+1. Create a new [`RapidataOrderBuilder`](reference/rapidata/rapidata_client/order/rapidata_order_builder.md/#rapidata.rapidata_client.order.rapidata_order_builder.RapidataOrderBuilder) and specify the name:
 
 ```py
 order_builder = rapi.new_order("Example Custom Order")
 ```
 
-2. Configure the order using a workflow, which defines the type of questions asked to people. For example, the `ClassifyWorkflow` asks a question with multiple answer choices:
+2. Configure the order using a workflow, which defines the type of questions asked to people. For example, the [`ClassifyWorkflow`](reference/rapidata/rapidata_client/workflow/classify_workflow.md) asks a question with multiple answer choices:
 
 ```py
 from rapidata import ClassifyWorkflow
@@ -48,7 +48,7 @@ Set the `workflow` on the `order_builder`:
 order_builder.workflow(workflow)
 ```
 
-3. (Optional) Further configure the order by specifying the number of responses<sup>1</sup> desired for each datapoint (default is 10). Choose either a `NaiveReferee` or a `EarlyStoppingReferee`<sup>2</sup>:
+3. (Optional) Further configure the order by specifying the number of responses<sup>1</sup> desired for each datapoint (default is 10). Choose either a [`NaiveReferee`](reference/rapidata/rapidata_client/referee/naive_referee.md/#rapidata.rapidata_client.referee.naive_referee.NaiveReferee) or a [`EarlyStoppingReferee`](reference/rapidata/rapidata_client/referee/early_stopping_referee.md/#rapidata.rapidata_client.referee.early_stopping_referee.ClassifyEarlyStoppingReferee)<sup>2</sup>:
 
 ```py
 from rapidata import NaiveReferee
@@ -83,7 +83,7 @@ order = order_builder.create()
 
 ### Short Form
 
-The `RapidataOrderBuilder` supports a fluent interface, allowing method call chaining. This enables a more concise order creation:
+The [`RapidataOrderBuilder`](reference/rapidata/rapidata_client/order/rapidata_order_builder.md/#rapidata.rapidata_client.order.rapidata_order_builder.RapidataOrderBuilder) supports a fluent interface, allowing method call chaining. This enables a more concise order creation:
 
 ```py
 order = (

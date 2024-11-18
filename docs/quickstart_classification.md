@@ -21,7 +21,7 @@ pip install -U rapidata
 
 ## Usage
 
-Orders are managed through the `RapidataClient`.
+Orders are managed through the [`RapidataClient`](reference/rapidata/rapidata_client/rapidata_client.md#rapidata.rapidata_client.rapidata_client.RapidataClient).
 
 Create a client as follows:
 
