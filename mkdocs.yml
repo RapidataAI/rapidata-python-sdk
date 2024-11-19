@@ -50,9 +50,14 @@ markdown_extensions:
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
 
 nav:
+  - Overview: index.md
   - quickstart_classification.md
   - quickstart_compare.md
-  - Examples: examples/index.md
+  - Examples:
+    - Classification: examples/classify_order.md
+    - Compare: examples/compare_order.md
+    - Free Text: examples/free_text_order.md
+    - Transcription: examples/transcription_order.md
   - Customization:
     - Custom orders: custom_orders.md
   - API Documentation: api.md

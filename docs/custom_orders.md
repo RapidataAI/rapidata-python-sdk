@@ -121,7 +121,7 @@ most_recent_order = rapi.find_orders()[0]
 
 ### Monitoring Order Progress
 
-You can monitor the progress of the order on the [Rapidata Dashboard](https://app.rapidata.ai/dashboard/orders) or by checking how many datapoints are already done labeling (keep in mind that this will be an exponential function since the datapoints get picket at random to be labeled):
+You can monitor the progress of the order on the [Rapidata Dashboard](https://app.rapidata.ai/dashboard/orders) or by checking how many datapoints are already done labeling:
 
 ```py
 order.display_progress_bar()

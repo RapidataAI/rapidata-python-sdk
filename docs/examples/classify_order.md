@@ -1,5 +1,7 @@
 # Example Classify Order
 
+[:octicons-arrow-right-24: Introduction to custom orders](../custom_orders.md)
+
 ```python
 --8<-- "examples/classify_order.py"
 ```
