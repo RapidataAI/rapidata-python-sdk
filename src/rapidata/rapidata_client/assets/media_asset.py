@@ -33,12 +33,31 @@ class MediaAsset(BaseAsset):
         """
         if re.match(r'^https?://', path):
             self.path = MediaAsset.get_image_bytes(path)
+            self.name = path.split('/')[-1]
+            if not self.name.endswith(('.jpg', '.jpeg', '.png', '.gif')):
+                self.name += '.jpg'
             return
         
         if not os.path.exists(path):
             raise FileNotFoundError(f"File not found: {path}, please provide a valid local file path.")
         
         self.path: str | bytes = path
+        self.name = path
+    
+    def set_custom_name(self, name: str) -> 'MediaAsset':
+        """
+        Set a custom name for the media asset, will only work with links.
+
+        Args:
+            name (str): The custom name to be set.
+        """
+        if isinstance(self.path, bytes):
+            if not name.endswith(('.jpg', '.jpeg', '.png', '.gif')):
+                name += '.jpg'
+            self.name = name
+        else:
+            raise ValueError("Custom name can only be set for links.")
+        return self
 
     @staticmethod
     def get_image_bytes(image_url: str) -> bytes:

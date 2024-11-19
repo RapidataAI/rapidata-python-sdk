@@ -82,9 +82,9 @@ class RapidataDataset:
 
         def upload_datapoint(media_asset: MediaAsset | MultiAsset, meta: Metadata | None) -> None:
             if isinstance(media_asset, MediaAsset):
-                paths = [media_asset.path]
+                assets = [media_asset]
             elif isinstance(media_asset, MultiAsset):
-                paths = [asset.path for asset in media_asset.assets if isinstance(asset, MediaAsset)]
+                assets = media_asset.assets
             else:
                 raise ValueError(f"Unsupported asset type: {type(media_asset)}")
 
@@ -99,11 +99,12 @@ class RapidataDataset:
             )
 
             files: list[tuple[str, bytes] | str] = []
-            for file_path in paths:
-                if isinstance(file_path, bytes):
-                    files.append(("file.png", file_path))
-                else:
-                    files.append(cast(str, file_path))
+            for asset in assets:
+                if isinstance(asset, MediaAsset):
+                    if isinstance(asset.path, bytes):
+                        files.append((asset.name, asset.path))
+                    else:
+                        files.append(cast(str, asset.path))
 
             self.openapi_service.dataset_api.dataset_create_datapoint_post(
                 model=model,
