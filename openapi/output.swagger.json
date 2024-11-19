@@ -562,7 +562,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/QueryOrdersModel"
+                  "$ref": "#/components/schemas/QueryModel"
                 }
               }
             }
@@ -1249,43 +1249,54 @@
         }
       }
     },
-    "/Identity/RegisterTemporary": {
-      "post": {
+    "/Client/Query": {
+      "get": {
         "tags": [
-          "Identity"
+          "Client"
         ],
-        "summary": "Registers and logs in a temporary customer.",
-        "requestBody": {
-          "description": "The model to register the temporary customer with.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterTemporaryCustomerModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterTemporaryCustomerModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterTemporaryCustomerModel"
+        "summary": "Gets the clients for the current customer.",
+        "description": "A client allows a customer to authenticate with the APIs without using their own credentials.\r\nThis is useful for creating service accounts or other automated processes,\r\nas when using the Rapidata Python SDK.",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
               }
             }
           }
-        },
+        ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientsQueryResultPagedResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientsQueryResultPagedResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientsQueryResultPagedResult"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/Identity/CreateClient": {
+    "/Client": {
       "post": {
         "tags": [
-          "Identity"
+          "Client"
         ],
         "summary": "Creates a new client for the current customer.",
         "requestBody": {
@@ -1325,6 +1336,166 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CreateClientResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Client/{clientId}": {
+      "delete": {
+        "tags": [
+          "Client"
+        ],
+        "summary": "Deletes a customers client.",
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "path",
+            "description": "The id of the client to delete.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/Identity/RegisterTemporary": {
+      "post": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Registers and logs in a temporary customer.",
+        "requestBody": {
+          "description": "The model to register the temporary customer with.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterTemporaryCustomerModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterTemporaryCustomerModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterTemporaryCustomerModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/Identity/CreateBridgeToken": {
+      "post": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Creates a pair of read and write keys for a client.\r\nThe write key is used to store the authentication result.\r\nThe read key is used to retrieve the authentication result.",
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "query",
+            "description": "The client ID to create the keys for.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBridgeTokenResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBridgeTokenResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBridgeTokenResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Identity/ReadBridgeToken": {
+      "get": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Tries to read the bridge token keys for a given read key.\r\nThe read key is used to retrieve the authentication result written by the write key.",
+        "parameters": [
+          {
+            "name": "readKey",
+            "in": "query",
+            "description": "The read key to read the bridge token keys for.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReadBridgeTokenKeysResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReadBridgeTokenKeysResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReadBridgeTokenKeysResult"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Accepted"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -5611,7 +5782,7 @@
         },
         "additionalProperties": false
       },
-      "QueryOrdersModel": {
+      "QueryModel": {
         "type": "object",
         "properties": {
           "page": {
@@ -5625,13 +5796,11 @@
             "items": {
               "$ref": "#/components/schemas/SortCriterion"
             },
-            "description": "The sorting criteria",
             "default": null,
             "nullable": true
           }
         },
-        "additionalProperties": false,
-        "description": "The model for querying orders."
+        "additionalProperties": false
       },
       "RootFilter": {
         "type": "object",
@@ -6069,6 +6238,81 @@
         "additionalProperties": false,
         "description": "Model for the workflow split step"
       },
+      "ClientsQueryResult": {
+        "required": [
+          "clientId",
+          "createdAt",
+          "displayName"
+        ],
+        "type": "object",
+        "properties": {
+          "clientId": {
+            "type": "string",
+            "nullable": true
+          },
+          "displayName": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClientsQueryResultPagedResult": {
+        "required": [
+          "items",
+          "page",
+          "pageSize",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientsQueryResult"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateBridgeTokenResult": {
+        "required": [
+          "readKey",
+          "writeKey"
+        ],
+        "type": "object",
+        "properties": {
+          "readKey": {
+            "type": "string"
+          },
+          "writeKey": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "CreateClientModel": {
         "type": "object",
         "properties": {
@@ -6080,6 +6324,7 @@
           },
           "customerId": {
             "type": "string",
+            "description": "An optional customer ID to create the client for.",
             "format": "uuid",
             "default": null,
             "nullable": true
@@ -6122,6 +6367,51 @@
         },
         "additionalProperties": false,
         "description": "Model for subscribing and unsubscribing to the newsletter."
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": {}
+      },
+      "ReadBridgeTokenKeysResult": {
+        "required": [
+          "accessToken",
+          "refreshToken"
+        ],
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "nullable": true
+          },
+          "refreshToken": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "RegisterTemporaryCustomerModel": {
         "required": [
@@ -7755,27 +8045,6 @@
           }
         },
         "additionalProperties": false
-      },
-      "QueryModel": {
-        "type": "object",
-        "properties": {
-          "pageInfo": {
-            "$ref": "#/components/schemas/PageInfo"
-          },
-          "filter": {
-            "$ref": "#/components/schemas/RootFilter"
-          },
-          "sortCriteria": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SortCriterion"
-            },
-            "description": "The sort criteria to apply to the query.",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false,
-        "description": "The model for a query."
       },
       "QueryValidationRapidsResult": {
         "required": [
@@ -10083,7 +10352,7 @@
       },
       "oauth2": {
         "type": "openIdConnect",
-        "openIdConnectUrl": "https://api.app.rabbitdata.ch/.well-known/openid-configuration"
+        "openIdConnectUrl": "https://auth.rabbitdata.ch/.well-known/openid-configuration"
       }
     }
   }
