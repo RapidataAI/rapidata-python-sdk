@@ -46,3 +46,6 @@ jobs:
             openapi/output.swagger.json
             src/rapidata/api_client/
             src/rapidata/api_client_README.md
+          reviewers: |
+            kannwism
+            LinoGiger
