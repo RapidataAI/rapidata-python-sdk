@@ -2,7 +2,14 @@
 Free Text Order
 '''
 
-from rapidata import RapidataClient, FreeTextWorkflow, Settings, CountryCodes, LabelingSelection, MediaAsset
+from rapidata import (
+    RapidataClient, 
+    FreeTextWorkflow, 
+    Settings, 
+    CountryCodes, 
+    LabelingSelection, 
+    MediaAsset
+)
 
 
 def new_free_text_order(rapi: RapidataClient):

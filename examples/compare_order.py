@@ -1,6 +1,7 @@
 '''
 Compare order with a validation set
 '''
+
 from rapidata import (
     Settings,
     NaiveReferee,

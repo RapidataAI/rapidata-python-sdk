@@ -1,5 +1,7 @@
 # Example Transcription Order
 
+[:octicons-arrow-right-24: Introduction to custom orders](../custom_orders.md)
+
 ```python
 --8<-- "examples/transcription_order.py"
 ```

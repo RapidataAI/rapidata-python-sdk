@@ -1,5 +1,7 @@
 # Example Free Text Order
 
+[:octicons-arrow-right-24: Introduction to custom orders](../custom_orders.md)
+
 ```python
 --8<-- "examples/free_text_order.py"
 ```
