@@ -44,6 +44,8 @@ from rapidata.api_client.models.classification_metadata import ClassificationMet
 from rapidata.api_client.models.classification_metadata_filter_config import ClassificationMetadataFilterConfig
 from rapidata.api_client.models.classification_metadata_model import ClassificationMetadataModel
 from rapidata.api_client.models.classify_payload import ClassifyPayload
+from rapidata.api_client.models.clients_query_result import ClientsQueryResult
+from rapidata.api_client.models.clients_query_result_paged_result import ClientsQueryResultPagedResult
 from rapidata.api_client.models.clone_dataset_model import CloneDatasetModel
 from rapidata.api_client.models.clone_order_model import CloneOrderModel
 from rapidata.api_client.models.clone_order_result import CloneOrderResult
@@ -65,6 +67,7 @@ from rapidata.api_client.models.count_classification_metadata_filter_config impo
 from rapidata.api_client.models.count_metadata import CountMetadata
 from rapidata.api_client.models.count_metadata_model import CountMetadataModel
 from rapidata.api_client.models.country_user_filter_model import CountryUserFilterModel
+from rapidata.api_client.models.create_bridge_token_result import CreateBridgeTokenResult
 from rapidata.api_client.models.create_client_model import CreateClientModel
 from rapidata.api_client.models.create_client_result import CreateClientResult
 from rapidata.api_client.models.create_complex_order_model import CreateComplexOrderModel
@@ -189,6 +192,7 @@ from rapidata.api_client.models.polygon_result import PolygonResult
 from rapidata.api_client.models.polygon_truth import PolygonTruth
 from rapidata.api_client.models.private_text_metadata_input import PrivateTextMetadataInput
 from rapidata.api_client.models.probabilistic_attach_category_referee_config import ProbabilisticAttachCategoryRefereeConfig
+from rapidata.api_client.models.problem_details import ProblemDetails
 from rapidata.api_client.models.prompt_metadata import PromptMetadata
 from rapidata.api_client.models.prompt_metadata_input import PromptMetadataInput
 from rapidata.api_client.models.prompt_metadata_model import PromptMetadataModel
@@ -196,7 +200,6 @@ from rapidata.api_client.models.public_order_model import PublicOrderModel
 from rapidata.api_client.models.public_text_metadata_input import PublicTextMetadataInput
 from rapidata.api_client.models.query_campaigns_model import QueryCampaignsModel
 from rapidata.api_client.models.query_model import QueryModel
-from rapidata.api_client.models.query_orders_model import QueryOrdersModel
 from rapidata.api_client.models.query_validation_rapids_result import QueryValidationRapidsResult
 from rapidata.api_client.models.query_validation_rapids_result_asset import QueryValidationRapidsResultAsset
 from rapidata.api_client.models.query_validation_rapids_result_paged_result import QueryValidationRapidsResultPagedResult
@@ -208,6 +211,7 @@ from rapidata.api_client.models.rapid_answer_result import RapidAnswerResult
 from rapidata.api_client.models.rapid_result_model import RapidResultModel
 from rapidata.api_client.models.rapid_result_model_result import RapidResultModelResult
 from rapidata.api_client.models.rapid_skipped_model import RapidSkippedModel
+from rapidata.api_client.models.read_bridge_token_keys_result import ReadBridgeTokenKeysResult
 from rapidata.api_client.models.register_temporary_customer_model import RegisterTemporaryCustomerModel
 from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.send_completion_mail_step_model import SendCompletionMailStepModel
