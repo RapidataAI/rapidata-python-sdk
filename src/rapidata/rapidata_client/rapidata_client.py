@@ -9,6 +9,8 @@ from rapidata.rapidata_client.dataset.rapidata_dataset import RapidataDataset
 
 from rapidata.rapidata_client.simple_builders.simple_classification_builders import ClassificationQuestionBuilder
 from rapidata.rapidata_client.simple_builders.simple_compare_builders import CompareCriteriaBuilder
+from rapidata.rapidata_client.simple_builders.simple_free_text_builders import FreeTextQuestionBuilder
+from rapidata.rapidata_client.simple_builders.simple_transcription_builder import TranscriptionInstructionBuilder
 
 from rapidata.api_client.exceptions import BadRequestException
 from urllib3._collections import HTTPHeaderDict
@@ -177,3 +179,26 @@ class RapidataClient:
             CompareQuestionBuilder: A CompareQuestionBuilder instance.
         """
         return CompareCriteriaBuilder(name=name, openapi_service=self.openapi_service)
+    
+    def create_free_text_order(self, name: str) -> FreeTextQuestionBuilder:
+        """Create a new free text order where people are asked to provide a free text answer.
+
+        Args:
+            name (str): The name of the order.
+
+        Returns:
+            FreeTextQuestionBuilder: A FreeTextQuestionBuilder instance.
+        """
+        return FreeTextQuestionBuilder(name=name, openapi_service=self.openapi_service)
+    
+    def create_transcription_order(self, name: str) -> TranscriptionInstructionBuilder:
+        """Create a new transcription order where people are asked to transcribe an audio file.
+
+        Args:
+            name (str): The name of the order.
+
+        Returns:
+            TranscriptionInstructionBuilder: A TranscriptionInstructionBuilder instance.
+        """
+        return TranscriptionInstructionBuilder(name=name, openapi_service=self.openapi_service)
+

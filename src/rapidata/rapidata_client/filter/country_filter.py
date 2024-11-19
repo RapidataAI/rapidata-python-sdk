@@ -7,6 +7,9 @@ class CountryFilter(Filter):
 
     def __init__(self, country_codes: list[str]):
         # check that all characters in the country codes are uppercase
+        if not isinstance(country_codes, list):
+            raise ValueError("Country codes must be a list")
+        
         if not all([code.isupper() for code in country_codes]):
             raise ValueError("Country codes must be uppercase")
 
