@@ -27,7 +27,7 @@ class CreateClientModel(BaseModel):
     The model for creating a new client.
     """ # noqa: E501
     display_name: Optional[StrictStr] = Field(default=None, description="An optional display name for the client.", alias="displayName")
-    customer_id: Optional[StrictStr] = Field(default=None, alias="customerId")
+    customer_id: Optional[StrictStr] = Field(default=None, description="An optional customer ID to create the client for.", alias="customerId")
     __properties: ClassVar[List[str]] = ["displayName", "customerId"]
 
     model_config = ConfigDict(
