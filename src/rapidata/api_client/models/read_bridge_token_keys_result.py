@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
@@ -27,8 +27,12 @@ class ReadBridgeTokenKeysResult(BaseModel):
     ReadBridgeTokenKeysResult
     """ # noqa: E501
     access_token: Optional[StrictStr] = Field(alias="accessToken")
+    expires_in: Optional[StrictInt] = Field(alias="expiresIn")
     refresh_token: Optional[StrictStr] = Field(alias="refreshToken")
-    __properties: ClassVar[List[str]] = ["accessToken", "refreshToken"]
+    id_token: Optional[StrictStr] = Field(alias="idToken")
+    token_type: Optional[StrictStr] = Field(alias="tokenType")
+    scope: Optional[StrictStr]
+    __properties: ClassVar[List[str]] = ["accessToken", "expiresIn", "refreshToken", "idToken", "tokenType", "scope"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -74,10 +78,30 @@ class ReadBridgeTokenKeysResult(BaseModel):
         if self.access_token is None and "access_token" in self.model_fields_set:
             _dict['accessToken'] = None
 
+        # set to None if expires_in (nullable) is None
+        # and model_fields_set contains the field
+        if self.expires_in is None and "expires_in" in self.model_fields_set:
+            _dict['expiresIn'] = None
+
         # set to None if refresh_token (nullable) is None
         # and model_fields_set contains the field
         if self.refresh_token is None and "refresh_token" in self.model_fields_set:
             _dict['refreshToken'] = None
+
+        # set to None if id_token (nullable) is None
+        # and model_fields_set contains the field
+        if self.id_token is None and "id_token" in self.model_fields_set:
+            _dict['idToken'] = None
+
+        # set to None if token_type (nullable) is None
+        # and model_fields_set contains the field
+        if self.token_type is None and "token_type" in self.model_fields_set:
+            _dict['tokenType'] = None
+
+        # set to None if scope (nullable) is None
+        # and model_fields_set contains the field
+        if self.scope is None and "scope" in self.model_fields_set:
+            _dict['scope'] = None
 
         return _dict
 
@@ -92,7 +116,11 @@ class ReadBridgeTokenKeysResult(BaseModel):
 
         _obj = cls.model_validate({
             "accessToken": obj.get("accessToken"),
-            "refreshToken": obj.get("refreshToken")
+            "expiresIn": obj.get("expiresIn"),
+            "refreshToken": obj.get("refreshToken"),
+            "idToken": obj.get("idToken"),
+            "tokenType": obj.get("tokenType"),
+            "scope": obj.get("scope")
         })
         return _obj
 

@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
@@ -28,7 +28,8 @@ class EvaluationWorkflowModel(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for EvaluationWorkflow", alias="_t")
     validation_set_id: StrictStr = Field(description="The Validation Set Id is used to as a source for the tasks that will be sent to the user.", alias="validationSetId")
-    __properties: ClassVar[List[str]] = ["_t", "validationSetId"]
+    should_accept_incorrect: StrictBool = Field(description="Indicates if the user should get feedback on their answers if they answer wrong. If set to true the user will not  notice that he was tested.", alias="shouldAcceptIncorrect")
+    __properties: ClassVar[List[str]] = ["_t", "validationSetId", "shouldAcceptIncorrect"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -89,7 +90,8 @@ class EvaluationWorkflowModel(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'EvaluationWorkflow',
-            "validationSetId": obj.get("validationSetId")
+            "validationSetId": obj.get("validationSetId"),
+            "shouldAcceptIncorrect": obj.get("shouldAcceptIncorrect")
         })
         return _obj
 

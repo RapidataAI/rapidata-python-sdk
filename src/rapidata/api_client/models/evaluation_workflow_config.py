@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.compare_workflow_model1_referee import CompareWorkflowModel1Referee
 from typing import Optional, Set
@@ -30,7 +30,8 @@ class EvaluationWorkflowConfig(BaseModel):
     t: StrictStr = Field(description="Discriminator value for EvaluationWorkflowConfig", alias="_t")
     validation_set_id: StrictStr = Field(alias="validationSetId")
     referee: CompareWorkflowModel1Referee
-    __properties: ClassVar[List[str]] = ["_t", "validationSetId", "referee"]
+    should_accept_incorrect: StrictBool = Field(alias="shouldAcceptIncorrect")
+    __properties: ClassVar[List[str]] = ["_t", "validationSetId", "referee", "shouldAcceptIncorrect"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -95,7 +96,8 @@ class EvaluationWorkflowConfig(BaseModel):
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'EvaluationWorkflowConfig',
             "validationSetId": obj.get("validationSetId"),
-            "referee": CompareWorkflowModel1Referee.from_dict(obj["referee"]) if obj.get("referee") is not None else None
+            "referee": CompareWorkflowModel1Referee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
+            "shouldAcceptIncorrect": obj.get("shouldAcceptIncorrect")
         })
         return _obj
 
