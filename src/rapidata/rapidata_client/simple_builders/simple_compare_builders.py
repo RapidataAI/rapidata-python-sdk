@@ -73,13 +73,13 @@ class CompareOrderBuilder:
         self._filters.append(LanguageFilter(language_codes))
         return self
     
-    def create(self, submit: bool = True, max_upload_workers: int = 10) -> RapidataOrder:
-        """Create the compare order.
+    def run(self, submit: bool = True, disalbe_link: bool = False) -> RapidataOrder:
+        """Run the compare order.
         
         Args:
             submit (bool): Whether to submit the order. Defaults to True. \
                 Set this to False if you first want to see the order on your dashboard before running it.
-            max_upload_workers (int): The maximum number of workers for uploading. Defaults to 10.
+            disalbe_link (bool): Whether to disable the printing of the link to the order. Defaults to False.
             
         Returns:
             RapidataOrder: The created compare order."""
@@ -113,7 +113,7 @@ class CompareOrderBuilder:
             .media(self._media_assets, metadata=self._metadata)
             .selections(selection)
             .filters(self._filters)
-            .create(submit=submit, max_workers=max_upload_workers))
+            .create(submit=submit, disable_link=disalbe_link))
         
         return order
 

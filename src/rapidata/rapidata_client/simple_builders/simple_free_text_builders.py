@@ -45,13 +45,13 @@ class FreeTextOrderBuilder:
         self._filters.append(LanguageFilter(language_codes))
         return self
 
-    def create(self, submit: bool = True, max_upload_workers: int = 10) -> 'RapidataOrder':
-        """Create the free text order.
+    def run(self, submit: bool = True, disable_link: bool = False) -> 'RapidataOrder':
+        """Run the free text order.
         
         Args:
             submit (bool): Whether to submit the order. Defaults to True. \
                 Set this to False if you first want to see the order on your dashboard before running it.
-            max_upload_workers (int): The maximum number of workers for uploading. Defaults to 10.
+            disable_link (bool): Whether to disable the printing of the link to the order. Defaults to False.
             
         Returns:
             RapidataOrder: The created free text order."""
@@ -73,7 +73,7 @@ class FreeTextOrderBuilder:
             .selections(selection)
             .settings(self._settings)
             .filters(self._filters)
-            .create(submit=submit, max_workers=max_upload_workers))
+            .create(submit=submit, disable_link=disable_link))
 
         return order 
 
