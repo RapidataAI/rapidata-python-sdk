@@ -5204,6 +5204,7 @@
         "title": "EvaluationWorkflow",
         "required": [
           "_t",
+          "shouldAcceptIncorrect",
           "validationSetId"
         ],
         "type": "object",
@@ -5220,6 +5221,10 @@
           "validationSetId": {
             "type": "string",
             "description": "The Validation Set Id is used to as a source for the tasks that will be sent to the user."
+          },
+          "shouldAcceptIncorrect": {
+            "type": "boolean",
+            "description": "Indicates if the user should get feedback on their answers if they answer wrong. If set to true the user will not\r\nnotice that he was tested."
           }
         },
         "additionalProperties": false,
@@ -6398,7 +6403,11 @@
       "ReadBridgeTokenKeysResult": {
         "required": [
           "accessToken",
-          "refreshToken"
+          "expiresIn",
+          "idToken",
+          "refreshToken",
+          "scope",
+          "tokenType"
         ],
         "type": "object",
         "properties": {
@@ -6406,7 +6415,24 @@
             "type": "string",
             "nullable": true
           },
+          "expiresIn": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
           "refreshToken": {
+            "type": "string",
+            "nullable": true
+          },
+          "idToken": {
+            "type": "string",
+            "nullable": true
+          },
+          "tokenType": {
+            "type": "string",
+            "nullable": true
+          },
+          "scope": {
             "type": "string",
             "nullable": true
           }
@@ -9830,6 +9856,7 @@
         "required": [
           "_t",
           "referee",
+          "shouldAcceptIncorrect",
           "validationSetId"
         ],
         "type": "object",
@@ -9861,6 +9888,9 @@
             "discriminator": {
               "propertyName": "_t"
             }
+          },
+          "shouldAcceptIncorrect": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
