@@ -1,6 +1,4 @@
-from rapidata.rapidata_client.dataset.rapidata_validation_set import (
-    RapidataValidationSet,
-)
+from rapidata.rapidata_client.dataset.rapidata_validation_set import RapidataValidationSet
 from rapidata.rapidata_client.dataset.validation_set_builder import ValidationSetBuilder
 from rapidata.rapidata_client.order.rapidata_order_builder import RapidataOrderBuilder
 from rapidata.service.openapi_service import OpenAPIService
@@ -11,6 +9,8 @@ from rapidata.rapidata_client.simple_builders.simple_classification_builders imp
 from rapidata.rapidata_client.simple_builders.simple_compare_builders import CompareCriteriaBuilder
 from rapidata.rapidata_client.simple_builders.simple_free_text_builders import FreeTextQuestionBuilder
 from rapidata.rapidata_client.simple_builders.simple_transcription_builder import TranscriptionInstructionBuilder
+
+from rapidata.rapidata_client.dataset.rapid_builders import BaseRapidBuilder
 
 from rapidata.api_client.exceptions import BadRequestException
 from urllib3._collections import HTTPHeaderDict
@@ -23,10 +23,14 @@ from rapidata.api_client.models.sort_criterion import SortCriterion
 
 from rapidata.api_client.models.query_validation_set_model import QueryValidationSetModel
 
+from deprecated import deprecated
+
 
 class RapidataClient:
     """The Rapidata client is the main entry point for interacting with the Rapidata API. It allows you to create orders and validation sets. For creating a new order, check out `new_order()`. For creating a new validation set, check out `new_validation_set()`."""
 
+    rapid_builder = BaseRapidBuilder()
+    
     def __init__(
         self,
         client_id: str | None = None,
@@ -51,7 +55,7 @@ class RapidataClient:
             oauth_scope=oauth_scope,
             cert_path=cert_path
         )
-
+    
     def new_order(self, name: str) -> RapidataOrderBuilder:
         """Create a new order using a RapidataOrderBuilder instance.
 

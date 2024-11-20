@@ -16,6 +16,14 @@ from rapidata.rapidata_client.dataset.validation_rapid_parts import ValidatioRap
 from rapidata.rapidata_client.metadata.base_metadata import Metadata
 from rapidata.service.openapi_service import OpenAPIService
 
+from rapidata.rapidata_client.dataset.rapid_builders.rapids import (
+    Rapid, 
+    ClassificationRapid,
+    CompareRapid,
+    TranscriptionRapid
+)
+from deprecated import deprecated
+
 
 class ValidationSetBuilder:
     """The ValidationSetBuilder is used to build a validation set.
@@ -71,8 +79,55 @@ class ValidationSetBuilder:
             )
 
         return validation_set
+    
+    def add_rapid(self, rapid: Rapid):
+        """Add a rapid to the validation set.
+        To create the Rapid, use the RapidataClient.rapid_builder instance.
 
+        Args:
+            rapid (Rapid): The rapid to add to the validation set.
+        """
+        if not isinstance(rapid, Rapid):
+            raise ValueError("This method only accepts Rapid instances")
+        
+        if isinstance(rapid, ClassificationRapid):
+            self._add_classify_rapid(rapid.asset, rapid.question, rapid.options, rapid.truths, rapid.metadata)
+
+        if isinstance(rapid, CompareRapid):
+            self._add_compare_rapid(rapid.asset, rapid.criteria, rapid.truth, rapid.metadata)
+
+        if isinstance(rapid, TranscriptionRapid):
+            self._add_transcription_rapid(rapid.asset, rapid.instruction, rapid.transcription, rapid.truths, rapid.strict_grading)
+
+    @deprecated("Use add_rapid instead")
     def add_classify_rapid(
+        self,
+        asset: MediaAsset | TextAsset,
+        question: str,
+        categories: list[str],
+        truths: list[str],
+        metadata: list[Metadata] = [],
+    ):
+        """Add a classify rapid to the validation set.
+
+        Args:
+            asset (MediaAsset | TextAsset): The asset for the rapid.
+            question (str): The question for the rapid.
+            categories (list[str]): The list of categories for the rapid.
+            truths (list[str]): The list of truths for the rapid.
+            metadata (list[Metadata], optional): The metadata for the rapid. Defaults to an empty list.
+
+        Returns:
+            ValidationSetBuilder: The ValidationSetBuilder instance.
+
+        Raises:
+            ValueError: If the lengths of categories and truths are inconsistent.
+        """
+        self._add_classify_rapid(asset, question, categories, truths, metadata)
+
+        return self
+    
+    def _add_classify_rapid(
         self,
         asset: MediaAsset | TextAsset,
         question: str,
@@ -113,8 +168,7 @@ class ValidationSetBuilder:
             )
         )
 
-        return self
-
+    @deprecated("Use add_rapid instead")
     def add_compare_rapid(
         self,
         asset: MultiAsset,
@@ -136,7 +190,32 @@ class ValidationSetBuilder:
         Raises:
             ValueError: If the number of assets is not exactly two.
         """
-        payload = ComparePayload(_t="ComparePayload", criteria=question)
+        self._add_compare_rapid(asset, question, truth, metadata)
+
+        return self
+    
+    def _add_compare_rapid(
+        self,
+        asset: MultiAsset,
+        criteria: str,
+        truth: str,
+        metadata: list[Metadata] = [],
+    ):
+        """Add a compare rapid to the validation set.
+
+        Args:
+            asset (MultiAsset): The assets for the rapid.
+            criteria (str): The criteria for the comparison.
+            truth (str): The truth identifier for the rapid.
+            metadata (list[Metadata], optional): The metadata for the rapid. Defaults to an empty list.
+
+        Returns:
+            ValidationSetBuilder: The ValidationSetBuilder instance.
+
+        Raises:
+            ValueError: If the number of assets is not exactly two.
+        """
+        payload = ComparePayload(_t="ComparePayload", criteria=criteria)
         # take only last part of truth path
         truth = os.path.basename(truth)
         model_truth = CompareTruth(_t="CompareTruth", winnerId=truth)
@@ -146,7 +225,7 @@ class ValidationSetBuilder:
 
         self._rapid_parts.append(
             ValidatioRapidParts(
-                question=question,
+                question=criteria,
                 payload=payload,
                 truths=model_truth,
                 metadata=metadata,
@@ -155,9 +234,37 @@ class ValidationSetBuilder:
             )
         )
 
-        return self
-
+    @deprecated("Use add_rapid instead")
     def add_transcription_rapid(
+        self,
+        asset: MediaAsset | TextAsset,
+        question: str,
+        transcription: str,
+        truths: list[int],
+        strict_grading: bool | None = None,
+        metadata: list[Metadata] = [],
+    ):
+        """Add a transcription rapid to the validation set.
+
+        Args:
+            asset (MediaAsset | TextAsset): The asset for the rapid.
+            question (str): The question for the rapid.
+            transcription (list[str]): The transcription for the rapid.
+            truths (list[int]): The list of indices of the true word selections.
+            strict_grading (bool | None, optional): The strict grading for the rapid. Defaults to None.
+            metadata (list[Metadata], optional): The metadata for the rapid.
+
+        Returns:
+            ValidationSetBuilder: The ValidationSetBuilder instance.
+
+        Raises:
+            ValueError: If a correct word is not found in the transcription.
+        """
+        self._add_transcription_rapid(asset, question, transcription, truths, strict_grading, metadata)
+
+        return self
+    
+    def _add_transcription_rapid(
         self,
         asset: MediaAsset | TextAsset,
         question: str,
@@ -213,5 +320,3 @@ class ValidationSetBuilder:
                 randomCorrectProbability = 1 / len(transcription_words),
             )
         )
-
-        return self
