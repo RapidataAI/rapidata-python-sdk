@@ -1,2 +1,2 @@
 from .feature_flags import FeatureFlags
-from .settings import Settings
+from .settings import Settings, TranslationBehaviour

@@ -9,7 +9,7 @@ from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.assets import MediaAsset, TextAsset, BaseAsset
 from rapidata.rapidata_client.filter import Filter, CountryFilter, LanguageFilter
 from rapidata.rapidata_client.metadata import TranscriptionMetadata
-from rapidata.rapidata_client.settings import Settings
+from rapidata.rapidata_client.settings import Settings, TranslationBehaviour
 
 class TranscriptionOrderBuilder:
     def __init__(self, 
@@ -53,6 +53,33 @@ class TranscriptionOrderBuilder:
         """Allows labeler to only answer once the video has finished playing.
         The offset gets added on top. Can be negative to allow answers before the video ends."""
         self._settings.play_video_until_the_end(offset)
+        return self
+    
+    def translation(self, disable: bool = False, show_both: bool = False) -> 'TranscriptionOrderBuilder':
+        """Disable the translation of the order.
+        Only the instruction will be translated.
+        
+        Args:
+            disable (bool): Whether to disable the translation. Defaults to False.
+            show_both (bool): Whether to show the original text alongside the translation. Defaults to False.
+                ATTENTION: this can lead to cluttering of the UI if the texts are long, leading to bad results."""
+
+        if not isinstance(disable, bool) or not isinstance(show_both, bool):
+            raise ValueError("disable and show_both must be booleans.")
+        
+        if disable and show_both:
+            raise ValueError("You can't disable the translation and show both at the same time.")
+        
+        if show_both:
+            self._settings.translation_behaviour(TranslationBehaviour.BOTH)
+            return self
+        
+        if disable:
+            self._settings.translation_behaviour(TranslationBehaviour.ONLY_ORIGINAL)
+
+        else:
+            self._settings.translation_behaviour(TranslationBehaviour.ONLY_TRANSLATED)
+
         return self
 
     def run(self, submit: bool = True, disable_link: bool = False) -> 'RapidataOrder':

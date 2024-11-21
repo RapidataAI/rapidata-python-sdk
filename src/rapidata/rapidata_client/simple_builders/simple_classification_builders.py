@@ -10,6 +10,7 @@ from rapidata.rapidata_client.selection.labeling_selection import LabelingSelect
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.assets import MediaAsset, TextAsset, BaseAsset
 from rapidata.rapidata_client.filter import Filter, CountryFilter, LanguageFilter
+from rapidata.rapidata_client.settings import Settings, TranslationBehaviour
 from deprecated import deprecated
 from typing import Sequence
 
@@ -30,6 +31,7 @@ class ClassificationOrderBuilder:
         self._metadata = None
         self._validation_set_id = None
         self._filters: list[Filter] = []
+        self._settings = Settings()
         self._time_effort = time_effort
 
     def prompts(self, prompts: list[str]) -> 'ClassificationOrderBuilder':
@@ -72,6 +74,33 @@ class ClassificationOrderBuilder:
     def languages(self, language_codes: list[str]) -> 'ClassificationOrderBuilder':
         """Set the languages where order will be shown as language codes."""
         self._filters.append(LanguageFilter(language_codes))
+        return self
+    
+    def translation(self, disable: bool = False, show_both: bool = False) -> 'ClassificationOrderBuilder':
+        """Disable the translation of the order.
+        Only the question and the options will be translated.
+        
+        Args:
+            disable (bool): Whether to disable the translation. Defaults to False.
+            show_both (bool): Whether to show the original text alongside the translation. Defaults to False.
+                ATTENTION: this can lead to cluttering of the UI if the texts are long, leading to bad results."""
+
+        if not isinstance(disable, bool) or not isinstance(show_both, bool):
+            raise ValueError("disable and show_both must be booleans.")
+        
+        if disable and show_both:
+            raise ValueError("You can't disable the translation and show both at the same time.")
+        
+        if show_both:
+            self._settings.translation_behaviour(TranslationBehaviour.BOTH)
+            return self
+        
+        if disable:
+            self._settings.translation_behaviour(TranslationBehaviour.ONLY_ORIGINAL)
+
+        else:
+            self._settings.translation_behaviour(TranslationBehaviour.ONLY_TRANSLATED)
+
         return self
 
     @deprecated("Use .run instead.")
