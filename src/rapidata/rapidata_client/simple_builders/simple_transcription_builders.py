@@ -1,3 +1,4 @@
+from constants import MAX_TIME_IN_SECONDS_FOR_ONE_SESSION
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 from rapidata.rapidata_client.order.rapidata_order_builder import RapidataOrderBuilder
 from rapidata.rapidata_client.referee.naive_referee import NaiveReferee
@@ -6,7 +7,7 @@ from rapidata.rapidata_client.workflow import TranscriptionWorkflow
 from rapidata.rapidata_client.selection.validation_selection import ValidationSelection
 from rapidata.rapidata_client.selection.labeling_selection import LabelingSelection
 from rapidata.service.openapi_service import OpenAPIService
-from rapidata.rapidata_client.assets import MediaAsset, TextAsset, BaseAsset
+from rapidata.rapidata_client.assets import MediaAsset, BaseAsset
 from rapidata.rapidata_client.filter import Filter, CountryFilter, LanguageFilter
 from rapidata.rapidata_client.metadata import TranscriptionMetadata
 from rapidata.rapidata_client.settings import Settings, TranslationBehaviour
@@ -93,15 +94,15 @@ class TranscriptionOrderBuilder:
         Returns:
             RapidataOrder: The created transcription order."""
         
-        if (self._validation_set_id and 25//self._time_effort - 1 < 1) or (25//self._time_effort < 1):
-            raise ValueError(f"The Labelers only have 25 seconds to do the task. \
+        if (self._validation_set_id and MAX_TIME_IN_SECONDS_FOR_ONE_SESSION//self._time_effort - 1 < 1) or (MAX_TIME_IN_SECONDS_FOR_ONE_SESSION//self._time_effort < 1):
+            raise ValueError(f"The Labelers only have {MAX_TIME_IN_SECONDS_FOR_ONE_SESSION} seconds to do the task. \
                              Your taks is too complex. Try to break it down into simpler tasks.\
                              {'Alternatively remove the validation task' if self._validation_set_id else ''}")
 
         selection: list[Selection] = ([ValidationSelection(amount=1, validation_set_id=self._validation_set_id), 
-                                       LabelingSelection(amount=25//self._time_effort - 1)] 
+                                       LabelingSelection(amount=MAX_TIME_IN_SECONDS_FOR_ONE_SESSION//self._time_effort - 1)] 
                      if self._validation_set_id 
-                     else [LabelingSelection(amount=25//self._time_effort)])
+                     else [LabelingSelection(amount=MAX_TIME_IN_SECONDS_FOR_ONE_SESSION//self._time_effort)])
 
         order = (self._order_builder
             .workflow(

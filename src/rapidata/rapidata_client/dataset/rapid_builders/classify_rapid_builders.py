@@ -1,7 +1,5 @@
-from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.assets import MediaAsset, TextAsset
 from rapidata.rapidata_client.metadata import PromptMetadata
-from rapidata.rapidata_client.dataset.rapidata_validation_set import RapidataValidationSet
 from rapidata.rapidata_client.dataset.rapid_builders.rapids import ClassificationRapid
 
 class ClassifyRapidBuilder:
@@ -83,7 +81,7 @@ class ClassifyRapidMediaBuilder:
 
     This class adds the media asset to the classification rapid.
     """
-    def __init__(self, question: str, options: list[str], ):
+    def __init__(self, question: str, options: list[str]):
         self._question = question
         self._options = options
         self._asset: MediaAsset | TextAsset | None = None

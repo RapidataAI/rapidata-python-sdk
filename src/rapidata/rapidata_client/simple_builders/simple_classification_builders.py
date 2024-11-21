@@ -1,3 +1,4 @@
+from constants import MAX_TIME_IN_SECONDS_FOR_ONE_SESSION
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 from rapidata.rapidata_client.order.rapidata_order_builder import RapidataOrderBuilder
 from rapidata.rapidata_client.metadata import Metadata, PromptMetadata
@@ -128,15 +129,15 @@ class ClassificationOrderBuilder:
         else:
             referee = NaiveReferee(responses=self._responses_required)
         
-        if (self._validation_set_id and 25//self._time_effort - 1 < 1) or (25//self._time_effort < 1):
-            raise ValueError(f"The Labelers only have 25 seconds to do the task. \
+        if (self._validation_set_id and MAX_TIME_IN_SECONDS_FOR_ONE_SESSION//self._time_effort - 1 < 1) or (MAX_TIME_IN_SECONDS_FOR_ONE_SESSION//self._time_effort < 1):
+            raise ValueError(f"The Labelers only have {MAX_TIME_IN_SECONDS_FOR_ONE_SESSION} seconds to do the task. \
                              Your taks is too complex. Try to break it down into simpler tasks.\
                              {'Alternatively remove the validation task' if self._validation_set_id else ''}")
 
         selection: list[Selection] = ([ValidationSelection(amount=1, validation_set_id=self._validation_set_id), 
-                                       LabelingSelection(amount=25//self._time_effort - 1)] 
+                                       LabelingSelection(amount=MAX_TIME_IN_SECONDS_FOR_ONE_SESSION//self._time_effort - 1)] 
                      if self._validation_set_id 
-                     else [LabelingSelection(amount=25//self._time_effort)])
+                     else [LabelingSelection(amount=MAX_TIME_IN_SECONDS_FOR_ONE_SESSION//self._time_effort)])
 
         order = (self._order_builder
             .workflow(

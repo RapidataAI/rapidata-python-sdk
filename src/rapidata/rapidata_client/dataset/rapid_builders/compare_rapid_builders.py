@@ -65,14 +65,8 @@ class CompareRapidTruthBuilder:
         if not isinstance(truth, str):
             raise ValueError("Truth must be a string.")
         
-        if re.match(r'^https?://', truth):
-            self._truth = truth.split('/')[-1]
-            if not self._truth.endswith(('.jpg', '.jpeg', '.png', '.gif')):
-                self._truth += '.jpg'
-
-            return self._build()
-
-        self._truth = truth
+        self._truth = MediaAsset(truth).name
+        
         return self._build()
     
     def _build(self):

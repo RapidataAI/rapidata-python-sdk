@@ -1,3 +1,4 @@
+from constants import MAX_TIME_IN_SECONDS_FOR_ONE_SESSION
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 from rapidata.rapidata_client.order.rapidata_order_builder import RapidataOrderBuilder
 from rapidata.rapidata_client.referee.naive_referee import NaiveReferee
@@ -83,11 +84,11 @@ class FreeTextOrderBuilder:
         Returns:
             RapidataOrder: The created free text order."""
         
-        if 25//self._time_effort < 1:
-            raise ValueError("The Labelers only have 25 seconds to do the task. \
+        if MAX_TIME_IN_SECONDS_FOR_ONE_SESSION//self._time_effort < 1:
+            raise ValueError(f"The Labelers only have {MAX_TIME_IN_SECONDS_FOR_ONE_SESSION} seconds to do the task. \
                              Your taks is too complex. Try to break it down into simpler tasks.")
 
-        selection: list[Selection] = [LabelingSelection(amount=25//self._time_effort)]
+        selection: list[Selection] = [LabelingSelection(amount=MAX_TIME_IN_SECONDS_FOR_ONE_SESSION//self._time_effort)]
 
         order = (self._order_builder
             .workflow(
