@@ -1,6 +1,7 @@
 from rapidata.rapidata_client.assets import MultiAsset, TextAsset, MediaAsset
 from rapidata.rapidata_client.metadata import PromptMetadata
 from rapidata.rapidata_client.dataset.rapid_builders.rapids import CompareRapid
+import re
 
 class CompareRapidBuilder:
     """Final builder class for comparison rapid.
@@ -62,8 +63,15 @@ class CompareRapidTruthBuilder:
             truth (str): The correct answer for the comparison task. Is the string of the correct media/text asset"""
         
         if not isinstance(truth, str):
-            raise ValueError("Truth must be a string")
+            raise ValueError("Truth must be a string.")
         
+        if re.match(r'^https?://', truth):
+            self._truth = truth.split('/')[-1]
+            if not self._truth.endswith(('.jpg', '.jpeg', '.png', '.gif')):
+                self._truth += '.jpg'
+
+            return self._build()
+
         self._truth = truth
         return self._build()
     
