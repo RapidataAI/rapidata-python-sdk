@@ -6,6 +6,10 @@ class PromptMetadata(Metadata):
 
     def __init__(self, prompt: str, identifier: str = "prompt"):
         super().__init__(identifier=identifier)
+
+        if not isinstance(prompt, str):
+            raise ValueError("Prompt must be a string")
+        
         self._prompt = prompt
     
 

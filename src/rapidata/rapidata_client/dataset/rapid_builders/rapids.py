@@ -10,7 +10,6 @@ class ClassificationRapid(Rapid):
         self.options = options
         self.truths = truths
         self.asset = asset
-
         self.metadata = metadata
 
 class CompareRapid(Rapid):

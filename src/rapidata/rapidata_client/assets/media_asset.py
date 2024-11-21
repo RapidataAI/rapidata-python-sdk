@@ -31,6 +31,9 @@ class MediaAsset(BaseAsset):
         Raises:
             FileNotFoundError: If the provided file path does not exist.
         """
+        if not isinstance(path, str):
+            raise ValueError("Media must be a string, either a local file path or an image URL")
+
         if re.match(r'^https?://', path):
             self.path = MediaAsset.get_image_bytes(path)
             self.name = path.split('/')[-1]
