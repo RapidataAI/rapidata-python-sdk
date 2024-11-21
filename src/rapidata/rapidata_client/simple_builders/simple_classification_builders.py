@@ -74,6 +74,11 @@ class ClassificationOrderBuilder:
         self._filters.append(LanguageFilter(language_codes))
         return self
 
+    @deprecated("Use .run instead.")
+    def create(self, submit: bool = True, max_upload_workers: int = 10) -> 'RapidataOrder':
+        """Create the classification order."""
+        return self.run(submit=submit, disable_link=False)
+
     def run(self, submit: bool = True, disable_link: bool = False) -> 'RapidataOrder':
         """Run the classification order.
         

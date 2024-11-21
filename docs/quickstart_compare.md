@@ -64,10 +64,10 @@ order_builder = order_builder.media([
 order_builder = order_builder.responses(20)
 ```
 
-5. Finally create the order. This sends the order off for verification and will start collecting responses.
+5. Finally we want to run the order. This sends the order off for verification and will start collecting responses.
 
 ```py
-order = order_builder.create()
+order = order_builder.run()
 ```
 
 6. You can see your orders on the [Rapidata Dashboard](https://app.rapidata.ai/dashboard/orders).
@@ -83,7 +83,7 @@ order = (rapi.create_compare_order("Example Compare Order")
         ["https://assets.rapidata.ai/rapidata_logo.png",
         "https://assets.rapidata.ai/rapidata_concept_logo.jpg"]])
         .responses(20)
-        .create())
+        .run())
 ```
 
 ### Retrieve Orders
