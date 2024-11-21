@@ -27,7 +27,7 @@ from rapidata.service.openapi_service import OpenAPIService
 
 from rapidata.rapidata_client.workflow.compare_workflow import CompareWorkflow
 
-from rapidata.rapidata_client.assets import MediaAsset, TextAsset, MultiAsset
+from rapidata.rapidata_client.assets import MediaAsset, TextAsset, MultiAsset, BaseAsset
 
 from typing import Optional, cast, Sequence
 
@@ -69,7 +69,7 @@ class RapidataOrderBuilder:
         self._selections: list[Selection] = []
         self._rapids_per_bag: int = 2
         self._priority: int = 50
-        self._assets: list[MediaAsset] | list[TextAsset] | list[MultiAsset] = []
+        self._assets: Sequence[BaseAsset] = []
 
     def _to_model(self) -> CreateOrderModel:
         """
@@ -202,7 +202,7 @@ class RapidataOrderBuilder:
             order.submit()
 
         if not disable_link:
-            print(f"Order '{self._name}' is now viewable under https://app.rapidata.ai/order/detail/{order.order_id}.")
+            print(f"Order '{self._name}' is now viewable under: https://app.{self._openapi_service.enviroment}/order/detail/{order.order_id}")
 
         return order
 
@@ -240,8 +240,8 @@ class RapidataOrderBuilder:
 
     def media(
         self,
-        asset: list[MediaAsset] | list[TextAsset] | list[MultiAsset],
-        metadata: Sequence[Metadata] | None = None,
+        asset: Sequence[BaseAsset],
+        metadata: Sequence[Metadata] | None = None, # make this a list of metadata on next major release
     ) -> "RapidataOrderBuilder":
         """
         Set the media assets for the order.

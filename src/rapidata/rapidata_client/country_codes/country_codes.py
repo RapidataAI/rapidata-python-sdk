@@ -16,4 +16,4 @@ class CountryCodes:
         "GB",
         "US",
     ]
-    GERMAN_SPEAKING = (["AT", "DE"],)
+    GERMAN_SPEAKING = ["AT", "DE"]

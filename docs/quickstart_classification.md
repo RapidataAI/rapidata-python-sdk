@@ -69,10 +69,10 @@ order_builder = order_builder.media(["examples/data/wallaby.jpg"])
 order_builder = order_builder.responses(20)
 ```
 
-6. Finally create the order. This sends the order off for verification and will start collecting responses.
+6. Finally we want to run the order. This sends the order off for verification and will start collecting responses.
 
 ```py
-order = order_builder.create()
+order = order_builder.run()
 ```
 
 7. You can see your orders on the [Rapidata Dashboard](https://app.rapidata.ai/dashboard/orders).
@@ -88,7 +88,7 @@ order = (rapi.create_classify_order("Example Classification Order")
          .options(["Fish", "Cat", "Wallaby", "Airplane"])
          .media(["https://assets.rapidata.ai/wallaby.jpg"])
          .responses(20)
-         .create())
+         .run())
 ```
 
 ### Retrieve Orders

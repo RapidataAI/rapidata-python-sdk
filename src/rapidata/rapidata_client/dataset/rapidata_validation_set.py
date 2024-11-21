@@ -52,6 +52,27 @@ class RapidataValidationSet:
         self.openapi_service = openapi_service
         self.name = name
 
+    def upload_files(self, model: AddValidationRapidModel, assets: list[MediaAsset]):
+        """Upload a file to the validation set.
+
+        Args:
+            asset list[(MediaAsset)]: The asset to upload.
+
+        Returns:
+            str: The path to the uploaded file.
+        """
+        files = []
+        for asset in assets:
+            if isinstance(asset.path, str):
+                files.append(asset.path)
+            elif isinstance(asset.path, bytes):
+                files.append((asset.name, asset.path))
+            else:
+                raise ValueError("upload file failed")
+        self.openapi_service.validation_api.validation_add_validation_rapid_post(
+            model=model, files=files
+        )        
+
     def add_general_validation_rapid(
         self,
         payload: (
@@ -107,9 +128,7 @@ class RapidataValidationSet:
             randomCorrectProbability=randomCorrectProbability,
         )
         if isinstance(asset, MediaAsset):
-            self.openapi_service.validation_api.validation_add_validation_rapid_post(
-                model=model, files=[asset.path]
-            )
+            self.upload_files(model=model, assets=[asset])
 
         elif isinstance(asset, TextAsset):
             model = AddValidationTextRapidModel(
@@ -128,12 +147,10 @@ class RapidataValidationSet:
             )
 
         elif isinstance(asset, MultiAsset):
-            files = [a.path for a in asset if isinstance(a, MediaAsset)]
+            files = [a for a in asset if isinstance(a, MediaAsset)]
             texts = [a.text for a in asset if isinstance(a, TextAsset)]
             if files:
-                self.openapi_service.validation_api.validation_add_validation_rapid_post(
-                    model=model, files=files # type: ignore
-                )
+                self.upload_files(model=model, assets=files)
             if texts:
                 model = AddValidationTextRapidModel(
                     validationSetId=self.id,

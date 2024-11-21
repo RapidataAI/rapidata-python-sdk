@@ -96,17 +96,18 @@ class Settings:
         """
         self._settings["no_shuffle"] = str(value)
         return self
-
-    def compare_with_prompt_design(self, value: bool = True):
-        """A special design to compare two texts/images based on a criteria and a given prompt.
-
+    
+    def play_video_until_the_end(self, additional_time=0):
+        """Allows users to only answer once the video has finished playing.
+        The additional time gets added on top. Can be negative to allow answers before the video ends.
+        
         Args:
-            value (bool, optional): Whether to enable compare with prompt design. Defaults to True.
-
+            additional_time (int, optional): Additional time in milliseconds. Defaults to 0.
+            
         Returns:
-            Settings: The current Settings instance for method chaining.
-        """
-        self._settings["claire"] = str(value)
+            Settings: The current Settings instance for method chaining."""
+            
+        self._settings["alert_on_fast_response_add_media_duration"] = str(additional_time)
         return self
 
     def key_value(self, key: str, value: str):

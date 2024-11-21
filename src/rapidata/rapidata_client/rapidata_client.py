@@ -1,6 +1,4 @@
-from rapidata.rapidata_client.dataset.rapidata_validation_set import (
-    RapidataValidationSet,
-)
+from rapidata.rapidata_client.dataset.rapidata_validation_set import RapidataValidationSet
 from rapidata.rapidata_client.dataset.validation_set_builder import ValidationSetBuilder
 from rapidata.rapidata_client.order.rapidata_order_builder import RapidataOrderBuilder
 from rapidata.service.openapi_service import OpenAPIService
@@ -9,6 +7,10 @@ from rapidata.rapidata_client.dataset.rapidata_dataset import RapidataDataset
 
 from rapidata.rapidata_client.simple_builders.simple_classification_builders import ClassificationQuestionBuilder
 from rapidata.rapidata_client.simple_builders.simple_compare_builders import CompareCriteriaBuilder
+from rapidata.rapidata_client.simple_builders.simple_free_text_builders import FreeTextQuestionBuilder
+from rapidata.rapidata_client.simple_builders.simple_transcription_builders import TranscriptionInstructionBuilder
+
+from rapidata.rapidata_client.dataset.rapid_builders import BaseRapidBuilder
 
 from rapidata.api_client.exceptions import BadRequestException
 from urllib3._collections import HTTPHeaderDict
@@ -21,16 +23,19 @@ from rapidata.api_client.models.sort_criterion import SortCriterion
 
 from rapidata.api_client.models.query_validation_set_model import QueryValidationSetModel
 
+from deprecated import deprecated
+
 
 class RapidataClient:
-    """The Rapidata client is the main entry point for interacting with the Rapidata API. It allows you to create orders and validation sets. For creating a new order, check out `new_order()`. For creating a new validation set, check out `new_validation_set()`."""
+    """The Rapidata client is the main entry point for interacting with the Rapidata API. It allows you to create orders and validation sets."""
 
+    rapid_builder = BaseRapidBuilder()
+    
     def __init__(
         self,
         client_id: str | None = None,
         client_secret: str | None = None,
-        endpoint: str = "https://api.rapidata.ai",
-        token_url: str = "https://auth.rapidata.ai",
+        enviroment: str = "rapidata.ai",
         oauth_scope: str = "openid",
         cert_path: str | None = None,
     ):
@@ -44,12 +49,12 @@ class RapidataClient:
         self.openapi_service = OpenAPIService(
             client_id=client_id,
             client_secret=client_secret,
-            endpoint=endpoint,
-            token_url=token_url,
+            enviroment=enviroment,
             oauth_scope=oauth_scope,
             cert_path=cert_path
         )
-
+    
+    @deprecated("Use the specific builder methods instead.")
     def new_order(self, name: str) -> RapidataOrderBuilder:
         """Create a new order using a RapidataOrderBuilder instance.
 
@@ -177,3 +182,26 @@ class RapidataClient:
             CompareQuestionBuilder: A CompareQuestionBuilder instance.
         """
         return CompareCriteriaBuilder(name=name, openapi_service=self.openapi_service)
+    
+    def create_free_text_order(self, name: str) -> FreeTextQuestionBuilder:
+        """Create a new free text order where people are asked to provide a free text answer.
+
+        Args:
+            name (str): The name of the order.
+
+        Returns:
+            FreeTextQuestionBuilder: A FreeTextQuestionBuilder instance.
+        """
+        return FreeTextQuestionBuilder(name=name, openapi_service=self.openapi_service)
+    
+    def create_transcription_order(self, name: str) -> TranscriptionInstructionBuilder:
+        """Create a new transcription order where people are asked to transcribe an audio file.
+
+        Args:
+            name (str): The name of the order.
+
+        Returns:
+            TranscriptionInstructionBuilder: A TranscriptionInstructionBuilder instance.
+        """
+        return TranscriptionInstructionBuilder(name=name, openapi_service=self.openapi_service)
+

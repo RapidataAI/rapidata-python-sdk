@@ -106,10 +106,12 @@ class RapidataDataset:
                     else:
                         files.append(cast(str, asset.path))
 
-            self.openapi_service.dataset_api.dataset_create_datapoint_post(
+            upload_response = self.openapi_service.dataset_api.dataset_create_datapoint_post(
                 model=model,
                 files=files # type: ignore
             )
+            if upload_response.errors:
+                raise ValueError(f"Error uploading datapoint: {upload_response.errors}")
 
         total_uploads = len(media_paths)
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
