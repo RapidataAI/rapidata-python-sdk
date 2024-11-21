@@ -202,7 +202,7 @@ class RapidataOrderBuilder:
             order.submit()
 
         if not disable_link:
-            print(f"Order '{self._name}' is now viewable under: https://app.rapidata.ai/order/detail/{order.order_id}")
+            print(f"Order '{self._name}' is now viewable under: https://app.{self._openapi_service.enviroment}/order/detail/{order.order_id}")
 
         return order
 

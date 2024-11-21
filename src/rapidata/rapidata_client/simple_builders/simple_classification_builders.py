@@ -59,8 +59,8 @@ class ClassificationOrderBuilder:
         self._probability_threshold = probability_threshold
         return self
 
-    def validation_set_id(self, validation_set_id: str) -> 'ClassificationOrderBuilder':
-        """Set the validation set ID for the classification order."""
+    def validation_set(self, validation_set_id: str) -> 'ClassificationOrderBuilder':
+        """Set the validation set for the classification order."""
         self._validation_set_id = validation_set_id
         return self
     

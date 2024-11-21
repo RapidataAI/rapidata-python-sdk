@@ -34,8 +34,8 @@ class TranscriptionOrderBuilder:
         self._referee = NaiveReferee(responses=responses_required)
         return self
 
-    def validation_set_id(self, validation_set_id: str) -> 'TranscriptionOrderBuilder':
-        """Set the validation set ID for the transcription order."""
+    def validation_set(self, validation_set_id: str) -> 'TranscriptionOrderBuilder':
+        """Set the validation set for the transcription order."""
         self._validation_set_id = validation_set_id
         return self
     

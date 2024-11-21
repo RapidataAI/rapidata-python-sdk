@@ -27,7 +27,7 @@ from deprecated import deprecated
 
 
 class RapidataClient:
-    """The Rapidata client is the main entry point for interacting with the Rapidata API. It allows you to create orders and validation sets. For creating a new order, check out `new_order()`. For creating a new validation set, check out `new_validation_set()`."""
+    """The Rapidata client is the main entry point for interacting with the Rapidata API. It allows you to create orders and validation sets."""
 
     rapid_builder = BaseRapidBuilder()
     
@@ -35,8 +35,7 @@ class RapidataClient:
         self,
         client_id: str | None = None,
         client_secret: str | None = None,
-        endpoint: str = "https://api.rapidata.ai",
-        token_url: str = "https://auth.rapidata.ai",
+        enviroment: str = "rapidata.ai",
         oauth_scope: str = "openid",
         cert_path: str | None = None,
     ):
@@ -50,12 +49,12 @@ class RapidataClient:
         self.openapi_service = OpenAPIService(
             client_id=client_id,
             client_secret=client_secret,
-            endpoint=endpoint,
-            token_url=token_url,
+            enviroment=enviroment,
             oauth_scope=oauth_scope,
             cert_path=cert_path
         )
     
+    @deprecated("Use the specific builder methods instead.")
     def new_order(self, name: str) -> RapidataOrderBuilder:
         """Create a new order using a RapidataOrderBuilder instance.
 

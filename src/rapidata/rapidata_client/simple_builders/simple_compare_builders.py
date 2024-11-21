@@ -53,8 +53,8 @@ class CompareOrderBuilder:
         self._metadata = metadata
         return self
     
-    def validation_set_id(self, validation_set_id: str) -> 'CompareOrderBuilder':
-        """Set the validation set ID for the comparison order."""
+    def validation_set(self, validation_set_id: str) -> 'CompareOrderBuilder':
+        """Set the validation set for the comparison order."""
         self._validation_set_id = validation_set_id
         return self
     

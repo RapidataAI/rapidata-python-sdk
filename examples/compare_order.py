@@ -2,62 +2,40 @@
 Compare order with a validation set
 '''
 
-from rapidata import (
-    Settings,
-    NaiveReferee,
-    CompareWorkflow,
-    RapidataClient,
-    LabelingSelection,
-    ValidationSelection,
-    MultiAsset,
-    MediaAsset,
-)
+from rapidata import RapidataClient
 
 
 def new_compare_order(rapi: RapidataClient):
-    logo_path = "examples/data/rapidata_logo.png"
-    concept_path = "examples/data/rapidata_concept_logo.jpg"
+    logo_path = "https://assets.rapidata.ai/rapidata_logo.png"
+    concept_path = "https://assets.rapidata.ai/rapidata_concept_logo.jpg"
     # Validation set
     # This will be shown as defined in the ValidationSelection and will make our annotators understand the task better
-    validation_set = (
-        rapi.new_validation_set(name="Example SimpleMatchup Validation Set")
-        .add_compare_rapid(
-            asset=MultiAsset([MediaAsset(logo_path), MediaAsset(concept_path)]),
-            question="Which logo is the actual Rapidata logo?",
-            truth=logo_path,
-        )
-        .create()
-    )
+    validation_set_builder = rapi.new_validation_set(name="Example Compare Validation Set")
+
+    validation_set = validation_set_builder.add_rapid(
+        rapi.rapid_builder
+        .compare_rapid()
+        .criteria("Which logo is the actual Rapidata logo?")
+        .media([logo_path, concept_path])
+        .truth(logo_path)
+        .build()
+    ).create()
 
     # configure order
     order = (
-        rapi.new_order(
-            name="Example SimpleMatchup Order",
-        )
-        .workflow(
-            CompareWorkflow(
-                criteria="Which logo is better?",
-            )
-        )
-        .referee(NaiveReferee(responses=1))
-        .media([
-            MultiAsset([
-                MediaAsset(path="examples/data/rapidata_concept_logo.jpg"), 
-                MediaAsset(path="examples/data/rapidata_logo.png")
-                ])]
-        )
-        .selections([
-            ValidationSelection(amount=1, validation_set_id=validation_set.id),
-            LabelingSelection(amount=1)
-            ])
-        .settings( # This means that if someone tries to answer before 2 seconds, they will be warned. use with caution. should be the bare minimum.
-            Settings().alert_on_fast_response(2000) 
-        )
-        .create()
+        rapi.create_compare_order(name="Example Compare Order")
+        .criteria("Which logo is better?")
+        .media([[concept_path, logo_path]])
+        .responses(10)
+        .validation_set(validation_set.id)
+        .run()
     )
 
     return order
 
 
 if __name__ == "__main__":
-    new_compare_order(RapidataClient())
+    order = new_compare_order(RapidataClient())
+    order.display_progress_bar()
+    results = order.get_results()
+    print(results)

@@ -15,11 +15,13 @@ class OpenAPIService:
         self,
         client_id: str | None,
         client_secret: str | None,
-        endpoint: str,
-        token_url: str,
+        enviroment: str,
         oauth_scope: str,
         cert_path: str | None = None,
     ):
+        self.enviroment = enviroment  
+        endpoint=f"https://api.{enviroment}"
+        token_url=f"https://auth.{enviroment}"
         token_manager = TokenManager(
             client_id=client_id,
             client_secret=client_secret,

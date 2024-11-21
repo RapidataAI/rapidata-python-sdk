@@ -99,6 +99,8 @@ class ValidationSetBuilder:
         if isinstance(rapid, TranscriptionRapid):
             self._add_transcription_rapid(rapid.asset, rapid.instruction, rapid.transcription, rapid.truths, rapid.strict_grading)
 
+        return self
+
     @deprecated("Use add_rapid instead")
     def add_classify_rapid(
         self,
