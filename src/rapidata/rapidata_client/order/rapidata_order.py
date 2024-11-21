@@ -106,7 +106,7 @@ class RapidataOrder:
         Returns: 
             The results of the order.
         """
-        while self.get_status() not in ["Completed", "Paused"]:
+        while self.get_status() not in ["Completed", "Paused", "ManuelReview"]:
             sleep(5)
 
         try:
