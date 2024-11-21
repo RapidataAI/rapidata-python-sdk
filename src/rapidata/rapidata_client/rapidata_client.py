@@ -15,7 +15,7 @@ from rapidata.rapidata_client.dataset.rapid_builders import BaseRapidBuilder
 from rapidata.api_client.exceptions import BadRequestException
 from urllib3._collections import HTTPHeaderDict
 
-from rapidata.api_client.models.query_orders_model import QueryOrdersModel
+from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.page_info import PageInfo
 from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.filter import Filter
@@ -113,7 +113,7 @@ class RapidataClient:
             list[RapidataOrder]: A list of RapidataOrder instances.
         """
         try:
-            order_page_result = self.openapi_service.order_api.order_query_get(QueryOrdersModel(
+            order_page_result = self.openapi_service.order_api.order_query_get(QueryModel(
                 page=PageInfo(index=1, size=amount),
                 filter=RootFilter(filters=[Filter(field="OrderName", operator="Contains", value=name)]),
                 sortCriteria=[SortCriterion(direction="Desc", propertyName="OrderDate")]
