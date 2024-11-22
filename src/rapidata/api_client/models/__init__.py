@@ -213,6 +213,7 @@ from rapidata.api_client.models.rapid_result_model_result import RapidResultMode
 from rapidata.api_client.models.rapid_skipped_model import RapidSkippedModel
 from rapidata.api_client.models.read_bridge_token_keys_result import ReadBridgeTokenKeysResult
 from rapidata.api_client.models.register_temporary_customer_model import RegisterTemporaryCustomerModel
+from rapidata.api_client.models.register_temporary_customer_result import RegisterTemporaryCustomerResult
 from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.send_completion_mail_step_model import SendCompletionMailStepModel
 from rapidata.api_client.models.shape import Shape
