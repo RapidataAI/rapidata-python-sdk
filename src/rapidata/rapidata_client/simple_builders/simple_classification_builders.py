@@ -219,6 +219,15 @@ class ClassificationOptionsBuilder:
 
     def options(self, options: list[str]) -> ClassificationMediaBuilder:
         """Set the answer options for the classification order."""
+        if not isinstance(options, list) or not all(isinstance(option, str) for option in options):
+            raise ValueError("Options must be a list of strings")
+        
+        if len(options) < 2:
+            raise ValueError("At least two options are required")
+        
+        if len(options) > 8:
+            raise ValueError("Maximum of 8 options allowed")
+
         self._options = options
         return self._build()
 
