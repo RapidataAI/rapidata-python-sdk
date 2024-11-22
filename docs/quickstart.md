@@ -1,6 +1,8 @@
-# Quickstart Classification Guide
+# Quickstart Guide
 
 Directly ask real humans to classify your data. This guide will show you how to create a classification order using the Rapidata API.
+
+There are many other types of orders you can create which you can find in the examples.
 
 We will create an order, specify what question and answer options we want to have, as well as upload the data we want to classify.
 

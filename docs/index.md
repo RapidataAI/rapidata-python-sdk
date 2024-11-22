@@ -34,7 +34,7 @@ Set up your environment and make your first API request in minutes.
     print(results)
     ```
     
-    [:octicons-arrow-right-24: Let's go](quickstart_classification.md)
+    [:octicons-arrow-right-24: Let's go](quickstart.md)
 
 </div>
 

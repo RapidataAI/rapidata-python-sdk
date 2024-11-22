@@ -51,8 +51,8 @@ markdown_extensions:
 
 nav:
   - Overview: index.md
-  - quickstart_classification.md
-  - quickstart_compare.md
+  - quickstart.md
+  - Improve Quality: improve_order_quality.md
   - Examples:
     - Classification: examples/classify_order.md
     - Compare: examples/compare_order.md
