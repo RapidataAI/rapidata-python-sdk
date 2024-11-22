@@ -1395,7 +1395,24 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegisterTemporaryCustomerResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegisterTemporaryCustomerResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegisterTemporaryCustomerResult"
+                }
+              }
+            }
           }
         }
       }
@@ -6452,6 +6469,46 @@
         },
         "additionalProperties": false,
         "description": "The model for signing up a new temporary user."
+      },
+      "RegisterTemporaryCustomerResult": {
+        "required": [
+          "access_token",
+          "id_token",
+          "token_type"
+        ],
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "description": "The access token to authenticate the user."
+          },
+          "expires_in": {
+            "type": "integer",
+            "description": "The time in seconds until the access token expires.",
+            "format": "int32",
+            "nullable": true
+          },
+          "refresh_token": {
+            "type": "string",
+            "description": "The refresh token to refresh the access token.",
+            "nullable": true
+          },
+          "id_token": {
+            "type": "string",
+            "description": "The id token to identify the user."
+          },
+          "token_type": {
+            "type": "string",
+            "description": "The type of token. Usually, this is \"Bearer\"."
+          },
+          "scope": {
+            "type": "string",
+            "description": "The scope of access the token has.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "The access parameters of the newly registered temporary customer."
       },
       "AddValidationRapidModel": {
         "required": [

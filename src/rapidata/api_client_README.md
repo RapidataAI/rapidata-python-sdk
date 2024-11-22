@@ -344,6 +344,7 @@ Class | Method | HTTP request | Description
  - [RapidSkippedModel](rapidata/api_client/docs/RapidSkippedModel.md)
  - [ReadBridgeTokenKeysResult](rapidata/api_client/docs/ReadBridgeTokenKeysResult.md)
  - [RegisterTemporaryCustomerModel](rapidata/api_client/docs/RegisterTemporaryCustomerModel.md)
+ - [RegisterTemporaryCustomerResult](rapidata/api_client/docs/RegisterTemporaryCustomerResult.md)
  - [RootFilter](rapidata/api_client/docs/RootFilter.md)
  - [SendCompletionMailStepModel](rapidata/api_client/docs/SendCompletionMailStepModel.md)
  - [Shape](rapidata/api_client/docs/Shape.md)

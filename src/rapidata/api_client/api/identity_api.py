@@ -22,6 +22,7 @@ from typing_extensions import Annotated
 from rapidata.api_client.models.create_bridge_token_result import CreateBridgeTokenResult
 from rapidata.api_client.models.read_bridge_token_keys_result import ReadBridgeTokenKeysResult
 from rapidata.api_client.models.register_temporary_customer_model import RegisterTemporaryCustomerModel
+from rapidata.api_client.models.register_temporary_customer_result import RegisterTemporaryCustomerResult
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -589,7 +590,7 @@ class IdentityApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> None:
+    ) -> RegisterTemporaryCustomerResult:
         """Registers and logs in a temporary customer.
 
 
@@ -626,7 +627,7 @@ class IdentityApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '200': "RegisterTemporaryCustomerResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -655,7 +656,7 @@ class IdentityApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
+    ) -> ApiResponse[RegisterTemporaryCustomerResult]:
         """Registers and logs in a temporary customer.
 
 
@@ -692,7 +693,7 @@ class IdentityApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '200': "RegisterTemporaryCustomerResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -758,7 +759,7 @@ class IdentityApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '200': "RegisterTemporaryCustomerResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -799,6 +800,15 @@ class IdentityApi:
             _body_params = register_temporary_customer_model
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'text/plain', 
+                    'application/json', 
+                    'text/json'
+                ]
+            )
 
         # set the HTTP header `Content-Type`
         if _content_type:
