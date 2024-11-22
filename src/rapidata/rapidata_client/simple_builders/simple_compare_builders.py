@@ -1,4 +1,4 @@
-from constants import MAX_TIME_IN_SECONDS_FOR_ONE_SESSION
+from rapidata.constants import MAX_TIME_IN_SECONDS_FOR_ONE_SESSION
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.metadata import Metadata, PromptMetadata
 from rapidata.rapidata_client.order.rapidata_order_builder import RapidataOrderBuilder

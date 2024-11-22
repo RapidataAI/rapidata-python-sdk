@@ -1,4 +1,4 @@
-from constants import MAX_TIME_IN_SECONDS_FOR_ONE_SESSION
+from rapidata.constants import MAX_TIME_IN_SECONDS_FOR_ONE_SESSION
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 from rapidata.rapidata_client.order.rapidata_order_builder import RapidataOrderBuilder
 from rapidata.rapidata_client.referee.naive_referee import NaiveReferee
