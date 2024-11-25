@@ -2,6 +2,8 @@
 
 This example builds on what was introduced in the [Quickstart](quickstart.md) as well as the [Improve Order Quality](improve_order_quality.md) guide.
 
+## Order description
+
 We have to state of the art models, Flux and Midjourney that generate images based on a description aka prompt. We want to now find out, which of the images more closely aligns with the prompt. 
 
 ```python
