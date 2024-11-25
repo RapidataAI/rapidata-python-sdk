@@ -13,5 +13,5 @@ With this order we want to find out what kind of emotions people feel when they 
 The resulting rapids for the users look like this:
 
 <figure markdown="span">
-![Classify Example](../media/order-types/classify-screen.png){ width="50%" }
+![Classify Example](../media/order-types/classify_emotions_example.png){ width="50%" }
 </figure>

@@ -14,6 +14,7 @@ def get_emotions_of_images_order(rapi: RapidataClient):
          .question("What emotions do you feel when looking at the image?")
          .options(["happy", "sad", "angry", "surprised", "disgusted", "scared", "neutral"])
          .media(generated_images_urls)
+         .responses(50)
          .run()
         )
 

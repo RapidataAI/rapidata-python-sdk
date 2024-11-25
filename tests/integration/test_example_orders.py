@@ -4,7 +4,7 @@ from rapidata import RapidataClient
 from examples.classify_order import new_classify_order
 from examples.compare_order import new_compare_order
 from examples.free_text_order import new_free_text_order
-from examples.transcription_order import new_transcription_order
+from examples.select_words_order import new_transcription_order
 from examples.classify_text_asset_order import new_classify_text_asset_order
 from examples.conditional_validation_rapid_selection import (
     new_cond_validation_rapid_order,

@@ -1,7 +1,7 @@
 from .rapidata_client import (
     RapidataClient,
     ClassifyWorkflow,
-    TranscriptionWorkflow,
+    SelectWordsWorkflow,
     CompareWorkflow,
     FreeTextWorkflow,
     DemographicSelection,
@@ -14,7 +14,7 @@ from .rapidata_client import (
     PrivateTextMetadata,
     PublicTextMetadata,
     PromptMetadata,
-    TranscriptionMetadata,
+    SelectWordsMetadata,
     Settings,
     FeatureFlags, # remove next major version
     CountryCodes,

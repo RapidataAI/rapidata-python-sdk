@@ -2,27 +2,20 @@
 Free Text Order
 '''
 
-from rapidata import (
-    RapidataClient, 
-    CountryCodes, 
-)
+from rapidata import RapidataClient
 
+def get_prompt_ideas(rapi: RapidataClient):
 
-def new_free_text_order(rapi: RapidataClient):
-
-    order = (rapi.create_free_text_order(name="Example Free Text Order")
-             .question("Describe this video!")
-             .media(["https://assets.rapidata.ai/waiting.mp4"])
-             .responses(3)
-             .minimum_characters(15)
-             .countries(CountryCodes.ENGLISH_SPEAKING)
+    order = (rapi.create_free_text_order(name="Example prompt generation")
+             .question("What would you like to ask an AI? please spell out the question")
+             .media(["https://assets.rapidata.ai/ai_question.png"])
              .run())
 
     return order
 
 
 if __name__ == "__main__":
-    order = new_free_text_order(RapidataClient())
+    order = get_prompt_ideas(RapidataClient())
     order.display_progress_bar()
     results = order.get_results()
     print(results)
