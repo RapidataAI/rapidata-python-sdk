@@ -34,7 +34,7 @@ validation_set_builder = rapi.new_validation_set(
         "Example Compare Validataion Set")
 ```
 
-2. Now that we have the validataion set, we can start adding tasks to it, where we know the ground truth. In our case, each task is called a 'Rapid'. Let's first create the Rapid, and then add it to the validation set:
+2. Now that we have the validation set builder, we can start adding tasks to it, where we know the ground truth. In our case, each task is called a 'Rapid'. Let's first create the Rapid, and then add it to the validation set builder:
 
 ```py
 rapid = (rapi.rapid_builder
