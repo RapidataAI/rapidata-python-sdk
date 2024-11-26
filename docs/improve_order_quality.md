@@ -12,7 +12,7 @@ The validation task has a known truth and will be shown infront of the actual la
 
 ## Example Validation Set
 
-Let’s walk through how to create and use a validation set using the **Compare Order** as an example. The principles apply to any order type.
+Let’s walk through how to create and use a validation set using the **Compare Order** as an example. The principles apply to any order type and the created validation set can be reused indefinitely.
 
 Here’s what labelers will see during validation for this example:
 

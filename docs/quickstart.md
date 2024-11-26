@@ -2,7 +2,7 @@
 
 Directly ask real humans to classify your data. This guide will show you how to create a classification order using the Rapidata API.
 
-There are many other types of orders you can create which you can find in the examples.
+There are many other types of orders you can create which you can find in the examples on the [Overview](index.md).
 
 We will create an order, specify what question and answer options we want to have, as well as upload the data we want to classify.
 
@@ -25,7 +25,7 @@ pip install -U rapidata
 
 Orders are managed through the [`RapidataClient`](reference/rapidata/rapidata_client/rapidata_client.md#rapidata.rapidata_client.rapidata_client.RapidataClient).
 
-Create a client as follows:
+Create a client as follows, this will save your credentials in a local file so you don't have to log in again on that machine:
 
 ```py
 from rapidata import RapidataClient
@@ -33,6 +33,14 @@ from rapidata import RapidataClient
 #first time executing it on a machine will require you to log in
 rapi = RapidataClient()
 ```
+
+Alternatively you can generate a Client ID and Secret in the [Rapidata Settings](https://app.rapidata.ai/settings/tokens) and pass them to the [`RapidataClient`](reference/rapidata/rapidata_client/rapidata_client.md#rapidata.rapidata_client.rapidata_client.RapidataClient) constructor:
+
+```py
+from rapidata import RapidataClient
+rapi = RapidataClient(client_id="Your client ID", client_secret="Your client secret")
+```
+
 ### Creating an Order
 
 1. Create a new `Classification Order` and specify the name:

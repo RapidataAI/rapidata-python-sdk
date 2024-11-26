@@ -45,7 +45,7 @@ class MediaAsset(BaseAsset):
         if re.match(r'^https?://', path):
             self.path = self._get_media_bytes(path)
             self.name = path.split('/')[-1]
-            if not self.name.endswith(('.jpg', '.jpeg', '.png', '.gif', '.mp3', '.mp4')):
+            if not self.name.endswith(('.jpg', '.jpeg', '.png', '.gif', '.mp3', '.mp4', '.webp')):
                 raise ValueError("Supported file types for custom names: jpg, jpeg, png, gif, mp3, mp4")
             return
         
@@ -59,7 +59,7 @@ class MediaAsset(BaseAsset):
     def set_custom_name(self, name: str) -> 'MediaAsset':
         """Set a custom name for the media asset (only works with URLs)."""
         if isinstance(self.path, bytes):
-            if not name.endswith(('.jpg', '.jpeg', '.png', '.gif', '.mp3', '.mp4')):
+            if not name.endswith(('.jpg', '.jpeg', '.png', '.gif', '.mp3', '.mp4', '.webp')):
                 raise ValueError("Supported file types for custom names: jpg, jpeg, png, gif, mp3, mp4")
             self.name = name
         else:
