@@ -4,7 +4,7 @@ This example builds on what was introduced in the [Quickstart](quickstart.md) as
 
 ## Order description
 
-We have to state of the art models, Flux and Midjourney that generate images based on a description aka prompt. We want to now find out, which of the images more closely aligns with the prompt. 
+We have two state of the art models, Flux and Midjourney that generate images based on a description aka prompt. We want to find out which of the images more closely aligns with the prompt. 
 
 ```python
 --8<-- "examples/compare_prompt_image_alignment.py"
