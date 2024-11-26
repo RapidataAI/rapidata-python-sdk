@@ -19,7 +19,7 @@ Here’s what labelers will see during validation for this example:
 ![Compare Example](./media/order-types/good_bad_ai_image.png){ width="40%" }
 
 ### Creating a Validation Set
-First we always need to create a new [`RapidataClient`](reference/rapidata/rapidata_client/rapidata_client.md#rapidata.rapidata_client.rapidata_client.RapidataClient):
+As always, we start by creating a [`RapidataClient`](reference/rapidata/rapidata_client/rapidata_client.md#rapidata.rapidata_client.rapidata_client.RapidataClient):
 
 ```py
 from rapidata import RapidataClient
