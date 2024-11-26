@@ -298,3 +298,9 @@ class RapidataValidationSet:
             asset=asset,
             randomCorrectProbability=len(correct_words) / len(transcription),
         )
+
+    def __str__(self):
+        return f"name: '{self.name}' id: {self.id}"
+    
+    def __repr__(self):
+        return f"name: '{self.name}' id: {self.id}"

@@ -1,7 +1,7 @@
 from .rapidata_client import RapidataClient
 from .workflow import (
     ClassifyWorkflow,
-    TranscriptionWorkflow,
+    SelectWordsWorkflow,
     CompareWorkflow,
     FreeTextWorkflow,
 )
@@ -17,7 +17,7 @@ from .metadata import (
     PrivateTextMetadata,
     PublicTextMetadata,
     PromptMetadata,
-    TranscriptionMetadata,
+    SelectWordsMetadata,
 )
 from .settings import Settings, FeatureFlags # remove FeatureFlags next major version
 from .country_codes import CountryCodes

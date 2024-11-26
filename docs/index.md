@@ -34,7 +34,7 @@ Set up your environment and make your first API request in minutes.
     print(results)
     ```
     
-    [:octicons-arrow-right-24: Let's go](quickstart_classification.md)
+    [:octicons-arrow-right-24: Let's go](quickstart.md)
 
 </div>
 
@@ -47,7 +47,7 @@ Set up your environment and make your first API request in minutes.
     The user is given mutliple answer options for the given question and image.
 
     <figure markdown="span">
-    ![Classify Example](./media/order-types/classify-screen.png){ width="60%" }
+    ![Classify Example](./media/order-types/classify_emotions_example.png){ width="60%" }
     </figure>
 
     [:octicons-arrow-right-24: Let's go](./examples/classify_order.md)
@@ -56,10 +56,10 @@ Set up your environment and make your first API request in minutes.
 
     ---
 
-    The user chooses between two images/videos based on a criteria.
+    The user chooses between two images/videos/texts based on a criteria.
 
     <figure markdown="span">
-    ![Compare Example](./media/order-types/compare-screen.png){ width="60%" }
+    ![Compare Example](./media/order-types/compare_text_image_alignment.png){ width="60%" }
     </figure>
 
     [:octicons-arrow-right-24: Let's go](./examples/compare_order.md)
@@ -71,22 +71,22 @@ Set up your environment and make your first API request in minutes.
     The user has a keyboard pop up to freely answer anything.
 
     <figure markdown="span">
-    ![Freetext Example](./media/order-types/freetext-screen.png){ width="60%" }
+    ![Freetext Example](./media/order-types/freetext_question_to_ai.png){ width="60%" }
     </figure>
 
     [:octicons-arrow-right-24: Let's go](./examples/free_text_order.md)
 
--   __Transcription Order__
+-   __SelectWords Order__
 
     ---
 
-    Play a video and have users click the words they hear or don't hear.
+    Have the users click on words in a text depending on a condition.
 
     <figure markdown="span">
-    ![Transcription Example](./media/order-types/transcription-screen.png){ width="60%" }
+    ![SelectWords Example](./media/order-types/select_words_tts_example.png){ width="60%" }
     </figure>
 
-    [:octicons-arrow-right-24: Let's go](./examples/transcription_order.md)
+    [:octicons-arrow-right-24: Let's go](./examples/select_words_order.md)
 
 </div>
 

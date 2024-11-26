@@ -29,7 +29,7 @@ class CompareOrderBuilder:
         self._time_effort = time_effort
 
     def responses(self, responses_required: int) -> 'CompareOrderBuilder':
-        """Set the number of resoonses required per matchup/pairing for the comparison order. Will default to 10."""
+        """Set the number of resoonses required per matchup/pairing for the comparison order. Will default to 10 if not set."""
         self._responses_required = responses_required
         return self
     

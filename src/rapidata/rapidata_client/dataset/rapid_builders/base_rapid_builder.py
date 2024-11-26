@@ -1,5 +1,5 @@
 from rapidata.service.openapi_service import OpenAPIService
-from rapidata.rapidata_client.dataset.rapid_builders import ClassifyRapidQuestionBuilder, CompareRapidCriteriaBuilder, TranscriptionRapidInstructionBuilder
+from rapidata.rapidata_client.dataset.rapid_builders import ClassifyRapidQuestionBuilder, CompareRapidCriteriaBuilder, SelectWordsRapidInstructionBuilder
 
 class BaseRapidBuilder:
     """Base class for creating different types of rapids.
@@ -23,11 +23,11 @@ class BaseRapidBuilder:
         """
         return CompareRapidCriteriaBuilder()
     
-    def transcription_rapid(self):
-        """Creates a transcription rapid.
+    def select_words_rapid(self):
+        """Creates a select words rapid.
         
         Returns:
-            TranscriptionRapidInstructionBuilder: A builder for creating the transcription instruction.
+            SelectWordsRapidInstructionBuilder: A builder for creating the select words instruction.
         """
-        return TranscriptionRapidInstructionBuilder()
+        return SelectWordsRapidInstructionBuilder()
         

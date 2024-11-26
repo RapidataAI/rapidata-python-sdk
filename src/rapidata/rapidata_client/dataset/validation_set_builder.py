@@ -20,7 +20,7 @@ from rapidata.rapidata_client.dataset.rapid_builders.rapids import (
     Rapid, 
     ClassificationRapid,
     CompareRapid,
-    TranscriptionRapid
+    SelectWordsRapid
 )
 from deprecated import deprecated
 
@@ -96,8 +96,8 @@ class ValidationSetBuilder:
         if isinstance(rapid, CompareRapid):
             self._add_compare_rapid(rapid.asset, rapid.criteria, rapid.truth, rapid.metadata)
 
-        if isinstance(rapid, TranscriptionRapid):
-            self._add_transcription_rapid(rapid.asset, rapid.instruction, rapid.transcription, rapid.truths, rapid.strict_grading)
+        if isinstance(rapid, SelectWordsRapid):
+            self._add_select_words_rapid(rapid.asset, rapid.instruction, rapid.text, rapid.truths, rapid.strict_grading)
 
         return self
 
@@ -237,21 +237,21 @@ class ValidationSetBuilder:
         )
 
     @deprecated("Use add_rapid instead")
-    def add_transcription_rapid(
+    def add_select_words_rapid(
         self,
         asset: MediaAsset | TextAsset,
         question: str,
-        transcription: str,
+        select_words: str,
         truths: list[int],
         strict_grading: bool | None = None,
         metadata: list[Metadata] = [],
     ):
-        """Add a transcription rapid to the validation set.
+        """Add a select words rapid to the validation set.
 
         Args:
             asset (MediaAsset | TextAsset): The asset for the rapid.
             question (str): The question for the rapid.
-            transcription (list[str]): The transcription for the rapid.
+            select words (list[str]): The select words for the rapid.
             truths (list[int]): The list of indices of the true word selections.
             strict_grading (bool | None, optional): The strict grading for the rapid. Defaults to None.
             metadata (list[Metadata], optional): The metadata for the rapid.
@@ -260,27 +260,27 @@ class ValidationSetBuilder:
             ValidationSetBuilder: The ValidationSetBuilder instance.
 
         Raises:
-            ValueError: If a correct word is not found in the transcription.
+            ValueError: If a correct word is not found in the select words.
         """
-        self._add_transcription_rapid(asset, question, transcription, truths, strict_grading, metadata)
+        self._add_select_words_rapid(asset, question, select_words, truths, strict_grading, metadata)
 
         return self
     
-    def _add_transcription_rapid(
+    def _add_select_words_rapid(
         self,
         asset: MediaAsset | TextAsset,
         question: str,
-        transcription: str,
+        select_words: str,
         truths: list[int],
         strict_grading: bool | None = None,
         metadata: list[Metadata] = [],
     ):
-        """Add a transcription rapid to the validation set.
+        """Add a select words rapid to the validation set.
 
         Args:
             asset (MediaAsset | TextAsset): The asset for the rapid.
             question (str): The question for the rapid.
-            transcription (list[str]): The transcription for the rapid.
+            select words (list[str]): The select words for the rapid.
             truths (list[int]): The list of indices of the true word selections.
             strict_grading (bool | None, optional): The strict grading for the rapid. Defaults to None.
             metadata (list[Metadata], optional): The metadata for the rapid.
@@ -289,11 +289,11 @@ class ValidationSetBuilder:
             ValidationSetBuilder: The ValidationSetBuilder instance.
 
         Raises:
-            ValueError: If a correct word is not found in the transcription.
+            ValueError: If a correct word is not found in the select words.
         """
         transcription_words = [
             TranscriptionWord(word=word, wordIndex=i)
-            for i, word in enumerate(transcription.split())
+            for i, word in enumerate(select_words.split())
         ]
 
         true_words = []

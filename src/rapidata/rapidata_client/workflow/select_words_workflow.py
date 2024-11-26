@@ -4,26 +4,26 @@ from rapidata.api_client.models.transcription_rapid_blueprint import Transcripti
 from rapidata.rapidata_client.workflow.base_workflow import Workflow
 
 
-class TranscriptionWorkflow(Workflow):
+class SelectWordsWorkflow(Workflow):
     """
-    A workflow for transcription tasks.
+    A workflow for select words tasks.
 
-    This class represents a transcription workflow where audio or video content
+    This class represents a select words workflow where audio or video content
     is transcribed based on given instructions.
 
     Attributes:
-        _instruction (str): The instruction for the transcription task.
+        _instruction (str): The instruction for the select words task.
 
     Args:
-        instruction (str): The instruction to be provided for the transcription task.
+        instruction (str): The instruction to be provided for the select words task.
     """
 
     def __init__(self, instruction: str):
         """
-        Initialize a TranscriptionWorkflow instance.
+        Initialize a SelectWordsWorkflow instance.
 
         Args:
-            instruction (str): The instruction to be provided for the transcription task.
+            instruction (str): The instruction to be provided for the select words task.
         """
         super().__init__(type="SimpleWorkflowConfig")
         self._instruction = instruction
