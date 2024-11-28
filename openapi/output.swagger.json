@@ -152,26 +152,26 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/DatapointMetadataModel"
+                "type": "object",
+                "properties": {
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "description": "The image files to upload."
                   },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "files": {
-                        "type": "array",
-                        "items": {
-                          "type": "string",
-                          "format": "binary"
-                        }
-                      }
-                    }
+                  "model": {
+                    "$ref": "#/components/schemas/DatapointMetadataModel"
                   }
-                ]
+                }
               },
               "encoding": {
                 "files": {
+                  "style": "form"
+                },
+                "model": {
                   "style": "form"
                 }
               }
@@ -1890,25 +1890,25 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "allOf": [
-                  {
+                "type": "object",
+                "properties": {
+                  "model": {
                     "$ref": "#/components/schemas/AddValidationRapidModel"
                   },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "files": {
-                        "type": "array",
-                        "items": {
-                          "type": "string",
-                          "format": "binary"
-                        }
-                      }
-                    }
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "description": "The files to be used as assets for the validation rapid. Each file will create a new rapid."
                   }
-                ]
+                }
               },
               "encoding": {
+                "model": {
+                  "style": "form"
+                },
                 "files": {
                   "style": "form"
                 }
@@ -2213,25 +2213,25 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "allOf": [
-                  {
+                "type": "object",
+                "properties": {
+                  "model": {
                     "$ref": "#/components/schemas/CreateDemographicRapidModel"
                   },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "file": {
-                        "type": "array",
-                        "items": {
-                          "type": "string",
-                          "format": "binary"
-                        }
-                      }
-                    }
+                  "file": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "description": "The file to use as the asset for the rapid."
                   }
-                ]
+                }
               },
               "encoding": {
+                "model": {
+                  "style": "form"
+                },
                 "file": {
                   "style": "form"
                 }

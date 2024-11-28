@@ -19,7 +19,7 @@ from typing_extensions import Annotated
 from pydantic import Field, StrictBytes, StrictStr
 from typing import List, Optional, Tuple, Union
 from typing_extensions import Annotated
-from rapidata.api_client.models.datapoint_metadata_model_metadata_inner import DatapointMetadataModelMetadataInner
+from rapidata.api_client.models.datapoint_metadata_model import DatapointMetadataModel
 from rapidata.api_client.models.get_dataset_by_id_result import GetDatasetByIdResult
 from rapidata.api_client.models.import_from_file_result import ImportFromFileResult
 from rapidata.api_client.models.upload_datapoints_result import UploadDatapointsResult
@@ -326,9 +326,8 @@ class DatasetApi:
     @validate_call
     def dataset_create_datapoint_post(
         self,
-        metadata: Annotated[List[DatapointMetadataModelMetadataInner], Field(description="The metadata of the datapoint.")],
-        dataset_id: Annotated[Optional[StrictStr], Field(description="The id of the dataset to create the datapoint in.")] = None,
-        files: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        files: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The image files to upload.")] = None,
+        model: Optional[DatapointMetadataModel] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -346,12 +345,10 @@ class DatasetApi:
 
         If multiple files are uploaded, a multi asset datapoint will be created.
 
-        :param metadata: The metadata of the datapoint. (required)
-        :type metadata: List[DatapointMetadataModelMetadataInner]
-        :param dataset_id: The id of the dataset to create the datapoint in.
-        :type dataset_id: str
-        :param files:
+        :param files: The image files to upload.
         :type files: List[bytearray]
+        :param model:
+        :type model: DatapointMetadataModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -375,9 +372,8 @@ class DatasetApi:
         """ # noqa: E501
 
         _param = self._dataset_create_datapoint_post_serialize(
-            metadata=metadata,
-            dataset_id=dataset_id,
             files=files,
+            model=model,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -401,9 +397,8 @@ class DatasetApi:
     @validate_call
     def dataset_create_datapoint_post_with_http_info(
         self,
-        metadata: Annotated[List[DatapointMetadataModelMetadataInner], Field(description="The metadata of the datapoint.")],
-        dataset_id: Annotated[Optional[StrictStr], Field(description="The id of the dataset to create the datapoint in.")] = None,
-        files: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        files: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The image files to upload.")] = None,
+        model: Optional[DatapointMetadataModel] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -421,12 +416,10 @@ class DatasetApi:
 
         If multiple files are uploaded, a multi asset datapoint will be created.
 
-        :param metadata: The metadata of the datapoint. (required)
-        :type metadata: List[DatapointMetadataModelMetadataInner]
-        :param dataset_id: The id of the dataset to create the datapoint in.
-        :type dataset_id: str
-        :param files:
+        :param files: The image files to upload.
         :type files: List[bytearray]
+        :param model:
+        :type model: DatapointMetadataModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -450,9 +443,8 @@ class DatasetApi:
         """ # noqa: E501
 
         _param = self._dataset_create_datapoint_post_serialize(
-            metadata=metadata,
-            dataset_id=dataset_id,
             files=files,
+            model=model,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -476,9 +468,8 @@ class DatasetApi:
     @validate_call
     def dataset_create_datapoint_post_without_preload_content(
         self,
-        metadata: Annotated[List[DatapointMetadataModelMetadataInner], Field(description="The metadata of the datapoint.")],
-        dataset_id: Annotated[Optional[StrictStr], Field(description="The id of the dataset to create the datapoint in.")] = None,
-        files: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        files: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The image files to upload.")] = None,
+        model: Optional[DatapointMetadataModel] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -496,12 +487,10 @@ class DatasetApi:
 
         If multiple files are uploaded, a multi asset datapoint will be created.
 
-        :param metadata: The metadata of the datapoint. (required)
-        :type metadata: List[DatapointMetadataModelMetadataInner]
-        :param dataset_id: The id of the dataset to create the datapoint in.
-        :type dataset_id: str
-        :param files:
+        :param files: The image files to upload.
         :type files: List[bytearray]
+        :param model:
+        :type model: DatapointMetadataModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -525,9 +514,8 @@ class DatasetApi:
         """ # noqa: E501
 
         _param = self._dataset_create_datapoint_post_serialize(
-            metadata=metadata,
-            dataset_id=dataset_id,
             files=files,
+            model=model,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -546,9 +534,8 @@ class DatasetApi:
 
     def _dataset_create_datapoint_post_serialize(
         self,
-        metadata,
-        dataset_id,
         files,
+        model,
         _request_auth,
         _content_type,
         _headers,
@@ -558,7 +545,6 @@ class DatasetApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
-            'metadata': 'csv',
             'files': 'multi',
         }
 
@@ -575,12 +561,10 @@ class DatasetApi:
         # process the query parameters
         # process the header parameters
         # process the form parameters
-        if dataset_id is not None:
-            _form_params.append(('datasetId', dataset_id))
-        if metadata is not None:
-            _form_params.append(('metadata', metadata))
         if files is not None:
             _files['files'] = files
+        if model is not None:
+            _form_params.append(('model', model))
         # process the body parameter
 
 
