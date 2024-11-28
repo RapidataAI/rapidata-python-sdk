@@ -5,8 +5,5 @@
     "extraPaths": [
         "src"
     ],
-    "typeCheckingMode": "strict",
-    "reportMissingTypeStubs": false,
-    "useLibraryCodeForTypes": true,
-    "pythonVersion": "3.10"
+    "pythonPlatform": "All"
 }
