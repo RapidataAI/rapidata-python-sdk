@@ -25,4 +25,4 @@ jobs:
         run: pyright --version
       
       - name: Run Pyright Type Checking
-        run: pyright src/rapidata/rapidata_client
+        run: poetry run pyright --level error src/rapidata/rapidata_client
