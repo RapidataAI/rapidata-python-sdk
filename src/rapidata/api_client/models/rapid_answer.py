@@ -28,11 +28,12 @@ class RapidAnswer(BaseModel):
     RapidAnswer
     """ # noqa: E501
     id: StrictStr
+    user_id: StrictStr = Field(alias="userId")
     country: StrictStr
     result: RapidAnswerResult
     user_score: Union[StrictFloat, StrictInt] = Field(alias="userScore")
     demographic_information: Dict[str, StrictStr] = Field(alias="demographicInformation")
-    __properties: ClassVar[List[str]] = ["id", "country", "result", "userScore", "demographicInformation"]
+    __properties: ClassVar[List[str]] = ["id", "userId", "country", "result", "userScore", "demographicInformation"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -89,6 +90,7 @@ class RapidAnswer(BaseModel):
 
         _obj = cls.model_validate({
             "id": obj.get("id"),
+            "userId": obj.get("userId"),
             "country": obj.get("country"),
             "result": RapidAnswerResult.from_dict(obj["result"]) if obj.get("result") is not None else None,
             "userScore": obj.get("userScore"),

@@ -48,7 +48,6 @@ from rapidata.api_client.exceptions import ApiException
 # import models into sdk package
 from rapidata.api_client.models.add_campaign_artifact_result import AddCampaignArtifactResult
 from rapidata.api_client.models.add_campaign_model import AddCampaignModel
-from rapidata.api_client.models.add_validation_rapid_model import AddValidationRapidModel
 from rapidata.api_client.models.add_validation_rapid_model_payload import AddValidationRapidModelPayload
 from rapidata.api_client.models.add_validation_rapid_model_truth import AddValidationRapidModelTruth
 from rapidata.api_client.models.add_validation_rapid_result import AddValidationRapidResult
@@ -107,7 +106,6 @@ from rapidata.api_client.models.create_complex_order_model_pipeline import Creat
 from rapidata.api_client.models.create_complex_order_result import CreateComplexOrderResult
 from rapidata.api_client.models.create_dataset_artifact_model import CreateDatasetArtifactModel
 from rapidata.api_client.models.create_dataset_artifact_model_dataset import CreateDatasetArtifactModelDataset
-from rapidata.api_client.models.create_demographic_rapid_model import CreateDemographicRapidModel
 from rapidata.api_client.models.create_empty_validation_set_result import CreateEmptyValidationSetResult
 from rapidata.api_client.models.create_order_model import CreateOrderModel
 from rapidata.api_client.models.create_order_model_referee import CreateOrderModelReferee
@@ -121,7 +119,6 @@ from rapidata.api_client.models.create_unsupported_order_model import CreateUnsu
 from rapidata.api_client.models.datapoint import Datapoint
 from rapidata.api_client.models.datapoint_asset import DatapointAsset
 from rapidata.api_client.models.datapoint_get_by_id_get200_response import DatapointGetByIdGet200Response
-from rapidata.api_client.models.datapoint_metadata_model import DatapointMetadataModel
 from rapidata.api_client.models.datapoint_metadata_model_metadata_inner import DatapointMetadataModelMetadataInner
 from rapidata.api_client.models.datapoint_model import DatapointModel
 from rapidata.api_client.models.datapoint_model_asset import DatapointModelAsset

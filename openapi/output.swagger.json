@@ -152,26 +152,26 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "files": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "format": "binary"
-                    },
-                    "description": "The image files to upload."
-                  },
-                  "model": {
+                "allOf": [
+                  {
                     "$ref": "#/components/schemas/DatapointMetadataModel"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "files": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "format": "binary"
+                        }
+                      }
+                    }
                   }
-                }
+                ]
               },
               "encoding": {
                 "files": {
-                  "style": "form"
-                },
-                "model": {
                   "style": "form"
                 }
               }
@@ -1890,25 +1890,25 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "model": {
+                "allOf": [
+                  {
                     "$ref": "#/components/schemas/AddValidationRapidModel"
                   },
-                  "files": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "format": "binary"
-                    },
-                    "description": "The files to be used as assets for the validation rapid. Each file will create a new rapid."
+                  {
+                    "type": "object",
+                    "properties": {
+                      "files": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "format": "binary"
+                        }
+                      }
+                    }
                   }
-                }
+                ]
               },
               "encoding": {
-                "model": {
-                  "style": "form"
-                },
                 "files": {
                   "style": "form"
                 }
@@ -2213,25 +2213,25 @@
           "content": {
             "multipart/form-data": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "model": {
+                "allOf": [
+                  {
                     "$ref": "#/components/schemas/CreateDemographicRapidModel"
                   },
-                  "file": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "format": "binary"
-                    },
-                    "description": "The file to use as the asset for the rapid."
+                  {
+                    "type": "object",
+                    "properties": {
+                      "file": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "format": "binary"
+                        }
+                      }
+                    }
                   }
-                }
+                ]
               },
               "encoding": {
-                "model": {
-                  "style": "form"
-                },
                 "file": {
                   "style": "form"
                 }
@@ -9326,11 +9326,15 @@
           "demographicInformation",
           "id",
           "result",
+          "userId",
           "userScore"
         ],
         "type": "object",
         "properties": {
           "id": {
+            "type": "string"
+          },
+          "userId": {
             "type": "string"
           },
           "country": {
