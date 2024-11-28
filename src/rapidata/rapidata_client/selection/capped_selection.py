@@ -21,5 +21,5 @@ class CappedSelection(Selection):
                 CappedSelectionSelectionsInner(selection.to_model())
                 for selection in self.selections
             ],
-            max_rapids=self.max_rapids,
+            maxRapids=self.max_rapids,
         )
