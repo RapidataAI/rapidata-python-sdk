@@ -24,13 +24,10 @@ jobs:
       - name: Print Pyright version
         run: pyright --version
 
-      - name: Debug Python Path
+      - name: Install dependencies
         run: |
-          poetry run python -c "import sys; print('\n'.join(sys.path))"
-          poetry run python -c "from rapidata.api_client import *"
-      
-      - name: Run Pyright Type Checking
-        run: poetry run pyright --verbose src/rapidata/rapidata_client
+          poetry install --no-interaction
+          poetry run pip install -e .
       
       - name: Run Pyright Type Checking
         run: poetry run pyright "src/rapidata/rapidata_client"
