@@ -7,7 +7,7 @@ from rapidata.api_client.models.free_text_rapid_blueprint import FreeTextRapidBl
 
 class FreeTextWorkflow(Workflow):
     """
-    A workflow for free text input tasks. 
+    A workflow for free text input tasks.
 
     This class represents a workflow where users can provide free-form text responses
     to a given question.
@@ -19,7 +19,7 @@ class FreeTextWorkflow(Workflow):
         question (str): The question to be presented for free text input.
     """
 
-    def __init__(self, question: str):
+    def __init__(self, question: str = 10):
         """
         Initialize a FreeTextWorkflow instance.
 
