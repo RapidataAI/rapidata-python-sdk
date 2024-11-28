@@ -1,6 +1,6 @@
 # Early Stopping Based on Confidence
 
-To improve the efficiency and cost-effectiveness of your data labeling tasks, Rapidata offers an Early Stopping feature based on confidence thresholds. This feature allows you to automatically stop collecting responses for a datapoint once a specified confidence level is reached, saving time and resources without compromising on result quality.
+To improve the efficiency and cost-effectiveness of your data labeling tasks, Rapidata offers an Early Stopping feature based on confidence thresholds. This feature allows you to automatically stop collecting responses for a datapoint once a specified confidence level is reached, saving time and resources without compromising quality.
 
 
 ## Why Use Early Stopping?
