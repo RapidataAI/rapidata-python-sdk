@@ -1,9 +1,3 @@
 {
-    "include": [
-        "src/rapidata/rapidata_client"
-    ],
-    "extraPaths": [
-        "src"
-    ],
-    "pythonPlatform": "All"
+  "include": ["src/rapidata/rapidata_client"]
 }

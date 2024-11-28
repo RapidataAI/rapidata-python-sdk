@@ -10,16 +10,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
       
-      - name: Install Poetry
-        run: pipx install poetry
-        
-      - name: Install dependencies
-        run: poetry install --no-interaction
-        
-      - name: Install Pyright
-        run: npm install -g pyright
-
-      - name: Run Pyright Type Checking
-        run: pyright src/rapidata/rapidata_client
+      - run: pipx install poetry
+      - uses: actions/setup-python@v5
+        with:
+          cache: 'poetry'
+      
+      - run: poetry install
+      - run: echo "$(poetry env info --path)/bin" >> $GITHUB_PATH
+      
+      - uses: jakebailey/pyright-action@v2
+        with:
+          working-directory: src/rapidata/rapidata_client
