@@ -19,7 +19,7 @@ class FreeTextWorkflow(Workflow):
         question (str): The question to be presented for free text input.
     """
 
-    def __init__(self, question: str = 10):
+    def __init__(self, question: str = 1):
         """
         Initialize a FreeTextWorkflow instance.
 
