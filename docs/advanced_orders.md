@@ -28,7 +28,7 @@ Each request to humans begins with creating an order. Use the `rapi` client to c
 1. Create a new [`RapidataOrderBuilder`](reference/rapidata/rapidata_client/order/rapidata_order_builder.md/#rapidata.rapidata_client.order.rapidata_order_builder.RapidataOrderBuilder) and specify the name:
 
 ```py
-order_builder = rapi.new_complex_order("Example Custom Order")
+order_builder = rapi.new_advanced_order("Example Custom Order")
 ```
 
 2. Configure the order using a workflow, which defines the type of questions asked to people. For example, the [`ClassifyWorkflow`](reference/rapidata/rapidata_client/workflow/classify_workflow.md) asks a question with multiple answer choices:
@@ -94,7 +94,7 @@ The [`RapidataOrderBuilder`](reference/rapidata/rapidata_client/order/rapidata_o
 
 ```py
 order = (
-    rapi.new_complex_order(name="Example Custom Order")
+    rapi.new_advanced_order(name="Example Custom Order")
     .workflow(
         ClassifyWorkflow(
             question="What is shown in the image?",

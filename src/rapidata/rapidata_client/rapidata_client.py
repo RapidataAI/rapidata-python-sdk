@@ -54,7 +54,7 @@ class RapidataClient:
             cert_path=cert_path
         )
     
-    @deprecated("Use the specific builder methods or new_complex_order instead.")
+    @deprecated("Use the specific builder methods or new_advanced_order instead.")
     def new_order(self, name: str) -> RapidataOrderBuilder:
         """Create a new order using a RapidataOrderBuilder instance.
 
@@ -64,9 +64,9 @@ class RapidataClient:
         Returns:
             RapidataOrderBuilder: A RapidataOrderBuilder instance.
         """
-        return self.new_complex_order(name)
+        return self.new_advanced_order(name)
     
-    def new_complex_order(self, name: str) -> RapidataOrderBuilder:
+    def new_advanced_order(self, name: str) -> RapidataOrderBuilder:
         """Create a new order using a RapidataOrderBuilder instance.
         This method is intended for creating orders with complex requirements that can not be fulfilled with the specific builders.
         For any other order, it is recommended to use the specific builder methods.
