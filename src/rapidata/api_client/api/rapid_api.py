@@ -19,7 +19,7 @@ from typing_extensions import Annotated
 from pydantic import Field, StrictBytes, StrictStr
 from typing import List, Optional, Tuple, Union
 from typing_extensions import Annotated
-from rapidata.api_client.models.classify_payload import ClassifyPayload
+from rapidata.api_client.models.create_demographic_rapid_model import CreateDemographicRapidModel
 from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.query_validation_rapids_result_paged_result import QueryValidationRapidsResultPagedResult
 from rapidata.api_client.models.rapid_result_model import RapidResultModel
@@ -313,9 +313,8 @@ class RapidApi:
     @validate_call
     def rapid_create_demographic_rapid_post(
         self,
-        key: Annotated[StrictStr, Field(description="The identifier of the demographic classification.")],
-        payload: ClassifyPayload,
-        file: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        model: Optional[CreateDemographicRapidModel] = None,
+        file: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The file to use as the asset for the rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -332,11 +331,9 @@ class RapidApi:
         """Creates a new Demographic Rapid.
 
 
-        :param key: The identifier of the demographic classification. (required)
-        :type key: str
-        :param payload: (required)
-        :type payload: ClassifyPayload
-        :param file:
+        :param model:
+        :type model: CreateDemographicRapidModel
+        :param file: The file to use as the asset for the rapid.
         :type file: List[bytearray]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -361,8 +358,7 @@ class RapidApi:
         """ # noqa: E501
 
         _param = self._rapid_create_demographic_rapid_post_serialize(
-            key=key,
-            payload=payload,
+            model=model,
             file=file,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -387,9 +383,8 @@ class RapidApi:
     @validate_call
     def rapid_create_demographic_rapid_post_with_http_info(
         self,
-        key: Annotated[StrictStr, Field(description="The identifier of the demographic classification.")],
-        payload: ClassifyPayload,
-        file: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        model: Optional[CreateDemographicRapidModel] = None,
+        file: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The file to use as the asset for the rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -406,11 +401,9 @@ class RapidApi:
         """Creates a new Demographic Rapid.
 
 
-        :param key: The identifier of the demographic classification. (required)
-        :type key: str
-        :param payload: (required)
-        :type payload: ClassifyPayload
-        :param file:
+        :param model:
+        :type model: CreateDemographicRapidModel
+        :param file: The file to use as the asset for the rapid.
         :type file: List[bytearray]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -435,8 +428,7 @@ class RapidApi:
         """ # noqa: E501
 
         _param = self._rapid_create_demographic_rapid_post_serialize(
-            key=key,
-            payload=payload,
+            model=model,
             file=file,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -461,9 +453,8 @@ class RapidApi:
     @validate_call
     def rapid_create_demographic_rapid_post_without_preload_content(
         self,
-        key: Annotated[StrictStr, Field(description="The identifier of the demographic classification.")],
-        payload: ClassifyPayload,
-        file: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        model: Optional[CreateDemographicRapidModel] = None,
+        file: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The file to use as the asset for the rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -480,11 +471,9 @@ class RapidApi:
         """Creates a new Demographic Rapid.
 
 
-        :param key: The identifier of the demographic classification. (required)
-        :type key: str
-        :param payload: (required)
-        :type payload: ClassifyPayload
-        :param file:
+        :param model:
+        :type model: CreateDemographicRapidModel
+        :param file: The file to use as the asset for the rapid.
         :type file: List[bytearray]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -509,8 +498,7 @@ class RapidApi:
         """ # noqa: E501
 
         _param = self._rapid_create_demographic_rapid_post_serialize(
-            key=key,
-            payload=payload,
+            model=model,
             file=file,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -530,8 +518,7 @@ class RapidApi:
 
     def _rapid_create_demographic_rapid_post_serialize(
         self,
-        key,
-        payload,
+        model,
         file,
         _request_auth,
         _content_type,
@@ -558,10 +545,8 @@ class RapidApi:
         # process the query parameters
         # process the header parameters
         # process the form parameters
-        if key is not None:
-            _form_params.append(('key', key))
-        if payload is not None:
-            _form_params.append(('payload', payload))
+        if model is not None:
+            _form_params.append(('model', model))
         if file is not None:
             _files['file'] = file
         # process the body parameter
