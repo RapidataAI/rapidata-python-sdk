@@ -24,10 +24,5 @@ jobs:
       - name: Print Pyright version
         run: pyright --version
 
-      - name: Install dependencies
-        run: |
-          poetry install --no-interaction
-          poetry run pip install -e .
-      
       - name: Run Pyright Type Checking
         run: poetry run pyright "src/rapidata/rapidata_client"
