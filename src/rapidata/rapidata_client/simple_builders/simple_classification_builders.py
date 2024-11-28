@@ -28,7 +28,7 @@ class ClassificationOrderBuilder:
         self._options = options
         self._media_assets = media_assets
         self._responses_required = 10
-        self._probability_threshold = None
+        self._confidence_threshold = None
         self._metadata = None
         self._validation_set_id = None
         self._filters: list[Filter] = []
@@ -54,12 +54,16 @@ class ClassificationOrderBuilder:
 
     def responses(self, responses_required: int) -> 'ClassificationOrderBuilder':
         """Set the number of responses required per datapoint for the classification order. Will default to 10."""
+        if responses_required < 1:
+            raise ValueError("Responses required must be at least 1")
+        
         self._responses_required = responses_required
         return self
 
-    def probability_threshold(self, probability_threshold: float) -> 'ClassificationOrderBuilder':
-        """Set the probability threshold for early stopping."""
-        self._probability_threshold = probability_threshold
+    def confidence_threshold(self, confidence_threshold: float) -> 'ClassificationOrderBuilder':
+        """Set the confidence threshold for early stopping.
+        That means that the order will either stop at the number of responses or when the confidence threshold is reached, whatever comes first."""
+        self._confidence_threshold = confidence_threshold
         return self
 
     def validation_set(self, validation_set_id: str) -> 'ClassificationOrderBuilder':
@@ -120,10 +124,10 @@ class ClassificationOrderBuilder:
         Returns:
             RapidataOrder: The created classification order."""
                 
-        if self._probability_threshold and self._responses_required:
+        if self._confidence_threshold:
             referee = EarlyStoppingReferee(
                 max_vote_count=self._responses_required,
-                threshold=self._probability_threshold
+                threshold=self._confidence_threshold
             )
 
         else:
