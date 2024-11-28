@@ -16,13 +16,15 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictBytes, StrictStr
+from pydantic import Field, StrictBytes, StrictFloat, StrictInt, StrictStr
 from typing import List, Optional, Tuple, Union
 from typing_extensions import Annotated
-from rapidata.api_client.models.add_validation_rapid_model import AddValidationRapidModel
+from rapidata.api_client.models.add_validation_rapid_model_payload import AddValidationRapidModelPayload
+from rapidata.api_client.models.add_validation_rapid_model_truth import AddValidationRapidModelTruth
 from rapidata.api_client.models.add_validation_rapid_result import AddValidationRapidResult
 from rapidata.api_client.models.add_validation_text_rapid_model import AddValidationTextRapidModel
 from rapidata.api_client.models.create_empty_validation_set_result import CreateEmptyValidationSetResult
+from rapidata.api_client.models.datapoint_metadata_model_metadata_inner import DatapointMetadataModelMetadataInner
 from rapidata.api_client.models.get_available_validation_sets_result import GetAvailableValidationSetsResult
 from rapidata.api_client.models.get_validation_set_by_id_result import GetValidationSetByIdResult
 from rapidata.api_client.models.import_validation_set_from_file_result import ImportValidationSetFromFileResult
@@ -51,8 +53,12 @@ class ValidationApi:
     @validate_call
     def validation_add_validation_rapid_post(
         self,
-        model: Optional[AddValidationRapidModel] = None,
-        files: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The files to be used as assets for the validation rapid. Each file will create a new rapid.")] = None,
+        payload: AddValidationRapidModelPayload,
+        metadata: Annotated[List[DatapointMetadataModelMetadataInner], Field(description="Some metadata to attach to the rapid.")],
+        truth: AddValidationRapidModelTruth,
+        validation_set_id: Annotated[Optional[StrictStr], Field(description="The ID of the validation set to add the rapid to.")] = None,
+        random_correct_probability: Annotated[Optional[Union[StrictFloat, StrictInt]], Field(description="The probability for an answer to be correct when randomly guessing.")] = None,
+        files: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -69,9 +75,17 @@ class ValidationApi:
         """Adds a new validation rapid to the specified validation set.
 
 
-        :param model:
-        :type model: AddValidationRapidModel
-        :param files: The files to be used as assets for the validation rapid. Each file will create a new rapid.
+        :param payload: (required)
+        :type payload: AddValidationRapidModelPayload
+        :param metadata: Some metadata to attach to the rapid. (required)
+        :type metadata: List[DatapointMetadataModelMetadataInner]
+        :param truth: (required)
+        :type truth: AddValidationRapidModelTruth
+        :param validation_set_id: The ID of the validation set to add the rapid to.
+        :type validation_set_id: str
+        :param random_correct_probability: The probability for an answer to be correct when randomly guessing.
+        :type random_correct_probability: float
+        :param files:
         :type files: List[bytearray]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -96,7 +110,11 @@ class ValidationApi:
         """ # noqa: E501
 
         _param = self._validation_add_validation_rapid_post_serialize(
-            model=model,
+            payload=payload,
+            metadata=metadata,
+            truth=truth,
+            validation_set_id=validation_set_id,
+            random_correct_probability=random_correct_probability,
             files=files,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -121,8 +139,12 @@ class ValidationApi:
     @validate_call
     def validation_add_validation_rapid_post_with_http_info(
         self,
-        model: Optional[AddValidationRapidModel] = None,
-        files: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The files to be used as assets for the validation rapid. Each file will create a new rapid.")] = None,
+        payload: AddValidationRapidModelPayload,
+        metadata: Annotated[List[DatapointMetadataModelMetadataInner], Field(description="Some metadata to attach to the rapid.")],
+        truth: AddValidationRapidModelTruth,
+        validation_set_id: Annotated[Optional[StrictStr], Field(description="The ID of the validation set to add the rapid to.")] = None,
+        random_correct_probability: Annotated[Optional[Union[StrictFloat, StrictInt]], Field(description="The probability for an answer to be correct when randomly guessing.")] = None,
+        files: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -139,9 +161,17 @@ class ValidationApi:
         """Adds a new validation rapid to the specified validation set.
 
 
-        :param model:
-        :type model: AddValidationRapidModel
-        :param files: The files to be used as assets for the validation rapid. Each file will create a new rapid.
+        :param payload: (required)
+        :type payload: AddValidationRapidModelPayload
+        :param metadata: Some metadata to attach to the rapid. (required)
+        :type metadata: List[DatapointMetadataModelMetadataInner]
+        :param truth: (required)
+        :type truth: AddValidationRapidModelTruth
+        :param validation_set_id: The ID of the validation set to add the rapid to.
+        :type validation_set_id: str
+        :param random_correct_probability: The probability for an answer to be correct when randomly guessing.
+        :type random_correct_probability: float
+        :param files:
         :type files: List[bytearray]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -166,7 +196,11 @@ class ValidationApi:
         """ # noqa: E501
 
         _param = self._validation_add_validation_rapid_post_serialize(
-            model=model,
+            payload=payload,
+            metadata=metadata,
+            truth=truth,
+            validation_set_id=validation_set_id,
+            random_correct_probability=random_correct_probability,
             files=files,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -191,8 +225,12 @@ class ValidationApi:
     @validate_call
     def validation_add_validation_rapid_post_without_preload_content(
         self,
-        model: Optional[AddValidationRapidModel] = None,
-        files: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The files to be used as assets for the validation rapid. Each file will create a new rapid.")] = None,
+        payload: AddValidationRapidModelPayload,
+        metadata: Annotated[List[DatapointMetadataModelMetadataInner], Field(description="Some metadata to attach to the rapid.")],
+        truth: AddValidationRapidModelTruth,
+        validation_set_id: Annotated[Optional[StrictStr], Field(description="The ID of the validation set to add the rapid to.")] = None,
+        random_correct_probability: Annotated[Optional[Union[StrictFloat, StrictInt]], Field(description="The probability for an answer to be correct when randomly guessing.")] = None,
+        files: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -209,9 +247,17 @@ class ValidationApi:
         """Adds a new validation rapid to the specified validation set.
 
 
-        :param model:
-        :type model: AddValidationRapidModel
-        :param files: The files to be used as assets for the validation rapid. Each file will create a new rapid.
+        :param payload: (required)
+        :type payload: AddValidationRapidModelPayload
+        :param metadata: Some metadata to attach to the rapid. (required)
+        :type metadata: List[DatapointMetadataModelMetadataInner]
+        :param truth: (required)
+        :type truth: AddValidationRapidModelTruth
+        :param validation_set_id: The ID of the validation set to add the rapid to.
+        :type validation_set_id: str
+        :param random_correct_probability: The probability for an answer to be correct when randomly guessing.
+        :type random_correct_probability: float
+        :param files:
         :type files: List[bytearray]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -236,7 +282,11 @@ class ValidationApi:
         """ # noqa: E501
 
         _param = self._validation_add_validation_rapid_post_serialize(
-            model=model,
+            payload=payload,
+            metadata=metadata,
+            truth=truth,
+            validation_set_id=validation_set_id,
+            random_correct_probability=random_correct_probability,
             files=files,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -256,7 +306,11 @@ class ValidationApi:
 
     def _validation_add_validation_rapid_post_serialize(
         self,
-        model,
+        payload,
+        metadata,
+        truth,
+        validation_set_id,
+        random_correct_probability,
         files,
         _request_auth,
         _content_type,
@@ -267,6 +321,7 @@ class ValidationApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
+            'metadata': 'csv',
             'files': 'multi',
         }
 
@@ -283,8 +338,16 @@ class ValidationApi:
         # process the query parameters
         # process the header parameters
         # process the form parameters
-        if model is not None:
-            _form_params.append(('model', model))
+        if validation_set_id is not None:
+            _form_params.append(('validationSetId', validation_set_id))
+        if payload is not None:
+            _form_params.append(('payload', payload))
+        if metadata is not None:
+            _form_params.append(('metadata', metadata))
+        if truth is not None:
+            _form_params.append(('truth', truth))
+        if random_correct_probability is not None:
+            _form_params.append(('randomCorrectProbability', random_correct_probability))
         if files is not None:
             _files['files'] = files
         # process the body parameter

@@ -147,7 +147,6 @@ Class | Method | HTTP request | Description
 
  - [AddCampaignArtifactResult](rapidata/api_client/docs/AddCampaignArtifactResult.md)
  - [AddCampaignModel](rapidata/api_client/docs/AddCampaignModel.md)
- - [AddValidationRapidModel](rapidata/api_client/docs/AddValidationRapidModel.md)
  - [AddValidationRapidModelPayload](rapidata/api_client/docs/AddValidationRapidModelPayload.md)
  - [AddValidationRapidModelTruth](rapidata/api_client/docs/AddValidationRapidModelTruth.md)
  - [AddValidationRapidResult](rapidata/api_client/docs/AddValidationRapidResult.md)
@@ -206,7 +205,6 @@ Class | Method | HTTP request | Description
  - [CreateComplexOrderResult](rapidata/api_client/docs/CreateComplexOrderResult.md)
  - [CreateDatasetArtifactModel](rapidata/api_client/docs/CreateDatasetArtifactModel.md)
  - [CreateDatasetArtifactModelDataset](rapidata/api_client/docs/CreateDatasetArtifactModelDataset.md)
- - [CreateDemographicRapidModel](rapidata/api_client/docs/CreateDemographicRapidModel.md)
  - [CreateEmptyValidationSetResult](rapidata/api_client/docs/CreateEmptyValidationSetResult.md)
  - [CreateOrderModel](rapidata/api_client/docs/CreateOrderModel.md)
  - [CreateOrderModelReferee](rapidata/api_client/docs/CreateOrderModelReferee.md)
@@ -220,7 +218,6 @@ Class | Method | HTTP request | Description
  - [Datapoint](rapidata/api_client/docs/Datapoint.md)
  - [DatapointAsset](rapidata/api_client/docs/DatapointAsset.md)
  - [DatapointGetByIdGet200Response](rapidata/api_client/docs/DatapointGetByIdGet200Response.md)
- - [DatapointMetadataModel](rapidata/api_client/docs/DatapointMetadataModel.md)
  - [DatapointMetadataModelMetadataInner](rapidata/api_client/docs/DatapointMetadataModelMetadataInner.md)
  - [DatapointModel](rapidata/api_client/docs/DatapointModel.md)
  - [DatapointModelAsset](rapidata/api_client/docs/DatapointModelAsset.md)
