@@ -1,0 +1,10 @@
+{
+    "include": [
+        "src/rapidata/rapidata_client"
+    ],
+    "pythonPath": "python",
+    "pythonPlatform": "All",
+    "extraPaths": [
+        "src"
+    ]
+}
