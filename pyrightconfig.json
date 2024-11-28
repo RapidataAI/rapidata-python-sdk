@@ -2,9 +2,11 @@
     "include": [
         "src/rapidata/rapidata_client"
     ],
-    "pythonPath": "python",
-    "pythonPlatform": "All",
     "extraPaths": [
         "src"
-    ]
+    ],
+    "typeCheckingMode": "strict",
+    "reportMissingTypeStubs": false,
+    "useLibraryCodeForTypes": true,
+    "pythonVersion": "3.8"
 }
