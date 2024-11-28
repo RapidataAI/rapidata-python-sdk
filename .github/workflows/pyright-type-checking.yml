@@ -1,0 +1,25 @@
+name: Python Type Checking with Pyright
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  type-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+      
+      - name: Install Poetry
+        run: pipx install poetry
+        
+      - name: Install dependencies
+        run: poetry install --no-interaction
+        
+      - name: Install Pyright
+        run: npm install -g pyright
+
+      - name: Run Pyright Type Checking
+        run: pyright src/rapidata/rapidata_client
