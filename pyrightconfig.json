@@ -8,5 +8,5 @@
     "typeCheckingMode": "strict",
     "reportMissingTypeStubs": false,
     "useLibraryCodeForTypes": true,
-    "pythonVersion": "3.8"
+    "pythonVersion": "3.10"
 }
