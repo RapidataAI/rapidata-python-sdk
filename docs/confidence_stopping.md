@@ -22,9 +22,9 @@ The Early Stopping feature leverages the trustworthiness, quantified through the
 - **Aggregated Confidence**: By combining the userScores of annotators who selected a particular category, the system computes the probability that this category is the correct one.
 - **Threshold Comparison**: If the calculated confidence exceeds your specified threshold, the system stops collecting further responses for that datapoint.
 
-## Understanding the Confidence Threshold Plot
+## Understanding the Confidence Threshold
 
-To help you estimate the number of responses needed to reach different confidence levels, we've conducted a thousand simulations based on actual userScore distributions.
+We've created a plot to give you an estimate of the number of responses required to reach a certain confidence level.
 
 There are a few things to keep in mind when interpreting the results:
 
