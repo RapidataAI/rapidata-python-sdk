@@ -108,13 +108,26 @@ class ClassificationOrderBuilder:
 
         return self
 
-    @deprecated("Use .run instead.")
+    @deprecated("Use .submit instead.")
     def create(self, submit: bool = True, max_upload_workers: int = 10) -> 'RapidataOrder':
         """Create the classification order."""
-        return self.run(submit=submit, disable_link=False)
-
+        return self.submit(submit=submit, disable_link=False)
+    
+    @deprecated("Use .submit instead.")
     def run(self, submit: bool = True, disable_link: bool = False) -> 'RapidataOrder':
         """Run the classification order.
+        
+        Args:
+            submit (bool): Whether to submit the order. Defaults to True. \
+                Set this to False if you first want to see the order on your dashboard before running it.
+            disable_link (bool): Whether to disable the printing of the link to the order. Defaults to False.
+            
+        Returns:
+            RapidataOrder: The created classification order."""
+        return self.submit(submit=submit, disable_link=disable_link)
+
+    def submit(self, submit: bool = True, disable_link: bool = False) -> 'RapidataOrder':
+        """Submit the classification order to be labeled.
         
         Args:
             submit (bool): Whether to submit the order. Defaults to True. \

@@ -53,14 +53,14 @@ Implementing Early Stopping is straightforward. You simply add the .confidence_t
 ### Example: Classification Order with Early Stopping
 
 ```python
-order = (rapi
-        .create_classify_order("Test Classification Order")
+order = (rapi.order_builder
+        .classify_order("Test Classification Order")
         .question("What do you see in the image?")
         .options(["Dog", "Cat"])
         .media(["https://assets.rapidata.ai/dog.jpeg"])
         .responses(50)
         .confidence_threshold(0.99)
-        .run())
+        .submit())
 
 order.display_progress_bar()
 result = order.get_results()

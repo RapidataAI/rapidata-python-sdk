@@ -46,8 +46,8 @@ class RapidataOrderBuilder:
 
     def __init__(
         self,
-        openapi_service: OpenAPIService,
         name: str,
+        openapi_service: OpenAPIService,
     ):
         """
         Initialize the RapidataOrderBuilder.

@@ -43,10 +43,10 @@ rapi = RapidataClient(client_id="Your client ID", client_secret="Your client sec
 
 ### Creating an Order
 
-1. Create a new `Classification Order` and specify the name:
+1. Create a new `Classification Order` and specify the name by making use of the `order_builder`:
 
 ```py
-order_builder = rapi.create_classify_order("Example Classification Order")
+order_builder = rapi.order_builder.classify_order("Example Classification Order")
 ```
 
 2. Add the question you want to ask.
@@ -79,10 +79,10 @@ order_builder = order_builder.media(["examples/data/wallaby.jpg"])
 order_builder = order_builder.responses(20)
 ```
 
-6. Finally we want to run the order. This sends the order off for verification and will start collecting responses.
+6. Finally we want to submit the order. This sends the order off for verification and will start collecting responses.
 
 ```py
-order = order_builder.run()
+order = order_builder.submit()
 ```
 
 7. You can see your orders on the [Rapidata Dashboard](https://app.rapidata.ai/dashboard/orders).
@@ -93,12 +93,13 @@ order = order_builder.run()
 The `RapidataSDK` supports a fluent interface, allowing method call chaining. This enables a more concise order creation:
 
 ```py
-order = (rapi.create_classify_order("Example Classification Order")
+order = (rapi.order_builder
+         .classify_order("Example Classification Order")
          .question("What is shown in the image?")
          .options(["Fish", "Cat", "Wallaby", "Airplane"])
          .media(["https://assets.rapidata.ai/wallaby.jpg"])
          .responses(20)
-         .run())
+         .submit())
 ```
 
 ### Retrieve Orders

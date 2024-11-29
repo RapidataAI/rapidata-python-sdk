@@ -13,23 +13,23 @@ def new_compare_order(rapi: RapidataClient):
     validation_set_builder = rapi.new_validation_set(name="Example SimpleMatchup Validation Set")
 
     validation_set = validation_set_builder.add_rapid(
-        rapi.rapid_builder
-        .compare_rapid()
+        rapi.rapid_builder.compare_rapid()
         .criteria("Which logo is the actual Rapidata logo?")
         .media([logo_path, concept_path])
         .truth(logo_path)
         .build()
-    ).create()
+    ).submit()
 
     # configure order
     order = (
-        rapi.create_compare_order(name="Example SimpleMatchup Order")
+        rapi.order_builder
+        .compare_order(name="Example SimpleMatchup Order")
         .criteria("Which logo is better?")
         .media([[concept_path, logo_path]])
         .responses(10)
         .prompts(["Hint: This is not a trick question"])
         .validation_set(validation_set.id)
-        .run()
+        .submit()
     )
 
     return order

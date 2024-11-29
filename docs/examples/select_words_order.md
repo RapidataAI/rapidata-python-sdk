@@ -1,6 +1,6 @@
 # Example Select Words Order
 
-This example builds on what was introduced in the [Quickstart](quickstart.md) as well as the [Improve Order Quality](improve_order_quality.md) guide.
+This example builds on what was introduced in the [Quickstart](/rapidata-python-sdk/quickstart/) as well as the [Improve Order Quality](/rapidata-python-sdk/improve_order_quality/) guide.
 
 ## Order description
 
