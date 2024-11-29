@@ -1,6 +1,7 @@
 import json
 import os
 import time
+import urllib.parse
 import webbrowser
 from datetime import datetime, timezone
 from pathlib import Path
@@ -10,8 +11,6 @@ from typing import Dict, List, Optional, Tuple
 import requests
 from colorama import Fore
 from pydantic import BaseModel
-
-import colorama
 
 
 class ClientCredential(BaseModel):
