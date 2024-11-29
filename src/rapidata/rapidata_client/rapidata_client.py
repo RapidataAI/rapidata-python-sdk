@@ -5,6 +5,8 @@ from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 from rapidata.rapidata_client.dataset.rapidata_dataset import RapidataDataset
 
+from rapidata.rapidata_client.order.order_builder import BaseOrderBuilder
+
 from rapidata.rapidata_client.simple_builders.simple_classification_builders import ClassificationQuestionBuilder
 from rapidata.rapidata_client.simple_builders.simple_compare_builders import CompareCriteriaBuilder
 from rapidata.rapidata_client.simple_builders.simple_free_text_builders import FreeTextQuestionBuilder
@@ -28,8 +30,6 @@ from deprecated import deprecated
 
 class RapidataClient:
     """The Rapidata client is the main entry point for interacting with the Rapidata API. It allows you to create orders and validation sets."""
-
-    rapid_builder = BaseRapidBuilder()
     
     def __init__(
         self,
@@ -53,8 +53,12 @@ class RapidataClient:
             oauth_scope=oauth_scope,
             cert_path=cert_path
         )
+        
+        self.rapid_builder = BaseRapidBuilder()
+
+        self.order_builder = BaseOrderBuilder(openapi_service=self.openapi_service)
     
-    @deprecated("Use the specific builder methods or new_advanced_order instead.")
+    @deprecated("Use the order_builder instead.")
     def new_order(self, name: str) -> RapidataOrderBuilder:
         """Create a new order using a RapidataOrderBuilder instance.
 
@@ -66,6 +70,7 @@ class RapidataClient:
         """
         return self.new_advanced_order(name)
     
+    @deprecated("Use the order_builder instead.")
     def new_advanced_order(self, name: str) -> RapidataOrderBuilder:
         """Create a new order using a RapidataOrderBuilder instance.
         This method is intended for creating orders with complex requirements that can not be fulfilled with the specific builders.
@@ -78,7 +83,7 @@ class RapidataClient:
         Returns:
             RapidataOrderBuilder: A RapidataOrderBuilder instance.
         """
-        return RapidataOrderBuilder(openapi_service=self.openapi_service, name=name)
+        return RapidataOrderBuilder(name=name, openapi_service=self.openapi_service)
 
     def new_validation_set(self, name: str) -> ValidationSetBuilder:
         """Create a new validation set using a ValidationDatasetBuilder instance.
@@ -175,6 +180,7 @@ class RapidataClient:
         orders = [self.get_validation_set(validation_set.id) for validation_set in validation_page_result.items] # type: ignore # will be fixed with the next backend deployment
         return orders
 
+    @deprecated("Use the order_builder instead.")
     def create_classify_order(self, name: str) -> ClassificationQuestionBuilder:
         """Create a new classification order where people are asked to classify an image.
 
@@ -186,6 +192,7 @@ class RapidataClient:
         """
         return ClassificationQuestionBuilder(name=name, openapi_service=self.openapi_service)
 
+    @deprecated("Use the order_builder instead.")
     def create_compare_order(self, name: str) -> CompareCriteriaBuilder:
         """Create a new comparison order where people are asked to compare two images.
 
@@ -197,6 +204,7 @@ class RapidataClient:
         """
         return CompareCriteriaBuilder(name=name, openapi_service=self.openapi_service)
     
+    @deprecated("Use the order_builder instead.")
     def create_free_text_order(self, name: str) -> FreeTextQuestionBuilder:
         """Create a new free text order where people are asked to provide a free text answer.
 
@@ -208,6 +216,7 @@ class RapidataClient:
         """
         return FreeTextQuestionBuilder(name=name, openapi_service=self.openapi_service)
     
+    @deprecated("Use the order_builder instead.")
     def create_select_words_order(self, name: str) -> SelectWordsInstructionBuilder:
         """Create a new select words order where people are asked to transcribe an audio file.
 

@@ -82,9 +82,19 @@ class SelectWordsOrderBuilder:
             self._settings.translation_behaviour(TranslationBehaviour.ONLY_TRANSLATED)
 
         return self
-
+    
     def run(self, submit: bool = True, disable_link: bool = False) -> 'RapidataOrder':
         """Run the order.
+        
+        Args:
+            submit (bool): Whether to submit the order. Defaults to True. \
+                Set this to False if you first want to see the order on your dashboard before running it.
+            disable_link (bool): Whether to disable the printing of the link to the order. Defaults to False."""
+        
+        return self.submit(submit=submit, disable_link=disable_link)
+
+    def submit(self, submit: bool = True, disable_link: bool = False) -> 'RapidataOrder':
+        """Submit the order to be labeled.
         
         Args:
             submit (bool): Whether to submit the order. Defaults to True. \

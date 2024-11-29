@@ -37,7 +37,7 @@ def create_validation_set(rapi: RapidataClient):
             .build()
         )
 
-    return validation_set_builder.create()
+    return validation_set_builder.submit()
 
 def get_prompt_image_alignment(rapi: RapidataClient, validatation_set_id: str):
     base_url = "https://assets.rapidata.ai/"
@@ -57,13 +57,14 @@ def get_prompt_image_alignment(rapi: RapidataClient, validatation_set_id: str):
     image_urls = [[f"{base_url}flux_{image}", f"{base_url}mj_{image}"] for image in images] # list of image pairs to be matched with prompts
 
     order = (
-        rapi.create_compare_order(name="Example Image Prompt Alignment Order")
+        rapi.order_builder
+        .compare_order(name="Example Image Prompt Alignment Order")
         .criteria("Which image follows the prompt more accurately?")
         .media(image_urls)
         .prompts(prompts)
         .responses(25)
         .validation_set(validatation_set_id)
-        .run()
+        .submit()
     )
 
     return order

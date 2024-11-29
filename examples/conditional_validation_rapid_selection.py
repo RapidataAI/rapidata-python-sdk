@@ -25,7 +25,7 @@ def new_cond_validation_rapid_order(rapi: RapidataClient):
             truths=["Marsupial"],
             metadata=[PromptMetadata(prompt="Hint: It has a pouch")],
         )
-        .create()
+        .submit()
     )
 
     # Configure order

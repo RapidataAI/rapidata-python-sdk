@@ -22,11 +22,12 @@ Set up your environment and make your first API request in minutes.
 
     rapi = RapidataClient()
 
-    order = (rapi.create_classify_order("Example Classification Order")
+    order = (rapi.order_builder
+            .classify_order("Example Classification Order")
             .question("What is shown in the image?")
             .options(["Fish", "Cat", "Wallaby", "Airplane"])
             .media(["https://assets.rapidata.ai/wallaby.jpg"])
-            .create())
+            .submit())
 
     order.display_progress_bar()
 
