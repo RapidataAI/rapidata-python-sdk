@@ -1,6 +1,6 @@
 # Example Compare Order
 
-This example builds on what was introduced in the [Quickstart](/rapidata-python-sdk/quickstart/) as well as the [Improve Order Quality](/rapidata-python-sdk/improve_order_quality/) guide.
+This example builds on what was introduced in the [Quickstart](/quickstart/) as well as the [Improve Order Quality](/improve_order_quality/) guide.
 
 ## Order description
 

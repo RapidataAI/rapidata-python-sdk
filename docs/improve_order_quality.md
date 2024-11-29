@@ -1,6 +1,6 @@
 # Improve Response Quality
 
-This guide builds on the [Quickstart](/rapidata-python-sdk/quickstart/) and focuses on improving the quality of responses received for your orders. By creating a **Validation Set**, you can provide clear guidance to labelers, helping them better understand your expectations. While using a validation set is optional, it significantly enhances response accuracy and consistency, especially for more complex or unintuitve tasks.
+This guide builds on the [Quickstart](/quickstart/) and focuses on improving the quality of responses received for your orders. By creating a **Validation Set**, you can provide clear guidance to labelers, helping them better understand your expectations. While using a validation set is optional, it significantly enhances response accuracy and consistency, especially for more complex or unintuitve tasks.
 
 ### Why Use a Validation Set?
 

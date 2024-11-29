@@ -1,5 +1,5 @@
 # Advanced orders examples
-Directly ask real humans to classify your data. This guide will show you how to create the same classification order shown in the [Quickstart](/rapidata-python-sdk/quickstart/) using the advanced order builder which allows for more options and customization.
+Directly ask real humans to classify your data. This guide will show you how to create the same classification order shown in the [Quickstart](/quickstart/) using the advanced order builder which allows for more options and customization.
 
 We will create an order, specify what question and answer options we want to have, as well as upload the data we want to classify.
 

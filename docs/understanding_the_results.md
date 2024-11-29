@@ -2,7 +2,7 @@
 
 After running your order and collecting responses, you'll receive a structured result containing valuable insights from the annotators. Understanding each component of this result is crucial for analyzing and utilizing the data effectively.
 
-Here's an example of the results you might receive when running the [Quickstart order](/rapidata-python-sdk/quickstart/) (for simplicity, this example uses only 3 responses):
+Here's an example of the results you might receive when running the [Quickstart order](/quickstart/) (for simplicity, this example uses only 3 responses):
 
 ```json
 {

@@ -18,7 +18,7 @@ Early Stopping addresses this by:
 The Early Stopping feature leverages the trustworthiness, quantified through their `userScores`, to calculate the confidence level of each category for any given datapoint.
 
 ### Confidence Calculation
-- **UserScores**: Each annotator has a `userScore` between 0 and 1, representing their reliability. [More information](/rapidata-python-sdk/understanding_the_results/#understanding-the-user-scores)
+- **UserScores**: Each annotator has a `userScore` between 0 and 1, representing their reliability. [More information](/understanding_the_results/#understanding-the-user-scores)
 - **Aggregated Confidence**: By combining the userScores of annotators who selected a particular category, the system computes the probability that this category is the correct one.
 - **Threshold Comparison**: If the calculated confidence exceeds your specified threshold, the system stops collecting further responses for that datapoint.
 
@@ -35,7 +35,7 @@ There are a few things to keep in mind when interpreting the results:
 
 
 <div style="width: 780px; height: 650px; overflow: hidden;">
-    <iframe src="/rapidata-python-sdk/plots/confidence_threshold_plot_with_slider_darkmode.html"
+    <iframe src="/plots/confidence_threshold_plot_with_slider_darkmode.html"
             width="100%" 
             height="100%" 
             frameborder="0" 
@@ -83,7 +83,7 @@ We recommend using Early Stopping when:
 
 ## Analyzing Early Stopping Results
 
-When using Early Stopping, the [results](/rapidata-python-sdk/understanding_the_results/) will additionally include a `confidencePerCategory` field for each datapoint. This field shows the confidence level for each of the categories in the task.
+When using Early Stopping, the [results](/understanding_the_results/) will additionally include a `confidencePerCategory` field for each datapoint. This field shows the confidence level for each of the categories in the task.
 
 Example:
 ```json
