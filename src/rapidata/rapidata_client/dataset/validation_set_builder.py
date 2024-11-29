@@ -44,7 +44,7 @@ class ValidationSetBuilder:
         self.validation_set_id: str | None = None
         self._rapid_parts: list[ValidatioRapidParts] = []
 
-    def create(self) -> RapidataValidationSet:
+    def submit(self) -> RapidataValidationSet:
         """Create the validation set by executing all HTTP requests. This should be the last method called on the builder.
 
         Returns:
@@ -79,6 +79,18 @@ class ValidationSetBuilder:
             )
 
         return validation_set
+
+    @deprecated("Use submit instead")
+    def create(self) -> RapidataValidationSet:
+        """Create the validation set by executing all HTTP requests. This should be the last method called on the builder.
+
+        Returns:
+            RapidataValidationSet: A RapidataValidationSet instance.
+
+        Raises:
+            ValueError: If the validation set creation fails.
+        """
+        return self.submit()
     
     def add_rapid(self, rapid: Rapid):
         """Add a rapid to the validation set.

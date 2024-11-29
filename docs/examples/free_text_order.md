@@ -1,6 +1,6 @@
 # Example Free Text Order
 
-This example builds on what was introduced in the [Quickstart](quickstart.md).
+This example builds on what was introduced in the [Quickstart](/rapidata-python-sdk/quickstart/).
 
 ## Order description
 

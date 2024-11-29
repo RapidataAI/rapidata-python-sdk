@@ -52,14 +52,16 @@ markdown_extensions:
 nav:
   - Overview: index.md
   - quickstart.md
+  - Understanding The Results: understanding_the_results.md
   - Improve Quality: improve_order_quality.md
+  - Improve Efficency: confidence_stopping.md
   - Examples:
     - Classification: examples/classify_order.md
     - Compare: examples/compare_order.md
     - Free Text: examples/free_text_order.md
     - SelectWords: examples/select_words_order.md
-  - Customization:
-    - Custom orders: custom_orders.md
+  - Advanced Orders:
+    - Advanced Orders Intro: advanced_orders.md
   - API Documentation: api.md
 
 theme:

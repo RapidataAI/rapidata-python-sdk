@@ -23,12 +23,13 @@ def new_compare_order(rapi: RapidataClient):
 
     # configure order
     order = (
-        rapi.create_compare_order(name="Example Compare Order")
+        rapi.order_builder
+        .compare_order(name="Example Compare Order")
         .criteria("Which logo is better?")
         .media([[concept_path, logo_path]])
         .responses(10)
         .validation_set(validation_set.id)
-        .run()
+        .submit()
     )
 
     return order

@@ -23,13 +23,16 @@ class CompareOrderBuilder:
         self._responses_required = 10
         self._metadata = None
         self._validation_set_id = None
-        self._probability_threshold = None
+        self._confidence_threshold = None
         self._filters: list[Filter] = []
         self._settings = Settings()
         self._time_effort = time_effort
 
     def responses(self, responses_required: int) -> 'CompareOrderBuilder':
         """Set the number of resoonses required per matchup/pairing for the comparison order. Will default to 10 if not set."""
+        if responses_required < 1:
+            raise ValueError("Responses required must be at least 1.")
+        
         self._responses_required = responses_required
         return self
     
@@ -61,9 +64,10 @@ class CompareOrderBuilder:
         self._validation_set_id = validation_set_id
         return self
     
-    def probability_threshold(self, probability_threshold: float) -> 'CompareOrderBuilder':
-        """Set the probability threshold for early stopping."""
-        self._probability_threshold = probability_threshold
+    def confidence_threshold(self, confidence_threshold: float) -> 'CompareOrderBuilder':
+        """Set the confidence threshold for early stopping.
+        That means that the order will either stop at the number of responses or when the confidence threshold is reached, whatever comes first."""
+        self._confidence_threshold = confidence_threshold
         return self
     
     def countries(self, country_codes: list[str]) -> 'CompareOrderBuilder':
@@ -103,10 +107,10 @@ class CompareOrderBuilder:
 
         return self
     
-    @deprecated("Use .run instead.")
+    @deprecated("Use .submit instead.")
     def create(self, submit: bool = True, max_upload_workers: int = 10) -> 'RapidataOrder':
         """Create the classification order."""
-        return self.run(submit=submit, disable_link=False)
+        return self.submit(submit=submit, disable_link=False)
     
     def run(self, submit: bool = True, disable_link: bool = False) -> RapidataOrder:
         """Run the compare order.
@@ -118,11 +122,24 @@ class CompareOrderBuilder:
             
         Returns:
             RapidataOrder: The created compare order."""
+            
+        return self.submit(submit=submit, disable_link=disable_link)
+    
+    def submit(self, submit: bool = True, disable_link: bool = False) -> RapidataOrder:
+        """Submit the compare order to be labeled.
         
-        if self._probability_threshold and self._responses_required:
+        Args:
+            submit (bool): Whether to submit the order. Defaults to True. \
+                Set this to False if you first want to see the order on your dashboard before running it.
+            disable_link (bool): Whether to disable the printing of the link to the order. Defaults to False.
+            
+        Returns:
+            RapidataOrder: The created compare order."""
+        
+        if self._confidence_threshold:
             referee = EarlyStoppingReferee(
                 max_vote_count=self._responses_required,
-                threshold=self._probability_threshold
+                threshold=self._confidence_threshold
             )
 
         else:
