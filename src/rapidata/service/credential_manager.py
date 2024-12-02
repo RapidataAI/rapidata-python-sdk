@@ -1,6 +1,7 @@
 import json
 import os
 import time
+import urllib.parse
 import webbrowser
 from datetime import datetime, timezone
 from pathlib import Path
@@ -8,6 +9,7 @@ from socket import gethostname
 from typing import Dict, List, Optional, Tuple
 
 import requests
+from colorama import Fore
 from pydantic import BaseModel
 
 
@@ -206,7 +208,15 @@ class CredentialManager:
             return None
 
         auth_url = f"{self.endpoint}/connect/authorize/external?clientId=rapidata-cli&scope=openid profile email roles&writeKey={bridge_endpoint.write_key}"
-        webbrowser.open(auth_url)
+        could_open_browser = webbrowser.open(auth_url)
+
+        if not could_open_browser:
+            encoded_url = urllib.parse.quote(auth_url, safe="%/:=&?~#+!$,;'@()*[]")
+            print(
+                Fore.RED
+                + f'Please open the following URL in your browser to log in: "{encoded_url}"'
+                + Fore.RESET
+            )
 
         access_token = self._poll_read_key(bridge_endpoint.read_key)
         if not access_token:
