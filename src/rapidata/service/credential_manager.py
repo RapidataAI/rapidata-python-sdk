@@ -215,6 +215,7 @@ class CredentialManager:
             print(
                 Fore.RED
                 + f'Please open the following URL in your browser to log in: "{encoded_url}"'
+                + Fore.RESET
             )
 
         access_token = self._poll_read_key(bridge_endpoint.read_key)
