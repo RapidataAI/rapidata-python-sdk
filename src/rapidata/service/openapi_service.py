@@ -9,8 +9,6 @@ from rapidata.api_client.api_client import ApiClient
 from rapidata.api_client.configuration import Configuration
 from rapidata.service.token_manager import TokenManager, TokenInfo
 
-from importlib.metadata import version, PackageNotFoundError
-
 
 class OpenAPIService:
     def __init__(
@@ -21,9 +19,9 @@ class OpenAPIService:
         oauth_scope: str,
         cert_path: str | None = None,
     ):
-        self.enviroment = enviroment
-        endpoint = f"https://api.{enviroment}"
-        token_url = f"https://auth.{enviroment}"
+        self.enviroment = enviroment  
+        endpoint=f"https://api.{enviroment}"
+        token_url=f"https://auth.{enviroment}"
         token_manager = TokenManager(
             client_id=client_id,
             client_secret=client_secret,
@@ -32,11 +30,7 @@ class OpenAPIService:
             cert_path=cert_path,
         )
         client_configuration = Configuration(host=endpoint, ssl_ca_cert=cert_path)
-        self.api_client = ApiClient(
-            configuration=client_configuration,
-            header_name="X-Client",
-            header_value=f"RapidataPythonSDK/{self._get_rapidata_package_version()}",
-        )
+        self.api_client = ApiClient(configuration=client_configuration)
 
         self.api_client.configuration.api_key["bearer"] = (
             f"Bearer {token_manager.fetch_token().access_token}"
@@ -80,16 +74,3 @@ class OpenAPIService:
 
     def _set_token(self, token: TokenInfo):
         self.api_client.configuration.api_key["bearer"] = f"Bearer {token.access_token}"
-
-    def _get_rapidata_package_version(self):
-        """
-        Returns the version of the currently installed rapidata package.
-
-        Returns:
-            Optional[str]: The version of the installed rapidata package,
-                        or None if the package is not found
-        """
-        try:
-            return version("rapidata")
-        except PackageNotFoundError:
-            return None
