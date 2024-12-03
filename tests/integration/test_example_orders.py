@@ -1,10 +1,10 @@
 import time
 import unittest
 from rapidata import RapidataClient
-from examples.classify_order import new_classify_order
+from examples.classify_order import get_emotions_of_images_order
 from examples.compare_order import new_compare_order
-from examples.free_text_order import new_free_text_order
-from examples.select_words_order import new_transcription_order
+from examples.free_text_order import get_prompt_ideas
+import examples.select_words_order as select_words_order
 from examples.classify_text_asset_order import new_classify_text_asset_order
 from examples.conditional_validation_rapid_selection import (
     new_cond_validation_rapid_order,
@@ -17,19 +17,20 @@ class TestExampleOrders(unittest.TestCase):
         self.rapi = RapidataClient()
 
     def test_classify_order(self):
-        new_classify_order(self.rapi)
+        get_emotions_of_images_order(self.rapi)
 
     def test_classify_text_asset_order(self):
         new_classify_text_asset_order(self.rapi)
 
     def test_free_text_input_order(self):
-        new_free_text_order(self.rapi)
+        get_prompt_ideas(self.rapi)
 
     def test_compare_order(self):
         new_compare_order(self.rapi)
 
     def test_transcription_order(self):
-        new_transcription_order(self.rapi)
+        validation_set = select_words_order.create_validation_set(self.rapi)
+        select_words_order.new_select_words_order(self.rapi, validation_set.id)
 
     def test_cond_validation_order(self):
         new_cond_validation_rapid_order(self.rapi)
