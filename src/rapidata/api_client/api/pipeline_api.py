@@ -22,7 +22,8 @@ from typing_extensions import Annotated
 from rapidata.api_client.models.add_campaign_artifact_result import AddCampaignArtifactResult
 from rapidata.api_client.models.add_campaign_model import AddCampaignModel
 from rapidata.api_client.models.get_pipeline_by_id_result import GetPipelineByIdResult
-from rapidata.api_client.models.update_workflow_config_request import UpdateWorkflowConfigRequest
+from rapidata.api_client.models.pipeline_id_workflow_put_request import PipelineIdWorkflowPutRequest
+from rapidata.api_client.models.update_campaign_model import UpdateCampaignModel
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -43,8 +44,306 @@ class PipelineApi:
 
 
     @validate_call
-    def pipeline_add_campaign_patch(
+    def pipeline_id_campaign_artifact_id_put(
         self,
+        id: Annotated[StrictStr, Field(description="The id of the pipeline to update.")],
+        artifact_id: Annotated[StrictStr, Field(description="The id of the campaign artifact to update.")],
+        update_campaign_model: Annotated[Optional[UpdateCampaignModel], Field(description="The new campaign settings.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> None:
+        """Updates a specific campaign for a pipeline.
+
+
+        :param id: The id of the pipeline to update. (required)
+        :type id: str
+        :param artifact_id: The id of the campaign artifact to update. (required)
+        :type artifact_id: str
+        :param update_campaign_model: The new campaign settings.
+        :type update_campaign_model: UpdateCampaignModel
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._pipeline_id_campaign_artifact_id_put_serialize(
+            id=id,
+            artifact_id=artifact_id,
+            update_campaign_model=update_campaign_model,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def pipeline_id_campaign_artifact_id_put_with_http_info(
+        self,
+        id: Annotated[StrictStr, Field(description="The id of the pipeline to update.")],
+        artifact_id: Annotated[StrictStr, Field(description="The id of the campaign artifact to update.")],
+        update_campaign_model: Annotated[Optional[UpdateCampaignModel], Field(description="The new campaign settings.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
+        """Updates a specific campaign for a pipeline.
+
+
+        :param id: The id of the pipeline to update. (required)
+        :type id: str
+        :param artifact_id: The id of the campaign artifact to update. (required)
+        :type artifact_id: str
+        :param update_campaign_model: The new campaign settings.
+        :type update_campaign_model: UpdateCampaignModel
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._pipeline_id_campaign_artifact_id_put_serialize(
+            id=id,
+            artifact_id=artifact_id,
+            update_campaign_model=update_campaign_model,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def pipeline_id_campaign_artifact_id_put_without_preload_content(
+        self,
+        id: Annotated[StrictStr, Field(description="The id of the pipeline to update.")],
+        artifact_id: Annotated[StrictStr, Field(description="The id of the campaign artifact to update.")],
+        update_campaign_model: Annotated[Optional[UpdateCampaignModel], Field(description="The new campaign settings.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Updates a specific campaign for a pipeline.
+
+
+        :param id: The id of the pipeline to update. (required)
+        :type id: str
+        :param artifact_id: The id of the campaign artifact to update. (required)
+        :type artifact_id: str
+        :param update_campaign_model: The new campaign settings.
+        :type update_campaign_model: UpdateCampaignModel
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._pipeline_id_campaign_artifact_id_put_serialize(
+            id=id,
+            artifact_id=artifact_id,
+            update_campaign_model=update_campaign_model,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _pipeline_id_campaign_artifact_id_put_serialize(
+        self,
+        id,
+        artifact_id,
+        update_campaign_model,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if id is not None:
+            _path_params['id'] = id
+        if artifact_id is not None:
+            _path_params['artifact-id'] = artifact_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if update_campaign_model is not None:
+            _body_params = update_campaign_model
+
+
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json', 
+                        'text/json', 
+                        'application/*+json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'bearer', 
+            'oauth2'
+        ]
+
+        return self.api_client.param_serialize(
+            method='PUT',
+            resource_path='/pipeline/{id}/campaign/{artifact-id}',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def pipeline_id_campaign_post(
+        self,
+        id: Annotated[StrictStr, Field(description="The id of the pipeline to update")],
         add_campaign_model: Optional[AddCampaignModel] = None,
         _request_timeout: Union[
             None,
@@ -62,6 +361,8 @@ class PipelineApi:
         """Adds a campaign to a pipeline.
 
 
+        :param id: The id of the pipeline to update (required)
+        :type id: str
         :param add_campaign_model: 
         :type add_campaign_model: AddCampaignModel
         :param _request_timeout: timeout setting for this request. If one
@@ -86,7 +387,8 @@ class PipelineApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._pipeline_add_campaign_patch_serialize(
+        _param = self._pipeline_id_campaign_post_serialize(
+            id=id,
             add_campaign_model=add_campaign_model,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -109,8 +411,9 @@ class PipelineApi:
 
 
     @validate_call
-    def pipeline_add_campaign_patch_with_http_info(
+    def pipeline_id_campaign_post_with_http_info(
         self,
+        id: Annotated[StrictStr, Field(description="The id of the pipeline to update")],
         add_campaign_model: Optional[AddCampaignModel] = None,
         _request_timeout: Union[
             None,
@@ -128,6 +431,8 @@ class PipelineApi:
         """Adds a campaign to a pipeline.
 
 
+        :param id: The id of the pipeline to update (required)
+        :type id: str
         :param add_campaign_model: 
         :type add_campaign_model: AddCampaignModel
         :param _request_timeout: timeout setting for this request. If one
@@ -152,7 +457,8 @@ class PipelineApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._pipeline_add_campaign_patch_serialize(
+        _param = self._pipeline_id_campaign_post_serialize(
+            id=id,
             add_campaign_model=add_campaign_model,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -175,8 +481,9 @@ class PipelineApi:
 
 
     @validate_call
-    def pipeline_add_campaign_patch_without_preload_content(
+    def pipeline_id_campaign_post_without_preload_content(
         self,
+        id: Annotated[StrictStr, Field(description="The id of the pipeline to update")],
         add_campaign_model: Optional[AddCampaignModel] = None,
         _request_timeout: Union[
             None,
@@ -194,6 +501,8 @@ class PipelineApi:
         """Adds a campaign to a pipeline.
 
 
+        :param id: The id of the pipeline to update (required)
+        :type id: str
         :param add_campaign_model: 
         :type add_campaign_model: AddCampaignModel
         :param _request_timeout: timeout setting for this request. If one
@@ -218,7 +527,8 @@ class PipelineApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._pipeline_add_campaign_patch_serialize(
+        _param = self._pipeline_id_campaign_post_serialize(
+            id=id,
             add_campaign_model=add_campaign_model,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -236,8 +546,9 @@ class PipelineApi:
         return response_data.response
 
 
-    def _pipeline_add_campaign_patch_serialize(
+    def _pipeline_id_campaign_post_serialize(
         self,
+        id,
         add_campaign_model,
         _request_auth,
         _content_type,
@@ -260,6 +571,8 @@ class PipelineApi:
         _body_params: Optional[bytes] = None
 
         # process the path parameters
+        if id is not None:
+            _path_params['id'] = id
         # process the query parameters
         # process the header parameters
         # process the form parameters
@@ -301,8 +614,290 @@ class PipelineApi:
         ]
 
         return self.api_client.param_serialize(
-            method='PATCH',
-            resource_path='/Pipeline/AddCampaign',
+            method='POST',
+            resource_path='/pipeline/{id}/campaign',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def pipeline_id_campaign_put(
+        self,
+        id: Annotated[StrictStr, Field(description="The id of the pipeline to update.")],
+        update_campaign_model: Annotated[Optional[UpdateCampaignModel], Field(description="The new campaign settings.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> None:
+        """Updates the default campaign for a pipeline.
+
+
+        :param id: The id of the pipeline to update. (required)
+        :type id: str
+        :param update_campaign_model: The new campaign settings.
+        :type update_campaign_model: UpdateCampaignModel
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._pipeline_id_campaign_put_serialize(
+            id=id,
+            update_campaign_model=update_campaign_model,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def pipeline_id_campaign_put_with_http_info(
+        self,
+        id: Annotated[StrictStr, Field(description="The id of the pipeline to update.")],
+        update_campaign_model: Annotated[Optional[UpdateCampaignModel], Field(description="The new campaign settings.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
+        """Updates the default campaign for a pipeline.
+
+
+        :param id: The id of the pipeline to update. (required)
+        :type id: str
+        :param update_campaign_model: The new campaign settings.
+        :type update_campaign_model: UpdateCampaignModel
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._pipeline_id_campaign_put_serialize(
+            id=id,
+            update_campaign_model=update_campaign_model,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def pipeline_id_campaign_put_without_preload_content(
+        self,
+        id: Annotated[StrictStr, Field(description="The id of the pipeline to update.")],
+        update_campaign_model: Annotated[Optional[UpdateCampaignModel], Field(description="The new campaign settings.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Updates the default campaign for a pipeline.
+
+
+        :param id: The id of the pipeline to update. (required)
+        :type id: str
+        :param update_campaign_model: The new campaign settings.
+        :type update_campaign_model: UpdateCampaignModel
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._pipeline_id_campaign_put_serialize(
+            id=id,
+            update_campaign_model=update_campaign_model,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _pipeline_id_campaign_put_serialize(
+        self,
+        id,
+        update_campaign_model,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if id is not None:
+            _path_params['id'] = id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if update_campaign_model is not None:
+            _body_params = update_campaign_model
+
+
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json', 
+                        'text/json', 
+                        'application/*+json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'bearer', 
+            'oauth2'
+        ]
+
+        return self.api_client.param_serialize(
+            method='PUT',
+            resource_path='/pipeline/{id}/campaign',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -580,9 +1175,11 @@ class PipelineApi:
 
 
     @validate_call
-    def pipeline_update_workflow_config_post(
+    def pipeline_id_workflow_artifact_id_put(
         self,
-        update_workflow_config_request: Annotated[Optional[UpdateWorkflowConfigRequest], Field(description="The request to update the workflow configuration.")] = None,
+        id: Annotated[StrictStr, Field(description="The id of the pipeline to update.")],
+        artifact_id: Annotated[StrictStr, Field(description="The id of the workflow config artifact to update.")],
+        pipeline_id_workflow_put_request: Annotated[Optional[PipelineIdWorkflowPutRequest], Field(description="The new workflow configuration.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -598,9 +1195,14 @@ class PipelineApi:
     ) -> None:
         """Updates the workflow configuration for a pipeline.
 
+        This method needs to be called before the pipeline is started.  Otherwise, the changes will not take effect unless the pipeline is restarted.
 
-        :param update_workflow_config_request: The request to update the workflow configuration.
-        :type update_workflow_config_request: UpdateWorkflowConfigRequest
+        :param id: The id of the pipeline to update. (required)
+        :type id: str
+        :param artifact_id: The id of the workflow config artifact to update. (required)
+        :type artifact_id: str
+        :param pipeline_id_workflow_put_request: The new workflow configuration.
+        :type pipeline_id_workflow_put_request: PipelineIdWorkflowPutRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -623,8 +1225,10 @@ class PipelineApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._pipeline_update_workflow_config_post_serialize(
-            update_workflow_config_request=update_workflow_config_request,
+        _param = self._pipeline_id_workflow_artifact_id_put_serialize(
+            id=id,
+            artifact_id=artifact_id,
+            pipeline_id_workflow_put_request=pipeline_id_workflow_put_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -632,7 +1236,7 @@ class PipelineApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '204': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -646,9 +1250,11 @@ class PipelineApi:
 
 
     @validate_call
-    def pipeline_update_workflow_config_post_with_http_info(
+    def pipeline_id_workflow_artifact_id_put_with_http_info(
         self,
-        update_workflow_config_request: Annotated[Optional[UpdateWorkflowConfigRequest], Field(description="The request to update the workflow configuration.")] = None,
+        id: Annotated[StrictStr, Field(description="The id of the pipeline to update.")],
+        artifact_id: Annotated[StrictStr, Field(description="The id of the workflow config artifact to update.")],
+        pipeline_id_workflow_put_request: Annotated[Optional[PipelineIdWorkflowPutRequest], Field(description="The new workflow configuration.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -664,9 +1270,14 @@ class PipelineApi:
     ) -> ApiResponse[None]:
         """Updates the workflow configuration for a pipeline.
 
+        This method needs to be called before the pipeline is started.  Otherwise, the changes will not take effect unless the pipeline is restarted.
 
-        :param update_workflow_config_request: The request to update the workflow configuration.
-        :type update_workflow_config_request: UpdateWorkflowConfigRequest
+        :param id: The id of the pipeline to update. (required)
+        :type id: str
+        :param artifact_id: The id of the workflow config artifact to update. (required)
+        :type artifact_id: str
+        :param pipeline_id_workflow_put_request: The new workflow configuration.
+        :type pipeline_id_workflow_put_request: PipelineIdWorkflowPutRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -689,8 +1300,10 @@ class PipelineApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._pipeline_update_workflow_config_post_serialize(
-            update_workflow_config_request=update_workflow_config_request,
+        _param = self._pipeline_id_workflow_artifact_id_put_serialize(
+            id=id,
+            artifact_id=artifact_id,
+            pipeline_id_workflow_put_request=pipeline_id_workflow_put_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -698,7 +1311,7 @@ class PipelineApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '204': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -712,9 +1325,11 @@ class PipelineApi:
 
 
     @validate_call
-    def pipeline_update_workflow_config_post_without_preload_content(
+    def pipeline_id_workflow_artifact_id_put_without_preload_content(
         self,
-        update_workflow_config_request: Annotated[Optional[UpdateWorkflowConfigRequest], Field(description="The request to update the workflow configuration.")] = None,
+        id: Annotated[StrictStr, Field(description="The id of the pipeline to update.")],
+        artifact_id: Annotated[StrictStr, Field(description="The id of the workflow config artifact to update.")],
+        pipeline_id_workflow_put_request: Annotated[Optional[PipelineIdWorkflowPutRequest], Field(description="The new workflow configuration.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -730,9 +1345,14 @@ class PipelineApi:
     ) -> RESTResponseType:
         """Updates the workflow configuration for a pipeline.
 
+        This method needs to be called before the pipeline is started.  Otherwise, the changes will not take effect unless the pipeline is restarted.
 
-        :param update_workflow_config_request: The request to update the workflow configuration.
-        :type update_workflow_config_request: UpdateWorkflowConfigRequest
+        :param id: The id of the pipeline to update. (required)
+        :type id: str
+        :param artifact_id: The id of the workflow config artifact to update. (required)
+        :type artifact_id: str
+        :param pipeline_id_workflow_put_request: The new workflow configuration.
+        :type pipeline_id_workflow_put_request: PipelineIdWorkflowPutRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -755,8 +1375,10 @@ class PipelineApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._pipeline_update_workflow_config_post_serialize(
-            update_workflow_config_request=update_workflow_config_request,
+        _param = self._pipeline_id_workflow_artifact_id_put_serialize(
+            id=id,
+            artifact_id=artifact_id,
+            pipeline_id_workflow_put_request=pipeline_id_workflow_put_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -764,7 +1386,7 @@ class PipelineApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '204': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -773,9 +1395,11 @@ class PipelineApi:
         return response_data.response
 
 
-    def _pipeline_update_workflow_config_post_serialize(
+    def _pipeline_id_workflow_artifact_id_put_serialize(
         self,
-        update_workflow_config_request,
+        id,
+        artifact_id,
+        pipeline_id_workflow_put_request,
         _request_auth,
         _content_type,
         _headers,
@@ -797,12 +1421,16 @@ class PipelineApi:
         _body_params: Optional[bytes] = None
 
         # process the path parameters
+        if id is not None:
+            _path_params['id'] = id
+        if artifact_id is not None:
+            _path_params['artifact-id'] = artifact_id
         # process the query parameters
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if update_workflow_config_request is not None:
-            _body_params = update_workflow_config_request
+        if pipeline_id_workflow_put_request is not None:
+            _body_params = pipeline_id_workflow_put_request
 
 
 
@@ -829,8 +1457,293 @@ class PipelineApi:
         ]
 
         return self.api_client.param_serialize(
-            method='POST',
-            resource_path='/Pipeline/UpdateWorkflowConfig',
+            method='PUT',
+            resource_path='/pipeline/{id}/workflow/{artifact-id}',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def pipeline_id_workflow_put(
+        self,
+        id: Annotated[StrictStr, Field(description="The id of the pipeline to update.")],
+        pipeline_id_workflow_put_request: Annotated[Optional[PipelineIdWorkflowPutRequest], Field(description="The new workflow configuration.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> None:
+        """Updates the workflow configuration for a pipeline.
+
+        This method needs to be called before the pipeline is started.  Otherwise, the changes will not take effect unless the pipeline is restarted.
+
+        :param id: The id of the pipeline to update. (required)
+        :type id: str
+        :param pipeline_id_workflow_put_request: The new workflow configuration.
+        :type pipeline_id_workflow_put_request: PipelineIdWorkflowPutRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._pipeline_id_workflow_put_serialize(
+            id=id,
+            pipeline_id_workflow_put_request=pipeline_id_workflow_put_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def pipeline_id_workflow_put_with_http_info(
+        self,
+        id: Annotated[StrictStr, Field(description="The id of the pipeline to update.")],
+        pipeline_id_workflow_put_request: Annotated[Optional[PipelineIdWorkflowPutRequest], Field(description="The new workflow configuration.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
+        """Updates the workflow configuration for a pipeline.
+
+        This method needs to be called before the pipeline is started.  Otherwise, the changes will not take effect unless the pipeline is restarted.
+
+        :param id: The id of the pipeline to update. (required)
+        :type id: str
+        :param pipeline_id_workflow_put_request: The new workflow configuration.
+        :type pipeline_id_workflow_put_request: PipelineIdWorkflowPutRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._pipeline_id_workflow_put_serialize(
+            id=id,
+            pipeline_id_workflow_put_request=pipeline_id_workflow_put_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def pipeline_id_workflow_put_without_preload_content(
+        self,
+        id: Annotated[StrictStr, Field(description="The id of the pipeline to update.")],
+        pipeline_id_workflow_put_request: Annotated[Optional[PipelineIdWorkflowPutRequest], Field(description="The new workflow configuration.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Updates the workflow configuration for a pipeline.
+
+        This method needs to be called before the pipeline is started.  Otherwise, the changes will not take effect unless the pipeline is restarted.
+
+        :param id: The id of the pipeline to update. (required)
+        :type id: str
+        :param pipeline_id_workflow_put_request: The new workflow configuration.
+        :type pipeline_id_workflow_put_request: PipelineIdWorkflowPutRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._pipeline_id_workflow_put_serialize(
+            id=id,
+            pipeline_id_workflow_put_request=pipeline_id_workflow_put_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _pipeline_id_workflow_put_serialize(
+        self,
+        id,
+        pipeline_id_workflow_put_request,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if id is not None:
+            _path_params['id'] = id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if pipeline_id_workflow_put_request is not None:
+            _body_params = pipeline_id_workflow_put_request
+
+
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json', 
+                        'text/json', 
+                        'application/*+json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'bearer', 
+            'oauth2'
+        ]
+
+        return self.api_client.param_serialize(
+            method='PUT',
+            resource_path='/pipeline/{id}/workflow',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

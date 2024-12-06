@@ -20,7 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.compare_workflow_model1_referee import CompareWorkflowModel1Referee
-from rapidata.api_client.models.simple_workflow_model1_blueprint import SimpleWorkflowModel1Blueprint
+from rapidata.api_client.models.validation_import_post_request_blueprint import ValidationImportPostRequestBlueprint
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -32,7 +32,7 @@ class SimpleWorkflowModel1(BaseModel):
     id: StrictStr
     dataset_id: Optional[StrictStr] = Field(alias="datasetId")
     state: StrictStr
-    blueprint: SimpleWorkflowModel1Blueprint
+    blueprint: ValidationImportPostRequestBlueprint
     referee: CompareWorkflowModel1Referee
     name: StrictStr
     owner_mail: Optional[StrictStr] = Field(alias="ownerMail")
@@ -116,7 +116,7 @@ class SimpleWorkflowModel1(BaseModel):
             "id": obj.get("id"),
             "datasetId": obj.get("datasetId"),
             "state": obj.get("state"),
-            "blueprint": SimpleWorkflowModel1Blueprint.from_dict(obj["blueprint"]) if obj.get("blueprint") is not None else None,
+            "blueprint": ValidationImportPostRequestBlueprint.from_dict(obj["blueprint"]) if obj.get("blueprint") is not None else None,
             "referee": CompareWorkflowModel1Referee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
             "name": obj.get("name"),
             "ownerMail": obj.get("ownerMail")
