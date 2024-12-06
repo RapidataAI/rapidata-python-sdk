@@ -17,10 +17,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.compare_workflow_model1_referee import CompareWorkflowModel1Referee
-from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.simple_workflow_config_model_blueprint import SimpleWorkflowConfigModelBlueprint
 from typing import Optional, Set
 from typing_extensions import Self
@@ -33,10 +32,7 @@ class SimpleWorkflowConfigModel(BaseModel):
     referee: CompareWorkflowModel1Referee
     blueprint: SimpleWorkflowConfigModelBlueprint
     target_country_codes: List[StrictStr] = Field(description="A list of country codes that this workflow is targeting.", alias="targetCountryCodes")
-    feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
-    priority: Optional[StrictStr] = None
-    is_fallback: Optional[StrictBool] = Field(default=None, alias="isFallback")
-    __properties: ClassVar[List[str]] = ["_t", "referee", "blueprint", "targetCountryCodes", "featureFlags", "priority", "isFallback"]
+    __properties: ClassVar[List[str]] = ["_t", "referee", "blueprint", "targetCountryCodes"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -90,23 +86,6 @@ class SimpleWorkflowConfigModel(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of blueprint
         if self.blueprint:
             _dict['blueprint'] = self.blueprint.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in feature_flags (list)
-        _items = []
-        if self.feature_flags:
-            for _item_feature_flags in self.feature_flags:
-                if _item_feature_flags:
-                    _items.append(_item_feature_flags.to_dict())
-            _dict['featureFlags'] = _items
-        # set to None if priority (nullable) is None
-        # and model_fields_set contains the field
-        if self.priority is None and "priority" in self.model_fields_set:
-            _dict['priority'] = None
-
-        # set to None if is_fallback (nullable) is None
-        # and model_fields_set contains the field
-        if self.is_fallback is None and "is_fallback" in self.model_fields_set:
-            _dict['isFallback'] = None
-
         return _dict
 
     @classmethod
@@ -122,10 +101,7 @@ class SimpleWorkflowConfigModel(BaseModel):
             "_t": obj.get("_t") if obj.get("_t") is not None else 'SimpleWorkflowConfig',
             "referee": CompareWorkflowModel1Referee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
             "blueprint": SimpleWorkflowConfigModelBlueprint.from_dict(obj["blueprint"]) if obj.get("blueprint") is not None else None,
-            "targetCountryCodes": obj.get("targetCountryCodes"),
-            "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
-            "priority": obj.get("priority"),
-            "isFallback": obj.get("isFallback")
+            "targetCountryCodes": obj.get("targetCountryCodes")
         })
         return _obj
 

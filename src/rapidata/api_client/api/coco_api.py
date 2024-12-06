@@ -16,8 +16,8 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictBytes, StrictStr
-from typing import Optional, Tuple, Union
+from pydantic import Field, StrictStr
+from typing import Optional
 from typing_extensions import Annotated
 from rapidata.api_client.models.submit_coco_model import SubmitCocoModel
 from rapidata.api_client.models.submit_coco_result import SubmitCocoResult
@@ -320,9 +320,8 @@ class CocoApi:
     @validate_call
     def coco_upload_post(
         self,
-        name: Annotated[Optional[StrictStr], Field(description="The name to give the newly uploaded CoCo set.")] = None,
-        title: Annotated[Optional[StrictStr], Field(description="The title to be used when creating rapids from the CoCo set.")] = None,
-        file: Annotated[Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]], Field(description="The file containing the CoCo set.")] = None,
+        name: Optional[StrictStr] = None,
+        title: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -339,12 +338,10 @@ class CocoApi:
         """Uploads a CoCo set to the system.
 
 
-        :param name: The name to give the newly uploaded CoCo set.
+        :param name:
         :type name: str
-        :param title: The title to be used when creating rapids from the CoCo set.
+        :param title:
         :type title: str
-        :param file: The file containing the CoCo set.
-        :type file: bytearray
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -370,7 +367,6 @@ class CocoApi:
         _param = self._coco_upload_post_serialize(
             name=name,
             title=title,
-            file=file,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -394,9 +390,8 @@ class CocoApi:
     @validate_call
     def coco_upload_post_with_http_info(
         self,
-        name: Annotated[Optional[StrictStr], Field(description="The name to give the newly uploaded CoCo set.")] = None,
-        title: Annotated[Optional[StrictStr], Field(description="The title to be used when creating rapids from the CoCo set.")] = None,
-        file: Annotated[Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]], Field(description="The file containing the CoCo set.")] = None,
+        name: Optional[StrictStr] = None,
+        title: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -413,12 +408,10 @@ class CocoApi:
         """Uploads a CoCo set to the system.
 
 
-        :param name: The name to give the newly uploaded CoCo set.
+        :param name:
         :type name: str
-        :param title: The title to be used when creating rapids from the CoCo set.
+        :param title:
         :type title: str
-        :param file: The file containing the CoCo set.
-        :type file: bytearray
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -444,7 +437,6 @@ class CocoApi:
         _param = self._coco_upload_post_serialize(
             name=name,
             title=title,
-            file=file,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -468,9 +460,8 @@ class CocoApi:
     @validate_call
     def coco_upload_post_without_preload_content(
         self,
-        name: Annotated[Optional[StrictStr], Field(description="The name to give the newly uploaded CoCo set.")] = None,
-        title: Annotated[Optional[StrictStr], Field(description="The title to be used when creating rapids from the CoCo set.")] = None,
-        file: Annotated[Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]], Field(description="The file containing the CoCo set.")] = None,
+        name: Optional[StrictStr] = None,
+        title: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -487,12 +478,10 @@ class CocoApi:
         """Uploads a CoCo set to the system.
 
 
-        :param name: The name to give the newly uploaded CoCo set.
+        :param name:
         :type name: str
-        :param title: The title to be used when creating rapids from the CoCo set.
+        :param title:
         :type title: str
-        :param file: The file containing the CoCo set.
-        :type file: bytearray
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -518,7 +507,6 @@ class CocoApi:
         _param = self._coco_upload_post_serialize(
             name=name,
             title=title,
-            file=file,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -539,7 +527,6 @@ class CocoApi:
         self,
         name,
         title,
-        file,
         _request_auth,
         _content_type,
         _headers,
@@ -568,8 +555,6 @@ class CocoApi:
             _form_params.append(('Name', name))
         if title is not None:
             _form_params.append(('Title', title))
-        if file is not None:
-            _files['File'] = file
         # process the body parameter
 
 
