@@ -17,32 +17,24 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.compare_workflow_model1_referee import CompareWorkflowModel1Referee
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CompareWorkflowConfig(BaseModel):
+class NotAvailableYetResult(BaseModel):
     """
-    CompareWorkflowConfig
+    NotAvailableYetResult
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for CompareWorkflowConfig", alias="_t")
-    criteria: StrictStr
-    starting_elo: Optional[StrictInt] = Field(default=None, alias="startingElo")
-    k_factor: Optional[StrictInt] = Field(default=None, alias="kFactor")
-    match_size: Optional[StrictInt] = Field(default=None, alias="matchSize")
-    scaling_factor: Optional[StrictInt] = Field(default=None, alias="scalingFactor")
-    matches_until_completed: Optional[StrictInt] = Field(default=None, alias="matchesUntilCompleted")
-    referee: CompareWorkflowModel1Referee
-    target_country_codes: List[StrictStr] = Field(alias="targetCountryCodes")
-    __properties: ClassVar[List[str]] = ["_t", "criteria", "startingElo", "kFactor", "matchSize", "scalingFactor", "matchesUntilCompleted", "referee", "targetCountryCodes"]
+    t: StrictStr = Field(description="Discriminator value for NotAvailableYetResult", alias="_t")
+    message: StrictStr
+    __properties: ClassVar[List[str]] = ["_t", "message"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['CompareWorkflowConfig']):
-            raise ValueError("must be one of enum values ('CompareWorkflowConfig')")
+        if value not in set(['NotAvailableYetResult']):
+            raise ValueError("must be one of enum values ('NotAvailableYetResult')")
         return value
 
     model_config = ConfigDict(
@@ -63,7 +55,7 @@ class CompareWorkflowConfig(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CompareWorkflowConfig from a JSON string"""
+        """Create an instance of NotAvailableYetResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -84,14 +76,11 @@ class CompareWorkflowConfig(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of referee
-        if self.referee:
-            _dict['referee'] = self.referee.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CompareWorkflowConfig from a dict"""
+        """Create an instance of NotAvailableYetResult from a dict"""
         if obj is None:
             return None
 
@@ -99,15 +88,8 @@ class CompareWorkflowConfig(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'CompareWorkflowConfig',
-            "criteria": obj.get("criteria"),
-            "startingElo": obj.get("startingElo"),
-            "kFactor": obj.get("kFactor"),
-            "matchSize": obj.get("matchSize"),
-            "scalingFactor": obj.get("scalingFactor"),
-            "matchesUntilCompleted": obj.get("matchesUntilCompleted"),
-            "referee": CompareWorkflowModel1Referee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
-            "targetCountryCodes": obj.get("targetCountryCodes")
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'NotAvailableYetResult',
+            "message": obj.get("message")
         })
         return _obj
 

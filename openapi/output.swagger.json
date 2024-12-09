@@ -159,8 +159,7 @@
                     "items": {
                       "type": "string",
                       "format": "binary"
-                    },
-                    "description": "The image files to upload."
+                    }
                   },
                   "model": {
                     "$ref": "#/components/schemas/DatapointMetadataModel"
@@ -1495,7 +1494,21 @@
             }
           },
           "202": {
-            "description": "Accepted"
+            "description": null,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/NotAvailableYetResult"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Void"
+                    }
+                  ]
+                }
+              }
+            }
           },
           "404": {
             "description": "Not Found",
@@ -1624,17 +1637,10 @@
                 "type": "object",
                 "properties": {
                   "Name": {
-                    "type": "string",
-                    "description": "The name to give the newly uploaded CoCo set."
+                    "type": "string"
                   },
                   "Title": {
-                    "type": "string",
-                    "description": "The title to be used when creating rapids from the CoCo set."
-                  },
-                  "File": {
-                    "type": "string",
-                    "description": "The file containing the CoCo set.",
-                    "format": "binary"
+                    "type": "string"
                   }
                 }
               },
@@ -1643,9 +1649,6 @@
                   "style": "form"
                 },
                 "Title": {
-                  "style": "form"
-                },
-                "File": {
                   "style": "form"
                 }
               }
@@ -1900,8 +1903,7 @@
                     "items": {
                       "type": "string",
                       "format": "binary"
-                    },
-                    "description": "The files to be used as assets for the validation rapid. Each file will create a new rapid."
+                    }
                   }
                 }
               },
@@ -2032,23 +2034,14 @@
                         "$ref": "#/components/schemas/BoundingBoxRapidBlueprint"
                       }
                     ],
-                    "description": "The blueprint for the rapid to be created.",
                     "discriminator": {
                       "propertyName": "_t"
                     }
-                  },
-                  "File": {
-                    "type": "string",
-                    "description": "The file to use as the asset for the rapid.",
-                    "format": "binary"
                   }
                 }
               },
               "encoding": {
                 "Blueprint": {
-                  "style": "form"
-                },
-                "File": {
                   "style": "form"
                 }
               }
@@ -2092,21 +2085,12 @@
                 "type": "object",
                 "properties": {
                   "Criteria": {
-                    "type": "string",
-                    "description": "The criteria to use for the compare rapid."
-                  },
-                  "File": {
-                    "type": "string",
-                    "description": "The file to use as the asset for the rapid.",
-                    "format": "binary"
+                    "type": "string"
                   }
                 }
               },
               "encoding": {
                 "Criteria": {
-                  "style": "form"
-                },
-                "File": {
                   "style": "form"
                 }
               }
@@ -2223,8 +2207,7 @@
                     "items": {
                       "type": "string",
                       "format": "binary"
-                    },
-                    "description": "The file to use as the asset for the rapid."
+                    }
                   }
                 }
               },
@@ -2410,7 +2393,7 @@
                 "schema": {
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/GetAttachCategoryWorkflowResultOverviewResult"
+                      "$ref": "#/components/schemas/GetClassifyWorkflowResultOverviewResult"
                     },
                     {
                       "$ref": "#/components/schemas/GetSimpleWorkflowResultOverviewResult"
@@ -2610,39 +2593,6 @@
         }
       }
     },
-    "/Pipeline/UpdateWorkflowConfig": {
-      "post": {
-        "tags": [
-          "Pipeline"
-        ],
-        "summary": "Updates the workflow configuration for a pipeline.",
-        "requestBody": {
-          "description": "The request to update the workflow configuration.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateWorkflowConfigRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateWorkflowConfigRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateWorkflowConfigRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/Pipeline/{id}": {
       "get": {
         "tags": [
@@ -2684,12 +2634,23 @@
         }
       }
     },
-    "/Pipeline/AddCampaign": {
-      "patch": {
+    "/pipeline/{id}/campaign": {
+      "post": {
         "tags": [
           "Pipeline"
         ],
         "summary": "Adds a campaign to a pipeline.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the pipeline to update",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "description": "",
           "content": {
@@ -2730,6 +2691,266 @@
                 }
               }
             }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Pipeline"
+        ],
+        "summary": "Updates the default campaign for a pipeline.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the pipeline to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The new campaign settings.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCampaignModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCampaignModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCampaignModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/pipeline/{id}/campaign/{artifact-id}": {
+      "put": {
+        "tags": [
+          "Pipeline"
+        ],
+        "summary": "Updates a specific campaign for a pipeline.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the pipeline to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "artifact-id",
+            "in": "path",
+            "description": "The id of the campaign artifact to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The new campaign settings.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCampaignModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCampaignModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCampaignModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/pipeline/{id}/workflow": {
+      "put": {
+        "tags": [
+          "Pipeline"
+        ],
+        "summary": "Updates the workflow configuration for a pipeline.",
+        "description": "This method needs to be called before the pipeline is started.\r\nOtherwise, the changes will not take effect unless the pipeline is restarted.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the pipeline to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The new workflow configuration.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/CompareWorkflowConfigModel"
+                  },
+                  {
+                    "$ref": "#/components/schemas/SimpleWorkflowConfigModel"
+                  }
+                ],
+                "description": "The base configuration for a workflow.",
+                "discriminator": {
+                  "propertyName": "_t"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/CompareWorkflowConfigModel"
+                  },
+                  {
+                    "$ref": "#/components/schemas/SimpleWorkflowConfigModel"
+                  }
+                ],
+                "description": "The base configuration for a workflow.",
+                "discriminator": {
+                  "propertyName": "_t"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/CompareWorkflowConfigModel"
+                  },
+                  {
+                    "$ref": "#/components/schemas/SimpleWorkflowConfigModel"
+                  }
+                ],
+                "description": "The base configuration for a workflow.",
+                "discriminator": {
+                  "propertyName": "_t"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/pipeline/{id}/workflow/{artifact-id}": {
+      "put": {
+        "tags": [
+          "Pipeline"
+        ],
+        "summary": "Updates the workflow configuration for a pipeline.",
+        "description": "This method needs to be called before the pipeline is started.\r\nOtherwise, the changes will not take effect unless the pipeline is restarted.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the pipeline to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "artifact-id",
+            "in": "path",
+            "description": "The id of the workflow config artifact to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The new workflow configuration.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/CompareWorkflowConfigModel"
+                  },
+                  {
+                    "$ref": "#/components/schemas/SimpleWorkflowConfigModel"
+                  }
+                ],
+                "description": "The base configuration for a workflow.",
+                "discriminator": {
+                  "propertyName": "_t"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/CompareWorkflowConfigModel"
+                  },
+                  {
+                    "$ref": "#/components/schemas/SimpleWorkflowConfigModel"
+                  }
+                ],
+                "description": "The base configuration for a workflow.",
+                "discriminator": {
+                  "propertyName": "_t"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/CompareWorkflowConfigModel"
+                  },
+                  {
+                    "$ref": "#/components/schemas/SimpleWorkflowConfigModel"
+                  }
+                ],
+                "description": "The base configuration for a workflow.",
+                "discriminator": {
+                  "propertyName": "_t"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
           }
         }
       }
@@ -2843,9 +3064,6 @@
       "BaseError": {
         "type": "object",
         "properties": {
-          "errorType": {
-            "$ref": "#/components/schemas/ErrorType"
-          },
           "errorMessage": {
             "type": "string"
           }
@@ -3132,16 +3350,6 @@
         },
         "additionalProperties": false
       },
-      "ErrorType": {
-        "enum": [
-          "Validation",
-          "Authorization",
-          "Runtime",
-          "NotFound",
-          "Timeout"
-        ],
-        "type": "string"
-      },
       "FileAsset": {
         "title": "FileAsset",
         "required": [
@@ -3255,9 +3463,6 @@
                 },
                 {
                   "$ref": "#/components/schemas/TranscriptionMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/TranslatedPromptMetadataModel"
                 }
               ],
               "discriminator": {
@@ -3599,9 +3804,6 @@
                 },
                 {
                   "$ref": "#/components/schemas/TranscriptionMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/TranslatedPromptMetadataModel"
                 }
               ],
               "discriminator": {
@@ -3716,9 +3918,6 @@
                 },
                 {
                   "$ref": "#/components/schemas/TranscriptionMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/TranslatedPromptMetadataModel"
                 }
               ],
               "discriminator": {
@@ -4035,9 +4234,6 @@
                 },
                 {
                   "$ref": "#/components/schemas/TranscriptionMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/TranslatedPromptMetadataModel"
                 }
               ],
               "discriminator": {
@@ -4189,57 +4385,6 @@
             "type": "string"
           },
           "transcription": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "TranslatedPromptMetadataModel": {
-        "title": "TranslatedPromptMetadata",
-        "required": [
-          "_t",
-          "identifier",
-          "prompt"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "TranslatedPromptMetadata"
-            ],
-            "type": "string",
-            "description": "Discriminator value for TranslatedPromptMetadata",
-            "default": "TranslatedPromptMetadata",
-            "example": "TranslatedPromptMetadata"
-          },
-          "prompt": {
-            "$ref": "#/components/schemas/TranslatedString"
-          },
-          "identifier": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "TranslatedString": {
-        "required": [
-          "englishText",
-          "targetLanguage",
-          "text",
-          "wasTranslated"
-        ],
-        "type": "object",
-        "properties": {
-          "wasTranslated": {
-            "type": "boolean"
-          },
-          "englishText": {
-            "type": "string"
-          },
-          "text": {
-            "type": "string"
-          },
-          "targetLanguage": {
             "type": "string"
           }
         },
@@ -6390,6 +6535,29 @@
         "additionalProperties": false,
         "description": "Model for subscribing and unsubscribing to the newsletter."
       },
+      "NotAvailableYetResult": {
+        "title": "NotAvailableYetResult",
+        "required": [
+          "_t",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "NotAvailableYetResult"
+            ],
+            "type": "string",
+            "description": "Discriminator value for NotAvailableYetResult",
+            "default": "NotAvailableYetResult",
+            "example": "NotAvailableYetResult"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "ProblemDetails": {
         "type": "object",
         "properties": {
@@ -6418,7 +6586,9 @@
         "additionalProperties": {}
       },
       "ReadBridgeTokenKeysResult": {
+        "title": "ReadBridgeTokenKeysResult",
         "required": [
+          "_t",
           "accessToken",
           "expiresIn",
           "idToken",
@@ -6428,6 +6598,15 @@
         ],
         "type": "object",
         "properties": {
+          "_t": {
+            "enum": [
+              "ReadBridgeTokenKeysResult"
+            ],
+            "type": "string",
+            "description": "Discriminator value for ReadBridgeTokenKeysResult",
+            "default": "ReadBridgeTokenKeysResult",
+            "example": "ReadBridgeTokenKeysResult"
+          },
           "accessToken": {
             "type": "string",
             "nullable": true
@@ -6509,6 +6688,10 @@
         },
         "additionalProperties": false,
         "description": "The access parameters of the newly registered temporary customer."
+      },
+      "Void": {
+        "type": "object",
+        "additionalProperties": false
       },
       "AddValidationRapidModel": {
         "required": [
@@ -6751,7 +6934,8 @@
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "description": "The texts to use for the rapid."
           },
           "randomCorrectProbability": {
             "type": "number",
@@ -8418,6 +8602,57 @@
         },
         "additionalProperties": false
       },
+      "TranslatedPromptMetadataModel": {
+        "title": "TranslatedPromptMetadata",
+        "required": [
+          "_t",
+          "identifier",
+          "prompt"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "TranslatedPromptMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for TranslatedPromptMetadata",
+            "default": "TranslatedPromptMetadata",
+            "example": "TranslatedPromptMetadata"
+          },
+          "prompt": {
+            "$ref": "#/components/schemas/TranslatedString"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TranslatedString": {
+        "required": [
+          "englishText",
+          "targetLanguage",
+          "text",
+          "wasTranslated"
+        ],
+        "type": "object",
+        "properties": {
+          "wasTranslated": {
+            "type": "boolean"
+          },
+          "englishText": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "targetLanguage": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "CompareWorkflowModel1": {
         "title": "CompareWorkflowModel",
         "required": [
@@ -8612,7 +8847,7 @@
         },
         "additionalProperties": false
       },
-      "GetAttachCategoryWorkflowResultOverviewResult": {
+      "GetClassifyWorkflowResultOverviewResult": {
         "required": [
           "completedRapids",
           "hiddenCompletedRapidsCount",
@@ -9580,7 +9815,6 @@
           "_t",
           "campaignName",
           "featureFlags",
-          "pipelineId",
           "priority",
           "selections",
           "userFilters"
@@ -9595,10 +9829,6 @@
             "description": "Discriminator value for AddCampaignModel",
             "default": "AddCampaignModel",
             "example": "AddCampaignModel"
-          },
-          "pipelineId": {
-            "type": "string",
-            "description": "The pipeline the campaign should belong to."
           },
           "artifactId": {
             "type": "string",
@@ -9779,19 +10009,6 @@
             "items": {
               "type": "string"
             }
-          },
-          "featureFlags": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FeatureFlag"
-            }
-          },
-          "priority": {
-            "type": "string",
-            "nullable": true
-          },
-          "isFallback": {
-            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -9866,20 +10083,6 @@
               "type": "string"
             },
             "description": "A list of country codes that this workflow is targeting."
-          },
-          "featureFlags": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FeatureFlag"
-            }
-          },
-          "priority": {
-            "type": "string",
-            "nullable": true
-          },
-          "isFallback": {
-            "type": "boolean",
-            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -10001,7 +10204,8 @@
       },
       "GetPipelineByIdResult": {
         "required": [
-          "artifacts"
+          "artifacts",
+          "featureFlags"
         ],
         "type": "object",
         "properties": {
@@ -10028,6 +10232,12 @@
               "discriminator": {
                 "propertyName": "_t"
               }
+            }
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
             }
           }
         },
@@ -10107,19 +10317,6 @@
             "items": {
               "type": "string"
             }
-          },
-          "featureFlags": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FeatureFlag"
-            }
-          },
-          "priority": {
-            "type": "string",
-            "nullable": true
-          },
-          "isFallback": {
-            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -10200,65 +10397,35 @@
               "type": "string"
             },
             "description": "A list of country codes that this workflow is targeting."
-          },
-          "featureFlags": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FeatureFlag"
-            }
-          },
-          "priority": {
-            "type": "string",
-            "nullable": true
-          },
-          "isFallback": {
-            "type": "boolean",
-            "nullable": true
           }
         },
         "additionalProperties": false,
         "description": "The configuration for a simple workflow.\r\nA simple workflow creates a rapid for each datapoint in its dataset.\r\nIt is considered complete when all rapids have been completed."
       },
-      "UpdateWorkflowConfigRequest": {
+      "UpdateCampaignModel": {
         "required": [
-          "artifactId",
-          "config",
-          "pipelineId"
+          "featureFlags",
+          "priority"
         ],
         "type": "object",
         "properties": {
-          "pipelineId": {
-            "type": "string",
-            "description": "The id of the pipeline to update."
-          },
-          "artifactId": {
-            "type": "string",
-            "description": "The id of the workflow config artifact to update.",
+          "priority": {
+            "type": "integer",
+            "description": "A value above 0 indicating how much the campaign should be prioritized.\r\nThe higher the value the more weight it will be given during campaign selection.",
+            "format": "int32",
             "nullable": true
           },
-          "config": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/CompareWorkflowConfigModel"
-              },
-              {
-                "$ref": "#/components/schemas/SimpleWorkflowConfigModel"
-              }
-            ],
-            "description": "The new workflow configuration.",
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          },
-          "campaignArtifactId": {
-            "type": "string",
-            "description": "The id of the campaign artifact to update.",
-            "default": null,
+          "featureFlags": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "The feature flags to assign this campaign.",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "A request to update the workflow configuration."
+        "description": "The model containing the new configuration for a campaign."
       },
       "WorkflowArtifactModel": {
         "title": "WorkflowArtifactModel",

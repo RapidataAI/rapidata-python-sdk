@@ -30,7 +30,6 @@ class AddCampaignModel(BaseModel):
     The model for adding a campaign to an existing pipeline.
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for AddCampaignModel", alias="_t")
-    pipeline_id: StrictStr = Field(description="The pipeline the campaign should belong to.", alias="pipelineId")
     artifact_id: Optional[StrictStr] = Field(default=None, description="The id of the campaign artifact. If not provided a random value will be used.", alias="artifactId")
     campaign_name: StrictStr = Field(description="The name of the campaign.", alias="campaignName")
     user_filters: List[CreateOrderModelUserFiltersInner] = Field(description="The user filters to apply to the campaign.", alias="userFilters")
@@ -38,7 +37,7 @@ class AddCampaignModel(BaseModel):
     selections: Optional[List[CappedSelectionSelectionsInner]] = Field(description="The selections that the campaign should have.")
     feature_flags: List[FeatureFlag] = Field(description="The feature flags that should be applied to the campaign.", alias="featureFlags")
     priority: StrictInt = Field(description="The priority of the campaign.")
-    __properties: ClassVar[List[str]] = ["_t", "pipelineId", "artifactId", "campaignName", "userFilters", "validationSetId", "selections", "featureFlags", "priority"]
+    __properties: ClassVar[List[str]] = ["_t", "artifactId", "campaignName", "userFilters", "validationSetId", "selections", "featureFlags", "priority"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -135,7 +134,6 @@ class AddCampaignModel(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'AddCampaignModel',
-            "pipelineId": obj.get("pipelineId"),
             "artifactId": obj.get("artifactId"),
             "campaignName": obj.get("campaignName"),
             "userFilters": [CreateOrderModelUserFiltersInner.from_dict(_item) for _item in obj["userFilters"]] if obj.get("userFilters") is not None else None,
