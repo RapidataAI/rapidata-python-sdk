@@ -32,6 +32,11 @@ class EarlyStoppingReferee(Referee):
             max_vote_count (int, optional): The maximum number of votes allowed
                 before stopping. Defaults to 100.
         """
+        if threshold <= 0 or threshold >= 1:
+            raise ValueError("The threshold must be between 0 and 1.")
+        if max_vote_count < 1:
+            raise ValueError("The number of responses must be greater than 0.")
+        
         self.threshold = threshold
         self.max_vote_count = max_vote_count
 

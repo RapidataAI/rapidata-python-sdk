@@ -1,8 +1,8 @@
-from rapidata.rapidata_client.selection.base_selection import Selection
+from rapidata.rapidata_client.selection.base_selection import RapidataSelection
 from rapidata.api_client.models.demographic_selection import DemographicSelection as DemographicSelectionModel
 
 
-class DemographicSelection(Selection):
+class DemographicSelection(RapidataSelection):
     """Demographic selection class."""
 
     def __init__(self, keys: list[str], maxRapids: int):

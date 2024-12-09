@@ -1,9 +1,9 @@
 from typing import Any
-from rapidata.rapidata_client.filter.base_filter import Filter
+from rapidata.rapidata_client.filter.base_filter import RapidataFilter
 from rapidata.api_client.models.country_user_filter_model import CountryUserFilterModel
 
 
-class CountryFilter(Filter):
+class CountryFilter(RapidataFilter):
 
     def __init__(self, country_codes: list[str]):
         # check that all characters in the country codes are uppercase

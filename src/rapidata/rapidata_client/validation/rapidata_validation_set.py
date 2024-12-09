@@ -40,6 +40,8 @@ from rapidata.rapidata_client.assets.text_asset import TextAsset
 from rapidata.rapidata_client.metadata.base_metadata import Metadata
 from rapidata.service.openapi_service import OpenAPIService
 
+from typing import Sequence
+
 
 class RapidataValidationSet:
     """A class for interacting with a Rapidata validation set.
@@ -73,7 +75,7 @@ class RapidataValidationSet:
             model=model, files=files
         )        
 
-    def add_general_validation_rapid(
+    def _add_general_validation_rapid(
         self,
         payload: (
             BoundingBoxPayload
@@ -97,7 +99,7 @@ class RapidataValidationSet:
             | PolygonTruth
             | TranscriptionTruth
         ),
-        metadata: list[Metadata],
+        metadata: Sequence[Metadata],
         asset: MediaAsset | TextAsset | MultiAsset,
         randomCorrectProbability: float,
     ) -> None:
@@ -177,7 +179,7 @@ class RapidataValidationSet:
         question: str,
         categories: list[str],
         truths: list[str],
-        metadata: list[Metadata] = [],
+        metadata: Sequence[Metadata] = [],
     ) -> None:
         """Add a classify rapid to the validation set.
 
@@ -186,7 +188,7 @@ class RapidataValidationSet:
             question (str): The question for the rapid.
             categories (list[str]): The list of categories for the rapid.
             truths (list[str]): The list of truths for the rapid.
-            metadata (list[Metadata], optional): The metadata for the rapid. Defaults to an empty list.
+            metadata (Sequence[Metadata], optional): The metadata for the rapid. Defaults to an empty list.
 
         Returns:
             None
@@ -198,7 +200,7 @@ class RapidataValidationSet:
             correctCategories=truths, _t="AttachCategoryTruth"
         )
 
-        self.add_general_validation_rapid(
+        self._add_general_validation_rapid(
             payload=payload,
             truths=model_truth,
             metadata=metadata,
@@ -211,7 +213,7 @@ class RapidataValidationSet:
         asset: MultiAsset,
         question: str,
         truth: str,
-        metadata: list[Metadata] = [],
+        metadata: Sequence[Metadata] = [],
     ) -> None:
         """Add a compare rapid to the validation set.
 
@@ -219,7 +221,7 @@ class RapidataValidationSet:
             asset (MultiAsset): The assets for the rapid.
             question (str): The question for the rapid.
             truth (str): The path to the truth file.
-            metadata (list[Metadata], optional): The metadata for the rapid. Defaults to an empty list.
+            metadata (Sequence[Metadata], optional): The metadata for the rapid. Defaults to an empty list.
 
         Returns:
             None
@@ -235,7 +237,7 @@ class RapidataValidationSet:
         if len(asset) != 2:
             raise ValueError("Compare rapid requires exactly two media paths")
 
-        self.add_general_validation_rapid(
+        self._add_general_validation_rapid(
             payload=payload,
             truths=model_truth,
             metadata=metadata,
@@ -250,7 +252,7 @@ class RapidataValidationSet:
         transcription: list[str],
         correct_words: list[str],
         strict_grading: bool | None = None,
-        metadata: list[Metadata] = [],
+        metadata: Sequence[Metadata] = [],
     ) -> None:
         """Add a transcription rapid to the validation set.
 
@@ -260,7 +262,7 @@ class RapidataValidationSet:
             transcription (list[str]): The transcription for the rapid.
             correct_words (list[str]): The list of correct words for the rapid.
             strict_grading (bool | None, optional): The strict grading for the rapid. Defaults to None.
-            metadata (list[Metadata], optional): The metadata for the rapid. Defaults to an empty list.
+            metadata (Sequence[Metadata], optional): The metadata for the rapid. Defaults to an empty list.
 
         Returns:
             None
@@ -291,7 +293,7 @@ class RapidataValidationSet:
             strictGrading=strict_grading,
         )
 
-        self.add_general_validation_rapid(
+        self._add_general_validation_rapid(
             payload=payload,
             truths=model_truth,
             metadata=metadata,
