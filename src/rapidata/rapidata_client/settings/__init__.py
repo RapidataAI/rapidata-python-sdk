@@ -1,2 +1,1 @@
-from .feature_flags import FeatureFlags
-from .settings import Settings, TranslationBehaviour
+from .settings import RapidataSettings, TranslationBehaviour, RapidataSetting

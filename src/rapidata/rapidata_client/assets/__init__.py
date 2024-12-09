@@ -6,3 +6,4 @@ from .base_asset import BaseAsset
 from .media_asset import MediaAsset
 from .text_asset import TextAsset
 from .multi_asset import MultiAsset
+from .data_type_enum import RapidataDataTypes

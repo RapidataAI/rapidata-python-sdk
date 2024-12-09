@@ -1,11 +1,11 @@
 from typing import Any
-from rapidata.rapidata_client.filter.base_filter import Filter
+from rapidata.rapidata_client.filter.base_filter import RapidataFilter
 from rapidata.api_client.models.campaign_user_filter_model import (
     CampaignUserFilterModel,
 )
 
 
-class CampaignFilter(Filter):
+class CampaignFilter(RapidataFilter):
 
     def __init__(self, campaign_ids: list[str]):
         self.campaign_ids = campaign_ids

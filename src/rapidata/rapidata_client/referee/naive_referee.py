@@ -20,6 +20,8 @@ class NaiveReferee(Referee):
             responses (int, optional): The number of responses required
                 to complete the task. Defaults to 10. This is per media item.
         """
+        if responses < 1:
+            raise ValueError("The number of responses must be greater than 0.")
         super().__init__()
         self.responses = responses
 

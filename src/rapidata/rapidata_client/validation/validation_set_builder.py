@@ -9,20 +9,20 @@ from rapidata.api_client.models.transcription_word import TranscriptionWord
 from rapidata.rapidata_client.assets.media_asset import MediaAsset
 from rapidata.rapidata_client.assets.multi_asset import MultiAsset
 from rapidata.rapidata_client.assets.text_asset import TextAsset
-from rapidata.rapidata_client.dataset.rapidata_validation_set import (
+from rapidata.rapidata_client.validation.rapidata_validation_set import (
     RapidataValidationSet,
 )
-from rapidata.rapidata_client.dataset.validation_rapid_parts import ValidatioRapidParts
+from rapidata.rapidata_client.validation.validation_rapid_parts import ValidatioRapidParts
 from rapidata.rapidata_client.metadata.base_metadata import Metadata
 from rapidata.service.openapi_service import OpenAPIService
 
-from rapidata.rapidata_client.dataset.rapid_builders.rapids import (
+from rapidata.rapidata_client.validation.rapids.rapids import (
     Rapid, 
     ClassificationRapid,
     CompareRapid,
     SelectWordsRapid
 )
-from deprecated import deprecated
+from typing import Sequence
 
 
 class ValidationSetBuilder:
@@ -44,7 +44,7 @@ class ValidationSetBuilder:
         self.validation_set_id: str | None = None
         self._rapid_parts: list[ValidatioRapidParts] = []
 
-    def submit(self) -> RapidataValidationSet:
+    def submit(self, print_confirmation: bool = True) -> RapidataValidationSet:
         """Create the validation set by executing all HTTP requests. This should be the last method called on the builder.
 
         Returns:
@@ -70,7 +70,7 @@ class ValidationSetBuilder:
         )
 
         for rapid_part in self._rapid_parts:
-            validation_set.add_general_validation_rapid(
+            validation_set._add_general_validation_rapid(
                 payload=rapid_part.payload,
                 truths=rapid_part.truths,
                 metadata=rapid_part.metadata,
@@ -78,19 +78,10 @@ class ValidationSetBuilder:
                 randomCorrectProbability=rapid_part.randomCorrectProbability,
             )
 
+        if print_confirmation:
+            print(f"Validation set '{self.name}' created with ID {self.validation_set_id}")
+            
         return validation_set
-
-    @deprecated("Use submit instead")
-    def create(self) -> RapidataValidationSet:
-        """Create the validation set by executing all HTTP requests. This should be the last method called on the builder.
-
-        Returns:
-            RapidataValidationSet: A RapidataValidationSet instance.
-
-        Raises:
-            ValueError: If the validation set creation fails.
-        """
-        return self.submit()
     
     def add_rapid(self, rapid: Rapid):
         """Add a rapid to the validation set.
@@ -112,34 +103,6 @@ class ValidationSetBuilder:
             self._add_select_words_rapid(rapid.asset, rapid.instruction, rapid.text, rapid.truths, rapid.strict_grading)
 
         return self
-
-    @deprecated("Use add_rapid instead")
-    def add_classify_rapid(
-        self,
-        asset: MediaAsset | TextAsset,
-        question: str,
-        categories: list[str],
-        truths: list[str],
-        metadata: list[Metadata] = [],
-    ):
-        """Add a classify rapid to the validation set.
-
-        Args:
-            asset (MediaAsset | TextAsset): The asset for the rapid.
-            question (str): The question for the rapid.
-            categories (list[str]): The list of categories for the rapid.
-            truths (list[str]): The list of truths for the rapid.
-            metadata (list[Metadata], optional): The metadata for the rapid. Defaults to an empty list.
-
-        Returns:
-            ValidationSetBuilder: The ValidationSetBuilder instance.
-
-        Raises:
-            ValueError: If the lengths of categories and truths are inconsistent.
-        """
-        self._add_classify_rapid(asset, question, categories, truths, metadata)
-
-        return self
     
     def _add_classify_rapid(
         self,
@@ -147,7 +110,7 @@ class ValidationSetBuilder:
         question: str,
         categories: list[str],
         truths: list[str],
-        metadata: list[Metadata] = [],
+        metadata: Sequence[Metadata] = [],
     ):
         """Add a classify rapid to the validation set.
 
@@ -156,7 +119,7 @@ class ValidationSetBuilder:
             question (str): The question for the rapid.
             categories (list[str]): The list of categories for the rapid.
             truths (list[str]): The list of truths for the rapid.
-            metadata (list[Metadata], optional): The metadata for the rapid. Defaults to an empty list.
+            metadata (Sequence[Metadata], optional): The metadata for the rapid. Defaults to an empty list.
 
         Returns:
             ValidationSetBuilder: The ValidationSetBuilder instance.
@@ -181,39 +144,13 @@ class ValidationSetBuilder:
                 asset=asset,
             )
         )
-
-    @deprecated("Use add_rapid instead")
-    def add_compare_rapid(
-        self,
-        asset: MultiAsset,
-        question: str,
-        truth: str,
-        metadata: list[Metadata] = [],
-    ):
-        """Add a compare rapid to the validation set.
-
-        Args:
-            asset (MultiAsset): The assets for the rapid.
-            question (str): The question for the rapid.
-            truth (str): The truth identifier for the rapid.
-            metadata (list[Metadata], optional): The metadata for the rapid. Defaults to an empty list.
-
-        Returns:
-            ValidationSetBuilder: The ValidationSetBuilder instance.
-
-        Raises:
-            ValueError: If the number of assets is not exactly two.
-        """
-        self._add_compare_rapid(asset, question, truth, metadata)
-
-        return self
     
     def _add_compare_rapid(
         self,
         asset: MultiAsset,
         criteria: str,
         truth: str,
-        metadata: list[Metadata] = [],
+        metadata: Sequence[Metadata] = [],
     ):
         """Add a compare rapid to the validation set.
 
@@ -221,7 +158,7 @@ class ValidationSetBuilder:
             asset (MultiAsset): The assets for the rapid.
             criteria (str): The criteria for the comparison.
             truth (str): The truth identifier for the rapid.
-            metadata (list[Metadata], optional): The metadata for the rapid. Defaults to an empty list.
+            metadata (Sequence[Metadata], optional): The metadata for the rapid. Defaults to an empty list.
 
         Returns:
             ValidationSetBuilder: The ValidationSetBuilder instance.
@@ -247,36 +184,6 @@ class ValidationSetBuilder:
                 asset=asset,
             )
         )
-
-    @deprecated("Use add_rapid instead")
-    def add_select_words_rapid(
-        self,
-        asset: MediaAsset | TextAsset,
-        question: str,
-        select_words: str,
-        truths: list[int],
-        strict_grading: bool | None = None,
-        metadata: list[Metadata] = [],
-    ):
-        """Add a select words rapid to the validation set.
-
-        Args:
-            asset (MediaAsset | TextAsset): The asset for the rapid.
-            question (str): The question for the rapid.
-            select words (list[str]): The select words for the rapid.
-            truths (list[int]): The list of indices of the true word selections.
-            strict_grading (bool | None, optional): The strict grading for the rapid. Defaults to None.
-            metadata (list[Metadata], optional): The metadata for the rapid.
-
-        Returns:
-            ValidationSetBuilder: The ValidationSetBuilder instance.
-
-        Raises:
-            ValueError: If a correct word is not found in the select words.
-        """
-        self._add_select_words_rapid(asset, question, select_words, truths, strict_grading, metadata)
-
-        return self
     
     def _add_select_words_rapid(
         self,
@@ -285,7 +192,7 @@ class ValidationSetBuilder:
         select_words: str,
         truths: list[int],
         strict_grading: bool | None = None,
-        metadata: list[Metadata] = [],
+        metadata: Sequence[Metadata] = [],
     ):
         """Add a select words rapid to the validation set.
 
@@ -295,7 +202,7 @@ class ValidationSetBuilder:
             select words (list[str]): The select words for the rapid.
             truths (list[int]): The list of indices of the true word selections.
             strict_grading (bool | None, optional): The strict grading for the rapid. Defaults to None.
-            metadata (list[Metadata], optional): The metadata for the rapid.
+            metadata (Sequence[Metadata], optional): The metadata for the rapid.
 
         Returns:
             ValidationSetBuilder: The ValidationSetBuilder instance.

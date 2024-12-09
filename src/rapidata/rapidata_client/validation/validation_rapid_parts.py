@@ -23,6 +23,7 @@ from rapidata.rapidata_client.assets.media_asset import MediaAsset
 from rapidata.rapidata_client.assets.multi_asset import MultiAsset
 from rapidata.rapidata_client.assets.text_asset import TextAsset
 from rapidata.rapidata_client.metadata.base_metadata import Metadata
+from typing import Sequence
 
 
 @dataclass
@@ -51,5 +52,5 @@ class ValidatioRapidParts:
         | PolygonTruth
         | TranscriptionTruth
     )
-    metadata: list[Metadata]
+    metadata: Sequence[Metadata]
     randomCorrectProbability: float

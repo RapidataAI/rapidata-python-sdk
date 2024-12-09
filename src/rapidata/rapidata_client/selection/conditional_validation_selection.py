@@ -1,4 +1,4 @@
-from rapidata.rapidata_client.selection.base_selection import Selection
+from rapidata.rapidata_client.selection.base_selection import RapidataSelection
 from rapidata.api_client.models.conditional_validation_rapid_selection_config import (
     ValidationChance,
 )
@@ -7,7 +7,7 @@ from rapidata.api_client.models.conditional_validation_selection import (
 )
 
 
-class ConditionalValidationSelection(Selection):
+class ConditionalValidationSelection(RapidataSelection):
     """Demographic selection class."""
 
     def __init__(
