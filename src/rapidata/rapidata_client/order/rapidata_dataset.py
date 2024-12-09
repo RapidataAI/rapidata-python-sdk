@@ -15,7 +15,7 @@ from rapidata.service.openapi_service import OpenAPIService
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
 
-from typing import cast
+from typing import cast, Sequence
 
 
 class RapidataDataset:
@@ -66,14 +66,9 @@ class RapidataDataset:
     def add_media_from_paths(
         self,
         media_paths: list[MediaAsset] |  list[MultiAsset], # where multiasset is a list of media assets
-        metadata: list[Metadata] | None = None,
+        metadata: Sequence[Metadata] | None = None,
         max_workers: int = 10,
     ):
-        if metadata is not None and len(metadata) != len(media_paths):
-            raise ValueError(
-                "metadata must be None or have the same length as media_paths"
-            )
-
         for media_path in media_paths:
             if isinstance(media_path, MultiAsset):
                 assert all(

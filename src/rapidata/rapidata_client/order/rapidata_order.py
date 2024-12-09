@@ -1,5 +1,5 @@
 from time import sleep
-from rapidata.rapidata_client.dataset.rapidata_dataset import RapidataDataset
+from rapidata.rapidata_client.order.rapidata_dataset import RapidataDataset
 from rapidata.service.openapi_service import OpenAPIService
 import json
 from rapidata.api_client.exceptions import ApiException
@@ -25,17 +25,23 @@ class RapidataOrder:
         openapi_service: OpenAPIService,
         name: str,
     ):
-        self.openapi_service = openapi_service
+        self._openapi_service = openapi_service
         self.order_id = order_id
         self._dataset = dataset
         self.name = name
         self._workflow_id = None
 
-    def submit(self):
+    def run(self, print_link: bool=True):
         """
-        Submits the order for processing.
+        Runs the order for to start collecting votes.
         """
-        self.openapi_service.order_api.order_submit_post(self.order_id)
+        self._openapi_service.order_api.order_submit_post(self.order_id)
+
+        if print_link:
+            print(f"Order '{self.name}' is now viewable under: https://app.{self._openapi_service.enviroment}/order/detail/{self.order_id}")
+        
+        return self
+
 
     def get_status(self) -> str:
         """
@@ -44,15 +50,18 @@ class RapidataOrder:
         Returns: 
             The status of the order.
         """
-        return self.openapi_service.order_api.order_get_by_id_get(self.order_id).state
+        return self._openapi_service.order_api.order_get_by_id_get(self.order_id).state
 
-    def display_progress_bar(self, refresh_rate=5):
+    def display_progress_bar(self, refresh_rate: int=5):
         """
         Displays a progress bar for the order processing using tqdm.
         
         Prameter: 
             How often to refresh the progress bar, in seconds.
         """
+        if refresh_rate < 1:
+            raise ValueError("refresh_rate must be at least 1")
+        
         with tqdm(total=100, desc="Processing order", unit="%", bar_format="{desc}: {percentage:3.0f}%|{bar}| completed [{elapsed}<{remaining}, {rate_fmt}]") as pbar:
             last_percentage = 0
             while True:
@@ -72,8 +81,8 @@ class RapidataOrder:
 
         for _ in range(10):
             try:
-                order_result = self.openapi_service.order_api.order_get_by_id_get(self.order_id)
-                pipeline = self.openapi_service.pipeline_api.pipeline_id_get(order_result.pipeline_id)
+                order_result = self._openapi_service.order_api.order_get_by_id_get(self.order_id)
+                pipeline = self._openapi_service.pipeline_api.pipeline_id_get(order_result.pipeline_id)
                 self._workflow_id = cast(WorkflowArtifactModel, pipeline.artifacts["workflow-artifact"].actual_instance).workflow_id
                 break
             except Exception:
@@ -87,7 +96,7 @@ class RapidataOrder:
         progress = None
         for _ in range(2):
             try:
-                progress = self.openapi_service.workflow_api.workflow_get_progress_get(workflow_id)
+                progress = self._openapi_service.workflow_api.workflow_get_progress_get(workflow_id)
                 break
             except Exception:
                 sleep(5)
@@ -111,7 +120,7 @@ class RapidataOrder:
 
         try:
             # Get the raw result string
-            result_str = self.openapi_service.order_api.order_result_get(id=self.order_id)
+            result_str = self._openapi_service.order_api.order_result_get(id=self.order_id)
             # Parse the result string as JSON
             return json.loads(result_str)
         except ApiException as e:

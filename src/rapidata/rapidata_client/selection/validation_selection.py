@@ -1,9 +1,9 @@
 
 from rapidata.api_client.models.validation_selection import ValidationSelection as ValidationSelectionModel
-from rapidata.rapidata_client.selection.base_selection import Selection
+from rapidata.rapidata_client.selection.base_selection import RapidataSelection
 
 
-class ValidationSelection(Selection):
+class ValidationSelection(RapidataSelection):
 
     def __init__(self, validation_set_id: str, amount: int = 1):
         self.validation_set_id = validation_set_id

@@ -4,13 +4,13 @@ from rapidata.api_client.models.capped_selection import (
 from rapidata.api_client.models.capped_selection_selections_inner import (
     CappedSelectionSelectionsInner,
 )
-from rapidata.rapidata_client.selection.base_selection import Selection
+from rapidata.rapidata_client.selection.base_selection import RapidataSelection
 from typing import Sequence
 
 
-class CappedSelection(Selection):
+class CappedSelection(RapidataSelection):
 
-    def __init__(self, selections: Sequence[Selection], max_rapids: int):
+    def __init__(self, selections: Sequence[RapidataSelection], max_rapids: int):
         self.selections = selections
         self.max_rapids = max_rapids
 

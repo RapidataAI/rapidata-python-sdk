@@ -1,0 +1,239 @@
+from rapidata.rapidata_client.validation.validation_set_builder import ValidationSetBuilder
+from rapidata.rapidata_client.validation.rapidata_validation_set import RapidataValidationSet
+from rapidata.service.openapi_service import OpenAPIService
+from rapidata.rapidata_client.assets.data_type_enum import RapidataDataTypes
+from rapidata.rapidata_client.validation.rapids.rapids_manager import RapidsManager
+from rapidata.rapidata_client.validation.rapids.rapids import Rapid
+from rapidata.rapidata_client.metadata import PromptMetadata
+
+from rapidata.api_client.models.page_info import PageInfo
+from rapidata.api_client.models.root_filter import RootFilter
+from rapidata.api_client.models.filter import Filter
+from rapidata.api_client.models.sort_criterion import SortCriterion
+from rapidata.api_client.exceptions import BadRequestException
+from urllib3._collections import HTTPHeaderDict
+
+from rapidata.api_client.models.query_validation_set_model import QueryValidationSetModel
+
+from typing import Sequence
+
+
+class ValidationSetManager:
+    def __init__(self, openapi_service: OpenAPIService) -> None:
+        self.openapi_service = openapi_service
+        self.rapid = RapidsManager()
+
+    def create_classification_set(self,
+        name: str,
+        question: str,
+        options: list[str],
+        datapoints: list[str],
+        truths: list[list[str]],
+        data_type: str = RapidataDataTypes.MEDIA,
+        prompts: list[str] | None = None,
+        print_confirmation: bool = True
+    ) -> RapidataValidationSet:
+        """Create a classification validation set.
+        
+        Args:
+            name (str): The name of the validation set.
+            question (str): The question to ask the labeler.
+            options (list[str]): The options to choose from.
+            datapoints (list[str]): The datapoints that will be used for validation.
+            truths (list[list[str]]): The truths for each datapoint. Outher list is for each datapoint, inner list is for each truth.
+                example:
+                    options: ["yes", "no", "maybe"]
+                    datapoints: ["datapoint1", "datapoint2"]
+                    truths: [["yes"], ["no", "maybe"]] -> first datapoint correct answer is "yes", second datapoint is "no" or "maybe"
+            data_type (str, optional): The type of data. Defaults to RapidataDataTypes.MEDIA. Other option: RapidataDataTypes.TEXT ("text").
+            prompts (list[str], optional): The prompts for each datapoint. Defaults to None.
+                If provided has to be the same length as datapoints and will be shown in addition to the question and options. (Therefore will be different for each datapoint)
+                Will be match up with the datapoints using the list index.
+            print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
+        """
+        
+        if len(datapoints) != len(truths):
+            raise ValueError("The number of datapoints and truths must be equal")
+        if prompts and len(prompts) != len(datapoints):
+            raise ValueError("The number of prompts and datapoints must be equal")
+        
+        rapids = []
+        for i in range(len(datapoints)):
+            rapids.append(
+                self.rapid.build_classification_rapid(
+                    question=question,
+                    options=options,
+                    datapoint=datapoints[i],
+                    truths=truths[i],
+                    data_type=data_type,
+                    metadata=[PromptMetadata(prompts[i])] if prompts else []
+                )
+            )
+
+        validation_set_builder = ValidationSetBuilder(name, self.openapi_service)
+        for rapid in rapids:
+            validation_set_builder.add_rapid(rapid)
+
+        return validation_set_builder.submit(print_confirmation)
+    
+    def create_compare_set(self,
+        name: str,
+        criteria: str,
+        truth: list[str],
+        datapoints: list[list[str]],
+        data_type: str = RapidataDataTypes.MEDIA,
+        prompts: list[str] | None = None,
+        print_confirmation: bool = True
+    ) -> RapidataValidationSet:
+        """Create a comparison validation set.
+
+        Args:
+            name (str): The name of the validation set.
+            criteria (str): The criteria to compare against.
+            truth (list[str]): The truth for each comparison. List is for each comparison.
+                example:
+                    criteria: "Which image has a cat?"
+                    datapoints = [["image1.jpg", "image2.jpg"], ["image3.jpg", "image4.jpg"]]
+                    truth: ["image1.jpg", "image4.jpg"] -> first comparison image1.jpg has a cat, second comparison image4.jpg has a cat
+            datapoints (list[list[str]]): The compare datapoints to create the validation set with. 
+                Outer list is for each comparison, inner list the two images/texts that will be compared.
+            data_type (str, optional): The type of data. Defaults to RapidataDataTypes.MEDIA. Other option: RapidataDataTypes.TEXT ("text").
+            prompts (list[str], optional): The prompts for each datapoint. Defaults to None.
+                If provided has to be the same length as datapoints and will be shown in addition to the criteria and truth. (Therefore will be different for each datapoint)
+                Will be match up with the datapoints using the list index.
+            print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
+        """
+        
+        if len(datapoints) != len(truth):
+            raise ValueError("The number of datapoints and truths must be equal")
+        
+        if prompts and len(prompts) != len(datapoints):
+            raise ValueError("The number of prompts and datapoints must be equal")
+        
+        rapids = []
+        for i in range(len(datapoints)):
+            rapids.append(
+                self.rapid.build_compare_rapid(
+                    criteria=criteria,
+                    truth=truth[i],
+                    datapoint=datapoints[i],
+                    data_type=data_type,
+                    metadata=[PromptMetadata(prompts[i])] if prompts else []
+                )
+            )
+
+        validation_set_builder = ValidationSetBuilder(name, self.openapi_service)
+        for rapid in rapids:
+            validation_set_builder.add_rapid(rapid)
+
+        return validation_set_builder.submit(print_confirmation)
+    
+    def create_select_words_set(self,
+        name: str,
+        instruction: str,
+        truths: list[list[int]],
+        datapoints: list[str],
+        texts: list[str],
+        strict_grading: bool = True,
+        print_confirmation: bool = True
+    ) -> RapidataValidationSet:
+        """Create a select words validation set.
+
+        Args:
+            name (str): The name of the validation set.
+            instruction (str): The instruction to show to the labeler.
+            truths (list[list[int]]): The truths for each datapoint. Outher list is for each datapoint, inner list is for each truth.
+                example:
+                    datapoints: ["datapoint1", "datapoint2"]
+                    texts: ["this example 1", "this example 2"]
+                    truths: [[0, 1], [2]] -> first datapoint correct words are "this" and "example", second datapoint is "2"
+            datapoints (list[str]): The datapoints that will be used for validation.
+            texts (list[str]): The texts that will be used for validation. The text will be split up by spaces to be selected by the labeler.
+            strict_grading (bool, optional): Whether to grade strictly. Defaults to True. 
+                If True, the labeler must select all correct words to be graded as correct.
+                If False, the labeler must select at least one correct word to be graded as correct.
+            print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
+            """
+        
+        if len(datapoints) != len(truths) or len(datapoints) != len(texts):
+            raise ValueError("The number of datapoints, truths, and texts must be equal")
+        
+        rapids = []
+        for i in range(len(datapoints)):
+            rapids.append(
+                self.rapid.build_select_words_rapid(
+                    instruction=instruction,
+                    truths=truths[i],
+                    datapoint=datapoints[i],
+                    text=texts[i],
+                    strict_grading=strict_grading
+                )
+            )
+
+        validation_set_builder = ValidationSetBuilder(name, self.openapi_service)
+        for rapid in rapids:
+            validation_set_builder.add_rapid(rapid)
+
+        return validation_set_builder.submit(print_confirmation)
+    
+    def create_rapid_set(self,
+        name: str,
+        rapids: Sequence[Rapid],
+        print_confirmation: bool = True
+    ) -> RapidataValidationSet:
+        """Create a validation set with a list of rapids.
+
+        Args:
+            name (str): The name of the validation set.
+            rapids (Sequence[Rapid]): The list of rapids to add to the validation set.
+            print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
+        """
+
+        validation_set_builder = ValidationSetBuilder(name, self.openapi_service)
+        for rapid in rapids:
+            validation_set_builder.add_rapid(rapid)
+
+        return validation_set_builder.submit(print_confirmation)
+    
+    def get_validation_set_by_id(self, validation_set_id: str) -> RapidataValidationSet:
+        """Get a validation set by ID.
+
+        Args:
+            validation_set_id (str): The ID of the validation set.
+
+        Returns:
+            RapidataValidationSet: The ValidationSet instance.
+        """
+        try:
+            validation_set = self.openapi_service.validation_api.validation_get_by_id_get(id=validation_set_id)
+        except Exception:
+            raise ValueError(f"ValidationSet with ID {validation_set_id} not found.")
+        
+        return RapidataValidationSet(validation_set_id, self.openapi_service, validation_set.name)
+    
+    def find_validation_sets(self, name: str = "", amount: int = 1) -> list[RapidataValidationSet]:
+        """Find validation sets by name.
+
+        Args:
+            name (str, optional): The name to search for. Defaults to "" to match with any set.
+            amount (int, optional): The amount of validation sets to return. Defaults to 1.
+
+        Returns:
+            list[RapidataValidationSet]: The list of validation sets.
+        """
+        try:
+            validation_page_result = self.openapi_service.validation_api.validation_query_validation_sets_get(QueryValidationSetModel(
+                pageInfo=PageInfo(index=1, size=amount),
+                filter=RootFilter(filters=[Filter(field="Name", operator="Contains", value=name)]),
+                sortCriteria=[SortCriterion(direction="Desc", propertyName="CreatedAt")]
+                ))
+
+        except BadRequestException as e:
+            raise ValueError(f"Error occured during request. \nError: {e.body} \nTraceid: {e.headers.get('X-Trace-Id') if isinstance(e.headers, HTTPHeaderDict) else 'Unknown'}")
+
+        except Exception as e:
+            raise ValueError(f"Unknown error occured: {e}")
+
+        validation_sets = [self.get_validation_set_by_id(validation_set.id) for validation_set in validation_page_result.items]
+        return validation_sets
+
