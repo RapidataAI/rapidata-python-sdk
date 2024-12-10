@@ -7,8 +7,6 @@ from .rapidata_client import (
     CappedSelection,
     PrivateTextMetadata,
     PublicTextMetadata,
-    # PromptMetadata,
-    # SelectWordsMetadata,
     RapidataSettings,
     TranslationBehaviour,
     CountryCodes,

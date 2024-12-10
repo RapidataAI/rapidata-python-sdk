@@ -10,14 +10,14 @@ def get_emotions_of_images_order(rapi: RapidataClient):
     emotions = ["anger", "disgust", "happiness", "sadness"]
     generated_images_urls = [f"{base_url}{emotion}.webp" for emotion in emotions]
     # Configure order
-    order = (rapi.order_builder
-             .classify_order("emotions from images")
-             .question("What emotions do you feel when looking at the image?")
-             .options(["happy", "sad", "angry", "surprised", "disgusted", "scared", "neutral"])
-             .media(generated_images_urls)
-             .responses(50)
-             .submit()
-            )
+
+    order = rapi.order.create_classification_order(
+        name="emotions from images",
+        question="What emotions do you feel when looking at the image?",
+        options=["happy", "sad", "angry", "surprised", "disgusted", "scared", "neutral"],
+        datapoints=generated_images_urls,
+        responses_per_datapoint=50
+        ).run()
 
     return order
 
