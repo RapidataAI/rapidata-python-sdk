@@ -65,8 +65,6 @@ nav:
     - Compare: examples/compare_order.md
     - Free Text: examples/free_text_order.md
     - SelectWords: examples/select_words_order.md
-  - Advanced Orders:
-    - Advanced Orders Intro: advanced_orders.md
   - API Documentation: api.md
 
 theme:

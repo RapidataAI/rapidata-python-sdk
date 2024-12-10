@@ -40,13 +40,13 @@ class ValidationSetManager:
             question (str): The question to ask the labeler.
             options (list[str]): The options to choose from.
             datapoints (list[str]): The datapoints that will be used for validation.
-            truths (list[list[str]]): The truths for each datapoint. Outher list is for each datapoint, inner list is for each truth.
+            truths (list[list[str]]): The truths for each datapoint. Outher list is for each datapoint, inner list is for each truth.\n
                 example:
                     options: ["yes", "no", "maybe"]
                     datapoints: ["datapoint1", "datapoint2"]
                     truths: [["yes"], ["no", "maybe"]] -> first datapoint correct answer is "yes", second datapoint is "no" or "maybe"
             data_type (str, optional): The type of data. Defaults to RapidataDataTypes.MEDIA. Other option: RapidataDataTypes.TEXT ("text").
-            prompts (list[str], optional): The prompts for each datapoint. Defaults to None.
+            prompts (list[str], optional): The prompts for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the question and options. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
@@ -79,8 +79,8 @@ class ValidationSetManager:
     def create_compare_set(self,
         name: str,
         criteria: str,
-        truth: list[str],
         datapoints: list[list[str]],
+        truths: list[str],
         data_type: str = RapidataDataTypes.MEDIA,
         prompts: list[str] | None = None,
         print_confirmation: bool = True
@@ -90,7 +90,7 @@ class ValidationSetManager:
         Args:
             name (str): The name of the validation set.
             criteria (str): The criteria to compare against.
-            truth (list[str]): The truth for each comparison. List is for each comparison.
+            truth (list[str]): The truth for each comparison. List is for each comparison.\n
                 example:
                     criteria: "Which image has a cat?"
                     datapoints = [["image1.jpg", "image2.jpg"], ["image3.jpg", "image4.jpg"]]
@@ -98,13 +98,13 @@ class ValidationSetManager:
             datapoints (list[list[str]]): The compare datapoints to create the validation set with. 
                 Outer list is for each comparison, inner list the two images/texts that will be compared.
             data_type (str, optional): The type of data. Defaults to RapidataDataTypes.MEDIA. Other option: RapidataDataTypes.TEXT ("text").
-            prompts (list[str], optional): The prompts for each datapoint. Defaults to None.
+            prompts (list[str], optional): The prompts for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the criteria and truth. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
         """
         
-        if len(datapoints) != len(truth):
+        if len(datapoints) != len(truths):
             raise ValueError("The number of datapoints and truths must be equal")
         
         if prompts and len(prompts) != len(datapoints):
@@ -115,7 +115,7 @@ class ValidationSetManager:
             rapids.append(
                 self.rapid.build_compare_rapid(
                     criteria=criteria,
-                    truth=truth[i],
+                    truth=truths[i],
                     datapoint=datapoints[i],
                     data_type=data_type,
                     metadata=[PromptMetadata(prompts[i])] if prompts else []
@@ -142,14 +142,15 @@ class ValidationSetManager:
         Args:
             name (str): The name of the validation set.
             instruction (str): The instruction to show to the labeler.
-            truths (list[list[int]]): The truths for each datapoint. Outher list is for each datapoint, inner list is for each truth.
+            truths (list[list[int]]): The truths for each datapoint. Outher list is for each datapoint, inner list is for each truth.\n
                 example:
                     datapoints: ["datapoint1", "datapoint2"]
                     sentences: ["this example 1", "this example 2"]
                     truths: [[0, 1], [2]] -> first datapoint correct words are "this" and "example", second datapoint is "2"
             datapoints (list[str]): The datapoints that will be used for validation.
-            sentences (list[str]): The sentences that will be used for validation. The text will be split up by spaces to be selected by the labeler.
-            strict_grading (bool, optional): Whether to grade strictly. Defaults to True. 
+            sentences (list[str]): The sentences that will be used for validation. The sentece will be split up by spaces to be selected by the labeler.
+                Must be the same length as datapoints.
+            strict_grading (bool, optional): Whether to grade strictly. Defaults to True.\n
                 If True, the labeler must select all correct words to be graded as correct. (and no wrong words)
                 If False, the labeler must select at least one correct word to be graded as correct. (and no wrong words)
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.

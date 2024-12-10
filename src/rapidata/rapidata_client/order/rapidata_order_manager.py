@@ -53,7 +53,7 @@ class RapidataOrderManager:
             responses_per_datapoint: int = 10,
             prompts: list[str] | None = None,
             validation_set_id: str | None = None,
-            probability_threshold: float | None = None,
+            confidence_threshold: float | None = None,
             filters: Sequence[RapidataFilter] = [],
             settings: Sequence[RapidataSetting] = [],
             sentences: list[str] | None = None,
@@ -73,11 +73,11 @@ class RapidataOrderManager:
         if prompts and data_type == RapidataDataTypes.TEXT:
             print("Warning: Prompts are not supported for text data type. Ignoring prompts.")
 
-        if not probability_threshold:
+        if not confidence_threshold:
             referee = NaiveReferee(responses=responses_per_datapoint)
         else:
             referee = EarlyStoppingReferee(
-                threshold=probability_threshold,
+                threshold=confidence_threshold,
                 max_vote_count=responses_per_datapoint,
             )
 
@@ -118,7 +118,7 @@ class RapidataOrderManager:
             responses_per_datapoint: int = 10,
             prompts: list[str] | None = None,
             validation_set_id: str | None = None,
-            probability_threshold: float | None = None,
+            confidence_threshold: float | None = None,
             filters: Sequence[RapidataFilter] = [],
             settings: Sequence[RapidataSetting] = [],
             selections: Sequence[RapidataSelection] | None = None,
@@ -130,14 +130,15 @@ class RapidataOrderManager:
             question (str): The question for the classification.
             options (list[str]): The list of options for the classification.
             datapoints (list[str]): The list of datapoints for the classification - each datapoint will be labeled.
-            data_type (str, optional): The data type of the datapoints. Defaults to RapidataDataTypes.MEDIA. Other option: RapidataDataTypes.TEXT ("text").
+            data_type (str, optional): The data type of the datapoints. Defaults to RapidataDataTypes.MEDIA. \n
+                Other option: RapidataDataTypes.TEXT ("text").
             responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
-            prompts (list[str], optional): The list of prompts for the classification. Defaults to None. 
+            prompts (list[str], optional): The list of prompts for the classification. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the question and options. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
-            validation_set_id (str, optional): The ID of the validation set. Defaults to None. 
+            validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
-            probability_threshold (float, optional): The probability threshold for the classification. Defaults to None. 
+            confidence_threshold (float, optional): The probability threshold for the classification. Defaults to None.\n
                 If provided, the classification datapoint will stop after the threshold is reached or at the number of responses, whatever happens first.
             filters (Sequence[RapidataFilter], optional): The list of filters for the classification. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the classification. Defaults to []. Decides how the tasks should be shown.
@@ -162,7 +163,7 @@ class RapidataOrderManager:
             responses_per_datapoint=responses_per_datapoint,
             prompts=prompts,
             validation_set_id=validation_set_id,
-            probability_threshold=probability_threshold,
+            confidence_threshold=confidence_threshold,
             filters=filters,
             selections=selections,
             settings=settings
@@ -176,7 +177,7 @@ class RapidataOrderManager:
             responses_per_datapoint: int = 10,
             prompts: list[str] | None = None,
             validation_set_id: str | None = None,
-            probability_threshold: float | None = None,
+            confidence_threshold: float | None = None,
             filters: Sequence[RapidataFilter] = [],
             settings: Sequence[RapidataSetting] = [],
             selections: Sequence[RapidataSelection] | None = None,
@@ -187,14 +188,15 @@ class RapidataOrderManager:
             name (str): The name of the order.
             criteria (str): The criteria for the comparison. Will be shown along side each datapoint.
             datapoints (list[list[str]]): Outher list is the datapoints, inner list is the options for the comparison - each datapoint will be labeled.
-            data_type (str, optional): The data type of the datapoints. Defaults to RapidataDataTypes.MEDIA. Other option: RapidataDataTypes.TEXT ("text").
+            data_type (str, optional): The data type of the datapoints. Defaults to RapidataDataTypes.MEDIA. \n
+                Other option: RapidataDataTypes.TEXT ("text").
             responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
-            prompts (list[str], optional): The list of prompts for the comparison. Defaults to None. 
+            prompts (list[str], optional): The list of prompts for the comparison. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the criteria. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
-            validation_set_id (str, optional): The ID of the validation set. Defaults to None. 
+            validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
-            probability_threshold (float, optional): The probability threshold for the comparison. Defaults to None. 
+            confidence_threshold (float, optional): The probability threshold for the comparison. Defaults to None.\n
                 If provided, the comparison datapoint will stop after the threshold is reached or at the number of responses, whatever happens first.
             filters (Sequence[RapidataFilter], optional): The list of filters for the comparison. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the comparison. Defaults to []. Decides how the tasks should be shown.
@@ -218,7 +220,7 @@ class RapidataOrderManager:
             responses_per_datapoint=responses_per_datapoint,
             prompts=prompts,
             validation_set_id=validation_set_id,
-            probability_threshold=probability_threshold,
+            confidence_threshold=confidence_threshold,
             filters=filters,
             selections=selections,
             settings=settings
@@ -240,7 +242,8 @@ class RapidataOrderManager:
             name (str): The name of the order.
             question (str): The question for the free text. Will be shown along side each datapoint.
             datapoints (list[str]): The list of datapoints for the free text - each datapoint will be labeled.
-            data_type (str, optional): The data type of the datapoints. Defaults to RapidataDataTypes.MEDIA. Other option: RapidataDataTypes.TEXT ("text").
+            data_type (str, optional): The data type of the datapoints. Defaults to RapidataDataTypes.MEDIA. \n
+                Other option: RapidataDataTypes.TEXT ("text").
             responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
             filters (Sequence[RapidataFilter], optional): The list of filters for the free text. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the free text. Defaults to []. Decides how the tasks should be shown.
@@ -285,9 +288,10 @@ class RapidataOrderManager:
             name (str): The name of the order.
             instruction (str): The instruction for the select words. Will be shown along side each datapoint.
             datapoints (list[str]): The list of datapoints for the select words - each datapoint will be labeled.
-            sentences (list[str]): The list of sentences for the select words - Will be split up by spaces and shown along side each datapoint.
+            sentences (list[str]): The list of sentences for the select words - Will be split up by spaces and shown along side each datapoint.\n
+                Must be the same length as datapoints.
             responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
-            validation_set_id (str, optional): The ID of the validation set. Defaults to None.
+            validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
             filters (Sequence[RapidataFilter], optional): The list of filters for the select words. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the select words. Defaults to []. Decides how the tasks should be shown.
