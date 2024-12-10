@@ -48,19 +48,19 @@ The Early Stopping feature is supported for the Classification and Comparison wo
 
 ## Using Early Stopping in Your Order
 
-Implementing Early Stopping is straightforward. You simply add the .confidence_threshold() method when building your order.
+Implementing Early Stopping is straightforward. You simply add the confidence threshold as a parameter when creating the order.
 
 ### Example: Classification Order with Early Stopping
 
 ```python
-order = (rapi.order_builder
-        .classify_order("Test Classification Order")
-        .question("What do you see in the image?")
-        .options(["Dog", "Cat"])
-        .media(["https://assets.rapidata.ai/dog.jpeg"])
-        .responses(50)
-        .confidence_threshold(0.99)
-        .submit())
+order = rapi.order.create_classification_order(
+    name="Test Classification Order with Early Stopping",
+    question="What do you see in the image?",
+    options=["Cat", "Dog"],
+    datapoints=["https://assets.rapidata.ai/dog.jpeg"],
+    responses_per_datapoint=50,
+    confidence_threshold=0.99,
+).run()
 
 order.display_progress_bar()
 result = order.get_results()
@@ -69,8 +69,8 @@ print(result)
 
 In this example:
 
-- responses(50): Sets the maximum number of responses per datapoint.
-- confidence_threshold(0.99): Specifies that data collection for a datapoint should stop once a 99% confidence level is reached.
+- responses_per_datapoint=50: Sets the maximum number of responses per datapoint.
+- confidence_threshold=0.99: Specifies that data collection for a datapoint should stop once a 99% confidence level is reached.
 
 We'd expect this to take roughtly 4 responses to reach the 99% confidence level.
 
@@ -116,7 +116,8 @@ Example:
                     "Dog": 1.0,
                     "Cat": 0.0
                 },
-                "confidencePerCategory": {
+                # this only appears when using early stopping
+                "confidencePerCategory": { 
                     "Dog": 0.9943,
                     "Cat": 0.0057
                 },

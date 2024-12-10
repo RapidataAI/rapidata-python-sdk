@@ -25,12 +25,12 @@ pip install -U rapidata
 
 Orders are managed through the [`RapidataClient`](reference/rapidata/rapidata_client/rapidata_client.md#rapidata.rapidata_client.rapidata_client.RapidataClient).
 
-Create a client as follows, this will save your credentials in a local file so you don't have to log in again on that machine:
+Create a client as follows, this will save your credentials in your `.config/rapidata/credentials.json` file so you don't have to log in again on that machine:
 
 ```py
 from rapidata import RapidataClient
 
-#first time executing it on a machine will require you to log in
+#The first time executing it on a machine will require you to log in
 rapi = RapidataClient()
 ```
 
@@ -43,79 +43,55 @@ rapi = RapidataClient(client_id="Your client ID", client_secret="Your client sec
 
 ### Creating an Order
 
-1. Create a new `Classification Order` and specify the name by making use of the `order_builder`:
+All order-related operations are performed using rapi.order.
+
+1. Here we create a classification order with a name and the question we want to ask:
 
 ```py
-order_builder = rapi.order_builder.classify_order("Example Classification Order")
+order = rapi.order.create_classification_order(
+    name="Example Classification Order",
+    question="What is shown in the image?",
+    options=["Fish", "Cat", "Wallaby", "Airplane"],
+    datapoints=["https://assets.rapidata.ai/wallaby.jpg"]
+)
 ```
+The parameters are as follows:
 
-2. Add the question you want to ask.
+- `name`: The name of the order. This is used to identify the order in the [Rapidata Dashboard](https://app.rapidata.ai/dashboard/orders). This name is also be used to find the order again later.
+- `question`: The question you want to ask the annotators.
+- `options`: The different answer options the annotators can choose from.
+- `datapoints`: The data you want to classify. This can be any public URL (that points to an image, video or audio) or a local file path. This is a list of all datapoints you want to classify. The same question and answer options will be asked for each datapoint. There is a limit of 100 datapoints per order. If you need more than that, you can reach out to us at <info@rapidata.ai>.
 
-```py
-order_builder = order_builder.question("What is shown in the image?")
-```
+Optionally you may add additional specifications with the other parameters. As an example, the `responses_per_datapoint` that specifies how many responses you want per datapoint<sup>1</sup>.
 
-3. add the different answer options (the order of the options will be randomized when displayed to the user):
+When calling this function the data gets uploaded and prepared, but no annotators will start working on it yet.
 
-```py
-order_builder = order_builder.options(["Fish", "Cat", "Wallaby", "Airplane"])
-```
-
-4. Add the paths to the images you want to classify:
+2. To start the order and collect responses, call the `run` method:
 
 ```py
-# URL
-order_builder = order_builder.media(["https://assets.rapidata.ai/wallaby.jpg"])
-```
-
-```py
-# Local file path
-order_builder = order_builder.media(["examples/data/wallaby.jpg"])
-```
-
-5. Optionally add additional specifications. here we're adding a specific amount of responses<sup>1</sup> we want per datapoint, there are other functionalities you can explore by looking at the order_builder methods:
-
-```py
-order_builder = order_builder.responses(20)
-```
-
-6. Finally we want to submit the order. This sends the order off for verification and will start collecting responses.
-
-```py
-order = order_builder.submit()
-```
-
-7. You can see your orders on the [Rapidata Dashboard](https://app.rapidata.ai/dashboard/orders).
-
-
-### Short Form
-
-The `RapidataSDK` supports a fluent interface, allowing method call chaining. This enables a more concise order creation:
-
-```py
-order = (rapi.order_builder
-         .classify_order("Example Classification Order")
-         .question("What is shown in the image?")
-         .options(["Fish", "Cat", "Wallaby", "Airplane"])
-         .media(["https://assets.rapidata.ai/wallaby.jpg"])
-         .responses(20)
-         .submit())
+order.run()
 ```
 
 ### Retrieve Orders
 
-To Retrieve old orders, you can use the `find_orders` method. This method allows you to filder by name and amount of orders to retrieve:
+To retrieve old orders, you can use the `find_orders` method. This method allows you to filter by name and amount of orders to retrieve:
 
 ```py
-example_orders = rapi.find_orders("Example Classification Order")
+example_orders = rapi.order.find_orders("Example Classification Order")
 
 # if no name is provided it will just return the most recent one
-most_recent_order = rapi.find_orders()[0]
+most_recent_order = rapi.order.find_orders()[0]
+```
+
+Optionally you can also retrieve a specific order using the order ID:
+
+```py
+order = rapi.order.get_order_by_id("order_id")
 ```
 
 ### Monitoring Order Progress
 
-You can monitor the progress of the order on the [Rapidata Dashboard](https://app.rapidata.ai/dashboard/orders) or by checking how many datapoints are already done labeling:
+You can monitor the progress of the order on the [Rapidata Dashboard](https://app.rapidata.ai/dashboard/orders) or by checking how many datapoints are already done with labeling:
 
 ```py
 order.display_progress_bar()
@@ -128,6 +104,14 @@ To download the results simply call the `get_results` method on the order:
 ```py
 results = order.get_results()
 ```
+
+## Credits and Billing
+
+When you first create an account on Rapidata, you will receive 100 free credits. Each credit give you 10 responses. After you have used up your free credits, you may purchase more [here](https://app.rapidata.ai/pricing).
+
+## Next Steps
+
+This is just the beginning. You can create many different types of orders and customize them to your needs. Check out the [Overview](index.md) for more examples and information or check out how to improve the quality of your responses in the [Improve Quality](/improve_order_quality/) .
 
 ------------------
 

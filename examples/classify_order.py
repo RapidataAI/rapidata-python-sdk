@@ -4,13 +4,17 @@ Classify order with a validation set
 
 from rapidata import RapidataClient
 
-
-def get_emotions_of_images_order(rapi: RapidataClient):
+def get_urls():
     base_url = "https://assets.rapidata.ai/dalle-3_"
     emotions = ["anger", "disgust", "happiness", "sadness"]
     generated_images_urls = [f"{base_url}{emotion}.webp" for emotion in emotions]
-    # Configure order
+    return generated_images_urls
 
+
+def get_emotions_of_images_order(rapi: RapidataClient):
+    generated_images_urls = get_urls()
+
+    # Configure order
     order = rapi.order.create_classification_order(
         name="emotions from images",
         question="What emotions do you feel when looking at the image?",

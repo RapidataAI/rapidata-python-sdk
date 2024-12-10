@@ -14,7 +14,7 @@ def new_compare_order(rapi: RapidataClient):
         name="Example SimpleMatchup Validation Set",
         criteria="Which logo is the actual Rapidata logo?",
         datapoints=[[logo_path, concept_path]],
-        truth=[logo_path]
+        truths=[logo_path]
     )
 
     # configure order

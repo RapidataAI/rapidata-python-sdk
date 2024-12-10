@@ -10,12 +10,11 @@ def new_compare_order(rapi: RapidataClient):
     concept_path = "https://assets.rapidata.ai/rapidata_concept_logo.jpg"
     # Validation set
     # This will be shown as defined in the ValidationSelection and will make our annotators understand the task better
-
     validation_set = rapi.validation.create_compare_set(
         name="Example Compare Validation Set",
         criteria="Which logo is the actual Rapidata logo?",
         datapoints=[[logo_path, concept_path]],
-        truth=[logo_path],
+        truths=[logo_path],
     )
 
     # configure order
