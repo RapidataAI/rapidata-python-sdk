@@ -241,8 +241,8 @@ class RapidataOrderBuilder:
         Set the media assets for the order.
 
         Args:
-            media_paths (list[MediaAsset] | list[TextAsset] | list[MultiAsset]): The paths of the media assets to be set.
-            metadata (list[Metadata] | None, optional): Metadata for the media assets. Defaults to None.
+            asset: (list[MediaAsset] | list[TextAsset] | list[MultiAsset]): The paths of the media assets to be set.
+            metadata: (list[Metadata] | None, optional): Metadata for the media assets. Defaults to None.
 
         Returns:
             RapidataOrderBuilder: The updated RapidataOrderBuilder instance.

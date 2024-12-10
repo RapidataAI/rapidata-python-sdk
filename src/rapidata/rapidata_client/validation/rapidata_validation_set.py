@@ -58,10 +58,7 @@ class RapidataValidationSet:
         """Upload a file to the validation set.
 
         Args:
-            asset list[(MediaAsset)]: The asset to upload.
-
-        Returns:
-            str: The path to the uploaded file.
+            assets: list[(MediaAsset)]: The asset to upload.
         """
         files = []
         for asset in assets:

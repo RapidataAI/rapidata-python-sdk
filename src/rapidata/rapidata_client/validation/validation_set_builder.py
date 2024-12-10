@@ -100,7 +100,7 @@ class ValidationSetBuilder:
             self._add_compare_rapid(rapid.asset, rapid.criteria, rapid.truth, rapid.metadata)
 
         if isinstance(rapid, SelectWordsRapid):
-            self._add_select_words_rapid(rapid.asset, rapid.instruction, rapid.text, rapid.truths, rapid.strict_grading)
+            self._add_select_words_rapid(rapid.asset, rapid.instruction, rapid.sentence, rapid.truths, rapid.strict_grading)
 
         return self
     
