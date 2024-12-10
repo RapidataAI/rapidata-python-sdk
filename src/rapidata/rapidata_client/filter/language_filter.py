@@ -6,8 +6,16 @@ from rapidata.api_client.models.language_user_filter_model import (
 
 
 class LanguageFilter(RapidataFilter):
-
+    """LanguageFilter Class
+    
+    Can be used to filter who to target based on language codes."""
     def __init__(self, language_codes: list[str]):
+        """
+        Initialize a LanguageFilter instance.
+
+        Args:
+            language_codes (list[str]): List of language codes to filter by.
+        """
         if not isinstance(language_codes, list):
             raise ValueError("Language codes must be a list")
         

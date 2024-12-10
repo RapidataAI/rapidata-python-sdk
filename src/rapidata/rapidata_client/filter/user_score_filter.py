@@ -6,8 +6,17 @@ from rapidata.api_client.models.user_score_user_filter_model import (
 
 
 class UserScoreFilter(RapidataFilter):
-
+    """UserScoreFilter Class
+    
+    Can be used to filter who to target based on their user score."""
     def __init__(self, lower_bound: float = 0.0, upper_bound: float = 1.0):
+        """
+        Initialize a UserScoreFilter instance.
+
+        Args:
+            lower_bound (float): The lower bound of the user score.
+            upper_bound (float): The upper bound of the user score.
+        """
         if lower_bound < 0 or lower_bound > 1:
             raise ValueError("The lower bound must be between 0 and 1.")
         if upper_bound < 0 or upper_bound > 1:
