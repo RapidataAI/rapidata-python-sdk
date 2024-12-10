@@ -12,10 +12,10 @@ class RapidataOrder:
     Represents a Rapidata order.
 
     Args:
-        The ID of the order.
-        The optional Dataset associated with the order.
-        The OpenAPIService instance used to interact with the Rapidata API.
-        The name of the order.
+        order_id: The ID of the order.
+        dataset: The optional Dataset associated with the order.
+        openapi_service: The OpenAPIService instance used to interact with the Rapidata API.
+        name: The name of the order.
     """
 
     def __init__(

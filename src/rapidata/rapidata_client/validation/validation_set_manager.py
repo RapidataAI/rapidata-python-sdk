@@ -150,8 +150,8 @@ class ValidationSetManager:
             datapoints (list[str]): The datapoints that will be used for validation.
             sentences (list[str]): The sentences that will be used for validation. The text will be split up by spaces to be selected by the labeler.
             strict_grading (bool, optional): Whether to grade strictly. Defaults to True. 
-                If True, the labeler must select all correct words to be graded as correct.
-                If False, the labeler must select at least one correct word to be graded as correct.
+                If True, the labeler must select all correct words to be graded as correct. (and no wrong words)
+                If False, the labeler must select at least one correct word to be graded as correct. (and no wrong words)
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
             """
         
@@ -165,7 +165,7 @@ class ValidationSetManager:
                     instruction=instruction,
                     truths=truths[i],
                     datapoint=datapoints[i],
-                    text=sentences[i],
+                    sentence=sentences[i],
                     strict_grading=strict_grading
                 )
             )
