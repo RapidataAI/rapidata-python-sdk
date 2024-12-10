@@ -41,7 +41,13 @@ class RapidataOrder:
             print(f"Order '{self.name}' is now viewable under: https://app.{self._openapi_service.enviroment}/order/detail/{self.order_id}")
         
         return self
-
+    
+    def pause(self):
+        """
+        Pauses the order.
+        """
+        self._openapi_service.order_api.order_pause_post(self.order_id)
+        print(f"Order '{self}' has been paused.")
 
     def get_status(self) -> str:
         """

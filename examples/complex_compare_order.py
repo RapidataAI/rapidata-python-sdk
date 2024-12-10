@@ -10,30 +10,24 @@ def new_compare_order(rapi: RapidataClient):
 
     # Validation set
     # This will be shown as defined in the ValidationSelection and will make our annotators understand the task better
-    validation_set_builder = rapi.new_validation_set(name="Example SimpleMatchup Validation Set")
-
-    validation_set = validation_set_builder.add_rapid(
-        rapi.rapid_builder.compare_rapid()
-        .criteria("Which logo is the actual Rapidata logo?")
-        .media([logo_path, concept_path])
-        .truth(logo_path)
-        .build()
-    ).submit()
-
-    # configure order
-    order = (
-        rapi.order_builder
-        .compare_order(name="Example SimpleMatchup Order")
-        .criteria("Which logo is better?")
-        .media([[concept_path, logo_path]])
-        .responses(10)
-        .prompts(["Hint: This is not a trick question"])
-        .validation_set(validation_set.id)
-        .submit()
+    validation_set = rapi.validation.create_compare_set(
+        name="Example SimpleMatchup Validation Set",
+        criteria="Which logo is the actual Rapidata logo?",
+        datapoints=[[logo_path, concept_path]],
+        truth=[logo_path]
     )
 
-    return order
+    # configure order
+    order = rapi.order.create_compare_order(
+        name="Example SimpleMatchup Order",
+        criteria="Which logo is better?",
+        datapoints=[[concept_path, logo_path]],
+        responses_per_datapoint=10,
+        prompts=["Hint: This is not a trick question"],
+        validation_set_id=validation_set.id
+    ).run()
 
+    return order
 
 if __name__ == "__main__":
     new_compare_order(RapidataClient())

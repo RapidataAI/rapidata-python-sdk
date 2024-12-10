@@ -133,7 +133,7 @@ class ValidationSetManager:
         instruction: str,
         truths: list[list[int]],
         datapoints: list[str],
-        texts: list[str],
+        sentences: list[str],
         strict_grading: bool = True,
         print_confirmation: bool = True
     ) -> RapidataValidationSet:
@@ -145,18 +145,18 @@ class ValidationSetManager:
             truths (list[list[int]]): The truths for each datapoint. Outher list is for each datapoint, inner list is for each truth.
                 example:
                     datapoints: ["datapoint1", "datapoint2"]
-                    texts: ["this example 1", "this example 2"]
+                    sentences: ["this example 1", "this example 2"]
                     truths: [[0, 1], [2]] -> first datapoint correct words are "this" and "example", second datapoint is "2"
             datapoints (list[str]): The datapoints that will be used for validation.
-            texts (list[str]): The texts that will be used for validation. The text will be split up by spaces to be selected by the labeler.
+            sentences (list[str]): The sentences that will be used for validation. The text will be split up by spaces to be selected by the labeler.
             strict_grading (bool, optional): Whether to grade strictly. Defaults to True. 
                 If True, the labeler must select all correct words to be graded as correct.
                 If False, the labeler must select at least one correct word to be graded as correct.
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
             """
         
-        if len(datapoints) != len(truths) or len(datapoints) != len(texts):
-            raise ValueError("The number of datapoints, truths, and texts must be equal")
+        if len(datapoints) != len(truths) or len(datapoints) != len(sentences):
+            raise ValueError("The number of datapoints, truths, and sentences must be equal")
         
         rapids = []
         for i in range(len(datapoints)):
@@ -165,7 +165,7 @@ class ValidationSetManager:
                     instruction=instruction,
                     truths=truths[i],
                     datapoint=datapoints[i],
-                    text=texts[i],
+                    text=sentences[i],
                     strict_grading=strict_grading
                 )
             )
