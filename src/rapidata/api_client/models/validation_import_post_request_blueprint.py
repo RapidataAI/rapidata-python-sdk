@@ -34,7 +34,7 @@ VALIDATIONIMPORTPOSTREQUESTBLUEPRINT_ONE_OF_SCHEMAS = ["AttachCategoryRapidBluep
 
 class ValidationImportPostRequestBlueprint(BaseModel):
     """
-    The blueprint for the rapid to be created.
+    ValidationImportPostRequestBlueprint
     """
     # data type: TranscriptionRapidBlueprint
     oneof_schema_1_validator: Optional[TranscriptionRapidBlueprint] = None
