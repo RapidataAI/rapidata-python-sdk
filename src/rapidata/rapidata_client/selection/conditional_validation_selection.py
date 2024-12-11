@@ -8,7 +8,9 @@ from rapidata.api_client.models.conditional_validation_selection import (
 
 
 class ConditionalValidationSelection(RapidataSelection):
-    """Demographic selection class."""
+    """Conditional validation selection class.
+
+    Probabilistically decides how many validation rapids you want to show per session based on the user score."""
 
     def __init__(
         self,
@@ -17,6 +19,19 @@ class ConditionalValidationSelection(RapidataSelection):
         chances: list[float],
         rapid_counts: list[int],
     ):
+        """
+        Initialize a ConditionalValidationSelection instance.
+
+        Args:
+            validation_set_id (str): The id of the validation set to be used.
+            thresholds (list[float]): The thresholds to use for the user score.
+            chances (list[float]): The chances of showing a validation rapid for each threshold.
+            rapid_counts (list[int]): The amount of validation rapids that will be shown per session of this validation set for each threshold if selected by probability. (all or nothing)
+        """
+        if len(thresholds) != len(chances) or len(thresholds) != len(rapid_counts):
+            raise ValueError(
+                "The lengths of thresholds, chances and rapid_counts must be equal."
+            )
         self.validation_set_id = validation_set_id
         self.thresholds = thresholds
         self.chances = chances

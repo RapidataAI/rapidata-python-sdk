@@ -9,8 +9,20 @@ from typing import Sequence
 
 
 class CappedSelection(RapidataSelection):
+    """CappedSelection Class
+
+    Takes in different selections and caps the amount of rapids that can be shown.
+    
+    Useful for demographic and conditional validation selections."""
 
     def __init__(self, selections: Sequence[RapidataSelection], max_rapids: int):
+        """
+        Initialize a CappedSelection instance.
+
+        Args:
+            selections (Sequence[RapidataSelection]): List of selections to cap.
+            max_rapids (int): The maximum amount of rapids that can be shown for this selection.
+        """
         self.selections = selections
         self.max_rapids = max_rapids
 

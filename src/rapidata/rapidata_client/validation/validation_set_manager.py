@@ -90,11 +90,11 @@ class ValidationSetManager:
         Args:
             name (str): The name of the validation set.
             criteria (str): The criteria to compare against.
-            truth (list[str]): The truth for each comparison. List is for each comparison.\n
+            truths (list[str]): The truths for each comparison. List is for each comparison.\n
                 example:
                     criteria: "Which image has a cat?"
                     datapoints = [["image1.jpg", "image2.jpg"], ["image3.jpg", "image4.jpg"]]
-                    truth: ["image1.jpg", "image4.jpg"] -> first comparison image1.jpg has a cat, second comparison image4.jpg has a cat
+                    truths: ["image1.jpg", "image4.jpg"] -> first comparison image1.jpg has a cat, second comparison image4.jpg has a cat
             datapoints (list[list[str]]): The compare datapoints to create the validation set with. 
                 Outer list is for each comparison, inner list the two images/texts that will be compared.
             data_type (str, optional): The type of data. Defaults to RapidataDataTypes.MEDIA. Other option: RapidataDataTypes.TEXT ("text").
