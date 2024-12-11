@@ -3,8 +3,8 @@ from io import BytesIO
 
 from PIL import Image
 
-from consts import CANVAS_WIDTH
-from models import ValidationRapid, BBox
+from consts import CANVAS_WIDTH, DOMAIN
+from models import BBox
 
 
 def resize_image(image: Image, target_width=CANVAS_WIDTH) -> Image:
@@ -27,3 +27,7 @@ def image_to_base64(img):
         img.save(buffer, "png")
         raw_base64 = base64.b64encode(buffer.getvalue()).decode()
         return f"data:image/png;base64,{raw_base64}"
+
+
+def get_validation_set_link(validation_set_id: str):
+    return f"https://{DOMAIN}/validation-set/detail/{validation_set_id}"

@@ -1,18 +1,16 @@
-import os
-
-from consts import DEFAULT_FILE, METADATA_COLUMNS, CANVAS_WIDTH, TEMP_FILE_DIR, DONE_EMOJI, NOT_DONE_EMOJI
-
+import dotenv
 from PIL import Image
 import streamlit as st
 from streamlit_drawable_canvas import st_canvas
+import sys
+from pathlib import Path
 
-from models import ValidationRapid, ValidationRapidCollection
-from utils import resize_image, calc_image_scale, image_to_base64, calc_relative_bbox_area
+sys.path.append(str(Path(__file__).parent.parent.parent.resolve()))
 
-
-
-
-
+from consts import DONE_EMOJI, NOT_DONE_EMOJI, LAST_CREATED_VALIDATION_SET_KEY
+from models import ValidationRapid, ValidationRapidCollection, RapidTypes
+from api import get_validation_rapids, create_validation_set, add_rapids_to_validation_set, get_validation_set_url
+from utils import resize_image
 
 
 @st.cache_resource
@@ -22,63 +20,124 @@ def get_collection():
 
 def display_metadata():
     st.markdown("## 🎒 <span style='color: #1E90FF;'>Inventory</span>", unsafe_allow_html=True)
+    if get_collection().rapids:
+        st.write('A rapid is done when there is only one box on it and the prompt is given!')
     coll = get_collection()
-
     for rapid in coll.rapids[::-1]:
         with st.container(border=True):
             cols = st.columns(5, vertical_alignment='center')
             with cols[0]:
                 st.image(rapid.image, use_container_width=True)
             content = [
-                rapid.name,
+                f"ID: {rapid.local_rapid_id}",
                 f"Ready {DONE_EMOJI}" if rapid.is_done() else f"Not Done {NOT_DONE_EMOJI}",
             ]
             for idx in range(1, len(content) + 1):
                 with cols[idx]:
                     st.write(content[idx - 1])
             with cols[3]:
-                select = st.button('select', key=f'bt_select_{rapid.rapid_id}')
+                select = st.button('Select', key=f'bt_select_{rapid.local_rapid_id}')
                 if select:
                     get_collection().current_rapid = rapid
                     update_canvas_key()
                     st.rerun()
+
             with cols[4]:
-                delete = st.button('delete', key=f'bt_delete_{rapid.rapid_id}')
+                delete = st.button('Delete', key=f'bt_delete_{rapid.local_rapid_id}')
                 if delete:
                     get_collection().remove_rapid(rapid)
                     st.rerun()
+            prompt = st.text_input(label='What should be the user prompt?',
+                                   value=rapid.prompt,
+                                   placeholder='Where is the dog in the image?',
+                                   key=f'tb_prompt_{rapid.local_rapid_id}')
+            rapid.prompt = prompt
+
+
+def display_file_uploader():
+    with st.container(border=True):
+        uploaded_image = st.file_uploader("➕Add rapid:",
+                                          type=["png", "jpg"],
+                                          key=f'file_uploader_id_{st.session_state.uploader_key}'
+                                          )
+        if uploaded_image:
+            image = Image.open(uploaded_image)
+            get_collection().add_rapids(
+                ValidationRapid(uploaded_image.name, image)
+            )
+            update_uploader_key()
+            update_canvas_key()
+            st.rerun()
+
+
+def display_clone_option():
+    with st.container(border=True):
+
+        validation_set_name = st.text_input(label="Clone an Existing Validation Set :panda_face: :panda_face:", placeholder="validation_set_id")
+        clone = st.button(label="Clone and Add All", use_container_width=True)
+
+        if clone:
+            rapids = get_validation_rapids(validation_set_name)
+            if rapids is None:
+                st.toast('🚫 **Validation set not found!**')
+            else:
+                get_collection().add_rapids(rapids)
+
+
+def display_creation_option():
+    with st.container(border=True):
+        rapid_type = st.selectbox(
+            "Choose the Type of Rapid :family:",
+            (RapidTypes.LINE, RapidTypes.LOCATE),
+        )
+        validation_set_name = st.text_input(
+            label="Choose a Name For The Validation Set 🏷",
+            placeholder="MyValidationSet"
+        )
+        create = st.button('Create Validation Set', use_container_width=True)
+
+        if create:
+            if any([not r.is_done() for r in get_collection().rapids]):
+                st.toast('🚫 **Make Sure To Finish All Rapids!**')
+            elif validation_set_name == '':
+                st.toast('🚫 **Validation Set Name Cannot Be empty!**')
+            else:
+                with st.spinner('In progress...'):
+                    validation_set_id = create_validation_set(validation_set_name)
+                    add_rapids_to_validation_set(
+                        rapids=get_collection().rapids,
+                        validation_set_id=validation_set_id,
+                        rapid_type=rapid_type,
+                    )
+                st.session_state[LAST_CREATED_VALIDATION_SET_KEY] = validation_set_id
+                st.toast(f'ValidationSet Created: {validation_set_id}')
+                st.balloons()
 
 
 def display_cockpit():
     st.markdown("## :rocket: <span style='color: #4CAF50;'>Cockpit</span>", unsafe_allow_html=True)
 
+    display_file_uploader()
 
-    uploaded_image = st.file_uploader("➕Add rapid:",
-                                      type=["png", "jpg"],
-                                      key=f'file_uploader_id_{st.session_state.uploader_key}'
-                                      )
-    if uploaded_image:
-        image = Image.open(uploaded_image)
-        get_collection().add_rapid(
-            ValidationRapid(uploaded_image.name, image)
-        )
-        update_uploader_key()
-        update_canvas_key()
-        st.rerun()
+    col1, col2 = st.columns(2, vertical_alignment='top')
 
-    validation_set_name = st.text_input(label='Validation Set Name 🏷️')
-    submit_validation_set = st.button(label="Submit Validation Set 📤")
-    if submit_validation_set:
-        if validation_set_name == "":
-            st.toast("🚫 **Make sure to enter a name for the validation set!**")
-        elif any([not rapid.is_done() for rapid in get_collection().rapids]):
-            st.toast("🚫 **Make sure all rapids are ready to submit!**")
-        else:
-            st.toast(f"✅ **Submitting {len(get_collection().rapids)} rapids**")
+    with col2:
+        display_creation_option()
+
+    with col1:
+        display_clone_option()
+        if val_set := st.session_state[LAST_CREATED_VALIDATION_SET_KEY]:
+            st.write('###### You have successfully created a validation set! :boom:')
+            st.write(f'{val_set}  [View it Here]({get_validation_set_url(val_set)})')
 
 
 def display_canvas():
     st.markdown("## 🎨 <span style='color: #00bcd4;'>Annotate</span>", unsafe_allow_html=True)
+
+    if get_collection().current_rapid is None:
+        st.markdown("### No Rapids found. Upload an Image to start :scream:", unsafe_allow_html=True)
+        return
+
     current_rapid = get_collection().current_rapid
     current_image = current_rapid.image
 
@@ -93,7 +152,7 @@ def display_canvas():
         drawing_mode='rect',
         height=resized_image.height,
         width=resized_image.width,
-        key=f'canvas_id_{st.session_state.canvas_key}_{current_rapid.rapid_id}',
+        key=f'canvas_id_{st.session_state.canvas_key}_{current_rapid.local_rapid_id}',
         display_toolbar=False
     )
     if canvas_result.json_data is not None and len(canvas_result.json_data['objects']) > 0:
@@ -107,7 +166,7 @@ def display_canvas():
 
 
 def main():
-    col1, col2, col3 = st.columns([1, 3, 3])
+    col1, col2, col3 = st.columns([1, 5, 5])
 
     with col2:
         display_canvas()
@@ -126,8 +185,10 @@ def update_canvas_key():
 
 
 def setup():
+    dotenv.load_dotenv('/Users/sneccello/Documents/rapidata/data_doctor/ranking_poc/.env', override=True)
     st.set_page_config(layout="wide")
-    os.makedirs(TEMP_FILE_DIR, exist_ok=True)
+
+    st.session_state[LAST_CREATED_VALIDATION_SET_KEY] = None
     if "uploader_key" not in st.session_state:
         st.session_state.uploader_key = 0
     if "canvas_key" not in st.session_state:
