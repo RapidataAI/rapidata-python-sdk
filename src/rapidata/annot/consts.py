@@ -1,6 +1,4 @@
-import os
 DEFAULT_FILE = 'rapidata.png'
-TEMP_FILE_DIR = str(os.path.join(os.getcwd(), 'rapidata_tmp'))
 METADATA_COLUMNS = [
     'image',
     'filename',
@@ -17,3 +15,12 @@ CANVAS_WIDTH = 600
 DONE_EMOJI = '✅'
 NOT_DONE_EMOJI = '❌'
 
+DOTENV_PATH = '/Users/sneccello/Documents/rapidata/data_doctor/ranking_poc/.env'
+ENV = 'test'
+
+if ENV == 'prod':
+    DOMAIN = 'rapidata.ai'
+else:
+    DOMAIN = 'rabbitdata.ch'
+
+LAST_CREATED_VALIDATION_SET_KEY = 'key_last_created_validation_set'

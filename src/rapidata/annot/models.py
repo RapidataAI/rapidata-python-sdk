@@ -1,8 +1,10 @@
 import dataclasses
-from collections import deque
+import enum
+from typing import List, Union
+
 from PIL import Image
 
-from consts import MAX_ANNOTATION_PER_RAPID, DEFAULT_FILE
+from consts import DEFAULT_FILE
 
 
 @dataclasses.dataclass
@@ -23,6 +25,11 @@ class BBox:
         )
 
 
+class RapidTypes(enum.Enum):
+    LOCATE = 'Locate'
+    LINE = 'Line'
+
+
 class ValidationRapid:
     RAPID_ID = 0
 
@@ -30,8 +37,10 @@ class ValidationRapid:
         self.annotation = dict()
         self.name = name
         self.image = image
-        self.rapid_id = self.RAPID_ID
+        self.local_rapid_id = self.RAPID_ID
+        self.prompt = ''
         ValidationRapid.RAPID_ID += 1
+
 
     @staticmethod
     def clone(rapid: 'ValidationRapid') -> 'ValidationRapid':
@@ -43,11 +52,11 @@ class ValidationRapid:
         self.annotation = annotation
 
     def is_done(self):
-        return len(self.annotation.get('objects', [])) == 1
+        return len(self.annotation.get('objects', [])) == 1 and len(self.prompt) >= 1
 
 class ValidationRapidCollection:
     def __init__(self, add_default: bool = True):
-        self.rapids = []
+        self.rapids: List[ValidationRapid] = []
 
         if add_default:
             self.add_default()
@@ -59,9 +68,13 @@ class ValidationRapidCollection:
         r = ValidationRapid(DEFAULT_FILE, image)
         self.rapids.append(r)
 
-    def add_rapid(self, rapid: ValidationRapid):
-        self.rapids.append(rapid)
-        self.current_rapid = rapid
+    def add_rapids(self, rapids: Union[ValidationRapid, List[ValidationRapid]]):
+        if not isinstance(rapids, list):
+            rapids = [rapids]
+
+        for r in rapids:
+            self.rapids.append(r)
+        self.current_rapid = rapids[-1]
 
     def remove_rapid(self, rapid: ValidationRapid):
         self.rapids.remove(rapid)
@@ -75,7 +88,7 @@ class ValidationRapidCollection:
             self.current_rapid = None
 
     def get_by_id(self, rapid_id):
-        filtered = [r for r in self.rapids if r.rapid_id == rapid_id]
+        filtered = [r for r in self.rapids if r.local_rapid_id == rapid_id]
         if filtered:
             return filtered[0]
         return None
