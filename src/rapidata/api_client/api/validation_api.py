@@ -52,7 +52,7 @@ class ValidationApi:
     def validation_add_validation_rapid_post(
         self,
         model: Optional[AddValidationRapidModel] = None,
-        files: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The files to be used as assets for the validation rapid. Each file will create a new rapid.")] = None,
+        files: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -71,7 +71,7 @@ class ValidationApi:
 
         :param model:
         :type model: AddValidationRapidModel
-        :param files: The files to be used as assets for the validation rapid. Each file will create a new rapid.
+        :param files:
         :type files: List[bytearray]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -122,7 +122,7 @@ class ValidationApi:
     def validation_add_validation_rapid_post_with_http_info(
         self,
         model: Optional[AddValidationRapidModel] = None,
-        files: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The files to be used as assets for the validation rapid. Each file will create a new rapid.")] = None,
+        files: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -141,7 +141,7 @@ class ValidationApi:
 
         :param model:
         :type model: AddValidationRapidModel
-        :param files: The files to be used as assets for the validation rapid. Each file will create a new rapid.
+        :param files:
         :type files: List[bytearray]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -192,7 +192,7 @@ class ValidationApi:
     def validation_add_validation_rapid_post_without_preload_content(
         self,
         model: Optional[AddValidationRapidModel] = None,
-        files: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The files to be used as assets for the validation rapid. Each file will create a new rapid.")] = None,
+        files: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -211,7 +211,7 @@ class ValidationApi:
 
         :param model:
         :type model: AddValidationRapidModel
-        :param files: The files to be used as assets for the validation rapid. Each file will create a new rapid.
+        :param files:
         :type files: List[bytearray]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1389,8 +1389,7 @@ class ValidationApi:
     @validate_call
     def validation_import_compare_post(
         self,
-        criteria: Annotated[Optional[StrictStr], Field(description="The criteria to use for the compare rapid.")] = None,
-        file: Annotated[Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]], Field(description="The file to use as the asset for the rapid.")] = None,
+        criteria: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1407,10 +1406,8 @@ class ValidationApi:
         """Imports a compare validation set from a zip file.
 
 
-        :param criteria: The criteria to use for the compare rapid.
+        :param criteria:
         :type criteria: str
-        :param file: The file to use as the asset for the rapid.
-        :type file: bytearray
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1435,7 +1432,6 @@ class ValidationApi:
 
         _param = self._validation_import_compare_post_serialize(
             criteria=criteria,
-            file=file,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1459,8 +1455,7 @@ class ValidationApi:
     @validate_call
     def validation_import_compare_post_with_http_info(
         self,
-        criteria: Annotated[Optional[StrictStr], Field(description="The criteria to use for the compare rapid.")] = None,
-        file: Annotated[Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]], Field(description="The file to use as the asset for the rapid.")] = None,
+        criteria: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1477,10 +1472,8 @@ class ValidationApi:
         """Imports a compare validation set from a zip file.
 
 
-        :param criteria: The criteria to use for the compare rapid.
+        :param criteria:
         :type criteria: str
-        :param file: The file to use as the asset for the rapid.
-        :type file: bytearray
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1505,7 +1498,6 @@ class ValidationApi:
 
         _param = self._validation_import_compare_post_serialize(
             criteria=criteria,
-            file=file,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1529,8 +1521,7 @@ class ValidationApi:
     @validate_call
     def validation_import_compare_post_without_preload_content(
         self,
-        criteria: Annotated[Optional[StrictStr], Field(description="The criteria to use for the compare rapid.")] = None,
-        file: Annotated[Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]], Field(description="The file to use as the asset for the rapid.")] = None,
+        criteria: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1547,10 +1538,8 @@ class ValidationApi:
         """Imports a compare validation set from a zip file.
 
 
-        :param criteria: The criteria to use for the compare rapid.
+        :param criteria:
         :type criteria: str
-        :param file: The file to use as the asset for the rapid.
-        :type file: bytearray
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1575,7 +1564,6 @@ class ValidationApi:
 
         _param = self._validation_import_compare_post_serialize(
             criteria=criteria,
-            file=file,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1595,7 +1583,6 @@ class ValidationApi:
     def _validation_import_compare_post_serialize(
         self,
         criteria,
-        file,
         _request_auth,
         _content_type,
         _headers,
@@ -1622,8 +1609,6 @@ class ValidationApi:
         # process the form parameters
         if criteria is not None:
             _form_params.append(('Criteria', criteria))
-        if file is not None:
-            _files['File'] = file
         # process the body parameter
 
 
@@ -1679,7 +1664,6 @@ class ValidationApi:
     def validation_import_post(
         self,
         blueprint: Optional[ValidationImportPostRequestBlueprint] = None,
-        file: Annotated[Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]], Field(description="The file to use as the asset for the rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1698,8 +1682,6 @@ class ValidationApi:
 
         :param blueprint:
         :type blueprint: ValidationImportPostRequestBlueprint
-        :param file: The file to use as the asset for the rapid.
-        :type file: bytearray
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1724,7 +1706,6 @@ class ValidationApi:
 
         _param = self._validation_import_post_serialize(
             blueprint=blueprint,
-            file=file,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1749,7 +1730,6 @@ class ValidationApi:
     def validation_import_post_with_http_info(
         self,
         blueprint: Optional[ValidationImportPostRequestBlueprint] = None,
-        file: Annotated[Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]], Field(description="The file to use as the asset for the rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1768,8 +1748,6 @@ class ValidationApi:
 
         :param blueprint:
         :type blueprint: ValidationImportPostRequestBlueprint
-        :param file: The file to use as the asset for the rapid.
-        :type file: bytearray
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1794,7 +1772,6 @@ class ValidationApi:
 
         _param = self._validation_import_post_serialize(
             blueprint=blueprint,
-            file=file,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1819,7 +1796,6 @@ class ValidationApi:
     def validation_import_post_without_preload_content(
         self,
         blueprint: Optional[ValidationImportPostRequestBlueprint] = None,
-        file: Annotated[Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]], Field(description="The file to use as the asset for the rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1838,8 +1814,6 @@ class ValidationApi:
 
         :param blueprint:
         :type blueprint: ValidationImportPostRequestBlueprint
-        :param file: The file to use as the asset for the rapid.
-        :type file: bytearray
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1864,7 +1838,6 @@ class ValidationApi:
 
         _param = self._validation_import_post_serialize(
             blueprint=blueprint,
-            file=file,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1884,7 +1857,6 @@ class ValidationApi:
     def _validation_import_post_serialize(
         self,
         blueprint,
-        file,
         _request_auth,
         _content_type,
         _headers,
@@ -1911,8 +1883,6 @@ class ValidationApi:
         # process the form parameters
         if blueprint is not None:
             _form_params.append(('Blueprint', blueprint))
-        if file is not None:
-            _files['File'] = file
         # process the body parameter
 
 

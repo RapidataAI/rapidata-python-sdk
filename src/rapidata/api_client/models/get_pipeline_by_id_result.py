@@ -17,8 +17,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.get_pipeline_by_id_result_artifacts_value import GetPipelineByIdResultArtifactsValue
 from typing import Optional, Set
 from typing_extensions import Self
@@ -28,7 +29,8 @@ class GetPipelineByIdResult(BaseModel):
     GetPipelineByIdResult
     """ # noqa: E501
     artifacts: Dict[str, GetPipelineByIdResultArtifactsValue]
-    __properties: ClassVar[List[str]] = ["artifacts"]
+    feature_flags: List[FeatureFlag] = Field(alias="featureFlags")
+    __properties: ClassVar[List[str]] = ["artifacts", "featureFlags"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -76,6 +78,13 @@ class GetPipelineByIdResult(BaseModel):
                 if self.artifacts[_key_artifacts]:
                     _field_dict[_key_artifacts] = self.artifacts[_key_artifacts].to_dict()
             _dict['artifacts'] = _field_dict
+        # override the default output from pydantic by calling `to_dict()` of each item in feature_flags (list)
+        _items = []
+        if self.feature_flags:
+            for _item_feature_flags in self.feature_flags:
+                if _item_feature_flags:
+                    _items.append(_item_feature_flags.to_dict())
+            _dict['featureFlags'] = _items
         return _dict
 
     @classmethod
@@ -93,7 +102,8 @@ class GetPipelineByIdResult(BaseModel):
                 for _k, _v in obj["artifacts"].items()
             )
             if obj.get("artifacts") is not None
-            else None
+            else None,
+            "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
         })
         return _obj
 

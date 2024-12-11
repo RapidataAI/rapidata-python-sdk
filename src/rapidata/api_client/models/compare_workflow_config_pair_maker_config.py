@@ -17,30 +17,33 @@ import json
 import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
-from rapidata.api_client.models.get_classify_workflow_result_overview_result import GetClassifyWorkflowResultOverviewResult
-from rapidata.api_client.models.get_simple_workflow_result_overview_result import GetSimpleWorkflowResultOverviewResult
+from rapidata.api_client.models.online_pair_maker_config import OnlinePairMakerConfig
+from rapidata.api_client.models.pre_arranged_pair_maker_config import PreArrangedPairMakerConfig
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-SIMPLEWORKFLOWGETRESULTOVERVIEWGET200RESPONSE_ONE_OF_SCHEMAS = ["GetClassifyWorkflowResultOverviewResult", "GetSimpleWorkflowResultOverviewResult"]
+COMPAREWORKFLOWCONFIGPAIRMAKERCONFIG_ONE_OF_SCHEMAS = ["OnlinePairMakerConfig", "PreArrangedPairMakerConfig"]
 
-class SimpleWorkflowGetResultOverviewGet200Response(BaseModel):
+class CompareWorkflowConfigPairMakerConfig(BaseModel):
     """
-    SimpleWorkflowGetResultOverviewGet200Response
+    CompareWorkflowConfigPairMakerConfig
     """
-    # data type: GetClassifyWorkflowResultOverviewResult
-    oneof_schema_1_validator: Optional[GetClassifyWorkflowResultOverviewResult] = None
-    # data type: GetSimpleWorkflowResultOverviewResult
-    oneof_schema_2_validator: Optional[GetSimpleWorkflowResultOverviewResult] = None
-    actual_instance: Optional[Union[GetClassifyWorkflowResultOverviewResult, GetSimpleWorkflowResultOverviewResult]] = None
-    one_of_schemas: Set[str] = { "GetClassifyWorkflowResultOverviewResult", "GetSimpleWorkflowResultOverviewResult" }
+    # data type: OnlinePairMakerConfig
+    oneof_schema_1_validator: Optional[OnlinePairMakerConfig] = None
+    # data type: PreArrangedPairMakerConfig
+    oneof_schema_2_validator: Optional[PreArrangedPairMakerConfig] = None
+    actual_instance: Optional[Union[OnlinePairMakerConfig, PreArrangedPairMakerConfig]] = None
+    one_of_schemas: Set[str] = { "OnlinePairMakerConfig", "PreArrangedPairMakerConfig" }
 
     model_config = ConfigDict(
         validate_assignment=True,
         protected_namespaces=(),
     )
 
+
+    discriminator_value_class_map: Dict[str, str] = {
+    }
 
     def __init__(self, *args, **kwargs) -> None:
         if args:
@@ -54,25 +57,25 @@ class SimpleWorkflowGetResultOverviewGet200Response(BaseModel):
 
     @field_validator('actual_instance')
     def actual_instance_must_validate_oneof(cls, v):
-        instance = SimpleWorkflowGetResultOverviewGet200Response.model_construct()
+        instance = CompareWorkflowConfigPairMakerConfig.model_construct()
         error_messages = []
         match = 0
-        # validate data type: GetClassifyWorkflowResultOverviewResult
-        if not isinstance(v, GetClassifyWorkflowResultOverviewResult):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `GetClassifyWorkflowResultOverviewResult`")
+        # validate data type: OnlinePairMakerConfig
+        if not isinstance(v, OnlinePairMakerConfig):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `OnlinePairMakerConfig`")
         else:
             match += 1
-        # validate data type: GetSimpleWorkflowResultOverviewResult
-        if not isinstance(v, GetSimpleWorkflowResultOverviewResult):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `GetSimpleWorkflowResultOverviewResult`")
+        # validate data type: PreArrangedPairMakerConfig
+        if not isinstance(v, PreArrangedPairMakerConfig):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `PreArrangedPairMakerConfig`")
         else:
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in SimpleWorkflowGetResultOverviewGet200Response with oneOf schemas: GetClassifyWorkflowResultOverviewResult, GetSimpleWorkflowResultOverviewResult. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in CompareWorkflowConfigPairMakerConfig with oneOf schemas: OnlinePairMakerConfig, PreArrangedPairMakerConfig. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in SimpleWorkflowGetResultOverviewGet200Response with oneOf schemas: GetClassifyWorkflowResultOverviewResult, GetSimpleWorkflowResultOverviewResult. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in CompareWorkflowConfigPairMakerConfig with oneOf schemas: OnlinePairMakerConfig, PreArrangedPairMakerConfig. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -87,25 +90,25 @@ class SimpleWorkflowGetResultOverviewGet200Response(BaseModel):
         error_messages = []
         match = 0
 
-        # deserialize data into GetClassifyWorkflowResultOverviewResult
+        # deserialize data into OnlinePairMakerConfig
         try:
-            instance.actual_instance = GetClassifyWorkflowResultOverviewResult.from_json(json_str)
+            instance.actual_instance = OnlinePairMakerConfig.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # deserialize data into GetSimpleWorkflowResultOverviewResult
+        # deserialize data into PreArrangedPairMakerConfig
         try:
-            instance.actual_instance = GetSimpleWorkflowResultOverviewResult.from_json(json_str)
+            instance.actual_instance = PreArrangedPairMakerConfig.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into SimpleWorkflowGetResultOverviewGet200Response with oneOf schemas: GetClassifyWorkflowResultOverviewResult, GetSimpleWorkflowResultOverviewResult. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into CompareWorkflowConfigPairMakerConfig with oneOf schemas: OnlinePairMakerConfig, PreArrangedPairMakerConfig. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into SimpleWorkflowGetResultOverviewGet200Response with oneOf schemas: GetClassifyWorkflowResultOverviewResult, GetSimpleWorkflowResultOverviewResult. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into CompareWorkflowConfigPairMakerConfig with oneOf schemas: OnlinePairMakerConfig, PreArrangedPairMakerConfig. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -119,7 +122,7 @@ class SimpleWorkflowGetResultOverviewGet200Response(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], GetClassifyWorkflowResultOverviewResult, GetSimpleWorkflowResultOverviewResult]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], OnlinePairMakerConfig, PreArrangedPairMakerConfig]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

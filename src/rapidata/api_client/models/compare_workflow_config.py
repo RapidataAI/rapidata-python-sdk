@@ -17,10 +17,10 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.compare_workflow_config_pair_maker_config import CompareWorkflowConfigPairMakerConfig
 from rapidata.api_client.models.compare_workflow_model1_referee import CompareWorkflowModel1Referee
-from rapidata.api_client.models.feature_flag import FeatureFlag
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -32,15 +32,12 @@ class CompareWorkflowConfig(BaseModel):
     criteria: StrictStr
     starting_elo: Optional[StrictInt] = Field(default=None, alias="startingElo")
     k_factor: Optional[StrictInt] = Field(default=None, alias="kFactor")
-    match_size: Optional[StrictInt] = Field(default=None, alias="matchSize")
     scaling_factor: Optional[StrictInt] = Field(default=None, alias="scalingFactor")
+    pair_maker_config: Optional[CompareWorkflowConfigPairMakerConfig] = Field(default=None, alias="pairMakerConfig")
     matches_until_completed: Optional[StrictInt] = Field(default=None, alias="matchesUntilCompleted")
     referee: CompareWorkflowModel1Referee
     target_country_codes: List[StrictStr] = Field(alias="targetCountryCodes")
-    feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
-    priority: Optional[StrictStr] = None
-    is_fallback: Optional[StrictBool] = Field(default=None, alias="isFallback")
-    __properties: ClassVar[List[str]] = ["_t", "criteria", "startingElo", "kFactor", "matchSize", "scalingFactor", "matchesUntilCompleted", "referee", "targetCountryCodes", "featureFlags", "priority", "isFallback"]
+    __properties: ClassVar[List[str]] = ["_t", "criteria", "startingElo", "kFactor", "scalingFactor", "pairMakerConfig", "matchesUntilCompleted", "referee", "targetCountryCodes"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -88,21 +85,12 @@ class CompareWorkflowConfig(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of pair_maker_config
+        if self.pair_maker_config:
+            _dict['pairMakerConfig'] = self.pair_maker_config.to_dict()
         # override the default output from pydantic by calling `to_dict()` of referee
         if self.referee:
             _dict['referee'] = self.referee.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in feature_flags (list)
-        _items = []
-        if self.feature_flags:
-            for _item_feature_flags in self.feature_flags:
-                if _item_feature_flags:
-                    _items.append(_item_feature_flags.to_dict())
-            _dict['featureFlags'] = _items
-        # set to None if priority (nullable) is None
-        # and model_fields_set contains the field
-        if self.priority is None and "priority" in self.model_fields_set:
-            _dict['priority'] = None
-
         return _dict
 
     @classmethod
@@ -119,14 +107,11 @@ class CompareWorkflowConfig(BaseModel):
             "criteria": obj.get("criteria"),
             "startingElo": obj.get("startingElo"),
             "kFactor": obj.get("kFactor"),
-            "matchSize": obj.get("matchSize"),
             "scalingFactor": obj.get("scalingFactor"),
+            "pairMakerConfig": CompareWorkflowConfigPairMakerConfig.from_dict(obj["pairMakerConfig"]) if obj.get("pairMakerConfig") is not None else None,
             "matchesUntilCompleted": obj.get("matchesUntilCompleted"),
             "referee": CompareWorkflowModel1Referee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
-            "targetCountryCodes": obj.get("targetCountryCodes"),
-            "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
-            "priority": obj.get("priority"),
-            "isFallback": obj.get("isFallback")
+            "targetCountryCodes": obj.get("targetCountryCodes")
         })
         return _obj
 
