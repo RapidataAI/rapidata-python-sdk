@@ -243,7 +243,7 @@ class RapidataOrderManager:
 
         Args:
             name (str): The name of the order.
-            question (str): The question for the free text. Will be shown along side each datapoint.
+            question (str): The question to be answered by the free text. Will be shown along side each datapoint.
             datapoints (list[str]): The list of datapoints for the free text - each datapoint will be labeled.
             data_type (str, optional): The data type of the datapoints. Defaults to RapidataDataTypes.MEDIA. \n
                 Other option: RapidataDataTypes.TEXT ("text").
@@ -289,7 +289,7 @@ class RapidataOrderManager:
 
         Args:
             name (str): The name of the order.
-            instruction (str): The instruction for the select words. Will be shown along side each datapoint.
+            instruction (str): The instruction for how the words should be selected. Will be shown along side each datapoint.
             datapoints (list[str]): The list of datapoints for the select words - each datapoint will be labeled.
             sentences (list[str]): The list of sentences for the select words - Will be split up by spaces and shown along side each datapoint.\n
                 Must be the same length as datapoints.
@@ -417,7 +417,7 @@ class RapidataOrderManager:
         except Exception:
             raise ValueError(f"Order with ID {order_id} not found.")
 
-        temp_dataset = RapidataDataset("temp", self.openapi_service)
+        temp_dataset = RapidataDataset("temp", self._openapi_service)
         return RapidataOrder(
             order_id=order_id, 
             name=order.order_name,
