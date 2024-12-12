@@ -1,4 +1,4 @@
-from .base_filter import Filter
+from .base_filter import RapidataFilter
 from .age_filter import AgeFilter, AgeGroup
 from .campaign_filter import CampaignFilter
 from .country_filter import CountryFilter

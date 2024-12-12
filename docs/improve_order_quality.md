@@ -1,14 +1,14 @@
 # Improve Response Quality
 
-This guide builds on the [Quickstart](/quickstart/) and focuses on improving the quality of responses received for your orders. By creating a **Validation Set**, you can provide clear guidance to labelers, helping them better understand your expectations. While using a validation set is optional, it significantly enhances response accuracy and consistency, especially for more complex or unintuitve tasks.
+This guide builds on the [Quickstart](/quickstart/) and focuses on improving the quality of responses received for your orders. By creating a **Validation Set**, you can provide clear guidance to labelers, helping them better understand your expectations. While using a validation set is optional, it significantly enhances response accuracy and consistency, especially for more complex or unintuitive tasks.
 
 ### Why Use a Validation Set?
 
 A validation set is a collection of tasks with known answers. It provides labelers with examples of how you want your data annotated, offering immediate feedback to align their work with your requirements.
 
-### How does it work?
+### How Does it Work?
 
-The validation task has a known truth and will be shown infront of the actual labeling task. Think of it as an interview question before the work starts. The labelers are only allowed to proceed to the actual task if they correctly solve one validation task.
+The validation task has a known truth and will be shown in front of the actual labeling task. Think of it as an interview question before the work starts. The labelers are only allowed to proceed to the actual task if they correctly solve one validation task.
 
 ## Example Validation Set
 
@@ -27,55 +27,60 @@ from rapidata import RapidataClient
 rapi = RapidataClient()
 ```
 
-1. Create an empty validation set builder with a name to later find it again:
+All the validation-related operations are performed using `rapi.validation`. Here we create a compare validation set to be used in any future orders:
+
+The creation is structured in the same way as the order creation, except here we have to supply the correct answers as "truth" for each task.
 
 ```py
-validation_set_builder = rapi.new_validation_set(
-        "Example Compare Validataion Set")
+validation_set = rapi.validation.create_compare_set(
+     name="Example Compare Validation Set",
+     criteria="Which of the AI generated images looks more realistic?",
+     datapoints=[["https://assets.rapidata.ai/bad_ai_generated_image.png", 
+         "https://assets.rapidata.ai/good_ai_generated_image.png"]], 
+     truths=["https://assets.rapidata.ai/good_ai_generated_image.png"] 
+)
 ```
 
-2. Now that we have the validation set builder, we can start adding tasks to it, where we know the ground truth. In our case, each task is called a 'Rapid'. Let's first create the Rapid, and then add it to the validation set builder:
+The parameters are as follows:
 
-```py
-rapid = (rapi.rapid_builder
-         .compare_rapid() # We specify the type of Rapid we want to create
-         .criteria("Which of the AI generated images looks more realistic?") # We specifiy the criteria for the labeler how to decide which image to select
-         .media(["https://assets.rapidata.ai/bad_ai_generated_image.png", 
-         "https://assets.rapidata.ai/good_ai_generated_image.png"]) # We specify the two images that will be compared
-         .truth("https://assets.rapidata.ai/good_ai_generated_image.png") # We specify the image that is the correct choice
-         .build()) # We build the Rapid to get the instance
+- `name`: The name of the validation set. This is used to identify the validation set and to find it again later.
+- `criteria`: The criteria for the comparison. This is the question that the labeler will answer.
+- `datapoints`: The datapoints, each containing 2 images to compare.
+- `truths`: The truth, which image is the correct answer.
 
-validation_set_builder.add_rapid(rapid) # We can add as many rapids to the validation set as we want. Each time, a random one will be chosen to be shown to the labeler.
-```
-
-3. After we have added all the tasks to the validation set, we can submit the validation set to use it in our orders:
-
-```py
-validataion_set = validation_set_builder.submit()
-```
+The truths must be the same length as the datapoints and contain the correct answer for each datapoint.
 
 ### Usage
 
-1. Let's find the validation set that we can add it to the order. It can be reused for multiple orders:
+1. We can now use the validation set in any order we create. We first need to find the validation set we created:
 
 ```py
-validation_set = rapi.find_validation_sets("Example Compare Validataion Set")[0] 
+# find the validation set by name
+validation_set = rapi.validation.find_validation_sets("Example Compare Validation Set")[0] 
+
+# or by id
+validation_set = rapi.validation.get_validation_set_by_id("validation_set_id")
 ```
 
-2. Now we can create a new order and add the validation set to it. It will automatically be shown infront of the datapoints we want to label. Ideally the criteria is the same or very closely related to the one in the validation set:
+2. Now we can create a new order and add the validation set to it. It will automatically be shown in front of the datapoints we want to label. Ideally the criteria is the same or very closely related to the one in the validation set:
 
 ```py
-order = (rapi.order_builder.compare_order("Example Compare Order") # We create a new order
-        .criteria("Which of the AI generated images looks more realistic?") # We specify the criteria for the labeler how to decide which image to select
-        .media([["https://assets.rapidata.ai/dalle-3_human.jpg", 
-        "https://assets.rapidata.ai/flux_human.jpg"]]) # We specify the images that will be labeled. (list of lists - inner list will be the matched pairs)
-        .validation_set(validation_set.id) # We specify the validation set that will be used to validate the order
-        .submit()) # We submit the order to collect the responses
+order = rapi.order.create_compare_order(
+     name="Example Compare Validation Set",
+     criteria="Which of the AI generated images looks more realistic?", 
+     datapoints=[["https://assets.rapidata.ai/dalle-3_human.jpg", 
+        "https://assets.rapidata.ai/flux_human.jpg"]],
+     validation_set_id=validation_set.id
+).run()
 ```
 
-3. Now we wait for the order to complete and look at the results:
+If the labeler answers the validation task incorrectly, they will get warned and have to answer it correctly before they can proceed to the actual task.
+
+3. Finally we wait for the order to complete and look at the results:
 
 ```py
 order.display_progress_bar()
 results = order.get_results()
 ```
+
+The validation results will not be included in the final results, you'll only see the results of the actual tasks you wanted to have labeled. Likewise you'll only be charged credits for the actual tasks and not the validation tasks.

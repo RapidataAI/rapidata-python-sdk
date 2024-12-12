@@ -4,13 +4,25 @@ from rapidata.api_client.models.capped_selection import (
 from rapidata.api_client.models.capped_selection_selections_inner import (
     CappedSelectionSelectionsInner,
 )
-from rapidata.rapidata_client.selection.base_selection import Selection
+from rapidata.rapidata_client.selection.base_selection import RapidataSelection
 from typing import Sequence
 
 
-class CappedSelection(Selection):
+class CappedSelection(RapidataSelection):
+    """CappedSelection Class
 
-    def __init__(self, selections: Sequence[Selection], max_rapids: int):
+    Takes in different selections and caps the amount of rapids that can be shown.
+    
+    Useful for demographic and conditional validation selections."""
+
+    def __init__(self, selections: Sequence[RapidataSelection], max_rapids: int):
+        """
+        Initialize a CappedSelection instance.
+
+        Args:
+            selections (Sequence[RapidataSelection]): List of selections to cap.
+            max_rapids (int): The maximum amount of rapids that can be shown for this selection.
+        """
         self.selections = selections
         self.max_rapids = max_rapids
 
