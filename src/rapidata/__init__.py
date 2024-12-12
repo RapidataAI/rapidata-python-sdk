@@ -17,5 +17,6 @@ from .rapidata_client import (
     UserScoreFilter,
     CampaignFilter,
     AgeGroup,
-    Gender
+    Gender,
+    Box
 )
