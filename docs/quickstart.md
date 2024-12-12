@@ -25,7 +25,7 @@ pip install -U rapidata
 
 Orders are managed through the [`RapidataClient`](reference/rapidata/rapidata_client/rapidata_client.md#rapidata.rapidata_client.rapidata_client.RapidataClient).
 
-Create a client as follows, this will save your credentials in your `.config/rapidata/credentials.json` file so you don't have to log in again on that machine:
+Create a client as follows, this will save your credentials in your `~/.config/rapidata/credentials.json` file so you don't have to log in again on that machine:
 
 ```py
 from rapidata import RapidataClient
