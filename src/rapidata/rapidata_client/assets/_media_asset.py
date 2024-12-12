@@ -8,6 +8,7 @@ from io import BytesIO
 from rapidata.rapidata_client.assets._base_asset import BaseAsset
 import requests
 import re
+from PIL import Image
 
 class MediaAsset(BaseAsset):
     """MediaAsset Class
@@ -53,7 +54,24 @@ class MediaAsset(BaseAsset):
         
         self.path: str | bytes = path
         self.name = path
-    
+
+    def get_image_dimension(self) -> tuple[int, int] | None:
+        """
+        Get the dimensions (width, height) of an image file.
+        Returns None for non-image files or if dimensions can't be determined.
+        """
+        if not any(self.name.lower().endswith(ext) for ext in ('.jpg', '.jpeg', '.png', '.gif', '.webp')):
+            return None
+            
+        try:
+            if isinstance(self.path, bytes):
+                img = Image.open(BytesIO(self.path))
+            else:
+                img = Image.open(self.path)
+            return img.size
+        except Exception:
+            return None
+
     def set_custom_name(self, name: str) -> 'MediaAsset':
         """Set a custom name for the media asset (only works with URLs)."""
         if isinstance(self.path, bytes):

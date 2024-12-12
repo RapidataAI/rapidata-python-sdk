@@ -6,21 +6,24 @@ from rapidata.api_client.models.compare_truth import CompareTruth
 from rapidata.api_client.models.transcription_payload import TranscriptionPayload
 from rapidata.api_client.models.transcription_truth import TranscriptionTruth
 from rapidata.api_client.models.transcription_word import TranscriptionWord
-from rapidata.rapidata_client.assets._media_asset import MediaAsset
-from rapidata.rapidata_client.assets._multi_asset import MultiAsset
-from rapidata.rapidata_client.assets._text_asset import TextAsset
+from rapidata.rapidata_client.assets.media_asset import MediaAsset
+from rapidata.rapidata_client.assets.multi_asset import MultiAsset
+from rapidata.rapidata_client.assets.text_asset import TextAsset
 from rapidata.rapidata_client.validation.rapidata_validation_set import (
     RapidataValidationSet,
 )
 from rapidata.rapidata_client.validation._validation_rapid_parts import ValidatioRapidParts
 from rapidata.rapidata_client.metadata._base_metadata import Metadata
 from rapidata.service.openapi_service import OpenAPIService
+from rapidata.rapidata_client.validation.rapids.box import Box
 
 from rapidata.rapidata_client.validation.rapids.rapids import (
     Rapid, 
     ClassificationRapid,
     CompareRapid,
-    SelectWordsRapid
+    SelectWordsRapid,
+    LocateRapid,
+    DrawRapid
 )
 from typing import Sequence
 
@@ -94,13 +97,13 @@ class ValidationSetBuilder:
             raise ValueError("This method only accepts Rapid instances")
         
         if isinstance(rapid, ClassificationRapid):
-            self.__add_classify_rapid(rapid.asset, rapid.question, rapid.options, rapid.truths, rapid.metadata)
+            self._add_classify_rapid(rapid.asset, rapid.question, rapid.options, rapid.truths, rapid.metadata)
 
         if isinstance(rapid, CompareRapid):
-            self.__add_compare_rapid(rapid.asset, rapid.criteria, rapid.truth, rapid.metadata)
+            self._add_compare_rapid(rapid.asset, rapid.criteria, rapid.truth, rapid.metadata)
 
         if isinstance(rapid, SelectWordsRapid):
-            self.__add_select_words_rapid(rapid.asset, rapid.instruction, rapid.sentence, rapid.truths, rapid.strict_grading)
+            self._add_select_words_rapid(rapid.asset, rapid.instruction, rapid.sentence, rapid.truths, rapid.strict_grading)
 
         return self
     
@@ -241,3 +244,115 @@ class ValidationSetBuilder:
                 randomCorrectProbability = 1 / len(transcription_words),
             )
         )
+    
+    def _add_locate_rapid(
+        self,
+        target: str,
+        asset: MediaAsset,
+        truths: list[Box]
+    ):
+        """Add a locate rapid to the validation set.
+
+        Args:
+            target (str): The target for the locate rapid.
+            asset (MediaAsset): The asset for the rapid.
+            truths (list[Box]): The truths for the rapid.
+
+        Returns:
+            ValidationSetBuilder: The ValidationSetBuilder instance.
+        """
+        payload = LocatePayload(
+            _t="LocatePayload", target=target
+        )
+
+        img_dimensions = asset.get_image_dimension()
+
+        if not img_dimensions:
+            raise ValueError("Failed to get image dimensions")
+
+        model_truth = LocateBoxTruth(
+            _t="LocateBoxTruth", 
+            boundingBoxes=[BoxShape(
+                _t="BoxShape",
+                xMin=truth.x_min / img_dimensions[0] * 100,
+                xMax=truth.x_max / img_dimensions[0] * 100,
+                yMax=truth.y_max / img_dimensions[1] * 100,
+                yMin=truth.y_min / img_dimensions[1] * 100,
+            ) for truth in truths]
+        )
+
+        coverage = self._calculate_boxes_coverage(truths, img_dimensions[0], img_dimensions[1])
+
+        self._rapid_parts.append(
+            ValidatioRapidParts(
+                question=target,
+                payload=payload,
+                truths=model_truth,
+                metadata=[],
+                randomCorrectProbability=coverage,
+                asset=asset,
+            )
+        )
+
+    def _add_draw_rapid(
+        self,
+        target: str,
+        asset: MediaAsset,
+        truths: list[Box]
+    ):
+        """Add a draw rapid to the validation set.
+
+        Args:
+            target (str): The target for the draw rapid.
+            asset (MediaAsset): The asset for the rapid.
+            truths (list[Box]): The truths for the rapid.
+
+        Returns:
+            ValidationSetBuilder: The ValidationSetBuilder instance.
+        """
+
+        payload = LinePayload(
+            _t="LinePayload", target=target
+        )
+
+        img_dimensions = asset.get_image_dimension()
+
+        if not img_dimensions:
+            raise ValueError("Failed to get image dimensions")
+
+        model_truth = BoundingBoxTruth(
+            _t="BoundingBoxTruth", 
+            xMax=truths[0].x_max / img_dimensions[0],
+            xMin=truths[0].x_min / img_dimensions[0],
+            yMax=truths[0].y_max / img_dimensions[1],
+            yMin=truths[0].y_min / img_dimensions[1],
+        ) # TO BE CHANGED BEFORE MERGING
+
+        coverage = self._calculate_boxes_coverage(truths, img_dimensions[0], img_dimensions[1])
+
+        self._rapid_parts.append(
+            ValidatioRapidParts(
+                question=target,
+                payload=payload,
+                truths=model_truth,
+                metadata=[],
+                randomCorrectProbability=coverage,
+                asset=asset,
+            )
+        )
+
+
+    def _calculate_boxes_coverage(self, boxes: list[Box], image_width: int, image_height: int) -> float:
+        if not boxes:
+            return 0.0
+            
+        # Convert all coordinates to integers for pixel-wise coverage
+        pixels = set()
+        for box in boxes:
+            for x in range(int(box.x_min), int(box.x_max + 1)):
+                for y in range(int(box.y_min), int(box.y_max + 1)):
+                    if 0 <= x < image_width and 0 <= y < image_height:
+                        pixels.add((x,y))
+                        
+        total_covered = len(pixels)
+        return total_covered / (image_width * image_height)
