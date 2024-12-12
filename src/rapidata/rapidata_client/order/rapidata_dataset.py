@@ -69,6 +69,11 @@ class RapidataDataset:
         metadata: Sequence[Metadata] | None = None,
         max_workers: int = 10,
     ):
+        if metadata is not None and len(metadata) != len(media_paths):
+            raise ValueError(
+                "metadata must be None or have the same length as media_paths"
+            )
+        
         for media_path in media_paths:
             if isinstance(media_path, MultiAsset):
                 assert all(

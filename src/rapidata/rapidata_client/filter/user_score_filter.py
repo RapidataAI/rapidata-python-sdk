@@ -11,7 +11,9 @@ class UserScoreFilter(RapidataFilter):
     Can be used to filter who to target based on their user score."""
     def __init__(self, lower_bound: float = 0.0, upper_bound: float = 1.0):
         """
-        Initialize a UserScoreFilter instance.
+        Initialize a UserScoreFilter instance.\n
+
+        example: UserScoreFilter(0.5, 0.9) -> will only show the order to users that have a UserScore of >0.5 and <0.9
 
         Args:
             lower_bound (float): The lower bound of the user score.
