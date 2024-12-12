@@ -322,6 +322,7 @@ class RapidataOrderManager:
             target: str,
             datapoints: list[str],
             responses_per_datapoint: int = 10,
+            prompts: list[str] | None = None,
             validation_set_id: str | None = None,
             filters: Sequence[RapidataFilter] = [],
             settings: Sequence[RapidataSetting] = [],
@@ -334,6 +335,9 @@ class RapidataOrderManager:
             target (str): The target what should be located. Will be shown along side each datapoint.
             datapoints (list[str]): The list of datapoints for the locate - each datapoint will be labeled.
             responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
+            prompts (list[str], optional): The list of prompts for the comparison. Defaults to None.\n
+                If provided has to be the same length as datapoints and will be shown in addition to the criteria. (Therefore will be different for each datapoint)
+                Will be match up with the datapoints using the list index.
             validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
             filters (Sequence[RapidataFilter], optional): The list of filters for the locate. Defaults to []. Decides who the tasks should be shown to.
@@ -348,6 +352,7 @@ class RapidataOrderManager:
             workflow=LocateWorkflow(target=target),
             assets=assets,
             responses_per_datapoint=responses_per_datapoint,
+            prompts=prompts,
             validation_set_id=validation_set_id,
             filters=filters,
             selections=selections,
@@ -359,6 +364,7 @@ class RapidataOrderManager:
             target: str,
             datapoints: list[str],
             responses_per_datapoint: int = 10,
+            prompts: list[str] | None = None,
             validation_set_id: str | None = None,
             filters: Sequence[RapidataFilter] = [],
             settings: Sequence[RapidataSetting] = [],
@@ -371,6 +377,9 @@ class RapidataOrderManager:
             target (str): The target for how the lines should be drawn. Will be shown along side each datapoint.
             datapoints (list[str]): The list of datapoints for the draw lines - each datapoint will be labeled.
             responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
+            prompts (list[str], optional): The list of prompts for the comparison. Defaults to None.\n
+                If provided has to be the same length as datapoints and will be shown in addition to the criteria. (Therefore will be different for each datapoint)
+                Will be match up with the datapoints using the list index.
             validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
             filters (Sequence[RapidataFilter], optional): The list of filters for the draw lines. Defaults to []. Decides who the tasks should be shown to.
@@ -385,6 +394,7 @@ class RapidataOrderManager:
             workflow=DrawWorkflow(target=target),
             assets=assets,
             responses_per_datapoint=responses_per_datapoint,
+            prompts=prompts,
             validation_set_id=validation_set_id,
             filters=filters,
             selections=selections,
