@@ -1,6 +1,7 @@
 from rapidata.rapidata_client.assets import MediaAsset, TextAsset, MultiAsset
 from rapidata.rapidata_client.metadata import Metadata
 from typing import Sequence
+from rapidata.rapidata_client.validation.rapids.box import Box
 
 class Rapid:
     pass
@@ -56,3 +57,28 @@ class SelectWordsRapid(Rapid):
         self.sentence = sentence
         self.strict_grading = strict_grading
 
+class LocateRapid(Rapid):
+    """A locate rapid. Used to have the labeler locate a specific object in an image."""
+    def __init__(self, target: str, truths: list[Box], asset: MediaAsset):
+        """Creating the locate rapid
+        
+        Args:
+            target (str): The object that the labeler is supposed to locate in the image.
+            truths (list[Box]): The boxes that the object is located in.
+            asset (MediaAsset): The image that the labeler is locating the object in."""
+        self.target = target
+        self.asset = asset
+        self.truths = truths
+
+class DrawRapid(Rapid):
+    """A draw rapid. Used to have the labeler draw a specific object in an image."""
+    def __init__(self, target: str, truths: list[Box], asset: MediaAsset):
+        """Creating the draw rapid
+        
+        Args:
+            target (str): The object that the labeler is supposed to draw in the image.
+            truths (list[Box]): The boxes that the object is located in.
+            asset (MediaAsset): The image that the labeler is drawing the object in."""
+        self.target = target
+        self.asset = asset
+        self.truths = truths

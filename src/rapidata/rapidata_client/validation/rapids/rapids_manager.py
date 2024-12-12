@@ -1,7 +1,13 @@
 from rapidata.rapidata_client.assets.data_type_enum import RapidataDataTypes
-from rapidata.rapidata_client.validation.rapids.rapids import ClassificationRapid, CompareRapid, SelectWordsRapid
+from rapidata.rapidata_client.validation.rapids.rapids import (
+    ClassificationRapid, 
+    CompareRapid, 
+    SelectWordsRapid, 
+    LocateRapid, 
+    DrawRapid)
 from rapidata.rapidata_client.assets import MediaAsset, TextAsset, MultiAsset
 from rapidata.rapidata_client.metadata import Metadata
+from rapidata.rapidata_client.validation.rapids.box import Box
 
 from typing import Sequence
 
@@ -107,4 +113,45 @@ class RapidsManager:
                 sentence=sentence,
                 strict_grading=strict_grading,
                 )
+    
+    def build_locate_rapid(self,
+            target: str,
+            truths: list[Box],
+            datapoint: str,
+    ) -> LocateRapid:
+        """Build a locate rapid
+
+        Args:
+            target (str): The object that the labeler will be locating.
+            truths (list[Box]): The bounding boxes of the object that the labeler ought to be locating.
+            datapoint (str): The asset that the labeler will be locating the object in.
+        """
         
+        asset = MediaAsset(datapoint)
+
+        return LocateRapid(
+                target=target,
+                truths=truths,
+                asset=asset,
+                )
+    
+    def build_draw_rapid(self,
+            target: str,
+            truths: list[Box],
+            datapoint: str,
+    ) -> DrawRapid:
+        """Build a draw rapid
+
+        Args:
+            target (str): The object that the labeler will be drawing.
+            truths (list[Box]): The bounding boxes of the object that the labeler ought to be drawing.
+            datapoint (str): The asset that the labeler will be drawing the object in.
+        """
+        
+        asset = MediaAsset(datapoint)
+
+        return DrawRapid(
+                target=target,
+                truths=truths,
+                asset=asset,
+                )

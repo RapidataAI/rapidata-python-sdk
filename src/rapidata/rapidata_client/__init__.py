@@ -30,3 +30,5 @@ from .filter import (
     GenderFilter,
     Gender,
 )
+
+from .validation import Box
