@@ -6,7 +6,7 @@ To learn about the basics of creating an order, please refer to the [quickstart 
 
 With this order we want to find out what kind of emotions certain AI generated image convey. We have asked Dalle-3 to generate 4 different images that would convey happiness, anger, disgust and sadness and saved those images to publically accessible URLs. 
 
-Now we want to find out if the images actually match the emotions we asked for. When you run this with your own examples, you may use simple, local paths to your images instead of the URLs.
+Now we want to find out if the images actually match the emotions we asked for. When you run this with your own examples, you may use local paths to your images instead of the URLs.
 
 ```python
 --8<-- "examples/classify_order.py"
