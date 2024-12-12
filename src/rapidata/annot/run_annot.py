@@ -7,15 +7,21 @@ from pathlib import Path
 
 sys.path.append(str(Path(__file__).parent.parent.parent.resolve()))
 
-from consts import DONE_EMOJI, NOT_DONE_EMOJI, LAST_CREATED_VALIDATION_SET_KEY
+from consts import DONE_EMOJI, NOT_DONE_EMOJI, LAST_CREATED_VALIDATION_SET_KEY, DEFAULT_FILE, CREATED_RAPIDS_COUNTER_KEY
 from models import ValidationRapid, ValidationRapidCollection, RapidTypes
-from api import get_validation_rapids, create_validation_set, add_rapids_to_validation_set, get_validation_set_url
+from api import get_validation_rapids, get_validation_set_url, validation_set_from_rapids
 from utils import resize_image
 
 
 @st.cache_resource
 def get_collection():
-    return ValidationRapidCollection(add_default=True)
+    return ValidationRapidCollection(
+        starter_rapid=ValidationRapid(
+            name=DEFAULT_FILE,
+            image=Image.open(DEFAULT_FILE),
+            rapid_id=get_next_rapid_id()
+        )
+    )
 
 
 def display_metadata():
@@ -53,18 +59,24 @@ def display_metadata():
                                    key=f'tb_prompt_{rapid.local_rapid_id}')
             rapid.prompt = prompt
 
+def get_next_rapid_id():
+    st.session_state[CREATED_RAPIDS_COUNTER_KEY] += 1
+    return st.session_state[CREATED_RAPIDS_COUNTER_KEY]
+
 
 def display_file_uploader():
     with st.container(border=True):
-        uploaded_image = st.file_uploader("➕Add rapid:",
+        uploaded_images = st.file_uploader("➕Add rapid:",
                                           type=["png", "jpg"],
-                                          key=f'file_uploader_id_{st.session_state.uploader_key}'
+                                          key=f'file_uploader_id_{st.session_state.uploader_key}',
+                                          accept_multiple_files=True
                                           )
-        if uploaded_image:
-            image = Image.open(uploaded_image)
-            get_collection().add_rapids(
-                ValidationRapid(uploaded_image.name, image)
-            )
+        if uploaded_images:
+            for uploaded_image in uploaded_images:
+                image = Image.open(uploaded_image)
+                get_collection().add_rapids(
+                    ValidationRapid(uploaded_image.name, image, rapid_id=get_next_rapid_id())
+                )
             update_uploader_key()
             update_canvas_key()
             st.rerun()
@@ -88,7 +100,7 @@ def display_creation_option():
     with st.container(border=True):
         rapid_type = st.selectbox(
             "Choose the Type of Rapid :family:",
-            (RapidTypes.LINE, RapidTypes.LOCATE),
+            (RapidTypes.LOCATE,),
         )
         validation_set_name = st.text_input(
             label="Choose a Name For The Validation Set 🏷",
@@ -103,12 +115,9 @@ def display_creation_option():
                 st.toast('🚫 **Validation Set Name Cannot Be empty!**')
             else:
                 with st.spinner('In progress...'):
-                    validation_set_id = create_validation_set(validation_set_name)
-                    add_rapids_to_validation_set(
-                        rapids=get_collection().rapids,
-                        validation_set_id=validation_set_id,
-                        rapid_type=rapid_type,
-                    )
+                    validation_set_id = validation_set_from_rapids(name=validation_set_name,
+                                                                   rapids=get_collection().rapids,
+                                                                   rapid_type=rapid_type)
                 st.session_state[LAST_CREATED_VALIDATION_SET_KEY] = validation_set_id
                 st.toast(f'ValidationSet Created: {validation_set_id}')
                 st.balloons()
@@ -142,6 +151,7 @@ def display_canvas():
     current_image = current_rapid.image
 
     resized_image = resize_image(current_image)
+
     canvas_result = st_canvas(
         fill_color="rgba(255, 165, 0, 0.3)",
         stroke_width=3,
@@ -187,13 +197,16 @@ def update_canvas_key():
 def setup():
     dotenv.load_dotenv('/Users/sneccello/Documents/rapidata/data_doctor/ranking_poc/.env', override=True)
     st.set_page_config(layout="wide")
-
-    st.session_state[LAST_CREATED_VALIDATION_SET_KEY] = None
     if "uploader_key" not in st.session_state:
         st.session_state.uploader_key = 0
     if "canvas_key" not in st.session_state:
         st.session_state.canvas_key = 0
 
+    if CREATED_RAPIDS_COUNTER_KEY not in st.session_state:
+        st.session_state[CREATED_RAPIDS_COUNTER_KEY] = 0
+
+    if LAST_CREATED_VALIDATION_SET_KEY not in st.session_state:
+        st.session_state[LAST_CREATED_VALIDATION_SET_KEY] = 0
 
 if __name__ == '__main__':
     setup()

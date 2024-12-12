@@ -1,4 +1,4 @@
-DEFAULT_FILE = 'rapidata.png'
+DEFAULT_FILE = "/Users/marcellschneider/Documents/rapidata/rapidata-python-sdk/src/rapidata/annot/rapidata.png"
 METADATA_COLUMNS = [
     'image',
     'filename',
@@ -15,7 +15,7 @@ CANVAS_WIDTH = 600
 DONE_EMOJI = '✅'
 NOT_DONE_EMOJI = '❌'
 
-DOTENV_PATH = '/Users/sneccello/Documents/rapidata/data_doctor/ranking_poc/.env'
+DOTENV_PATH = '/Users/marcellschneider/Documents/rapidata/rapidata-python-sdk/src/rapidata/annot/.env'
 ENV = 'test'
 
 if ENV == 'prod':
@@ -24,3 +24,5 @@ else:
     DOMAIN = 'rabbitdata.ch'
 
 LAST_CREATED_VALIDATION_SET_KEY = 'key_last_created_validation_set'
+
+CREATED_RAPIDS_COUNTER_KEY = "key_created_rapid_count"

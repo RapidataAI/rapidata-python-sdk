@@ -7,8 +7,9 @@ from PIL import Image
 import requests
 import os
 from models import BBox, ValidationRapid, RapidTypes
-from rapidata import RapidataClient
+from rapidata import RapidataClient, Box
 from rapidata.annot.consts import DOMAIN, DOTENV_PATH, ENV
+from rapidata.rapidata_client.validation.rapids.rapids import LocateRapid, Rapid
 from utils import calc_image_scale
 
 
@@ -16,9 +17,8 @@ def get_api_endpoint(path: str) -> str:
     return f"https://api.{DOMAIN}/{path}"
 
 
-def create_validation_set(name: str) -> str:
-    dotenv.load_dotenv(DOTENV_PATH)
-    client = create_client()
+def create_validation_set_depr(name: str) -> str:
+
 
     HEADERS = {
         "Authorization": client.openapi_service.api_client.configuration.api_key["bearer"],
@@ -85,6 +85,58 @@ def _add_rapid(validation_set_id: str, rapid_type: RapidTypes, prompt: str, imag
         # Clean up: Close the file and remove the temporary file
         files['files'][1].close()  # Close the file handler
         os.remove(temp_file_path)  # Delete the temporary file
+
+
+def _create_locate_rapids(rapids: List[ValidationRapid]) -> List[LocateRapid]:
+    client = create_client()
+    locate_rapids = []
+    for rapid in rapids:
+        annotation = rapid.annotation["objects"][0]
+
+        x, y, width, height = annotation["left"], annotation["top"], annotation["width"], annotation["height"]
+        bbox = BBox(x, y, width, height, annotation_scale=1 / calc_image_scale(rapid.image)).get_scaled()
+        print(bbox)
+        SUFFIX = "png"
+        with tempfile.NamedTemporaryFile(delete=False, suffix=SUFFIX) as temp_file:
+            temp_file_path = temp_file.name + '.' + SUFFIX
+            rapid.image.save(temp_file_path)
+
+            rapid = client.validation.rapid.build_locate_rapid(
+                target=rapid.prompt,
+                truths=[
+                    Box(
+                        x_min=bbox.x,
+                        x_max=bbox.x + bbox.width,
+                        y_min=bbox.y,
+                        y_max=bbox.y + bbox.height,
+                    )
+                ],
+                datapoint=temp_file_path
+            )
+            locate_rapids.append(rapid)
+
+    return locate_rapids
+
+
+def _create_validation_set(name:str, rapids: List[Rapid]):
+
+    client = create_client()
+    val_set = client.validation.create_rapid_set(
+        name=name,
+        rapids=rapids,
+        print_confirmation=False
+    )
+    return val_set.id
+
+def validation_set_from_rapids(name: str, rapids: List[ValidationRapid], rapid_type: RapidTypes) -> str:
+
+    if rapid_type == RapidTypes.LOCATE:
+        rapids = _create_locate_rapids(rapids)
+    else:
+        raise ValueError("Unknown rapid type")
+
+    return _create_validation_set(name, rapids)
+
 
 
 def add_rapids_to_validation_set(rapids: List[ValidationRapid], rapid_type: RapidTypes, validation_set_id: str):

@@ -3,6 +3,7 @@ import enum
 from typing import List, Union
 
 from PIL import Image
+from typing import Optional
 
 from consts import DEFAULT_FILE
 
@@ -31,22 +32,14 @@ class RapidTypes(enum.Enum):
 
 
 class ValidationRapid:
-    RAPID_ID = 0
 
-    def __init__(self, name: str, image: Image.Image):
+    def __init__(self, name: str, image: Image.Image, rapid_id: int):
         self.annotation = dict()
         self.name = name
-        self.image = image
-        self.local_rapid_id = self.RAPID_ID
+        self.image: Image.Image = image
+        self.local_rapid_id = rapid_id
         self.prompt = ''
-        ValidationRapid.RAPID_ID += 1
 
-
-    @staticmethod
-    def clone(rapid: 'ValidationRapid') -> 'ValidationRapid':
-        r = ValidationRapid(rapid.name, rapid.image)
-        r.annotation = rapid.annotation
-        return r
 
     def set_annotation(self, annotation: dict):
         self.annotation = annotation
@@ -55,18 +48,13 @@ class ValidationRapid:
         return len(self.annotation.get('objects', [])) == 1 and len(self.prompt) >= 1
 
 class ValidationRapidCollection:
-    def __init__(self, add_default: bool = True):
-        self.rapids: List[ValidationRapid] = []
+    def __init__(self, starter_rapid: Optional[ValidationRapid] = None):
+        self.rapids: List[ValidationRapid] = list()
 
-        if add_default:
-            self.add_default()
-        self.current_rapid = None
+        if starter_rapid is not None:
+            self.rapids.append(starter_rapid)
         self.set_last()
 
-    def add_default(self):
-        image = Image.open(DEFAULT_FILE)
-        r = ValidationRapid(DEFAULT_FILE, image)
-        self.rapids.append(r)
 
     def add_rapids(self, rapids: Union[ValidationRapid, List[ValidationRapid]]):
         if not isinstance(rapids, list):
@@ -74,7 +62,7 @@ class ValidationRapidCollection:
 
         for r in rapids:
             self.rapids.append(r)
-        self.current_rapid = rapids[-1]
+        self.set_last()
 
     def remove_rapid(self, rapid: ValidationRapid):
         self.rapids.remove(rapid)
