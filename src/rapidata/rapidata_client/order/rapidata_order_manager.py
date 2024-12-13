@@ -309,7 +309,8 @@ class RapidataOrderManager:
             filters=filters,
             selections=selections,
             settings=settings,
-            sentences=sentences
+            sentences=sentences,
+            default_labeling_amount=2
         )
 
 

@@ -7,7 +7,7 @@ from rapidata import (
     LabelingSelection,
     ConditionalValidationSelection,
 )
-from rapidata.rapidata_client.assets.media_asset import MediaAsset
+from rapidata.rapidata_client.assets._media_asset import MediaAsset
 
 
 def new_cond_validation_rapid_order(rapi: RapidataClient):
@@ -15,8 +15,8 @@ def new_cond_validation_rapid_order(rapi: RapidataClient):
     # This will be shown as defined in the ValidationSelection and will make our annotators understand the task better
     validation_set = rapi.validation.create_classification_set(
         name="Example Classify Validation Set",
-        question="What is shown in the image?",
-        options=["Fish", "Cat", "Wallaby", "Airplane"],
+        instruction="What is shown in the image?",
+        answer_options=["Fish", "Cat", "Wallaby", "Airplane"],
         truths=[["Wallaby"]],
         datapoints=["examples/data/wallaby.jpg"],
         prompts=["Hint: It has a pouch"],
@@ -33,8 +33,8 @@ def new_cond_validation_rapid_order(rapi: RapidataClient):
             ]
     order = rapi.order.create_classification_order(
         name="Example Classify Order",
-        question="What is shown in the image?",
-        options=["Fish", "Cat", "Wallaby", "Airplane"],
+        instruction="What is shown in the image?",
+        answer_options=["Fish", "Cat", "Wallaby", "Airplane"],
         datapoints=["examples/data/wallaby.jpg"],
         responses_per_datapoint=3,
         prompts=["Hint: It has a pouch"],
