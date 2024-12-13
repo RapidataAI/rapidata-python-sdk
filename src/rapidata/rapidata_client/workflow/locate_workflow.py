@@ -1,7 +1,7 @@
 from rapidata.api_client.models.simple_workflow_model import SimpleWorkflowModel
 from rapidata.api_client.models.simple_workflow_model_blueprint import SimpleWorkflowModelBlueprint
 from rapidata.api_client.models.locate_rapid_blueprint import LocateRapidBlueprint
-from rapidata.rapidata_client.workflow.base_workflow import Workflow
+from rapidata.rapidata_client.workflow._base_workflow import Workflow
 
 
 class LocateWorkflow(Workflow):
@@ -10,7 +10,7 @@ class LocateWorkflow(Workflow):
         super().__init__(type="SimpleWorkflowConfig")
         self._target = target
 
-    def to_model(self) -> SimpleWorkflowModel:
+    def _to_model(self) -> SimpleWorkflowModel:
         blueprint = LocateRapidBlueprint(
             _t="LocateBlueprint",
             target=self._target
