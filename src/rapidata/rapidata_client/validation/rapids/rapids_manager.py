@@ -12,9 +12,9 @@ class RapidsManager:
     def __init__(self):
         pass
     
-    def build_classification_rapid(self,
-            question: str,
-            options: list[str],
+    def classification_rapid(self,
+            instruction: str,
+            answer_options: list[str],
             datapoint: str,
             truths: list[str],
             data_type: str = RapidataDataTypes.MEDIA,
@@ -23,8 +23,8 @@ class RapidsManager:
         """Build a classification rapid
         
         Args:
-            question (str): The question to be asked to the labeler.
-            options (list[str]): The options that the labeler can choose from.
+            instruction (str): The instruction/question to be shown to the labeler.
+            answer_options (list[str]): The options that the labeler can choose from to answer the question.
             datapoint (str): The datapoint that the labeler will be labeling.
             truths (list[str]): The correct answers to the question.
             data_type (str, optional): The type of the datapoint. Defaults to RapidataDataTypes.MEDIA.
@@ -39,15 +39,15 @@ class RapidsManager:
             raise ValueError(f"Unsupported data type: {data_type}")
 
         return ClassificationRapid(
-                question=question,
-                options=options,
+                question=instruction,
+                options=answer_options,
                 asset=asset,
                 truths=truths,
                 metadata=metadata,
                 )
     
-    def build_compare_rapid(self,
-            criteria: str,
+    def compare_rapid(self,
+            instruction: str,
             truth: str,
             datapoint: list[str],
             data_type: str = RapidataDataTypes.MEDIA,
@@ -56,7 +56,7 @@ class RapidsManager:
         """Build a compare rapid
 
         Args:
-            criteria (str): The criteria that the labeler will be comparing the assets on.
+            instruction (str): The instruction that the labeler will be comparing the assets on.
             truth (str): The correct answer to the comparison. (has to be one of the assets)
             datapoint (list[str]): The two assets that the labeler will be comparing.
             data_type (str, optional): The type of the datapoint. Defaults to RapidataDataTypes.MEDIA.
@@ -73,13 +73,13 @@ class RapidsManager:
         asset = MultiAsset(assets)
 
         return CompareRapid(
-                criteria=criteria,
+                criteria=instruction,
                 asset=asset,
                 truth=truth,
                 metadata=metadata,
                 )
     
-    def build_select_words_rapid(self,
+    def select_words_rapid(self,
             instruction: str,
             truths: list[int],
             datapoint: str,

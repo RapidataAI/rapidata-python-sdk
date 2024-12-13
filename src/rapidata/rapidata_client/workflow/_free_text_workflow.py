@@ -19,15 +19,15 @@ class FreeTextWorkflow(Workflow):
         question (str): The question to be presented for free text input.
     """
 
-    def __init__(self, question: str):
+    def __init__(self, instruction: str):
         """
         Initialize a FreeTextWorkflow instance.
 
         Args:
-            question (str): The question to be presented for free text input.
+            question (str): The instruction to be presented for free text input.
         """
         super().__init__(type="SimpleWorkflowConfig")
-        self._question = question
+        self._question = instruction
 
     def _to_dict(self) -> dict[str, Any]:
         return {

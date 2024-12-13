@@ -21,10 +21,10 @@ class ClassifyWorkflow(Workflow):
         _options (list[str]): The list of classification options.
     """
 
-    def __init__(self, question: str, options: list[str]):
+    def __init__(self, instruction: str, answer_options: list[str]):
         super().__init__(type="SimpleWorkflowConfig")
-        self._question = question
-        self._options = options
+        self._question = instruction
+        self._options = answer_options
 
     def _to_dict(self) -> dict[str, Any]:
         return {
