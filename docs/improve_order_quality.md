@@ -34,7 +34,7 @@ The creation is structured in the same way as the order creation, except here we
 ```py
 validation_set = rapi.validation.create_compare_set(
      name="Example Compare Validation Set",
-     criteria="Which of the AI generated images looks more realistic?",
+     instruction="Which of the AI generated images looks more realistic?",
      datapoints=[["https://assets.rapidata.ai/bad_ai_generated_image.png", 
          "https://assets.rapidata.ai/good_ai_generated_image.png"]], 
      truths=["https://assets.rapidata.ai/good_ai_generated_image.png"] 
@@ -67,7 +67,7 @@ validation_set = rapi.validation.get_validation_set_by_id("validation_set_id")
 ```py
 order = rapi.order.create_compare_order(
      name="Example Compare Validation Set",
-     criteria="Which of the AI generated images looks more realistic?", 
+     instruction="Which of the AI generated images looks more realistic?", 
      datapoints=[["https://assets.rapidata.ai/dalle-3_human.jpg", 
         "https://assets.rapidata.ai/flux_human.jpg"]],
      validation_set_id=validation_set.id

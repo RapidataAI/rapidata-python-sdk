@@ -49,7 +49,7 @@ def create_validation_set(rapi: RapidataClient):
     
     return rapi.validation.create_compare_set(
         name="Example Image Prompt Alignment Validation Set",
-        criteria="Which image follows the prompt more accurately?",
+        instruction="Which image follows the prompt more accurately?",
         prompts=[datapoint[0] for datapoint in validation_image_pairs],
         datapoints=[[datapoint[1], datapoint[2]] for datapoint in validation_image_pairs],
         truths=[datapoint[1] for datapoint in validation_image_pairs]
@@ -61,7 +61,7 @@ def get_prompt_image_alignment(rapi: RapidataClient, validatation_set_id: str):
 
     order = rapi.order.create_compare_order(
         name="Example Image Prompt Alignment Order",
-        criteria="Which image follows the prompt more accurately?",
+        instruction="Which image follows the prompt more accurately?",
         datapoints=image_urls,
         responses_per_datapoint=25,
         prompts=prompts,

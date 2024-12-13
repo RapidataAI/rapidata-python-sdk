@@ -55,8 +55,8 @@ Implementing Early Stopping is straightforward. You simply add the confidence th
 ```python
 order = rapi.order.create_classification_order(
     name="Test Classification Order with Early Stopping",
-    question="What do you see in the image?",
-    options=["Cat", "Dog"],
+    instruction="What do you see in the image?",
+    answer_options=["Cat", "Dog"],
     datapoints=["https://assets.rapidata.ai/dog.jpeg"],
     responses_per_datapoint=50,
     confidence_threshold=0.99,

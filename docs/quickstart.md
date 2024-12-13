@@ -45,21 +45,21 @@ rapi = RapidataClient(client_id="Your client ID", client_secret="Your client sec
 
 All order-related operations are performed using rapi.order.
 
-1. Here we create a classification order with a name and the question we want to ask:
+1. Here we create a classification order with a name and the instruction / question we want to ask:
 
 ```py
 order = rapi.order.create_classification_order(
     name="Example Classification Order",
-    question="What is shown in the image?",
-    options=["Fish", "Cat", "Wallaby", "Airplane"],
+    instruction="What is shown in the image?",
+    answer_options=["Fish", "Cat", "Wallaby", "Airplane"],
     datapoints=["https://assets.rapidata.ai/wallaby.jpg"]
 )
 ```
 The parameters are as follows:
 
 - `name`: The name of the order. This is used to identify the order in the [Rapidata Dashboard](https://app.rapidata.ai/dashboard/orders). This name is also be used to find the order again later.
-- `question`: The question you want to ask the annotators.
-- `options`: The different answer options the annotators can choose from.
+- `instruction`: The instruction you want to ask the annotators to compare the image by.
+- `answer_options`: The different answer options the annotators can choose from.
 - `datapoints`: The data you want to classify. This can be any public URL (that points to an image, video or audio) or a local file path. This is a list of all datapoints you want to classify. The same question and answer options will be asked for each datapoint. There is a limit of 100 datapoints per order. If you need more than that, you can reach out to us at <info@rapidata.ai>.
 
 Optionally you may add additional specifications with the other parameters. As an example, the `responses_per_datapoint` that specifies how many responses you want per datapoint<sup>1</sup>.
@@ -107,7 +107,7 @@ results = order.get_results()
 
 ## Credits and Billing
 
-When you first create an account on Rapidata, you will receive 100 free credits. Each credit give you 10 responses. After you have used up your free credits, you may purchase more [here](https://app.rapidata.ai/pricing).
+When you first create an account on Rapidata, you will receive 100 free credits. Each credit give you 10 responses. After you have used up your free credits, you may purchase more on our [website](https://app.rapidata.ai/pricing).
 
 ## Next Steps
 
