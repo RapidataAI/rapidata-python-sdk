@@ -13,6 +13,8 @@ from rapidata.api_client.models.sort_criterion import SortCriterion
 from rapidata.api_client.exceptions import BadRequestException
 from urllib3._collections import HTTPHeaderDict
 
+from rapidata.rapidata_client.validation.rapids.box import Box
+
 from rapidata.api_client.models.query_validation_set_model import QueryValidationSetModel
 
 from typing import Sequence
@@ -168,6 +170,84 @@ class ValidationSetManager:
                     datapoint=datapoints[i],
                     sentence=sentences[i],
                     strict_grading=strict_grading
+                )
+            )
+
+        validation_set_builder = ValidationSetBuilder(name, self._openapi_service)
+        for rapid in rapids:
+            validation_set_builder._add_rapid(rapid)
+
+        return validation_set_builder._submit(print_confirmation)
+    
+    def create_locate_set(self,
+        name: str,
+        instruction: str,
+        truths: list[list[Box]],
+        datapoints: list[str],
+        print_confirmation: bool = True
+    ) -> RapidataValidationSet:
+        """Create a locate validation set.
+
+        Args:
+            name (str): The name of the validation set. (will not be shown to the labeler)
+            instruction (str): The instruction to show to the labeler.
+            truths (list[list[Box]]): The truths for each datapoint. Outher list is for each datapoint, inner list is for each truth.\n
+                example:
+                    datapoints: ["datapoint1", "datapoint2"]
+                    truths: [[Box(0, 0, 100, 100)], [Box(50, 50, 150, 150)]] -> first datapoint the object is in the top left corner, second datapoint the object is in the center
+            datapoints (list[str]): The datapoints that will be used for validation.
+            print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
+        """
+        
+        if len(datapoints) != len(truths):
+            raise ValueError("The number of datapoints and truths must be equal")
+        
+        rapids = []
+        for i in range(len(datapoints)):
+            rapids.append(
+                self.rapid.locate_rapid(
+                    instruction=instruction,
+                    truths=truths[i],
+                    datapoint=datapoints[i]
+                )
+            )
+
+        validation_set_builder = ValidationSetBuilder(name, self._openapi_service)
+        for rapid in rapids:
+            validation_set_builder._add_rapid(rapid)
+
+        return validation_set_builder._submit(print_confirmation)
+    
+    def create_draw_set(self,
+        name: str,
+        instruction: str,
+        truths: list[list[Box]],
+        datapoints: list[str],
+        print_confirmation: bool = True
+    ) -> RapidataValidationSet:
+        """Create a draw validation set.
+
+        Args:
+            name (str): The name of the validation set. (will not be shown to the labeler)
+            instruction (str): The instruction to show to the labeler.
+            truths (list[list[Box]]): The truths for each datapoint. Outher list is for each datapoint, inner list is for each truth.\n
+                example:
+                    datapoints: ["datapoint1", "datapoint2"]
+                    truths: [[Box(0, 0, 100, 100)], [Box(50, 50, 150, 150)]] -> first datapoint the object is in the top left corner, second datapoint the object is in the center
+            datapoints (list[str]): The datapoints that will be used for validation.
+            print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
+        """
+        
+        if len(datapoints) != len(truths):
+            raise ValueError("The number of datapoints and truths must be equal")
+        
+        rapids = []
+        for i in range(len(datapoints)):
+            rapids.append(
+                self.rapid.draw_rapid(
+                    instruction=instruction,
+                    truths=truths[i],
+                    datapoint=datapoints[i]
                 )
             )
 

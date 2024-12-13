@@ -114,15 +114,15 @@ class RapidsManager:
                 strict_grading=strict_grading,
                 )
     
-    def build_locate_rapid(self,
-            target: str,
+    def locate_rapid(self,
+            instruction: str,
             truths: list[Box],
             datapoint: str,
     ) -> LocateRapid:
         """Build a locate rapid
 
         Args:
-            target (str): The object that the labeler will be locating.
+            instruction (str): The instruction on what the labeler should do.
             truths (list[Box]): The bounding boxes of the object that the labeler ought to be locating.
             datapoint (str): The asset that the labeler will be locating the object in.
         """
@@ -130,20 +130,20 @@ class RapidsManager:
         asset = MediaAsset(datapoint)
 
         return LocateRapid(
-                instruction=target,
+                instruction=instruction,
                 truths=truths,
                 asset=asset,
                 )
     
-    def build_draw_rapid(self,
-            target: str,
+    def draw_rapid(self,
+            instruction: str,
             truths: list[Box],
             datapoint: str,
     ) -> DrawRapid:
         """Build a draw rapid
 
         Args:
-            target (str): The object that the labeler will be drawing.
+            instruction (str): The instructions on what the labeler
             truths (list[Box]): The bounding boxes of the object that the labeler ought to be drawing.
             datapoint (str): The asset that the labeler will be drawing the object in.
         """
@@ -151,7 +151,7 @@ class RapidsManager:
         asset = MediaAsset(datapoint)
 
         return DrawRapid(
-                instruction=target,
+                instruction=instruction,
                 truths=truths,
                 asset=asset,
                 )
