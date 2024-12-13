@@ -16,23 +16,21 @@ from rapidata.api_client.models.create_order_model_workflow import (
 )
 
 from rapidata.rapidata_client.settings import RapidataSettings, RapidataSetting, TranslationBehaviour
-from rapidata.rapidata_client.metadata.base_metadata import Metadata
-from rapidata.rapidata_client.order.rapidata_dataset import RapidataDataset
-from rapidata.rapidata_client.referee.naive_referee import NaiveReferee
-from rapidata.rapidata_client.selection.base_selection import RapidataSelection
+from rapidata.rapidata_client.metadata._base_metadata import Metadata
+from rapidata.rapidata_client.order._rapidata_dataset import RapidataDataset
+from rapidata.rapidata_client.referee._naive_referee import NaiveReferee
+from rapidata.rapidata_client.selection._base_selection import RapidataSelection
 from rapidata.rapidata_client.filter import RapidataFilter, CountryFilter, LanguageFilter
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 from rapidata.rapidata_client.referee import Referee
 from rapidata.service.openapi_service import OpenAPIService
 
-from rapidata.rapidata_client.workflow.compare_workflow import CompareWorkflow
+from rapidata.rapidata_client.workflow._compare_workflow import CompareWorkflow
 
 from rapidata.rapidata_client.assets import MediaAsset, TextAsset, MultiAsset, BaseAsset
 
 from typing import Optional, cast, Sequence
-
-from deprecated import deprecated
 
 
 class RapidataOrderBuilder:
@@ -59,19 +57,19 @@ class RapidataOrderBuilder:
         """
         self._name = name
         self.order_id: str | None = None
-        self._openapi_service = openapi_service
-        self._dataset: Optional[RapidataDataset]
-        self._workflow: Workflow | None = None
-        self._referee: Referee | None = None
-        self._metadata: Sequence[Metadata] | None = None
-        self._aggregator: AggregatorType | None = None
-        self._validation_set_id: str | None = None
-        self._settings: Sequence[RapidataSetting] | None = None
-        self._user_filters: list[RapidataFilter] = []
-        self._selections: list[RapidataSelection] = []
-        self._rapids_per_bag: int = 2
-        self._priority: int = 50
-        self._assets: Sequence[BaseAsset] = []
+        self.__openapi_service = openapi_service
+        self.__dataset: Optional[RapidataDataset]
+        self.__workflow: Workflow | None = None
+        self.__referee: Referee | None = None
+        self.__metadata: Sequence[Metadata] | None = None
+        self.__aggregator: AggregatorType | None = None
+        self.__validation_set_id: str | None = None
+        self.__settings: Sequence[RapidataSetting] | None = None
+        self.__user_filters: list[RapidataFilter] = []
+        self.__selections: list[RapidataSelection] = []
+        self.__rapids_per_bag: int = 2
+        self.__priority: int = 50
+        self.__assets: Sequence[BaseAsset] = []
 
     def _to_model(self) -> CreateOrderModel:
         """
@@ -83,36 +81,36 @@ class RapidataOrderBuilder:
         Returns:
             CreateOrderModel: The model representing the order configuration.
         """
-        if self._workflow is None:
+        if self.__workflow is None:
             raise ValueError("You must provide a workflow to create an order.")
 
-        if self._referee is None:
+        if self.__referee is None:
             print("No referee provided, using default NaiveReferee.")
-            self._referee = NaiveReferee()
+            self.__referee = NaiveReferee()
 
         return CreateOrderModel(
             _t="CreateOrderModel",
             orderName=self._name,
-            workflow=CreateOrderModelWorkflow(self._workflow.to_model()),
+            workflow=CreateOrderModelWorkflow(self.__workflow._to_model()),
             userFilters=[
-                CreateOrderModelUserFiltersInner(user_filter.to_model())
-                for user_filter in self._user_filters
+                CreateOrderModelUserFiltersInner(user_filter._to_model())
+                for user_filter in self.__user_filters
             ],
-            referee=CreateOrderModelReferee(self._referee.to_model()),
-            validationSetId=self._validation_set_id,
+            referee=CreateOrderModelReferee(self.__referee._to_model()),
+            validationSetId=self.__validation_set_id,
             featureFlags=(
-                [setting.to_feature_flag() for setting in self._settings]
-                if self._settings is not None
+                [setting._to_feature_flag() for setting in self.__settings]
+                if self.__settings is not None
                 else None
             ),
             selections=[
-                CappedSelectionSelectionsInner(selection.to_model())
-                for selection in self._selections
+                CappedSelectionSelectionsInner(selection._to_model())
+                for selection in self.__selections
             ],
-            priority=self._priority,
+            priority=self.__priority,
         )
 
-    def create(self, max_upload_workers: int = 10) -> RapidataOrder:
+    def _create(self, max_upload_workers: int = 10) -> RapidataOrder:
         """
         Create the Rapidata order by making the necessary API calls based on the builder's configuration.
 
@@ -128,45 +126,45 @@ class RapidataOrderBuilder:
         """
         order_model = self._to_model()
         if isinstance(
-            self._workflow, CompareWorkflow
+            self.__workflow, CompareWorkflow
         ):  # Temporary fix; will be handled by backend in the future
             assert all(
-                isinstance(item, MultiAsset) for item in self._assets
+                isinstance(item, MultiAsset) for item in self.__assets
             ), "The media paths must be of type MultiAsset for comparison tasks."
 
-        result = self._openapi_service.order_api.order_create_post(
+        result = self.__openapi_service.order_api.order_create_post(
             create_order_model=order_model
         )
 
         self.order_id = result.order_id
 
-        self._dataset = (
-            RapidataDataset(result.dataset_id, self._openapi_service)
+        self.__dataset = (
+            RapidataDataset(result.dataset_id, self.__openapi_service)
             if result.dataset_id
             else None
         )
 
         order = RapidataOrder(
             order_id=self.order_id,
-            dataset=self._dataset,
-            openapi_service=self._openapi_service,
+            dataset=self.__dataset,
+            openapi_service=self.__openapi_service,
             name=self._name,
         )
 
-        if all(isinstance(item, MediaAsset) for item in self._assets) and order.dataset:
-            assets = cast(list[MediaAsset], self._assets)
-            order.dataset.add_media_from_paths(assets, self._metadata, max_upload_workers)
+        if all(isinstance(item, MediaAsset) for item in self.__assets) and order.dataset:
+            assets = cast(list[MediaAsset], self.__assets)
+            order.dataset._add_media_from_paths(assets, self.__metadata, max_upload_workers)
 
         elif (
-            all(isinstance(item, TextAsset) for item in self._assets) and order.dataset
+            all(isinstance(item, TextAsset) for item in self.__assets) and order.dataset
         ):
-            assets = cast(list[TextAsset], self._assets)
-            order.dataset.add_texts(assets)
+            assets = cast(list[TextAsset], self.__assets)
+            order.dataset._add_texts(assets)
 
         elif (
-            all(isinstance(item, MultiAsset) for item in self._assets) and order.dataset
+            all(isinstance(item, MultiAsset) for item in self.__assets) and order.dataset
         ):
-            multi_assets = cast(list[MultiAsset], self._assets)
+            multi_assets = cast(list[MultiAsset], self.__assets)
 
             # Check if all MultiAssets contain the same type of assets
             first_asset_type = type(multi_assets[0].assets[0])
@@ -181,12 +179,12 @@ class RapidataOrderBuilder:
 
             # Process based on the asset type
             if issubclass(first_asset_type, MediaAsset):
-                order.dataset.add_media_from_paths(
-                    multi_assets, self._metadata, max_upload_workers
+                order.dataset._add_media_from_paths(
+                    multi_assets, self.__metadata, max_upload_workers
                 )
 
             elif issubclass(first_asset_type, TextAsset):
-                order.dataset.add_texts(multi_assets)
+                order.dataset._add_texts(multi_assets)
 
             else:
                 raise ValueError(
@@ -200,7 +198,7 @@ class RapidataOrderBuilder:
 
         return order
 
-    def workflow(self, workflow: Workflow) -> "RapidataOrderBuilder":
+    def _workflow(self, workflow: Workflow) -> "RapidataOrderBuilder":
         """
         Set the workflow for the order.
 
@@ -213,10 +211,10 @@ class RapidataOrderBuilder:
         if not isinstance(workflow, Workflow):
             raise TypeError("Workflow must be of type Workflow.")
 
-        self._workflow = workflow
+        self.__workflow = workflow
         return self
 
-    def referee(self, referee: Referee) -> "RapidataOrderBuilder":
+    def _referee(self, referee: Referee) -> "RapidataOrderBuilder":
         """
         Set the referee for the order.
 
@@ -229,10 +227,10 @@ class RapidataOrderBuilder:
         if not isinstance(referee, Referee):
             raise TypeError("Referee must be of type Referee.")
 
-        self._referee = referee
+        self.__referee = referee
         return self
 
-    def media(
+    def _media(
         self,
         asset: Sequence[BaseAsset],
         metadata: Sequence[Metadata] | None = None,
@@ -261,11 +259,11 @@ class RapidataOrderBuilder:
                 if not isinstance(data, Metadata):
                     raise TypeError("Metadata must be of type Metadata.")
 
-        self._assets = asset
-        self._metadata = metadata
+        self.__assets = asset
+        self.__metadata = metadata
         return self
 
-    def settings(self, settings: Sequence[RapidataSetting]) -> "RapidataOrderBuilder":
+    def _settings(self, settings: Sequence[RapidataSetting]) -> "RapidataOrderBuilder":
         """
         Set the settings for the order.
 
@@ -283,10 +281,10 @@ class RapidataOrderBuilder:
             if not isinstance(s, RapidataSetting):
                 raise TypeError("The settings list must only contain Setting objects.")
 
-        self._settings = settings
+        self.__settings = settings
         return self
 
-    def filters(self, filters: Sequence[RapidataFilter]) -> "RapidataOrderBuilder":
+    def _filters(self, filters: Sequence[RapidataFilter]) -> "RapidataOrderBuilder":
         """
         Set the filters for the order, e.g., country, language, userscore, etc.
 
@@ -303,13 +301,13 @@ class RapidataOrderBuilder:
             if not isinstance(f, RapidataFilter):
                 raise TypeError("Filters must be of type Filter.")
 
-        if len(self._user_filters) > 0:
+        if len(self.__user_filters) > 0:
             print("Overwriting existing user filters.")
 
-        self._user_filters = filters
+        self.__user_filters = filters
         return self
 
-    def aggregator(self, aggregator: AggregatorType) -> "RapidataOrderBuilder":
+    def _aggregator(self, aggregator: AggregatorType) -> "RapidataOrderBuilder":
         """
         Set the aggregator for the order.
 
@@ -322,10 +320,10 @@ class RapidataOrderBuilder:
         if not isinstance(aggregator, AggregatorType):
             raise TypeError("Aggregator must be of type AggregatorType.")
 
-        self._aggregator = aggregator
+        self.__aggregator = aggregator
         return self
 
-    def validation_set_id(self, validation_set_id: str) -> "RapidataOrderBuilder":
+    def _validation_set_id(self, validation_set_id: str) -> "RapidataOrderBuilder":
         """
         Set the validation set ID for the order.
 
@@ -338,10 +336,10 @@ class RapidataOrderBuilder:
         if not isinstance(validation_set_id, str):
             raise TypeError("Validation set ID must be of type str.")
 
-        self._validation_set_id = validation_set_id
+        self.__validation_set_id = validation_set_id
         return self
 
-    def rapids_per_bag(self, amount: int) -> "RapidataOrderBuilder":
+    def _rapids_per_bag(self, amount: int) -> "RapidataOrderBuilder":
         """
         Define the number of tasks a user sees in a single session.
 
@@ -356,7 +354,7 @@ class RapidataOrderBuilder:
         """
         raise NotImplementedError("Not implemented yet.")
 
-    def selections(self, selections: Sequence[RapidataSelection]) -> "RapidataOrderBuilder":
+    def _selections(self, selections: Sequence[RapidataSelection]) -> "RapidataOrderBuilder":
         """
         Set the selections for the order.
 
@@ -375,10 +373,10 @@ class RapidataOrderBuilder:
             if not isinstance(selection, RapidataSelection):
                 raise TypeError("Selections must be of type Selection.")
 
-        self._selections = selections  # type: ignore
+        self.__selections = selections  # type: ignore
         return self
 
-    def priority(self, priority: int) -> "RapidataOrderBuilder":
+    def _priority(self, priority: int) -> "RapidataOrderBuilder":
         """
         Set the priority for the order.
 
@@ -391,5 +389,5 @@ class RapidataOrderBuilder:
         if not isinstance(priority, int):
             raise TypeError("Priority must be of type int.")
 
-        self._priority = priority
+        self.__priority = priority
         return self

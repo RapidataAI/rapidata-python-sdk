@@ -1,5 +1,5 @@
 from rapidata.api_client.models.naive_referee_model import NaiveRefereeModel
-from rapidata.rapidata_client.referee.base_referee import Referee
+from rapidata.rapidata_client.referee._base_referee import Referee
 
 
 class NaiveReferee(Referee):
@@ -25,11 +25,11 @@ class NaiveReferee(Referee):
         super().__init__()
         self.responses = responses
 
-    def to_dict(self):
+    def _to_dict(self):
         return {
             "_t": "NaiveRefereeConfig",
             "guessesRequired": self.responses,
         }
 
-    def to_model(self):
+    def _to_model(self):
         return NaiveRefereeModel(_t="NaiveReferee", totalVotes=self.responses)

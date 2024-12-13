@@ -1,4 +1,4 @@
-from rapidata.rapidata_client.selection.base_selection import RapidataSelection
+from rapidata.rapidata_client.selection._base_selection import RapidataSelection
 from rapidata.api_client.models.conditional_validation_rapid_selection_config import (
     ValidationChance,
 )
@@ -37,7 +37,7 @@ class ConditionalValidationSelection(RapidataSelection):
         self.chances = chances
         self.rapid_counts = rapid_counts
 
-    def to_model(self):
+    def _to_model(self):
         return ConditionalValidationSelectionModel(
             _t="ConditionalValidationSelection",
             validationSetId=self.validation_set_id,

@@ -3,7 +3,7 @@
 Defines the MultiAsset class for handling multiple BaseAsset instances.
 """
 
-from rapidata.rapidata_client.assets.base_asset import BaseAsset
+from rapidata.rapidata_client.assets._base_asset import BaseAsset
 from rapidata.rapidata_client.assets import MediaAsset, TextAsset
 from typing import Iterator, Sequence
 

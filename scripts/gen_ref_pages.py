@@ -11,8 +11,14 @@ src = root / "src"
 
 for path in sorted(src.rglob("*.py")):
     module_path = path.relative_to(src).with_suffix("")
+    
+    # Skip files that start with underscore
+    if any(part.startswith('_') for part in module_path.parts):
+        continue
+        
     if "rapidata_client" not in str(module_path):
         continue
+        
     doc_path = path.relative_to(src).with_suffix(".md")
     full_doc_path = Path("reference", doc_path)
 

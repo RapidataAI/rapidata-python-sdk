@@ -16,7 +16,8 @@ class RapidataClient:
         oauth_scope: str = "openid",
         cert_path: str | None = None,
     ):
-        """Initialize the RapidataClient. Best practice is to store the client ID and client secret in environment variables. Ask your Rapidata representative for the client ID and client secret.
+        """Initialize the RapidataClient. If both the client_id and client_secret are None, it will try using your credentials under "~/.config/rapidata/credentials.json". 
+        If this is not successful, it will open a browser windown and ask you to log in, then save your new credentials in said json file.
 
         Args:
             client_id (str): The client ID for authentication.

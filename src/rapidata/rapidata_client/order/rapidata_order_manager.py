@@ -1,37 +1,35 @@
+from typing import Sequence
+from urllib3._collections import HTTPHeaderDict
+
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.assets.data_type_enum import RapidataDataTypes
-
+from rapidata.rapidata_client.assets import MediaAsset, TextAsset, MultiAsset
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
-from rapidata.rapidata_client.order.rapidata_order_builder import RapidataOrderBuilder
+from rapidata.rapidata_client.order._rapidata_order_builder import RapidataOrderBuilder
 from rapidata.rapidata_client.metadata import PromptMetadata, SelectWordsMetadata
-from rapidata.rapidata_client.referee.naive_referee import NaiveReferee
-from rapidata.rapidata_client.referee.early_stopping_referee import EarlyStoppingReferee
-from rapidata.rapidata_client.selection.base_selection import RapidataSelection
+from rapidata.rapidata_client.referee._naive_referee import NaiveReferee
+from rapidata.rapidata_client.referee._early_stopping_referee import EarlyStoppingReferee
+from rapidata.rapidata_client.selection._base_selection import RapidataSelection
+from rapidata.rapidata_client.selection.validation_selection import ValidationSelection
+from rapidata.rapidata_client.selection.labeling_selection import LabelingSelection
 from rapidata.rapidata_client.workflow import (
     ClassifyWorkflow,
     CompareWorkflow,
     FreeTextWorkflow,
-    SelectWordsWorkflow)
-from rapidata.rapidata_client.selection.validation_selection import ValidationSelection
-from rapidata.rapidata_client.selection.labeling_selection import LabelingSelection
-from rapidata.rapidata_client.assets import MediaAsset, TextAsset, MultiAsset
+    SelectWordsWorkflow
+)
 from rapidata.rapidata_client.filter import RapidataFilter
-from rapidata.rapidata_client.settings import RapidataSettings, RapidataSetting
-from typing import Sequence
-
 from rapidata.rapidata_client.filter.rapidata_filters import RapidataFilters
-from rapidata.rapidata_client.settings.settings import RapidataSettings
-
-from rapidata.rapidata_client.order.rapidata_dataset import RapidataDataset
+from rapidata.rapidata_client.settings import RapidataSettings, RapidataSetting
+from rapidata.rapidata_client.selection.rapidata_selections import RapidataSelections
 
 from rapidata.api_client.exceptions import BadRequestException
-from urllib3._collections import HTTPHeaderDict
-
 from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.page_info import PageInfo
 from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.filter import Filter
 from rapidata.api_client.models.sort_criterion import SortCriterion
+
 
 class RapidataOrderManager:
 
@@ -39,13 +37,14 @@ class RapidataOrderManager:
         self.openapi_service = openapi_service
         self.filters = RapidataFilters
         self.settings = RapidataSettings
+        self.selections = RapidataSelections
 
-    def _get_selections(self, validation_set_id: str | None, labeling_amount=3) -> Sequence[RapidataSelection]:
+    def __get_selections(self, validation_set_id: str | None, labeling_amount=3) -> Sequence[RapidataSelection]:
         if validation_set_id:
             return [ValidationSelection(validation_set_id=validation_set_id), LabelingSelection(amount=labeling_amount-1)]
         return [LabelingSelection(amount=labeling_amount)]
     
-    def _create_general_order(self,
+    def __create_general_order(self,
             name: str,
             workflow: ClassifyWorkflow | CompareWorkflow | FreeTextWorkflow | SelectWordsWorkflow,
             assets: list[MediaAsset] | list[TextAsset] | list[MultiAsset],
@@ -87,7 +86,7 @@ class RapidataOrderManager:
             print("Warning: You provided both selections and validation_set_id. Ignoring validation_set_id.")
         
         if selections is None:
-            selections = self._get_selections(validation_set_id, labeling_amount=default_labeling_amount)
+            selections = self.__get_selections(validation_set_id, labeling_amount=default_labeling_amount)
 
         prompts_metadata = [PromptMetadata(prompt=prompt) for prompt in prompts] if prompts else None
         sentence_metadata = [SelectWordsMetadata(select_words=sentence) for sentence in sentences] if sentences else None
@@ -95,20 +94,19 @@ class RapidataOrderManager:
         metadata = prompts_metadata or sentence_metadata or None
 
         order = (order_builder
-                 .workflow(workflow)
-                 .media(
+                 ._workflow(workflow)
+                 ._media(
                      asset=assets,
                      metadata=metadata
                      )
-                 .referee(referee)
-                 .filters(filters)
-                 .selections(selections) 
-                 .settings(settings)
-                 .create()
+                 ._referee(referee)
+                 ._filters(filters)
+                 ._selections(selections) 
+                 ._settings(settings)
+                 ._create()
                  )
         return order
         
-
     def create_classification_order(self,
             name: str,
             question: str,
@@ -150,9 +148,9 @@ class RapidataOrderManager:
         elif data_type == RapidataDataTypes.TEXT:
             assets = [TextAsset(text=text) for text in datapoints]
         else:
-            raise ValueError(f"Unsupported data type: {data_type}, must be one of {RapidataDataTypes.possible_values()}")
+            raise ValueError(f"Unsupported data type: {data_type}, must be one of {RapidataDataTypes._possible_values()}")
         
-        return self._create_general_order(
+        return self.__create_general_order(
             name=name,
             workflow=ClassifyWorkflow(
                 question=question,
@@ -208,9 +206,9 @@ class RapidataOrderManager:
         elif data_type == RapidataDataTypes.TEXT:
             assets = [MultiAsset([TextAsset(text=text) for text in datapoint]) for datapoint in datapoints]
         else:
-            raise ValueError(f"Unsupported data type: {data_type}, must be one of {RapidataDataTypes.possible_values()}")
+            raise ValueError(f"Unsupported data type: {data_type}, must be one of {RapidataDataTypes._possible_values()}")
         
-        return self._create_general_order(
+        return self.__create_general_order(
             name=name,
             workflow=CompareWorkflow(
                 criteria=criteria
@@ -255,9 +253,9 @@ class RapidataOrderManager:
         elif data_type == RapidataDataTypes.TEXT:
             assets = [TextAsset(text=text) for text in datapoints]
         else:
-            raise ValueError(f"Unsupported data type: {data_type}, must be one of {RapidataDataTypes.possible_values()}")
+            raise ValueError(f"Unsupported data type: {data_type}, must be one of {RapidataDataTypes._possible_values()}")
 
-        return self._create_general_order(
+        return self.__create_general_order(
             name=name,
             workflow=FreeTextWorkflow(
                 question=question
@@ -300,7 +298,7 @@ class RapidataOrderManager:
 
         assets = [MediaAsset(path=path) for path in datapoints]
         
-        return self._create_general_order(
+        return self.__create_general_order(
             name=name,
             workflow=SelectWordsWorkflow(
                 instruction=instruction
@@ -330,9 +328,7 @@ class RapidataOrderManager:
         except Exception:
             raise ValueError(f"Order with ID {order_id} not found.")
 
-        temp_dataset = RapidataDataset("temp", self.openapi_service)
         return RapidataOrder(
-            dataset=temp_dataset, 
             order_id=order_id, 
             name=order.order_name,
             openapi_service=self.openapi_service)

@@ -5,8 +5,7 @@ Defines the MediaAsset class for handling media file paths within assets.
 
 import os
 from io import BytesIO
-from rapidata.rapidata_client.assets.base_asset import BaseAsset
-from rapidata.rapidata_client.metadata.prompt_metadata import PromptMetadata
+from rapidata.rapidata_client.assets._base_asset import BaseAsset
 import requests
 import re
 
@@ -29,7 +28,7 @@ class MediaAsset(BaseAsset):
         'video/mp4',       # MP4
     ]
 
-    def __init__(self, path: str, prompt: str | None = None):
+    def __init__(self, path: str):
         """
         Initialize a MediaAsset instance.
 
@@ -43,14 +42,10 @@ class MediaAsset(BaseAsset):
         if not isinstance(path, str):
             raise ValueError("Media must be a string, either a local file path or a URL")
         
-        if not isinstance(prompt, str) and prompt is not None:
-            raise ValueError("Prompt must be a string or None")
-
-        self.prompt = PromptMetadata(prompt) if prompt else None
         if re.match(r'^https?://', path):
-            self.path = self._get_media_bytes(path)
+            self.path = self.__get_media_bytes(path)
             self.name = path.split('/')[-1]
-            self.name = self._check_name_ending(self.name)
+            self.name = self.__check_name_ending(self.name)
             return
         
         if not os.path.exists(path):
@@ -62,19 +57,19 @@ class MediaAsset(BaseAsset):
     def set_custom_name(self, name: str) -> 'MediaAsset':
         """Set a custom name for the media asset (only works with URLs)."""
         if isinstance(self.path, bytes):
-            self.name = self._check_name_ending(name)
+            self.name = self.__check_name_ending(name)
         else:
             raise ValueError("Custom name can only be set for URLs.")
         return self
     
-    def _check_name_ending(self, name: str) -> str:
+    def __check_name_ending(self, name: str) -> str:
         """Check if the media path is valid."""
         if not name.endswith(('.jpg', '.jpeg', '.png', '.gif', '.mp3', '.mp4', '.webp')):
             print("Warning: Supported file types: jpg, jpeg, png, gif, mp3, mp4. Image might not be displayed correctly.")
             name = name + '.jpg'
         return name
 
-    def _get_media_bytes(self, url: str) -> bytes:
+    def __get_media_bytes(self, url: str) -> bytes:
         """
         Downloads media files from URL and validates type and duration.
         

@@ -5,5 +5,5 @@ from typing import Any
 class RapidataSelection:
 
     @abstractmethod
-    def to_model(self) -> Any:
+    def _to_model(self) -> Any:
         pass

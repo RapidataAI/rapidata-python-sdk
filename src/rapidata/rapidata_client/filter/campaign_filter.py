@@ -1,5 +1,5 @@
 from typing import Any
-from rapidata.rapidata_client.filter.base_filter import RapidataFilter
+from rapidata.rapidata_client.filter._base_filter import RapidataFilter
 from rapidata.api_client.models.campaign_user_filter_model import (
     CampaignUserFilterModel,
 )
@@ -19,7 +19,7 @@ class CampaignFilter(RapidataFilter):
         """
         self.campaign_ids = campaign_ids
 
-    def to_model(self):
+    def _to_model(self):
         return CampaignUserFilterModel(
             _t="CampaignFilter",
             campaignIds=self.campaign_ids,

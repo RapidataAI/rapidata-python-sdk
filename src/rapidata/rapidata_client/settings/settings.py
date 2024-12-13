@@ -14,7 +14,7 @@ class RapidataSetting(BaseModel):
     key: str
     value: Any
 
-    def to_feature_flag(self) -> FeatureFlagModel:
+    def _to_feature_flag(self) -> FeatureFlagModel:
         return FeatureFlagModel(key=self.key, value=str(self.value))
 
 def alert_on_fast_response(milliseconds: int) -> RapidataSetting:
@@ -39,10 +39,10 @@ def translation_behaviour(behaviour: TranslationBehaviour = TranslationBehaviour
     Will not translate text datapoints or sentences.
     
     The behaviour can be set to:
-            - TranslationBehaviour.BOTH: Show both the original and the translated text.
-                Clutter the screen if the options are too long.
-            - TranslationBehaviour.ONLY_ORIGINAL: Show only the original text.
-            - TranslationBehaviour.ONLY_TRANSLATED: Show only the translated text.
+        - TranslationBehaviour.BOTH: Show both the original and the translated text.
+            Clutter the screen if the options are too long.
+        - TranslationBehaviour.ONLY_ORIGINAL: Show only the original text.
+        - TranslationBehaviour.ONLY_TRANSLATED: Show only the translated text.
 
     Args:
         behaviour (TranslationBehaviour): The translation behaviour. Defaults to TranslationBehaviour.BOTH."""

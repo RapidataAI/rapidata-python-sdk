@@ -34,10 +34,10 @@ from rapidata.api_client.models.polygon_truth import PolygonTruth
 from rapidata.api_client.models.transcription_payload import TranscriptionPayload
 from rapidata.api_client.models.transcription_truth import TranscriptionTruth
 from rapidata.api_client.models.transcription_word import TranscriptionWord
-from rapidata.rapidata_client.assets.media_asset import MediaAsset
-from rapidata.rapidata_client.assets.multi_asset import MultiAsset
-from rapidata.rapidata_client.assets.text_asset import TextAsset
-from rapidata.rapidata_client.metadata.base_metadata import Metadata
+from rapidata.rapidata_client.assets._media_asset import MediaAsset
+from rapidata.rapidata_client.assets._multi_asset import MultiAsset
+from rapidata.rapidata_client.assets._text_asset import TextAsset
+from rapidata.rapidata_client.metadata._base_metadata import Metadata
 from rapidata.service.openapi_service import OpenAPIService
 
 from typing import Sequence
@@ -51,10 +51,10 @@ class RapidataValidationSet:
 
     def __init__(self, validation_set_id, openapi_service: OpenAPIService, name: str):
         self.id = validation_set_id
-        self.openapi_service = openapi_service
         self.name = name
+        self.__openapi_service = openapi_service
 
-    def upload_files(self, model: AddValidationRapidModel, assets: list[MediaAsset]):
+    def __upload_files(self, model: AddValidationRapidModel, assets: list[MediaAsset]):
         """Upload a file to the validation set.
 
         Args:
@@ -68,7 +68,7 @@ class RapidataValidationSet:
                 files.append((asset.name, asset.path))
             else:
                 raise ValueError("upload file failed")
-        self.openapi_service.validation_api.validation_add_validation_rapid_post(
+        self.__openapi_service.validation_api.validation_add_validation_rapid_post(
             model=model, files=files
         )        
 
@@ -121,13 +121,13 @@ class RapidataValidationSet:
             payload=AddValidationRapidModelPayload(payload),
             truth=AddValidationRapidModelTruth(truths),
             metadata=[
-                DatapointMetadataModelMetadataInner(meta.to_model())
+                DatapointMetadataModelMetadataInner(meta._to_model())
                 for meta in metadata
             ],
             randomCorrectProbability=randomCorrectProbability,
         )
         if isinstance(asset, MediaAsset):
-            self.upload_files(model=model, assets=[asset])
+            self.__upload_files(model=model, assets=[asset])
 
         elif isinstance(asset, TextAsset):
             model = AddValidationTextRapidModel(
@@ -135,13 +135,13 @@ class RapidataValidationSet:
                 payload=AddValidationRapidModelPayload(payload),
                 truth=AddValidationRapidModelTruth(truths),
                 metadata=[
-                    DatapointMetadataModelMetadataInner(meta.to_model())
+                    DatapointMetadataModelMetadataInner(meta._to_model())
                     for meta in metadata
                 ],
                 randomCorrectProbability=randomCorrectProbability,
                 texts=[asset.text],
             )
-            self.openapi_service.validation_api.validation_add_validation_text_rapid_post(
+            self.__openapi_service.validation_api.validation_add_validation_text_rapid_post(
                 add_validation_text_rapid_model=model
             )
 
@@ -149,20 +149,20 @@ class RapidataValidationSet:
             files = [a for a in asset if isinstance(a, MediaAsset)]
             texts = [a.text for a in asset if isinstance(a, TextAsset)]
             if files:
-                self.upload_files(model=model, assets=files)
+                self.__upload_files(model=model, assets=files)
             if texts:
                 model = AddValidationTextRapidModel(
                     validationSetId=self.id,
                     payload=AddValidationRapidModelPayload(payload),
                     truth=AddValidationRapidModelTruth(truths),
                     metadata=[
-                        DatapointMetadataModelMetadataInner(meta.to_model())
+                        DatapointMetadataModelMetadataInner(meta._to_model())
                         for meta in metadata
                     ],
                     randomCorrectProbability=randomCorrectProbability,
                     texts=texts,
                 )
-                self.openapi_service.validation_api.validation_add_validation_text_rapid_post(
+                self.__openapi_service.validation_api.validation_add_validation_text_rapid_post(
                     add_validation_text_rapid_model=model
                 )
 
@@ -170,7 +170,7 @@ class RapidataValidationSet:
         else:
             raise ValueError("Invalid asset type")
 
-    def add_classify_rapid(
+    def _add_classify_rapid(
         self,
         asset: MediaAsset | TextAsset,
         question: str,
@@ -205,7 +205,7 @@ class RapidataValidationSet:
             randomCorrectProbability=len(truths) / len(categories),
         )
 
-    def add_compare_rapid(
+    def _add_compare_rapid(
         self,
         asset: MultiAsset,
         question: str,
@@ -242,7 +242,7 @@ class RapidataValidationSet:
             randomCorrectProbability=1 / len(asset),
         )
 
-    def add_transcription_rapid(
+    def _add_transcription_rapid(
         self,
         asset: MediaAsset | TextAsset,
         question: str,

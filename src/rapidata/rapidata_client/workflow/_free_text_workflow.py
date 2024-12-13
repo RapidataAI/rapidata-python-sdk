@@ -29,16 +29,16 @@ class FreeTextWorkflow(Workflow):
         super().__init__(type="SimpleWorkflowConfig")
         self._question = question
 
-    def to_dict(self) -> dict[str, Any]:
+    def _to_dict(self) -> dict[str, Any]:
         return {
-            **super().to_dict(),
+            **super()._to_dict(),
             "blueprint": {
                 "_t": "FreeTextBlueprint",
                 "question": self._question,
             },
         }
 
-    def to_model(self) -> SimpleWorkflowModel:
+    def _to_model(self) -> SimpleWorkflowModel:
         blueprint = FreeTextRapidBlueprint(
             _t="FreeTextBlueprint",
             question=self._question,

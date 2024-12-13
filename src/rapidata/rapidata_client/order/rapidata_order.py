@@ -1,5 +1,5 @@
 from time import sleep
-from rapidata.rapidata_client.order.rapidata_dataset import RapidataDataset
+from rapidata.rapidata_client.order._rapidata_dataset import RapidataDataset
 from rapidata.service.openapi_service import OpenAPIService
 import json
 from rapidata.api_client.exceptions import ApiException
@@ -13,32 +13,32 @@ class RapidataOrder:
 
     Args:
         order_id: The ID of the order.
-        dataset: The optional Dataset associated with the order.
         openapi_service: The OpenAPIService instance used to interact with the Rapidata API.
         name: The name of the order.
+        dataset: The optional Dataset associated with the order.
     """
 
     def __init__(
         self,
         order_id: str,
-        dataset: Optional[RapidataDataset],
         openapi_service: OpenAPIService,
         name: str,
+        dataset: Optional[RapidataDataset]=None,
     ):
-        self._openapi_service = openapi_service
         self.order_id = order_id
-        self._dataset = dataset
         self.name = name
-        self._workflow_id = None
+        self.__openapi_service = openapi_service
+        self.__dataset = dataset
+        self.__workflow_id = None
 
     def run(self, print_link: bool=True):
         """
         Runs the order for to start collecting votes.
         """
-        self._openapi_service.order_api.order_submit_post(self.order_id)
+        self.__openapi_service.order_api.order_submit_post(self.order_id)
 
         if print_link:
-            print(f"Order '{self.name}' is now viewable under: https://app.{self._openapi_service.enviroment}/order/detail/{self.order_id}")
+            print(f"Order '{self.name}' is now viewable under: https://app.{self.__openapi_service.enviroment}/order/detail/{self.order_id}")
         
         return self
     
@@ -46,7 +46,7 @@ class RapidataOrder:
         """
         Pauses the order.
         """
-        self._openapi_service.order_api.order_pause_post(self.order_id)
+        self.__openapi_service.order_api.order_pause_post(self.order_id)
         print(f"Order '{self}' has been paused.")
 
     def get_status(self) -> str:
@@ -56,14 +56,14 @@ class RapidataOrder:
         Returns: 
             The status of the order.
         """
-        return self._openapi_service.order_api.order_get_by_id_get(self.order_id).state
+        return self.__openapi_service.order_api.order_get_by_id_get(self.order_id).state
 
     def display_progress_bar(self, refresh_rate: int=5):
         """
         Displays a progress bar for the order processing using tqdm.
         
-        Prameter: 
-            How often to refresh the progress bar, in seconds.
+        Args: 
+            refresh_rate: How often to refresh the progress bar, in seconds.
         """
         if refresh_rate < 1:
             raise ValueError("refresh_rate must be at least 1")
@@ -71,7 +71,7 @@ class RapidataOrder:
         with tqdm(total=100, desc="Processing order", unit="%", bar_format="{desc}: {percentage:3.0f}%|{bar}| completed [{elapsed}<{remaining}, {rate_fmt}]") as pbar:
             last_percentage = 0
             while True:
-                current_percentage = self._get_workflow_progress().completion_percentage
+                current_percentage = self.__get_workflow_progress().completion_percentage
                 if current_percentage > last_percentage:
                     pbar.update(current_percentage - last_percentage)
                     last_percentage = current_percentage
@@ -81,28 +81,28 @@ class RapidataOrder:
 
                 sleep(refresh_rate)
 
-    def _get_workflow_id(self):
-        if self._workflow_id:
-            return self._workflow_id
+    def __get_workflow_id(self):
+        if self.__workflow_id:
+            return self.__workflow_id
 
         for _ in range(10):
             try:
-                order_result = self._openapi_service.order_api.order_get_by_id_get(self.order_id)
-                pipeline = self._openapi_service.pipeline_api.pipeline_id_get(order_result.pipeline_id)
-                self._workflow_id = cast(WorkflowArtifactModel, pipeline.artifacts["workflow-artifact"].actual_instance).workflow_id
+                order_result = self.__openapi_service.order_api.order_get_by_id_get(self.order_id)
+                pipeline = self.__openapi_service.pipeline_api.pipeline_id_get(order_result.pipeline_id)
+                self.__workflow_id = cast(WorkflowArtifactModel, pipeline.artifacts["workflow-artifact"].actual_instance).workflow_id
                 break
             except Exception:
                 sleep(2)
-        if not self._workflow_id:
+        if not self.__workflow_id:
             raise Exception("Order has not started yet. Please start it or wait for a few seconds and try again.")
-        return self._workflow_id
+        return self.__workflow_id
     
-    def _get_workflow_progress(self):
-        workflow_id = self._get_workflow_id()
+    def __get_workflow_progress(self):
+        workflow_id = self.__get_workflow_id()
         progress = None
         for _ in range(2):
             try:
-                progress = self._openapi_service.workflow_api.workflow_get_progress_get(workflow_id)
+                progress = self.__openapi_service.workflow_api.workflow_get_progress_get(workflow_id)
                 break
             except Exception:
                 sleep(5)
@@ -126,7 +126,7 @@ class RapidataOrder:
 
         try:
             # Get the raw result string
-            result_str = self._openapi_service.order_api.order_result_get(id=self.order_id)
+            result_str = self.__openapi_service.order_api.order_result_get(id=self.order_id)
             # Parse the result string as JSON
             return json.loads(result_str)
         except ApiException as e:
@@ -143,7 +143,7 @@ class RapidataOrder:
         Returns: 
             The RapidataDataset instance.
         """
-        return self._dataset
+        return self.__dataset
     
     def __str__(self) -> str:
         return f"name: '{self.name}' order id: {self.order_id}"

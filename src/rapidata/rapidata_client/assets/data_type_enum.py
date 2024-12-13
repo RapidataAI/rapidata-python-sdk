@@ -3,5 +3,5 @@ class RapidataDataTypes:
     TEXT = "text"
 
     @classmethod
-    def possible_values(cls):
+    def _possible_values(cls):
         return [cls.MEDIA, cls.TEXT]

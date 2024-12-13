@@ -19,10 +19,10 @@ from rapidata.api_client.models.polygon_payload import PolygonPayload
 from rapidata.api_client.models.polygon_truth import PolygonTruth
 from rapidata.api_client.models.transcription_payload import TranscriptionPayload
 from rapidata.api_client.models.transcription_truth import TranscriptionTruth
-from rapidata.rapidata_client.assets.media_asset import MediaAsset
-from rapidata.rapidata_client.assets.multi_asset import MultiAsset
-from rapidata.rapidata_client.assets.text_asset import TextAsset
-from rapidata.rapidata_client.metadata.base_metadata import Metadata
+from rapidata.rapidata_client.assets._media_asset import MediaAsset
+from rapidata.rapidata_client.assets._multi_asset import MultiAsset
+from rapidata.rapidata_client.assets._text_asset import TextAsset
+from rapidata.rapidata_client.metadata._base_metadata import Metadata
 from typing import Sequence
 
 

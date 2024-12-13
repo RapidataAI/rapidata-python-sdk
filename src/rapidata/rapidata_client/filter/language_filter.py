@@ -1,5 +1,5 @@
 from typing import Any
-from rapidata.rapidata_client.filter.base_filter import RapidataFilter
+from rapidata.rapidata_client.filter._base_filter import RapidataFilter
 from rapidata.api_client.models.language_user_filter_model import (
     LanguageUserFilterModel,
 )
@@ -31,5 +31,5 @@ class LanguageFilter(RapidataFilter):
 
         self.languages = language_codes
 
-    def to_model(self):
+    def _to_model(self):
         return LanguageUserFilterModel(_t="LanguageFilter", languages=self.languages)

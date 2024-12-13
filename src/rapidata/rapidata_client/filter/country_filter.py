@@ -1,5 +1,5 @@
 from typing import Any
-from rapidata.rapidata_client.filter.base_filter import RapidataFilter
+from rapidata.rapidata_client.filter._base_filter import RapidataFilter
 from rapidata.api_client.models.country_user_filter_model import CountryUserFilterModel
 
 
@@ -24,5 +24,5 @@ class CountryFilter(RapidataFilter):
 
         self.country_codes = country_codes
 
-    def to_model(self):
+    def _to_model(self):
         return CountryUserFilterModel(_t="CountryFilter", countries=self.country_codes)

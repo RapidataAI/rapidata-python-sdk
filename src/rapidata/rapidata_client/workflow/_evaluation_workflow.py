@@ -1,5 +1,5 @@
 from rapidata.api_client.models.evaluation_workflow_model import EvaluationWorkflowModel
-from rapidata.rapidata_client.workflow.base_workflow import Workflow
+from rapidata.rapidata_client.workflow._base_workflow import Workflow
 
 
 class EvaluationWorkflow(Workflow):
@@ -17,7 +17,7 @@ class EvaluationWorkflow(Workflow):
         self.validation_set_id = validation_set_id
         self.should_accept_incorrect = should_accept_incorrect
 
-    def to_model(self):
+    def _to_model(self):
         return EvaluationWorkflowModel(
             _t="EvaluationWorkflow",
             validationSetId=self.validation_set_id,

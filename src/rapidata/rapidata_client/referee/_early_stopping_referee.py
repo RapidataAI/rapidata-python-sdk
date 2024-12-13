@@ -1,5 +1,5 @@
 from typing import Any
-from rapidata.rapidata_client.referee.base_referee import Referee
+from rapidata.rapidata_client.referee._base_referee import Referee
 from rapidata.api_client.models.early_stopping_referee_model import (
     EarlyStoppingRefereeModel,
 )
@@ -40,14 +40,14 @@ class EarlyStoppingReferee(Referee):
         self.threshold = threshold
         self.max_vote_count = max_vote_count
 
-    def to_dict(self):
+    def _to_dict(self):
         return {
             "_t": "ProbabilisticAttachCategoryRefereeConfig",
             "threshold": self.threshold,
             "maxVotes": self.max_vote_count,
         }
 
-    def to_model(self) -> Any:
+    def _to_model(self) -> Any:
         return EarlyStoppingRefereeModel(
             _t="EarlyStoppingReferee",
             threshold=self.threshold,

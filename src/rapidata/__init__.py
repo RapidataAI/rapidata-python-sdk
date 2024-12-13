@@ -5,8 +5,6 @@ from .rapidata_client import (
     ValidationSelection,
     ConditionalValidationSelection,
     CappedSelection,
-    PrivateTextMetadata,
-    PublicTextMetadata,
     RapidataSettings,
     TranslationBehaviour,
     CountryCodes,
