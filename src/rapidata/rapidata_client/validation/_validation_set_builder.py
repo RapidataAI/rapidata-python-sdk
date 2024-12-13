@@ -11,12 +11,10 @@ from rapidata.api_client.models.locate_box_truth import LocateBoxTruth
 from rapidata.api_client.models.line_payload import LinePayload
 from rapidata.api_client.models.bounding_box_truth import BoundingBoxTruth
 from rapidata.api_client.models.box_shape import BoxShape
-from rapidata.rapidata_client.assets.media_asset import MediaAsset
-from rapidata.rapidata_client.assets.multi_asset import MultiAsset
-from rapidata.rapidata_client.assets.text_asset import TextAsset
 from rapidata.rapidata_client.validation.rapidata_validation_set import (
     RapidataValidationSet,
 )
+from rapidata.rapidata_client.assets import MediaAsset, TextAsset, MultiAsset
 from rapidata.rapidata_client.validation._validation_rapid_parts import ValidatioRapidParts
 from rapidata.rapidata_client.metadata._base_metadata import Metadata
 from rapidata.service.openapi_service import OpenAPIService
@@ -102,19 +100,19 @@ class ValidationSetBuilder:
             raise ValueError("This method only accepts Rapid instances")
         
         elif isinstance(rapid, ClassificationRapid):
-            self._add_classify_rapid(rapid.asset, rapid.question, rapid.options, rapid.truths, rapid.metadata)
+            self.__add_classify_rapid(rapid.asset, rapid.instruction, rapid.answer_options, rapid.truths, rapid.metadata)
 
         elif isinstance(rapid, CompareRapid):
-            self._add_compare_rapid(rapid.asset, rapid.criteria, rapid.truth, rapid.metadata)
+            self.__add_compare_rapid(rapid.asset, rapid.instruction, rapid.truth, rapid.metadata)
 
         elif isinstance(rapid, SelectWordsRapid):
-            self._add_select_words_rapid(rapid.asset, rapid.instruction, rapid.sentence, rapid.truths, rapid.strict_grading)
+            self.__add_select_words_rapid(rapid.asset, rapid.instruction, rapid.sentence, rapid.truths, rapid.strict_grading)
         
         elif isinstance(rapid, LocateRapid):
-            self._add_locate_rapid(rapid.target, rapid.asset, rapid.truths)
+            self.__add_locate_rapid(rapid.asset, rapid.instruction, rapid.truths)
 
         elif isinstance(rapid, DrawRapid):
-            self._add_draw_rapid(rapid.target, rapid.asset, rapid.truths)
+            self.__add_draw_rapid(rapid.asset, rapid.instruction, rapid.truths)
 
         else:
             raise ValueError("Unsupported rapid type")
@@ -259,16 +257,16 @@ class ValidationSetBuilder:
             )
         )
     
-    def _add_locate_rapid(
+    def __add_locate_rapid(
         self,
-        target: str,
         asset: MediaAsset,
+        instruction: str,
         truths: list[Box]
     ):
         """Add a locate rapid to the validation set.
 
         Args:
-            target (str): The target for the locate rapid.
+            instruction (str): The instruction for the locate rapid.
             asset (MediaAsset): The asset for the rapid.
             truths (list[Box]): The truths for the rapid.
 
@@ -276,7 +274,7 @@ class ValidationSetBuilder:
             ValidationSetBuilder: The ValidationSetBuilder instance.
         """
         payload = LocatePayload(
-            _t="LocatePayload", target=target
+            _t="LocatePayload", target=instruction
         )
 
         img_dimensions = asset.get_image_dimension()
@@ -299,7 +297,7 @@ class ValidationSetBuilder:
 
         self._rapid_parts.append(
             ValidatioRapidParts(
-                question=target,
+                instruction=instruction,
                 payload=payload,
                 truths=model_truth,
                 metadata=[],
@@ -308,16 +306,16 @@ class ValidationSetBuilder:
             )
         )
 
-    def _add_draw_rapid(
+    def __add_draw_rapid(
         self,
-        target: str,
         asset: MediaAsset,
+        instruction: str,
         truths: list[Box]
     ):
         """Add a draw rapid to the validation set.
 
         Args:
-            target (str): The target for the draw rapid.
+            instruction (str): The instruction for the draw rapid.
             asset (MediaAsset): The asset for the rapid.
             truths (list[Box]): The truths for the rapid.
 
@@ -326,7 +324,7 @@ class ValidationSetBuilder:
         """
 
         payload = LinePayload(
-            _t="LinePayload", target=target
+            _t="LinePayload", target=instruction
         )
 
         img_dimensions = asset.get_image_dimension()
@@ -346,7 +344,7 @@ class ValidationSetBuilder:
 
         self._rapid_parts.append(
             ValidatioRapidParts(
-                question=target,
+                instruction=instruction,
                 payload=payload,
                 truths=model_truth,
                 metadata=[],

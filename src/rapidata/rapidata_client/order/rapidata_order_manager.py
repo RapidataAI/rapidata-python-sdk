@@ -348,7 +348,7 @@ class RapidataOrderManager:
 
         assets = [MediaAsset(path=path) for path in datapoints]
 
-        return self._create_general_order(
+        return self.__create_general_order(
             name=name,
             workflow=LocateWorkflow(target=target),
             assets=assets,
@@ -390,7 +390,7 @@ class RapidataOrderManager:
 
         assets = [MediaAsset(path=path) for path in datapoints]
 
-        return self._create_general_order(
+        return self.__create_general_order(
             name=name,
             workflow=DrawWorkflow(target=target),
             assets=assets,
@@ -417,7 +417,6 @@ class RapidataOrderManager:
         except Exception:
             raise ValueError(f"Order with ID {order_id} not found.")
 
-        temp_dataset = RapidataDataset("temp", self._openapi_service)
         return RapidataOrder(
             order_id=order_id, 
             name=order.order_name,

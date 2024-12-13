@@ -45,8 +45,8 @@ class RapidsManager:
             raise ValueError(f"Unsupported data type: {data_type}")
 
         return ClassificationRapid(
-                question=instruction,
-                options=answer_options,
+                instruction=instruction,
+                answer_options=answer_options,
                 asset=asset,
                 truths=truths,
                 metadata=metadata,
@@ -79,7 +79,7 @@ class RapidsManager:
         asset = MultiAsset(assets)
 
         return CompareRapid(
-                criteria=instruction,
+                instruction=instruction,
                 asset=asset,
                 truth=truth,
                 metadata=metadata,
@@ -130,7 +130,7 @@ class RapidsManager:
         asset = MediaAsset(datapoint)
 
         return LocateRapid(
-                target=target,
+                instruction=target,
                 truths=truths,
                 asset=asset,
                 )
@@ -151,7 +151,7 @@ class RapidsManager:
         asset = MediaAsset(datapoint)
 
         return DrawRapid(
-                target=target,
+                instruction=target,
                 truths=truths,
                 asset=asset,
                 )

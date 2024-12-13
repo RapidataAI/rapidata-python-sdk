@@ -1,7 +1,7 @@
 from rapidata.api_client.models.simple_workflow_model import SimpleWorkflowModel
 from rapidata.api_client.models.simple_workflow_model_blueprint import SimpleWorkflowModelBlueprint
 from rapidata.api_client.models.line_rapid_blueprint import LineRapidBlueprint
-from rapidata.rapidata_client.workflow.base_workflow import Workflow
+from rapidata.rapidata_client.workflow._base_workflow import Workflow
 
 
 class DrawWorkflow(Workflow):
@@ -10,7 +10,7 @@ class DrawWorkflow(Workflow):
         super().__init__(type="SimpleWorkflowConfig")
         self._target = target
 
-    def to_model(self) -> SimpleWorkflowModel:
+    def _to_model(self) -> SimpleWorkflowModel:
         blueprint = LineRapidBlueprint(
             _t="LineBlueprint",
             target=self._target
