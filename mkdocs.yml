@@ -25,7 +25,7 @@ plugins:
             docstring_options:
               ignore_init_summary: true
             merge_init_into_class: true
-            show_if_no_docstring: true
+            show_if_no_docstring: false
   - gen-files:
       scripts:
         - scripts/gen_ref_pages.py

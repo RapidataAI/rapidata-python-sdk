@@ -55,7 +55,7 @@ class RapidataOrderManager:
             assets: list[MediaAsset] | list[TextAsset] | list[MultiAsset],
             data_type: str = RapidataDataTypes.MEDIA,
             responses_per_datapoint: int = 10,
-            prompts: list[str] | None = None,
+            contexts: list[str] | None = None,
             validation_set_id: str | None = None,
             confidence_threshold: float | None = None,
             filters: Sequence[RapidataFilter] = [],
@@ -65,17 +65,17 @@ class RapidataOrderManager:
             default_labeling_amount: int = 3
         ) -> RapidataOrder:
         
-        if prompts and len(prompts) != len(assets):
-            raise ValueError("Number of prompts must match number of datapoints")
+        if contexts and len(contexts) != len(assets):
+            raise ValueError("Number of contexts must match number of datapoints")
         
         if sentences and len(sentences) != len(assets):
             raise ValueError("Number of sentences must match number of datapoints")
         
-        if sentences and prompts:
-            raise ValueError("You can only use prompts or sentences, not both")
+        if sentences and contexts:
+            raise ValueError("You can only use contexts or sentences, not both")
         
-        if prompts and data_type == RapidataDataTypes.TEXT:
-            print("Warning: Prompts are not supported for text data type. Ignoring prompts.")
+        if contexts and data_type == RapidataDataTypes.TEXT:
+            print("Warning: Contexts are not supported for text data type. Ignoring contexts.")
 
         if not confidence_threshold:
             referee = NaiveReferee(responses=responses_per_datapoint)
@@ -93,7 +93,7 @@ class RapidataOrderManager:
         if selections is None:
             selections = self.__get_selections(validation_set_id, labeling_amount=default_labeling_amount)
 
-        prompts_metadata = [PromptMetadata(prompt=prompt) for prompt in prompts] if prompts else None
+        prompts_metadata = [PromptMetadata(prompt=prompt) for prompt in contexts] if contexts else None
         sentence_metadata = [SelectWordsMetadata(select_words=sentence) for sentence in sentences] if sentences else None
 
         metadata = prompts_metadata or sentence_metadata or None
@@ -119,7 +119,7 @@ class RapidataOrderManager:
             datapoints: list[str],
             data_type: str = RapidataDataTypes.MEDIA,
             responses_per_datapoint: int = 10,
-            prompts: list[str] | None = None,
+            contexts: list[str] | None = None,
             validation_set_id: str | None = None,
             confidence_threshold: float | None = None,
             filters: Sequence[RapidataFilter] = [],
@@ -136,7 +136,7 @@ class RapidataOrderManager:
             data_type (str, optional): The data type of the datapoints. Defaults to RapidataDataTypes.MEDIA. \n
                 Other option: RapidataDataTypes.TEXT ("text").
             responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
-            prompts (list[str], optional): The list of prompts for the classification. Defaults to None.\n
+            contexts (list[str], optional): The list of contexts for the classification. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the question and options. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
             validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
@@ -164,7 +164,7 @@ class RapidataOrderManager:
             assets=assets,
             data_type=data_type,
             responses_per_datapoint=responses_per_datapoint,
-            prompts=prompts,
+            contexts=contexts,
             validation_set_id=validation_set_id,
             confidence_threshold=confidence_threshold,
             filters=filters,
@@ -178,7 +178,7 @@ class RapidataOrderManager:
             datapoints: list[list[str]],
             data_type: str = RapidataDataTypes.MEDIA,
             responses_per_datapoint: int = 10,
-            prompts: list[str] | None = None,
+            contexts: list[str] | None = None,
             validation_set_id: str | None = None,
             confidence_threshold: float | None = None,
             filters: Sequence[RapidataFilter] = [],
@@ -194,7 +194,7 @@ class RapidataOrderManager:
             data_type (str, optional): The data type of the datapoints. Defaults to RapidataDataTypes.MEDIA. \n
                 Other option: RapidataDataTypes.TEXT ("text").
             responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
-            prompts (list[str], optional): The list of prompts for the comparison. Defaults to None.\n
+            contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the criteria. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
             validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
@@ -221,7 +221,7 @@ class RapidataOrderManager:
             assets=assets,
             data_type=data_type,
             responses_per_datapoint=responses_per_datapoint,
-            prompts=prompts,
+            contexts=contexts,
             validation_set_id=validation_set_id,
             confidence_threshold=confidence_threshold,
             filters=filters,
@@ -243,7 +243,7 @@ class RapidataOrderManager:
 
         Args:
             name (str): The name of the order.
-            question (str): The question to be answered by the free text. Will be shown along side each datapoint.
+            instruction (str): The instruction to answer with free text. Will be shown along side each datapoint.
             datapoints (list[str]): The list of datapoints for the free text - each datapoint will be labeled.
             data_type (str, optional): The data type of the datapoints. Defaults to RapidataDataTypes.MEDIA. \n
                 Other option: RapidataDataTypes.TEXT ("text").
@@ -323,7 +323,7 @@ class RapidataOrderManager:
             target: str,
             datapoints: list[str],
             responses_per_datapoint: int = 10,
-            prompts: list[str] | None = None,
+            contexts: list[str] | None = None,
             validation_set_id: str | None = None,
             filters: Sequence[RapidataFilter] = [],
             settings: Sequence[RapidataSetting] = [],
@@ -336,7 +336,7 @@ class RapidataOrderManager:
             target (str): The target what should be located. Will be shown along side each datapoint.
             datapoints (list[str]): The list of datapoints for the locate - each datapoint will be labeled.
             responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
-            prompts (list[str], optional): The list of prompts for the comparison. Defaults to None.\n
+            contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the criteria. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
             validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
@@ -353,7 +353,7 @@ class RapidataOrderManager:
             workflow=LocateWorkflow(target=target),
             assets=assets,
             responses_per_datapoint=responses_per_datapoint,
-            prompts=prompts,
+            contexts=contexts,
             validation_set_id=validation_set_id,
             filters=filters,
             selections=selections,
@@ -365,7 +365,7 @@ class RapidataOrderManager:
             target: str,
             datapoints: list[str],
             responses_per_datapoint: int = 10,
-            prompts: list[str] | None = None,
+            contexts: list[str] | None = None,
             validation_set_id: str | None = None,
             filters: Sequence[RapidataFilter] = [],
             settings: Sequence[RapidataSetting] = [],
@@ -378,7 +378,7 @@ class RapidataOrderManager:
             target (str): The target for how the lines should be drawn. Will be shown along side each datapoint.
             datapoints (list[str]): The list of datapoints for the draw lines - each datapoint will be labeled.
             responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
-            prompts (list[str], optional): The list of prompts for the comparison. Defaults to None.\n
+            contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the criteria. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
             validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
@@ -395,7 +395,7 @@ class RapidataOrderManager:
             workflow=DrawWorkflow(target=target),
             assets=assets,
             responses_per_datapoint=responses_per_datapoint,
-            prompts=prompts,
+            contexts=contexts,
             validation_set_id=validation_set_id,
             filters=filters,
             selections=selections,
