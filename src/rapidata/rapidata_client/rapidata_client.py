@@ -23,6 +23,10 @@ class RapidataClient:
             client_id (str): The client ID for authentication.
             client_secret (str): The client secret for authentication.
             enviroment (str, optional): The API endpoint.
+
+        Attributes:
+            order (RapidataOrderManager): The RapidataOrderManager instance.
+            validation (ValidationSetManager): The ValidationSetManager instance.
         """
         self._openapi_service = OpenAPIService(
             client_id=client_id,

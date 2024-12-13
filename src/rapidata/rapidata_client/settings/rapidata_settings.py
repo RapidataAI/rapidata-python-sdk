@@ -1,0 +1,28 @@
+from rapidata.rapidata_client.settings import (
+    AlertOnFastResponse,
+    TranslationBehaviour,
+    FreeTextMinimumCharacters,
+    NoShuffle,
+    PlayVideoUntilTheEnd,
+    CustomSettings,
+    )
+
+class RapidataSettings:
+    """Container class for all setting factory functions
+    
+    Attributes:
+        alert_on_fast_response (AlertOnFastResponse): The AlertOnFastResponse instance.
+        translation_behaviour (TranslationBehaviour): The TranslationBehaviour instance.
+        free_text_minimum_characters (FreeTextMinimumCharacters): The FreeTextMinimumCharacters instance.
+        no_shuffle (NoShuffle): The NoShuffle instance.
+        play_video_until_the_end (PlayVideoUntilTheEnd): The PlayVideoUntilTheEnd instance.
+        custom_settings (CustomSettings): The CustomSettings instance.
+    """
+
+    alert_on_fast_response = AlertOnFastResponse
+    translation_behaviour = TranslationBehaviour
+    free_text_minimum_characters = FreeTextMinimumCharacters
+    no_shuffle = NoShuffle
+    play_video_until_the_end = PlayVideoUntilTheEnd
+    custom_settings = CustomSettings
+

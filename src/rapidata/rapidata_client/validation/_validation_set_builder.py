@@ -142,6 +142,9 @@ class ValidationSetBuilder:
         Raises:
             ValueError: If the lengths of categories and truths are inconsistent.
         """
+        # if not all(truth in answer_options for truth in truths):
+        #     raise ValueError("Truths must be part of the answer options")
+
         payload = ClassifyPayload(
             _t="ClassifyPayload", possibleCategories=answer_options, title=instruction
         )
