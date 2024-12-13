@@ -23,7 +23,7 @@ def new_compare_order(rapi: RapidataClient):
         instruction="Which logo is better?",
         datapoints=[[concept_path, logo_path]],
         responses_per_datapoint=10,
-        prompts=["Hint: This is not a trick question"],
+        contexts=["Hint: This is not a trick question"],
         validation_set_id=validation_set.id
     ).run()
 

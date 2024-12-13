@@ -19,7 +19,7 @@ def new_cond_validation_rapid_order(rapi: RapidataClient):
         answer_options=["Fish", "Cat", "Wallaby", "Airplane"],
         truths=[["Wallaby"]],
         datapoints=["examples/data/wallaby.jpg"],
-        prompts=["Hint: It has a pouch"],
+        contexts=["Hint: It has a pouch"],
     )
     # configure order
     selections = [
@@ -37,7 +37,7 @@ def new_cond_validation_rapid_order(rapi: RapidataClient):
         answer_options=["Fish", "Cat", "Wallaby", "Airplane"],
         datapoints=["examples/data/wallaby.jpg"],
         responses_per_datapoint=3,
-        prompts=["Hint: It has a pouch"],
+        contexts=["Hint: It has a pouch"],
         selections=selections
     ).run()
 

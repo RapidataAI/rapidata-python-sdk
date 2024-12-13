@@ -1,7 +1,7 @@
 from typing import Any
 from rapidata.rapidata_client.filter._base_filter import RapidataFilter
 from rapidata.api_client.models.age_user_filter_model import AgeUserFilterModel
-from rapidata.api_client.models.age_group import AgeGroup
+from rapidata.rapidata_client.filter.models.age_group import AgeGroup
 
 
 class AgeFilter(RapidataFilter):
@@ -21,5 +21,5 @@ class AgeFilter(RapidataFilter):
     def _to_model(self):
         return AgeUserFilterModel(
             _t="AgeFilter",
-            ageGroups=self.age_groups,
+            ageGroups=[age_group._to_backend_model() for age_group in self.age_groups],
         )
