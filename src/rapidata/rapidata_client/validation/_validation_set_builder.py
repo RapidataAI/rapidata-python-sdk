@@ -6,6 +6,11 @@ from rapidata.api_client.models.compare_truth import CompareTruth
 from rapidata.api_client.models.transcription_payload import TranscriptionPayload
 from rapidata.api_client.models.transcription_truth import TranscriptionTruth
 from rapidata.api_client.models.transcription_word import TranscriptionWord
+from rapidata.api_client.models.locate_payload import LocatePayload
+from rapidata.api_client.models.locate_box_truth import LocateBoxTruth
+from rapidata.api_client.models.line_payload import LinePayload
+from rapidata.api_client.models.bounding_box_truth import BoundingBoxTruth
+from rapidata.api_client.models.box_shape import BoxShape
 from rapidata.rapidata_client.assets.media_asset import MediaAsset
 from rapidata.rapidata_client.assets.multi_asset import MultiAsset
 from rapidata.rapidata_client.assets.text_asset import TextAsset
@@ -96,14 +101,23 @@ class ValidationSetBuilder:
         if not isinstance(rapid, Rapid):
             raise ValueError("This method only accepts Rapid instances")
         
-        if isinstance(rapid, ClassificationRapid):
+        elif isinstance(rapid, ClassificationRapid):
             self._add_classify_rapid(rapid.asset, rapid.question, rapid.options, rapid.truths, rapid.metadata)
 
-        if isinstance(rapid, CompareRapid):
+        elif isinstance(rapid, CompareRapid):
             self._add_compare_rapid(rapid.asset, rapid.criteria, rapid.truth, rapid.metadata)
 
-        if isinstance(rapid, SelectWordsRapid):
+        elif isinstance(rapid, SelectWordsRapid):
             self._add_select_words_rapid(rapid.asset, rapid.instruction, rapid.sentence, rapid.truths, rapid.strict_grading)
+        
+        elif isinstance(rapid, LocateRapid):
+            self._add_locate_rapid(rapid.target, rapid.asset, rapid.truths)
+
+        elif isinstance(rapid, DrawRapid):
+            self._add_draw_rapid(rapid.target, rapid.asset, rapid.truths)
+
+        else:
+            raise ValueError("Unsupported rapid type")
 
         return self
     
