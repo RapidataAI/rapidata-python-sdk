@@ -173,7 +173,7 @@ class RapidataValidationSet:
     def _add_classify_rapid(
         self,
         asset: MediaAsset | TextAsset,
-        question: str,
+        instruction: str,
         categories: list[str],
         truths: list[str],
         metadata: Sequence[Metadata] = [],
@@ -182,7 +182,7 @@ class RapidataValidationSet:
 
         Args:
             asset (MediaAsset | TextAsset): The asset for the rapid.
-            question (str): The question for the rapid.
+            instruction (str): The instruction for the rapid.
             categories (list[str]): The list of categories for the rapid.
             truths (list[str]): The list of truths for the rapid.
             metadata (Sequence[Metadata], optional): The metadata for the rapid. Defaults to an empty list.
@@ -191,7 +191,7 @@ class RapidataValidationSet:
             None
         """
         payload = ClassifyPayload(
-            _t="ClassifyPayload", possibleCategories=categories, title=question
+            _t="ClassifyPayload", possibleCategories=categories, title=instruction
         )
         model_truth = AttachCategoryTruth(
             correctCategories=truths, _t="AttachCategoryTruth"
@@ -208,7 +208,7 @@ class RapidataValidationSet:
     def _add_compare_rapid(
         self,
         asset: MultiAsset,
-        question: str,
+        instruction: str,
         truth: str,
         metadata: Sequence[Metadata] = [],
     ) -> None:
@@ -216,7 +216,7 @@ class RapidataValidationSet:
 
         Args:
             asset (MultiAsset): The assets for the rapid.
-            question (str): The question for the rapid.
+            instruction (str): The instruction for the rapid.
             truth (str): The path to the truth file.
             metadata (Sequence[Metadata], optional): The metadata for the rapid. Defaults to an empty list.
 
@@ -226,7 +226,7 @@ class RapidataValidationSet:
         Raises:
             ValueError: If the number of assets is not exactly two.
         """
-        payload = ComparePayload(_t="ComparePayload", criteria=question)
+        payload = ComparePayload(_t="ComparePayload", criteria=instruction)
         # take only last part of truth path
         truth = os.path.basename(truth)
         model_truth = CompareTruth(_t="CompareTruth", winnerId=truth)
@@ -245,8 +245,8 @@ class RapidataValidationSet:
     def _add_transcription_rapid(
         self,
         asset: MediaAsset | TextAsset,
-        question: str,
-        transcription: list[str],
+        instruction: str,
+        text: list[str],
         correct_words: list[str],
         strict_grading: bool | None = None,
         metadata: Sequence[Metadata] = [],
@@ -255,8 +255,8 @@ class RapidataValidationSet:
 
         Args:
             asset (MediaAsset | TextAsset): The asset for the rapid.
-            question (str): The question for the rapid.
-            transcription (list[str]): The transcription for the rapid.
+            instruction (str): The instruction for the rapid.
+            text (list[str]): The text for the rapid.
             correct_words (list[str]): The list of correct words for the rapid.
             strict_grading (bool | None, optional): The strict grading for the rapid. Defaults to None.
             metadata (Sequence[Metadata], optional): The metadata for the rapid. Defaults to an empty list.
@@ -269,19 +269,19 @@ class RapidataValidationSet:
         """
         transcription_words = [
             TranscriptionWord(word=word, wordIndex=i)
-            for i, word in enumerate(transcription)
+            for i, word in enumerate(text)
         ]
 
         correct_transcription_words = []
         for word in correct_words:
-            if word not in transcription:
+            if word not in text:
                 raise ValueError(f"Correct word '{word}' not found in transcription")
             correct_transcription_words.append(
-                TranscriptionWord(word=word, wordIndex=transcription.index(word))
+                TranscriptionWord(word=word, wordIndex=text.index(word))
             )
 
         payload = TranscriptionPayload(
-            _t="TranscriptionPayload", title=question, transcription=transcription_words
+            _t="TranscriptionPayload", title=instruction, transcription=transcription_words
         )
 
         model_truth = TranscriptionTruth(
@@ -295,7 +295,7 @@ class RapidataValidationSet:
             truths=model_truth,
             metadata=metadata,
             asset=asset,
-            randomCorrectProbability=len(correct_words) / len(transcription),
+            randomCorrectProbability=len(correct_words) / len(text),
         )
 
     def __str__(self):

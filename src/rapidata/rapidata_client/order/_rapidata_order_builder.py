@@ -1,6 +1,3 @@
-from warnings import warn
-
-from rapidata.api_client.models.aggregator_type import AggregatorType
 from rapidata.api_client.models.capped_selection_selections_inner import (
     CappedSelectionSelectionsInner,
 )
@@ -15,12 +12,12 @@ from rapidata.api_client.models.create_order_model_workflow import (
     CreateOrderModelWorkflow,
 )
 
-from rapidata.rapidata_client.settings import RapidataSettings, RapidataSetting, TranslationBehaviour
+from rapidata.rapidata_client.settings import RapidataSetting
 from rapidata.rapidata_client.metadata._base_metadata import Metadata
 from rapidata.rapidata_client.order._rapidata_dataset import RapidataDataset
 from rapidata.rapidata_client.referee._naive_referee import NaiveReferee
 from rapidata.rapidata_client.selection._base_selection import RapidataSelection
-from rapidata.rapidata_client.filter import RapidataFilter, CountryFilter, LanguageFilter
+from rapidata.rapidata_client.filter import RapidataFilter
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 from rapidata.rapidata_client.referee import Referee
@@ -62,12 +59,10 @@ class RapidataOrderBuilder:
         self.__workflow: Workflow | None = None
         self.__referee: Referee | None = None
         self.__metadata: Sequence[Metadata] | None = None
-        self.__aggregator: AggregatorType | None = None
         self.__validation_set_id: str | None = None
         self.__settings: Sequence[RapidataSetting] | None = None
         self.__user_filters: list[RapidataFilter] = []
         self.__selections: list[RapidataSelection] = []
-        self.__rapids_per_bag: int = 2
         self.__priority: int = 50
         self.__assets: Sequence[BaseAsset] = []
 
@@ -305,22 +300,6 @@ class RapidataOrderBuilder:
             print("Overwriting existing user filters.")
 
         self.__user_filters = filters
-        return self
-
-    def _aggregator(self, aggregator: AggregatorType) -> "RapidataOrderBuilder":
-        """
-        Set the aggregator for the order.
-
-        Args:
-            aggregator (AggregatorType): The aggregator to be set.
-
-        Returns:
-            RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
-        """
-        if not isinstance(aggregator, AggregatorType):
-            raise TypeError("Aggregator must be of type AggregatorType.")
-
-        self.__aggregator = aggregator
         return self
 
     def _validation_set_id(self, validation_set_id: str) -> "RapidataOrderBuilder":

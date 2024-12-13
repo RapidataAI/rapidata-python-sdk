@@ -19,15 +19,15 @@ class CompareWorkflow(Workflow):
         criteria (str): The criteria to be used for comparison.
     """
 
-    def __init__(self, criteria: str):
+    def __init__(self, instruction: str):
         """
         Initialize a CompareWorkflow instance.
 
         Args:
-            criteria (str): The criteria to be used for comparison.
+            instruction (str): The instruction to compare.
         """
         super().__init__(type="CompareWorkflowConfig")
-        self._criteria = criteria
+        self._criteria = instruction
 
     def _to_dict(self) -> dict[str, Any]:
         return {

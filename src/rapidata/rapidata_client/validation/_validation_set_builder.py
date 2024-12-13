@@ -107,8 +107,8 @@ class ValidationSetBuilder:
     def __add_classify_rapid(
         self,
         asset: MediaAsset | TextAsset,
-        question: str,
-        categories: list[str],
+        instruction: str,
+        answer_options: list[str],
         truths: list[str],
         metadata: Sequence[Metadata] = [],
     ):
@@ -116,8 +116,8 @@ class ValidationSetBuilder:
 
         Args:
             asset (MediaAsset | TextAsset): The asset for the rapid.
-            question (str): The question for the rapid.
-            categories (list[str]): The list of categories for the rapid.
+            instruction (str): The instruction for the rapid.
+            answer_options (list[str]): The list of answer_options for the rapid.
             truths (list[str]): The list of truths for the rapid.
             metadata (Sequence[Metadata], optional): The metadata for the rapid. Defaults to an empty list.
 
@@ -128,7 +128,7 @@ class ValidationSetBuilder:
             ValueError: If the lengths of categories and truths are inconsistent.
         """
         payload = ClassifyPayload(
-            _t="ClassifyPayload", possibleCategories=categories, title=question
+            _t="ClassifyPayload", possibleCategories=answer_options, title=instruction
         )
         model_truth = AttachCategoryTruth(
             correctCategories=truths, _t="AttachCategoryTruth"
@@ -136,11 +136,11 @@ class ValidationSetBuilder:
 
         self._rapid_parts.append(
             ValidatioRapidParts(
-                question=question,
+                instruction=instruction,
                 payload=payload,
                 truths=model_truth,
                 metadata=metadata,
-                randomCorrectProbability=len(truths) / len(categories),
+                randomCorrectProbability=len(truths) / len(answer_options),
                 asset=asset,
             )
         )
@@ -148,7 +148,7 @@ class ValidationSetBuilder:
     def __add_compare_rapid(
         self,
         asset: MultiAsset,
-        criteria: str,
+        instruction: str,
         truth: str,
         metadata: Sequence[Metadata] = [],
     ):
@@ -156,7 +156,7 @@ class ValidationSetBuilder:
 
         Args:
             asset (MultiAsset): The assets for the rapid.
-            criteria (str): The criteria for the comparison.
+            instruction (str): The instruction for the comparison.
             truth (str): The truth identifier for the rapid.
             metadata (Sequence[Metadata], optional): The metadata for the rapid. Defaults to an empty list.
 
@@ -166,7 +166,7 @@ class ValidationSetBuilder:
         Raises:
             ValueError: If the number of assets is not exactly two.
         """
-        payload = ComparePayload(_t="ComparePayload", criteria=criteria)
+        payload = ComparePayload(_t="ComparePayload", criteria=instruction)
         # take only last part of truth path
         truth = os.path.basename(truth)
         model_truth = CompareTruth(_t="CompareTruth", winnerId=truth)
@@ -176,7 +176,7 @@ class ValidationSetBuilder:
 
         self._rapid_parts.append(
             ValidatioRapidParts(
-                question=criteria,
+                instruction=instruction,
                 payload=payload,
                 truths=model_truth,
                 metadata=metadata,
@@ -188,7 +188,7 @@ class ValidationSetBuilder:
     def __add_select_words_rapid(
         self,
         asset: MediaAsset | TextAsset,
-        question: str,
+        instruction: str,
         select_words: str,
         truths: list[int],
         strict_grading: bool | None = None,
@@ -198,7 +198,7 @@ class ValidationSetBuilder:
 
         Args:
             asset (MediaAsset | TextAsset): The asset for the rapid.
-            question (str): The question for the rapid.
+            instruction (str): The instruction for the rapid.
             select words (list[str]): The select words for the rapid.
             truths (list[int]): The list of indices of the true word selections.
             strict_grading (bool | None, optional): The strict grading for the rapid. Defaults to None.
@@ -222,7 +222,7 @@ class ValidationSetBuilder:
             true_words.append(transcription_words[idx])
 
         payload = TranscriptionPayload(
-            _t="TranscriptionPayload", title=question, transcription=transcription_words
+            _t="TranscriptionPayload", title=instruction, transcription=transcription_words
         )
 
         model_truth = TranscriptionTruth(
@@ -233,7 +233,7 @@ class ValidationSetBuilder:
 
         self._rapid_parts.append(
             ValidatioRapidParts(
-                question=question,
+                instruction=instruction,
                 asset=asset,
                 payload=payload,
                 truths=model_truth,

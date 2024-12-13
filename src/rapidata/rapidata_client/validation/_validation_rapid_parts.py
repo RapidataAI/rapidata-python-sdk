@@ -28,7 +28,7 @@ from typing import Sequence
 
 @dataclass
 class ValidatioRapidParts:
-    question: str
+    instruction: str
     asset: MediaAsset | TextAsset | MultiAsset
     payload: (
         BoundingBoxPayload

@@ -109,8 +109,8 @@ class RapidataOrderManager:
         
     def create_classification_order(self,
             name: str,
-            question: str,
-            options: list[str],
+            instruction: str,
+            answer_options: list[str],
             datapoints: list[str],
             data_type: str = RapidataDataTypes.MEDIA,
             responses_per_datapoint: int = 10,
@@ -124,9 +124,9 @@ class RapidataOrderManager:
         """Create a classification order.
         
         Args:
-            name (str): The name of the order.
-            question (str): The question for the classification.
-            options (list[str]): The list of options for the classification.
+            name (str): The name of the order. (Will not be shown to the labeler)
+            instruction (str): The instruction for how the data should be classified.
+            answer_options (list[str]): The list of options for the classification.
             datapoints (list[str]): The list of datapoints for the classification - each datapoint will be labeled.
             data_type (str, optional): The data type of the datapoints. Defaults to RapidataDataTypes.MEDIA. \n
                 Other option: RapidataDataTypes.TEXT ("text").
@@ -153,8 +153,8 @@ class RapidataOrderManager:
         return self.__create_general_order(
             name=name,
             workflow=ClassifyWorkflow(
-                question=question,
-                options=options
+                instruction=instruction,
+                answer_options=answer_options
             ),
             assets=assets,
             data_type=data_type,
@@ -169,7 +169,7 @@ class RapidataOrderManager:
     
     def create_compare_order(self,
             name: str,
-            criteria: str,
+            instruction: str,
             datapoints: list[list[str]],
             data_type: str = RapidataDataTypes.MEDIA,
             responses_per_datapoint: int = 10,
@@ -183,8 +183,8 @@ class RapidataOrderManager:
         """Create a compare order.
 
         Args:
-            name (str): The name of the order.
-            criteria (str): The criteria for the comparison. Will be shown along side each datapoint.
+            name (str): The name of the order. (Will not be shown to the labeler)
+            instruction (str): The instruction for the comparison. Will be shown along side each datapoint.
             datapoints (list[list[str]]): Outher list is the datapoints, inner list is the options for the comparison - each datapoint will be labeled.
             data_type (str, optional): The data type of the datapoints. Defaults to RapidataDataTypes.MEDIA. \n
                 Other option: RapidataDataTypes.TEXT ("text").
@@ -211,7 +211,7 @@ class RapidataOrderManager:
         return self.__create_general_order(
             name=name,
             workflow=CompareWorkflow(
-                criteria=criteria
+                instruction=instruction
             ),
             assets=assets,
             data_type=data_type,
@@ -226,7 +226,7 @@ class RapidataOrderManager:
     
     def create_free_text_order(self,
             name: str,
-            question: str,
+            instruction: str,
             datapoints: list[str],
             data_type: str = RapidataDataTypes.MEDIA,
             responses_per_datapoint: int = 10,
@@ -237,8 +237,8 @@ class RapidataOrderManager:
         """Create a free text order.
 
         Args:
-            name (str): The name of the order.
-            question (str): The question for the free text. Will be shown along side each datapoint.
+            name (str): The name of the order. (Will not be shown to the labeler)
+            question (str): The instruction for the free text. Will be shown along side each datapoint.
             datapoints (list[str]): The list of datapoints for the free text - each datapoint will be labeled.
             data_type (str, optional): The data type of the datapoints. Defaults to RapidataDataTypes.MEDIA. \n
                 Other option: RapidataDataTypes.TEXT ("text").
@@ -258,7 +258,7 @@ class RapidataOrderManager:
         return self.__create_general_order(
             name=name,
             workflow=FreeTextWorkflow(
-                question=question
+                instruction=instruction
             ),
             assets=assets,
             data_type=data_type,
@@ -283,7 +283,7 @@ class RapidataOrderManager:
         """Create a select words order.
 
         Args:
-            name (str): The name of the order.
+            name (str): The name of the order. (Will not be shown to the labeler)
             instruction (str): The instruction for the select words. Will be shown along side each datapoint.
             datapoints (list[str]): The list of datapoints for the select words - each datapoint will be labeled.
             sentences (list[str]): The list of sentences for the select words - Will be split up by spaces and shown along side each datapoint.\n

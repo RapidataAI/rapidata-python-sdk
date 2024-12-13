@@ -25,8 +25,8 @@ class ValidationSetManager:
 
     def create_classification_set(self,
         name: str,
-        question: str,
-        options: list[str],
+        instruction: str,
+        answer_options: list[str],
         datapoints: list[str],
         truths: list[list[str]],
         data_type: str = RapidataDataTypes.MEDIA,
@@ -36,9 +36,9 @@ class ValidationSetManager:
         """Create a classification validation set.
         
         Args:
-            name (str): The name of the validation set.
-            question (str): The question to ask the labeler.
-            options (list[str]): The options to choose from.
+            name (str): The name of the validation set. (will not be shown to the labeler)
+            instruction (str): The instruction by which the labeler will answer.
+            answer_options (list[str]): The options to choose from when answering.
             datapoints (list[str]): The datapoints that will be used for validation.
             truths (list[list[str]]): The truths for each datapoint. Outher list is for each datapoint, inner list is for each truth.\n
                 example:
@@ -60,9 +60,9 @@ class ValidationSetManager:
         rapids = []
         for i in range(len(datapoints)):
             rapids.append(
-                self.rapid.build_classification_rapid(
-                    question=question,
-                    options=options,
+                self.rapid.classification_rapid(
+                    instruction=instruction,
+                    answer_options=answer_options,
                     datapoint=datapoints[i],
                     truths=truths[i],
                     data_type=data_type,
@@ -78,7 +78,7 @@ class ValidationSetManager:
     
     def create_compare_set(self,
         name: str,
-        criteria: str,
+        instruction: str,
         datapoints: list[list[str]],
         truths: list[str],
         data_type: str = RapidataDataTypes.MEDIA,
@@ -88,8 +88,8 @@ class ValidationSetManager:
         """Create a comparison validation set.
 
         Args:
-            name (str): The name of the validation set.
-            criteria (str): The criteria to compare against.
+            name (str): The name of the validation set. (will not be shown to the labeler)
+            instruction (str): The instruction to compare against.
             truths (list[str]): The truths for each comparison. List is for each comparison.\n
                 example:
                     criteria: "Which image has a cat?"
@@ -113,8 +113,8 @@ class ValidationSetManager:
         rapids = []
         for i in range(len(datapoints)):
             rapids.append(
-                self.rapid.build_compare_rapid(
-                    criteria=criteria,
+                self.rapid.compare_rapid(
+                    instruction=instruction,
                     truth=truths[i],
                     datapoint=datapoints[i],
                     data_type=data_type,
@@ -140,7 +140,7 @@ class ValidationSetManager:
         """Create a select words validation set.
 
         Args:
-            name (str): The name of the validation set.
+            name (str): The name of the validation set. (will not be shown to the labeler)
             instruction (str): The instruction to show to the labeler.
             truths (list[list[int]]): The truths for each datapoint. Outher list is for each datapoint, inner list is for each truth.\n
                 example:
@@ -162,7 +162,7 @@ class ValidationSetManager:
         rapids = []
         for i in range(len(datapoints)):
             rapids.append(
-                self.rapid.build_select_words_rapid(
+                self.rapid.select_words_rapid(
                     instruction=instruction,
                     truths=truths[i],
                     datapoint=datapoints[i],
@@ -177,7 +177,7 @@ class ValidationSetManager:
 
         return validation_set_builder._submit(print_confirmation)
     
-    def create_rapid_set(self,
+    def create_mixed_set(self,
         name: str,
         rapids: Sequence[Rapid],
         print_confirmation: bool = True
@@ -185,7 +185,7 @@ class ValidationSetManager:
         """Create a validation set with a list of rapids.
 
         Args:
-            name (str): The name of the validation set.
+            name (str): The name of the validation set. (will not be shown to the labeler)
             rapids (Sequence[Rapid]): The list of rapids to add to the validation set.
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
         """
