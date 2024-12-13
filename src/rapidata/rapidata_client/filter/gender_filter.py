@@ -1,7 +1,7 @@
 from typing import Any
 from rapidata.rapidata_client.filter._base_filter import RapidataFilter
 from rapidata.api_client.models.gender_user_filter_model import GenderUserFilterModel
-from rapidata.api_client.models.gender import Gender
+from rapidata.rapidata_client.filter.models.gender import Gender
 
 
 class GenderFilter(RapidataFilter):
@@ -21,5 +21,5 @@ class GenderFilter(RapidataFilter):
     def _to_model(self):
         return GenderUserFilterModel(
             _t="GenderFilter",
-            genders=self.genders,
+            genders=[gender._to_backend_model() for gender in self.genders],
         )

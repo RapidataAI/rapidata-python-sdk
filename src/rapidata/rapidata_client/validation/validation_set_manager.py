@@ -32,7 +32,7 @@ class ValidationSetManager:
         datapoints: list[str],
         truths: list[list[str]],
         data_type: str = RapidataDataTypes.MEDIA,
-        prompts: list[str] | None = None,
+        contexts: list[str] | None = None,
         print_confirmation: bool = True
     ) -> RapidataValidationSet:
         """Create a classification validation set.
@@ -48,16 +48,16 @@ class ValidationSetManager:
                     datapoints: ["datapoint1", "datapoint2"]
                     truths: [["yes"], ["no", "maybe"]] -> first datapoint correct answer is "yes", second datapoint is "no" or "maybe"
             data_type (str, optional): The type of data. Defaults to RapidataDataTypes.MEDIA. Other option: RapidataDataTypes.TEXT ("text").
-            prompts (list[str], optional): The prompts for each datapoint. Defaults to None.\n
-                If provided has to be the same length as datapoints and will be shown in addition to the question and options. (Therefore will be different for each datapoint)
+            contexts (list[str], optional): The contexts for each datapoint. Defaults to None.\n
+                If provided has to be the same length as datapoints and will be shown in addition to the instruction and answer options. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
         """
         
         if len(datapoints) != len(truths):
             raise ValueError("The number of datapoints and truths must be equal")
-        if prompts and len(prompts) != len(datapoints):
-            raise ValueError("The number of prompts and datapoints must be equal")
+        if contexts and len(contexts) != len(datapoints):
+            raise ValueError("The number of contexts and datapoints must be equal")
         
         rapids = []
         for i in range(len(datapoints)):
@@ -68,7 +68,7 @@ class ValidationSetManager:
                     datapoint=datapoints[i],
                     truths=truths[i],
                     data_type=data_type,
-                    metadata=[PromptMetadata(prompts[i])] if prompts else []
+                    metadata=[PromptMetadata(contexts[i])] if contexts else []
                 )
             )
 
@@ -84,7 +84,7 @@ class ValidationSetManager:
         datapoints: list[list[str]],
         truths: list[str],
         data_type: str = RapidataDataTypes.MEDIA,
-        prompts: list[str] | None = None,
+        contexts: list[str] | None = None,
         print_confirmation: bool = True
     ) -> RapidataValidationSet:
         """Create a comparison validation set.
@@ -94,14 +94,14 @@ class ValidationSetManager:
             instruction (str): The instruction to compare against.
             truths (list[str]): The truths for each comparison. List is for each comparison.\n
                 example:
-                    criteria: "Which image has a cat?"
+                    instruction: "Which image has a cat?"
                     datapoints = [["image1.jpg", "image2.jpg"], ["image3.jpg", "image4.jpg"]]
                     truths: ["image1.jpg", "image4.jpg"] -> first comparison image1.jpg has a cat, second comparison image4.jpg has a cat
             datapoints (list[list[str]]): The compare datapoints to create the validation set with. 
                 Outer list is for each comparison, inner list the two images/texts that will be compared.
             data_type (str, optional): The type of data. Defaults to RapidataDataTypes.MEDIA. Other option: RapidataDataTypes.TEXT ("text").
-            prompts (list[str], optional): The prompts for each datapoint. Defaults to None.\n
-                If provided has to be the same length as datapoints and will be shown in addition to the criteria and truth. (Therefore will be different for each datapoint)
+            contexts (list[str], optional): The contexts for each datapoint. Defaults to None.\n
+                If provided has to be the same length as datapoints and will be shown in addition to the instruction and truth. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
         """
@@ -109,8 +109,8 @@ class ValidationSetManager:
         if len(datapoints) != len(truths):
             raise ValueError("The number of datapoints and truths must be equal")
         
-        if prompts and len(prompts) != len(datapoints):
-            raise ValueError("The number of prompts and datapoints must be equal")
+        if contexts and len(contexts) != len(datapoints):
+            raise ValueError("The number of contexts and datapoints must be equal")
         
         rapids = []
         for i in range(len(datapoints)):
@@ -120,7 +120,7 @@ class ValidationSetManager:
                     truth=truths[i],
                     datapoint=datapoints[i],
                     data_type=data_type,
-                    metadata=[PromptMetadata(prompts[i])] if prompts else []
+                    metadata=[PromptMetadata(contexts[i])] if contexts else []
                 )
             )
 

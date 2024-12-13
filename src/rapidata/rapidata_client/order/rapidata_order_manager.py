@@ -43,6 +43,7 @@ class RapidataOrderManager:
         self.filters = RapidataFilters
         self.settings = RapidataSettings
         self.selections = RapidataSelections
+        self.__priority = 50
 
     def __get_selections(self, validation_set_id: str | None, labeling_amount=3) -> Sequence[RapidataSelection]:
         if validation_set_id:
@@ -108,9 +109,13 @@ class RapidataOrderManager:
                  ._filters(filters)
                  ._selections(selections) 
                  ._settings(settings)
+                 ._priority(self.__priority)
                  ._create()
                  )
         return order
+    
+    def _set_priority(self, priority: int):
+        self.__priority = priority
         
     def create_classification_order(self,
             name: str,
@@ -137,7 +142,7 @@ class RapidataOrderManager:
                 Other option: RapidataDataTypes.TEXT ("text").
             responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
             contexts (list[str], optional): The list of contexts for the classification. Defaults to None.\n
-                If provided has to be the same length as datapoints and will be shown in addition to the question and options. (Therefore will be different for each datapoint)
+                If provided has to be the same length as datapoints and will be shown in addition to the instruction and options. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
             validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
@@ -195,7 +200,7 @@ class RapidataOrderManager:
                 Other option: RapidataDataTypes.TEXT ("text").
             responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
             contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
-                If provided has to be the same length as datapoints and will be shown in addition to the criteria. (Therefore will be different for each datapoint)
+                If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
             validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
@@ -337,7 +342,7 @@ class RapidataOrderManager:
             datapoints (list[str]): The list of datapoints for the locate - each datapoint will be labeled.
             responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
             contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
-                If provided has to be the same length as datapoints and will be shown in addition to the criteria. (Therefore will be different for each datapoint)
+                If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
             validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
@@ -379,7 +384,7 @@ class RapidataOrderManager:
             datapoints (list[str]): The list of datapoints for the draw lines - each datapoint will be labeled.
             responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
             contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
-                If provided has to be the same length as datapoints and will be shown in addition to the criteria. (Therefore will be different for each datapoint)
+                If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
             validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
