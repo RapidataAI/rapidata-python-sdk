@@ -1,4 +1,4 @@
-from rapidata.rapidata_client.selection.base_selection import RapidataSelection
+from rapidata.rapidata_client.selection._base_selection import RapidataSelection
 from rapidata.api_client.models.demographic_selection import DemographicSelection as DemographicSelectionModel
 
 
@@ -17,11 +17,11 @@ class DemographicSelection(RapidataSelection):
 
         Args:
             keys (list[str]): List of keys for the demographic rapids to be shown. As an example: "age"
-            maxRapids (int): The maximum number of rapids to run.\n
+            max_rapids (int): The maximum number of rapids to run.\n
                 Allows to provide more keys, in case some of the earlier ones are not selected because of high confidence.
         """
         self.keys = keys
         self.max_rapids = max_rapids
 
-    def to_model(self):
+    def _to_model(self):
         return DemographicSelectionModel(_t="DemographicSelection", keys=self.keys, maxRapids=self.max_rapids)

@@ -26,9 +26,9 @@ class ClassifyWorkflow(Workflow):
         self._question = question
         self._options = options
 
-    def to_dict(self) -> dict[str, Any]:
+    def _to_dict(self) -> dict[str, Any]:
         return {
-            **super().to_dict(),
+            **super()._to_dict(),
             "blueprint": {
                 "_t": "ClassifyBlueprint",
                 "title": self._question,
@@ -36,7 +36,7 @@ class ClassifyWorkflow(Workflow):
             }
         }
 
-    def to_model(self) -> SimpleWorkflowModel:
+    def _to_model(self) -> SimpleWorkflowModel:
         blueprint = AttachCategoryRapidBlueprint(
             _t="ClassifyBlueprint",
             title=self._question,

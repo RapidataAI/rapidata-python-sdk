@@ -3,7 +3,8 @@ from typing import Any
 
 
 class RapidataFilter:
+    """The base class for all Rapidata Filters."""
 
     @abstractmethod
-    def to_model(self) -> Any:
+    def _to_model(self) -> Any:
         pass

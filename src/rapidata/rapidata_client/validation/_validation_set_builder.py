@@ -6,14 +6,14 @@ from rapidata.api_client.models.compare_truth import CompareTruth
 from rapidata.api_client.models.transcription_payload import TranscriptionPayload
 from rapidata.api_client.models.transcription_truth import TranscriptionTruth
 from rapidata.api_client.models.transcription_word import TranscriptionWord
-from rapidata.rapidata_client.assets.media_asset import MediaAsset
-from rapidata.rapidata_client.assets.multi_asset import MultiAsset
-from rapidata.rapidata_client.assets.text_asset import TextAsset
+from rapidata.rapidata_client.assets._media_asset import MediaAsset
+from rapidata.rapidata_client.assets._multi_asset import MultiAsset
+from rapidata.rapidata_client.assets._text_asset import TextAsset
 from rapidata.rapidata_client.validation.rapidata_validation_set import (
     RapidataValidationSet,
 )
-from rapidata.rapidata_client.validation.validation_rapid_parts import ValidatioRapidParts
-from rapidata.rapidata_client.metadata.base_metadata import Metadata
+from rapidata.rapidata_client.validation._validation_rapid_parts import ValidatioRapidParts
+from rapidata.rapidata_client.metadata._base_metadata import Metadata
 from rapidata.service.openapi_service import OpenAPIService
 
 from rapidata.rapidata_client.validation.rapids.rapids import (
@@ -44,7 +44,7 @@ class ValidationSetBuilder:
         self.validation_set_id: str | None = None
         self._rapid_parts: list[ValidatioRapidParts] = []
 
-    def submit(self, print_confirmation: bool = True) -> RapidataValidationSet:
+    def _submit(self, print_confirmation: bool = True) -> RapidataValidationSet:
         """Create the validation set by executing all HTTP requests. This should be the last method called on the builder.
 
         Returns:
@@ -83,7 +83,7 @@ class ValidationSetBuilder:
             
         return validation_set
     
-    def add_rapid(self, rapid: Rapid):
+    def _add_rapid(self, rapid: Rapid):
         """Add a rapid to the validation set.
         To create the Rapid, use the RapidataClient.rapid_builder instance.
 
@@ -94,17 +94,17 @@ class ValidationSetBuilder:
             raise ValueError("This method only accepts Rapid instances")
         
         if isinstance(rapid, ClassificationRapid):
-            self._add_classify_rapid(rapid.asset, rapid.question, rapid.options, rapid.truths, rapid.metadata)
+            self.__add_classify_rapid(rapid.asset, rapid.question, rapid.options, rapid.truths, rapid.metadata)
 
         if isinstance(rapid, CompareRapid):
-            self._add_compare_rapid(rapid.asset, rapid.criteria, rapid.truth, rapid.metadata)
+            self.__add_compare_rapid(rapid.asset, rapid.criteria, rapid.truth, rapid.metadata)
 
         if isinstance(rapid, SelectWordsRapid):
-            self._add_select_words_rapid(rapid.asset, rapid.instruction, rapid.sentence, rapid.truths, rapid.strict_grading)
+            self.__add_select_words_rapid(rapid.asset, rapid.instruction, rapid.sentence, rapid.truths, rapid.strict_grading)
 
         return self
     
-    def _add_classify_rapid(
+    def __add_classify_rapid(
         self,
         asset: MediaAsset | TextAsset,
         question: str,
@@ -145,7 +145,7 @@ class ValidationSetBuilder:
             )
         )
     
-    def _add_compare_rapid(
+    def __add_compare_rapid(
         self,
         asset: MultiAsset,
         criteria: str,
@@ -185,7 +185,7 @@ class ValidationSetBuilder:
             )
         )
     
-    def _add_select_words_rapid(
+    def __add_select_words_rapid(
         self,
         asset: MediaAsset | TextAsset,
         question: str,

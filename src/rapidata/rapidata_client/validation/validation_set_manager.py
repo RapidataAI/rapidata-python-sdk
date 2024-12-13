@@ -1,4 +1,4 @@
-from rapidata.rapidata_client.validation.validation_set_builder import ValidationSetBuilder
+from rapidata.rapidata_client.validation._validation_set_builder import ValidationSetBuilder
 from rapidata.rapidata_client.validation.rapidata_validation_set import RapidataValidationSet
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.assets.data_type_enum import RapidataDataTypes
@@ -72,9 +72,9 @@ class ValidationSetManager:
 
         validation_set_builder = ValidationSetBuilder(name, self.openapi_service)
         for rapid in rapids:
-            validation_set_builder.add_rapid(rapid)
+            validation_set_builder._add_rapid(rapid)
 
-        return validation_set_builder.submit(print_confirmation)
+        return validation_set_builder._submit(print_confirmation)
     
     def create_compare_set(self,
         name: str,
@@ -124,9 +124,9 @@ class ValidationSetManager:
 
         validation_set_builder = ValidationSetBuilder(name, self.openapi_service)
         for rapid in rapids:
-            validation_set_builder.add_rapid(rapid)
+            validation_set_builder._add_rapid(rapid)
 
-        return validation_set_builder.submit(print_confirmation)
+        return validation_set_builder._submit(print_confirmation)
     
     def create_select_words_set(self,
         name: str,
@@ -173,9 +173,9 @@ class ValidationSetManager:
 
         validation_set_builder = ValidationSetBuilder(name, self.openapi_service)
         for rapid in rapids:
-            validation_set_builder.add_rapid(rapid)
+            validation_set_builder._add_rapid(rapid)
 
-        return validation_set_builder.submit(print_confirmation)
+        return validation_set_builder._submit(print_confirmation)
     
     def create_rapid_set(self,
         name: str,
@@ -192,9 +192,9 @@ class ValidationSetManager:
 
         validation_set_builder = ValidationSetBuilder(name, self.openapi_service)
         for rapid in rapids:
-            validation_set_builder.add_rapid(rapid)
+            validation_set_builder._add_rapid(rapid)
 
-        return validation_set_builder.submit(print_confirmation)
+        return validation_set_builder._submit(print_confirmation)
     
     def get_validation_set_by_id(self, validation_set_id: str) -> RapidataValidationSet:
         """Get a validation set by ID.

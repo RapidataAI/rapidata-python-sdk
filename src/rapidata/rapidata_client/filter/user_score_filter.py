@@ -1,5 +1,5 @@
 from typing import Any
-from rapidata.rapidata_client.filter.base_filter import RapidataFilter
+from rapidata.rapidata_client.filter._base_filter import RapidataFilter
 from rapidata.api_client.models.user_score_user_filter_model import (
     UserScoreUserFilterModel,
 )
@@ -29,7 +29,7 @@ class UserScoreFilter(RapidataFilter):
         self.upper_bound = upper_bound
         self.lower_bound = lower_bound
 
-    def to_model(self):
+    def _to_model(self):
         return UserScoreUserFilterModel(
             _t="UserScoreFilter",
             upperbound=self.upper_bound,

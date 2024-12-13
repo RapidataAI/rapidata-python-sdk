@@ -8,7 +8,7 @@ from rapidata.api_client.models.datapoint_metadata_model_metadata_inner import (
 from rapidata.api_client.models.upload_text_sources_to_dataset_model import (
     UploadTextSourcesToDatasetModel,
 )
-from rapidata.rapidata_client.metadata.base_metadata import Metadata
+from rapidata.rapidata_client.metadata._base_metadata import Metadata
 from rapidata.rapidata_client.assets import TextAsset, MediaAsset, MultiAsset
 from rapidata.service import LocalFileService
 from rapidata.service.openapi_service import OpenAPIService
@@ -25,7 +25,7 @@ class RapidataDataset:
         self.openapi_service = openapi_service
         self.local_file_service = LocalFileService()
 
-    def add_texts(
+    def _add_texts(
         self,
         text_assets: list[TextAsset] | list[MultiAsset],
         max_workers: int = 10,
@@ -63,7 +63,7 @@ class RapidataDataset:
                     future.result()  # This will raise any exceptions that occurred during execution
                     pbar.update(1)
 
-    def add_media_from_paths(
+    def _add_media_from_paths(
         self,
         media_paths: list[MediaAsset] |  list[MultiAsset], # where multiasset is a list of media assets
         metadata: Sequence[Metadata] | None = None,
@@ -88,7 +88,7 @@ class RapidataDataset:
             else:
                 raise ValueError(f"Unsupported asset type: {type(media_asset)}")
 
-            meta_model = meta.to_model() if meta else None
+            meta_model = meta._to_model() if meta else None
             model = DatapointMetadataModel(
                 datasetId=self.dataset_id,
                 metadata=(

@@ -1,7 +1,7 @@
 from rapidata.api_client.models.simple_workflow_model import SimpleWorkflowModel
 from rapidata.api_client.models.simple_workflow_model_blueprint import SimpleWorkflowModelBlueprint
 from rapidata.api_client.models.transcription_rapid_blueprint import TranscriptionRapidBlueprint
-from rapidata.rapidata_client.workflow.base_workflow import Workflow
+from rapidata.rapidata_client.workflow._base_workflow import Workflow
 
 
 class SelectWordsWorkflow(Workflow):
@@ -28,7 +28,7 @@ class SelectWordsWorkflow(Workflow):
         super().__init__(type="SimpleWorkflowConfig")
         self._instruction = instruction
 
-    def to_model(self) -> SimpleWorkflowModel:
+    def _to_model(self) -> SimpleWorkflowModel:
         blueprint = TranscriptionRapidBlueprint(
             _t="TranscriptionBlueprint",
             title=self._instruction

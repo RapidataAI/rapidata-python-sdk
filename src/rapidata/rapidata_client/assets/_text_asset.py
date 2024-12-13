@@ -3,7 +3,7 @@
 Defines the TextAsset class for handling textual data within assets.
 """
 
-from rapidata.rapidata_client.assets.base_asset import BaseAsset
+from rapidata.rapidata_client.assets._base_asset import BaseAsset
 
 
 class TextAsset(BaseAsset):

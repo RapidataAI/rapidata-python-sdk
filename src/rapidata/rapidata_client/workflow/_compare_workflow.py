@@ -29,13 +29,13 @@ class CompareWorkflow(Workflow):
         super().__init__(type="CompareWorkflowConfig")
         self._criteria = criteria
 
-    def to_dict(self) -> dict[str, Any]:
+    def _to_dict(self) -> dict[str, Any]:
         return {
-            **super().to_dict(),
+            **super()._to_dict(),
             "criteria": self._criteria,
         }
 
-    def to_model(self) -> SimpleWorkflowModel:
+    def _to_model(self) -> SimpleWorkflowModel:
         blueprint = CompareRapidBlueprint(
             _t="CompareBlueprint",
             criteria=self._criteria,
