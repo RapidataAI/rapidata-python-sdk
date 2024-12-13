@@ -6,7 +6,7 @@ from .rapidata_client import (
     ConditionalValidationSelection,
     CappedSelection,
     RapidataSettings,
-    TranslationBehaviour,
+    TranslationBehaviourOptions,
     CountryCodes,
     MediaAsset,
     TextAsset,
