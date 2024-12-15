@@ -1,6 +1,6 @@
 from rapidata.annot.api import create_client
 
-VAL_SET_ID = "675ac1774c3062b2f53abfeb"
+VAL_SET_ID = "675ae59ed53e277218a8b638"
 client = create_client()
 
 order = client.order.create_locate_order(
@@ -11,4 +11,5 @@ order = client.order.create_locate_order(
     validation_set_id=VAL_SET_ID,
 )
 
+client.validation.create_rapid_set()
 order.run()

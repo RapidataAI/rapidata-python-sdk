@@ -95,13 +95,13 @@ def _create_locate_rapids(rapids: List[ValidationRapid]) -> List[LocateRapid]:
 
         x, y, width, height = annotation["left"], annotation["top"], annotation["width"], annotation["height"]
         bbox = BBox(x, y, width, height, annotation_scale=1 / calc_image_scale(rapid.image)).get_scaled()
-        print(bbox)
+
         SUFFIX = "png"
         with tempfile.NamedTemporaryFile(delete=False, suffix=SUFFIX) as temp_file:
             temp_file_path = temp_file.name + '.' + SUFFIX
             rapid.image.save(temp_file_path)
 
-            rapid = client.validation.rapid.build_locate_rapid(
+            rapid = client.validation.rapid.build_draw_rapid(
                 target=rapid.prompt,
                 truths=[
                     Box(
