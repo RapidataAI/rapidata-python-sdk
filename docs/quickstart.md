@@ -105,6 +105,8 @@ To download the results simply call the `get_results` method on the order:
 results = order.get_results()
 ```
 
+To better understand the results you can check out the [Understanding the Results](/understanding_the_results/) guide.
+
 ## Credits and Billing
 
 When you first create an account on Rapidata, you will receive 100 free credits. Each credit give you 10 responses. After you have used up your free credits, you may purchase more on our [website](https://app.rapidata.ai/pricing).

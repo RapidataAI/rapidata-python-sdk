@@ -24,8 +24,8 @@ Set up your environment and make your first API request in minutes.
 
     order = rapi.order.create_classification_order(
         name="Example Classification Order",
-        question="What is shown in the image?",
-        options=["Fish", "Cat", "Wallaby", "Airplane"],
+        instruction="What is shown in the image?",
+        answer_options=["Fish", "Cat", "Wallaby", "Airplane"],
         datapoints=["https://assets.rapidata.ai/wallaby.jpg"]
     ).run()
 
