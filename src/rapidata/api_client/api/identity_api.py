@@ -359,7 +359,7 @@ class IdentityApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ReadBridgeTokenKeysResult",
-            '202': None,
+            '202': "IdentityReadBridgeTokenGet202Response",
             '404': "ProblemDetails",
         }
         response_data = self.api_client.call_api(
@@ -427,7 +427,7 @@ class IdentityApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ReadBridgeTokenKeysResult",
-            '202': None,
+            '202': "IdentityReadBridgeTokenGet202Response",
             '404': "ProblemDetails",
         }
         response_data = self.api_client.call_api(
@@ -495,7 +495,7 @@ class IdentityApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "ReadBridgeTokenKeysResult",
-            '202': None,
+            '202': "IdentityReadBridgeTokenGet202Response",
             '404': "ProblemDetails",
         }
         response_data = self.api_client.call_api(

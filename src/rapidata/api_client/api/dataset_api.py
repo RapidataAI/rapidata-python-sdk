@@ -326,7 +326,7 @@ class DatasetApi:
     @validate_call
     def dataset_create_datapoint_post(
         self,
-        files: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The image files to upload.")] = None,
+        files: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
         model: Optional[DatapointMetadataModel] = None,
         _request_timeout: Union[
             None,
@@ -345,7 +345,7 @@ class DatasetApi:
 
         If multiple files are uploaded, a multi asset datapoint will be created.
 
-        :param files: The image files to upload.
+        :param files:
         :type files: List[bytearray]
         :param model:
         :type model: DatapointMetadataModel
@@ -397,7 +397,7 @@ class DatasetApi:
     @validate_call
     def dataset_create_datapoint_post_with_http_info(
         self,
-        files: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The image files to upload.")] = None,
+        files: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
         model: Optional[DatapointMetadataModel] = None,
         _request_timeout: Union[
             None,
@@ -416,7 +416,7 @@ class DatasetApi:
 
         If multiple files are uploaded, a multi asset datapoint will be created.
 
-        :param files: The image files to upload.
+        :param files:
         :type files: List[bytearray]
         :param model:
         :type model: DatapointMetadataModel
@@ -468,7 +468,7 @@ class DatasetApi:
     @validate_call
     def dataset_create_datapoint_post_without_preload_content(
         self,
-        files: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The image files to upload.")] = None,
+        files: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
         model: Optional[DatapointMetadataModel] = None,
         _request_timeout: Union[
             None,
@@ -487,7 +487,7 @@ class DatasetApi:
 
         If multiple files are uploaded, a multi asset datapoint will be created.
 
-        :param files: The image files to upload.
+        :param files:
         :type files: List[bytearray]
         :param model:
         :type model: DatapointMetadataModel

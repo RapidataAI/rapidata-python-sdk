@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.compare_workflow_model1_pair_maker_information import CompareWorkflowModel1PairMakerInformation
 from rapidata.api_client.models.compare_workflow_model1_referee import CompareWorkflowModel1Referee
 from typing import Optional, Set
 from typing_extensions import Self
@@ -31,16 +32,16 @@ class CompareWorkflowModel1(BaseModel):
     id: StrictStr
     dataset_id: Optional[StrictStr] = Field(alias="datasetId")
     referee: CompareWorkflowModel1Referee
+    pair_maker_information: CompareWorkflowModel1PairMakerInformation = Field(alias="pairMakerInformation")
     state: StrictStr
     criteria: StrictStr
     name: StrictStr
     owner_mail: Optional[StrictStr] = Field(alias="ownerMail")
     starting_elo: StrictInt = Field(alias="startingElo")
     k_factor: StrictInt = Field(alias="kFactor")
-    match_size: StrictInt = Field(alias="matchSize")
     scaling_factor: StrictInt = Field(alias="scalingFactor")
     matches_until_completed: StrictInt = Field(alias="matchesUntilCompleted")
-    __properties: ClassVar[List[str]] = ["_t", "id", "datasetId", "referee", "state", "criteria", "name", "ownerMail", "startingElo", "kFactor", "matchSize", "scalingFactor", "matchesUntilCompleted"]
+    __properties: ClassVar[List[str]] = ["_t", "id", "datasetId", "referee", "pairMakerInformation", "state", "criteria", "name", "ownerMail", "startingElo", "kFactor", "scalingFactor", "matchesUntilCompleted"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -91,6 +92,9 @@ class CompareWorkflowModel1(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of referee
         if self.referee:
             _dict['referee'] = self.referee.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of pair_maker_information
+        if self.pair_maker_information:
+            _dict['pairMakerInformation'] = self.pair_maker_information.to_dict()
         # set to None if dataset_id (nullable) is None
         # and model_fields_set contains the field
         if self.dataset_id is None and "dataset_id" in self.model_fields_set:
@@ -117,13 +121,13 @@ class CompareWorkflowModel1(BaseModel):
             "id": obj.get("id"),
             "datasetId": obj.get("datasetId"),
             "referee": CompareWorkflowModel1Referee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
+            "pairMakerInformation": CompareWorkflowModel1PairMakerInformation.from_dict(obj["pairMakerInformation"]) if obj.get("pairMakerInformation") is not None else None,
             "state": obj.get("state"),
             "criteria": obj.get("criteria"),
             "name": obj.get("name"),
             "ownerMail": obj.get("ownerMail"),
             "startingElo": obj.get("startingElo"),
             "kFactor": obj.get("kFactor"),
-            "matchSize": obj.get("matchSize"),
             "scalingFactor": obj.get("scalingFactor"),
             "matchesUntilCompleted": obj.get("matchesUntilCompleted")
         })

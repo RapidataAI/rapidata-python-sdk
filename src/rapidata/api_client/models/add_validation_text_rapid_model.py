@@ -33,7 +33,7 @@ class AddValidationTextRapidModel(BaseModel):
     payload: AddValidationRapidModelPayload
     metadata: List[DatapointMetadataModelMetadataInner] = Field(description="Some metadata to attach to the rapid.")
     truth: AddValidationRapidModelTruth
-    texts: List[StrictStr]
+    texts: List[StrictStr] = Field(description="The texts to use for the rapid.")
     random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(description="The probability for an answer to be correct when randomly guessing.", alias="randomCorrectProbability")
     __properties: ClassVar[List[str]] = ["validationSetId", "payload", "metadata", "truth", "texts", "randomCorrectProbability"]
 

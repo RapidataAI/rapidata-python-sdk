@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
@@ -26,13 +26,21 @@ class ReadBridgeTokenKeysResult(BaseModel):
     """
     ReadBridgeTokenKeysResult
     """ # noqa: E501
+    t: StrictStr = Field(description="Discriminator value for ReadBridgeTokenKeysResult", alias="_t")
     access_token: Optional[StrictStr] = Field(alias="accessToken")
     expires_in: Optional[StrictInt] = Field(alias="expiresIn")
     refresh_token: Optional[StrictStr] = Field(alias="refreshToken")
     id_token: Optional[StrictStr] = Field(alias="idToken")
     token_type: Optional[StrictStr] = Field(alias="tokenType")
     scope: Optional[StrictStr]
-    __properties: ClassVar[List[str]] = ["accessToken", "expiresIn", "refreshToken", "idToken", "tokenType", "scope"]
+    __properties: ClassVar[List[str]] = ["_t", "accessToken", "expiresIn", "refreshToken", "idToken", "tokenType", "scope"]
+
+    @field_validator('t')
+    def t_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['ReadBridgeTokenKeysResult']):
+            raise ValueError("must be one of enum values ('ReadBridgeTokenKeysResult')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -115,6 +123,7 @@ class ReadBridgeTokenKeysResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'ReadBridgeTokenKeysResult',
             "accessToken": obj.get("accessToken"),
             "expiresIn": obj.get("expiresIn"),
             "refreshToken": obj.get("refreshToken"),

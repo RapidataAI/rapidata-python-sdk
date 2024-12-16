@@ -17,30 +17,33 @@ import json
 import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
-from rapidata.api_client.models.get_classify_workflow_result_overview_result import GetClassifyWorkflowResultOverviewResult
-from rapidata.api_client.models.get_simple_workflow_result_overview_result import GetSimpleWorkflowResultOverviewResult
+from rapidata.api_client.models.compare_workflow_config_model import CompareWorkflowConfigModel
+from rapidata.api_client.models.simple_workflow_config_model import SimpleWorkflowConfigModel
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-SIMPLEWORKFLOWGETRESULTOVERVIEWGET200RESPONSE_ONE_OF_SCHEMAS = ["GetClassifyWorkflowResultOverviewResult", "GetSimpleWorkflowResultOverviewResult"]
+PIPELINEIDWORKFLOWPUTREQUEST_ONE_OF_SCHEMAS = ["CompareWorkflowConfigModel", "SimpleWorkflowConfigModel"]
 
-class SimpleWorkflowGetResultOverviewGet200Response(BaseModel):
+class PipelineIdWorkflowPutRequest(BaseModel):
     """
-    SimpleWorkflowGetResultOverviewGet200Response
+    The base configuration for a workflow.
     """
-    # data type: GetClassifyWorkflowResultOverviewResult
-    oneof_schema_1_validator: Optional[GetClassifyWorkflowResultOverviewResult] = None
-    # data type: GetSimpleWorkflowResultOverviewResult
-    oneof_schema_2_validator: Optional[GetSimpleWorkflowResultOverviewResult] = None
-    actual_instance: Optional[Union[GetClassifyWorkflowResultOverviewResult, GetSimpleWorkflowResultOverviewResult]] = None
-    one_of_schemas: Set[str] = { "GetClassifyWorkflowResultOverviewResult", "GetSimpleWorkflowResultOverviewResult" }
+    # data type: CompareWorkflowConfigModel
+    oneof_schema_1_validator: Optional[CompareWorkflowConfigModel] = None
+    # data type: SimpleWorkflowConfigModel
+    oneof_schema_2_validator: Optional[SimpleWorkflowConfigModel] = None
+    actual_instance: Optional[Union[CompareWorkflowConfigModel, SimpleWorkflowConfigModel]] = None
+    one_of_schemas: Set[str] = { "CompareWorkflowConfigModel", "SimpleWorkflowConfigModel" }
 
     model_config = ConfigDict(
         validate_assignment=True,
         protected_namespaces=(),
     )
 
+
+    discriminator_value_class_map: Dict[str, str] = {
+    }
 
     def __init__(self, *args, **kwargs) -> None:
         if args:
@@ -54,25 +57,25 @@ class SimpleWorkflowGetResultOverviewGet200Response(BaseModel):
 
     @field_validator('actual_instance')
     def actual_instance_must_validate_oneof(cls, v):
-        instance = SimpleWorkflowGetResultOverviewGet200Response.model_construct()
+        instance = PipelineIdWorkflowPutRequest.model_construct()
         error_messages = []
         match = 0
-        # validate data type: GetClassifyWorkflowResultOverviewResult
-        if not isinstance(v, GetClassifyWorkflowResultOverviewResult):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `GetClassifyWorkflowResultOverviewResult`")
+        # validate data type: CompareWorkflowConfigModel
+        if not isinstance(v, CompareWorkflowConfigModel):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `CompareWorkflowConfigModel`")
         else:
             match += 1
-        # validate data type: GetSimpleWorkflowResultOverviewResult
-        if not isinstance(v, GetSimpleWorkflowResultOverviewResult):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `GetSimpleWorkflowResultOverviewResult`")
+        # validate data type: SimpleWorkflowConfigModel
+        if not isinstance(v, SimpleWorkflowConfigModel):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `SimpleWorkflowConfigModel`")
         else:
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in SimpleWorkflowGetResultOverviewGet200Response with oneOf schemas: GetClassifyWorkflowResultOverviewResult, GetSimpleWorkflowResultOverviewResult. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in PipelineIdWorkflowPutRequest with oneOf schemas: CompareWorkflowConfigModel, SimpleWorkflowConfigModel. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in SimpleWorkflowGetResultOverviewGet200Response with oneOf schemas: GetClassifyWorkflowResultOverviewResult, GetSimpleWorkflowResultOverviewResult. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in PipelineIdWorkflowPutRequest with oneOf schemas: CompareWorkflowConfigModel, SimpleWorkflowConfigModel. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -87,25 +90,25 @@ class SimpleWorkflowGetResultOverviewGet200Response(BaseModel):
         error_messages = []
         match = 0
 
-        # deserialize data into GetClassifyWorkflowResultOverviewResult
+        # deserialize data into CompareWorkflowConfigModel
         try:
-            instance.actual_instance = GetClassifyWorkflowResultOverviewResult.from_json(json_str)
+            instance.actual_instance = CompareWorkflowConfigModel.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # deserialize data into GetSimpleWorkflowResultOverviewResult
+        # deserialize data into SimpleWorkflowConfigModel
         try:
-            instance.actual_instance = GetSimpleWorkflowResultOverviewResult.from_json(json_str)
+            instance.actual_instance = SimpleWorkflowConfigModel.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into SimpleWorkflowGetResultOverviewGet200Response with oneOf schemas: GetClassifyWorkflowResultOverviewResult, GetSimpleWorkflowResultOverviewResult. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into PipelineIdWorkflowPutRequest with oneOf schemas: CompareWorkflowConfigModel, SimpleWorkflowConfigModel. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into SimpleWorkflowGetResultOverviewGet200Response with oneOf schemas: GetClassifyWorkflowResultOverviewResult, GetSimpleWorkflowResultOverviewResult. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into PipelineIdWorkflowPutRequest with oneOf schemas: CompareWorkflowConfigModel, SimpleWorkflowConfigModel. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -119,7 +122,7 @@ class SimpleWorkflowGetResultOverviewGet200Response(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], GetClassifyWorkflowResultOverviewResult, GetSimpleWorkflowResultOverviewResult]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], CompareWorkflowConfigModel, SimpleWorkflowConfigModel]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

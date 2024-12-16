@@ -26,10 +26,11 @@ class AgeGroup(str, Enum):
     """
     allowed enum values
     """
-    ENUM_0_MINUS_18 = '0-18'
-    ENUM_19_MINUS_30 = '19-30'
-    ENUM_31_MINUS_50 = '31-50'
-    ENUM_51_MINUS_65 = '51-65'
+    ENUM_0_MINUS_17 = '0-17'
+    ENUM_18_MINUS_29 = '18-29'
+    ENUM_30_MINUS_39 = '30-39'
+    ENUM_40_MINUS_49 = '40-49'
+    ENUM_50_MINUS_64 = '50-64'
     ENUM_65_PLUS = '65+'
 
     @classmethod
