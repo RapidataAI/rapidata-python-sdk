@@ -17,28 +17,26 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.compare_workflow_model1_referee import CompareWorkflowModel1Referee
-from rapidata.api_client.models.simple_workflow_config_model_blueprint import SimpleWorkflowConfigModelBlueprint
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing import Optional, Set
 from typing_extensions import Self
 
-class SimpleWorkflowConfigModel(BaseModel):
+class OnlinePairMakerInformation(BaseModel):
     """
-    The configuration for a simple workflow.  A simple workflow creates a rapid for each datapoint in its dataset.  It is considered complete when all rapids have been completed.
+    OnlinePairMakerInformation
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for SimpleWorkflowConfig", alias="_t")
-    referee: CompareWorkflowModel1Referee
-    blueprint: SimpleWorkflowConfigModelBlueprint
-    target_country_codes: List[StrictStr] = Field(description="A list of country codes that this workflow is targeting.", alias="targetCountryCodes")
-    __properties: ClassVar[List[str]] = ["_t", "referee", "blueprint", "targetCountryCodes"]
+    t: StrictStr = Field(description="Discriminator value for OnlinePairMakerInformation", alias="_t")
+    random_matches_ratio: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="randomMatchesRatio")
+    total_comparison_budget: Optional[StrictInt] = Field(default=None, alias="totalComparisonBudget")
+    current_comparison_budget: Optional[StrictInt] = Field(default=None, alias="currentComparisonBudget")
+    __properties: ClassVar[List[str]] = ["_t", "randomMatchesRatio", "totalComparisonBudget", "currentComparisonBudget"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['SimpleWorkflowConfig']):
-            raise ValueError("must be one of enum values ('SimpleWorkflowConfig')")
+        if value not in set(['OnlinePairMakerInformation']):
+            raise ValueError("must be one of enum values ('OnlinePairMakerInformation')")
         return value
 
     model_config = ConfigDict(
@@ -59,7 +57,7 @@ class SimpleWorkflowConfigModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of SimpleWorkflowConfigModel from a JSON string"""
+        """Create an instance of OnlinePairMakerInformation from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -80,17 +78,11 @@ class SimpleWorkflowConfigModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of referee
-        if self.referee:
-            _dict['referee'] = self.referee.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of blueprint
-        if self.blueprint:
-            _dict['blueprint'] = self.blueprint.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of SimpleWorkflowConfigModel from a dict"""
+        """Create an instance of OnlinePairMakerInformation from a dict"""
         if obj is None:
             return None
 
@@ -98,10 +90,10 @@ class SimpleWorkflowConfigModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'SimpleWorkflowConfig',
-            "referee": CompareWorkflowModel1Referee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
-            "blueprint": SimpleWorkflowConfigModelBlueprint.from_dict(obj["blueprint"]) if obj.get("blueprint") is not None else None,
-            "targetCountryCodes": obj.get("targetCountryCodes")
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'OnlinePairMakerInformation',
+            "randomMatchesRatio": obj.get("randomMatchesRatio"),
+            "totalComparisonBudget": obj.get("totalComparisonBudget"),
+            "currentComparisonBudget": obj.get("currentComparisonBudget")
         })
         return _obj
 

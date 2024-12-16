@@ -159,8 +159,7 @@
                     "items": {
                       "type": "string",
                       "format": "binary"
-                    },
-                    "description": "The image files to upload."
+                    }
                   },
                   "model": {
                     "$ref": "#/components/schemas/DatapointMetadataModel"
@@ -1495,7 +1494,21 @@
             }
           },
           "202": {
-            "description": "Accepted"
+            "description": null,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/NotAvailableYetResult"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Void"
+                    }
+                  ]
+                }
+              }
+            }
           },
           "404": {
             "description": "Not Found",
@@ -1624,17 +1637,10 @@
                 "type": "object",
                 "properties": {
                   "Name": {
-                    "type": "string",
-                    "description": "The name to give the newly uploaded CoCo set."
+                    "type": "string"
                   },
                   "Title": {
-                    "type": "string",
-                    "description": "The title to be used when creating rapids from the CoCo set."
-                  },
-                  "File": {
-                    "type": "string",
-                    "description": "The file containing the CoCo set.",
-                    "format": "binary"
+                    "type": "string"
                   }
                 }
               },
@@ -1643,9 +1649,6 @@
                   "style": "form"
                 },
                 "Title": {
-                  "style": "form"
-                },
-                "File": {
                   "style": "form"
                 }
               }
@@ -1900,8 +1903,7 @@
                     "items": {
                       "type": "string",
                       "format": "binary"
-                    },
-                    "description": "The files to be used as assets for the validation rapid. Each file will create a new rapid."
+                    }
                   }
                 }
               },
@@ -2032,23 +2034,14 @@
                         "$ref": "#/components/schemas/BoundingBoxRapidBlueprint"
                       }
                     ],
-                    "description": "The blueprint for the rapid to be created.",
                     "discriminator": {
                       "propertyName": "_t"
                     }
-                  },
-                  "File": {
-                    "type": "string",
-                    "description": "The file to use as the asset for the rapid.",
-                    "format": "binary"
                   }
                 }
               },
               "encoding": {
                 "Blueprint": {
-                  "style": "form"
-                },
-                "File": {
                   "style": "form"
                 }
               }
@@ -2092,21 +2085,12 @@
                 "type": "object",
                 "properties": {
                   "Criteria": {
-                    "type": "string",
-                    "description": "The criteria to use for the compare rapid."
-                  },
-                  "File": {
-                    "type": "string",
-                    "description": "The file to use as the asset for the rapid.",
-                    "format": "binary"
+                    "type": "string"
                   }
                 }
               },
               "encoding": {
                 "Criteria": {
-                  "style": "form"
-                },
-                "File": {
                   "style": "form"
                 }
               }
@@ -2223,8 +2207,7 @@
                     "items": {
                       "type": "string",
                       "format": "binary"
-                    },
-                    "description": "The file to use as the asset for the rapid."
+                    }
                   }
                 }
               },
@@ -2410,7 +2393,7 @@
                 "schema": {
                   "oneOf": [
                     {
-                      "$ref": "#/components/schemas/GetAttachCategoryWorkflowResultOverviewResult"
+                      "$ref": "#/components/schemas/GetClassifyWorkflowResultOverviewResult"
                     },
                     {
                       "$ref": "#/components/schemas/GetSimpleWorkflowResultOverviewResult"
@@ -2610,39 +2593,6 @@
         }
       }
     },
-    "/Pipeline/UpdateWorkflowConfig": {
-      "post": {
-        "tags": [
-          "Pipeline"
-        ],
-        "summary": "Updates the workflow configuration for a pipeline.",
-        "requestBody": {
-          "description": "The request to update the workflow configuration.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateWorkflowConfigRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateWorkflowConfigRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateWorkflowConfigRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/Pipeline/{id}": {
       "get": {
         "tags": [
@@ -2684,12 +2634,23 @@
         }
       }
     },
-    "/Pipeline/AddCampaign": {
-      "patch": {
+    "/pipeline/{id}/campaign": {
+      "post": {
         "tags": [
           "Pipeline"
         ],
         "summary": "Adds a campaign to a pipeline.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the pipeline to update",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "description": "",
           "content": {
@@ -2730,6 +2691,266 @@
                 }
               }
             }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Pipeline"
+        ],
+        "summary": "Updates the default campaign for a pipeline.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the pipeline to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The new campaign settings.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCampaignModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCampaignModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCampaignModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/pipeline/{id}/campaign/{artifact-id}": {
+      "put": {
+        "tags": [
+          "Pipeline"
+        ],
+        "summary": "Updates a specific campaign for a pipeline.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the pipeline to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "artifact-id",
+            "in": "path",
+            "description": "The id of the campaign artifact to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The new campaign settings.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCampaignModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCampaignModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCampaignModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/pipeline/{id}/workflow": {
+      "put": {
+        "tags": [
+          "Pipeline"
+        ],
+        "summary": "Updates the workflow configuration for a pipeline.",
+        "description": "This method needs to be called before the pipeline is started.\r\nOtherwise, the changes will not take effect unless the pipeline is restarted.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the pipeline to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The new workflow configuration.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/CompareWorkflowConfigModel"
+                  },
+                  {
+                    "$ref": "#/components/schemas/SimpleWorkflowConfigModel"
+                  }
+                ],
+                "description": "The base configuration for a workflow.",
+                "discriminator": {
+                  "propertyName": "_t"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/CompareWorkflowConfigModel"
+                  },
+                  {
+                    "$ref": "#/components/schemas/SimpleWorkflowConfigModel"
+                  }
+                ],
+                "description": "The base configuration for a workflow.",
+                "discriminator": {
+                  "propertyName": "_t"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/CompareWorkflowConfigModel"
+                  },
+                  {
+                    "$ref": "#/components/schemas/SimpleWorkflowConfigModel"
+                  }
+                ],
+                "description": "The base configuration for a workflow.",
+                "discriminator": {
+                  "propertyName": "_t"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/pipeline/{id}/workflow/{artifact-id}": {
+      "put": {
+        "tags": [
+          "Pipeline"
+        ],
+        "summary": "Updates the workflow configuration for a pipeline.",
+        "description": "This method needs to be called before the pipeline is started.\r\nOtherwise, the changes will not take effect unless the pipeline is restarted.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the pipeline to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "artifact-id",
+            "in": "path",
+            "description": "The id of the workflow config artifact to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The new workflow configuration.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/CompareWorkflowConfigModel"
+                  },
+                  {
+                    "$ref": "#/components/schemas/SimpleWorkflowConfigModel"
+                  }
+                ],
+                "description": "The base configuration for a workflow.",
+                "discriminator": {
+                  "propertyName": "_t"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/CompareWorkflowConfigModel"
+                  },
+                  {
+                    "$ref": "#/components/schemas/SimpleWorkflowConfigModel"
+                  }
+                ],
+                "description": "The base configuration for a workflow.",
+                "discriminator": {
+                  "propertyName": "_t"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/CompareWorkflowConfigModel"
+                  },
+                  {
+                    "$ref": "#/components/schemas/SimpleWorkflowConfigModel"
+                  }
+                ],
+                "description": "The base configuration for a workflow.",
+                "discriminator": {
+                  "propertyName": "_t"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
           }
         }
       }
@@ -2843,9 +3064,6 @@
       "BaseError": {
         "type": "object",
         "properties": {
-          "errorType": {
-            "$ref": "#/components/schemas/ErrorType"
-          },
           "errorMessage": {
             "type": "string"
           }
@@ -3132,16 +3350,6 @@
         },
         "additionalProperties": false
       },
-      "ErrorType": {
-        "enum": [
-          "Validation",
-          "Authorization",
-          "Runtime",
-          "NotFound",
-          "Timeout"
-        ],
-        "type": "string"
-      },
       "FileAsset": {
         "title": "FileAsset",
         "required": [
@@ -3255,9 +3463,6 @@
                 },
                 {
                   "$ref": "#/components/schemas/TranscriptionMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/TranslatedPromptMetadataModel"
                 }
               ],
               "discriminator": {
@@ -3599,9 +3804,6 @@
                 },
                 {
                   "$ref": "#/components/schemas/TranscriptionMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/TranslatedPromptMetadataModel"
                 }
               ],
               "discriminator": {
@@ -3716,9 +3918,6 @@
                 },
                 {
                   "$ref": "#/components/schemas/TranscriptionMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/TranslatedPromptMetadataModel"
                 }
               ],
               "discriminator": {
@@ -4035,9 +4234,6 @@
                 },
                 {
                   "$ref": "#/components/schemas/TranscriptionMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/TranslatedPromptMetadataModel"
                 }
               ],
               "discriminator": {
@@ -4194,57 +4390,6 @@
         },
         "additionalProperties": false
       },
-      "TranslatedPromptMetadataModel": {
-        "title": "TranslatedPromptMetadata",
-        "required": [
-          "_t",
-          "identifier",
-          "prompt"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "TranslatedPromptMetadata"
-            ],
-            "type": "string",
-            "description": "Discriminator value for TranslatedPromptMetadata",
-            "default": "TranslatedPromptMetadata",
-            "example": "TranslatedPromptMetadata"
-          },
-          "prompt": {
-            "$ref": "#/components/schemas/TranslatedString"
-          },
-          "identifier": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "TranslatedString": {
-        "required": [
-          "englishText",
-          "targetLanguage",
-          "text",
-          "wasTranslated"
-        ],
-        "type": "object",
-        "properties": {
-          "wasTranslated": {
-            "type": "boolean"
-          },
-          "englishText": {
-            "type": "string"
-          },
-          "text": {
-            "type": "string"
-          },
-          "targetLanguage": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "UploadDatapointsResult": {
         "required": [
           "createdCount",
@@ -4341,10 +4486,11 @@
       },
       "AgeGroup": {
         "enum": [
-          "0-18",
-          "19-30",
-          "31-50",
-          "51-65",
+          "0-17",
+          "18-29",
+          "30-39",
+          "40-49",
+          "50-64",
           "65+"
         ],
         "type": "string"
@@ -4665,10 +4811,19 @@
             "description": "The KFactor is used to calculate the Elo change after each match. Per default this is between 20 and 40.",
             "format": "int32"
           },
-          "matchSize": {
-            "type": "integer",
-            "description": "The MatchSize determines how many datapoints will be matched together once. Per default this is 2.",
-            "format": "int32"
+          "pairMakerConfig": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PreArrangedPairMakerConfigModel"
+              },
+              {
+                "$ref": "#/components/schemas/OnlinePairMakerConfigModel"
+              }
+            ],
+            "description": "PairMakerConfig is responsible for matchmaking. Use PreArrangedPairMakerConfig for\r\ncompletely random matches or use OnlinePairMakerConfig for more dynamic pairmaking",
+            "discriminator": {
+              "propertyName": "_t"
+            }
           },
           "scalingFactor": {
             "type": "integer",
@@ -5654,6 +5809,37 @@
         },
         "additionalProperties": false
       },
+      "OnlinePairMakerConfigModel": {
+        "title": "OnlinePairMaker",
+        "required": [
+          "_t",
+          "totalComparisonBudget"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "OnlinePairMaker"
+            ],
+            "type": "string",
+            "description": "Discriminator value for OnlinePairMaker",
+            "default": "OnlinePairMaker",
+            "example": "OnlinePairMaker"
+          },
+          "randomMatchesRatio": {
+            "type": "number",
+            "description": "The ratio of random matches for the algorithm to burn-in.",
+            "format": "float"
+          },
+          "totalComparisonBudget": {
+            "type": "integer",
+            "description": "Total number of comparisons to carry out.",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The OnlinePairMaker creates random pairs in the beginning and then continues to create pairs\r\nthat are close in ranking."
+      },
       "OrderModel": {
         "required": [
           "customerMail",
@@ -5783,6 +5969,31 @@
           }
         },
         "additionalProperties": false
+      },
+      "PreArrangedPairMakerConfigModel": {
+        "title": "PreArrangedPairMaker",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "PreArrangedPairMaker"
+            ],
+            "type": "string",
+            "description": "Discriminator value for PreArrangedPairMaker",
+            "default": "PreArrangedPairMaker",
+            "example": "PreArrangedPairMaker"
+          },
+          "pairSize": {
+            "type": "integer",
+            "description": "The pair size in comparisons.",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The PreArrangedPairMaker is used for completely random pairmaking from the beginning"
       },
       "PublicOrderModel": {
         "required": [
@@ -6390,6 +6601,29 @@
         "additionalProperties": false,
         "description": "Model for subscribing and unsubscribing to the newsletter."
       },
+      "NotAvailableYetResult": {
+        "title": "NotAvailableYetResult",
+        "required": [
+          "_t",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "NotAvailableYetResult"
+            ],
+            "type": "string",
+            "description": "Discriminator value for NotAvailableYetResult",
+            "default": "NotAvailableYetResult",
+            "example": "NotAvailableYetResult"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "ProblemDetails": {
         "type": "object",
         "properties": {
@@ -6418,7 +6652,9 @@
         "additionalProperties": {}
       },
       "ReadBridgeTokenKeysResult": {
+        "title": "ReadBridgeTokenKeysResult",
         "required": [
+          "_t",
           "accessToken",
           "expiresIn",
           "idToken",
@@ -6428,6 +6664,15 @@
         ],
         "type": "object",
         "properties": {
+          "_t": {
+            "enum": [
+              "ReadBridgeTokenKeysResult"
+            ],
+            "type": "string",
+            "description": "Discriminator value for ReadBridgeTokenKeysResult",
+            "default": "ReadBridgeTokenKeysResult",
+            "example": "ReadBridgeTokenKeysResult"
+          },
           "accessToken": {
             "type": "string",
             "nullable": true
@@ -6509,6 +6754,10 @@
         },
         "additionalProperties": false,
         "description": "The access parameters of the newly registered temporary customer."
+      },
+      "Void": {
+        "type": "object",
+        "additionalProperties": false
       },
       "AddValidationRapidModel": {
         "required": [
@@ -6751,7 +7000,8 @@
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "description": "The texts to use for the rapid."
           },
           "randomCorrectProbability": {
             "type": "number",
@@ -8418,6 +8668,57 @@
         },
         "additionalProperties": false
       },
+      "TranslatedPromptMetadataModel": {
+        "title": "TranslatedPromptMetadata",
+        "required": [
+          "_t",
+          "identifier",
+          "prompt"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "TranslatedPromptMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for TranslatedPromptMetadata",
+            "default": "TranslatedPromptMetadata",
+            "example": "TranslatedPromptMetadata"
+          },
+          "prompt": {
+            "$ref": "#/components/schemas/TranslatedString"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TranslatedString": {
+        "required": [
+          "englishText",
+          "targetLanguage",
+          "text",
+          "wasTranslated"
+        ],
+        "type": "object",
+        "properties": {
+          "wasTranslated": {
+            "type": "boolean"
+          },
+          "englishText": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "targetLanguage": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "CompareWorkflowModel1": {
         "title": "CompareWorkflowModel",
         "required": [
@@ -8427,9 +8728,9 @@
           "id",
           "kFactor",
           "matchesUntilCompleted",
-          "matchSize",
           "name",
           "ownerMail",
+          "pairMakerInformation",
           "referee",
           "scalingFactor",
           "startingElo",
@@ -8469,6 +8770,19 @@
               "propertyName": "_t"
             }
           },
+          "pairMakerInformation": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/OnlinePairMakerInformation"
+              },
+              {
+                "$ref": "#/components/schemas/PreArrangedPairMakerInformation"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
           "state": {
             "type": "string"
           },
@@ -8487,10 +8801,6 @@
             "format": "int32"
           },
           "kFactor": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "matchSize": {
             "type": "integer",
             "format": "int32"
           },
@@ -8612,7 +8922,7 @@
         },
         "additionalProperties": false
       },
-      "GetAttachCategoryWorkflowResultOverviewResult": {
+      "GetClassifyWorkflowResultOverviewResult": {
         "required": [
           "completedRapids",
           "hiddenCompletedRapidsCount",
@@ -9232,6 +9542,69 @@
         },
         "additionalProperties": false
       },
+      "OnlinePairMakerInformation": {
+        "title": "OnlinePairMakerInformation",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "OnlinePairMakerInformation"
+            ],
+            "type": "string",
+            "description": "Discriminator value for OnlinePairMakerInformation",
+            "default": "OnlinePairMakerInformation",
+            "example": "OnlinePairMakerInformation"
+          },
+          "randomMatchesRatio": {
+            "type": "number",
+            "format": "float"
+          },
+          "totalComparisonBudget": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "currentComparisonBudget": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PreArrangedPairMakerInformation": {
+        "title": "PreArrangedPairMakerInformation",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "PreArrangedPairMakerInformation"
+            ],
+            "type": "string",
+            "description": "Discriminator value for PreArrangedPairMakerInformation",
+            "default": "PreArrangedPairMakerInformation",
+            "example": "PreArrangedPairMakerInformation"
+          },
+          "pairSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "randomize": {
+            "type": "boolean"
+          },
+          "wrapAround": {
+            "type": "boolean"
+          },
+          "matchesAlreadyMade": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
       "ProbabilisticAttachCategoryRefereeConfig": {
         "title": "ProbabilisticAttachCategoryRefereeConfig",
         "required": [
@@ -9580,7 +9953,6 @@
           "_t",
           "campaignName",
           "featureFlags",
-          "pipelineId",
           "priority",
           "selections",
           "userFilters"
@@ -9595,10 +9967,6 @@
             "description": "Discriminator value for AddCampaignModel",
             "default": "AddCampaignModel",
             "example": "AddCampaignModel"
-          },
-          "pipelineId": {
-            "type": "string",
-            "description": "The pipeline the campaign should belong to."
           },
           "artifactId": {
             "type": "string",
@@ -9746,13 +10114,22 @@
             "type": "integer",
             "format": "int32"
           },
-          "matchSize": {
-            "type": "integer",
-            "format": "int32"
-          },
           "scalingFactor": {
             "type": "integer",
             "format": "int32"
+          },
+          "pairMakerConfig": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/OnlinePairMakerConfig"
+              },
+              {
+                "$ref": "#/components/schemas/PreArrangedPairMakerConfig"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
           },
           "matchesUntilCompleted": {
             "type": "integer",
@@ -9779,19 +10156,6 @@
             "items": {
               "type": "string"
             }
-          },
-          "featureFlags": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FeatureFlag"
-            }
-          },
-          "priority": {
-            "type": "string",
-            "nullable": true
-          },
-          "isFallback": {
-            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -9801,6 +10165,7 @@
         "required": [
           "_t",
           "criteria",
+          "pairMakerConfig",
           "referee",
           "targetCountryCodes"
         ],
@@ -9829,15 +10194,24 @@
             "description": "The K-factor to use in the ELO calculation.\r\nDetermines the maximum possible change in a player's Elo rating after a single match.\r\nHigher K-Factor values result in larger rating changes.",
             "format": "int32"
           },
-          "matchSize": {
-            "type": "integer",
-            "description": "The number of datapoints to match against each other in each match.",
-            "format": "int32"
-          },
           "scalingFactor": {
             "type": "integer",
             "description": "Scaling factor to use in the ELO calculation.\r\nAdjusts the sensitivity of the Elo rating system to differences in player ratings.\r\nIt affects how much the rating changes based on the expected outcome versus the actual outcome.",
             "format": "int32"
+          },
+          "pairMakerConfig": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/OnlinePairMakerConfig"
+              },
+              {
+                "$ref": "#/components/schemas/PreArrangedPairMakerConfig"
+              }
+            ],
+            "description": "The PairMaker Algorithm's config that is used for making matchups",
+            "discriminator": {
+              "propertyName": "_t"
+            }
           },
           "matchesUntilCompleted": {
             "type": "integer",
@@ -9866,20 +10240,6 @@
               "type": "string"
             },
             "description": "A list of country codes that this workflow is targeting."
-          },
-          "featureFlags": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FeatureFlag"
-            }
-          },
-          "priority": {
-            "type": "string",
-            "nullable": true
-          },
-          "isFallback": {
-            "type": "boolean",
-            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -10001,7 +10361,8 @@
       },
       "GetPipelineByIdResult": {
         "required": [
-          "artifacts"
+          "artifacts",
+          "featureFlags"
         ],
         "type": "object",
         "properties": {
@@ -10029,6 +10390,68 @@
                 "propertyName": "_t"
               }
             }
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "OnlinePairMakerConfig": {
+        "title": "OnlinePairMakerConfig",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "OnlinePairMakerConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for OnlinePairMakerConfig",
+            "default": "OnlinePairMakerConfig",
+            "example": "OnlinePairMakerConfig"
+          },
+          "randomMatchesRatio": {
+            "type": "number",
+            "format": "float"
+          },
+          "totalComparisonBudget": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PreArrangedPairMakerConfig": {
+        "title": "PreArrangedPairMakerConfig",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "PreArrangedPairMakerConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for PreArrangedPairMakerConfig",
+            "default": "PreArrangedPairMakerConfig",
+            "example": "PreArrangedPairMakerConfig"
+          },
+          "pairSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "randomize": {
+            "type": "boolean"
+          },
+          "wrapAround": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -10107,19 +10530,6 @@
             "items": {
               "type": "string"
             }
-          },
-          "featureFlags": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FeatureFlag"
-            }
-          },
-          "priority": {
-            "type": "string",
-            "nullable": true
-          },
-          "isFallback": {
-            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -10200,65 +10610,35 @@
               "type": "string"
             },
             "description": "A list of country codes that this workflow is targeting."
-          },
-          "featureFlags": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FeatureFlag"
-            }
-          },
-          "priority": {
-            "type": "string",
-            "nullable": true
-          },
-          "isFallback": {
-            "type": "boolean",
-            "nullable": true
           }
         },
         "additionalProperties": false,
         "description": "The configuration for a simple workflow.\r\nA simple workflow creates a rapid for each datapoint in its dataset.\r\nIt is considered complete when all rapids have been completed."
       },
-      "UpdateWorkflowConfigRequest": {
+      "UpdateCampaignModel": {
         "required": [
-          "artifactId",
-          "config",
-          "pipelineId"
+          "featureFlags",
+          "priority"
         ],
         "type": "object",
         "properties": {
-          "pipelineId": {
-            "type": "string",
-            "description": "The id of the pipeline to update."
-          },
-          "artifactId": {
-            "type": "string",
-            "description": "The id of the workflow config artifact to update.",
+          "priority": {
+            "type": "integer",
+            "description": "A value above 0 indicating how much the campaign should be prioritized.\r\nThe higher the value the more weight it will be given during campaign selection.",
+            "format": "int32",
             "nullable": true
           },
-          "config": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/CompareWorkflowConfigModel"
-              },
-              {
-                "$ref": "#/components/schemas/SimpleWorkflowConfigModel"
-              }
-            ],
-            "description": "The new workflow configuration.",
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          },
-          "campaignArtifactId": {
-            "type": "string",
-            "description": "The id of the campaign artifact to update.",
-            "default": null,
+          "featureFlags": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "The feature flags to assign this campaign.",
             "nullable": true
           }
         },
         "additionalProperties": false,
-        "description": "A request to update the workflow configuration."
+        "description": "The model containing the new configuration for a campaign."
       },
       "WorkflowArtifactModel": {
         "title": "WorkflowArtifactModel",
