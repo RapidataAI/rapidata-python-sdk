@@ -4,7 +4,7 @@ from rapidata.rapidata_client.settings import (
     FreeTextMinimumCharacters,
     NoShuffle,
     PlayVideoUntilTheEnd,
-    CustomSettings,
+    CustomSetting,
     )
 
 class RapidataSettings:
@@ -19,7 +19,7 @@ class RapidataSettings:
         free_text_minimum_characters (FreeTextMinimumCharacters): The FreeTextMinimumCharacters instance.
         no_shuffle (NoShuffle): The NoShuffle instance.
         play_video_until_the_end (PlayVideoUntilTheEnd): The PlayVideoUntilTheEnd instance.
-        custom_settings (CustomSettings): The CustomSettings instance.
+        custom_setting (CustomSetting): The CustomSetting instance.
     """
 
     alert_on_fast_response = AlertOnFastResponse
@@ -27,5 +27,5 @@ class RapidataSettings:
     free_text_minimum_characters = FreeTextMinimumCharacters
     no_shuffle = NoShuffle
     play_video_until_the_end = PlayVideoUntilTheEnd
-    custom_settings = CustomSettings
+    custom_setting = CustomSetting
 

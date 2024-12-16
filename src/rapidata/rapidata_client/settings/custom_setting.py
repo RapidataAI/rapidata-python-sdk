@@ -1,6 +1,6 @@
 from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
 
-class CustomSettings(RapidataSetting):
+class CustomSetting(RapidataSetting):
     """
     Set a custom setting with the given key and value. Use this to enable features that do not have a dedicated method (yet)
     
