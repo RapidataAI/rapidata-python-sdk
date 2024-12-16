@@ -84,3 +84,9 @@ results = order.get_results()
 ```
 
 The validation results will not be included in the final results, you'll only see the results of the actual tasks you wanted to have labeled. Likewise you'll only be charged credits for the actual tasks and not the validation tasks.
+
+### Next Steps
+
+You now know how to create and use a validation set to improve the quality of your orders. Check out our [example](/examples/compare_order/) for the benchmark described in [this paper](https://arxiv.org/abs/2409.11904) where we collected over 2 million responses! You may also have a look at the freely available [Huggingface dataset](https://huggingface.co/collections/Rapidata/flux-sd3-mj-dalle-human-annotation-sets-675ae83c8ad7551e497e2c29). 
+
+Happy labeling!
