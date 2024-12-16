@@ -18,6 +18,7 @@ class ClassificationRapid(Rapid):
         asset (MediaAsset | TextAsset): The asset that the labeler will be labeling.
         metadata (Sequence[Metadata]): The metadata that is attached to the rapid.
     """
+
     def __init__(self, instruction: str, answer_options: list[str], truths: list[str], asset: MediaAsset | TextAsset, metadata: Sequence[Metadata]):
         self.instruction = instruction
         self.answer_options = answer_options
@@ -26,33 +27,35 @@ class ClassificationRapid(Rapid):
         self.metadata = metadata
 
 class CompareRapid(Rapid):
-    """A comparison rapid. Used as a comparison of two assets for the labeler to compare."""
+    """
+    Used as a comparison of two assets for the labeler to compare.
+    
+    Args:
+        instruction (str): The instruction that the labeler will be comparing the assets on.
+        truth (str): The correct answer to the comparison. (has to be one of the assets)
+        asset (MultiAsset): The assets that the labeler will be comparing.
+        metadata (Sequence[Metadata]): The metadata that is attached to the rapid.
+    """
     def __init__(self, instruction: str, truth: str, asset: MultiAsset, metadata: Sequence[Metadata]):
-        """Creating the comparison rapid
-
-        Args:
-            instruction (str): The instruction that the labeler will be comparing the assets on.
-            truth (str): The correct answer to the comparison. (has to be one of the assets)
-            asset (MultiAsset): The assets that the labeler will be comparing.
-            metadata (Sequence[Metadata]): The metadata that is attached to the rapid."""
         self.instruction = instruction
         self.asset = asset
         self.truth = truth
         self.metadata = metadata
 
 class SelectWordsRapid(Rapid):
-    """A select words rapid. Used to give the labeler a text and have them select words from it."""
+    """
+    Used to give the labeler a text and have them select words from it.
+    
+    Args:
+        instruction (str): The instruction for the labeler.
+        truths (list[int]): The indices of the words that are the correct answers.
+        asset (MediaAsset): The asset that the labeler will be selecting words from.
+        sentence (str): The sentence that the labeler will be selecting words from. (split up by spaces)
+        strict_grading (bool): Whether the grading should be strict or not. 
+            True means that all correct words and no wrong words have to be selected for the rapid to be marked as correct.
+            False means that at least one correct word and no wrong words have to be selected for the rapid to be marked as correct.
+    """
     def __init__(self, instruction: str, truths: list[int], asset: MediaAsset, sentence: str, strict_grading: bool):
-        """Creating the select words rapid
-        
-        Args:
-            instruction (str): The instruction for the labeler.
-            truths (list[int]): The indices of the words that are the correct answers.
-            asset (MediaAsset): The asset that the labeler will be selecting words from.
-            sentence (str): The sentence that the labeler will be selecting words from. (split up by spaces)
-            strict_grading (bool): Whether the grading should be strict or not. 
-                True means that all correct words and no wrong words have to be selected for the rapid to be marked as correct.
-                False means that at least one correct word and no wrong words have to be selected for the rapid to be marked as correct."""
         self.instruction = instruction
         self.truths = truths
         self.asset = asset
@@ -60,27 +63,28 @@ class SelectWordsRapid(Rapid):
         self.strict_grading = strict_grading
 
 class LocateRapid(Rapid):
-    """A locate rapid. Used to have the labeler locate a specific object in an image."""
+    """
+    Used to have the labeler locate a specific object in an image.
+    
+    Args:
+        instruction (str): The instructions on what the labeler should do.
+        truths (list[Box]): The boxes that the object is located in.
+        asset (MediaAsset): The image that the labeler is locating the object in."""
     def __init__(self, instruction: str, truths: list[Box], asset: MediaAsset):
-        """Creating the locate rapid
-        
-        Args:
-            instruction (str): The instructions on what the labeler should do.
-            truths (list[Box]): The boxes that the object is located in.
-            asset (MediaAsset): The image that the labeler is locating the object in."""
         self.instruction = instruction
         self.asset = asset
         self.truths = truths
 
 class DrawRapid(Rapid):
-    """A draw rapid. Used to have the labeler draw a specific object in an image."""
+    """
+    Used to have the labeler draw a specific object in an image.
+    
+    Args:
+        instruction (str): The instructions on what the labeler should do.
+        truths (list[Box]): The boxes that the object is located in.
+        asset (MediaAsset): The image that the labeler is drawing the object in.
+    """
     def __init__(self, instruction: str, truths: list[Box], asset: MediaAsset):
-        """Creating the draw rapid
-        
-        Args:
-            instruction (str): The instructions on what the labeler should do.
-            truths (list[Box]): The boxes that the object is located in.
-            asset (MediaAsset): The image that the labeler is drawing the object in."""
         self.instruction = instruction
         self.asset = asset
         self.truths = truths

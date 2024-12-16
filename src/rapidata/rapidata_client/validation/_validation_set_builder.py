@@ -232,6 +232,7 @@ class ValidationSetBuilder:
 
         true_words = []
         for idx in truths:
+            assert isinstance(idx, int), "truths must be a list of integers"
             if idx > len(transcription_words) - 1:
                 raise ValueError(f"Index {idx} is out of bounds")
             true_words.append(transcription_words[idx])
