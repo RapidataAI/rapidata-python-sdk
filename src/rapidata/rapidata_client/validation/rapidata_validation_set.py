@@ -46,7 +46,13 @@ from typing import Sequence
 class RapidataValidationSet:
     """A class for interacting with a Rapidata validation set.
 
-    Get a `ValidationSet` either by using `rapi.get_validation_set(id)` to get an existing validation set or by using `rapi.new_validation_set(name)` to create a new validation set.
+    Represents a set of all the validation tasks that can be added to an order.
+
+    When added to an order, the tasks will be selected randomly from the set.
+
+    Attributes:
+        id (str): The ID of the validation set.
+        name (str): The name of the validation set.
     """
 
     def __init__(self, validation_set_id, openapi_service: OpenAPIService, name: str):

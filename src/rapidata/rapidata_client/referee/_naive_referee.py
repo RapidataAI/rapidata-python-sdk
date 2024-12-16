@@ -9,17 +9,15 @@ class NaiveReferee(Referee):
     where the task is considered finished after a predetermined number of
     responses have been made, regardless of the content or quality of those responses.
 
+    Args:
+        responses (int, optional): The number of responses required
+            to complete the task. Defaults to 10. This is per media item.
+
     Attributes:
         responses (int): The number of responses required to complete the task.
     """
 
     def __init__(self, responses: int = 10):
-        """Initialize the NaiveReferee.
-
-        Args:
-            responses (int, optional): The number of responses required
-                to complete the task. Defaults to 10. This is per media item.
-        """
         if responses < 1:
             raise ValueError("The number of responses must be greater than 0.")
         super().__init__()

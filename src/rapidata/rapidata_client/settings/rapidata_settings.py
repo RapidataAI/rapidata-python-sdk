@@ -8,7 +8,10 @@ from rapidata.rapidata_client.settings import (
     )
 
 class RapidataSettings:
-    """Container class for all setting factory functions
+    """
+    Container class for all setting factory functions
+
+    Settings can be added to an order to determine the behaviour of the task.
     
     Attributes:
         alert_on_fast_response (AlertOnFastResponse): The AlertOnFastResponse instance.

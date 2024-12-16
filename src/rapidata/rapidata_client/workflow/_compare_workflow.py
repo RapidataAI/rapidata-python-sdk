@@ -10,35 +10,29 @@ class CompareWorkflow(Workflow):
     A workflow for comparison tasks.
 
     This class represents a comparison workflow where items are compared based on
-    specified criteria.
+    specified instruction.
 
     Attributes:
-        _criteria (str): The criteria used for comparison.
+        _instruction (str): The instruction used for comparison.
 
     Args:
-        criteria (str): The criteria to be used for comparison.
+        instruction (str): The instruction to be used for comparison.
     """
 
     def __init__(self, instruction: str):
-        """
-        Initialize a CompareWorkflow instance.
-
-        Args:
-            instruction (str): The instruction to compare.
-        """
         super().__init__(type="CompareWorkflowConfig")
-        self._criteria = instruction
+        self._instruction = instruction
 
     def _to_dict(self) -> dict[str, Any]:
         return {
             **super()._to_dict(),
-            "criteria": self._criteria,
+            "criteria": self._instruction,
         }
 
     def _to_model(self) -> SimpleWorkflowModel:
         blueprint = CompareRapidBlueprint(
             _t="CompareBlueprint",
-            criteria=self._criteria,
+            criteria=self._instruction,
         )
 
         return SimpleWorkflowModel(

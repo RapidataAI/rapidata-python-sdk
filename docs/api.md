@@ -87,4 +87,4 @@ The Rapidata API builds on the [RapidataClient](reference/rapidata/rapidata_clie
 
 [RapidataValidationManger](reference/rapidata/rapidata_client/validation/validation_set_manager.md) - accessible through the RapidataClient(rapi) under rapi.validation
 
-[RapidsManager](reference/rapidata/rapidata_client/validation/rapids/rapids_manager.md) - accessible through the RapidataClient(rapi) under rapi.validation
+[RapidsManager](reference/rapidata/rapidata_client/validation/rapids/rapids_manager.md) - accessible through the RapidataClient(rapi) under rapi.validation.rapid. Used to create specific rapids to be added to a validation set.

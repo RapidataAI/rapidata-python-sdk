@@ -45,13 +45,6 @@ class RapidataOrderBuilder:
         name: str,
         openapi_service: OpenAPIService,
     ):
-        """
-        Initialize the RapidataOrderBuilder.
-
-        Args:
-            openapi_service (OpenAPIService): The OpenAPIService instance.
-            name (str): The name of the order.
-        """
         self._name = name
         self.order_id: str | None = None
         self.__openapi_service = openapi_service

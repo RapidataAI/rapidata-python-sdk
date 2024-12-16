@@ -7,15 +7,13 @@ from rapidata.rapidata_client.filter.models.gender import Gender
 class GenderFilter(RapidataFilter):
     """GenderFilter Class
     
-    Can be used to filter who to target based on their gender."""
+    Can be used to filter who to target based on their gender.
+    
+    
+    Args:
+        genders (list[Gender]): List of genders to filter by."""
 
     def __init__(self, genders: list[Gender]):
-        """
-        Initialize a GenderFilter instance.
-
-        Args:
-            genders (list[Gender]): List of genders to filter by.
-        """
         self.genders = genders
 
     def _to_model(self):

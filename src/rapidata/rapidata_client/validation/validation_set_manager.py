@@ -21,8 +21,11 @@ from typing import Sequence
 
 
 class ValidationSetManager:
+    """
+    Responsible for everything related to validation sets. From creation to retrieval.
+    """
     def __init__(self, openapi_service: OpenAPIService) -> None:
-        self._openapi_service = openapi_service
+        self.__openapi_service = openapi_service
         self.rapid = RapidsManager()
 
     def create_classification_set(self,
@@ -72,7 +75,7 @@ class ValidationSetManager:
                 )
             )
 
-        validation_set_builder = ValidationSetBuilder(name, self._openapi_service)
+        validation_set_builder = ValidationSetBuilder(name, self.__openapi_service)
         for rapid in rapids:
             validation_set_builder._add_rapid(rapid)
 
@@ -124,7 +127,7 @@ class ValidationSetManager:
                 )
             )
 
-        validation_set_builder = ValidationSetBuilder(name, self._openapi_service)
+        validation_set_builder = ValidationSetBuilder(name, self.__openapi_service)
         for rapid in rapids:
             validation_set_builder._add_rapid(rapid)
 
@@ -173,7 +176,7 @@ class ValidationSetManager:
                 )
             )
 
-        validation_set_builder = ValidationSetBuilder(name, self._openapi_service)
+        validation_set_builder = ValidationSetBuilder(name, self.__openapi_service)
         for rapid in rapids:
             validation_set_builder._add_rapid(rapid)
 
@@ -212,7 +215,7 @@ class ValidationSetManager:
                 )
             )
 
-        validation_set_builder = ValidationSetBuilder(name, self._openapi_service)
+        validation_set_builder = ValidationSetBuilder(name, self.__openapi_service)
         for rapid in rapids:
             validation_set_builder._add_rapid(rapid)
 
@@ -251,7 +254,7 @@ class ValidationSetManager:
                 )
             )
 
-        validation_set_builder = ValidationSetBuilder(name, self._openapi_service)
+        validation_set_builder = ValidationSetBuilder(name, self.__openapi_service)
         for rapid in rapids:
             validation_set_builder._add_rapid(rapid)
 
@@ -270,7 +273,7 @@ class ValidationSetManager:
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
         """
 
-        validation_set_builder = ValidationSetBuilder(name, self._openapi_service)
+        validation_set_builder = ValidationSetBuilder(name, self.__openapi_service)
         for rapid in rapids:
             validation_set_builder._add_rapid(rapid)
 
@@ -286,11 +289,11 @@ class ValidationSetManager:
             RapidataValidationSet: The ValidationSet instance.
         """
         try:
-            validation_set = self._openapi_service.validation_api.validation_get_by_id_get(id=validation_set_id)
+            validation_set = self.__openapi_service.validation_api.validation_get_by_id_get(id=validation_set_id)
         except Exception:
             raise ValueError(f"ValidationSet with ID {validation_set_id} not found.")
         
-        return RapidataValidationSet(validation_set_id, self._openapi_service, validation_set.name)
+        return RapidataValidationSet(validation_set_id, self.__openapi_service, validation_set.name)
     
     def find_validation_sets(self, name: str = "", amount: int = 1) -> list[RapidataValidationSet]:
         """Find validation sets by name.
@@ -303,7 +306,7 @@ class ValidationSetManager:
             list[RapidataValidationSet]: The list of validation sets.
         """
         try:
-            validation_page_result = self._openapi_service.validation_api.validation_query_validation_sets_get(QueryValidationSetModel(
+            validation_page_result = self.__openapi_service.validation_api.validation_query_validation_sets_get(QueryValidationSetModel(
                 pageInfo=PageInfo(index=1, size=amount),
                 filter=RootFilter(filters=[Filter(field="Name", operator="Contains", value=name)]),
                 sortCriteria=[SortCriterion(direction="Desc", propertyName="CreatedAt")]

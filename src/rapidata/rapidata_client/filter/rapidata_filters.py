@@ -8,6 +8,12 @@ from rapidata.rapidata_client.filter import (
 
 class RapidataFilters:
     """RapidataFilters Classes
+
+    These filters can be added to the order to specifically target a certain group of users.
+
+    Note that adding multiple filters to the same order will result in a logical AND operation between the filters.
+
+    Warning: this might significantly slow down the number of responses you receive.
     
     Attributes:
         user_score (UserScoreFilter): The UserScoreFilter instance.

@@ -6,15 +6,13 @@ from rapidata.api_client.models.country_user_filter_model import CountryUserFilt
 class CountryFilter(RapidataFilter):
     """CountryFilter Class
 
-    Can be used to filter who to target based on country codes."""
+    Can be used to filter who to target based on country codes.
+    
+    Args:
+        country_codes (list[str]): List of country codes (capizalized) to filter by.
+    """
 
     def __init__(self, country_codes: list[str]):
-        """
-        Initialize a CountryFilter instance.
-        
-        Args:
-            country_codes (list[str]): List of country codes (capizalized) to filter by.
-        """
         # check that all characters in the country codes are uppercase
         if not isinstance(country_codes, list):
             raise ValueError("Country codes must be a list")
