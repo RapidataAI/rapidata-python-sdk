@@ -1,12 +1,14 @@
 from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
 
 class AlertOnFastResponse(RapidataSetting):
+    """
+    Gives an alert as a pop up on the UI when the response time is less than the milliseconds.
+    
+    Args:
+        threshold (int): if the user responds in less than this time, an alert will be shown.
+    """
+    
     def __init__(self, threshold: int):
-        """Gives an alert as a pop up on the UI when the response time is less than the milliseconds.
-        
-        Args:
-            threshold (int): if the user responds in less than this time, an alert will be shown."""
-        
         if not isinstance(threshold, int):
             raise ValueError("The alert must be an integer.")
         if threshold < 10:

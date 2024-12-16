@@ -12,9 +12,9 @@ from rapidata.rapidata_client.validation.rapids.box import Box
 from typing import Sequence
 
 class RapidsManager:
-    """RapidsManager Class
-    
-    Can be used to build different types of rapids. That can then be added to Validation sets"""
+    """
+    Can be used to build different types of rapids. That can then be added to Validation sets
+    """
     def __init__(self):
         pass
     

@@ -1,13 +1,14 @@
 from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
 
 class FreeTextMinimumCharacters(RapidataSetting):
+    """
+    Set the minimum number of characters a user has to type.
+    
+    Args:
+        value (int): The minimum number of characters for free text.
+    """
 
     def __init__(self, value: int):
-        """Set the minimum number of characters a user has to type.
-        
-        Args:
-            value (int): The minimum number of characters for free text."""
-        
         if value < 0:
             raise ValueError("The minimum number of characters must be greater than or equal to 0.")
         if value > 20:

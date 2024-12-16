@@ -37,15 +37,15 @@ from rapidata.api_client.models.sort_criterion import SortCriterion
 
 
 class RapidataOrderManager:
+    """
+    Handels everything regarding the orders from creation to retrieval.
+    
+    Attributes:
+        filters (RapidataFilters): The RapidataFilters instance.
+        settings (RapidataSettings): The RapidataSettings instance.
+        selections (RapidataSelections): The RapidataSelections instance."""
 
     def __init__(self, openapi_service: OpenAPIService):
-        """Initialize the RapidataOrderManager.
-        
-        Attributes:
-            filters (RapidataFilters): The RapidataFilters instance.
-            settings (RapidataSettings): The RapidataSettings instance.
-            selections (RapidataSelections): The RapidataSelections instance.
-        """
         self._openapi_service = openapi_service
         self.filters = RapidataFilters
         self.settings = RapidataSettings

@@ -35,16 +35,13 @@ class ValidationSetBuilder:
     """The ValidationSetBuilder is used to build a validation set.
     Give the validation set a name and then add classify, compare, or transcription rapid parts to it.
     Get a `ValidationSetBuilder` by calling [`rapi.new_validation_set()`](../rapidata_client.md/#rapidata.rapidata_client.rapidata_client.RapidataClient.new_validation_set).
+
+    Args:
+        name (str): The name of the validation set.
+        openapi_service (OpenAPIService): An instance of OpenAPIService to interact with the API.
     """
 
     def __init__(self, name: str, openapi_service: OpenAPIService):
-        """
-        Initialize the ValidationSetBuilder.
-
-        Args:
-            name (str): The name of the validation set.
-            openapi_service (OpenAPIService): An instance of OpenAPIService to interact with the API.
-        """
         self.name = name
         self.openapi_service = openapi_service
         self.validation_set_id: str | None = None

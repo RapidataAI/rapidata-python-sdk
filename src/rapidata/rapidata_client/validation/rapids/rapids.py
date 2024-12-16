@@ -7,16 +7,18 @@ class Rapid:
     pass
 
 class ClassificationRapid(Rapid):
-    """A classification rapid. Used as a multiple choice question for the labeler to answer."""
+    """
+    A classification rapid. Used as a multiple choice question for the labeler to answer.
+    
+    
+    Args: 
+        instruction (str): The instruction how to choose the options.
+        answer_options (list[str]): The options that the labeler can choose from.
+        truths (list[str]): The correct answers to the question.
+        asset (MediaAsset | TextAsset): The asset that the labeler will be labeling.
+        metadata (Sequence[Metadata]): The metadata that is attached to the rapid.
+    """
     def __init__(self, instruction: str, answer_options: list[str], truths: list[str], asset: MediaAsset | TextAsset, metadata: Sequence[Metadata]):
-        """Creating the classification rapid
-        
-        Args: 
-            instruction (str): The instruction how to choose the options.
-            answer_options (list[str]): The options that the labeler can choose from.
-            truths (list[str]): The correct answers to the question.
-            asset (MediaAsset | TextAsset): The asset that the labeler will be labeling.
-            metadata (Sequence[Metadata]): The metadata that is attached to the rapid."""
         self.instruction = instruction
         self.answer_options = answer_options
         self.truths = truths
