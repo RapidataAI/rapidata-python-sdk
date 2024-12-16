@@ -8,15 +8,17 @@ class AgeGroup(Enum):
     
     Attributes:
         UNDER_18 (AgeGroup): Represents the age group of users under 18.
-        BETWEEN_18_30 (AgeGroup): Represents the age group of users between 18 and 30.
-        BETWEEN_31_50 (AgeGroup): Represents the age group of users between 31 and 50.
-        BETWEEN_51_65 (AgeGroup): Represents the age group of users between 51 and 65.
+        BETWEEN_18_29 (AgeGroup): Represents the age group of users between 18 and 29.
+        BETWEEN_30_39 (AgeGroup): Represents the age group of users between 30 and 39.
+        BETWEEN_40_49 (AgeGroup): Represents the age group of users between 40 and 49.
+        BETWEEN_50_64 (AgeGroup): Represents the age group of users between 50 and 64.
         OVER_65 (AgeGroup): Represents the age group of users over 65."""
     
-    UNDER_18 = BackendAgeGroupModel.ENUM_0_MINUS_18
-    BETWEEN_18_30 = BackendAgeGroupModel.ENUM_19_MINUS_30
-    BETWEEN_31_50 = BackendAgeGroupModel.ENUM_31_MINUS_50
-    BETWEEN_51_65 = BackendAgeGroupModel.ENUM_51_MINUS_65
+    UNDER_18 = BackendAgeGroupModel.ENUM_0_MINUS_17
+    BETWEEN_18_29 = BackendAgeGroupModel.ENUM_18_MINUS_29
+    BETWEEN_30_39 = BackendAgeGroupModel.ENUM_30_MINUS_39
+    BETWEEN_40_49 = BackendAgeGroupModel.ENUM_40_MINUS_49
+    BETWEEN_50_64 = BackendAgeGroupModel.ENUM_50_MINUS_64
     OVER_65 = BackendAgeGroupModel.ENUM_65_PLUS
 
     def _to_backend_model(self) -> BackendAgeGroupModel:
