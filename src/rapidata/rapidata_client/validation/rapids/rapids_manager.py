@@ -118,6 +118,7 @@ class RapidsManager:
             instruction: str,
             truths: list[Box],
             datapoint: str,
+            metadata: Sequence[Metadata] = [],
     ) -> LocateRapid:
         """Build a locate rapid
 
@@ -125,6 +126,7 @@ class RapidsManager:
             instruction (str): The instruction on what the labeler should do.
             truths (list[Box]): The bounding boxes of the object that the labeler ought to be locating.
             datapoint (str): The asset that the labeler will be locating the object in.
+            metadata (Sequence[Metadata], optional): The metadata that is attached to the rapid. Defaults to [].
         """
         
         asset = MediaAsset(datapoint)
@@ -133,12 +135,14 @@ class RapidsManager:
                 instruction=instruction,
                 truths=truths,
                 asset=asset,
+                metadata=metadata,
                 )
     
     def draw_rapid(self,
             instruction: str,
             truths: list[Box],
             datapoint: str,
+            metadata: Sequence[Metadata] = [],
     ) -> DrawRapid:
         """Build a draw rapid
 
@@ -146,6 +150,7 @@ class RapidsManager:
             instruction (str): The instructions on what the labeler
             truths (list[Box]): The bounding boxes of the object that the labeler ought to be drawing.
             datapoint (str): The asset that the labeler will be drawing the object in.
+            metadata (Sequence[Metadata], optional): The metadata that is attached to the rapid. Defaults to [].
         """
         
         asset = MediaAsset(datapoint)
@@ -154,4 +159,5 @@ class RapidsManager:
                 instruction=instruction,
                 truths=truths,
                 asset=asset,
+                metadata=metadata,
                 )

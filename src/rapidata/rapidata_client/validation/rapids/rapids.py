@@ -69,11 +69,14 @@ class LocateRapid(Rapid):
     Args:
         instruction (str): The instructions on what the labeler should do.
         truths (list[Box]): The boxes that the object is located in.
-        asset (MediaAsset): The image that the labeler is locating the object in."""
-    def __init__(self, instruction: str, truths: list[Box], asset: MediaAsset):
+        asset (MediaAsset): The image that the labeler is locating the object in.
+        metadata (Sequence[Metadata]): The metadata that is attached to the rapid.    
+    """
+    def __init__(self, instruction: str, truths: list[Box], asset: MediaAsset, metadata: Sequence[Metadata]):
         self.instruction = instruction
         self.asset = asset
         self.truths = truths
+        self.metadata = metadata
 
 class DrawRapid(Rapid):
     """
@@ -83,8 +86,9 @@ class DrawRapid(Rapid):
         instruction (str): The instructions on what the labeler should do.
         truths (list[Box]): The boxes that the object is located in.
         asset (MediaAsset): The image that the labeler is drawing the object in.
+        metadata (Sequence[Metadata]): The metadata that is attached to the rapid.
     """
-    def __init__(self, instruction: str, truths: list[Box], asset: MediaAsset):
+    def __init__(self, instruction: str, truths: list[Box], asset: MediaAsset, metadata: Sequence[Metadata]):
         self.instruction = instruction
         self.asset = asset
         self.truths = truths

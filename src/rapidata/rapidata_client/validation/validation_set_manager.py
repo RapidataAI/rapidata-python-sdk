@@ -187,6 +187,7 @@ class ValidationSetManager:
         instruction: str,
         truths: list[list[Box]],
         datapoints: list[str],
+        contexts: list[str] | None = None,
         print_confirmation: bool = True
     ) -> RapidataValidationSet:
         """Create a locate validation set.
@@ -199,11 +200,15 @@ class ValidationSetManager:
                     datapoints: ["datapoint1", "datapoint2"]
                     truths: [[Box(0, 0, 100, 100)], [Box(50, 50, 150, 150)]] -> first datapoint the object is in the top left corner, second datapoint the object is in the center
             datapoints (list[str]): The datapoints that will be used for validation.
+            contexts (list[str], optional): The contexts for each datapoint. Defaults to None.
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
         """
         
         if len(datapoints) != len(truths):
             raise ValueError("The number of datapoints and truths must be equal")
+        
+        if contexts and len(contexts) != len(datapoints):
+            raise ValueError("The number of contexts and datapoints must be equal")
         
         rapids = []
         for i in range(len(datapoints)):
@@ -211,7 +216,8 @@ class ValidationSetManager:
                 self.rapid.locate_rapid(
                     instruction=instruction,
                     truths=truths[i],
-                    datapoint=datapoints[i]
+                    datapoint=datapoints[i],
+                    metadata=[PromptMetadata(contexts[i])] if contexts else []
                 )
             )
 
@@ -226,6 +232,7 @@ class ValidationSetManager:
         instruction: str,
         truths: list[list[Box]],
         datapoints: list[str],
+        contexts: list[str] | None = None,
         print_confirmation: bool = True
     ) -> RapidataValidationSet:
         """Create a draw validation set.
@@ -238,11 +245,15 @@ class ValidationSetManager:
                     datapoints: ["datapoint1", "datapoint2"]
                     truths: [[Box(0, 0, 100, 100)], [Box(50, 50, 150, 150)]] -> first datapoint the object is in the top left corner, second datapoint the object is in the center
             datapoints (list[str]): The datapoints that will be used for validation.
+            contexts (list[str], optional): The contexts for each datapoint. Defaults to None.
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
         """
         
         if len(datapoints) != len(truths):
             raise ValueError("The number of datapoints and truths must be equal")
+        
+        if contexts and len(contexts) != len(datapoints):
+            raise ValueError("The number of contexts and datapoints must be equal")
         
         rapids = []
         for i in range(len(datapoints)):
@@ -250,7 +261,8 @@ class ValidationSetManager:
                 self.rapid.draw_rapid(
                     instruction=instruction,
                     truths=truths[i],
-                    datapoint=datapoints[i]
+                    datapoint=datapoints[i],
+                    metadata=[PromptMetadata(contexts[i])] if contexts else []
                 )
             )
 

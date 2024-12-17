@@ -171,8 +171,7 @@ class RapidataValidationSet:
                 self.__openapi_service.validation_api.validation_add_validation_text_rapid_post(
                     add_validation_text_rapid_model=model
                 )
-
-
+                
         else:
             raise ValueError("Invalid asset type")
 
