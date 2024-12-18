@@ -10,38 +10,32 @@ class FreeTextWorkflow(Workflow):
     A workflow for free text input tasks.
 
     This class represents a workflow where users can provide free-form text responses
-    to a given question.
+    to a given instruction.
 
     Attributes:
-        _question (str): The question to be answered with free text.
+        _instruction (str): The instruction to be answered with free text.
 
     Args:
-        question (str): The question to be presented for free text input.
+        instruction (str): The instruction to be presented for free text input.
     """
 
     def __init__(self, instruction: str):
-        """
-        Initialize a FreeTextWorkflow instance.
-
-        Args:
-            question (str): The instruction to be presented for free text input.
-        """
         super().__init__(type="SimpleWorkflowConfig")
-        self._question = instruction
+        self._instruction = instruction
 
     def _to_dict(self) -> dict[str, Any]:
         return {
             **super()._to_dict(),
             "blueprint": {
                 "_t": "FreeTextBlueprint",
-                "question": self._question,
+                "question": self._instruction,
             },
         }
 
     def _to_model(self) -> SimpleWorkflowModel:
         blueprint = FreeTextRapidBlueprint(
             _t="FreeTextBlueprint",
-            question=self._question,
+            question=self._instruction,
         )
 
         return SimpleWorkflowModel(

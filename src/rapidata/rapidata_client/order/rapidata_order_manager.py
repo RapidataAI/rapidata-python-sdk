@@ -13,11 +13,16 @@ from rapidata.rapidata_client.selection._base_selection import RapidataSelection
 from rapidata.rapidata_client.selection.validation_selection import ValidationSelection
 from rapidata.rapidata_client.selection.labeling_selection import LabelingSelection
 from rapidata.rapidata_client.workflow import (
+    Workflow,
     ClassifyWorkflow,
     CompareWorkflow,
     FreeTextWorkflow,
-    SelectWordsWorkflow
-)
+    SelectWordsWorkflow,
+    LocateWorkflow,
+    DrawWorkflow)
+from rapidata.rapidata_client.selection.validation_selection import ValidationSelection
+from rapidata.rapidata_client.selection.labeling_selection import LabelingSelection
+from rapidata.rapidata_client.assets import MediaAsset, TextAsset, MultiAsset
 from rapidata.rapidata_client.filter import RapidataFilter
 from rapidata.rapidata_client.filter.rapidata_filters import RapidataFilters
 from rapidata.rapidata_client.settings import RapidataSettings, RapidataSetting
@@ -32,12 +37,20 @@ from rapidata.api_client.models.sort_criterion import SortCriterion
 
 
 class RapidataOrderManager:
+    """
+    Handels everything regarding the orders from creation to retrieval.
+    
+    Attributes:
+        filters (RapidataFilters): The RapidataFilters instance.
+        settings (RapidataSettings): The RapidataSettings instance.
+        selections (RapidataSelections): The RapidataSelections instance."""
 
     def __init__(self, openapi_service: OpenAPIService):
-        self.openapi_service = openapi_service
+        self._openapi_service = openapi_service
         self.filters = RapidataFilters
         self.settings = RapidataSettings
         self.selections = RapidataSelections
+        self.__priority = 50
 
     def __get_selections(self, validation_set_id: str | None, labeling_amount=3) -> Sequence[RapidataSelection]:
         if validation_set_id:
@@ -46,11 +59,11 @@ class RapidataOrderManager:
     
     def __create_general_order(self,
             name: str,
-            workflow: ClassifyWorkflow | CompareWorkflow | FreeTextWorkflow | SelectWordsWorkflow,
+            workflow: Workflow,
             assets: list[MediaAsset] | list[TextAsset] | list[MultiAsset],
             data_type: str = RapidataDataTypes.MEDIA,
             responses_per_datapoint: int = 10,
-            prompts: list[str] | None = None,
+            contexts: list[str] | None = None,
             validation_set_id: str | None = None,
             confidence_threshold: float | None = None,
             filters: Sequence[RapidataFilter] = [],
@@ -60,17 +73,17 @@ class RapidataOrderManager:
             default_labeling_amount: int = 3
         ) -> RapidataOrder:
         
-        if prompts and len(prompts) != len(assets):
-            raise ValueError("Number of prompts must match number of datapoints")
+        if contexts and len(contexts) != len(assets):
+            raise ValueError("Number of contexts must match number of datapoints")
         
         if sentences and len(sentences) != len(assets):
             raise ValueError("Number of sentences must match number of datapoints")
         
-        if sentences and prompts:
-            raise ValueError("You can only use prompts or sentences, not both")
+        if sentences and contexts:
+            raise ValueError("You can only use contexts or sentences, not both")
         
-        if prompts and data_type == RapidataDataTypes.TEXT:
-            print("Warning: Prompts are not supported for text data type. Ignoring prompts.")
+        if contexts and data_type == RapidataDataTypes.TEXT:
+            print("Warning: Contexts are not supported for text data type. Ignoring contexts.")
 
         if not confidence_threshold:
             referee = NaiveReferee(responses=responses_per_datapoint)
@@ -80,7 +93,7 @@ class RapidataOrderManager:
                 max_vote_count=responses_per_datapoint,
             )
 
-        order_builder = RapidataOrderBuilder(name=name, openapi_service=self.openapi_service)
+        order_builder = RapidataOrderBuilder(name=name, openapi_service=self._openapi_service)
 
         if selections and validation_set_id:
             print("Warning: You provided both selections and validation_set_id. Ignoring validation_set_id.")
@@ -88,7 +101,7 @@ class RapidataOrderManager:
         if selections is None:
             selections = self.__get_selections(validation_set_id, labeling_amount=default_labeling_amount)
 
-        prompts_metadata = [PromptMetadata(prompt=prompt) for prompt in prompts] if prompts else None
+        prompts_metadata = [PromptMetadata(prompt=prompt) for prompt in contexts] if contexts else None
         sentence_metadata = [SelectWordsMetadata(select_words=sentence) for sentence in sentences] if sentences else None
 
         metadata = prompts_metadata or sentence_metadata or None
@@ -103,9 +116,13 @@ class RapidataOrderManager:
                  ._filters(filters)
                  ._selections(selections) 
                  ._settings(settings)
+                 ._priority(self.__priority)
                  ._create()
                  )
         return order
+    
+    def _set_priority(self, priority: int):
+        self.__priority = priority
         
     def create_classification_order(self,
             name: str,
@@ -114,7 +131,7 @@ class RapidataOrderManager:
             datapoints: list[str],
             data_type: str = RapidataDataTypes.MEDIA,
             responses_per_datapoint: int = 10,
-            prompts: list[str] | None = None,
+            contexts: list[str] | None = None,
             validation_set_id: str | None = None,
             confidence_threshold: float | None = None,
             filters: Sequence[RapidataFilter] = [],
@@ -131,8 +148,8 @@ class RapidataOrderManager:
             data_type (str, optional): The data type of the datapoints. Defaults to RapidataDataTypes.MEDIA. \n
                 Other option: RapidataDataTypes.TEXT ("text").
             responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
-            prompts (list[str], optional): The list of prompts for the classification. Defaults to None.\n
-                If provided has to be the same length as datapoints and will be shown in addition to the question and options. (Therefore will be different for each datapoint)
+            contexts (list[str], optional): The list of contexts for the classification. Defaults to None.\n
+                If provided has to be the same length as datapoints and will be shown in addition to the instruction and options. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
             validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
@@ -159,7 +176,7 @@ class RapidataOrderManager:
             assets=assets,
             data_type=data_type,
             responses_per_datapoint=responses_per_datapoint,
-            prompts=prompts,
+            contexts=contexts,
             validation_set_id=validation_set_id,
             confidence_threshold=confidence_threshold,
             filters=filters,
@@ -173,7 +190,7 @@ class RapidataOrderManager:
             datapoints: list[list[str]],
             data_type: str = RapidataDataTypes.MEDIA,
             responses_per_datapoint: int = 10,
-            prompts: list[str] | None = None,
+            contexts: list[str] | None = None,
             validation_set_id: str | None = None,
             confidence_threshold: float | None = None,
             filters: Sequence[RapidataFilter] = [],
@@ -189,8 +206,8 @@ class RapidataOrderManager:
             data_type (str, optional): The data type of the datapoints. Defaults to RapidataDataTypes.MEDIA. \n
                 Other option: RapidataDataTypes.TEXT ("text").
             responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
-            prompts (list[str], optional): The list of prompts for the comparison. Defaults to None.\n
-                If provided has to be the same length as datapoints and will be shown in addition to the criteria. (Therefore will be different for each datapoint)
+            contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
+                If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
             validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
@@ -216,7 +233,7 @@ class RapidataOrderManager:
             assets=assets,
             data_type=data_type,
             responses_per_datapoint=responses_per_datapoint,
-            prompts=prompts,
+            contexts=contexts,
             validation_set_id=validation_set_id,
             confidence_threshold=confidence_threshold,
             filters=filters,
@@ -237,8 +254,8 @@ class RapidataOrderManager:
         """Create a free text order.
 
         Args:
-            name (str): The name of the order. (Will not be shown to the labeler)
-            question (str): The instruction for the free text. Will be shown along side each datapoint.
+            name (str): The name of the order.
+            instruction (str): The instruction to answer with free text. Will be shown along side each datapoint.
             datapoints (list[str]): The list of datapoints for the free text - each datapoint will be labeled.
             data_type (str, optional): The data type of the datapoints. Defaults to RapidataDataTypes.MEDIA. \n
                 Other option: RapidataDataTypes.TEXT ("text").
@@ -283,8 +300,8 @@ class RapidataOrderManager:
         """Create a select words order.
 
         Args:
-            name (str): The name of the order. (Will not be shown to the labeler)
-            instruction (str): The instruction for the select words. Will be shown along side each datapoint.
+            name (str): The name of the order.
+            instruction (str): The instruction for how the words should be selected. Will be shown along side each datapoint.
             datapoints (list[str]): The list of datapoints for the select words - each datapoint will be labeled.
             sentences (list[str]): The list of sentences for the select words - Will be split up by spaces and shown along side each datapoint.\n
                 Must be the same length as datapoints.
@@ -312,7 +329,90 @@ class RapidataOrderManager:
             sentences=sentences,
             default_labeling_amount=2
         )
+    
+    def create_locate_order(self,
+            name: str,
+            target: str,
+            datapoints: list[str],
+            responses_per_datapoint: int = 10,
+            contexts: list[str] | None = None,
+            validation_set_id: str | None = None,
+            filters: Sequence[RapidataFilter] = [],
+            settings: Sequence[RapidataSetting] = [],
+            selections: Sequence[RapidataSelection] | None = None,
+        ) -> RapidataOrder:
+        """Create a locate order.
 
+        Args:
+            name (str): The name of the order.
+            target (str): The target what should be located. Will be shown along side each datapoint.
+            datapoints (list[str]): The list of datapoints for the locate - each datapoint will be labeled.
+            responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
+            contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
+                If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
+                Will be match up with the datapoints using the list index.
+            validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
+                If provided, one validation task will be shown infront of the datapoints that will be labeled.
+            filters (Sequence[RapidataFilter], optional): The list of filters for the locate. Defaults to []. Decides who the tasks should be shown to.
+            settings (Sequence[RapidataSetting], optional): The list of settings for the locate. Defaults to []. Decides how the tasks should be shown.
+            selections (Sequence[RapidataSelection], optional): The list of selections for the locate. Defaults to None. Decides in what order the tasks should be shown.
+        """
+
+        assets = [MediaAsset(path=path) for path in datapoints]
+
+        return self.__create_general_order(
+            name=name,
+            workflow=LocateWorkflow(target=target),
+            assets=assets,
+            responses_per_datapoint=responses_per_datapoint,
+            contexts=contexts,
+            validation_set_id=validation_set_id,
+            filters=filters,
+            selections=selections,
+            settings=settings
+        )
+
+    def create_draw_order(self,
+            name: str,
+            target: str,
+            datapoints: list[str],
+            responses_per_datapoint: int = 10,
+            contexts: list[str] | None = None,
+            validation_set_id: str | None = None,
+            filters: Sequence[RapidataFilter] = [],
+            settings: Sequence[RapidataSetting] = [],
+            selections: Sequence[RapidataSelection] | None = None,
+        ) -> RapidataOrder:
+        """Create a draw order.
+
+        Args:
+            name (str): The name of the order.
+            target (str): The target for how the lines should be drawn. Will be shown along side each datapoint.
+            datapoints (list[str]): The list of datapoints for the draw lines - each datapoint will be labeled.
+            responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
+            contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
+                If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
+                Will be match up with the datapoints using the list index.
+            validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
+                If provided, one validation task will be shown infront of the datapoints that will be labeled.
+            filters (Sequence[RapidataFilter], optional): The list of filters for the draw lines. Defaults to []. Decides who the tasks should be shown to.
+            settings (Sequence[RapidataSetting], optional): The list of settings for the draw lines. Defaults to []. Decides how the tasks should be shown.
+            selections (Sequence[RapidataSelection], optional): The list of selections for the draw lines. Defaults to None. Decides in what order the tasks should be shown.
+        """
+
+        assets = [MediaAsset(path=path) for path in datapoints]
+
+        return self.__create_general_order(
+            name=name,
+            workflow=DrawWorkflow(target=target),
+            assets=assets,
+            responses_per_datapoint=responses_per_datapoint,
+            contexts=contexts,
+            validation_set_id=validation_set_id,
+            filters=filters,
+            selections=selections,
+            settings=settings
+        )
 
     def get_order_by_id(self, order_id: str) -> RapidataOrder:
         """Get an order by ID.
@@ -325,14 +425,14 @@ class RapidataOrderManager:
         """
 
         try:
-            order = self.openapi_service.order_api.order_get_by_id_get(order_id)
+            order = self._openapi_service.order_api.order_get_by_id_get(order_id)
         except Exception:
             raise ValueError(f"Order with ID {order_id} not found.")
 
         return RapidataOrder(
             order_id=order_id, 
             name=order.order_name,
-            openapi_service=self.openapi_service)
+            openapi_service=self._openapi_service)
 
     def find_orders(self, name: str = "", amount: int = 1) -> list[RapidataOrder]:
         """Find your recent orders given criteria. If nothing is provided, it will return the most recent order.
@@ -345,7 +445,7 @@ class RapidataOrderManager:
             list[RapidataOrder]: A list of RapidataOrder instances.
         """
         try:
-            order_page_result = self.openapi_service.order_api.order_query_get(QueryModel(
+            order_page_result = self._openapi_service.order_api.order_query_get(QueryModel(
                 page=PageInfo(index=1, size=amount),
                 filter=RootFilter(filters=[Filter(field="OrderName", operator="Contains", value=name)]),
                 sortCriteria=[SortCriterion(direction="Desc", propertyName="OrderDate")]

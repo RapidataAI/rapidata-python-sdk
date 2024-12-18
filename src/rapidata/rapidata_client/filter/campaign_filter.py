@@ -8,15 +8,15 @@ from rapidata.api_client.models.campaign_user_filter_model import (
 class CampaignFilter(RapidataFilter):
     """CampaignFilter Class
 
-    Can be used to filter who to target based on campaign IDs."""
+    Can be used to filter who to target based on campaign IDs.
+
+    This filter can only be used when directly in contact with Rapidata.
+    
+    Args:
+        campaign_ids (list[str]): List of campaign IDs to filter by.
+    """
 
     def __init__(self, campaign_ids: list[str]):
-        """
-        Initialize a CampaignFilter instance.
-
-        Args:
-            campaign_ids (list[str]): List of campaign IDs to filter by.
-        """
         self.campaign_ids = campaign_ids
 
     def _to_model(self):

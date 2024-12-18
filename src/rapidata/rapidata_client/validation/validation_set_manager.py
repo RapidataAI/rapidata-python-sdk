@@ -13,14 +13,19 @@ from rapidata.api_client.models.sort_criterion import SortCriterion
 from rapidata.api_client.exceptions import BadRequestException
 from urllib3._collections import HTTPHeaderDict
 
+from rapidata.rapidata_client.validation.rapids.box import Box
+
 from rapidata.api_client.models.query_validation_set_model import QueryValidationSetModel
 
 from typing import Sequence
 
 
 class ValidationSetManager:
+    """
+    Responsible for everything related to validation sets. From creation to retrieval.
+    """
     def __init__(self, openapi_service: OpenAPIService) -> None:
-        self.openapi_service = openapi_service
+        self.__openapi_service = openapi_service
         self.rapid = RapidsManager()
 
     def create_classification_set(self,
@@ -30,7 +35,7 @@ class ValidationSetManager:
         datapoints: list[str],
         truths: list[list[str]],
         data_type: str = RapidataDataTypes.MEDIA,
-        prompts: list[str] | None = None,
+        contexts: list[str] | None = None,
         print_confirmation: bool = True
     ) -> RapidataValidationSet:
         """Create a classification validation set.
@@ -46,16 +51,16 @@ class ValidationSetManager:
                     datapoints: ["datapoint1", "datapoint2"]
                     truths: [["yes"], ["no", "maybe"]] -> first datapoint correct answer is "yes", second datapoint is "no" or "maybe"
             data_type (str, optional): The type of data. Defaults to RapidataDataTypes.MEDIA. Other option: RapidataDataTypes.TEXT ("text").
-            prompts (list[str], optional): The prompts for each datapoint. Defaults to None.\n
-                If provided has to be the same length as datapoints and will be shown in addition to the question and options. (Therefore will be different for each datapoint)
+            contexts (list[str], optional): The contexts for each datapoint. Defaults to None.\n
+                If provided has to be the same length as datapoints and will be shown in addition to the instruction and answer options. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
         """
         
         if len(datapoints) != len(truths):
             raise ValueError("The number of datapoints and truths must be equal")
-        if prompts and len(prompts) != len(datapoints):
-            raise ValueError("The number of prompts and datapoints must be equal")
+        if contexts and len(contexts) != len(datapoints):
+            raise ValueError("The number of contexts and datapoints must be equal")
         
         rapids = []
         for i in range(len(datapoints)):
@@ -66,11 +71,11 @@ class ValidationSetManager:
                     datapoint=datapoints[i],
                     truths=truths[i],
                     data_type=data_type,
-                    metadata=[PromptMetadata(prompts[i])] if prompts else []
+                    metadata=[PromptMetadata(contexts[i])] if contexts else []
                 )
             )
 
-        validation_set_builder = ValidationSetBuilder(name, self.openapi_service)
+        validation_set_builder = ValidationSetBuilder(name, self.__openapi_service)
         for rapid in rapids:
             validation_set_builder._add_rapid(rapid)
 
@@ -82,7 +87,7 @@ class ValidationSetManager:
         datapoints: list[list[str]],
         truths: list[str],
         data_type: str = RapidataDataTypes.MEDIA,
-        prompts: list[str] | None = None,
+        contexts: list[str] | None = None,
         print_confirmation: bool = True
     ) -> RapidataValidationSet:
         """Create a comparison validation set.
@@ -92,14 +97,14 @@ class ValidationSetManager:
             instruction (str): The instruction to compare against.
             truths (list[str]): The truths for each comparison. List is for each comparison.\n
                 example:
-                    criteria: "Which image has a cat?"
+                    instruction: "Which image has a cat?"
                     datapoints = [["image1.jpg", "image2.jpg"], ["image3.jpg", "image4.jpg"]]
                     truths: ["image1.jpg", "image4.jpg"] -> first comparison image1.jpg has a cat, second comparison image4.jpg has a cat
             datapoints (list[list[str]]): The compare datapoints to create the validation set with. 
                 Outer list is for each comparison, inner list the two images/texts that will be compared.
             data_type (str, optional): The type of data. Defaults to RapidataDataTypes.MEDIA. Other option: RapidataDataTypes.TEXT ("text").
-            prompts (list[str], optional): The prompts for each datapoint. Defaults to None.\n
-                If provided has to be the same length as datapoints and will be shown in addition to the criteria and truth. (Therefore will be different for each datapoint)
+            contexts (list[str], optional): The contexts for each datapoint. Defaults to None.\n
+                If provided has to be the same length as datapoints and will be shown in addition to the instruction and truth. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
         """
@@ -107,8 +112,8 @@ class ValidationSetManager:
         if len(datapoints) != len(truths):
             raise ValueError("The number of datapoints and truths must be equal")
         
-        if prompts and len(prompts) != len(datapoints):
-            raise ValueError("The number of prompts and datapoints must be equal")
+        if contexts and len(contexts) != len(datapoints):
+            raise ValueError("The number of contexts and datapoints must be equal")
         
         rapids = []
         for i in range(len(datapoints)):
@@ -118,11 +123,11 @@ class ValidationSetManager:
                     truth=truths[i],
                     datapoint=datapoints[i],
                     data_type=data_type,
-                    metadata=[PromptMetadata(prompts[i])] if prompts else []
+                    metadata=[PromptMetadata(contexts[i])] if contexts else []
                 )
             )
 
-        validation_set_builder = ValidationSetBuilder(name, self.openapi_service)
+        validation_set_builder = ValidationSetBuilder(name, self.__openapi_service)
         for rapid in rapids:
             validation_set_builder._add_rapid(rapid)
 
@@ -171,7 +176,97 @@ class ValidationSetManager:
                 )
             )
 
-        validation_set_builder = ValidationSetBuilder(name, self.openapi_service)
+        validation_set_builder = ValidationSetBuilder(name, self.__openapi_service)
+        for rapid in rapids:
+            validation_set_builder._add_rapid(rapid)
+
+        return validation_set_builder._submit(print_confirmation)
+    
+    def create_locate_set(self,
+        name: str,
+        instruction: str,
+        truths: list[list[Box]],
+        datapoints: list[str],
+        contexts: list[str] | None = None,
+        print_confirmation: bool = True
+    ) -> RapidataValidationSet:
+        """Create a locate validation set.
+
+        Args:
+            name (str): The name of the validation set. (will not be shown to the labeler)
+            instruction (str): The instruction to show to the labeler.
+            truths (list[list[Box]]): The truths for each datapoint. Outher list is for each datapoint, inner list is for each truth.\n
+                example:
+                    datapoints: ["datapoint1", "datapoint2"]
+                    truths: [[Box(0, 0, 100, 100)], [Box(50, 50, 150, 150)]] -> first datapoint the object is in the top left corner, second datapoint the object is in the center
+            datapoints (list[str]): The datapoints that will be used for validation.
+            contexts (list[str], optional): The contexts for each datapoint. Defaults to None.
+            print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
+        """
+        
+        if len(datapoints) != len(truths):
+            raise ValueError("The number of datapoints and truths must be equal")
+        
+        if contexts and len(contexts) != len(datapoints):
+            raise ValueError("The number of contexts and datapoints must be equal")
+        
+        rapids = []
+        for i in range(len(datapoints)):
+            rapids.append(
+                self.rapid.locate_rapid(
+                    instruction=instruction,
+                    truths=truths[i],
+                    datapoint=datapoints[i],
+                    metadata=[PromptMetadata(contexts[i])] if contexts else []
+                )
+            )
+
+        validation_set_builder = ValidationSetBuilder(name, self.__openapi_service)
+        for rapid in rapids:
+            validation_set_builder._add_rapid(rapid)
+
+        return validation_set_builder._submit(print_confirmation)
+    
+    def create_draw_set(self,
+        name: str,
+        instruction: str,
+        truths: list[list[Box]],
+        datapoints: list[str],
+        contexts: list[str] | None = None,
+        print_confirmation: bool = True
+    ) -> RapidataValidationSet:
+        """Create a draw validation set.
+
+        Args:
+            name (str): The name of the validation set. (will not be shown to the labeler)
+            instruction (str): The instruction to show to the labeler.
+            truths (list[list[Box]]): The truths for each datapoint. Outher list is for each datapoint, inner list is for each truth.\n
+                example:
+                    datapoints: ["datapoint1", "datapoint2"]
+                    truths: [[Box(0, 0, 100, 100)], [Box(50, 50, 150, 150)]] -> first datapoint the object is in the top left corner, second datapoint the object is in the center
+            datapoints (list[str]): The datapoints that will be used for validation.
+            contexts (list[str], optional): The contexts for each datapoint. Defaults to None.
+            print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
+        """
+        
+        if len(datapoints) != len(truths):
+            raise ValueError("The number of datapoints and truths must be equal")
+        
+        if contexts and len(contexts) != len(datapoints):
+            raise ValueError("The number of contexts and datapoints must be equal")
+        
+        rapids = []
+        for i in range(len(datapoints)):
+            rapids.append(
+                self.rapid.draw_rapid(
+                    instruction=instruction,
+                    truths=truths[i],
+                    datapoint=datapoints[i],
+                    metadata=[PromptMetadata(contexts[i])] if contexts else []
+                )
+            )
+
+        validation_set_builder = ValidationSetBuilder(name, self.__openapi_service)
         for rapid in rapids:
             validation_set_builder._add_rapid(rapid)
 
@@ -190,7 +285,7 @@ class ValidationSetManager:
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
         """
 
-        validation_set_builder = ValidationSetBuilder(name, self.openapi_service)
+        validation_set_builder = ValidationSetBuilder(name, self.__openapi_service)
         for rapid in rapids:
             validation_set_builder._add_rapid(rapid)
 
@@ -206,11 +301,11 @@ class ValidationSetManager:
             RapidataValidationSet: The ValidationSet instance.
         """
         try:
-            validation_set = self.openapi_service.validation_api.validation_get_by_id_get(id=validation_set_id)
+            validation_set = self.__openapi_service.validation_api.validation_get_by_id_get(id=validation_set_id)
         except Exception:
             raise ValueError(f"ValidationSet with ID {validation_set_id} not found.")
         
-        return RapidataValidationSet(validation_set_id, self.openapi_service, validation_set.name)
+        return RapidataValidationSet(validation_set_id, self.__openapi_service, validation_set.name)
     
     def find_validation_sets(self, name: str = "", amount: int = 1) -> list[RapidataValidationSet]:
         """Find validation sets by name.
@@ -223,7 +318,7 @@ class ValidationSetManager:
             list[RapidataValidationSet]: The list of validation sets.
         """
         try:
-            validation_page_result = self.openapi_service.validation_api.validation_query_validation_sets_get(QueryValidationSetModel(
+            validation_page_result = self.__openapi_service.validation_api.validation_query_validation_sets_get(QueryValidationSetModel(
                 pageInfo=PageInfo(index=1, size=amount),
                 filter=RootFilter(filters=[Filter(field="Name", operator="Contains", value=name)]),
                 sortCriteria=[SortCriterion(direction="Desc", propertyName="CreatedAt")]

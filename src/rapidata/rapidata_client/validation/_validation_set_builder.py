@@ -6,21 +6,27 @@ from rapidata.api_client.models.compare_truth import CompareTruth
 from rapidata.api_client.models.transcription_payload import TranscriptionPayload
 from rapidata.api_client.models.transcription_truth import TranscriptionTruth
 from rapidata.api_client.models.transcription_word import TranscriptionWord
-from rapidata.rapidata_client.assets._media_asset import MediaAsset
-from rapidata.rapidata_client.assets._multi_asset import MultiAsset
-from rapidata.rapidata_client.assets._text_asset import TextAsset
+from rapidata.api_client.models.locate_payload import LocatePayload
+from rapidata.api_client.models.locate_box_truth import LocateBoxTruth
+from rapidata.api_client.models.line_payload import LinePayload
+from rapidata.api_client.models.bounding_box_truth import BoundingBoxTruth
+from rapidata.api_client.models.box_shape import BoxShape
 from rapidata.rapidata_client.validation.rapidata_validation_set import (
     RapidataValidationSet,
 )
+from rapidata.rapidata_client.assets import MediaAsset, TextAsset, MultiAsset
 from rapidata.rapidata_client.validation._validation_rapid_parts import ValidatioRapidParts
 from rapidata.rapidata_client.metadata._base_metadata import Metadata
 from rapidata.service.openapi_service import OpenAPIService
+from rapidata.rapidata_client.validation.rapids.box import Box
 
 from rapidata.rapidata_client.validation.rapids.rapids import (
     Rapid, 
     ClassificationRapid,
     CompareRapid,
-    SelectWordsRapid
+    SelectWordsRapid,
+    LocateRapid,
+    DrawRapid
 )
 from typing import Sequence
 
@@ -29,16 +35,13 @@ class ValidationSetBuilder:
     """The ValidationSetBuilder is used to build a validation set.
     Give the validation set a name and then add classify, compare, or transcription rapid parts to it.
     Get a `ValidationSetBuilder` by calling [`rapi.new_validation_set()`](../rapidata_client.md/#rapidata.rapidata_client.rapidata_client.RapidataClient.new_validation_set).
+
+    Args:
+        name (str): The name of the validation set.
+        openapi_service (OpenAPIService): An instance of OpenAPIService to interact with the API.
     """
 
     def __init__(self, name: str, openapi_service: OpenAPIService):
-        """
-        Initialize the ValidationSetBuilder.
-
-        Args:
-            name (str): The name of the validation set.
-            openapi_service (OpenAPIService): An instance of OpenAPIService to interact with the API.
-        """
         self.name = name
         self.openapi_service = openapi_service
         self.validation_set_id: str | None = None
@@ -93,14 +96,23 @@ class ValidationSetBuilder:
         if not isinstance(rapid, Rapid):
             raise ValueError("This method only accepts Rapid instances")
         
-        if isinstance(rapid, ClassificationRapid):
-            self.__add_classify_rapid(rapid.asset, rapid.question, rapid.options, rapid.truths, rapid.metadata)
+        elif isinstance(rapid, ClassificationRapid):
+            self.__add_classify_rapid(rapid.asset, rapid.instruction, rapid.answer_options, rapid.truths, rapid.metadata)
 
-        if isinstance(rapid, CompareRapid):
-            self.__add_compare_rapid(rapid.asset, rapid.criteria, rapid.truth, rapid.metadata)
+        elif isinstance(rapid, CompareRapid):
+            self.__add_compare_rapid(rapid.asset, rapid.instruction, rapid.truth, rapid.metadata)
 
-        if isinstance(rapid, SelectWordsRapid):
+        elif isinstance(rapid, SelectWordsRapid):
             self.__add_select_words_rapid(rapid.asset, rapid.instruction, rapid.sentence, rapid.truths, rapid.strict_grading)
+        
+        elif isinstance(rapid, LocateRapid):
+            self.__add_locate_rapid(rapid.asset, rapid.instruction, rapid.truths)
+
+        elif isinstance(rapid, DrawRapid):
+            self.__add_draw_rapid(rapid.asset, rapid.instruction, rapid.truths)
+
+        else:
+            raise ValueError("Unsupported rapid type")
 
         return self
     
@@ -127,6 +139,9 @@ class ValidationSetBuilder:
         Raises:
             ValueError: If the lengths of categories and truths are inconsistent.
         """
+        if not all(truth in answer_options for truth in truths):
+            raise ValueError("Truths must be part of the answer options")
+
         payload = ClassifyPayload(
             _t="ClassifyPayload", possibleCategories=answer_options, title=instruction
         )
@@ -217,6 +232,7 @@ class ValidationSetBuilder:
 
         true_words = []
         for idx in truths:
+            assert isinstance(idx, int), "truths must be a list of integers"
             if idx > len(transcription_words) - 1:
                 raise ValueError(f"Index {idx} is out of bounds")
             true_words.append(transcription_words[idx])
@@ -241,3 +257,115 @@ class ValidationSetBuilder:
                 randomCorrectProbability = 1 / len(transcription_words),
             )
         )
+    
+    def __add_locate_rapid(
+        self,
+        asset: MediaAsset,
+        instruction: str,
+        truths: list[Box]
+    ):
+        """Add a locate rapid to the validation set.
+
+        Args:
+            instruction (str): The instruction for the locate rapid.
+            asset (MediaAsset): The asset for the rapid.
+            truths (list[Box]): The truths for the rapid.
+
+        Returns:
+            ValidationSetBuilder: The ValidationSetBuilder instance.
+        """
+        payload = LocatePayload(
+            _t="LocatePayload", target=instruction
+        )
+
+        img_dimensions = asset.get_image_dimension()
+
+        if not img_dimensions:
+            raise ValueError("Failed to get image dimensions")
+
+        model_truth = LocateBoxTruth(
+            _t="LocateBoxTruth", 
+            boundingBoxes=[BoxShape(
+                _t="BoxShape",
+                xMin=truth.x_min / img_dimensions[0] * 100,
+                xMax=truth.x_max / img_dimensions[0] * 100,
+                yMax=truth.y_max / img_dimensions[1] * 100,
+                yMin=truth.y_min / img_dimensions[1] * 100,
+            ) for truth in truths]
+        )
+
+        coverage = self._calculate_boxes_coverage(truths, img_dimensions[0], img_dimensions[1])
+
+        self._rapid_parts.append(
+            ValidatioRapidParts(
+                instruction=instruction,
+                payload=payload,
+                truths=model_truth,
+                metadata=[],
+                randomCorrectProbability=coverage,
+                asset=asset,
+            )
+        )
+
+    def __add_draw_rapid(
+        self,
+        asset: MediaAsset,
+        instruction: str,
+        truths: list[Box]
+    ):
+        """Add a draw rapid to the validation set.
+
+        Args:
+            instruction (str): The instruction for the draw rapid.
+            asset (MediaAsset): The asset for the rapid.
+            truths (list[Box]): The truths for the rapid.
+
+        Returns:
+            ValidationSetBuilder: The ValidationSetBuilder instance.
+        """
+
+        payload = LinePayload(
+            _t="LinePayload", target=instruction
+        )
+
+        img_dimensions = asset.get_image_dimension()
+
+        if not img_dimensions:
+            raise ValueError("Failed to get image dimensions")
+
+        model_truth = BoundingBoxTruth(
+            _t="BoundingBoxTruth", 
+            xMax=truths[0].x_max / img_dimensions[0],
+            xMin=truths[0].x_min / img_dimensions[0],
+            yMax=truths[0].y_max / img_dimensions[1],
+            yMin=truths[0].y_min / img_dimensions[1],
+        ) # TO BE CHANGED BEFORE MERGING
+
+        coverage = self._calculate_boxes_coverage(truths, img_dimensions[0], img_dimensions[1])
+
+        self._rapid_parts.append(
+            ValidatioRapidParts(
+                instruction=instruction,
+                payload=payload,
+                truths=model_truth,
+                metadata=[],
+                randomCorrectProbability=coverage,
+                asset=asset,
+            )
+        )
+
+
+    def _calculate_boxes_coverage(self, boxes: list[Box], image_width: int, image_height: int) -> float:
+        if not boxes:
+            return 0.0
+            
+        # Convert all coordinates to integers for pixel-wise coverage
+        pixels = set()
+        for box in boxes:
+            for x in range(int(box.x_min), int(box.x_max + 1)):
+                for y in range(int(box.y_min), int(box.y_max + 1)):
+                    if 0 <= x < image_width and 0 <= y < image_height:
+                        pixels.add((x,y))
+                        
+        total_covered = len(pixels)
+        return total_covered / (image_width * image_height)

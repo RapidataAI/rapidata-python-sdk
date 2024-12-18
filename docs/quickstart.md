@@ -58,9 +58,9 @@ order = rapi.order.create_classification_order(
 The parameters are as follows:
 
 - `name`: The name of the order. This is used to identify the order in the [Rapidata Dashboard](https://app.rapidata.ai/dashboard/orders). This name is also be used to find the order again later.
-- `instruction`: The instruction you want to ask the annotators to compare the image by.
+- `instruction`: The instruction you want to show the annotators to select the options by.
 - `answer_options`: The different answer options the annotators can choose from.
-- `datapoints`: The data you want to classify. This can be any public URL (that points to an image, video or audio) or a local file path. This is a list of all datapoints you want to classify. The same question and answer options will be asked for each datapoint. There is a limit of 100 datapoints per order. If you need more than that, you can reach out to us at <info@rapidata.ai>.
+- `datapoints`: The data you want to classify. This can be any public URL (that points to an image, video or audio) or a local file path. This is a list of all datapoints you want to classify. The same instruction and answer options will be asked for each datapoint. There is a limit of 100 datapoints per order. If you need more than that, you can reach out to us at <info@rapidata.ai>.
 
 Optionally you may add additional specifications with the other parameters. As an example, the `responses_per_datapoint` that specifies how many responses you want per datapoint<sup>1</sup>.
 
@@ -104,6 +104,8 @@ To download the results simply call the `get_results` method on the order:
 ```py
 results = order.get_results()
 ```
+
+To better understand the results you can check out the [Understanding the Results](/understanding_the_results/) guide.
 
 ## Credits and Billing
 

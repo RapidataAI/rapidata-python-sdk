@@ -19,12 +19,6 @@ class SelectWordsWorkflow(Workflow):
     """
 
     def __init__(self, instruction: str):
-        """
-        Initialize a SelectWordsWorkflow instance.
-
-        Args:
-            instruction (str): The instruction to be provided for the select words task.
-        """
         super().__init__(type="SimpleWorkflowConfig")
         self._instruction = instruction
 

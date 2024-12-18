@@ -9,7 +9,10 @@ from tqdm import tqdm
 
 class RapidataOrder:
     """
-    Represents a Rapidata order.
+    An instance of a Rapidata order.
+
+    Used to interact with a specific order in the Rapidata system. 
+    Such as starting, pausing, and getting the results of the order.
 
     Args:
         order_id: The ID of the order.

@@ -1,5 +1,4 @@
 from itertools import zip_longest
-import os
 
 from rapidata.api_client.models.datapoint_metadata_model import DatapointMetadataModel
 from rapidata.api_client.models.datapoint_metadata_model_metadata_inner import (

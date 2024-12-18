@@ -5,6 +5,7 @@ repo_name: rapidata-python-sdk
 
 plugins:
   - search
+  - mike
   - autorefs:
       resolve_closest: true
   - mkdocstrings:
@@ -25,13 +26,17 @@ plugins:
             docstring_options:
               ignore_init_summary: true
             merge_init_into_class: true
-            show_if_no_docstring: true
+            show_if_no_docstring: false
   - gen-files:
       scripts:
         - scripts/gen_ref_pages.py
   - literate-nav:
       nav_file: SUMMARY.md
   - section-index
+  
+extra:
+  version:
+    provider: mike
 
 markdown_extensions:
   - attr_list
@@ -93,4 +98,3 @@ theme:
 
   features:
     - content.code.copy
-    # - navigation.instant # makes scrolling past the footer stutter on Arc
