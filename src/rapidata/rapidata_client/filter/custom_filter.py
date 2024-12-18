@@ -10,7 +10,7 @@ class CustomFilter(RapidataFilter):
 
     Ought to be used with contact to Rapidata. 
     
-    Warning: If identifier does not exist, order will just not get any responses.
+    Warning: If identifier does not exist, order will not get any responses.
     
     Args:
         identifier (str): Identifier of the custom filter.
