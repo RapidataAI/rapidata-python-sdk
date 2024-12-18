@@ -9,8 +9,8 @@ class FreeTextMinimumCharacters(RapidataSetting):
     """
 
     def __init__(self, value: int):
-        if value < 0:
-            raise ValueError("The minimum number of characters must be greater than or equal to 0.")
-        if value > 20:
+        if value < 1:
+            raise ValueError("The minimum number of characters must be greater than or equal to 1.")
+        if value > 40:
             print(f"Warning: Are you sure you want to set the minimum number of characters at {value}?")
         super().__init__(key="free_text_minimum_characters", value=value)

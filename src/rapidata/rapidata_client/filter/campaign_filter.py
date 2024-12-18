@@ -9,10 +9,12 @@ class CampaignFilter(RapidataFilter):
     """CampaignFilter Class
 
     Can be used to filter who to target based on campaign IDs.
+
+    This filter can only be used when directly in contact with Rapidata.
     
     Args:
         campaign_ids (list[str]): List of campaign IDs to filter by.
-        """
+    """
 
     def __init__(self, campaign_ids: list[str]):
         self.campaign_ids = campaign_ids
