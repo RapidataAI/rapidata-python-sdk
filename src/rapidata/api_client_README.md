@@ -224,6 +224,7 @@ Class | Method | HTTP request | Description
  - [CreateSimplePipelineModelArtifactsInner](rapidata/api_client/docs/CreateSimplePipelineModelArtifactsInner.md)
  - [CreateSimplePipelineModelPipelineStepsInner](rapidata/api_client/docs/CreateSimplePipelineModelPipelineStepsInner.md)
  - [CreateUnsupportedOrderModel](rapidata/api_client/docs/CreateUnsupportedOrderModel.md)
+ - [CustomUserFilterModel](rapidata/api_client/docs/CustomUserFilterModel.md)
  - [Datapoint](rapidata/api_client/docs/Datapoint.md)
  - [DatapointAsset](rapidata/api_client/docs/DatapointAsset.md)
  - [DatapointGetByIdGet200Response](rapidata/api_client/docs/DatapointGetByIdGet200Response.md)

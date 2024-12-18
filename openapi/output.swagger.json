@@ -5089,6 +5089,10 @@
             "format": "int32",
             "nullable": true
           },
+          "isSticky": {
+            "type": "boolean",
+            "description": "Indicates if the underlying campaign should be sticky."
+          },
           "userFilters": {
             "type": "array",
             "items": {
@@ -5101,6 +5105,9 @@
                 },
                 {
                   "$ref": "#/components/schemas/CountryUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/CustomUserFilterModel"
                 },
                 {
                   "$ref": "#/components/schemas/GenderUserFilterModel"
@@ -5269,6 +5276,36 @@
         },
         "additionalProperties": false,
         "description": "The model for creating an order with an unsupported label type or data type."
+      },
+      "CustomUserFilterModel": {
+        "title": "CustomUserFilterModel",
+        "required": [
+          "_t",
+          "identifier",
+          "values"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "CustomUserFilterModel"
+            ],
+            "type": "string",
+            "description": "Discriminator value for CustomUserFilterModel",
+            "default": "CustomUserFilterModel",
+            "example": "CustomUserFilterModel"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
       },
       "DatasetEvaluationStepModel": {
         "title": "DatasetEvaluationStepModel",
@@ -9991,6 +10028,9 @@
                   "$ref": "#/components/schemas/CountryUserFilterModel"
                 },
                 {
+                  "$ref": "#/components/schemas/CustomUserFilterModel"
+                },
+                {
                   "$ref": "#/components/schemas/GenderUserFilterModel"
                 },
                 {
@@ -10052,6 +10092,10 @@
             "type": "integer",
             "description": "The priority of the campaign.",
             "format": "int32"
+          },
+          "isSticky": {
+            "type": "boolean",
+            "description": "Indicates if the campaign is sticky."
           }
         },
         "additionalProperties": false,
