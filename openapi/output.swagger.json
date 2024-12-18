@@ -5278,7 +5278,7 @@
         "description": "The model for creating an order with an unsupported label type or data type."
       },
       "CustomUserFilterModel": {
-        "title": "CustomUserFilterModel",
+        "title": "CustomFilter",
         "required": [
           "_t",
           "identifier",
@@ -5288,12 +5288,12 @@
         "properties": {
           "_t": {
             "enum": [
-              "CustomUserFilterModel"
+              "CustomFilter"
             ],
             "type": "string",
-            "description": "Discriminator value for CustomUserFilterModel",
-            "default": "CustomUserFilterModel",
-            "example": "CustomUserFilterModel"
+            "description": "Discriminator value for CustomFilter",
+            "default": "CustomFilter",
+            "example": "CustomFilter"
           },
           "identifier": {
             "type": "string"
