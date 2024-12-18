@@ -6,11 +6,11 @@ from rapidata import RapidataClient
 
 def get_prompt_ideas(rapi: RapidataClient):
 
-    order = (rapi.order_builder
-             .free_text_order(name="Example prompt generation")
-             .question("What would you like to ask an AI? please spell out the question")
-             .media(["https://assets.rapidata.ai/ai_question.png"])
-             .submit())
+    order = rapi.order.create_free_text_order(
+        name="Example prompt generation",
+        instruction="What would you like to ask an AI? please spell out the question",
+        datapoints=["https://assets.rapidata.ai/ai_question.png"]
+    ).run()
 
     return order
 

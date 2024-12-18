@@ -8,28 +8,25 @@ from rapidata import RapidataClient
 def new_classify_text_asset_order(rapi: RapidataClient):
     # Validation set
     # This will be shown as defined in the ValidationSelection and will make our annotators understand the task better
-    validation_set_builder = rapi.new_validation_set("Example Text Classification Validation Set")
-
-    validation_set = validation_set_builder.add_rapid(
-        rapi.rapid_builder.classify_rapid()
-        .question("How does this song continue?")
-        .options(["Baby don't hurt me", "No more", "Illusions", "Submarine", "Rock you"])
-        .media("What is love?")
-        .truths(["Baby don't hurt me"])
-        .build()
-    ).submit()
+    validation_set = rapi.validation.create_classification_set(
+        name="Example Text Classification Validation Set",
+        instruction="How does this song continue?",
+        answer_options=["Baby don't hurt me", "No more", "Illusions", "Submarine", "Rock you"],
+        truths=[["Baby don't hurt me"]],
+        datapoints=["What is love?"],
+        data_type="text"
+    )
 
     # Configure order
-    order = (
-        rapi.order_builder
-        .classify_order(name="Example Text Classify Order")
-        .question("How does this song continue?")
-        .options(["Baby don't hurt me", "No more", "Illusions", "Submarine", "Rock you"])
-        .text(["We will, we will ...", "We all live in a yellow ..."])
-        .responses(3)
-        .validation_set(validation_set.id)
-        .submit()
-    )
+    order = rapi.order.create_classification_order(
+        name="Example Text Classify Order",
+        instruction="How does this song continue?",
+        answer_options=["Baby don't hurt me", "No more", "Illusions", "Submarine", "Rock you"],
+        datapoints=["We will, we will ...", "We all live in a yellow ..."],
+        data_type="text",
+        responses_per_datapoint=3,
+        validation_set_id=validation_set.id
+    ).run()
 
     return order
 

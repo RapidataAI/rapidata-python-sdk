@@ -1,16 +1,23 @@
 from typing import Any
-from rapidata.rapidata_client.filter.base_filter import Filter
+from rapidata.rapidata_client.filter._base_filter import RapidataFilter
 from rapidata.api_client.models.gender_user_filter_model import GenderUserFilterModel
-from rapidata.api_client.models.gender import Gender
+from rapidata.rapidata_client.filter.models.gender import Gender
 
 
-class GenderFilter(Filter):
+class GenderFilter(RapidataFilter):
+    """GenderFilter Class
+    
+    Can be used to filter who to target based on their gender.
+    
+    
+    Args:
+        genders (list[Gender]): List of genders to filter by."""
 
     def __init__(self, genders: list[Gender]):
         self.genders = genders
 
-    def to_model(self):
+    def _to_model(self):
         return GenderUserFilterModel(
             _t="GenderFilter",
-            genders=self.genders,
+            genders=[gender._to_backend_model() for gender in self.genders],
         )

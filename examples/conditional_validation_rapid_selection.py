@@ -4,45 +4,25 @@ Classify order with a validation set
 
 from rapidata import (
     RapidataClient,
-    ClassifyWorkflow,
-    NaiveReferee,
-    PromptMetadata,
     LabelingSelection,
     ConditionalValidationSelection,
 )
-from rapidata.rapidata_client.assets.media_asset import MediaAsset
+from rapidata.rapidata_client.assets._media_asset import MediaAsset
 
 
 def new_cond_validation_rapid_order(rapi: RapidataClient):
     # Validation set
     # This will be shown as defined in the ValidationSelection and will make our annotators understand the task better
-    validation_set = (
-        rapi.new_validation_set("Example Validation Set")
-        .add_classify_rapid(
-            asset=MediaAsset(path="examples/data/wallaby.jpg"),
-            question="What kind of animal is this?",
-            categories=["Fish", "Marsupial", "Bird", "Reptile"],
-            truths=["Marsupial"],
-            metadata=[PromptMetadata(prompt="Hint: It has a pouch")],
-        )
-        .submit()
+    validation_set = rapi.validation.create_classification_set(
+        name="Example Classify Validation Set",
+        instruction="What is shown in the image?",
+        answer_options=["Fish", "Cat", "Wallaby", "Airplane"],
+        truths=[["Wallaby"]],
+        datapoints=["examples/data/wallaby.jpg"],
+        contexts=["Hint: It has a pouch"],
     )
-
-    # Configure order
-    order = (
-        rapi.new_order(
-            name="Example Classify Order",
-        )
-        .workflow(
-            ClassifyWorkflow(
-                question="What is shown in the image?",
-                options=["Fish", "Cat", "Wallaby", "Airplane"],
-            )
-        )
-        .media([MediaAsset("examples/data/wallaby.jpg")])
-        .referee(NaiveReferee(responses=3))
-        .selections(
-            [
+    # configure order
+    selections = [
                 ConditionalValidationSelection(
                     chances=[0.9],
                     thresholds=[0.35],
@@ -51,9 +31,15 @@ def new_cond_validation_rapid_order(rapi: RapidataClient):
                 ),
                 LabelingSelection(amount=1),
             ]
-        )
-        .create()
-    )
+    order = rapi.order.create_classification_order(
+        name="Example Classify Order",
+        instruction="What is shown in the image?",
+        answer_options=["Fish", "Cat", "Wallaby", "Airplane"],
+        datapoints=["examples/data/wallaby.jpg"],
+        responses_per_datapoint=3,
+        contexts=["Hint: It has a pouch"],
+        selections=selections
+    ).run()
 
     result = order.get_status()
     print("Order in state: ", result)
