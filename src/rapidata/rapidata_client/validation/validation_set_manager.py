@@ -23,6 +23,9 @@ from typing import Sequence
 class ValidationSetManager:
     """
     Responsible for everything related to validation sets. From creation to retrieval.
+
+    Attributes:
+        rapid (RapidsManager): The RapidsManager instance.
     """
     def __init__(self, openapi_service: OpenAPIService) -> None:
         self.__openapi_service = openapi_service
