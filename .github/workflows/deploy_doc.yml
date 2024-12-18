@@ -1,37 +1,35 @@
 name: Deploy Documentation
 on:
   workflow_dispatch:
-  
+
 jobs:
   deploy-docs:
     if: github.event_name != 'pull_request' || github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Required for Mike to work with version history
-      
       - uses: actions/setup-python@v5
         with:
           python-version: '3.10'
-          
       - name: Install Poetry
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
           echo "$HOME/.local/bin" >> $GITHUB_PATH
-          
       - name: Update lock file and install dependencies
         run: |
           poetry lock --no-update
           poetry install --with docs
-          
-      - name: Configure Git
+      - name: Clean docs
         run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
-          
-      - name: Build and deploy docs
+          rm -rf site/
+          poetry run mkdocs build --clean
+      - name: Build MkDocs site
+        run: |
+          poetry run mkdocs build
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
         if: github.ref == 'refs/heads/main'
-        run: |
-          poetry run mike deploy --push --update-aliases 0.1 latest
-          poetry run mike set-default --push latest
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
+          force_orphan: true
