@@ -26,7 +26,7 @@ class CustomUserFilterModel(BaseModel):
     """
     CustomUserFilterModel
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for CustomUserFilterModel", alias="_t")
+    t: StrictStr = Field(description="Discriminator value for CustomFilter", alias="_t")
     identifier: StrictStr
     values: List[StrictStr]
     __properties: ClassVar[List[str]] = ["_t", "identifier", "values"]
@@ -34,8 +34,8 @@ class CustomUserFilterModel(BaseModel):
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['CustomUserFilterModel']):
-            raise ValueError("must be one of enum values ('CustomUserFilterModel')")
+        if value not in set(['CustomFilter']):
+            raise ValueError("must be one of enum values ('CustomFilter')")
         return value
 
     model_config = ConfigDict(
@@ -89,7 +89,7 @@ class CustomUserFilterModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'CustomUserFilterModel',
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'CustomFilter',
             "identifier": obj.get("identifier"),
             "values": obj.get("values")
         })
