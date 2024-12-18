@@ -35,8 +35,9 @@ from .filter import (
     UserScoreFilter,
     CampaignFilter,
     AgeFilter,
-    AgeGroup,
     GenderFilter,
+    CustomFilter,
+    AgeGroup,
     Gender,
 )
 

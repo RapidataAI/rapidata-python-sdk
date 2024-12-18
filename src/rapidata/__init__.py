@@ -20,6 +20,7 @@ from .rapidata_client import (
     LanguageFilter,
     UserScoreFilter,
     CampaignFilter,
+    CustomFilter,
     AgeGroup,
     Gender,
 
