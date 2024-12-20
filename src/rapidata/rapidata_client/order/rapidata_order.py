@@ -52,6 +52,13 @@ class RapidataOrder:
         self.__openapi_service.order_api.order_pause_post(self.order_id)
         print(f"Order '{self}' has been paused.")
 
+    def unpause(self):
+        """
+        Unpauses/resume the order.
+        """
+        self.__openapi_service.order_api.order_resume_post(self.order_id)
+        print(f"Order '{self}' has been unpaused.")
+
     def get_status(self) -> str:
         """
         Gets the status of the order.
