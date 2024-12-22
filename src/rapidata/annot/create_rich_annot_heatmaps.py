@@ -9,9 +9,10 @@ from rapidata.annot.api import create_client
 import seaborn as sns
 from scipy.ndimage import gaussian_filter
 
-ORDER_ID = "6759b2e21c406a176a8283b0"
+from rapidata.annot.consts import PRODUCTION_ENVIRONMENT
+
+LOCATE_ORDER_ID = "6759b2e21c406a176a8283b0"
 RICH_ANNOT_FOLDER = "/Users/marcellschneider/Documents/rapidata/rapidata-python-sdk/src/rapidata/annot/rich_annotations/Example data"
-OUTPUT_FOLDER = f"heatmaps_{ORDER_ID}"
 # heatmaps uses a gaussian curve with a sigma. This parameter controls,
 # what should be the sigma compared to min(image.width, image.height)
 # e.g. TOUCH_BELL_CURVE_SIGMA_TO_IMAGE_RATIO=0.5 if the image is (300, 500) the sigma will be 150
@@ -19,9 +20,8 @@ OUTPUT_FOLDER = f"heatmaps_{ORDER_ID}"
 TOUCH_BELL_CURVE_SIGMA_TO_IMAGE_RATIO = 0.1
 
 def create_heatmap(image_path, points, output_path):
-    #image = Image.open(image_path)
+    image = Image.open(image_path)
 
-    image = Image.open(BytesIO(requests.get('https://assets.rapidata.ai/5ca324ea-5314-4ddc-9147-8af5f8d5b2f9.jpg').content))
     width, height = image.size
 
     heatmap = np.zeros((height, width))
@@ -42,9 +42,11 @@ def create_heatmap(image_path, points, output_path):
 
 
 def main():
+    OUTPUT_FOLDER = f"heatmaps_{LOCATE_ORDER_ID}"
+
     os.makedirs(OUTPUT_FOLDER, exist_ok=True)
-    client = create_client()
-    order = client.order.get_order_by_id(ORDER_ID)
+    client = create_client(PRODUCTION_ENVIRONMENT)
+    order = client.order.get_order_by_id(LOCATE_ORDER_ID)
     results = order.get_results()
 
     for rapid in results["results"]:

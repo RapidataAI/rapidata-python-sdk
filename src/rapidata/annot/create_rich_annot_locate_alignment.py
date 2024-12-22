@@ -5,14 +5,14 @@ import dotenv
 
 from rapidata import LanguageFilter
 from rapidata.annot.api import create_client
-from rapidata.annot.consts import ALIGNMENT_PROMPT, LANGUAGES, TEST_ENVIRONMENT, DOTENV_PATH
+from rapidata.annot.consts import TEST_ENVIRONMENT, DOTENV_PATH, PRODUCTION_ENVIRONMENT
 
 DATA_FOLDER = "/Users/marcellschneider/Documents/rapidata/rapidata-python-sdk/src/rapidata/annot/rich_annotations/Example data"
+NAME = "My Image Alignment Order"
 
 
 def main():
     dotenv.load_dotenv(DOTENV_PATH)
-    NAME = "TEST"
 
     prompts = []
     paths = []
@@ -29,16 +29,16 @@ def main():
         prompts.append(prompt)
         paths.append(image_path)
 
-    client = create_client(TEST_ENVIRONMENT)
+    client = create_client(PRODUCTION_ENVIRONMENT)
     order = client.order.create_locate_order(
         name=NAME,
-        target=ALIGNMENT_PROMPT,
+        target="Tap the area where the image does not match the description",
         datapoints=paths,
         contexts=prompts,
         responses_per_datapoint=20,
-        validation_set_id="67689468785902043dcea5e2", #artificial prompts
+        validation_set_id="67689e58026456ec851f51f8", #hand made prompts prod
         filters=[
-            LanguageFilter(["hu"])
+            LanguageFilter(["en"])
         ]
     )
 
