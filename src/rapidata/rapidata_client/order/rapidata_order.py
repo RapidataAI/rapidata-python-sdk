@@ -15,17 +15,17 @@ class RapidataOrder:
     Such as starting, pausing, and getting the results of the order.
 
     Args:
+        name: The name of the order.
         order_id: The ID of the order.
         openapi_service: The OpenAPIService instance used to interact with the Rapidata API.
-        name: The name of the order.
         dataset: The optional Dataset associated with the order.
     """
 
     def __init__(
         self,
+        name: str,
         order_id: str,
         openapi_service: OpenAPIService,
-        name: str,
         dataset: Optional[RapidataDataset]=None,
     ):
         self.order_id = order_id
@@ -51,6 +51,13 @@ class RapidataOrder:
         """
         self.__openapi_service.order_api.order_pause_post(self.order_id)
         print(f"Order '{self}' has been paused.")
+
+    def unpause(self):
+        """
+        Unpauses/resume the order.
+        """
+        self.__openapi_service.order_api.order_resume_post(self.order_id)
+        print(f"Order '{self}' has been unpaused.")
 
     def get_status(self) -> str:
         """

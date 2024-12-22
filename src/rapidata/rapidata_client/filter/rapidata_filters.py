@@ -4,7 +4,8 @@ from rapidata.rapidata_client.filter import (
     CountryFilter, 
     GenderFilter, 
     LanguageFilter, 
-    UserScoreFilter)
+    UserScoreFilter,
+    CustomFilter)
 
 class RapidataFilters:
     """RapidataFilters Classes
@@ -22,10 +23,13 @@ class RapidataFilters:
         country (CountryFilter): The CountryFilter instance.
         campaign (CampaignFilter): The CampaignFilter instance
         gender (GenderFilter): The GenderFilter instance.
-        language (LanguageFilter): The LanguageFilter instance."""
+        language (LanguageFilter): The LanguageFilter instance.
+        custom_filter (CustomFilter): The CustomFilter instance.
+    """
     user_score = UserScoreFilter
     age = AgeFilter 
     campaign = CampaignFilter
     country = CountryFilter
     gender = GenderFilter
     language = LanguageFilter
+    custom_filter = CustomFilter

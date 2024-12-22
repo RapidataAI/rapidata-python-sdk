@@ -20,6 +20,7 @@ from typing import Any, List, Optional
 from rapidata.api_client.models.age_user_filter_model import AgeUserFilterModel
 from rapidata.api_client.models.campaign_user_filter_model import CampaignUserFilterModel
 from rapidata.api_client.models.country_user_filter_model import CountryUserFilterModel
+from rapidata.api_client.models.custom_user_filter_model import CustomUserFilterModel
 from rapidata.api_client.models.gender_user_filter_model import GenderUserFilterModel
 from rapidata.api_client.models.language_user_filter_model import LanguageUserFilterModel
 from rapidata.api_client.models.user_score_user_filter_model import UserScoreUserFilterModel
@@ -27,7 +28,7 @@ from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-CREATEORDERMODELUSERFILTERSINNER_ONE_OF_SCHEMAS = ["AgeUserFilterModel", "CampaignUserFilterModel", "CountryUserFilterModel", "GenderUserFilterModel", "LanguageUserFilterModel", "UserScoreUserFilterModel"]
+CREATEORDERMODELUSERFILTERSINNER_ONE_OF_SCHEMAS = ["AgeUserFilterModel", "CampaignUserFilterModel", "CountryUserFilterModel", "CustomUserFilterModel", "GenderUserFilterModel", "LanguageUserFilterModel", "UserScoreUserFilterModel"]
 
 class CreateOrderModelUserFiltersInner(BaseModel):
     """
@@ -39,14 +40,16 @@ class CreateOrderModelUserFiltersInner(BaseModel):
     oneof_schema_2_validator: Optional[CampaignUserFilterModel] = None
     # data type: CountryUserFilterModel
     oneof_schema_3_validator: Optional[CountryUserFilterModel] = None
+    # data type: CustomUserFilterModel
+    oneof_schema_4_validator: Optional[CustomUserFilterModel] = None
     # data type: GenderUserFilterModel
-    oneof_schema_4_validator: Optional[GenderUserFilterModel] = None
+    oneof_schema_5_validator: Optional[GenderUserFilterModel] = None
     # data type: LanguageUserFilterModel
-    oneof_schema_5_validator: Optional[LanguageUserFilterModel] = None
+    oneof_schema_6_validator: Optional[LanguageUserFilterModel] = None
     # data type: UserScoreUserFilterModel
-    oneof_schema_6_validator: Optional[UserScoreUserFilterModel] = None
-    actual_instance: Optional[Union[AgeUserFilterModel, CampaignUserFilterModel, CountryUserFilterModel, GenderUserFilterModel, LanguageUserFilterModel, UserScoreUserFilterModel]] = None
-    one_of_schemas: Set[str] = { "AgeUserFilterModel", "CampaignUserFilterModel", "CountryUserFilterModel", "GenderUserFilterModel", "LanguageUserFilterModel", "UserScoreUserFilterModel" }
+    oneof_schema_7_validator: Optional[UserScoreUserFilterModel] = None
+    actual_instance: Optional[Union[AgeUserFilterModel, CampaignUserFilterModel, CountryUserFilterModel, CustomUserFilterModel, GenderUserFilterModel, LanguageUserFilterModel, UserScoreUserFilterModel]] = None
+    one_of_schemas: Set[str] = { "AgeUserFilterModel", "CampaignUserFilterModel", "CountryUserFilterModel", "CustomUserFilterModel", "GenderUserFilterModel", "LanguageUserFilterModel", "UserScoreUserFilterModel" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -87,6 +90,11 @@ class CreateOrderModelUserFiltersInner(BaseModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `CountryUserFilterModel`")
         else:
             match += 1
+        # validate data type: CustomUserFilterModel
+        if not isinstance(v, CustomUserFilterModel):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `CustomUserFilterModel`")
+        else:
+            match += 1
         # validate data type: GenderUserFilterModel
         if not isinstance(v, GenderUserFilterModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `GenderUserFilterModel`")
@@ -104,10 +112,10 @@ class CreateOrderModelUserFiltersInner(BaseModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in CreateOrderModelUserFiltersInner with oneOf schemas: AgeUserFilterModel, CampaignUserFilterModel, CountryUserFilterModel, GenderUserFilterModel, LanguageUserFilterModel, UserScoreUserFilterModel. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in CreateOrderModelUserFiltersInner with oneOf schemas: AgeUserFilterModel, CampaignUserFilterModel, CountryUserFilterModel, CustomUserFilterModel, GenderUserFilterModel, LanguageUserFilterModel, UserScoreUserFilterModel. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in CreateOrderModelUserFiltersInner with oneOf schemas: AgeUserFilterModel, CampaignUserFilterModel, CountryUserFilterModel, GenderUserFilterModel, LanguageUserFilterModel, UserScoreUserFilterModel. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in CreateOrderModelUserFiltersInner with oneOf schemas: AgeUserFilterModel, CampaignUserFilterModel, CountryUserFilterModel, CustomUserFilterModel, GenderUserFilterModel, LanguageUserFilterModel, UserScoreUserFilterModel. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -140,6 +148,12 @@ class CreateOrderModelUserFiltersInner(BaseModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
+        # deserialize data into CustomUserFilterModel
+        try:
+            instance.actual_instance = CustomUserFilterModel.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
         # deserialize data into GenderUserFilterModel
         try:
             instance.actual_instance = GenderUserFilterModel.from_json(json_str)
@@ -161,10 +175,10 @@ class CreateOrderModelUserFiltersInner(BaseModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into CreateOrderModelUserFiltersInner with oneOf schemas: AgeUserFilterModel, CampaignUserFilterModel, CountryUserFilterModel, GenderUserFilterModel, LanguageUserFilterModel, UserScoreUserFilterModel. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into CreateOrderModelUserFiltersInner with oneOf schemas: AgeUserFilterModel, CampaignUserFilterModel, CountryUserFilterModel, CustomUserFilterModel, GenderUserFilterModel, LanguageUserFilterModel, UserScoreUserFilterModel. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into CreateOrderModelUserFiltersInner with oneOf schemas: AgeUserFilterModel, CampaignUserFilterModel, CountryUserFilterModel, GenderUserFilterModel, LanguageUserFilterModel, UserScoreUserFilterModel. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into CreateOrderModelUserFiltersInner with oneOf schemas: AgeUserFilterModel, CampaignUserFilterModel, CountryUserFilterModel, CustomUserFilterModel, GenderUserFilterModel, LanguageUserFilterModel, UserScoreUserFilterModel. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -178,7 +192,7 @@ class CreateOrderModelUserFiltersInner(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], AgeUserFilterModel, CampaignUserFilterModel, CountryUserFilterModel, GenderUserFilterModel, LanguageUserFilterModel, UserScoreUserFilterModel]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], AgeUserFilterModel, CampaignUserFilterModel, CountryUserFilterModel, CustomUserFilterModel, GenderUserFilterModel, LanguageUserFilterModel, UserScoreUserFilterModel]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

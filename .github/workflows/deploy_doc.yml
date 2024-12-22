@@ -1,7 +1,7 @@
 name: Deploy Documentation
 on:
   workflow_dispatch:
-  
+
 jobs:
   deploy-docs:
     if: github.event_name != 'pull_request' || github.event.pull_request.merged == true
@@ -33,3 +33,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./site
           force_orphan: true
+          cname: docs.rapidata.ai

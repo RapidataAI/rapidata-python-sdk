@@ -12,7 +12,16 @@ from .metadata import (
     PromptMetadata,
     SelectWordsMetadata,
 )
-from .settings import RapidataSettings, TranslationBehaviourOptions
+from .settings import (
+    RapidataSettings, 
+    TranslationBehaviourOptions,
+    AlertOnFastResponse,
+    TranslationBehaviour,
+    FreeTextMinimumCharacters,
+    NoShuffle,
+    PlayVideoUntilTheEnd,
+    CustomSetting,
+    )
 from .country_codes import CountryCodes
 from .assets import (
     MediaAsset, 
@@ -26,8 +35,9 @@ from .filter import (
     UserScoreFilter,
     CampaignFilter,
     AgeFilter,
-    AgeGroup,
     GenderFilter,
+    CustomFilter,
+    AgeGroup,
     Gender,
 )
 
