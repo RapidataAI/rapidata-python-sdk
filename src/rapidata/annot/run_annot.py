@@ -5,13 +5,15 @@ from streamlit_drawable_canvas import st_canvas
 import sys
 from pathlib import Path
 
+from rapidata.annot.consts import TEST_ENVIRONMENT, CHOSEN_ENVIRONMENT_KEY
+
 sys.path.append(str(Path(__file__).parent.parent.parent.resolve()))
 
-from consts import DONE_EMOJI, NOT_DONE_EMOJI, LAST_CREATED_VALIDATION_SET_KEY, DEFAULT_FILE, CREATED_RAPIDS_COUNTER_KEY
+from consts import LAST_CREATED_VALIDATION_SET_KEY, DEFAULT_FILE, CREATED_RAPIDS_COUNTER_KEY, DOTENV_PATH, \
+    PRODUCTION_ENVIRONMENT
 from models import ValidationRapid, ValidationRapidCollection, RapidTypes
 from api import get_validation_rapids, get_validation_set_url, validation_set_from_rapids
 from utils import resize_image
-
 
 @st.cache_resource
 def get_collection():
@@ -26,8 +28,6 @@ def get_collection():
 
 def display_metadata():
     st.markdown("## 🎒 <span style='color: #1E90FF;'>Inventory</span>", unsafe_allow_html=True)
-    if get_collection().rapids:
-        st.write('A rapid is done when there is only one box on it and the prompt is given!')
     coll = get_collection()
     for rapid in coll.rapids[::-1]:
         with st.container(border=True):
@@ -36,7 +36,7 @@ def display_metadata():
                 st.image(rapid.image, use_container_width=True)
             content = [
                 f"ID: {rapid.local_rapid_id}",
-                f"Ready {DONE_EMOJI}" if rapid.is_done() else f"Not Done {NOT_DONE_EMOJI}",
+                f"Ready ✅" if rapid.is_done() else f"Not Done ❌",
             ]
             for idx in range(1, len(content) + 1):
                 with cols[idx]:
@@ -53,9 +53,9 @@ def display_metadata():
                 if delete:
                     get_collection().remove_rapid(rapid)
                     st.rerun()
-            prompt = st.text_input(label='What should be the user prompt?',
+            prompt = st.text_input(label='Supply Optional Custom Rapid Prompt?',
                                    value=rapid.prompt,
-                                   placeholder='Where is the dog in the image?',
+                                   placeholder='Where is the dog in this image?',
                                    key=f'tb_prompt_{rapid.local_rapid_id}')
             rapid.prompt = prompt
 
@@ -89,12 +89,18 @@ def display_clone_option():
         clone = st.button(label="Clone and Add All", use_container_width=True)
 
         if clone:
-            rapids = get_validation_rapids(validation_set_name)
+            rapids = get_validation_rapids(validation_set_name, get_env())
             if rapids is None:
                 st.toast('🚫 **Validation set not found!**')
             else:
                 get_collection().add_rapids(rapids)
 
+
+def set_env(env: str):
+    st.session_state[CHOSEN_ENVIRONMENT_KEY] = env
+
+def get_env():
+    return st.session_state[CHOSEN_ENVIRONMENT_KEY]
 
 def display_creation_option():
     with st.container(border=True):
@@ -102,22 +108,39 @@ def display_creation_option():
             "Choose the Type of Rapid :family:",
             (RapidTypes.LOCATE,),
         )
+        environment = st.selectbox(
+            "What environment would you like to use?",
+            (TEST_ENVIRONMENT, PRODUCTION_ENVIRONMENT),
+            on_change=lambda: set_env(environment)
+        )
+
+        global_prompt = st.text_input(
+            label="What is the question asked from the user?",
+            placeholder="Where is the animal in this image?"
+        )
+
         validation_set_name = st.text_input(
             label="Choose a Name For The Validation Set 🏷",
             placeholder="MyValidationSet"
         )
+
+
         create = st.button('Create Validation Set', use_container_width=True)
 
         if create:
             if any([not r.is_done() for r in get_collection().rapids]):
-                st.toast('🚫 **Make Sure To Finish All Rapids!**')
+                st.toast('🚫 **Make Sure To Annotate All Rapids!**')
+            elif global_prompt == '':
+                st.toast('🚫 **Make Sure To Ask A Question From The User!**')
             elif validation_set_name == '':
                 st.toast('🚫 **Validation Set Name Cannot Be empty!**')
             else:
                 with st.spinner('In progress...'):
                     validation_set_id = validation_set_from_rapids(name=validation_set_name,
+                                                                   global_prompt=global_prompt,
                                                                    rapids=get_collection().rapids,
-                                                                   rapid_type=rapid_type)
+                                                                   rapid_type=rapid_type,
+                                                                   env=environment)
                 st.session_state[LAST_CREATED_VALIDATION_SET_KEY] = validation_set_id
                 st.toast(f'ValidationSet Created: {validation_set_id}')
                 st.balloons()
@@ -137,7 +160,7 @@ def display_cockpit():
         display_clone_option()
         if val_set := st.session_state[LAST_CREATED_VALIDATION_SET_KEY]:
             st.write('###### You have successfully created a validation set! :boom:')
-            st.write(f'{val_set}  [View it Here]({get_validation_set_url(val_set)})')
+            st.write(f'{val_set}  [View it Here]({get_validation_set_url(val_set, get_env())})')
 
 
 def display_canvas():
@@ -185,6 +208,7 @@ def main():
         st.divider()
         display_metadata()
 
+    rapids = get_collection().rapids
 
 def update_uploader_key():
     st.session_state.uploader_key += 1
@@ -195,7 +219,7 @@ def update_canvas_key():
 
 
 def setup():
-    dotenv.load_dotenv('/Users/sneccello/Documents/rapidata/data_doctor/ranking_poc/.env', override=True)
+    dotenv.load_dotenv(DOTENV_PATH, override=True)
     st.set_page_config(layout="wide")
     if "uploader_key" not in st.session_state:
         st.session_state.uploader_key = 0
@@ -207,6 +231,9 @@ def setup():
 
     if LAST_CREATED_VALIDATION_SET_KEY not in st.session_state:
         st.session_state[LAST_CREATED_VALIDATION_SET_KEY] = 0
+
+    if CHOSEN_ENVIRONMENT_KEY not in st.session_state:
+        st.session_state[CHOSEN_ENVIRONMENT_KEY] = TEST_ENVIRONMENT
 
 if __name__ == '__main__':
     setup()

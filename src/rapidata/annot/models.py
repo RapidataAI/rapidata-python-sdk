@@ -45,7 +45,7 @@ class ValidationRapid:
         self.annotation = annotation
 
     def is_done(self):
-        return len(self.annotation.get('objects', [])) == 1 and len(self.prompt) >= 1
+        return len(self.annotation.get('objects', [])) == 1
 
 class ValidationRapidCollection:
     def __init__(self, starter_rapid: Optional[ValidationRapid] = None):
