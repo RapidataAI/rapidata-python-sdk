@@ -106,7 +106,7 @@ class ValidationSetBuilder:
             self.__add_select_words_rapid(rapid.asset, rapid.instruction, rapid.sentence, rapid.truths, rapid.strict_grading)
         
         elif isinstance(rapid, LocateRapid):
-            self.__add_locate_rapid(rapid.asset, rapid.instruction, rapid.truths)
+            self.__add_locate_rapid(rapid.asset, rapid.instruction, rapid.truths, rapid.metadata)
 
         elif isinstance(rapid, DrawRapid):
             self.__add_draw_rapid(rapid.asset, rapid.instruction, rapid.truths)
@@ -262,7 +262,8 @@ class ValidationSetBuilder:
         self,
         asset: MediaAsset,
         instruction: str,
-        truths: list[Box]
+        truths: list[Box],
+        metadata: Sequence[Metadata] = [],
     ):
         """Add a locate rapid to the validation set.
 
@@ -301,7 +302,7 @@ class ValidationSetBuilder:
                 instruction=instruction,
                 payload=payload,
                 truths=model_truth,
-                metadata=[],
+                metadata=metadata,
                 randomCorrectProbability=coverage,
                 asset=asset,
             )
@@ -311,7 +312,8 @@ class ValidationSetBuilder:
         self,
         asset: MediaAsset,
         instruction: str,
-        truths: list[Box]
+        truths: list[Box],
+        metadata: Sequence[Metadata] = [],
     ):
         """Add a draw rapid to the validation set.
 
@@ -348,7 +350,7 @@ class ValidationSetBuilder:
                 instruction=instruction,
                 payload=payload,
                 truths=model_truth,
-                metadata=[],
+                metadata=metadata,
                 randomCorrectProbability=coverage,
                 asset=asset,
             )
