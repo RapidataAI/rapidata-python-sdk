@@ -9,6 +9,12 @@ from rapidata.annot.consts import TEST_ENVIRONMENT, DOTENV_PATH, PRODUCTION_ENVI
 
 DATA_FOLDER = "/Users/marcellschneider/Documents/rapidata/rapidata-python-sdk/src/rapidata/annot/rich_annotations/Example data"
 NAME = "My Image Alignment Order"
+ENVIRONMENT = TEST_ENVIRONMENT
+
+VALIDATION_SETS = {
+    TEST_ENVIRONMENT: '67689d54566e0d4ecc52f36d',
+    PRODUCTION_ENVIRONMENT: '67689e58026456ec851f51f8'
+}
 
 
 def main():
@@ -29,14 +35,14 @@ def main():
         prompts.append(prompt)
         paths.append(image_path)
 
-    client = create_client(PRODUCTION_ENVIRONMENT)
+    client = create_client(ENVIRONMENT)
     order = client.order.create_locate_order(
         name=NAME,
         target="Tap the area where the image does not match the description",
         datapoints=paths,
         contexts=prompts,
         responses_per_datapoint=20,
-        validation_set_id="67689e58026456ec851f51f8", #hand made prompts prod
+        validation_set_id=VALIDATION_SETS[ENVIRONMENT],
         filters=[
             LanguageFilter(["en"])
         ]
