@@ -5,14 +5,13 @@ from streamlit_drawable_canvas import st_canvas
 import sys
 from pathlib import Path
 
-from rapidata.annot.consts import TEST_ENVIRONMENT, CHOSEN_ENVIRONMENT_KEY
 
 sys.path.append(str(Path(__file__).parent.parent.parent.resolve()))
 
 from consts import LAST_CREATED_VALIDATION_SET_KEY, DEFAULT_FILE, CREATED_RAPIDS_COUNTER_KEY, DOTENV_PATH, \
-    PRODUCTION_ENVIRONMENT
+    PRODUCTION_ENVIRONMENT, TEST_ENVIRONMENT, CHOSEN_ENVIRONMENT_KEY
 from models import ValidationRapid, ValidationRapidCollection, RapidTypes
-from api import get_validation_rapids, get_validation_set_url, validation_set_from_rapids
+from rapidata.annot.api import get_validation_rapids, get_validation_set_url, validation_set_from_rapids
 from utils import resize_image
 
 @st.cache_resource
@@ -25,75 +24,91 @@ def get_collection():
         )
     )
 
+def display_rapid_metadata(rapid: ValidationRapid):
+    cols = st.columns(5, vertical_alignment='center')
+    with cols[0]:
+        st.image(rapid.image, use_container_width=True)
+    content = [
+        f"ID: {rapid.local_rapid_id}",
+        f"Ready ✅" if rapid.is_done() else f"Not Done ❌",
+    ]
+    for idx in range(1, len(content) + 1):
+        with cols[idx]:
+            st.write(content[idx - 1])
+    with cols[3]:
+        select = st.button('Select', key=f'bt_select_{rapid.local_rapid_id}')
+        if select:
+            get_collection().current_rapid = rapid
+            update_canvas_key()
+            st.rerun()
 
-def display_metadata():
+    with cols[4]:
+        delete = st.button('Delete', key=f'bt_delete_{rapid.local_rapid_id}')
+        if delete:
+            get_collection().remove_rapid(rapid)
+            st.rerun()
+    prompt = st.text_input(label='Supply Optional Custom Rapid Prompt?',
+                           value=rapid.prompt,
+                           placeholder='Where is the dog in this image?',
+                           key=f'tb_prompt_{rapid.local_rapid_id}')
+    rapid.prompt = prompt
+
+def display_inventory():
     st.markdown("## 🎒 <span style='color: #1E90FF;'>Inventory</span>", unsafe_allow_html=True)
     coll = get_collection()
     for rapid in coll.rapids[::-1]:
-        with st.container(border=True):
-            cols = st.columns(5, vertical_alignment='center')
-            with cols[0]:
-                st.image(rapid.image, use_container_width=True)
-            content = [
-                f"ID: {rapid.local_rapid_id}",
-                f"Ready ✅" if rapid.is_done() else f"Not Done ❌",
-            ]
-            for idx in range(1, len(content) + 1):
-                with cols[idx]:
-                    st.write(content[idx - 1])
-            with cols[3]:
-                select = st.button('Select', key=f'bt_select_{rapid.local_rapid_id}')
-                if select:
-                    get_collection().current_rapid = rapid
-                    update_canvas_key()
-                    st.rerun()
-
-            with cols[4]:
-                delete = st.button('Delete', key=f'bt_delete_{rapid.local_rapid_id}')
-                if delete:
-                    get_collection().remove_rapid(rapid)
-                    st.rerun()
-            prompt = st.text_input(label='Supply Optional Custom Rapid Prompt?',
-                                   value=rapid.prompt,
-                                   placeholder='Where is the dog in this image?',
-                                   key=f'tb_prompt_{rapid.local_rapid_id}')
-            rapid.prompt = prompt
+        with st.container():
+            display_rapid_metadata(rapid)
 
 def get_next_rapid_id():
     st.session_state[CREATED_RAPIDS_COUNTER_KEY] += 1
     return st.session_state[CREATED_RAPIDS_COUNTER_KEY]
 
 
-def display_file_uploader():
-    with st.container(border=True):
-        uploaded_images = st.file_uploader("➕Add rapid:",
-                                          type=["png", "jpg"],
-                                          key=f'file_uploader_id_{st.session_state.uploader_key}',
-                                          accept_multiple_files=True
-                                          )
-        if uploaded_images:
-            for uploaded_image in uploaded_images:
-                image = Image.open(uploaded_image)
-                get_collection().add_rapids(
-                    ValidationRapid(uploaded_image.name, image, rapid_id=get_next_rapid_id())
-                )
-            update_uploader_key()
-            update_canvas_key()
-            st.rerun()
+def render_file_upload():
+    uploaded_images = st.file_uploader("➕ Add Single Image:",
+                                       type=["png", "jpg"],
+                                       key=f'file_uploader_id_{st.session_state.uploader_key}',
+                                       accept_multiple_files=True
+                                       )
+    if uploaded_images:
+        for uploaded_image in uploaded_images:
+            image = Image.open(uploaded_image)
+            get_collection().add_rapids(
+                ValidationRapid(uploaded_image.name, image, rapid_id=get_next_rapid_id())
+            )
+        update_uploader_key()
+        update_canvas_key()
+        st.rerun()
+
+def render_validation_set_cloning():
+    st.write('➕ Add Images From an Existing Validation Set')
+    col1, col2 = st.columns(2, vertical_alignment='center')
+    with col1:
+        validation_set_name = st.text_input(label_visibility='collapsed',
+                                            label="Clone an Existing Validation Set :panda_face: :panda_face:",
+                                            placeholder="validation_set_id")
+    with col2:
+        clone = st.button(label="Add All", use_container_width=True)
+
+    if clone:
+        rapids = get_validation_rapids(validation_set_name, get_env())
+        if rapids is None:
+            st.toast('🚫 **Validation set not found!**')
+        else:
+            get_collection().add_rapids(rapids)
 
 
-def display_clone_option():
-    with st.container(border=True):
+def display_load_options():
+    st.markdown("## :rocket: <span style='color: #4CAF50;'>Load</span>", unsafe_allow_html=True)
 
-        validation_set_name = st.text_input(label="Clone an Existing Validation Set :panda_face: :panda_face:", placeholder="validation_set_id")
-        clone = st.button(label="Clone and Add All", use_container_width=True)
+    with st.container():
+        render_file_upload()
+        render_validation_set_cloning()
 
-        if clone:
-            rapids = get_validation_rapids(validation_set_name, get_env())
-            if rapids is None:
-                st.toast('🚫 **Validation set not found!**')
-            else:
-                get_collection().add_rapids(rapids)
+        if val_set := st.session_state[LAST_CREATED_VALIDATION_SET_KEY]:
+            st.write('###### You have successfully created a validation set! :boom:')
+            st.write(f'{val_set}  [View it Here]({get_validation_set_url(val_set, get_env())})')
 
 
 def set_env(env: str):
@@ -102,27 +117,33 @@ def set_env(env: str):
 def get_env():
     return st.session_state[CHOSEN_ENVIRONMENT_KEY]
 
+
 def display_creation_option():
-    with st.container(border=True):
-        rapid_type = st.selectbox(
-            "Choose the Type of Rapid :family:",
-            (RapidTypes.LOCATE,),
-        )
-        environment = st.selectbox(
-            "What environment would you like to use?",
-            (TEST_ENVIRONMENT, PRODUCTION_ENVIRONMENT),
-            on_change=lambda: set_env(environment)
-        )
+    st.markdown("## :rocket: <span style='color: #4CAF50;'>Create</span>", unsafe_allow_html=True)
 
-        global_prompt = st.text_input(
-            label="What is the question asked from the user?",
-            placeholder="Where is the animal in this image?"
-        )
+    with st.container():
+        col1, col2 = st.columns(2, vertical_alignment='top')
 
-        validation_set_name = st.text_input(
-            label="Choose a Name For The Validation Set 🏷",
-            placeholder="MyValidationSet"
-        )
+        with col1:
+            rapid_type = st.selectbox(
+                "Choose the Type of Rapid :family:",
+                (RapidTypes.LOCATE,),
+            )
+            environment = st.selectbox(
+                "What environment would you like to use?",
+                (TEST_ENVIRONMENT, PRODUCTION_ENVIRONMENT),
+                on_change=lambda: set_env(environment)
+            )
+        with col2:
+            global_prompt = st.text_input(
+                label="What is the question asked from the user?",
+                placeholder="Where is the animal in this image?"
+            )
+
+            validation_set_name = st.text_input(
+                label="Choose a Name For The Validation Set 🏷",
+                placeholder="MyValidationSet"
+            )
 
 
         create = st.button('Create Validation Set', use_container_width=True)
@@ -144,23 +165,6 @@ def display_creation_option():
                 st.session_state[LAST_CREATED_VALIDATION_SET_KEY] = validation_set_id
                 st.toast(f'ValidationSet Created: {validation_set_id}')
                 st.balloons()
-
-
-def display_cockpit():
-    st.markdown("## :rocket: <span style='color: #4CAF50;'>Cockpit</span>", unsafe_allow_html=True)
-
-    display_file_uploader()
-
-    col1, col2 = st.columns(2, vertical_alignment='top')
-
-    with col2:
-        display_creation_option()
-
-    with col1:
-        display_clone_option()
-        if val_set := st.session_state[LAST_CREATED_VALIDATION_SET_KEY]:
-            st.write('###### You have successfully created a validation set! :boom:')
-            st.write(f'{val_set}  [View it Here]({get_validation_set_url(val_set, get_env())})')
 
 
 def display_canvas():
@@ -203,12 +207,13 @@ def main():
 
     with col2:
         display_canvas()
-    with col3:
-        display_cockpit()
+    with col3:#TODO change load and create emojis and colors
+        display_load_options()
         st.divider()
-        display_metadata()
+        display_creation_option()
+        st.divider()
+        display_inventory()
 
-    rapids = get_collection().rapids
 
 def update_uploader_key():
     st.session_state.uploader_key += 1
