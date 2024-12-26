@@ -53,7 +53,7 @@ class ValidationRapidCollection:
 
         if starter_rapid is not None:
             self.rapids.append(starter_rapid)
-        self.set_last()
+        self.set_last_as_current()
 
 
     def add_rapids(self, rapids: Union[ValidationRapid, List[ValidationRapid]]):
@@ -62,14 +62,14 @@ class ValidationRapidCollection:
 
         for r in rapids:
             self.rapids.append(r)
-        self.set_last()
+        self.set_last_as_current()
 
     def remove_rapid(self, rapid: ValidationRapid):
         self.rapids.remove(rapid)
         if rapid == self.current_rapid:
-            self.set_last()
+            self.set_last_as_current()
 
-    def set_last(self):
+    def set_last_as_current(self):
         if self.rapids:
             self.current_rapid = self.rapids[-1]
         else:
