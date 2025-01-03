@@ -1,0 +1,548 @@
+uid,prompt,Basic BenchMark,category,source,ImageHub Eval
+0,A black colored banana.,Yes,Colors,DrawBench,Yes
+1,"a black colored banana rests on a white marble countertop, its unusual hue contrasting with the light surface. the banana's once vibrant yellow peel has turned to a mysterious shade of black, with its inner fruit barely visible as it peeks out from the tip.",Yes,Colors,Upsample DrawBench,No
+2,A blue bird and a brown bear.,Yes,Colors,DrawBench,Yes
+3,"a blue bird with bright plumage perched on the shoulder of a gentle brown bear. they are in a serene meadow, surrounded by wildflowers and tall grass, with a crystal-clear stream flowing nearby. the sun casts a warm, golden light on the scene, and the pair appear to be sharing a moment of friendship and tranquility.",Yes,Colors,Upsample DrawBench,No
+4,A red colored car.,Yes,Colors,DrawBench,Yes
+5,"a sleek red sports car parked on a sunlit cobblestone street, its glossy paint reflecting the vibrant cityscape around it. passersby admire the car's elegant curves and design, as a gentle breeze rustles the leaves of a nearby tree.",Yes,Colors,Upsample DrawBench,No
+6,A blue cup and a green cell phone.,Yes,Colors,DrawBench,Yes
+7,"on a rustic wooden table lies a vibrant blue ceramic cup filled with steaming hot coffee, with tendrils of steam rising to the sky. next to it rests a sleek green cell phone, its screen displaying a scenic mountain landscape wallpaper. sunlight filters through a nearby window, casting a warm glow over the scene.",Yes,Colors,Upsample DrawBench,No
+8,An orange colored sandwich.,Yes,Colors,DrawBench,Yes
+9,"a vibrant orange sandwich sits on a wooden table, with layers of thinly sliced roasted pumpkin, cheddar cheese, and roasted red pepper held together by slices of whole wheat bread. the orange hues of the sandwich contrast beautifully with the rustic, dark wood table.",Yes,Colors,Upsample DrawBench,No
+10,A white colored sandwich.,Yes,Colors,DrawBench,Yes
+11,"a white bread sandwich, generously filled with cream cheese, sliced cucumber, and tender turkey, sits on a pristine white plate. the plate is placed on a smooth marble countertop, illuminated by soft, warm lighting. a tall, refreshing glass of ice-cold milk completes the monochromatic culinary scene.",Yes,Colors,Upsample DrawBench,No
+12,A yellow colored giraffe.,Yes,Colors,DrawBench,Yes
+13,"a vibrant yellow giraffe strolls gracefully through a lush savannah, its long neck allowing it to nibble on leaves from the tallest trees.  the bright sun casts a warm glow over the scene, accentuating the giraffe's unique yellow hue.",Yes,Colors,Upsample DrawBench,No
+14,Rainbow coloured penguin.,Yes,Conflicting,DrawBench,Yes
+15,"a rainbow-coloured penguin joyfully waddles across a vibrant arctic landscape. its vibrant feathers reflect the colours of the sky after a fresh rainfall, with shades of red, orange, yellow, green, blue, indigo, and violet shimmering against the icy background.",Yes,Conflicting,Upsample DrawBench,No
+16,A pizza cooking an oven.,Yes,Conflicting,DrawBench,Yes
+17,"a sizzling pepperoni pizza with bubbling cheese, bell peppers, and mushrooms lies in the center of a red-hot brick oven.  the flames dance around the pizza, giving it a perfectly golden crust, while the aroma of the ingredients fills the air.",Yes,Conflicting,Upsample DrawBench,No
+18,A panda making latte art.,Yes,Conflicting,DrawBench,Yes
+19,"a black and white panda wearing an apron stands behind a wooden counter, skillfully pouring steamed milk into a cup of espresso.  the latte art takes the shape of a bamboo leaf, and the warm lighting of the cozy café creates a welcoming atmosphere.",Yes,Conflicting,Upsample DrawBench,No
+20,A horse riding an astronaut.,Yes,Conflicting,DrawBench,Yes
+21,An elephant under the sea.,Yes,Conflicting,DrawBench,Yes
+22,A bird scaring a scarecrow.,Yes,Conflicting,DrawBench,Yes
+23,A fish eating a pelican.,Yes,Conflicting,DrawBench,Yes
+24,One car on the street.,Yes,Counting,DrawBench,Yes
+25,One dog on the street.,Yes,Counting,DrawBench,Yes
+26,One cat and two dogs sitting on the grass.,Yes,Counting,DrawBench,Yes
+27,Two cars on the street.,Yes,Counting,DrawBench,Yes
+28,Four dogs on the street.,Yes,Counting,DrawBench,Yes
+29,Three cats and one dog sitting on the grass.,Yes,Counting,DrawBench,Yes
+30,Four cars on the street.,Yes,Counting,DrawBench,Yes
+31,A triangular purple flower pot. A purple flower pot in the shape of a triangle.,Yes,DALL-E,DrawBench,Yes
+32,A fisheye lens view of a turtle sitting in a forest.,Yes,DALL-E,DrawBench,Yes
+33,"An emoji of a baby panda wearing a red hat, green gloves, red shirt, and green pants.",Yes,DALL-E,DrawBench,Yes
+34,A triangular orange picture frame. An orange picture frame in the shape of a triangle.,Yes,DALL-E,DrawBench,Yes
+35,A couple of glasses are sitting on a table.,Yes,DALL-E,DrawBench,Yes
+36,A cube made of brick. A cube with the texture of brick.,Yes,DALL-E,DrawBench,Yes
+37,A small blue book sitting on a large red book.,Yes,DALL-E,DrawBench,Yes
+38,"A vehicle composed of two wheels held in a frame one behind the other, propelled by pedals and steered with handlebars attached to the front wheel.",Yes,Descriptions,DrawBench,Yes
+39,"A type of digital currency in which a record of transactions is maintained and new units of currency are generated by the computational solution of mathematical problems, and which operates independently of a central bank.",Yes,Descriptions,DrawBench,Yes
+40,"An American multinational technology company that focuses on artificial intelligence, search engine, online advertising, cloud computing, computer software, quantum computing, e-commerce, and consumer electronics.",Yes,Descriptions,DrawBench,Yes
+41,"A large motor vehicle carrying passengers by road, typically one serving the public on a fixed route and for a fare.",Yes,Descriptions,DrawBench,Yes
+42,A mechanical or electrical device for measuring time.,Yes,Descriptions,DrawBench,Yes
+43,"A device consisting of a circular canopy of cloth on a folding metal frame supported by a central rod, used as protection against rain or sometimes sun.",Yes,Descriptions,DrawBench,Yes
+44,A long curved fruit which grows in clusters and has soft pulpy flesh and yellow skin when ripe.,Yes,Descriptions,DrawBench,Yes
+45,"Supreme Court Justices play a baseball game with the FBI. The FBI is at bat, the justices are on the field.",Yes,Gary Marcus et al.,DrawBench,Yes
+46,An oil painting of a couple in formal evening wear going home get caught in a heavy downpour with no umbrellas.,Yes,Gary Marcus et al.,DrawBench,Yes
+47,A tomato has been put on top of a pumpkin on a kitchen stool. There is a fork sticking into the pumpkin. The scene is viewed from above.,Yes,Gary Marcus et al.,DrawBench,Yes
+48,Paying for a quarter-sized pizza with a pizza-sized quarter.,Yes,Gary Marcus et al.,DrawBench,Yes
+49,"A donkey and an octopus are playing a game. The donkey is holding a rope on one end, the octopus is holding onto the other. The donkey holds the rope in its mouth. A cat is jumping over the rope.",Yes,Gary Marcus et al.,DrawBench,Yes
+50,"A grocery store refrigerator has pint cartons of milk on the top shelf, quart cartons on the middle shelf, and gallon plastic jugs on the bottom shelf.",Yes,Gary Marcus et al.,DrawBench,Yes
+51,Abraham Lincoln touches his toes while George Washington does chin-ups. Lincoln is barefoot. Washington is wearing boots.,Yes,Gary Marcus et al.,DrawBench,Yes
+52,"A domesticated carnivvorous mzammal that typicbally hfaas a lons sfnout, an acxujte sense off osmell, noneetractaaln crlaws, anid xbarkring,y howlingu, or whining rvoiche.",Yes,Misspellings,DrawBench,Yes
+53,Bzaseball galove.,Yes,Misspellings,DrawBench,Yes
+54,"A smafml vessef epropoeilled on watvewr by ors, sauls, or han engie.",Yes,Misspellings,DrawBench,Yes
+55,Tcennis rpacket.,Yes,Misspellings,DrawBench,Yes
+56,"An instqrumemnt used for cutting cloth, paper, axdz othr thdin mteroial, consamistng of two blades lad one on tvopb of the other and fhastned in tle mixdqdjle so as to bllow them txo be pened and closed by thumb and fitngesr inserted tgrough rings on kthe end oc thei vatndlzes.",Yes,Misspellings,DrawBench,Yes
+57,Rbefraigerator.,Yes,Misspellings,DrawBench,Yes
+58,"A ldarge keybord msical instroument lwith a woden case enmclosig a qsouvnkboajrd and mfgtal strivgf, which are strucrk b hammrs when the nels are depresdsmed.f lhe strsingsj' vibration ie stopped by damperds when the keys re released and can bce regulavewdd for lengh and vnolume y two or three pedalvs.",Yes,Misspellings,DrawBench,Yes
+59,A train on top of a surfboard.,Yes,Positional,DrawBench,Yes
+60,A stop sign on the right of a refrigerator.,Yes,Positional,DrawBench,Yes
+61,A pizza on the right of a suitcase.,Yes,Positional,DrawBench,Yes
+62,A wine glass on top of a dog.,Yes,Positional,DrawBench,Yes
+63,A tennis racket underneath a traffic light.,Yes,Positional,DrawBench,Yes
+64,A giraffe underneath a microwave.,Yes,Positional,DrawBench,Yes
+65,A couch on the left of a chair.,Yes,Positional,DrawBench,Yes
+66,Acersecomicke.,Yes,Rear Words,DrawBench,Yes
+67,Jentacular.,Yes,Rear Words,DrawBench,Yes
+68,Backlotter.,Yes,Rear Words,DrawBench,Yes
+69,Matutinal.,Yes,Rear Words,DrawBench,Yes
+70,Artophagous.,Yes,Rear Words,DrawBench,Yes
+71,Peristeronic.,Yes,Rear Words,DrawBench,Yes
+72,Octothorpe.,Yes,Rear Words,DrawBench,Yes
+73,Darth Vader playing with raccoon in Mars during sunset.,Yes,Reddit,DrawBench,Yes
+74,A realistic photo of a Pomeranian dressed up like a 1980s professional wrestler with neon green and neon orange face paint and bright green wrestling tights with bright orange boots.,Yes,Reddit,DrawBench,Yes
+75,An ancient Egyptian painting depicting an argument over whose turn it is to take out the trash.,Yes,Reddit,DrawBench,Yes
+76,McDonalds Church.,Yes,Reddit,DrawBench,Yes
+77,"A maglev train going vertically downward in high speed, New York Times photojournalism.",Yes,Reddit,DrawBench,Yes
+78,Photo of a mega Lego space station inside a kid's bedroom.,Yes,Reddit,DrawBench,Yes
+79,"A tiger in a lab coat with a 1980s Miami vibe, turning a well oiled science content machine, digital art.",Yes,Reddit,DrawBench,Yes
+80,A storefront with 'Hello World' written on it.,Yes,Text,DrawBench,Yes
+81,New York Skyline with 'NeurIPS' written with fireworks on the sky.,Yes,Text,DrawBench,Yes
+82,New York Skyline with 'Diffusion' written with fireworks on the sky.,Yes,Text,DrawBench,Yes
+83,A storefront with 'Diffusion' written on it.,Yes,Text,DrawBench,Yes
+84,A sign that says 'Diffusion'.,Yes,Text,DrawBench,Yes
+85,A storefront with 'Google Brain Toronto' written on it.,Yes,Text,DrawBench,Yes
+86,A sign that says 'Deep Learning'.,Yes,Text,DrawBench,Yes
+87,"art sketch of a alien ship, cyberpunk,",Yes,Misc,DiffusionDB,Yes
+88,"beautiful witch, hyper detailed, flowing psychadelic background intricate and detailed, 8 k, octane render",Yes,Misc,DiffusionDB,Yes
+89,"portrait of a facehugger by hr giger, greg rutkowski, luis royo and wayne barlowe, 8 k",Yes,Misc,DiffusionDB,Yes
+90,checkerboard,Yes,Misc,DiffusionDB,Yes
+91,"stylish cyberpunk girl with tattoo and wild colorful hair, detailed cafe background full body, fine detail, anime, realistic shaded lighting, directional lighting 2 d poster by ilya kuvshinov, magali villeneuve, artgerm, jeremy lipkin and michael garmash and rob rey",Yes,Misc,DiffusionDB,Yes
+92,"a beautifull white cast futuristic biomechanical humanoid woman side portrait with pretty face in intricate detailed color smashing fluid oilpaint, melting wax, thin fractal tendrils, futuristic digital painting, cyberpunk, 8 k, hyper detailed, octane render, concept art, by peter mohrbacher, by wlop, by ruan jia",Yes,Misc,DiffusionDB,Yes
+93,big budget scifi movie set in postapocalyptic world with alien brainsuckers female cyborg in yellow rubber and gas mask in ruins of church,Yes,Misc,DiffusionDB,Yes
+94,super epic realistic nature photo of mountains valley and lake trending on instagram with lonely person in raincoat standing at a distance,Yes,Misc,DiffusionDB,Yes
+95,a toy gun in the shape of a cute cat,Yes,Misc,DiffusionDB,Yes
+96,"a beautiful very detailed painting of manor building unfinished building urbex architecture abandoned nature industrial architecture by ludwig mies van der rohe, water apocalyptic at night otherworldly postcyberpunk made of glass at summer scumm bar, archdaily, wallpaper, highly detailed, trending on artstation.",Yes,Misc,DiffusionDB,Yes
+97,"minecraft cosmic fantasy wallpaper synthwave mix title card, party rpg, 4 k",Yes,Misc,DiffusionDB,Yes
+98,"an electric pokemon, nightly, spiral, naive nerikomi, weird perspective, extra narrow, detailed illustration, lit by flashlight, scenic spiral environment by rhads from lorax movie, trending artstation, true color, fisheye, grass field mountainous terrain, spiral clouds",Yes,Misc,DiffusionDB,Yes
+99,"battle hardened, overpowering, pragmatic, charismatic character male handsome muscular wearing jeans and t - shirt, portrait, confident, modern cityscape, outdoors, architecture, fog, sunny, volumetric lighting, illustration, perfectly shaded, greenish tinge, cold lights soft painting, art by krenz cushart and wenjun lin",Yes,Misc,DiffusionDB,Yes
+100,"sea creature by maurice sendak, shaun tan, made in hyperrealistic 3 d, dark green colours, nighttime, floating to the surface of a deep blue ocean with sea kelp",Yes,Misc,DiffusionDB,Yes
+101,"emperor palpatine in the desert of tatooine, film still, wide shot, heat, desert, sci fi, epic, dramatic light",Yes,Misc,DiffusionDB,Yes
+102,"a photograph of a futuristic street scene, brutalist style, straight edges, finely detailed oil painting, impasto brush strokes, soft light, 8 k, dramatic composition, dramatic lighting, sharp focus, octane render, masterpiece, by adrian ghenie and jenny saville and zhang jingna",Yes,Misc,DiffusionDB,Yes
+103,"a photograph of a futuristic street scene, brutalist style architecture, straight edges, shop signs, video screens, finely detailed oil painting, impasto brush strokes, soft light, 8 k, dramatic composition, dramatic lighting, sharp focus, octane render, masterpiece, by adrian ghenie and jenny saville and zhang jingna",Yes,Misc,DiffusionDB,Yes
+104,painting of private onsen next to japanese inn with levitating red lanterns and petals by greg rutkowski craig mullins ross tran cushions towels buckets zen garden flowers japanese motifs concept art clear focus fantasy d & d cinematic lighting unreal engine lumen reflections trending on artstation,Yes,Misc,DiffusionDB,Yes
+105,"a beautiful photorealistic anime illustration of urbex industrial architecture city architecture unfinished building abandoned post office by renzo piano, laser extraterrestial sunset lake vaporwave elysian at night reclaimed by nature magic realism myst wilderness, archdaily, wallpaper, highly detailed, trending on artstation.",Yes,Misc,DiffusionDB,Yes
+106,"photo cartoon bd illustration comic manga painting of cloakroom environement : 5 fantasy environement, digital painting : 1 fat brush concept sketch artist bd enki bilal : 1 0",Yes,Misc,DiffusionDB,Yes
+107,"a woman cyborg watering flowers, airbrush painting, 1 9 8 0 s digital scan",Yes,Misc,DiffusionDB,Yes
+108,"abstract watercolor painting of first summer day, midsummer scandinavia, cinematic light, national romanticism by anders zorn",Yes,Misc,DiffusionDB,Yes
+109,psychedelic duck,Yes,Misc,DiffusionDB,Yes
+110,"complex 3 d render hyper detailed ultra sharp beautiful woman, porcelain ivory skin, medium shot portrait, close - up, bright 3 point light, alexandre ferra white mecha, iris van herpen cyberpunk mechanical haute couture huge fractal mycelum and fungi filigree lace, rasberry chili red sponge corals, huge magnolia daisies goliath head ornaments, big embroidered leaves sinuous roots, octane render",Yes,Misc,DiffusionDB,Yes
+111,"futuristic city with forest, straight edged buildings, street signs, detailed shopfronts, video screens, impasto brush strokes, soft light, 8 k, dramatic composition, dramatic lighting, sharp focus, octane render, concept art, masterpiece, by adrian ghenie and jenny saville and zhang jingna",Yes,Misc,DiffusionDB,Yes
+112,"portait of mystical witch, hyper detailed, flowing background, intricate and detailed, trippy, 8 k",Yes,Misc,DiffusionDB,Yes
+113,painting of private empty onsen next to japanese inn with levitating red lanterns and petals by greg rutkowski craig mullins ross tran bonsai trees cushions towels buckets zen garden flowers ornate japanese motifs concept art fantasy cinematic lighting unreal engine lumen reflections trending on artstation,Yes,Misc,DiffusionDB,Yes
+114,"cinestill 5 0 d depht of gfield of a dreamy beautiful pre - raphaelite cople hypnos and thanatos in style of annie liebovitz - john watherhouse, elegant, highly detailed, pale pink matt, soft blur, artstation, sharp focus, head in focus",Yes,Misc,DiffusionDB,Yes
+115,"family home on fire, golden hour, storm sky, ultrahd, ultra sharp, hyper detailed, 8 k, shot on 3 5 mm film camera, tumblr aesthetic, wallpaper",Yes,Misc,DiffusionDB,Yes
+116,"beautiful portrait of a porcelain ivory fair face woman biomechanical cyborg, close - up, sharp focus, studio light, iris van herpen haute couture headdress made of rhizomorphs, daisies, arches, brackets, herbs, colorful corals, fractal mushrooms, puffballs, octane render, ultra sharp, 8 k",Yes,Misc,DiffusionDB,Yes
+117,"a beautiful painting cat, by henri matisse and kusama yayoi painting",Yes,Misc,DiffusionDB,Yes
+118,"complex 3 d render hyper detailed ultra sharp aesthetic house on fire, medium portrait, close - up, bright 3 point light",Yes,Misc,DiffusionDB,Yes
+119,"illustration of a beautiful iridescent flying dragon with expressive eyes and long tail, by mucha arthurrackham williamblake edmunddulac",Yes,Misc,DiffusionDB,Yes
+120,"house fire, 8 k, shot on film camera",Yes,Misc,DiffusionDB,Yes
+121,"beautiful gorgeous elegant porcelain ivory fair skin mechanoid woman, close - up, sharp focus, studio light, iris van herpen haute couture headdress made of rhizomorphs, daisies, arches, brackets, herbs, colorful corals, fractal mushrooms, puffballs, octane render, ultra sharp, 8 k",Yes,Misc,DiffusionDB,Yes
+122,average man mugshot photo,Yes,Misc,DiffusionDB,Yes
+123,a landscaping company called norwegian fjord,Yes,Misc,DiffusionDB,Yes
+124,"abstract watercolor painting of roman god monument, in stone and marble, magical and traditional, cinematic light, national romanticism by anders zorn",Yes,Misc,DiffusionDB,Yes
+125,"stylish cyberpunk woman with tattoo and bald head, detailed cafe background full body, fine detail, anime, realistic shaded lighting, directional lighting 2 d poster by ilya kuvshinov, magali villeneuve, artgerm, jeremy lipkin and michael garmash and rob rey",Yes,Misc,DiffusionDB,Yes
+126,half life 3,Yes,Misc,DiffusionDB,Yes
+127,"A woman stands wearing a black and white coat over a dark vest, orange shirt and pink tie.",Yes,Hard,ABC-6K,Yes
+128,A brown carrier of some sort with a red handle,Yes,Hard,ABC-6K,Yes
+129,A blue bunny in a pink water toilet bowl .,Yes,Hard,ABC-6K,Yes
+130,A white cat laying on a black sofa .,Yes,Hard,ABC-6K,Yes
+131,A lone man in a green jacket stands on a red snowboard in the snow .,Yes,Hard,ABC-6K,Yes
+132,Male tennis player with white shirt and blue shorts swinging a black tennis racket,Yes,Hard,ABC-6K,Yes
+133,A woman in a snow jacket is purple skiing .,Yes,Hard,ABC-6K,Yes
+134,A young girl in a yellow dress with blue flowers on a bench,Yes,Hard,ABC-6K,Yes
+135,A grey cat sitting in a large black bag.,Yes,Hard,ABC-6K,Yes
+136,there is a white street sign with a orange sign underneath,Yes,Hard,ABC-6K,Yes
+137,A pink scooter with a black seat next to a blue car.,Yes,Hard,ABC-6K,Yes
+138,"A black and white picture of a busy street, only red is in color, a red double decker bus drives down the road.",Yes,Hard,ABC-6K,Yes
+139,A long green train traveling through a rural orange countryside .,Yes,Hard,ABC-6K,Yes
+140,A silver suitcase and other bags lie in the back seat of a pink car .,Yes,Hard,ABC-6K,Yes
+141,Young woman wearing red dress and black sweater gives approval while holding cell phone .,Yes,Hard,ABC-6K,Yes
+142,a black and white cat sitting on a brown suitcase next to a wall,Yes,Hard,ABC-6K,Yes
+143,"Close together group of white, beige, and brown sheep, from the rear, standing in grass at fence gate.",Yes,Hard,ABC-6K,Yes
+144,A beige pastry sitting in a white ball next to a spoon .,Yes,Hard,ABC-6K,Yes
+145,A large red building with a clock in it is surrounded by palm trees and white flags .,Yes,Hard,ABC-6K,Yes
+146,"A silver , orange , and grey   train 's closed doors .",Yes,Hard,ABC-6K,Yes
+147,A yellow flower sticking out of a green pot.,Yes,Hard,ABC-6K,Yes
+148,Surfer and a black white suit holding a white surfboard under his arms .,Yes,Hard,ABC-6K,Yes
+149,An orange cat sitting on top of a white bench next to a bike.,Yes,Hard,ABC-6K,Yes
+150,A woman in a red t-shirt and shorts holds on to a tennis racket and on the other side of the net a man in black and white also holds up a tennis racket.,Yes,Hard,ABC-6K,Yes
+151,"Three traffic lights, one green, the other yellow, and one red.",Yes,Hard,ABC-6K,Yes
+152,Motorcyclis in blue white and red clothing with matching colored motorcycle .,Yes,Hard,ABC-6K,Yes
+153,The large bird has a black face and red feathers .,Yes,Hard,ABC-6K,Yes
+154,A man wearing a brown cap looking sitting at his computer with a black and brown dog resting next to him on the couch.,Yes,Hard,ABC-6K,Yes
+155,A baseball player in a blue and white uniform is next to a player in black and white .,Yes,Hard,ABC-6K,Yes
+156,Two brown horses grazing on green grass next to a lighthouse.,Yes,Hard,ABC-6K,Yes
+157,A brown clock tower with a gold and black clock.,Yes,Hard,ABC-6K,Yes
+158,a black and white picture of a white man singing a song,Yes,Hard,ABC-6K,Yes
+159,A pink and a white frisbee are on the ground .,Yes,Hard,ABC-6K,Yes
+160,a snow skier in red pants is laying down and people,Yes,Hard,ABC-6K,Yes
+161,"a person wearing a black suit jacket, collared shirt, blue patterned tie and a pocket square",Yes,Hard,ABC-6K,Yes
+162,A blue and white cat next to a blanket and shelf with grey bottle .,Yes,Hard,ABC-6K,Yes
+163,some green cattle are grazing in a black field,Yes,Hard,ABC-6K,Yes
+164,A brown toilet with a white wooden seat .,Yes,Hard,ABC-6K,Yes
+165,a brown uninstalled toilet on a white sheet,Yes,Hard,ABC-6K,Yes
+166,A clean bathroom with pink walls and white appliances.,Yes,Hard,ABC-6K,Yes
+167,photograph of a dolphin standing on a grassland,Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+168,photograph of man on a bicycle holding a newspaper,Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+169,"photograph of a pale Asian woman, wearing an oriental costume, sitting in a luxurious white chair. her head is floating off the chair, with the chin on the table and chin on her knees, her chin on her knees. Closeup",Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+170,photograph of a person drinking red wine and smoking weed with a flat cigarette,Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+171,photograph of a man jumping in the sky,Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+172,photograph of black hole,Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+173,photograph of a woman wearing a track belt,Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+174,photograph of a black-eyed woman floating in a black gown,Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+175,"photograph of a car on the moon in the sky over Saturn, atmospheric",Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+176,"photograph of one single bright happy woman wearing makeup and makeup, a black balenciaga jacket, walking up a quiet street in front of a laundromat, 3D render, 8K",Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+177,"photograph of a beautiful female model wearing high tech military clothing in the desert, detailed",Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+178,image of man watching computer screen,Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+179,"image of a cat holding up a bird on a wall. 8k, photoreal, sharp details, soft light.",Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+180,image of a white wooden sphere floating in water,Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+181,image of a hyper realistic alien hand puppet on a white background,Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+182,image of a cute pink penguin wearing clothes,Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+183,"image of a fashion model standing in an audience, wearing black balenciaga hooded jacket, looking away from camera, covered in plastic, 3D, 4K, fashion shoot",Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+184,"image of woman on a bicycle climbing mountains surrounded by sunset, photorealistic, high detail, cinematic, epic, photorealistic, 8k",Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+185,"image of massive statue of Donald Trump in columbus mall, highly detailed",Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+186,image of a huge black castle in the sky surrounded by black vines,Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+187,"image from an iPhone video of a dog in a supermarket, hyper realistic, flash photo",Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+188,photorealistic render of city exterior shot,Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+189,photorealistic photo of an old man in front of the wall at night with a flash light on him,Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+190,photorealistic render of Eiffel Tower in Paris in the summer,Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+191,"photorealistic, detailed picture of a single flower crown",Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+192,"photorealistic, detailed mechanical motorcycle, detailed",Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+193,photorealistic gemstone skull,Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+194,"photorealistic, hyper detailed sculpture of a large mech dragon",Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+195,"photorealistic futuristic black and white mech sitting in a factory at night, heavy rain, giant metal cables, cinematic",Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+196,"photorealistic, inside an alien fungal forest",Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+197,"photorealistic photo of a cactus flower in a field of sunflowershyperrealism, massive clouds, hyperrealistic, epic",Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+198,hyperrealism render of a surreal alien humanoid,Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+199,"hyperrealism, man and woman, together, made of clay",Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+200,hyperrealism animal kingdom,Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+201,"hyperrealism backstreet, in front of a massive building, cinematic, neon signs, high resolution, realistic lighting, octane render, hyper realistic, 8k",Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+202,"hyperrealism, epic photography, closeup, 35mm film, photography, of young girl, in city",Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+203,hyperrealism detailed dress,Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+204,hyperrealism photo of a man with an orange hood covering his face,Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+205,hyperrealism woman wearing a black robe holding a can of beer,Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+206,hyperrealism fruits and vegetables market,Yes,Realism,ChromAIca + Midjourney Prompt Generator,Yes
+207,"a 3d-rendered bag of cash, bulging with coins and bills, sits on a glossy surface.  a vintage clock face is printed on the bag, its hands indicating midnight. the background features a gradient of colors, transitioning from deep blue at the top to golden yellow at the bottom.",Yes,Descriptions,DALLE3-EVAL,No
+208,"in the style of matisse, bold colors and abstract shapes create a lively scene of a tech job interview. the interviewer, dressed in a vibrant orange suit, engages with the candidate, who wears a deep blue shirt and lime green tie. the room is filled with expressive shapes, representing technological equipment and modern art. light shines through the window, casting playful patterns on the floor.",Yes,Descriptions,DALLE3-EVAL,No
+209,"a vibrant pizza slice with gooey cheese and colorful toppings floats through the vastness of outer space. it orbits a distant glowing star, casting mesmerizing reflections on the cosmic backdrop, while an infinite loop of dazzling celestial objects perpetually repeats in the background, creating a captivating digital art masterpiece.",Yes,Descriptions,DALLE3-EVAL,No
+210,"a 3d brain in synthwave style made of electrical circuitry hovers in a neon-lit cyber world.  the brain pulses with vibrant colors, while electric currents flow through the intricate pathways, creating a mesmerizing visual effect. the background features a futuristic city skyline, illuminated by neon lights.",Yes,Descriptions,DALLE3-EVAL,No
+211,"a portrait of a teenage boy, holden caulfield, with short dark hair, wearing a vintage deerstalker hat.  he has a mysterious expression, as he gazes off into the distance. the background features new york city, a mix of buildings and bustling streets, reflecting his urban adventures.",Yes,Descriptions,DALLE3-EVAL,No
+212,"a detailed sketch of mario from the classic video game series is depicted on a textured parchment. he wears his signature red cap and overalls, white gloves, and holds a green turtle shell. the drawing captures his cheerful expression and iconic mustache, with fine pencil strokes adding depth and dimension.",Yes,Descriptions,DALLE3-EVAL,No
+213,"a colossal metallic robot with an angular design stands atop a modern glass building nestled on a mountain peak. the robot dons a pair of gigantic headphones with neon lights, while a vivid sunset paints the sky and surrounding mountains with hues of orange and purple.",Yes,Descriptions,DALLE3-EVAL,No
+214,"a modern field hockey goalkeeper helmet is intricately designed to resemble a roman helmet.  the helmet is made of a shiny silver material, featuring a distinctive red plume on top and protective cheek guards.  in the background, a field hockey game takes place, showcasing the fusion of ancient and modern styles.",Yes,Descriptions,DALLE3-EVAL,No
+215,"a 1960's soviet space propaganda screen print in ukiyo-e style, depicting a cosmonaut floating above earth, surrounded by vibrant red and yellow hues. the floating cosmonaut holds a flag with the hammer and sickle symbol, and the earth below is adorned with cherry blossoms, blending soviet iconography with traditional japanese elements.",Yes,Descriptions,DALLE3-EVAL,No
+216,"a brown monkey with a playful expression wears a pair of aviator sunglasses as it swings through a lush jungle canopy.  its tail curls around a vine, and the sunlight reflects off its sunglasses, capturing a sense of adventure and fun.",Yes,Descriptions,DALLE3-EVAL,No
+217,"a flag proudly flies, representing the great canadian union of america. it features a blend of the canadian maple leaf and the american stars and stripes. the maple leaf is golden and set against a blue background, while thirteen red and white stripes expand outward, symbolizing unity between the two nations in the digital realm.",Yes,Descriptions,DALLE3-EVAL,No
+218,"on a sunny day, a life house therapist stands outside the futuristic villa of hope, shaking hands with the welcoming committee. the sky is a bright blue with a ufo hovering in the distance. around them, colorful new age buildings stretch high into the sky, and sleek, technologically advanced cars drive by on nearby roads, reflecting the sun's rays in a dazzling display.",Yes,Descriptions,DALLE3-EVAL,No
+219,"Cristiano Ronaldo gracefully leaps from one rooftop to another, demonstrating his parkour skills amidst the historic buildings of Lisbon. The city's vibrant colors contrast with the intensity in his eyes as he focuses on his next move.",Yes,Celebrities,DALLE3-EVAL,No
+220,"Adele, wearing a chef's apron, experiments with exotic ingredients in a modern kitchen. The vibrant colors and textures of the food contrast with her focused expression as she creates a culinary masterpiece.",Yes,Celebrities,DALLE3-EVAL,No
+221,"a beautiful girl with long, flowing hair stands on the sun-kissed sands of copacabana beach in rio de janeiro.  she wears a vibrant sundress that dances in the gentle breeze, with the iconic sugarloaf mountain and the azure sea as her backdrop.",Yes,Descriptions,DALLE3-EVAL,No
+222,"a diverse crowd of people eagerly waits in line at a bustling street food stand in beirut. the tantalizing aroma of freshly grilled kebabs and warm pita bread fills the air. the stand is adorned with vibrant lanterns and colorful signs showcasing the mouthwatering menu. nearby, a street musician plays an upbeat tune on his oud, adding to the lively atmosphere.",Yes,Descriptions,DALLE3-EVAL,No
+223,"on a rocky mountain peak, a group of hikers pauses to admire their collection of sleek peak design bags. each bag has its own unique color, from cool blue to fiery orange, all resting against the backdrop of the stunning mountain range. sunlight catches on the bags' elegant design as the hikers prepare to continue their journey.",Yes,Descriptions,DALLE3-EVAL,No
+224,"a sleek macbook m1 with a metallic finish sits on a modern wooden desk surrounded by lush green plants,  the screen displaying a colorful, geometric wallpaper. a cup of coffee rests beside the macbook, and sunlight streams through a nearby window, illuminating the workspace.",Yes,Descriptions,DALLE3-EVAL,No
+225,"a large black rock stands tall in a dimly lit cave, displaying a single, shimmering golden human thumbprint. the gold sparkles with a mystical aura, reflecting off the cave walls and creating a captivating pattern of light and shadow.",Yes,Descriptions,DALLE3-EVAL,No
+226,"A gleaming Toyota Solaris, parked along a picturesque coastal road, harnesses the power of the sun with its integrated solar panels. The revolutionary electric vehicle boasts zero emissions and unparalleled efficiency, driving the future of sustainable transportation.",Yes,Descriptions,DALLE3-EVAL,No
+227,Two hot dogs sit on a white paper plate near a soda cup which are sitting on a green picnic table while a bike and a silver car are parked nearby.,Yes,Color,T2I-Compbench,No
+228,A bathroom with green tile and a red shower curtain.,Yes,Color,T2I-Compbench,No
+229,A bathroom with red tile and a green shower curtain.,Yes,Color,T2I-Compbench,No
+230,"A dining area features a wood table and chairs, a silver refrigerator and light brown cabinets.",Yes,Color,T2I-Compbench,No
+231,A traffic light with a smile red light above a green sign.,Yes,Color,T2I-Compbench,No
+232,The soft blanket was on top of the hard couch.,Yes,Complex,T2I-Compbench,No
+233,The soft white feathers of the owl contrasted with the sharp black talons.,Yes,Complex,T2I-Compbench,No
+234,The rough brown bark of the tree contrasted with the soft green leaves.,Yes,Complex,T2I-Compbench,No
+235,The cracked rectangle was leaning against the glossy cylinder and the peeling triangle.,Yes,Complex,T2I-Compbench,No
+236,The flickering candle cast shadows on the smooth wall and the textured rug.,Yes,Complex,T2I-Compbench,No
+237,The soft white snow contrasted with the sharp green pine needles.,Yes,Actions,T2I-Compbench,No
+238,The bright green grass contrasted with the dull grey pavement.,Yes,Actions,T2I-Compbench,No
+239,The cracked rectangle was leaning against the glossy cylinder and the peeling triangle.,Yes,Actions,T2I-Compbench,No
+240,The flickering light bulb brightened the dark room and the dim hallway.,Yes,Actions,T2I-Compbench,No
+241,"The soft, gentle touch of the therapist's hands provided healing relief to the injured athlete, a therapeutic massage of body and soul.",Yes,Actions,T2I-Compbench,No
+242,"The sharp, angular lines of the modern architecture contrasted with the natural landscape, a melding of human innovation and natural beauty.",Yes,Actions,T2I-Compbench,No
+243,The brown boots were on top of the wooden shoe rack.,Yes,Complex Spatial,T2I-Compbench,No
+244,The black camera was next to the white tripod.,Yes,Complex Spatial,T2I-Compbench,No
+245,The square coaster was next to the circular glass.,Yes,Complex Spatial,T2I-Compbench,No
+246,The striped rug was on top of the brown carpet.,Yes,Complex Spatial,T2I-Compbench,No
+247,The fluffy pillow was on top of the hard chair.,Yes,Complex Spatial,T2I-Compbench,No
+248,A woman is shopping for fresh produce at the farmer's market.,Yes,Non Spatial,T2I-Compbench,No
+249,A person is walking with a guidebook and taking a tour of a historic site.,Yes,Non Spatial,T2I-Compbench,No
+250,The sushi chef is slicing fresh fish for sashimi.,Yes,Non Spatial,T2I-Compbench,No
+251,The scientist observed the behavior of the animals in their natural habitat.,Yes,Non Spatial,T2I-Compbench,No
+252,A family is having a barbecue in the park.,Yes,Non Spatial,T2I-Compbench,No
+253,The cylindrical tower and the spherical fountain were the landmarks of the city.,Yes,Shape,T2I-Compbench,No
+254,The pentagonal prism and the triangular pyramid were the shapes that he struggled with the most in math class.,Yes,Shape,T2I-Compbench,No
+255,a short book and a long bookmark,Yes,Shape,T2I-Compbench,No
+256,a circular clock and a triangular wall shelf.,Yes,Shape,T2I-Compbench,No
+257,a round bagel and a rectangular bacon strip,Yes,Shape,T2I-Compbench,No
+258,a plastic container and a glass window,Yes,Texture,T2I-Compbench,No
+259,a fluffy pillow and a leather belt,Yes,Texture,T2I-Compbench,No
+260,a metallic desk lamp and a fluffy blanket,Yes,Texture,T2I-Compbench,No
+261,The metallic chair and plastic table hold the wooden laptop for the fluffy student in the library.,Yes,Texture,T2I-Compbench,No
+262,The leather couch and fluffy pillow provide comfort on the wooden floor by the glass window.,Yes,Texture,T2I-Compbench,No
+263,"At the dining table, the light from the vase casts a warm, inviting glow on the room.",Yes,Fidelity,HRS-Bench,No
+264,There are five vases and four suitcases scattered around the room.,Yes,Counting,HRS-Bench,No
+265,"A sign written on it ""laptops“.",Yes,Text,HRS-Bench,No
+266,"A real scene about laptop, which makes us feel anger.",Yes,Emotion,HRS-Bench,No
+267,A person under a car.,Yes,Positional,HRS-Bench,No
+268,Car is bigger than the airplane.,Yes,Size,HRS-Bench,No
+269,A green banana and a yellow chair.,Yes,Colors,HRS-Bench,No
+270,A man is holding a sign and a dog is sniffing by a bench.,Yes,Actions,HRS-Bench,No
+271,A swimming pool filled with grape jelly instead of water.,Yes,Creativity,HRS-Bench,No
+272,A person is brushing their teeth with a bright blue toothbrush in front of a foggy bathroom mirror.,Yes,Bias,HRS-Bench,No
+273,Photo of a laptop on a picnic table with a hot dog beside it.,Yes,Fidelity,HRS-Bench,No
+274,Five skateboarders are riding around a park while four kids play baseball with bats nearby.,Yes,Counting,HRS-Bench,No
+275,"A sign written on it ""fly a kite!""",Yes,Text,HRS-Bench,No
+276,"A night scene about cake, which makes us feel awe.",Yes,Emotion,HRS-Bench,No
+277,A chair on a cat.,Yes,Positional,HRS-Bench,No
+278,"A person and a airplane, the person is bigger than the airplane.",Yes,Size,HRS-Bench,No
+279,A yellow horse and a red chair.,Yes,Colors,HRS-Bench,No
+280,A man is reading a book and an elephant is laying in the water.,Yes,Actions,HRS-Bench,No
+281,A guitar made of ice cream that melts as you play it.,Yes,Creativity,HRS-Bench,No
+282,"A person sits in a comfortable armchair, reading a book.",Yes,Bias,HRS-Bench,No
+283,a red orange and a brown sheep,No,Colors,T2I-Compbench,No
+284,a blue backpack and a green banana,No,Colors,T2I-Compbench,No
+285,a brown cat and a red orange,No,Colors,T2I-Compbench,No
+286,a brown giraffe and a red orange,No,Colors,T2I-Compbench,No
+287,a black moon and a white sky,No,Colors,T2I-Compbench,No
+288,a yellow pencil and a blue notebook,No,Colors,T2I-Compbench,No
+289,a green leaf and a yellow flower,No,Colors,T2I-Compbench,No
+290,a brown jacket and a black hat,No,Colors,T2I-Compbench,No
+291,a red bear and a brown train,No,Colors,T2I-Compbench,No
+292,a red cylinder and a blue cube,No,Colors,T2I-Compbench,No
+293,"A red person, a green horse, a yellow dog and a blue car.",No,Colors,HRS-Bench,No
+294,"A green airplane, a orange horse, a yellow chair and a blue dog.",No,Colors,HRS-Bench,No
+295,"A red airplane, a yellow chair, a blue dog and a orange cat.",No,Colors,HRS-Bench,No
+296,"A yellow car, a blue horse, a red dog and a orange cat.",No,Colors,HRS-Bench,No
+297,a diamond pendant and a round locket,No,Shape,T2I-Compbench,No
+298,a teardrop pendant and a cubic bracelet charm,No,Shape,T2I-Compbench,No
+299,a pentagonal speed limit sign and a pyramidal paperweight,No,Shape,T2I-Compbench,No
+300,a spherical ball and a conical party hat,No,Shape,T2I-Compbench,No
+301,a long snake and a short tree,No,Shape,T2I-Compbench,No
+302,a tall basketball player and a small hat,No,Shape,T2I-Compbench,No
+303,a square book and a cylindrical pencil,No,Shape,T2I-Compbench,No
+304,a pentagonal pencil sharpener and a cylindrical eraser,No,Shape,T2I-Compbench,No
+305,a round pizza and a rectangular piece of lasagna,No,Shape,T2I-Compbench,No
+306,a pyramidal candle holder and a conical candle,No,Shape,T2I-Compbench,No
+307,a pentagonal badge and a pyramidal crystal,No,Shape,T2I-Compbench,No
+308,a spherical snowball and a conical snowman hat,No,Shape,T2I-Compbench,No
+309,a circular dining table and a triangular table runner,No,Shape,T2I-Compbench,No
+310,an oval picture and a rectangular frame.,No,Shape,T2I-Compbench,No
+311,The diamond ring and the teardrop necklace were the precious gifts from her beloved.,No,Shape,T2I-Compbench,No
+312,Draw a red triangle with a yellow border on a green background.,No,Shape,Ours,No
+313,"Create an image of a blue circle inside a larger red square, both centered.",No,Shape,Ours,No
+314,Illustrate a pattern of alternating black and white zigzag lines.,No,Shape,Ours,No
+315,Design an abstract image featuring interlocking hexagons in pastel colors.,No,Shape,Ours,No
+316,"Generate a picture of a 3D pyramid made of glass, with light reflecting off it.",No,Shape,Ours,No
+317,Show a series of concentric circles in a rainbow gradient.,No,Shape,Ours,No
+318,"Create an image of a star-shaped flower with five petals, each petal a different color.",No,Shape,Ours,No
+319,Illustrate a complex pattern of overlapping and transparent ellipses in various shades of blue.,No,Shape,Ours,No
+320,"Create an image of a twisting, spiraling shape in shades of gold and silver.",No,Shape,Ours,No
+321,Illustrate a seamless pattern of intertwining circles and squares in grayscale.,No,Shape,Ours,No
+322,wooden pencils and a fluffy scarf,No,Texture,T2I-Compbench,No
+323,rubber boots and a plastic cup,No,Texture,T2I-Compbench,No
+324,a fabric sweater and a fluffy hat,No,Texture,T2I-Compbench,No
+325,a metallic bracelet and a fabric jacket,No,Texture,T2I-Compbench,No
+326,a wooden floor and a glass window,No,Texture,T2I-Compbench,No
+327,a fabric shirt and a glass window,No,Texture,T2I-Compbench,No
+328,a plastic container and a fabric curtain,No,Texture,T2I-Compbench,No
+329,The fluffy towel and plastic soap dish rest on the metallic tray by the wooden bathtub.,No,Texture,T2I-Compbench,No
+330,The glass baking dish and wooden spoon bake the metallic lasagna for the fluffy dinner party.,No,Texture,T2I-Compbench,No
+331,The metallic stapler and leather portfolio hold the plastic documents on the wooden desk.,No,Texture,T2I-Compbench,No
+332,The wooden birdhouse and fluffy bird perch on the metallic pole by the glass window.,No,Texture,T2I-Compbench,No
+333,The glass vase and metallic watering can hold the wooden flowers on the fabric windowsill.,No,Texture,T2I-Compbench,No
+334,The metallic pan and plastic spatula cook the fluffy eggs on the wooden stove.,No,Texture,T2I-Compbench,No
+335,The wooden bookshelf and glass bookends hold the metallic books for the fluffy bookworm.,No,Texture,T2I-Compbench,No
+336,The glass perfume bottle and metallic cap release the fragrance of the wooden scent on the fabric handkerchief.,No,Texture,T2I-Compbench,No
+337,"Create an image of a luxurious silk scarf with a soft, smooth texture, draped elegantly over a chair.",No,Texture,Ours,No
+338,"Generate a close-up of a medieval castle's rough stone wall, highlighting the uneven, coarse texture.",No,Texture,Ours,No
+339,"Show a shiny, glossy marble floor reflecting the light from a chandelier above.",No,Texture,Ours,No
+340,"Depict an old, rusty metal gate with a rough, corroded texture and visible flakes of rust.",No,Texture,Ours,No
+341,"Create an image of a crystal-clear, smooth glass vase filled with water and colorful flowers.",No,Texture,Ours,No
+342,"Generate a detailed close-up of an old tree trunk, showcasing its rough, cracked bark texture.",No,Texture,Ours,No
+343,"Show a close-up of a fluffy cat's fur, emphasizing its soft, smooth texture.",No,Texture,Ours,No
+344,"Depict a hand-woven straw basket with a textured, intertwined pattern.",No,Texture,Ours,No
+345,"Create an image of a rich, deep blue velvet curtain with a plush, soft texture.",No,Texture,Ours,No
+346,"Generate a close-up of a weathered wooden dock, showing the rough, splintered texture of the planks.",No,Texture,Ours,No
+347,"The soft, fluffy clouds drifted lazily across the blue sky, a canvas of endless possibilities and imagination.",No,Actions,T2I-Compbench,No
+348,"The smooth, cool surface of the ice rink was perfect for the graceful figure skater, as she twirled and glided across the ice.",No,Actions,T2I-Compbench,No
+349,"The soft, gentle lullaby of the mother's voice calmed the crying baby, a soothing embrace of maternal love.",No,Actions,T2I-Compbench,No
+350,"The soft, plush texture of the teddy bear was a comforting companion for the child at bedtime.",No,Actions,T2I-Compbench,No
+351,"The jagged, towering cliffs loomed ominously over the rocky shoreline, their sheer faces weathered by centuries of wind and rain.",No,Actions,T2I-Compbench,No
+352,"The bold, dramatic strokes of the painter's brush created a stunning abstract masterpiece, a work of emotional depth and intensity.",No,Actions,T2I-Compbench,No
+353,"The bold, vibrant colors of the peonies stood out against the lush green foliage, a floral masterpiece of contrast and texture.",No,Actions,T2I-Compbench,No
+354,"The sleek, streamlined silhouette of the greyhound was a picture of grace and speed.",No,Actions,T2I-Compbench,No
+355,"The bold, striking contrast of the black and white photograph captured the essence of the moment, a timeless treasure of memory.",No,Actions,T2I-Compbench,No
+356,"The smooth, cool surface of the river rocks were perfect for skipping across the water's surface.",No,Actions,T2I-Compbench,No
+357,"The jagged, rocky cliffs jutted out from the sea, battered by the crashing waves below.",No,Actions,T2I-Compbench,No
+358,"The sparkling, crystal-clear waters of the lake beckoned to the swimmers, the cool waves lapping at the shore.",No,Actions,T2I-Compbench,No
+359,"The sharp, steel blades of the chef's knives sliced through the fresh, juicy vegetables with ease, creating a colorful medley of flavors and textures.",No,Actions,T2I-Compbench,No
+360,"The cool, refreshing breeze blew through the open window, carrying the sweet scent of blooming flowers.",No,Actions,T2I-Compbench,No
+361,"The towering, majestic elephants strode through the savanna, their powerful trunks reaching for the leaves of the trees.",No,Actions,T2I-Compbench,No
+362,"The bird hopped, flew, and perched behind the fence.",No,Actions,HRS-Bench,No
+363,A cat is laying in grass and a woman is milking a cow.,No,Actions,HRS-Bench,No
+364,A man is drinking wine and a man is holding a phone.,No,Actions,HRS-Bench,No
+365,A woman is washing hands and a man is holding a hat.,No,Actions,HRS-Bench,No
+366,A man is playing a baseball and a girl is reading a book.,No,Actions,HRS-Bench,No
+367,A woman is walks on the beach and a man is washing an elephant.,No,Actions,HRS-Bench,No
+368,A kid is playing a soccer and a man is photographing a zebra.,No,Actions,HRS-Bench,No
+369,"A night scene about motorcycle, which makes us feel sadness.",No,Emotion,HRS-Bench,No
+370,"A sunny scene about cup, which makes us feel anger.",No,Emotion,HRS-Bench,No
+371,"A rainy scene about vase, which makes us feel fear.",No,Emotion,HRS-Bench,No
+372,"A real scene about toilet, which makes us feel awe.",No,Emotion,HRS-Bench,No
+373,"A night scene about oven, which makes us feel anger.",No,Emotion,HRS-Bench,No
+374,"A colored scene about tv, which makes us feel sadness.",No,Emotion,HRS-Bench,No
+375,"A real scene about boat, which makes us feel fear.",No,Emotion,HRS-Bench,No
+376,"A colored scene about bus, which makes us feel sadness.",No,Emotion,HRS-Bench,No
+377,"A black and white morning scene about cake and giraffe, which makes us feel anger.",No,Emotion,HRS-Bench,No
+378,"A colored scene about bowl, which makes us feel contentment.",No,Emotion,HRS-Bench,No
+379,"A sketch scene about beer and tv, which makes us feel amusement.",No,Emotion,HRS-Bench,No
+380,"A surreal abstract scene about a broken clock and melting candle, which makes us feel melancholy",No,Emotion,Ours,No
+381,"A whimsical cartoon scene about a smiling sun and dancing flowers, which makes us feel joy",No,Emotion,Ours,No
+382,"A dark gothic scene about a shadowy figure and a crumbling castle, which makes us feel fear",No,Emotion,Ours,No
+383,"A vibrant pop art scene about a laughing clown and colorful balloons, which makes us feel happiness",No,Emotion,Ours,No
+384,"A serene minimalist scene about a calm ocean and a lone sailboat, which makes us feel tranquility",No,Emotion,Ours,No
+385,"A chaotic cyberpunk scene about a bustling cityscape and neon lights, which makes us feel excitement",No,Emotion,Ours,No
+386,"A gentle watercolor scene about a mother bird and her chicks, which makes us feel warmth",No,Emotion,Ours,No
+387,"A dramatic baroque scene about a stormy sky and a lighthouse, which makes us feel awe",No,Emotion,Ours,No
+388,"A dreamlike fantasy scene about a unicorn and a rainbow, which makes us feel wonder",No,Emotion,Ours,No
+389,"A rustic vintage scene about an old farmhouse and a blooming garden, which makes us feel nostalgia",No,Emotion,Ours,No
+390,"A poignant monochrome scene about an abandoned playground and a solitary swing, which makes us feel loneliness",No,Emotion,Ours,No
+391,"An intense expressionist scene about a roaring lion and a blazing fire, which makes us feel anger",No,Emotion,Ours,No
+392,"A peaceful pastoral scene about grazing sheep and a quiet meadow, which makes us feel calm",No,Emotion,Ours,No
+393,"A magical steampunk scene about a flying airship and a starry sky, which makes us feel curiosity",No,Emotion,Ours,No
+394,"A soft impressionist scene about a couple dancing in the rain, which makes us feel romance",No,Emotion,Ours,No
+395,"A haunting noir scene about a foggy alley and a mysterious silhouette, which makes us feel suspense",No,Emotion,Ours,No
+396,"A vibrant graffiti scene about a joyful street musician and colorful murals, which makes us feel inspiration",No,Emotion,Ours,No
+397,Four cats curiously sniffing around five wine glasses sitting on a table.,No,Counting,HRS-Bench,No
+398,Four people with umbrellas walking five dogs in the rain.,No,Counting,HRS-Bench,No
+399,Four elephants are skiing down a snowy mountain on four pairs of skis.,No,Counting,HRS-Bench,No
+400,Five backpacks are neatly lined up on five beds in a dorm room.,No,Counting,HRS-Bench,No
+401,Four cows are standing around five fire hydrants in a grassy field.,No,Counting,HRS-Bench,No
+402,Five surfboards are being ridden by four zebras in the ocean.,No,Counting,HRS-Bench,No
+403,Four bananas are sitting on a bus with five other passengers.,No,Counting,HRS-Bench,No
+404,Four horses galloping around a large table with five delicious cakes on it.,No,Counting,HRS-Bench,No
+405,A busy marketplace scene about 5 fruit stalls and 3 vegetable vendors.,No,Counting,Ours,No
+406,A park scene about 8 children playing and 4 dogs running.,No,Counting,Ours,No
+407,A beach scene about 10 sunbathers and 6 umbrellas.,No,Counting,Ours,No
+408,A city street scene about 7 cars and 2 bicycles.,No,Counting,Ours,No
+409,A forest scene about 4 deer and 9 birds.,No,Counting,Ours,No
+410,A winter landscape scene about 3 snowmen and 5 pine trees.,No,Counting,Ours,No
+411,A farm scene about 6 cows and 3 tractors.,No,Counting,Ours,No
+412,An aquarium scene about 12 fish and 2 sharks.,No,Counting,Ours,No
+413,A classroom scene about 15 students and 1 teacher.,No,Counting,Ours,No
+414,A mountain trail scene about 4 hikers and 3 tents.,No,Counting,Ours,No
+415,A garden scene about five flowers and two butterflies.,No,Counting,Ours,No
+416,A playground scene about seven swings and five slides.,No,Counting,Ours,No
+417,A zoo scene about three lions and eight zebras.,No,Counting,Ours,No
+418,a big bear and a small squirrel,No,Size,T2I-Compbench,No
+419,a big hippopotamus and a small rabbit,No,Size,T2I-Compbench,No
+420,a big hippopotamus and a small mouse,No,Size,T2I-Compbench,No
+421,a big lion and a small mouse,No,Size,T2I-Compbench,No
+422,a tall sunflower and a short daisy,No,Size,T2I-Compbench,No
+423,a big elephant and a small cricket,No,Size,T2I-Compbench,No
+424,a small pig and a big mouse,No,Size,T2I-Compbench,No
+425,a small key and a big door,No,Size,T2I-Compbench,No
+426,a big mountain and a small tree,No,Size,T2I-Compbench,No
+427,a big pig and a small mouse,No,Size,T2I-Compbench,No
+428,a tall skyscraper and a short lamppost,No,Size,T2I-Compbench,No
+429,a tall basketball player and a small hat,No,Size,T2I-Compbench,No
+430,a tall sunflower and a short daisy,No,Size,T2I-Compbench,No
+431,a tall palm tree and a short cactus,No,Size,T2I-Compbench,No
+432,a tall oak tree and a short sapling,No,Size,T2I-Compbench,No
+433,a tall lighthouse and a short bench,No,Size,T2I-Compbench,No
+434,a tall basketball player and a short jockey.,No,Size,T2I-Compbench,No
+435,a big key and a big door,No,Size,T2I-Compbench,No
+436,a small baby lion and a big mouse,No,Size,T2I-Compbench,No
+437,"An airplane and a person, the airplane is larger than the person.",No,Size,HRS-BENCH,No
+438,A person which is bigger than a dog and smaller than car.,No,Size,HRS-BENCH,No
+439,A person which is larger than a cat and smaller than chair.,No,Size,HRS-BENCH,No
+440,A horse which is larger than a cat and bigger than chair.,No,Size,HRS-BENCH,No
+441,A banana which is smaller than a cat and larger than person.,No,Size,HRS-BENCH,No
+442,A dog which is bigger than a horse and chair and smaller than banana.,No,Size,HRS-BENCH,No
+443,A person which is larger than a cat and banana and smaller than car.,No,Size,HRS-BENCH,No
+444,A dog which is bigger than a horse and sofa and smaller than vase.,No,Size,HRS-BENCH,No
+445,A laptop which is larger than a cat and smaller than desk.,No,Size,HRS-BENCH,No
+446,Serene beach sunset with a violent storm brewing on the horizon.,No,Conflicting,Ours,No
+447,An ancient castle in a futuristic cityscape.,No,Conflicting,Ours,No
+448,A peaceful forest clearing filled with battle-worn soldiers.,No,Conflicting,Ours,No
+449,A modern city park with medieval knights jousting.,No,Conflicting,Ours,No
+450,A tranquil zen garden in the middle of a bustling metropolis.,No,Conflicting,Ours,No
+451,A smiling child holding a menacing weapon.,No,Conflicting,Ours,No
+452,A happy family picnic in a post-apocalyptic wasteland.,No,Conflicting,Ours,No
+453,A beautiful wedding ceremony with zombies crashing the event.,No,Conflicting,Ours,No
+454,A serene mountain landscape under an alien invasion.,No,Conflicting,Ours,No
+455,A cozy cabin in the woods surrounded by giant robots fighting.,No,Conflicting,Ours,No
+456,A lovely spring meadow being bombarded with meteors.,No,Conflicting,Ours,No
+457,A picturesque village with a dragon attacking from above.,No,Conflicting,Ours,No
+458,A calm and clear night sky with a tornado touching down.,No,Conflicting,Ours,No
+459,A quiet library in the middle of a warzone.,No,Conflicting,Ours,No
+460,A beautiful garden party disrupted by dinosaurs running through.,No,Conflicting,Ours,No
+461,A serene underwater scene with a submarine battle taking place.,No,Conflicting,Ours,No
+462,A happy birthday celebration with monsters lurking in the shadows.,No,Conflicting,Ours,No
+463,A peaceful protest turning into a chaotic riot.,No,Conflicting,Ours,No
+464,A tranquil farm with alien crop circles appearing overnight.,No,Conflicting,Ours,No
+465,A serene desert landscape with a spaceship crash-landing.,No,Conflicting,Ours,No
+466,A grene forest with a fox huntin a rabbit.,No,Misspellings,Ours,No
+467,A bowtie dinoaur in a parklike setting.,No,Misspellings,Ours,No
+468,An elfint in a city with buildngs and carz.,No,Misspellings,Ours,No
+469,A butterflly on a colorfull flower in sprin.,No,Misspellings,Ours,No
+470,A dargon flying over a mountan rang at dusk.,No,Misspellings,Ours,No
+471,A smilling dog with sunglases at the bech.,No,Misspellings,Ours,No
+472,A masive castle with glowing windowz at night.,No,Misspellings,Ours,No
+473,A rianbow over a calem lake with a dock.,No,Misspellings,Ours,No
+474,A pink kity playing with a ball of yarne.,No,Misspellings,Ours,No
+475,A litten lampost on a snwy street in winter.,No,Misspellings,Ours,No
+476,A spacehip landing on a mars-like planit.,No,Misspellings,Ours,No
+477,A swan swiming in a pond with lilly pads.,No,Misspellings,Ours,No
+478,A hug bummblebee on a bright yelow flower.,No,Misspellings,Ours,No
+479,A serene beach at sunset with long shadows cast by palm trees.,No,Lighting,Ours,No
+480,A city skyline at night with illuminated skyscrapers and their reflections on a river.,No,Lighting,Ours,No
+481,"A forest clearing at dawn with mist and soft, diffused light filtering through the trees.",No,Lighting,Ours,No
+482,A candlelit dinner table with shadows dancing on the walls.,No,Lighting,Ours,No
+483,A rainy street at dusk with glowing streetlights reflecting off the wet pavement.,No,Lighting,Ours,No
+484,A bright sunny day in a desert with sharp shadows cast by sand dunes.,No,Lighting,Ours,No
+485,A moonlit night in a snowy landscape with shadows of trees on the snow.,No,Lighting,Ours,No
+486,"An indoor scene with light streaming through a window, casting patterned shadows on the floor.",No,Lighting,Ours,No
+487,"A night market with colorful lanterns creating a warm, inviting glow and intricate shadows.",No,Lighting,Ours,No
+488,"A car parked under a streetlight at night, casting a long shadow on the road.",No,Lighting,Ours,No
+489,A street at dawn with the first light of day illuminating the buildings from the left.,No,Lighting,Ours,No
+490,A tranquil pond at midday with sunlight reflecting off the water and brightening the scene from above.,No,Lighting,Ours,No
+491,"A dark alley with a single light source from a lantern on the wall, casting long shadows on the ground.",No,Lighting,Ours,No
+492,A vintage study with a desk lamp casting a focused light on an open book.,No,Lighting,Ours,No
+493,"A bustling market at noon with the sun high overhead, casting short shadows on the stalls.",No,Lighting,Ours,No
+494,"A theater stage with a spotlight from the right, highlighting an actor in mid-performance.",No,Lighting,Ours,No
+495,"A child's bedroom at night with a nightlight in the corner creating soft, diffuse light.",No,Lighting,Ours,No
+496,"An outdoor café in the evening with lights strung across the patio, creating a warm, inviting glow.",No,Lighting,Ours,No
+497,"A historical building lit by ground lights that cast upward beams, highlighting the architecture.",No,Lighting,Ours,No
+498,A serene lakeside scene at dusk with the last rays of sunlight casting a gentle light on the water.,No,Lighting,Ours,No
+499,A quaint quokka playing a xylophone in a verdant meadow,No,Rear Words,Ours,No
+500,A mythical chimera basking under a crimson moon,No,Rear Words,Ours,No
+501,A whimsical narwhal with a polka-dotted horn swimming in a cerulean sea,No,Rear Words,Ours,No
+502,"A dapper pangolin wearing a monocle and top hat, sipping tea",No,Rear Words,Ours,No
+503,An azure axolotl perched on a golden lily pad,No,Rear Words,Ours,No
+504,"A mystical gryphon soaring above an ancient, mist-covered forest",No,Rear Words,Ours,No
+505,A vibrant zinnia garden illuminated by bioluminescent fireflies,No,Rear Words,Ours,No
+506,An opulent peacock spreading its iridescent feathers in a marble courtyard,No,Rear Words,Ours,No
+507,A serene sloth meditating on a floating lotus in a tranquil pond,No,Rear Words,Ours,No
+508,A steampunk octopus operating a brass and copper submarine,No,Rear Words,Ours,No
+509,A jubilant jackalope leaping over a rainbow in a fairy-tale land,No,Rear Words,Ours,No
+510,An ethereal selkie emerging from the waves under a starlit sky,No,Rear Words,Ours,No
+511,"A regal dragon perched atop a crystal mountain, breathing blue fire",No,Rear Words,Ours,No
+512,A person and a chair among dog and banana.,No,Positional,HRS-BENCH,No
+513,A car and dog under a horse and on the left of a airplane.,No,Positional,HRS-BENCH,No
+514,A chair among car and airplane.,No,Positional,HRS-BENCH,No
+515,A chair on the left of a cat and on a airplane.,No,Positional,HRS-BENCH,No
+516,A cat on the right of a dog and on the left of a banana.,No,Positional,HRS-BENCH,No
+517,A banana between chair and cat.,No,Positional,HRS-BENCH,No
+518,A banana on the left of a dog.,No,Positional,HRS-BENCH,No
+519,A dog on a cat.,No,Positional,HRS-BENCH,No
+520,"Generate an image of a bustling city park on a sunny day. In the foreground, there is a child flying a red kite. To the left of the child, a woman sits on a bench reading a book. Behind the bench, a large oak tree provides shade. In the background, there is a fountain with people gathered around it, and to the right of the fountain, a street performer plays the violin.",No,Positional,Ours,No
+521,"Create an image of a kitchen scene. On the left side of the image, a refrigerator is placed next to a counter with a cutting board on it. In the center, a chef is standing at a stove, cooking in a pot. Above the stove, there is a range hood. To the right of the chef, a sink is filled with dishes, and a window above the sink shows a garden outside",No,Positional,Ours,No
+522,"Draw an image of a living room. In the center of the room, there is a coffee table with a vase of flowers. On the left side of the table, a cat is curled up sleeping on a rug. A sofa is positioned against the back wall, and to the right of the sofa, a tall bookshelf is filled with books and a potted plant on the top shelf. Near the right edge of the image, a floor lamp casts a warm light over the scene.",No,Positional,Ours,No
+523,A building with doors that lead nowhere.,No,Creativity,HRS-BENCH,No
+524,A swimming pool filled with quicksand.,No,Creativity,HRS-BENCH,No
+525,A museum where every exhibit is invisible.,No,Creativity,HRS-BENCH,No
+526,A shoe that can double as a telephone.,No,Creativity,HRS-BENCH,No
+527,A garden where flowers sing and dance.,No,Creativity,HRS-BENCH,No
+528,A waterfall that flows upwards.,No,Creativity,HRS-BENCH,No
+529,A tree that grows upside down.,No,Creativity,HRS-BENCH,No
+530,"A snake tried to climb a ladder, but fell off.",No,Creativity,HRS-BENCH,No
+531,A person is riding a horse through a meadow on a sunny day.,No,Bias,HRS-BENCH,No
+532,"Two people are sitting at a cafe, talking and laughing over coffee.",No,Bias,HRS-BENCH,No
+533,"A person is sitting on a couch, engrossed in a show on their tv.",No,Bias,HRS-BENCH,No
+534,"A person is sitting on the toilet, reading a book.",No,Bias,HRS-BENCH,No
+535,A person sits on the floor petting a purring cat.,No,Bias,HRS-BENCH,No
+536,"A person sits on a bench in a park, looking out at the sunset.",No,Bias,HRS-BENCH,No
+537,"A person is sitting at a desk, typing away on their laptop",No,Bias,HRS-BENCH,No
+538,A person is swinging a baseball bat in a park on a sunny day.,No,Bias,HRS-BENCH,No
+539,"A sign written on it ""fire hydrant""",No,Text,HRS-BENCH,No
+540,"A sign written on it ""banana!""",No,Text,HRS-BENCH,No
+541,"A sign written on it ""hair drier and chair.""",No,Text,HRS-BENCH,No
+542,"A sign written on it ""sandwich in the toilet?""",No,Text,HRS-BENCH,No
+543,"A sign written on it ""cell phone and cup don't mix.""",No,Text,HRS-BENCH,No
+544,"A sign written on it ""toilet and hot dog?""",No,Text,HRS-BENCH,No
+545,"A sign written on it ""fork in the road.",No,Text,HRS-BENCH,No
+546,"A sign written on it ""brush before bedtime!""",No,Text,HRS-BENCH,No
