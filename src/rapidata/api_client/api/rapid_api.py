@@ -288,7 +288,6 @@ class RapidApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
             'oauth2'
         ]
 
@@ -569,7 +568,6 @@ class RapidApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
             'oauth2'
         ]
 
@@ -849,7 +847,6 @@ class RapidApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
             'oauth2'
         ]
 
@@ -1116,7 +1113,6 @@ class RapidApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
             'oauth2'
         ]
 
@@ -1353,7 +1349,6 @@ class RapidApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
             'oauth2'
         ]
 

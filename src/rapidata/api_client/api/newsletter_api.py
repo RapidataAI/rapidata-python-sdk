@@ -284,7 +284,6 @@ class NewsletterApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
             'oauth2'
         ]
 
@@ -551,7 +550,6 @@ class NewsletterApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
             'oauth2'
         ]
 
