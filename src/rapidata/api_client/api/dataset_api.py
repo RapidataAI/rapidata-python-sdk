@@ -1459,7 +1459,7 @@ class DatasetApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> UploadDatapointsResult:
-        """Creates a new multi asset datapoint.
+        """(Deprecated) Creates a new multi asset datapoint.
 
 
         :param dataset_id: The id of the dataset to upload the datapoint to.
@@ -1487,6 +1487,7 @@ class DatasetApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("POST /Dataset/UploadDatapoint is deprecated.", DeprecationWarning)
 
         _param = self._dataset_upload_datapoint_post_serialize(
             dataset_id=dataset_id,
@@ -1529,7 +1530,7 @@ class DatasetApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[UploadDatapointsResult]:
-        """Creates a new multi asset datapoint.
+        """(Deprecated) Creates a new multi asset datapoint.
 
 
         :param dataset_id: The id of the dataset to upload the datapoint to.
@@ -1557,6 +1558,7 @@ class DatasetApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("POST /Dataset/UploadDatapoint is deprecated.", DeprecationWarning)
 
         _param = self._dataset_upload_datapoint_post_serialize(
             dataset_id=dataset_id,
@@ -1599,7 +1601,7 @@ class DatasetApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Creates a new multi asset datapoint.
+        """(Deprecated) Creates a new multi asset datapoint.
 
 
         :param dataset_id: The id of the dataset to upload the datapoint to.
@@ -1627,6 +1629,7 @@ class DatasetApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("POST /Dataset/UploadDatapoint is deprecated.", DeprecationWarning)
 
         _param = self._dataset_upload_datapoint_post_serialize(
             dataset_id=dataset_id,
@@ -2030,7 +2033,7 @@ class DatasetApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Uploads images to a dataset.
+        """(Deprecated) Uploads images to a dataset.
 
         If multiple files are uploaded, a new datapoint will be created for each file.
 
@@ -2059,6 +2062,7 @@ class DatasetApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("POST /Dataset/UploadImagesToDataset is deprecated.", DeprecationWarning)
 
         _param = self._dataset_upload_images_to_dataset_post_serialize(
             dataset_id=dataset_id,
@@ -2101,7 +2105,7 @@ class DatasetApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Uploads images to a dataset.
+        """(Deprecated) Uploads images to a dataset.
 
         If multiple files are uploaded, a new datapoint will be created for each file.
 
@@ -2130,6 +2134,7 @@ class DatasetApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("POST /Dataset/UploadImagesToDataset is deprecated.", DeprecationWarning)
 
         _param = self._dataset_upload_images_to_dataset_post_serialize(
             dataset_id=dataset_id,
@@ -2172,7 +2177,7 @@ class DatasetApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Uploads images to a dataset.
+        """(Deprecated) Uploads images to a dataset.
 
         If multiple files are uploaded, a new datapoint will be created for each file.
 
@@ -2201,6 +2206,7 @@ class DatasetApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("POST /Dataset/UploadImagesToDataset is deprecated.", DeprecationWarning)
 
         _param = self._dataset_upload_images_to_dataset_post_serialize(
             dataset_id=dataset_id,

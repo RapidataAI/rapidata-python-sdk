@@ -302,7 +302,8 @@
               }
             }
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/Dataset/UploadImagesToDataset": {
@@ -350,7 +351,8 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/Dataset/CreatTextDatapoint": {
