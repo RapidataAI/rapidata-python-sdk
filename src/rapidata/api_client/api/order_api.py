@@ -288,6 +288,7 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
@@ -566,6 +567,7 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
@@ -841,6 +843,7 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
@@ -1116,6 +1119,7 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
@@ -1382,6 +1386,7 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
@@ -1635,6 +1640,7 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
@@ -1901,6 +1907,7 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
@@ -2163,6 +2170,7 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
@@ -2428,6 +2436,7 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
@@ -2673,6 +2682,7 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
@@ -2926,6 +2936,7 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
@@ -3188,6 +3199,7 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
@@ -3450,6 +3462,7 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
@@ -3703,6 +3716,7 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
@@ -3956,6 +3970,7 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
@@ -4209,6 +4224,7 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
@@ -4465,6 +4481,7 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
@@ -4730,6 +4747,7 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
@@ -5013,6 +5031,7 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
@@ -5296,6 +5315,7 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 

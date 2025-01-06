@@ -6,6 +6,9 @@
   },
   "security": [
     {
+      "bearer": []
+    },
+    {
       "oauth2": [
         "openid",
         "profile",
@@ -10838,8 +10841,15 @@
       }
     },
     "securitySchemes": {
+      "bearer": {
+        "type": "apiKey",
+        "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+        "name": "Authorization",
+        "in": "header"
+      },
       "oauth2": {
         "type": "openIdConnect",
+        "description": "OAuth2 authorization code flow, supporting OpenID Connect.",
         "openIdConnectUrl": "https://auth.rabbitdata.ch/.well-known/openid-configuration"
       }
     }

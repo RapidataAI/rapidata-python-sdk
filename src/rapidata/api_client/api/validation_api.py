@@ -316,6 +316,7 @@ class ValidationApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
@@ -591,6 +592,7 @@ class ValidationApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
@@ -853,6 +855,7 @@ class ValidationApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
@@ -1098,6 +1101,7 @@ class ValidationApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
@@ -1360,6 +1364,7 @@ class ValidationApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
@@ -1633,6 +1638,7 @@ class ValidationApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
@@ -1906,6 +1912,7 @@ class ValidationApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
@@ -2168,6 +2175,7 @@ class ValidationApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
