@@ -2208,7 +2208,7 @@ class OrderApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> str:
+    ) -> None:
         """Aggregates the results of an order.
 
         Returns the aggregated result as a file with a given name.  The annotated type of the response represents the content type of the file.
@@ -2246,7 +2246,7 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "str",
+            '200': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2275,7 +2275,7 @@ class OrderApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[str]:
+    ) -> ApiResponse[None]:
         """Aggregates the results of an order.
 
         Returns the aggregated result as a file with a given name.  The annotated type of the response represents the content type of the file.
@@ -2313,7 +2313,7 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "str",
+            '200': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2380,7 +2380,7 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "str",
+            '200': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2423,15 +2423,6 @@ class OrderApi:
         # process the body parameter
 
 
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
-                ]
-            )
 
 
         # authentication setting
