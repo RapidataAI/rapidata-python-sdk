@@ -17,7 +17,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
 from pydantic import Field, StrictStr
-from typing import Optional
+from typing import Any, Optional
 from typing_extensions import Annotated
 from rapidata.api_client.models.clone_order_model import CloneOrderModel
 from rapidata.api_client.models.clone_order_result import CloneOrderResult
@@ -2208,7 +2208,7 @@ class OrderApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> None:
+    ) -> object:
         """Aggregates the results of an order.
 
         Returns the aggregated result as a file with a given name.  The annotated type of the response represents the content type of the file.
@@ -2246,7 +2246,7 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '200': "object",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2275,7 +2275,7 @@ class OrderApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
+    ) -> ApiResponse[object]:
         """Aggregates the results of an order.
 
         Returns the aggregated result as a file with a given name.  The annotated type of the response represents the content type of the file.
@@ -2313,7 +2313,7 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '200': "object",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2380,7 +2380,7 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '200': "object",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2423,6 +2423,15 @@ class OrderApi:
         # process the body parameter
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'text/plain', 
+                    'application/json', 
+                    'text/json'
+                ]
+            )
 
 
         # authentication setting
