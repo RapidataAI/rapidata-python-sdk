@@ -255,6 +255,7 @@ class CampaignApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
@@ -508,6 +509,7 @@ class CampaignApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
@@ -770,6 +772,7 @@ class CampaignApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
@@ -1023,6 +1026,7 @@ class CampaignApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 

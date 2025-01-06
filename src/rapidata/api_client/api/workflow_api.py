@@ -275,6 +275,7 @@ class WorkflowApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
@@ -537,6 +538,7 @@ class WorkflowApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
@@ -799,6 +801,7 @@ class WorkflowApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
@@ -1061,6 +1064,7 @@ class WorkflowApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
@@ -1323,6 +1327,7 @@ class WorkflowApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'bearer', 
             'oauth2'
         ]
 
