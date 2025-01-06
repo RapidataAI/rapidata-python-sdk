@@ -45,12 +45,6 @@ configuration = rapidata.api_client.Configuration(
 # Examples for each auth method are provided below, use the example that
 # satisfies your auth use case.
 
-# Configure API key authorization: bearer
-configuration.api_key['bearer'] = os.environ["API_KEY"]
-
-# Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# configuration.api_key_prefix['bearer'] = 'Bearer'
-
 
 # Enter a context with an instance of the API client
 with rapidata.api_client.ApiClient(configuration) as api_client:
@@ -265,7 +259,6 @@ Class | Method | HTTP request | Description
  - [GetDatapointsByDatasetIdResult](rapidata/api_client/docs/GetDatapointsByDatasetIdResult.md)
  - [GetDatasetByIdResult](rapidata/api_client/docs/GetDatasetByIdResult.md)
  - [GetOrderByIdResult](rapidata/api_client/docs/GetOrderByIdResult.md)
- - [GetOrderResultsResult](rapidata/api_client/docs/GetOrderResultsResult.md)
  - [GetPipelineByIdResult](rapidata/api_client/docs/GetPipelineByIdResult.md)
  - [GetPipelineByIdResultArtifactsValue](rapidata/api_client/docs/GetPipelineByIdResultArtifactsValue.md)
  - [GetPublicOrdersResult](rapidata/api_client/docs/GetPublicOrdersResult.md)
@@ -423,13 +416,6 @@ Class | Method | HTTP request | Description
 
 
 Authentication schemes defined for the API:
-<a id="bearer"></a>
-### bearer
-
-- **Type**: API key
-- **API key parameter name**: Authorization
-- **Location**: HTTP header
-
 <a id="oauth2"></a>
 ### oauth2
 

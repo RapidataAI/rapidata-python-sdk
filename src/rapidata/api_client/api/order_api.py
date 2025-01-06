@@ -28,7 +28,6 @@ from rapidata.api_client.models.create_order_result import CreateOrderResult
 from rapidata.api_client.models.create_unsupported_order_model import CreateUnsupportedOrderModel
 from rapidata.api_client.models.feedback_model import FeedbackModel
 from rapidata.api_client.models.get_order_by_id_result import GetOrderByIdResult
-from rapidata.api_client.models.get_order_results_result import GetOrderResultsResult
 from rapidata.api_client.models.get_public_orders_result import GetPublicOrdersResult
 from rapidata.api_client.models.order_model_paged_result import OrderModelPagedResult
 from rapidata.api_client.models.query_model import QueryModel
@@ -289,7 +288,6 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
             'oauth2'
         ]
 
@@ -568,7 +566,6 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
             'oauth2'
         ]
 
@@ -844,7 +841,6 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
             'oauth2'
         ]
 
@@ -1120,7 +1116,6 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
             'oauth2'
         ]
 
@@ -1387,7 +1382,6 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
             'oauth2'
         ]
 
@@ -1641,7 +1635,6 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
             'oauth2'
         ]
 
@@ -1908,7 +1901,6 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
             'oauth2'
         ]
 
@@ -2171,7 +2163,6 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
             'oauth2'
         ]
 
@@ -2209,9 +2200,10 @@ class OrderApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetOrderResultsResult:
+    ) -> str:
         """Aggregates the results of an order.
 
+        Returns the aggregated result as a file with a given name.  The annotated type of the response represents the content type of the file.
 
         :param id: The id of the order
         :type id: str
@@ -2246,7 +2238,7 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetOrderResultsResult",
+            '200': "str",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2275,9 +2267,10 @@ class OrderApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetOrderResultsResult]:
+    ) -> ApiResponse[str]:
         """Aggregates the results of an order.
 
+        Returns the aggregated result as a file with a given name.  The annotated type of the response represents the content type of the file.
 
         :param id: The id of the order
         :type id: str
@@ -2312,7 +2305,7 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetOrderResultsResult",
+            '200': "str",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2344,6 +2337,7 @@ class OrderApi:
     ) -> RESTResponseType:
         """Aggregates the results of an order.
 
+        Returns the aggregated result as a file with a given name.  The annotated type of the response represents the content type of the file.
 
         :param id: The id of the order
         :type id: str
@@ -2378,7 +2372,7 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetOrderResultsResult",
+            '200': "str",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2434,7 +2428,6 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
             'oauth2'
         ]
 
@@ -2680,7 +2673,6 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
             'oauth2'
         ]
 
@@ -2934,7 +2926,6 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
             'oauth2'
         ]
 
@@ -3197,7 +3188,6 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
             'oauth2'
         ]
 
@@ -3460,7 +3450,6 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
             'oauth2'
         ]
 
@@ -3714,7 +3703,6 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
             'oauth2'
         ]
 
@@ -3968,7 +3956,6 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
             'oauth2'
         ]
 
@@ -4222,7 +4209,6 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
             'oauth2'
         ]
 
@@ -4479,7 +4465,6 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
             'oauth2'
         ]
 
@@ -4745,7 +4730,6 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
             'oauth2'
         ]
 
@@ -5029,7 +5013,6 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
             'oauth2'
         ]
 
@@ -5313,7 +5296,6 @@ class OrderApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
             'oauth2'
         ]
 
