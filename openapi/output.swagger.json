@@ -6,9 +6,6 @@
   },
   "security": [
     {
-      "bearer": []
-    },
-    {
       "oauth2": [
         "openid",
         "profile",
@@ -1091,6 +1088,7 @@
           "Order"
         ],
         "summary": "Aggregates the results of an order.",
+        "description": "Returns the aggregated result as a file with a given name.\r\nThe annotated type of the response represents the content type of the file.",
         "parameters": [
           {
             "name": "id",
@@ -1107,17 +1105,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetOrderResultsResult"
+                  "type": "string"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetOrderResultsResult"
+                  "type": "string"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetOrderResultsResult"
+                  "type": "string"
                 }
               }
             }
@@ -5630,27 +5628,6 @@
           },
           "isPublic": {
             "type": "boolean"
-          }
-        },
-        "additionalProperties": false
-      },
-      "GetOrderResultsResult": {
-        "required": [
-          "contentType",
-          "fileName",
-          "stream"
-        ],
-        "type": "object",
-        "properties": {
-          "stream": {
-            "type": "string",
-            "format": "binary"
-          },
-          "contentType": {
-            "type": "string"
-          },
-          "fileName": {
-            "type": "string"
           }
         },
         "additionalProperties": false
@@ -10861,12 +10838,6 @@
       }
     },
     "securitySchemes": {
-      "bearer": {
-        "type": "apiKey",
-        "description": "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-        "name": "Authorization",
-        "in": "header"
-      },
       "oauth2": {
         "type": "openIdConnect",
         "openIdConnectUrl": "https://auth.rabbitdata.ch/.well-known/openid-configuration"

@@ -250,7 +250,6 @@ class UserInfoApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'bearer', 
             'oauth2'
         ]
 
