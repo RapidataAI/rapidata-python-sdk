@@ -136,9 +136,8 @@ class RapidataOrder:
 
         try:
             # Get the raw result string
-            result_str = self.__openapi_service.order_api.order_result_get(id=self.order_id)
-            # Parse the result string as JSON
-            return json.loads(result_str)
+            return self.__openapi_service.order_api.order_get_order_results_get(id=self.order_id) # type: ignore
+        
         except ApiException as e:
             # Handle API exceptions
             raise Exception(f"Failed to get order results: {str(e)}") from e
