@@ -332,7 +332,7 @@ class RapidataOrderManager:
     
     def create_locate_order(self,
             name: str,
-            target: str,
+            instruction: str,
             datapoints: list[str],
             responses_per_datapoint: int = 10,
             contexts: list[str] | None = None,
@@ -345,7 +345,7 @@ class RapidataOrderManager:
 
         Args:
             name (str): The name of the order.
-            target (str): The target what should be located. Will be shown along side each datapoint.
+            instruction (str): The instruction what should be located. Will be shown along side each datapoint.
             datapoints (list[str]): The list of datapoints for the locate - each datapoint will be labeled.
             responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
             contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
@@ -362,7 +362,7 @@ class RapidataOrderManager:
 
         return self.__create_general_order(
             name=name,
-            workflow=LocateWorkflow(target=target),
+            workflow=LocateWorkflow(target=instruction),
             assets=assets,
             responses_per_datapoint=responses_per_datapoint,
             contexts=contexts,
@@ -374,7 +374,7 @@ class RapidataOrderManager:
 
     def create_draw_order(self,
             name: str,
-            target: str,
+            instruction: str,
             datapoints: list[str],
             responses_per_datapoint: int = 10,
             contexts: list[str] | None = None,
@@ -387,7 +387,7 @@ class RapidataOrderManager:
 
         Args:
             name (str): The name of the order.
-            target (str): The target for how the lines should be drawn. Will be shown along side each datapoint.
+            instruction (str): The instruction for how the lines should be drawn. Will be shown along side each datapoint.
             datapoints (list[str]): The list of datapoints for the draw lines - each datapoint will be labeled.
             responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
             contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
@@ -404,7 +404,7 @@ class RapidataOrderManager:
 
         return self.__create_general_order(
             name=name,
-            workflow=DrawWorkflow(target=target),
+            workflow=DrawWorkflow(target=instruction),
             assets=assets,
             responses_per_datapoint=responses_per_datapoint,
             contexts=contexts,
