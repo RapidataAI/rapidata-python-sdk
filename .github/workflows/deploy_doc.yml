@@ -1,6 +1,6 @@
 name: Deploy Documentation
-on:
-  workflow_dispatch:
+
+on: workflow_dispatch
 
 jobs:
   deploy-docs:
@@ -17,7 +17,7 @@ jobs:
           echo "$HOME/.local/bin" >> $GITHUB_PATH
       - name: Update lock file and install dependencies
         run: |
-          poetry lock --no-refresh
+          poetry lock
           poetry install --with docs
       - name: Clean docs
         run: |
