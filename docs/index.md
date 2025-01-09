@@ -84,10 +84,10 @@ Set up your environment and make your first API request in minutes.
     Have the users click on words in a text depending on a condition.
 
     <figure markdown="span">
-    ![SelectWords Example](./media/order-types/select_words_tts_example.png){ width="60%" }
+    ![SelectWords Example](./media/order-types/select_words_prompt.png){ width="60%" }
     </figure>
 
-    [:octicons-arrow-right-24: Let's go](./examples/select_words_order.md)
+    [:octicons-arrow-right-24: Let's go](./examples/select_faulty_prompt_order.md)
 
 </div>
 
