@@ -103,6 +103,6 @@ Set up your environment and make your first API request in minutes.
     ![Preference Example](./media/order-types/glass_on_dog_1.png){ width="80%" }
     </figure>
 
-    [:octicons-arrow-right-24: Let's go](https://rapidata.ai/blog/preference-dataset-demo)
+    [:octicons-arrow-right-24: Let's go](https://www.rapidata.ai/guides/preference-dataset-demo)
 
 </div>
