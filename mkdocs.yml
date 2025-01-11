@@ -62,14 +62,16 @@ markdown_extensions:
 nav:
   - Overview: index.md
   - quickstart.md
-  - Understanding The Results: understanding_the_results.md
+  - Understanding the Results: understanding_the_results.md
   - Improve Quality: improve_order_quality.md
   - Improve Efficency: confidence_stopping.md
   - Examples:
     - Classification: examples/classify_order.md
     - Compare: examples/compare_order.md
     - Free Text: examples/free_text_order.md
-    - SelectWords: examples/select_words_order.md
+    - SelectWords:
+      - Faulty Words: examples/select_faulty_prompt_order.md
+      - Text to Speech: examples/select_words_order.md
   - API Documentation: api.md
 
 theme:
