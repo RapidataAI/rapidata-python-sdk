@@ -3,6 +3,7 @@ from rapidata.rapidata_client.order._rapidata_dataset import RapidataDataset
 from rapidata.service.openapi_service import OpenAPIService
 import json
 from rapidata.api_client.exceptions import ApiException
+from rapidata.api_client.models.order_state import OrderState
 from typing import Optional, cast, Any
 from rapidata.api_client.models.workflow_artifact_model import WorkflowArtifactModel
 from tqdm import tqdm
@@ -78,6 +79,17 @@ class RapidataOrder:
         if refresh_rate < 1:
             raise ValueError("refresh_rate must be at least 1")
         
+        if self.get_status() == OrderState.CREATED:
+            raise Exception("Order has not been started yet. Please start it first.")
+        
+        while self.get_status() == OrderState.SUBMITTED:
+            print(f"Order '{self.name}' is submitted and being reviewed. standby...", end="\r")
+            sleep(1)
+
+        if self.get_status() == OrderState.MANUALREVIEW:
+            raise Exception(f"Order '{self.name}' is in manual review. It might take some time to start. To speed up the process, please contact support (info@rapidata.ai).\
+                            \nOnce the order has started, you can run this method again to display the progress bar.")
+
         with tqdm(total=100, desc="Processing order", unit="%", bar_format="{desc}: {percentage:3.0f}%|{bar}| completed [{elapsed}<{remaining}, {rate_fmt}]") as pbar:
             last_percentage = 0
             while True:
@@ -95,7 +107,7 @@ class RapidataOrder:
         if self.__workflow_id:
             return self.__workflow_id
 
-        for _ in range(10):
+        for _ in range(10): # Try for 20 seconds to get the workflow id if workflow has not started by then, raise an exception
             try:
                 order_result = self.__openapi_service.order_api.order_get_by_id_get(self.order_id)
                 pipeline = self.__openapi_service.pipeline_api.pipeline_id_get(order_result.pipeline_id)
@@ -104,7 +116,7 @@ class RapidataOrder:
             except Exception:
                 sleep(2)
         if not self.__workflow_id:
-            raise Exception("Order has not started yet. Please start it or wait for a few seconds and try again.")
+            raise Exception("Something went wrong when trying to get the order progress.")
         return self.__workflow_id
     
     def __get_workflow_progress(self):
@@ -131,7 +143,7 @@ class RapidataOrder:
         Returns: 
             The results of the order.
         """
-        while self.get_status() not in ["Completed", "Paused", "ManuelReview", "Failed"]:
+        while self.get_status() not in [OrderState.COMPLETED, OrderState.PAUSED, OrderState.MANUALREVIEW, OrderState.FAILED]:
             sleep(5)
 
         try:
