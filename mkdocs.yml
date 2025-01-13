@@ -72,6 +72,9 @@ nav:
     - SelectWords:
       - Faulty Words: examples/select_faulty_prompt_order.md
       - Text to Speech: examples/select_words_order.md
+  - Filters: reference/rapidata/rapidata_client/filter/rapidata_filters/
+  - Settings: reference/rapidata/rapidata_client/settings/rapidata_settings/
+  - Selections: reference/rapidata/rapidata_client/selection/rapidata_selections/
   - API Documentation: api.md
 
 theme:
