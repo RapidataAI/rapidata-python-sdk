@@ -25,12 +25,13 @@ from rapidata.api_client.models.line_rapid_blueprint import LineRapidBlueprint
 from rapidata.api_client.models.locate_rapid_blueprint import LocateRapidBlueprint
 from rapidata.api_client.models.named_entity_rapid_blueprint import NamedEntityRapidBlueprint
 from rapidata.api_client.models.polygon_rapid_blueprint import PolygonRapidBlueprint
+from rapidata.api_client.models.scrub_rapid_blueprint import ScrubRapidBlueprint
 from rapidata.api_client.models.transcription_rapid_blueprint import TranscriptionRapidBlueprint
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-SIMPLEWORKFLOWCONFIGMODELBLUEPRINT_ONE_OF_SCHEMAS = ["AttachCategoryRapidBlueprint", "BoundingBoxRapidBlueprint", "CompareRapidBlueprint", "FreeTextRapidBlueprint", "LineRapidBlueprint", "LocateRapidBlueprint", "NamedEntityRapidBlueprint", "PolygonRapidBlueprint", "TranscriptionRapidBlueprint"]
+SIMPLEWORKFLOWCONFIGMODELBLUEPRINT_ONE_OF_SCHEMAS = ["AttachCategoryRapidBlueprint", "BoundingBoxRapidBlueprint", "CompareRapidBlueprint", "FreeTextRapidBlueprint", "LineRapidBlueprint", "LocateRapidBlueprint", "NamedEntityRapidBlueprint", "PolygonRapidBlueprint", "ScrubRapidBlueprint", "TranscriptionRapidBlueprint"]
 
 class SimpleWorkflowConfigModelBlueprint(BaseModel):
     """
@@ -38,24 +39,26 @@ class SimpleWorkflowConfigModelBlueprint(BaseModel):
     """
     # data type: TranscriptionRapidBlueprint
     oneof_schema_1_validator: Optional[TranscriptionRapidBlueprint] = None
+    # data type: ScrubRapidBlueprint
+    oneof_schema_2_validator: Optional[ScrubRapidBlueprint] = None
     # data type: PolygonRapidBlueprint
-    oneof_schema_2_validator: Optional[PolygonRapidBlueprint] = None
+    oneof_schema_3_validator: Optional[PolygonRapidBlueprint] = None
     # data type: NamedEntityRapidBlueprint
-    oneof_schema_3_validator: Optional[NamedEntityRapidBlueprint] = None
+    oneof_schema_4_validator: Optional[NamedEntityRapidBlueprint] = None
     # data type: LocateRapidBlueprint
-    oneof_schema_4_validator: Optional[LocateRapidBlueprint] = None
+    oneof_schema_5_validator: Optional[LocateRapidBlueprint] = None
     # data type: LineRapidBlueprint
-    oneof_schema_5_validator: Optional[LineRapidBlueprint] = None
+    oneof_schema_6_validator: Optional[LineRapidBlueprint] = None
     # data type: FreeTextRapidBlueprint
-    oneof_schema_6_validator: Optional[FreeTextRapidBlueprint] = None
+    oneof_schema_7_validator: Optional[FreeTextRapidBlueprint] = None
     # data type: CompareRapidBlueprint
-    oneof_schema_7_validator: Optional[CompareRapidBlueprint] = None
+    oneof_schema_8_validator: Optional[CompareRapidBlueprint] = None
     # data type: AttachCategoryRapidBlueprint
-    oneof_schema_8_validator: Optional[AttachCategoryRapidBlueprint] = None
+    oneof_schema_9_validator: Optional[AttachCategoryRapidBlueprint] = None
     # data type: BoundingBoxRapidBlueprint
-    oneof_schema_9_validator: Optional[BoundingBoxRapidBlueprint] = None
-    actual_instance: Optional[Union[AttachCategoryRapidBlueprint, BoundingBoxRapidBlueprint, CompareRapidBlueprint, FreeTextRapidBlueprint, LineRapidBlueprint, LocateRapidBlueprint, NamedEntityRapidBlueprint, PolygonRapidBlueprint, TranscriptionRapidBlueprint]] = None
-    one_of_schemas: Set[str] = { "AttachCategoryRapidBlueprint", "BoundingBoxRapidBlueprint", "CompareRapidBlueprint", "FreeTextRapidBlueprint", "LineRapidBlueprint", "LocateRapidBlueprint", "NamedEntityRapidBlueprint", "PolygonRapidBlueprint", "TranscriptionRapidBlueprint" }
+    oneof_schema_10_validator: Optional[BoundingBoxRapidBlueprint] = None
+    actual_instance: Optional[Union[AttachCategoryRapidBlueprint, BoundingBoxRapidBlueprint, CompareRapidBlueprint, FreeTextRapidBlueprint, LineRapidBlueprint, LocateRapidBlueprint, NamedEntityRapidBlueprint, PolygonRapidBlueprint, ScrubRapidBlueprint, TranscriptionRapidBlueprint]] = None
+    one_of_schemas: Set[str] = { "AttachCategoryRapidBlueprint", "BoundingBoxRapidBlueprint", "CompareRapidBlueprint", "FreeTextRapidBlueprint", "LineRapidBlueprint", "LocateRapidBlueprint", "NamedEntityRapidBlueprint", "PolygonRapidBlueprint", "ScrubRapidBlueprint", "TranscriptionRapidBlueprint" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -84,6 +87,11 @@ class SimpleWorkflowConfigModelBlueprint(BaseModel):
         # validate data type: TranscriptionRapidBlueprint
         if not isinstance(v, TranscriptionRapidBlueprint):
             error_messages.append(f"Error! Input type `{type(v)}` is not `TranscriptionRapidBlueprint`")
+        else:
+            match += 1
+        # validate data type: ScrubRapidBlueprint
+        if not isinstance(v, ScrubRapidBlueprint):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `ScrubRapidBlueprint`")
         else:
             match += 1
         # validate data type: PolygonRapidBlueprint
@@ -128,10 +136,10 @@ class SimpleWorkflowConfigModelBlueprint(BaseModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in SimpleWorkflowConfigModelBlueprint with oneOf schemas: AttachCategoryRapidBlueprint, BoundingBoxRapidBlueprint, CompareRapidBlueprint, FreeTextRapidBlueprint, LineRapidBlueprint, LocateRapidBlueprint, NamedEntityRapidBlueprint, PolygonRapidBlueprint, TranscriptionRapidBlueprint. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in SimpleWorkflowConfigModelBlueprint with oneOf schemas: AttachCategoryRapidBlueprint, BoundingBoxRapidBlueprint, CompareRapidBlueprint, FreeTextRapidBlueprint, LineRapidBlueprint, LocateRapidBlueprint, NamedEntityRapidBlueprint, PolygonRapidBlueprint, ScrubRapidBlueprint, TranscriptionRapidBlueprint. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in SimpleWorkflowConfigModelBlueprint with oneOf schemas: AttachCategoryRapidBlueprint, BoundingBoxRapidBlueprint, CompareRapidBlueprint, FreeTextRapidBlueprint, LineRapidBlueprint, LocateRapidBlueprint, NamedEntityRapidBlueprint, PolygonRapidBlueprint, TranscriptionRapidBlueprint. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in SimpleWorkflowConfigModelBlueprint with oneOf schemas: AttachCategoryRapidBlueprint, BoundingBoxRapidBlueprint, CompareRapidBlueprint, FreeTextRapidBlueprint, LineRapidBlueprint, LocateRapidBlueprint, NamedEntityRapidBlueprint, PolygonRapidBlueprint, ScrubRapidBlueprint, TranscriptionRapidBlueprint. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -149,6 +157,12 @@ class SimpleWorkflowConfigModelBlueprint(BaseModel):
         # deserialize data into TranscriptionRapidBlueprint
         try:
             instance.actual_instance = TranscriptionRapidBlueprint.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into ScrubRapidBlueprint
+        try:
+            instance.actual_instance = ScrubRapidBlueprint.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
@@ -203,10 +217,10 @@ class SimpleWorkflowConfigModelBlueprint(BaseModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into SimpleWorkflowConfigModelBlueprint with oneOf schemas: AttachCategoryRapidBlueprint, BoundingBoxRapidBlueprint, CompareRapidBlueprint, FreeTextRapidBlueprint, LineRapidBlueprint, LocateRapidBlueprint, NamedEntityRapidBlueprint, PolygonRapidBlueprint, TranscriptionRapidBlueprint. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into SimpleWorkflowConfigModelBlueprint with oneOf schemas: AttachCategoryRapidBlueprint, BoundingBoxRapidBlueprint, CompareRapidBlueprint, FreeTextRapidBlueprint, LineRapidBlueprint, LocateRapidBlueprint, NamedEntityRapidBlueprint, PolygonRapidBlueprint, ScrubRapidBlueprint, TranscriptionRapidBlueprint. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into SimpleWorkflowConfigModelBlueprint with oneOf schemas: AttachCategoryRapidBlueprint, BoundingBoxRapidBlueprint, CompareRapidBlueprint, FreeTextRapidBlueprint, LineRapidBlueprint, LocateRapidBlueprint, NamedEntityRapidBlueprint, PolygonRapidBlueprint, TranscriptionRapidBlueprint. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into SimpleWorkflowConfigModelBlueprint with oneOf schemas: AttachCategoryRapidBlueprint, BoundingBoxRapidBlueprint, CompareRapidBlueprint, FreeTextRapidBlueprint, LineRapidBlueprint, LocateRapidBlueprint, NamedEntityRapidBlueprint, PolygonRapidBlueprint, ScrubRapidBlueprint, TranscriptionRapidBlueprint. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -220,7 +234,7 @@ class SimpleWorkflowConfigModelBlueprint(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], AttachCategoryRapidBlueprint, BoundingBoxRapidBlueprint, CompareRapidBlueprint, FreeTextRapidBlueprint, LineRapidBlueprint, LocateRapidBlueprint, NamedEntityRapidBlueprint, PolygonRapidBlueprint, TranscriptionRapidBlueprint]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], AttachCategoryRapidBlueprint, BoundingBoxRapidBlueprint, CompareRapidBlueprint, FreeTextRapidBlueprint, LineRapidBlueprint, LocateRapidBlueprint, NamedEntityRapidBlueprint, PolygonRapidBlueprint, ScrubRapidBlueprint, TranscriptionRapidBlueprint]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

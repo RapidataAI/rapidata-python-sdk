@@ -31,11 +31,11 @@ from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-ADDVALIDATIONRAPIDMODELPAYLOAD_ONE_OF_SCHEMAS = ["BoundingBoxPayload", "ClassifyPayload", "ComparePayload", "FreeTextPayload", "LinePayload", "LocatePayload", "NamedEntityPayload", "PolygonPayload", "ScrubPayload", "TranscriptionPayload"]
+QUERYVALIDATIONRAPIDSRESULTPAYLOAD_ONE_OF_SCHEMAS = ["BoundingBoxPayload", "ClassifyPayload", "ComparePayload", "FreeTextPayload", "LinePayload", "LocatePayload", "NamedEntityPayload", "PolygonPayload", "ScrubPayload", "TranscriptionPayload"]
 
-class AddValidationRapidModelPayload(BaseModel):
+class QueryValidationRapidsResultPayload(BaseModel):
     """
-    The payload to use for the rapid.
+    QueryValidationRapidsResultPayload
     """
     # data type: TranscriptionPayload
     oneof_schema_1_validator: Optional[TranscriptionPayload] = None
@@ -81,7 +81,7 @@ class AddValidationRapidModelPayload(BaseModel):
 
     @field_validator('actual_instance')
     def actual_instance_must_validate_oneof(cls, v):
-        instance = AddValidationRapidModelPayload.model_construct()
+        instance = QueryValidationRapidsResultPayload.model_construct()
         error_messages = []
         match = 0
         # validate data type: TranscriptionPayload
@@ -136,10 +136,10 @@ class AddValidationRapidModelPayload(BaseModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in AddValidationRapidModelPayload with oneOf schemas: BoundingBoxPayload, ClassifyPayload, ComparePayload, FreeTextPayload, LinePayload, LocatePayload, NamedEntityPayload, PolygonPayload, ScrubPayload, TranscriptionPayload. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in QueryValidationRapidsResultPayload with oneOf schemas: BoundingBoxPayload, ClassifyPayload, ComparePayload, FreeTextPayload, LinePayload, LocatePayload, NamedEntityPayload, PolygonPayload, ScrubPayload, TranscriptionPayload. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in AddValidationRapidModelPayload with oneOf schemas: BoundingBoxPayload, ClassifyPayload, ComparePayload, FreeTextPayload, LinePayload, LocatePayload, NamedEntityPayload, PolygonPayload, ScrubPayload, TranscriptionPayload. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in QueryValidationRapidsResultPayload with oneOf schemas: BoundingBoxPayload, ClassifyPayload, ComparePayload, FreeTextPayload, LinePayload, LocatePayload, NamedEntityPayload, PolygonPayload, ScrubPayload, TranscriptionPayload. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -217,10 +217,10 @@ class AddValidationRapidModelPayload(BaseModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into AddValidationRapidModelPayload with oneOf schemas: BoundingBoxPayload, ClassifyPayload, ComparePayload, FreeTextPayload, LinePayload, LocatePayload, NamedEntityPayload, PolygonPayload, ScrubPayload, TranscriptionPayload. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into QueryValidationRapidsResultPayload with oneOf schemas: BoundingBoxPayload, ClassifyPayload, ComparePayload, FreeTextPayload, LinePayload, LocatePayload, NamedEntityPayload, PolygonPayload, ScrubPayload, TranscriptionPayload. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into AddValidationRapidModelPayload with oneOf schemas: BoundingBoxPayload, ClassifyPayload, ComparePayload, FreeTextPayload, LinePayload, LocatePayload, NamedEntityPayload, PolygonPayload, ScrubPayload, TranscriptionPayload. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into QueryValidationRapidsResultPayload with oneOf schemas: BoundingBoxPayload, ClassifyPayload, ComparePayload, FreeTextPayload, LinePayload, LocatePayload, NamedEntityPayload, PolygonPayload, ScrubPayload, TranscriptionPayload. Details: " + ", ".join(error_messages))
         else:
             return instance
 

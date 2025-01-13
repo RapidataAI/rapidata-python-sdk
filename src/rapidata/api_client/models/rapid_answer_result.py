@@ -25,13 +25,14 @@ from rapidata.api_client.models.line_result import LineResult
 from rapidata.api_client.models.locate_result import LocateResult
 from rapidata.api_client.models.named_entity_result import NamedEntityResult
 from rapidata.api_client.models.polygon_result import PolygonResult
+from rapidata.api_client.models.scrub_result import ScrubResult
 from rapidata.api_client.models.skip_result import SkipResult
 from rapidata.api_client.models.transcription_result import TranscriptionResult
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-RAPIDANSWERRESULT_ONE_OF_SCHEMAS = ["AttachCategoryResult", "BoundingBoxResult", "CompareResult", "FreeTextResult", "LineResult", "LocateResult", "NamedEntityResult", "PolygonResult", "SkipResult", "TranscriptionResult"]
+RAPIDANSWERRESULT_ONE_OF_SCHEMAS = ["AttachCategoryResult", "BoundingBoxResult", "CompareResult", "FreeTextResult", "LineResult", "LocateResult", "NamedEntityResult", "PolygonResult", "ScrubResult", "SkipResult", "TranscriptionResult"]
 
 class RapidAnswerResult(BaseModel):
     """
@@ -39,26 +40,28 @@ class RapidAnswerResult(BaseModel):
     """
     # data type: TranscriptionResult
     oneof_schema_1_validator: Optional[TranscriptionResult] = None
+    # data type: ScrubResult
+    oneof_schema_2_validator: Optional[ScrubResult] = None
     # data type: PolygonResult
-    oneof_schema_2_validator: Optional[PolygonResult] = None
+    oneof_schema_3_validator: Optional[PolygonResult] = None
     # data type: NamedEntityResult
-    oneof_schema_3_validator: Optional[NamedEntityResult] = None
+    oneof_schema_4_validator: Optional[NamedEntityResult] = None
     # data type: LocateResult
-    oneof_schema_4_validator: Optional[LocateResult] = None
+    oneof_schema_5_validator: Optional[LocateResult] = None
     # data type: LineResult
-    oneof_schema_5_validator: Optional[LineResult] = None
+    oneof_schema_6_validator: Optional[LineResult] = None
     # data type: FreeTextResult
-    oneof_schema_6_validator: Optional[FreeTextResult] = None
+    oneof_schema_7_validator: Optional[FreeTextResult] = None
     # data type: CompareResult
-    oneof_schema_7_validator: Optional[CompareResult] = None
+    oneof_schema_8_validator: Optional[CompareResult] = None
     # data type: SkipResult
-    oneof_schema_8_validator: Optional[SkipResult] = None
+    oneof_schema_9_validator: Optional[SkipResult] = None
     # data type: AttachCategoryResult
-    oneof_schema_9_validator: Optional[AttachCategoryResult] = None
+    oneof_schema_10_validator: Optional[AttachCategoryResult] = None
     # data type: BoundingBoxResult
-    oneof_schema_10_validator: Optional[BoundingBoxResult] = None
-    actual_instance: Optional[Union[AttachCategoryResult, BoundingBoxResult, CompareResult, FreeTextResult, LineResult, LocateResult, NamedEntityResult, PolygonResult, SkipResult, TranscriptionResult]] = None
-    one_of_schemas: Set[str] = { "AttachCategoryResult", "BoundingBoxResult", "CompareResult", "FreeTextResult", "LineResult", "LocateResult", "NamedEntityResult", "PolygonResult", "SkipResult", "TranscriptionResult" }
+    oneof_schema_11_validator: Optional[BoundingBoxResult] = None
+    actual_instance: Optional[Union[AttachCategoryResult, BoundingBoxResult, CompareResult, FreeTextResult, LineResult, LocateResult, NamedEntityResult, PolygonResult, ScrubResult, SkipResult, TranscriptionResult]] = None
+    one_of_schemas: Set[str] = { "AttachCategoryResult", "BoundingBoxResult", "CompareResult", "FreeTextResult", "LineResult", "LocateResult", "NamedEntityResult", "PolygonResult", "ScrubResult", "SkipResult", "TranscriptionResult" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -87,6 +90,11 @@ class RapidAnswerResult(BaseModel):
         # validate data type: TranscriptionResult
         if not isinstance(v, TranscriptionResult):
             error_messages.append(f"Error! Input type `{type(v)}` is not `TranscriptionResult`")
+        else:
+            match += 1
+        # validate data type: ScrubResult
+        if not isinstance(v, ScrubResult):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `ScrubResult`")
         else:
             match += 1
         # validate data type: PolygonResult
@@ -136,10 +144,10 @@ class RapidAnswerResult(BaseModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in RapidAnswerResult with oneOf schemas: AttachCategoryResult, BoundingBoxResult, CompareResult, FreeTextResult, LineResult, LocateResult, NamedEntityResult, PolygonResult, SkipResult, TranscriptionResult. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in RapidAnswerResult with oneOf schemas: AttachCategoryResult, BoundingBoxResult, CompareResult, FreeTextResult, LineResult, LocateResult, NamedEntityResult, PolygonResult, ScrubResult, SkipResult, TranscriptionResult. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in RapidAnswerResult with oneOf schemas: AttachCategoryResult, BoundingBoxResult, CompareResult, FreeTextResult, LineResult, LocateResult, NamedEntityResult, PolygonResult, SkipResult, TranscriptionResult. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in RapidAnswerResult with oneOf schemas: AttachCategoryResult, BoundingBoxResult, CompareResult, FreeTextResult, LineResult, LocateResult, NamedEntityResult, PolygonResult, ScrubResult, SkipResult, TranscriptionResult. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -157,6 +165,12 @@ class RapidAnswerResult(BaseModel):
         # deserialize data into TranscriptionResult
         try:
             instance.actual_instance = TranscriptionResult.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into ScrubResult
+        try:
+            instance.actual_instance = ScrubResult.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
@@ -217,10 +231,10 @@ class RapidAnswerResult(BaseModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into RapidAnswerResult with oneOf schemas: AttachCategoryResult, BoundingBoxResult, CompareResult, FreeTextResult, LineResult, LocateResult, NamedEntityResult, PolygonResult, SkipResult, TranscriptionResult. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into RapidAnswerResult with oneOf schemas: AttachCategoryResult, BoundingBoxResult, CompareResult, FreeTextResult, LineResult, LocateResult, NamedEntityResult, PolygonResult, ScrubResult, SkipResult, TranscriptionResult. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into RapidAnswerResult with oneOf schemas: AttachCategoryResult, BoundingBoxResult, CompareResult, FreeTextResult, LineResult, LocateResult, NamedEntityResult, PolygonResult, SkipResult, TranscriptionResult. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into RapidAnswerResult with oneOf schemas: AttachCategoryResult, BoundingBoxResult, CompareResult, FreeTextResult, LineResult, LocateResult, NamedEntityResult, PolygonResult, ScrubResult, SkipResult, TranscriptionResult. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -234,7 +248,7 @@ class RapidAnswerResult(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], AttachCategoryResult, BoundingBoxResult, CompareResult, FreeTextResult, LineResult, LocateResult, NamedEntityResult, PolygonResult, SkipResult, TranscriptionResult]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], AttachCategoryResult, BoundingBoxResult, CompareResult, FreeTextResult, LineResult, LocateResult, NamedEntityResult, PolygonResult, ScrubResult, SkipResult, TranscriptionResult]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None
