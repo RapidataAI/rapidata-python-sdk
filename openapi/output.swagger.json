@@ -2007,6 +2007,9 @@
                         "$ref": "#/components/schemas/TranscriptionRapidBlueprint"
                       },
                       {
+                        "$ref": "#/components/schemas/ScrubRapidBlueprint"
+                      },
+                      {
                         "$ref": "#/components/schemas/PolygonRapidBlueprint"
                       },
                       {
@@ -6067,6 +6070,29 @@
         },
         "additionalProperties": false
       },
+      "ScrubRapidBlueprint": {
+        "title": "ScrubBlueprint",
+        "required": [
+          "_t",
+          "target"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "ScrubBlueprint"
+            ],
+            "type": "string",
+            "description": "Discriminator value for ScrubBlueprint",
+            "default": "ScrubBlueprint",
+            "example": "ScrubBlueprint"
+          },
+          "target": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "SendCompletionMailStepModel": {
         "title": "SendCompletionMailStepModel",
         "required": [
@@ -6118,6 +6144,9 @@
             "oneOf": [
               {
                 "$ref": "#/components/schemas/TranscriptionRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/ScrubRapidBlueprint"
               },
               {
                 "$ref": "#/components/schemas/PolygonRapidBlueprint"
@@ -6792,6 +6821,9 @@
                 "$ref": "#/components/schemas/TranscriptionPayload"
               },
               {
+                "$ref": "#/components/schemas/ScrubPayload"
+              },
+              {
                 "$ref": "#/components/schemas/PolygonPayload"
               },
               {
@@ -6848,6 +6880,9 @@
             "oneOf": [
               {
                 "$ref": "#/components/schemas/TranscriptionTruth"
+              },
+              {
+                "$ref": "#/components/schemas/ScrubTruth"
               },
               {
                 "$ref": "#/components/schemas/PolygonTruth"
@@ -6922,6 +6957,9 @@
                 "$ref": "#/components/schemas/TranscriptionPayload"
               },
               {
+                "$ref": "#/components/schemas/ScrubPayload"
+              },
+              {
                 "$ref": "#/components/schemas/PolygonPayload"
               },
               {
@@ -6978,6 +7016,9 @@
             "oneOf": [
               {
                 "$ref": "#/components/schemas/TranscriptionTruth"
+              },
+              {
+                "$ref": "#/components/schemas/ScrubTruth"
               },
               {
                 "$ref": "#/components/schemas/PolygonTruth"
@@ -7335,6 +7376,10 @@
         },
         "additionalProperties": false
       },
+      "Int32Int32ValueTuple": {
+        "type": "object",
+        "additionalProperties": false
+      },
       "LinePayload": {
         "title": "LinePayload",
         "required": [
@@ -7578,6 +7623,55 @@
         },
         "additionalProperties": false,
         "description": "The model for querying validation sets."
+      },
+      "ScrubPayload": {
+        "title": "ScrubPayload",
+        "required": [
+          "_t",
+          "target"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "ScrubPayload"
+            ],
+            "type": "string",
+            "description": "Discriminator value for ScrubPayload",
+            "default": "ScrubPayload",
+            "example": "ScrubPayload"
+          },
+          "target": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ScrubTruth": {
+        "title": "ScrubTruth",
+        "required": [
+          "_t",
+          "validRanges"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "ScrubTruth"
+            ],
+            "type": "string",
+            "description": "Discriminator value for ScrubTruth",
+            "default": "ScrubTruth",
+            "example": "ScrubTruth"
+          },
+          "validRanges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Int32Int32ValueTuple"
+            }
+          }
+        },
+        "additionalProperties": false
       },
       "SubmitCocoModel": {
         "required": [
@@ -8395,6 +8489,8 @@
       "QueryValidationRapidsResult": {
         "required": [
           "asset",
+          "metadata",
+          "payload",
           "type"
         ],
         "type": "object",
@@ -8420,6 +8516,121 @@
             "nullable": true,
             "discriminator": {
               "propertyName": "_t"
+            }
+          },
+          "truth": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranscriptionTruth"
+              },
+              {
+                "$ref": "#/components/schemas/ScrubTruth"
+              },
+              {
+                "$ref": "#/components/schemas/PolygonTruth"
+              },
+              {
+                "$ref": "#/components/schemas/NamedEntityTruth"
+              },
+              {
+                "$ref": "#/components/schemas/LocateBoxTruth"
+              },
+              {
+                "$ref": "#/components/schemas/LineTruth"
+              },
+              {
+                "$ref": "#/components/schemas/EmptyValidationTruth"
+              },
+              {
+                "$ref": "#/components/schemas/CompareTruth"
+              },
+              {
+                "$ref": "#/components/schemas/AttachCategoryTruth"
+              },
+              {
+                "$ref": "#/components/schemas/BoundingBoxTruth"
+              }
+            ],
+            "nullable": true,
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "payload": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranscriptionPayload"
+              },
+              {
+                "$ref": "#/components/schemas/ScrubPayload"
+              },
+              {
+                "$ref": "#/components/schemas/PolygonPayload"
+              },
+              {
+                "$ref": "#/components/schemas/NamedEntityPayload"
+              },
+              {
+                "$ref": "#/components/schemas/LocatePayload"
+              },
+              {
+                "$ref": "#/components/schemas/LinePayload"
+              },
+              {
+                "$ref": "#/components/schemas/FreeTextPayload"
+              },
+              {
+                "$ref": "#/components/schemas/ComparePayload"
+              },
+              {
+                "$ref": "#/components/schemas/ClassifyPayload"
+              },
+              {
+                "$ref": "#/components/schemas/BoundingBoxPayload"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "metadata": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/TranslatedPromptMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/ClassificationMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/CountMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/DemographicMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageDimensionMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/LocationMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/OriginalFilenameMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/TextMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadataModel"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
             }
           }
         },
@@ -8478,6 +8689,9 @@
                 "$ref": "#/components/schemas/TranscriptionResult"
               },
               {
+                "$ref": "#/components/schemas/ScrubResult"
+              },
+              {
                 "$ref": "#/components/schemas/PolygonResult"
               },
               {
@@ -8533,6 +8747,37 @@
         },
         "additionalProperties": false,
         "description": "The model for a Rapid skipped."
+      },
+      "ScrubResult": {
+        "title": "ScrubResult",
+        "required": [
+          "_t",
+          "rapidId",
+          "timestamps"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "ScrubResult"
+            ],
+            "type": "string",
+            "description": "Discriminator value for ScrubResult",
+            "default": "ScrubResult",
+            "example": "ScrubResult"
+          },
+          "rapidId": {
+            "type": "string"
+          },
+          "timestamps": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        },
+        "additionalProperties": false
       },
       "Shape": {
         "title": "Shape",
@@ -9732,6 +9977,9 @@
                 "$ref": "#/components/schemas/TranscriptionResult"
               },
               {
+                "$ref": "#/components/schemas/ScrubResult"
+              },
+              {
                 "$ref": "#/components/schemas/PolygonResult"
               },
               {
@@ -9813,6 +10061,9 @@
             "oneOf": [
               {
                 "$ref": "#/components/schemas/TranscriptionRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/ScrubRapidBlueprint"
               },
               {
                 "$ref": "#/components/schemas/PolygonRapidBlueprint"
@@ -10517,6 +10768,9 @@
                 "$ref": "#/components/schemas/TranscriptionRapidBlueprint"
               },
               {
+                "$ref": "#/components/schemas/ScrubRapidBlueprint"
+              },
+              {
                 "$ref": "#/components/schemas/PolygonRapidBlueprint"
               },
               {
@@ -10593,6 +10847,9 @@
             "oneOf": [
               {
                 "$ref": "#/components/schemas/TranscriptionRapidBlueprint"
+              },
+              {
+                "$ref": "#/components/schemas/ScrubRapidBlueprint"
               },
               {
                 "$ref": "#/components/schemas/PolygonRapidBlueprint"

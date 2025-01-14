@@ -31,11 +31,11 @@ from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-ADDVALIDATIONRAPIDMODELTRUTH_ONE_OF_SCHEMAS = ["AttachCategoryTruth", "BoundingBoxTruth", "CompareTruth", "EmptyValidationTruth", "LineTruth", "LocateBoxTruth", "NamedEntityTruth", "PolygonTruth", "ScrubTruth", "TranscriptionTruth"]
+QUERYVALIDATIONRAPIDSRESULTTRUTH_ONE_OF_SCHEMAS = ["AttachCategoryTruth", "BoundingBoxTruth", "CompareTruth", "EmptyValidationTruth", "LineTruth", "LocateBoxTruth", "NamedEntityTruth", "PolygonTruth", "ScrubTruth", "TranscriptionTruth"]
 
-class AddValidationRapidModelTruth(BaseModel):
+class QueryValidationRapidsResultTruth(BaseModel):
     """
-    The ground truth for the rapid.
+    QueryValidationRapidsResultTruth
     """
     # data type: TranscriptionTruth
     oneof_schema_1_validator: Optional[TranscriptionTruth] = None
@@ -81,7 +81,10 @@ class AddValidationRapidModelTruth(BaseModel):
 
     @field_validator('actual_instance')
     def actual_instance_must_validate_oneof(cls, v):
-        instance = AddValidationRapidModelTruth.model_construct()
+        if v is None:
+            return v
+
+        instance = QueryValidationRapidsResultTruth.model_construct()
         error_messages = []
         match = 0
         # validate data type: TranscriptionTruth
@@ -136,10 +139,10 @@ class AddValidationRapidModelTruth(BaseModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in AddValidationRapidModelTruth with oneOf schemas: AttachCategoryTruth, BoundingBoxTruth, CompareTruth, EmptyValidationTruth, LineTruth, LocateBoxTruth, NamedEntityTruth, PolygonTruth, ScrubTruth, TranscriptionTruth. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in QueryValidationRapidsResultTruth with oneOf schemas: AttachCategoryTruth, BoundingBoxTruth, CompareTruth, EmptyValidationTruth, LineTruth, LocateBoxTruth, NamedEntityTruth, PolygonTruth, ScrubTruth, TranscriptionTruth. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in AddValidationRapidModelTruth with oneOf schemas: AttachCategoryTruth, BoundingBoxTruth, CompareTruth, EmptyValidationTruth, LineTruth, LocateBoxTruth, NamedEntityTruth, PolygonTruth, ScrubTruth, TranscriptionTruth. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in QueryValidationRapidsResultTruth with oneOf schemas: AttachCategoryTruth, BoundingBoxTruth, CompareTruth, EmptyValidationTruth, LineTruth, LocateBoxTruth, NamedEntityTruth, PolygonTruth, ScrubTruth, TranscriptionTruth. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -148,9 +151,12 @@ class AddValidationRapidModelTruth(BaseModel):
         return cls.from_json(json.dumps(obj))
 
     @classmethod
-    def from_json(cls, json_str: str) -> Self:
+    def from_json(cls, json_str: Optional[str]) -> Self:
         """Returns the object represented by the json string"""
         instance = cls.model_construct()
+        if json_str is None:
+            return instance
+
         error_messages = []
         match = 0
 
@@ -217,10 +223,10 @@ class AddValidationRapidModelTruth(BaseModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into AddValidationRapidModelTruth with oneOf schemas: AttachCategoryTruth, BoundingBoxTruth, CompareTruth, EmptyValidationTruth, LineTruth, LocateBoxTruth, NamedEntityTruth, PolygonTruth, ScrubTruth, TranscriptionTruth. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into QueryValidationRapidsResultTruth with oneOf schemas: AttachCategoryTruth, BoundingBoxTruth, CompareTruth, EmptyValidationTruth, LineTruth, LocateBoxTruth, NamedEntityTruth, PolygonTruth, ScrubTruth, TranscriptionTruth. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into AddValidationRapidModelTruth with oneOf schemas: AttachCategoryTruth, BoundingBoxTruth, CompareTruth, EmptyValidationTruth, LineTruth, LocateBoxTruth, NamedEntityTruth, PolygonTruth, ScrubTruth, TranscriptionTruth. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into QueryValidationRapidsResultTruth with oneOf schemas: AttachCategoryTruth, BoundingBoxTruth, CompareTruth, EmptyValidationTruth, LineTruth, LocateBoxTruth, NamedEntityTruth, PolygonTruth, ScrubTruth, TranscriptionTruth. Details: " + ", ".join(error_messages))
         else:
             return instance
 

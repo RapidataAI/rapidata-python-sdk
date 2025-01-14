@@ -247,6 +247,8 @@ from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.query_validation_rapids_result import QueryValidationRapidsResult
 from rapidata.api_client.models.query_validation_rapids_result_asset import QueryValidationRapidsResultAsset
 from rapidata.api_client.models.query_validation_rapids_result_paged_result import QueryValidationRapidsResultPagedResult
+from rapidata.api_client.models.query_validation_rapids_result_payload import QueryValidationRapidsResultPayload
+from rapidata.api_client.models.query_validation_rapids_result_truth import QueryValidationRapidsResultTruth
 from rapidata.api_client.models.query_validation_set_model import QueryValidationSetModel
 from rapidata.api_client.models.query_workflows_model import QueryWorkflowsModel
 from rapidata.api_client.models.ranked_datapoint_model import RankedDatapointModel
@@ -259,6 +261,10 @@ from rapidata.api_client.models.read_bridge_token_keys_result import ReadBridgeT
 from rapidata.api_client.models.register_temporary_customer_model import RegisterTemporaryCustomerModel
 from rapidata.api_client.models.register_temporary_customer_result import RegisterTemporaryCustomerResult
 from rapidata.api_client.models.root_filter import RootFilter
+from rapidata.api_client.models.scrub_payload import ScrubPayload
+from rapidata.api_client.models.scrub_rapid_blueprint import ScrubRapidBlueprint
+from rapidata.api_client.models.scrub_result import ScrubResult
+from rapidata.api_client.models.scrub_truth import ScrubTruth
 from rapidata.api_client.models.send_completion_mail_step_model import SendCompletionMailStepModel
 from rapidata.api_client.models.shape import Shape
 from rapidata.api_client.models.simple_workflow_config import SimpleWorkflowConfig

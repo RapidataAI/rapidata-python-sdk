@@ -19,7 +19,10 @@ import json
 
 from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.file_asset_model1_metadata_inner import FileAssetModel1MetadataInner
 from rapidata.api_client.models.query_validation_rapids_result_asset import QueryValidationRapidsResultAsset
+from rapidata.api_client.models.query_validation_rapids_result_payload import QueryValidationRapidsResultPayload
+from rapidata.api_client.models.query_validation_rapids_result_truth import QueryValidationRapidsResultTruth
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -29,7 +32,10 @@ class QueryValidationRapidsResult(BaseModel):
     """ # noqa: E501
     type: StrictStr
     asset: Optional[QueryValidationRapidsResultAsset]
-    __properties: ClassVar[List[str]] = ["type", "asset"]
+    truth: Optional[QueryValidationRapidsResultTruth] = None
+    payload: QueryValidationRapidsResultPayload
+    metadata: List[FileAssetModel1MetadataInner]
+    __properties: ClassVar[List[str]] = ["type", "asset", "truth", "payload", "metadata"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -73,10 +79,28 @@ class QueryValidationRapidsResult(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of asset
         if self.asset:
             _dict['asset'] = self.asset.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of truth
+        if self.truth:
+            _dict['truth'] = self.truth.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of payload
+        if self.payload:
+            _dict['payload'] = self.payload.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in metadata (list)
+        _items = []
+        if self.metadata:
+            for _item_metadata in self.metadata:
+                if _item_metadata:
+                    _items.append(_item_metadata.to_dict())
+            _dict['metadata'] = _items
         # set to None if asset (nullable) is None
         # and model_fields_set contains the field
         if self.asset is None and "asset" in self.model_fields_set:
             _dict['asset'] = None
+
+        # set to None if truth (nullable) is None
+        # and model_fields_set contains the field
+        if self.truth is None and "truth" in self.model_fields_set:
+            _dict['truth'] = None
 
         return _dict
 
@@ -91,7 +115,10 @@ class QueryValidationRapidsResult(BaseModel):
 
         _obj = cls.model_validate({
             "type": obj.get("type"),
-            "asset": QueryValidationRapidsResultAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None
+            "asset": QueryValidationRapidsResultAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
+            "truth": QueryValidationRapidsResultTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
+            "payload": QueryValidationRapidsResultPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
+            "metadata": [FileAssetModel1MetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None
         })
         return _obj
 
