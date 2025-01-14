@@ -4,7 +4,8 @@ from rapidata.rapidata_client.validation.rapids.rapids import (
     CompareRapid, 
     SelectWordsRapid, 
     LocateRapid, 
-    DrawRapid)
+    DrawRapid,
+    TimestampRapid)
 from rapidata.rapidata_client.assets import MediaAsset, TextAsset, MultiAsset
 from rapidata.rapidata_client.metadata import Metadata
 from rapidata.rapidata_client.validation.rapids.box import Box
@@ -161,3 +162,30 @@ class RapidsManager:
                 asset=asset,
                 metadata=metadata,
                 )
+    
+    def timestamp_rapid(self,
+            instruction: str,
+            truths: list[tuple[int, int]],
+            datapoint: str,
+            metadata: Sequence[Metadata] = []
+    ) -> TimestampRapid:
+        """Build a timestamp rapid
+
+        Args:
+            instruction (str): The instruction for the labeler.
+            truths (list[tuple[int, int]]): The possible accepted timestamps intervals for the labeler (in frames).
+                The first element of the tuple is the start of the interval and the second element is the end of the interval.
+            datapoint (str): The asset that the labeler will be timestamping.
+            metadata (Sequence[Metadata], optional): The metadata that is attached to the rapid. Defaults to [].
+        """
+        
+        asset = MediaAsset(datapoint)
+
+        return TimestampRapid(
+                instruction=instruction,
+                truths=truths,
+                asset=asset,
+                metadata=metadata,
+                )
+
+        

@@ -6,6 +6,9 @@ from rapidata.api_client.models.compare_truth import CompareTruth
 from rapidata.api_client.models.transcription_payload import TranscriptionPayload
 from rapidata.api_client.models.transcription_truth import TranscriptionTruth
 from rapidata.api_client.models.transcription_word import TranscriptionWord
+from rapidata.api_client.models.scrub_payload import ScrubPayload
+from rapidata.api_client.models.scrub_truth import ScrubTruth
+
 from rapidata.api_client.models.locate_payload import LocatePayload
 from rapidata.api_client.models.locate_box_truth import LocateBoxTruth
 from rapidata.api_client.models.line_payload import LinePayload
@@ -26,7 +29,8 @@ from rapidata.rapidata_client.validation.rapids.rapids import (
     CompareRapid,
     SelectWordsRapid,
     LocateRapid,
-    DrawRapid
+    DrawRapid,
+    TimestampRapid
 )
 from typing import Sequence
 
@@ -106,10 +110,13 @@ class ValidationSetBuilder:
             self.__add_select_words_rapid(rapid.asset, rapid.instruction, rapid.sentence, rapid.truths, rapid.strict_grading)
         
         elif isinstance(rapid, LocateRapid):
-            self.__add_locate_rapid(rapid.asset, rapid.instruction, rapid.truths)
+            self.__add_locate_rapid(rapid.asset, rapid.instruction, rapid.truths, rapid.metadata)
 
         elif isinstance(rapid, DrawRapid):
-            self.__add_draw_rapid(rapid.asset, rapid.instruction, rapid.truths)
+            self.__add_draw_rapid(rapid.asset, rapid.instruction, rapid.truths, rapid.metadata)
+
+        elif isinstance(rapid, TimestampRapid):
+            self.__add_timestamp_rapid(rapid.asset, rapid.instruction, rapid.truths, rapid.metadata)
 
         else:
             raise ValueError("Unsupported rapid type")
@@ -262,7 +269,8 @@ class ValidationSetBuilder:
         self,
         asset: MediaAsset,
         instruction: str,
-        truths: list[Box]
+        truths: list[Box],
+        metadata: Sequence[Metadata] = [],
     ):
         """Add a locate rapid to the validation set.
 
@@ -301,7 +309,7 @@ class ValidationSetBuilder:
                 instruction=instruction,
                 payload=payload,
                 truths=model_truth,
-                metadata=[],
+                metadata=metadata,
                 randomCorrectProbability=coverage,
                 asset=asset,
             )
@@ -311,7 +319,8 @@ class ValidationSetBuilder:
         self,
         asset: MediaAsset,
         instruction: str,
-        truths: list[Box]
+        truths: list[Box],
+        metadata: Sequence[Metadata] = [],
     ):
         """Add a draw rapid to the validation set.
 
@@ -348,11 +357,57 @@ class ValidationSetBuilder:
                 instruction=instruction,
                 payload=payload,
                 truths=model_truth,
-                metadata=[],
+                metadata=metadata,
                 randomCorrectProbability=coverage,
                 asset=asset,
             )
         )
+
+    def __add_timestamp_rapid(
+        self,
+        asset: MediaAsset,
+        instruction: str,
+        truths: list[tuple[int, int]],
+        metadata: Sequence[Metadata] = [],
+    ):
+        """Add a timestamp rapid to the validation set.
+
+        Args:
+            instruction (str): The instruction for the timestamp rapid.
+            asset (MediaAsset): The asset for the rapid.
+            truths (list[tuple[int, int]]): The truths for the rapid.
+                This is a list of tuples where the first element is the start of the interval and the second element is the end of the interval.
+                The intervals are in frames.
+            metadata (Sequence[Metadata], optional): The metadata for the rapid. Defaults to an empty list.
+
+        Returns:
+            ValidationSetBuilder: The ValidationSetBuilder instance.
+        """
+        for truth in truths:
+            if len(truth) != 2:
+                raise ValueError("The truths per datapoint must be a tuple of exactly two integers.")
+            if truth[0] > truth[1]:
+                raise ValueError("The start of the interval must be smaller than the end of the interval.")
+        
+        payload = ScrubPayload(
+            _t="ScrubPayload", 
+            target=instruction
+        )
+
+        # model_truth = ScrubTruth(
+        #     _t="ScrubTruth",
+        # )
+
+        # self._rapid_parts.append(
+        #     ValidatioRapidParts(
+        #         instruction=instruction,
+        #         payload=payload,
+        #         truths=model_truth,
+        #         metadata=metadata,
+        #         randomCorrectProbability=1,
+        #         asset=asset,
+        #     )
+        # )
 
 
     def _calculate_boxes_coverage(self, boxes: list[Box], image_width: int, image_height: int) -> float:

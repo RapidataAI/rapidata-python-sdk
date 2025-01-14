@@ -1,21 +1,21 @@
 from rapidata.api_client.models.simple_workflow_model import SimpleWorkflowModel
 from rapidata.api_client.models.simple_workflow_model_blueprint import SimpleWorkflowModelBlueprint
-from rapidata.api_client.models.transcription_rapid_blueprint import TranscriptionRapidBlueprint
+from rapidata.api_client.models.scrub_rapid_blueprint import ScrubRapidBlueprint
 from rapidata.rapidata_client.workflow._base_workflow import Workflow
 
 
-class SelectWordsWorkflow(Workflow):
+class TimestampWorkflow(Workflow):
     """
-    A workflow for select words tasks.
+    A workflow for timestamp tasks.
 
-    This class represents a select words workflow 
-    where datapoints have a sentence attached to them where words can be selected.
+    This class represents a timestamp workflow 
+    where audio or video content receives timestamps based on the instruction.
 
     Attributes:
-        _instruction (str): The instruction for the select words task.
+        _instruction (str): The instruction for the timestamp task.
 
     Args:
-        instruction (str): The instruction to be provided for the select words task.
+        instruction (str): The instruction to be provided for the timestamp task.
     """
 
     def __init__(self, instruction: str):
@@ -23,9 +23,9 @@ class SelectWordsWorkflow(Workflow):
         self._instruction = instruction
 
     def _to_model(self) -> SimpleWorkflowModel:
-        blueprint = TranscriptionRapidBlueprint(
-            _t="TranscriptionBlueprint",
-            title=self._instruction
+        blueprint = ScrubRapidBlueprint(
+            _t="ScrubBlueprint",
+            target=self._instruction
         )
 
         return SimpleWorkflowModel(

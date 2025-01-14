@@ -6,3 +6,4 @@ from ._compare_workflow import CompareWorkflow
 from ._free_text_workflow import FreeTextWorkflow
 from ._select_words_workflow import SelectWordsWorkflow
 from ._evaluation_workflow import EvaluationWorkflow
+from ._timestamp_workflow import TimestampWorkflow

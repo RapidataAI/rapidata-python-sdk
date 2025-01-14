@@ -19,7 +19,8 @@ from rapidata.rapidata_client.workflow import (
     FreeTextWorkflow,
     SelectWordsWorkflow,
     LocateWorkflow,
-    DrawWorkflow)
+    DrawWorkflow,
+    TimestampWorkflow)
 from rapidata.rapidata_client.selection.validation_selection import ValidationSelection
 from rapidata.rapidata_client.selection.labeling_selection import LabelingSelection
 from rapidata.rapidata_client.assets import MediaAsset, TextAsset, MultiAsset
@@ -409,6 +410,46 @@ class RapidataOrderManager:
             responses_per_datapoint=responses_per_datapoint,
             contexts=contexts,
             validation_set_id=validation_set_id,
+            filters=filters,
+            selections=selections,
+            settings=settings
+        )
+    
+    def create_timestamp_order(self,
+            name: str,
+            instruction: str,
+            datapoints: list[str],
+            responses_per_datapoint: int = 10,
+            contexts: list[str] | None = None,
+            filters: Sequence[RapidataFilter] = [],
+            settings: Sequence[RapidataSetting] = [],
+            selections: Sequence[RapidataSelection] | None = None,
+        ) -> RapidataOrder:
+        """Create a timestamp order.
+
+        Args:
+            name (str): The name of the order.
+            instruction (str): The instruction for the timestamp task. Will be shown along side each datapoint.
+            datapoints (list[str]): The list of datapoints for the timestamp - each datapoint will be labeled.
+            responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
+            contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
+                If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
+                Will be match up with the datapoints using the list index.
+            filters (Sequence[RapidataFilter], optional): The list of filters for the timestamp. Defaults to []. Decides who the tasks should be shown to.
+            settings (Sequence[RapidataSetting], optional): The list of settings for the timestamp. Defaults to []. Decides how the tasks should be shown.
+            selections (Sequence[RapidataSelection], optional): The list of selections for the timestamp. Defaults to None. Decides in what order the tasks should be shown.
+        """
+
+        assets = [MediaAsset(path=path) for path in datapoints]
+
+        return self.__create_general_order(
+            name=name,
+            workflow=TimestampWorkflow(
+                instruction=instruction
+            ),
+            assets=assets,
+            responses_per_datapoint=responses_per_datapoint,
+            contexts=contexts,
             filters=filters,
             selections=selections,
             settings=settings
