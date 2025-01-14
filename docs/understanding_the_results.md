@@ -50,7 +50,10 @@ Here's an example of the results you might receive when running the [Quickstart 
             "userDetails": {
               "country": "DZ",
               "language": "ar",
-              "userScore": 0.6409
+              "userScore": 0.6409,
+              "age": "40-49",
+              "gender": "Male",
+              "occupation": "Medical Technologists",
             }
           },
           {
@@ -58,7 +61,10 @@ Here's an example of the results you might receive when running the [Quickstart 
             "userDetails": {
               "country": "EG",
               "language": "ar",
-              "userScore": 0.7608
+              "userScore": 0.7608,
+              "age": "30-39",
+              "gender": "Female",
+              "occupation": "Creative & Media"
             }
           },
           {
@@ -66,7 +72,10 @@ Here's an example of the results you might receive when running the [Quickstart 
             "userDetails": {
               "country": "DZ",
               "language": "ar",
-              "userScore": 0.3683
+              "userScore": 0.3683,
+              "age": "Unknown",
+              "gender": "Unknown",
+              "occupation": "Unknown"
             }
           }
         ]
@@ -154,6 +163,9 @@ Each item in the data list contains:
         - `country`: Country code of the annotator.
         - `language`: Language in which the annotator viewed the task.
         - `userScore`: A score representing the annotator's reliability.
+        - `age`: Age group of the annotator.
+        - `gender` : The gender of the annotator.
+        - `occupation`: The occupation of the annotator.
 
     Example:
 
@@ -163,7 +175,10 @@ Each item in the data list contains:
     "userDetails": {
         "country": "DZ",
         "language": "ar",
-        "userScore": 0.6409
+        "userScore": 0.6409,
+        "age": "40-49",
+        "gender": "Male",
+        "occupation": "Medical Technologists",
         }
     }
     ```
