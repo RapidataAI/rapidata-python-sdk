@@ -19,6 +19,9 @@ from rapidata.api_client.models.polygon_payload import PolygonPayload
 from rapidata.api_client.models.polygon_truth import PolygonTruth
 from rapidata.api_client.models.transcription_payload import TranscriptionPayload
 from rapidata.api_client.models.transcription_truth import TranscriptionTruth
+from rapidata.api_client.models.scrub_payload import ScrubPayload
+from rapidata.api_client.models.scrub_truth import ScrubTruth
+
 from rapidata.rapidata_client.assets._media_asset import MediaAsset
 from rapidata.rapidata_client.assets._multi_asset import MultiAsset
 from rapidata.rapidata_client.assets._text_asset import TextAsset
@@ -40,6 +43,7 @@ class ValidatioRapidParts:
         | NamedEntityPayload
         | PolygonPayload
         | TranscriptionPayload
+        | ScrubPayload
     )
     truths: (
         AttachCategoryTruth
@@ -51,6 +55,7 @@ class ValidatioRapidParts:
         | NamedEntityTruth
         | PolygonTruth
         | TranscriptionTruth
+        | ScrubTruth
     )
     metadata: Sequence[Metadata]
     randomCorrectProbability: float

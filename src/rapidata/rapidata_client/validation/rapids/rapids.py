@@ -92,3 +92,27 @@ class DrawRapid(Rapid):
         self.instruction = instruction
         self.asset = asset
         self.truths = truths
+        self.metadata = metadata
+
+class TimestampRapid(Rapid):
+    """
+    Used to have the labeler timestamp a video or audio file.
+    
+    Args:
+        instruction (str): The instruction for the labeler.
+        truths (list[tuple[int, int]]): The possible accepted timestamps intervals for the labeler (in frames).
+            The first element of the tuple is the start of the interval and the second element is the end of the interval.
+        asset (MediaAsset): The asset that the labeler is timestamping.
+        metadata (Sequence[Metadata]): The metadata that is attached to the rapid.
+    """
+    def __init__(self, instruction: str, truths: list[tuple[int, int]], asset: MediaAsset, metadata: Sequence[Metadata]):
+        for truth in truths:
+            if len(truth) != 2:
+                raise ValueError("The truths per datapoint must be a tuple of exactly two integers.")
+            if truth[0] > truth[1]:
+                raise ValueError("The start of the interval must be smaller than the end of the interval.")
+            
+        self.instruction = instruction
+        self.truths = truths
+        self.asset = asset
+        self.metadata = metadata
