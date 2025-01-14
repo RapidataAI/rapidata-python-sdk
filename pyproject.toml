@@ -17,6 +17,7 @@ python-dateutil = "^2.9.0.post0"
 tqdm = "^4.66.5"
 deprecated = "^1.2.14"
 colorama = "0.4.6"
+tinytag = "^2.0.0"
 
 [tool.poetry.group.dev.dependencies]
 python-dotenv = "^1.0.1"

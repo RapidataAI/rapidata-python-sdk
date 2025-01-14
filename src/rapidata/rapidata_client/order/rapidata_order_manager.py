@@ -442,6 +442,10 @@ class RapidataOrderManager:
 
         assets = [MediaAsset(path=path) for path in datapoints]
 
+        for asset in assets:
+            if not asset.get_duration():
+                raise ValueError("The datapoints for this order must have a duration. (e.g. video, audio or gif)")
+
         return self.__create_general_order(
             name=name,
             workflow=TimestampWorkflow(

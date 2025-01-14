@@ -9,6 +9,8 @@ from rapidata.rapidata_client.assets._base_asset import BaseAsset
 import requests
 import re
 from PIL import Image
+from tinytag import TinyTag
+import tempfile
 
 class MediaAsset(BaseAsset):
     """MediaAsset Class
@@ -54,6 +56,72 @@ class MediaAsset(BaseAsset):
         
         self.path: str | bytes = path
         self.name = path
+
+    def get_duration(self) -> int:
+        """
+        Get the duration of audio/video/gif files in milliseconds.
+        Returns 0 for static images.
+
+        Returns:
+            int: Duration in milliseconds for audio/video/gif, 0 for static images
+
+        Raises:
+            ValueError: If the duration cannot be determined
+        """
+        path_to_check = self.name.lower()
+        
+        # Handle GIFs specially
+        if path_to_check.endswith('.gif'):
+            try:
+                if isinstance(self.path, bytes):
+                    img = Image.open(BytesIO(self.path))
+                else:
+                    img = Image.open(self.path)
+                
+                # Get duration of all frames
+                duration = 0
+                with img:
+                    try:
+                        while True:
+                            duration += img.info.get('duration', 0)  # Duration per frame in milliseconds
+                            img.seek(img.tell() + 1)
+                    except EOFError:
+                        pass  # We've hit the end of the frames
+                
+                return duration  # Already in milliseconds
+            except Exception as e:
+                # If we can't get animation data, it might be a static GIF
+                return 0
+        
+        # Return 0 for other static images
+        if any(path_to_check.endswith(ext) for ext in ('.jpg', '.jpeg', '.png', '.webp')):
+            return 0
+
+        try:
+            # For URL downloads (bytes), write to temporary file first
+            if isinstance(self.path, bytes):
+                with tempfile.NamedTemporaryFile(suffix=os.path.splitext(self.name)[1], delete=False) as tmp:
+                    tmp.write(self.path)
+                    tmp.flush()
+                    # Close the file so it can be read
+                    tmp_path = tmp.name
+                
+                try:
+                    tag = TinyTag.get(tmp_path)
+                finally:
+                    # Clean up the temporary file
+                    os.unlink(tmp_path)
+            else:
+                # For local files, use path directly
+                tag = TinyTag.get(self.path)
+            
+            if tag.duration is None:
+                raise ValueError("Could not read duration from file")
+                
+            return int(tag.duration * 1000)  # Convert to milliseconds
+            
+        except Exception as e:
+            raise ValueError(f"Could not determine media duration: {str(e)}")
 
     def get_image_dimension(self) -> tuple[int, int] | None:
         """

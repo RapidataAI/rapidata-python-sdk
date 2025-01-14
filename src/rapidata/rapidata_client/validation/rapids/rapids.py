@@ -100,17 +100,27 @@ class TimestampRapid(Rapid):
     
     Args:
         instruction (str): The instruction for the labeler.
-        truths (list[tuple[int, int]]): The possible accepted timestamps intervals for the labeler (in frames).
+        truths (list[tuple[int, int]]): The possible accepted timestamps intervals for the labeler (in miliseconds).
             The first element of the tuple is the start of the interval and the second element is the end of the interval.
         asset (MediaAsset): The asset that the labeler is timestamping.
         metadata (Sequence[Metadata]): The metadata that is attached to the rapid.
     """
     def __init__(self, instruction: str, truths: list[tuple[int, int]], asset: MediaAsset, metadata: Sequence[Metadata]):
+        if not asset.get_duration():
+            raise ValueError("The datapoints must have a duration. (e.g. video, audio or gif)")
+        
+        if not isinstance(truths, list):
+            raise ValueError("The truths must be a list of tuples.")
+
         for truth in truths:
-            if len(truth) != 2:
+            if len(truth) != 2 or not all(isinstance(x, int) for x in truth):
                 raise ValueError("The truths per datapoint must be a tuple of exactly two integers.")
-            if truth[0] > truth[1]:
+            if truth[0] >= truth[1]:
                 raise ValueError("The start of the interval must be smaller than the end of the interval.")
+            if truth[0] < 0:
+                raise ValueError("The start of the interval must be greater than or equal to 0.")
+            if truth[1] > asset.get_duration():
+                raise ValueError("The end of the interval can not be greater than the duration of the datapoint.")
             
         self.instruction = instruction
         self.truths = truths

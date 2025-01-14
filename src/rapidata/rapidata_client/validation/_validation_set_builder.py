@@ -8,7 +8,7 @@ from rapidata.api_client.models.transcription_truth import TranscriptionTruth
 from rapidata.api_client.models.transcription_word import TranscriptionWord
 from rapidata.api_client.models.scrub_payload import ScrubPayload
 from rapidata.api_client.models.scrub_truth import ScrubTruth
-
+from rapidata.api_client.models.scrub_range import ScrubRange
 from rapidata.api_client.models.locate_payload import LocatePayload
 from rapidata.api_client.models.locate_box_truth import LocateBoxTruth
 from rapidata.api_client.models.line_payload import LinePayload
@@ -377,7 +377,7 @@ class ValidationSetBuilder:
             asset (MediaAsset): The asset for the rapid.
             truths (list[tuple[int, int]]): The truths for the rapid.
                 This is a list of tuples where the first element is the start of the interval and the second element is the end of the interval.
-                The intervals are in frames.
+                The intervals are in miliseconds.
             metadata (Sequence[Metadata], optional): The metadata for the rapid. Defaults to an empty list.
 
         Returns:
@@ -394,20 +394,24 @@ class ValidationSetBuilder:
             target=instruction
         )
 
-        # model_truth = ScrubTruth(
-        #     _t="ScrubTruth",
-        # )
+        model_truth = ScrubTruth(
+            _t="ScrubTruth",
+            validRanges=[ScrubRange(
+                start=truth[0],
+                end=truth[1]
+            ) for truth in truths]
+        )
 
-        # self._rapid_parts.append(
-        #     ValidatioRapidParts(
-        #         instruction=instruction,
-        #         payload=payload,
-        #         truths=model_truth,
-        #         metadata=metadata,
-        #         randomCorrectProbability=1,
-        #         asset=asset,
-        #     )
-        # )
+        self._rapid_parts.append(
+            ValidatioRapidParts(
+                instruction=instruction,
+                payload=payload,
+                truths=model_truth,
+                metadata=metadata,
+                randomCorrectProbability=self._calculate_coverage_ratio(asset.get_duration(), truths),
+                asset=asset,
+            )
+        )
 
 
     def _calculate_boxes_coverage(self, boxes: list[Box], image_width: int, image_height: int) -> float:
@@ -424,3 +428,44 @@ class ValidationSetBuilder:
                         
         total_covered = len(pixels)
         return total_covered / (image_width * image_height)
+    
+    def _calculate_coverage_ratio(self, total_duration: int, subsections: list[tuple[int, int]]) -> float:
+        """
+        Calculate the ratio of total_duration that is covered by subsections, handling overlaps.
+        
+        Args:
+            total_duration: The total duration to consider
+            subsections: List of tuples containing (start, end) times
+            
+        Returns:
+            float: Ratio of coverage (0 to 1)
+        """
+        if not subsections:
+            return 0.0
+        
+        # Sort subsections by start time and clamp to valid range
+        sorted_ranges = sorted(
+            (max(0, start), min(end, total_duration)) 
+            for start, end in subsections
+        )
+        
+        # Merge overlapping ranges
+        merged_ranges = []
+        current_range = list(sorted_ranges[0])
+        
+        for next_start, next_end in sorted_ranges[1:]:
+            current_start, current_end = current_range
+            
+            # If ranges overlap or are adjacent
+            if next_start <= current_end:
+                current_range[1] = max(current_end, next_end)
+            else:
+                merged_ranges.append(current_range)
+                current_range = [next_start, next_end]
+        
+        merged_ranges.append(current_range)
+        
+        # Calculate total coverage
+        total_coverage = sum(end - start for start, end in merged_ranges)
+        
+        return total_coverage / total_duration

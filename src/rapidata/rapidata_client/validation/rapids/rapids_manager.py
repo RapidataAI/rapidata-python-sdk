@@ -173,7 +173,7 @@ class RapidsManager:
 
         Args:
             instruction (str): The instruction for the labeler.
-            truths (list[tuple[int, int]]): The possible accepted timestamps intervals for the labeler (in frames).
+            truths (list[tuple[int, int]]): The possible accepted timestamps intervals for the labeler (in miliseconds).
                 The first element of the tuple is the start of the interval and the second element is the end of the interval.
             datapoint (str): The asset that the labeler will be timestamping.
             metadata (Sequence[Metadata], optional): The metadata that is attached to the rapid. Defaults to [].
