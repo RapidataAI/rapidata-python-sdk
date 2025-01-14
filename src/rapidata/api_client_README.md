@@ -364,6 +364,7 @@ Class | Method | HTTP request | Description
  - [RegisterTemporaryCustomerResult](rapidata/api_client/docs/RegisterTemporaryCustomerResult.md)
  - [RootFilter](rapidata/api_client/docs/RootFilter.md)
  - [ScrubPayload](rapidata/api_client/docs/ScrubPayload.md)
+ - [ScrubRange](rapidata/api_client/docs/ScrubRange.md)
  - [ScrubRapidBlueprint](rapidata/api_client/docs/ScrubRapidBlueprint.md)
  - [ScrubResult](rapidata/api_client/docs/ScrubResult.md)
  - [ScrubTruth](rapidata/api_client/docs/ScrubTruth.md)

@@ -262,6 +262,7 @@ from rapidata.api_client.models.register_temporary_customer_model import Registe
 from rapidata.api_client.models.register_temporary_customer_result import RegisterTemporaryCustomerResult
 from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.scrub_payload import ScrubPayload
+from rapidata.api_client.models.scrub_range import ScrubRange
 from rapidata.api_client.models.scrub_rapid_blueprint import ScrubRapidBlueprint
 from rapidata.api_client.models.scrub_result import ScrubResult
 from rapidata.api_client.models.scrub_truth import ScrubTruth
