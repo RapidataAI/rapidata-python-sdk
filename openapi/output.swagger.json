@@ -7376,10 +7376,6 @@
         },
         "additionalProperties": false
       },
-      "Int32Int32ValueTuple": {
-        "type": "object",
-        "additionalProperties": false
-      },
       "LinePayload": {
         "title": "LinePayload",
         "required": [
@@ -7647,6 +7643,24 @@
         },
         "additionalProperties": false
       },
+      "ScrubRange": {
+        "required": [
+          "end",
+          "start"
+        ],
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "end": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "ScrubTruth": {
         "title": "ScrubTruth",
         "required": [
@@ -7667,7 +7681,7 @@
           "validRanges": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Int32Int32ValueTuple"
+              "$ref": "#/components/schemas/ScrubRange"
             }
           }
         },

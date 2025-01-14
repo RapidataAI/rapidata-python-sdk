@@ -17,26 +17,18 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, StrictInt
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.scrub_range import ScrubRange
 from typing import Optional, Set
 from typing_extensions import Self
 
-class ScrubTruth(BaseModel):
+class ScrubRange(BaseModel):
     """
-    ScrubTruth
+    ScrubRange
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for ScrubTruth", alias="_t")
-    valid_ranges: List[ScrubRange] = Field(alias="validRanges")
-    __properties: ClassVar[List[str]] = ["_t", "validRanges"]
-
-    @field_validator('t')
-    def t_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['ScrubTruth']):
-            raise ValueError("must be one of enum values ('ScrubTruth')")
-        return value
+    start: StrictInt
+    end: StrictInt
+    __properties: ClassVar[List[str]] = ["start", "end"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -56,7 +48,7 @@ class ScrubTruth(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of ScrubTruth from a JSON string"""
+        """Create an instance of ScrubRange from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -77,18 +69,11 @@ class ScrubTruth(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in valid_ranges (list)
-        _items = []
-        if self.valid_ranges:
-            for _item_valid_ranges in self.valid_ranges:
-                if _item_valid_ranges:
-                    _items.append(_item_valid_ranges.to_dict())
-            _dict['validRanges'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of ScrubTruth from a dict"""
+        """Create an instance of ScrubRange from a dict"""
         if obj is None:
             return None
 
@@ -96,8 +81,8 @@ class ScrubTruth(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'ScrubTruth',
-            "validRanges": [ScrubRange.from_dict(_item) for _item in obj["validRanges"]] if obj.get("validRanges") is not None else None
+            "start": obj.get("start"),
+            "end": obj.get("end")
         })
         return _obj
 
