@@ -291,6 +291,56 @@ class ValidationSetManager:
 
         return validation_set_builder._submit(print_confirmation)
     
+
+    def create_timestamp_set(self,
+        name: str,
+        instruction: str,
+        truths: list[list[tuple[int, int]]],
+        datapoints: list[str],
+        contexts: list[str] | None = None,
+        print_confirmation: bool = True
+    ) -> RapidataValidationSet:
+        """Create a timestamp validation set.
+
+        Args:
+            name (str): The name of the validation set. (will not be shown to the labeler)
+            instruction (str): The instruction to show to the labeler.
+            truths (list[list[tuple[int, int]]]): The truths for each datapoint defined as start and endpoint based on miliseconds. 
+            Outher list is for each datapoint, inner list is for each truth.\n
+                example:
+                    datapoints: ["datapoint1", "datapoint2"]
+                    truths: [[(0, 10)], [(20, 30)]] -> first datapoint the correct interval is from 0 to 10, second datapoint the correct interval is from 20 to 30
+            datapoints (list[str]): The datapoints that will be used for validation.
+            contexts (list[str], optional): The contexts for each datapoint. Defaults to None.
+            print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
+        """
+        
+        if len(datapoints) != len(truths):
+            raise ValueError("The number of datapoints and truths must be equal")
+        
+        if not all([isinstance(truth, list) for truth in truths]):
+            raise ValueError("Truths must be a list of lists")
+        
+        if contexts and len(contexts) != len(datapoints):
+            raise ValueError("The number of contexts and datapoints must be equal")
+        
+        rapids = []
+        for i in range(len(datapoints)):
+            rapids.append(
+                self.rapid.timestamp_rapid(
+                    instruction=instruction,
+                    truths=truths[i],
+                    datapoint=datapoints[i],
+                    metadata=[PromptMetadata(contexts[i])] if contexts else []
+                )
+            )
+
+        validation_set_builder = ValidationSetBuilder(name, self.__openapi_service)
+        for rapid in rapids:
+            validation_set_builder._add_rapid(rapid)
+
+        return validation_set_builder._submit(print_confirmation)
+    
     def create_mixed_set(self,
         name: str,
         rapids: Sequence[Rapid],

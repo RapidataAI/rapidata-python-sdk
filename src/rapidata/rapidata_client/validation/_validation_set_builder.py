@@ -6,6 +6,9 @@ from rapidata.api_client.models.compare_truth import CompareTruth
 from rapidata.api_client.models.transcription_payload import TranscriptionPayload
 from rapidata.api_client.models.transcription_truth import TranscriptionTruth
 from rapidata.api_client.models.transcription_word import TranscriptionWord
+from rapidata.api_client.models.scrub_payload import ScrubPayload
+from rapidata.api_client.models.scrub_truth import ScrubTruth
+from rapidata.api_client.models.scrub_range import ScrubRange
 from rapidata.api_client.models.locate_payload import LocatePayload
 from rapidata.api_client.models.locate_box_truth import LocateBoxTruth
 from rapidata.api_client.models.line_payload import LinePayload
@@ -26,7 +29,8 @@ from rapidata.rapidata_client.validation.rapids.rapids import (
     CompareRapid,
     SelectWordsRapid,
     LocateRapid,
-    DrawRapid
+    DrawRapid,
+    TimestampRapid
 )
 from typing import Sequence
 
@@ -106,10 +110,13 @@ class ValidationSetBuilder:
             self.__add_select_words_rapid(rapid.asset, rapid.instruction, rapid.sentence, rapid.truths, rapid.strict_grading)
         
         elif isinstance(rapid, LocateRapid):
-            self.__add_locate_rapid(rapid.asset, rapid.instruction, rapid.truths)
+            self.__add_locate_rapid(rapid.asset, rapid.instruction, rapid.truths, rapid.metadata)
 
         elif isinstance(rapid, DrawRapid):
-            self.__add_draw_rapid(rapid.asset, rapid.instruction, rapid.truths)
+            self.__add_draw_rapid(rapid.asset, rapid.instruction, rapid.truths, rapid.metadata)
+
+        elif isinstance(rapid, TimestampRapid):
+            self.__add_timestamp_rapid(rapid.asset, rapid.instruction, rapid.truths, rapid.metadata)
 
         else:
             raise ValueError("Unsupported rapid type")
@@ -262,7 +269,8 @@ class ValidationSetBuilder:
         self,
         asset: MediaAsset,
         instruction: str,
-        truths: list[Box]
+        truths: list[Box],
+        metadata: Sequence[Metadata] = [],
     ):
         """Add a locate rapid to the validation set.
 
@@ -301,7 +309,7 @@ class ValidationSetBuilder:
                 instruction=instruction,
                 payload=payload,
                 truths=model_truth,
-                metadata=[],
+                metadata=metadata,
                 randomCorrectProbability=coverage,
                 asset=asset,
             )
@@ -311,7 +319,8 @@ class ValidationSetBuilder:
         self,
         asset: MediaAsset,
         instruction: str,
-        truths: list[Box]
+        truths: list[Box],
+        metadata: Sequence[Metadata] = [],
     ):
         """Add a draw rapid to the validation set.
 
@@ -348,8 +357,58 @@ class ValidationSetBuilder:
                 instruction=instruction,
                 payload=payload,
                 truths=model_truth,
-                metadata=[],
+                metadata=metadata,
                 randomCorrectProbability=coverage,
+                asset=asset,
+            )
+        )
+
+    def __add_timestamp_rapid(
+        self,
+        asset: MediaAsset,
+        instruction: str,
+        truths: list[tuple[int, int]],
+        metadata: Sequence[Metadata] = [],
+    ):
+        """Add a timestamp rapid to the validation set.
+
+        Args:
+            instruction (str): The instruction for the timestamp rapid.
+            asset (MediaAsset): The asset for the rapid.
+            truths (list[tuple[int, int]]): The truths for the rapid.
+                This is a list of tuples where the first element is the start of the interval and the second element is the end of the interval.
+                The intervals are in miliseconds.
+            metadata (Sequence[Metadata], optional): The metadata for the rapid. Defaults to an empty list.
+
+        Returns:
+            ValidationSetBuilder: The ValidationSetBuilder instance.
+        """
+        for truth in truths:
+            if len(truth) != 2:
+                raise ValueError("The truths per datapoint must be a tuple of exactly two integers.")
+            if truth[0] > truth[1]:
+                raise ValueError("The start of the interval must be smaller than the end of the interval.")
+        
+        payload = ScrubPayload(
+            _t="ScrubPayload", 
+            target=instruction
+        )
+
+        model_truth = ScrubTruth(
+            _t="ScrubTruth",
+            validRanges=[ScrubRange(
+                start=truth[0],
+                end=truth[1]
+            ) for truth in truths]
+        )
+
+        self._rapid_parts.append(
+            ValidatioRapidParts(
+                instruction=instruction,
+                payload=payload,
+                truths=model_truth,
+                metadata=metadata,
+                randomCorrectProbability=self._calculate_coverage_ratio(asset.get_duration(), truths),
                 asset=asset,
             )
         )
@@ -369,3 +428,44 @@ class ValidationSetBuilder:
                         
         total_covered = len(pixels)
         return total_covered / (image_width * image_height)
+    
+    def _calculate_coverage_ratio(self, total_duration: int, subsections: list[tuple[int, int]]) -> float:
+        """
+        Calculate the ratio of total_duration that is covered by subsections, handling overlaps.
+        
+        Args:
+            total_duration: The total duration to consider
+            subsections: List of tuples containing (start, end) times
+            
+        Returns:
+            float: Ratio of coverage (0 to 1)
+        """
+        if not subsections:
+            return 0.0
+        
+        # Sort subsections by start time and clamp to valid range
+        sorted_ranges = sorted(
+            (max(0, start), min(end, total_duration)) 
+            for start, end in subsections
+        )
+        
+        # Merge overlapping ranges
+        merged_ranges = []
+        current_range = list(sorted_ranges[0])
+        
+        for next_start, next_end in sorted_ranges[1:]:
+            current_start, current_end = current_range
+            
+            # If ranges overlap or are adjacent
+            if next_start <= current_end:
+                current_range[1] = max(current_end, next_end)
+            else:
+                merged_ranges.append(current_range)
+                current_range = [next_start, next_end]
+        
+        merged_ranges.append(current_range)
+        
+        # Calculate total coverage
+        total_coverage = sum(end - start for start, end in merged_ranges)
+        
+        return total_coverage / total_duration

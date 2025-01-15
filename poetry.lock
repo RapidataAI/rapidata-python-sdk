@@ -1246,6 +1246,20 @@ files = [
 ]
 
 [[package]]
+name = "tinytag"
+version = "2.0.0"
+description = "Read audio file metadata"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "tinytag-2.0.0-py3-none-any.whl", hash = "sha256:971b9dceae2d1de73b5e8300639ea0b41454633b899426e702aed15f0e72a9b4"},
+    {file = "tinytag-2.0.0.tar.gz", hash = "sha256:d041f53d15553bb148549bfbc7feab445caf7105ba95fa2ecb9827bb06b62275"},
+]
+
+[package.extras]
+tests = ["coverage", "mypy", "pycodestyle", "pylint", "pytest"]
+
+[[package]]
 name = "tomli"
 version = "2.2.1"
 description = "A lil' TOML parser"
@@ -1487,4 +1501,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "68c45e8584e6d10d6880e4f8c8cbd75cee84679aaa3f064861c8e65a552961b7"
+content-hash = "5e8af43f65be53453b2719728c285d95582037f91f32548a1464f2672d5b3585"
