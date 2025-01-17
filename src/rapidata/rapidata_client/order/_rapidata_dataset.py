@@ -48,7 +48,10 @@ class RapidataDataset:
                 textSources=texts
             )
 
-            self.openapi_service.dataset_api.dataset_creat_text_datapoint_post(model)
+            upload_response = self.openapi_service.dataset_api.dataset_creat_text_datapoint_post(model)
+
+            if upload_response.errors:
+                raise ValueError(f"Error uploading text datapoint: {upload_response.errors}")
 
         total_uploads = len(text_assets)
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
