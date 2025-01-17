@@ -71,7 +71,7 @@ class MediaAsset(BaseAsset):
         path_to_check = self.name.lower()
         
         # Return 0 for other static images
-        if any(path_to_check.endswith(ext) for ext in ('.jpg', '.jpeg', '.png', '.webp')):
+        if any(path_to_check.endswith(ext) for ext in ('.jpg', '.jpeg', '.png', '.webp', '.gif')):
             return 0
 
         try:
