@@ -421,6 +421,7 @@ class RapidataOrderManager:
             datapoints: list[str],
             responses_per_datapoint: int = 10,
             contexts: list[str] | None = None,
+            validation_set_id: str | None = None,
             filters: Sequence[RapidataFilter] = [],
             settings: Sequence[RapidataSetting] = [],
             selections: Sequence[RapidataSelection] | None = None,
@@ -435,6 +436,7 @@ class RapidataOrderManager:
             contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
+            validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
             filters (Sequence[RapidataFilter], optional): The list of filters for the timestamp. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the timestamp. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the timestamp. Defaults to None. Decides in what order the tasks should be shown.
@@ -454,9 +456,11 @@ class RapidataOrderManager:
             assets=assets,
             responses_per_datapoint=responses_per_datapoint,
             contexts=contexts,
+            validation_set_id=validation_set_id,
             filters=filters,
             selections=selections,
-            settings=settings
+            settings=settings,
+            default_labeling_amount=2
         )
 
     def get_order_by_id(self, order_id: str) -> RapidataOrder:
