@@ -59,42 +59,19 @@ class MediaAsset(BaseAsset):
 
     def get_duration(self) -> int:
         """
-        Get the duration of audio/video/gif files in milliseconds.
+        Get the duration of audio/video files in milliseconds.
         Returns 0 for static images.
 
         Returns:
-            int: Duration in milliseconds for audio/video/gif, 0 for static images
+            int: Duration in milliseconds for audio/video, 0 for static images
 
         Raises:
             ValueError: If the duration cannot be determined
         """
         path_to_check = self.name.lower()
         
-        # Handle GIFs specially
-        if path_to_check.endswith('.gif'):
-            try:
-                if isinstance(self.path, bytes):
-                    img = Image.open(BytesIO(self.path))
-                else:
-                    img = Image.open(self.path)
-                
-                # Get duration of all frames
-                duration = 0
-                with img:
-                    try:
-                        while True:
-                            duration += img.info.get('duration', 0)  # Duration per frame in milliseconds
-                            img.seek(img.tell() + 1)
-                    except EOFError:
-                        pass  # We've hit the end of the frames
-                
-                return duration  # Already in milliseconds
-            except Exception as e:
-                # If we can't get animation data, it might be a static GIF
-                return 0
-        
         # Return 0 for other static images
-        if any(path_to_check.endswith(ext) for ext in ('.jpg', '.jpeg', '.png', '.webp')):
+        if any(path_to_check.endswith(ext) for ext in ('.jpg', '.jpeg', '.png', '.webp', '.gif')):
             return 0
 
         try:

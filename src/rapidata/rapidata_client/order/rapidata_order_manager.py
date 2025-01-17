@@ -444,7 +444,7 @@ class RapidataOrderManager:
 
         for asset in assets:
             if not asset.get_duration():
-                raise ValueError("The datapoints for this order must have a duration. (e.g. video, audio or gif)")
+                raise ValueError("The datapoints for this order must have a duration. (e.g. video or audio)")
 
         return self.__create_general_order(
             name=name,

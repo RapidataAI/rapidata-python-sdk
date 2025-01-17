@@ -107,7 +107,7 @@ class TimestampRapid(Rapid):
     """
     def __init__(self, instruction: str, truths: list[tuple[int, int]], asset: MediaAsset, metadata: Sequence[Metadata]):
         if not asset.get_duration():
-            raise ValueError("The datapoints must have a duration. (e.g. video, audio or gif)")
+            raise ValueError("The datapoints must have a duration. (e.g. video or audio)")
         
         if not isinstance(truths, list):
             raise ValueError("The truths must be a list of tuples.")
