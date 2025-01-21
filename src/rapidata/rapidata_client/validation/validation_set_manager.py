@@ -63,8 +63,8 @@ class ValidationSetManager:
         if len(datapoints) != len(truths):
             raise ValueError("The number of datapoints and truths must be equal")
         
-        if not all([isinstance(truth, list) for truth in truths]):
-            raise ValueError("Truths must be a list of lists")
+        if not all([isinstance(truth, (list, tuple)) for truth in truths]):
+            raise ValueError("Truths must be a list of lists or tuples")
         
         if contexts and len(contexts) != len(datapoints):
             raise ValueError("The number of contexts and datapoints must be equal")
@@ -119,8 +119,8 @@ class ValidationSetManager:
         if len(datapoints) != len(truths):
             raise ValueError("The number of datapoints and truths must be equal")
         
-        if not all([isinstance(truth, list) for truth in truths]):
-            raise ValueError("Truths must be a list of lists")
+        if not all([isinstance(truth, str) for truth in truths]):
+            raise ValueError("Truths must be a list of strings")
 
         if contexts and len(contexts) != len(datapoints):
             raise ValueError("The number of contexts and datapoints must be equal")
@@ -171,8 +171,8 @@ class ValidationSetManager:
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
             """
         
-        if not all([isinstance(truth, list) for truth in truths]):
-            raise ValueError("Truths must be a list of lists")
+        if not all([isinstance(truth, (list, tuple)) for truth in truths]):
+            raise ValueError("Truths must be a list of lists or tuples")
 
         if len(datapoints) != len(truths) or len(datapoints) != len(sentences):
             raise ValueError("The number of datapoints, truths, and sentences must be equal")
@@ -220,8 +220,8 @@ class ValidationSetManager:
         if len(datapoints) != len(truths):
             raise ValueError("The number of datapoints and truths must be equal")
         
-        if not all([isinstance(truth, list) for truth in truths]):
-            raise ValueError("Truths must be a list of lists")
+        if not all([isinstance(truth, (list, tuple)) for truth in truths]):
+            raise ValueError("Truths must be a list of lists or tuples")
         
         if contexts and len(contexts) != len(datapoints):
             raise ValueError("The number of contexts and datapoints must be equal")
@@ -268,8 +268,8 @@ class ValidationSetManager:
         if len(datapoints) != len(truths):
             raise ValueError("The number of datapoints and truths must be equal")
         
-        if not all([isinstance(truth, list) for truth in truths]):
-            raise ValueError("Truths must be a list of lists")
+        if not all([isinstance(truth, (list, tuple)) for truth in truths]):
+            raise ValueError("Truths must be a list of lists or tuples")
         
         if contexts and len(contexts) != len(datapoints):
             raise ValueError("The number of contexts and datapoints must be equal")
@@ -318,8 +318,8 @@ class ValidationSetManager:
         if len(datapoints) != len(truths):
             raise ValueError("The number of datapoints and truths must be equal")
         
-        if not all([isinstance(truth, list) for truth in truths]):
-            raise ValueError("Truths must be a list of lists")
+        if not all([isinstance(truth, (list, tuple)) for truth in truths]):
+            raise ValueError("Truths must be a list of lists or tuples")
         
         if contexts and len(contexts) != len(datapoints):
             raise ValueError("The number of contexts and datapoints must be equal")
