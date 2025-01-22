@@ -1,6 +1,7 @@
 '''
 Classify order with a validation set
 '''
+
 from rapidata import RapidataClient
 
 def get_urls():
