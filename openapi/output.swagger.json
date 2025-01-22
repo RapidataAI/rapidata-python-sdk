@@ -1363,6 +1363,29 @@
         }
       }
     },
+    "/Client/SetReferrer": {
+      "post": {
+        "tags": [
+          "Client"
+        ],
+        "summary": "Sets the referrer for the current customer.",
+        "parameters": [
+          {
+            "name": "referrer",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/Identity/RegisterTemporary": {
       "post": {
         "tags": [
@@ -4533,7 +4556,8 @@
           "Line",
           "Transcription",
           "SinglePointLocate",
-          "FreeText"
+          "FreeText",
+          "Scrub"
         ],
         "type": "string"
       },
@@ -5069,7 +5093,8 @@
               "Line",
               "Transcription",
               "SinglePointLocate",
-              "FreeText"
+              "FreeText",
+              "Scrub"
             ],
             "type": "string",
             "description": "The aggregator is used to determine how the data will be aggregated. The default behavior is enough for most cases",
@@ -6422,7 +6447,8 @@
               "Line",
               "Transcription",
               "SinglePointLocate",
-              "FreeText"
+              "FreeText",
+              "Scrub"
             ],
             "type": "string",
             "description": "The type of the aggregator",
@@ -7780,7 +7806,18 @@
             }
           },
           "strictGrading": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
+          },
+          "requiredPrecision": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "requiredCompleteness": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
           }
         },
         "additionalProperties": false

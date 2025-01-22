@@ -4,6 +4,7 @@ from rapidata.rapidata_client.order.rapidata_order_manager import RapidataOrderM
 
 from rapidata.rapidata_client.validation.validation_set_manager import ValidationSetManager
 
+from rapidata.rapidata_client.demographic.demographic_manager import DemographicManager
 
 class RapidataClient:
     """The Rapidata client is the main entry point for interacting with the Rapidata API. It allows you to create orders and validation sets."""
@@ -39,3 +40,5 @@ class RapidataClient:
         self.order = RapidataOrderManager(openapi_service=self._openapi_service)
         
         self.validation = ValidationSetManager(openapi_service=self._openapi_service)
+
+        self.demographic = DemographicManager(openapi_service=self._openapi_service)

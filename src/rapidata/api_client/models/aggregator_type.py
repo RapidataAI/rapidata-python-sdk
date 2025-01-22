@@ -37,6 +37,7 @@ class AggregatorType(str, Enum):
     TRANSCRIPTION = 'Transcription'
     SINGLEPOINTLOCATE = 'SinglePointLocate'
     FREETEXT = 'FreeText'
+    SCRUB = 'Scrub'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
