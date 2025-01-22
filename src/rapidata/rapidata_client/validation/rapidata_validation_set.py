@@ -70,12 +70,8 @@ class RapidataValidationSet:
         """
         files = []
         for asset in assets:
-            if isinstance(asset.path, str):
-                files.append(asset.path)
-            elif isinstance(asset.path, bytes):
-                files.append((asset.name, asset.path))
-            else:
-                raise ValueError("upload file failed")
+            files.append(asset.to_file())
+            
         self.__openapi_service.validation_api.validation_add_validation_rapid_post(
             model=model, files=files
         )        

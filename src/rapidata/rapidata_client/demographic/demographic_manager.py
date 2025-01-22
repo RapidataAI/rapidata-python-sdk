@@ -23,5 +23,5 @@ class DemographicManager:
                 title=instruction
             )
         )
-        self._openapi_service.rapid_api.rapid_create_demographic_rapid_post(model=model, file=media.to_files())
+        self._openapi_service.rapid_api.rapid_create_demographic_rapid_post(model=model, file=[media.to_file()])
         

@@ -14,6 +14,7 @@ from rapidata.service.openapi_service import OpenAPIService
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
 
+from pydantic import StrictBytes, StrictStr
 from typing import cast, Sequence
 
 
@@ -100,17 +101,14 @@ class RapidataDataset:
                 ),
             )
 
-            files: list[tuple[str, bytes] | str] = []
+            files: list[tuple[StrictStr, StrictBytes] | StrictStr | StrictBytes] = []
             for asset in assets:
                 if isinstance(asset, MediaAsset):
-                    if isinstance(asset.path, bytes):
-                        files.append((asset.name, asset.path))
-                    else:
-                        files.append(cast(str, asset.path))
+                    files.append(asset.to_file())
 
             upload_response = self.openapi_service.dataset_api.dataset_create_datapoint_post(
                 model=model,
-                files=files # type: ignore
+                files=files
             )
             if upload_response.errors:
                 raise ValueError(f"Error uploading datapoint: {upload_response.errors}")
