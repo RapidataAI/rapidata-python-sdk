@@ -1,9 +1,7 @@
 '''
 Classify order with a validation set
 '''
-import sys
-sys.path.append('src')
-from rapidata.rapidata_client import RapidataClient
+from rapidata import RapidataClient
 
 def get_urls():
     base_url = "https://assets.rapidata.ai/dalle-3_"

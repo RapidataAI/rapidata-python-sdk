@@ -41,4 +41,4 @@ class RapidataClient:
         
         self.validation = ValidationSetManager(openapi_service=self._openapi_service)
 
-        self.demographic = DemographicManager(openapi_service=self._openapi_service)
+        self._demographic = DemographicManager(openapi_service=self._openapi_service)
