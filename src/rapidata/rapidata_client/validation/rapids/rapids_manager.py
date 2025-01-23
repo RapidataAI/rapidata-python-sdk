@@ -91,8 +91,8 @@ class RapidsManager:
             truths: list[int],
             datapoint: str,
             sentence: str,
-            required_precision: float,
-            required_completeness: float,
+            required_precision: float = 1,
+            required_completeness: float = 1,
             metadata: Sequence[Metadata] = [],
     ) -> SelectWordsRapid:
         """Build a select words rapid
@@ -102,8 +102,8 @@ class RapidsManager:
             truths (list[int]): The indices of the words that are the correct answers.
             datapoint (str): The asset that the labeler will be selecting words from.
             sentence (str): The sentence that the labeler will be selecting words from. (split up by spaces)
-            required_precision (float): The required precision for the labeler to get the rapid correct (minimum ratio of the words selected that need to be correct).
-            required_completeness (float): The required completeness for the labeler to get the rapid correct (miminum ratio of total correct words selected).
+            required_precision (float): The required precision for the labeler to get the rapid correct (minimum ratio of the words selected that need to be correct). defaults to 1. (no wrong words can be selected)
+            required_completeness (float): The required completeness for the labeler to get the rapid correct (miminum ratio of total correct words selected). defaults to 1. (all correct words need to be selected)
             metadata (Sequence[Metadata], optional): The metadata that is attached to the rapid. Defaults to [].
         """
         
