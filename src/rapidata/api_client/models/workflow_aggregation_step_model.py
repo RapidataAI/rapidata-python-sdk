@@ -46,8 +46,8 @@ class WorkflowAggregationStepModel(BaseModel):
         if value is None:
             return value
 
-        if value not in set(['NonCommittal', 'MajorityVote', 'SimpleMatchup', 'LocateCluster', 'Classification', 'Locate', 'BoundingBox', 'Line', 'Transcription', 'SinglePointLocate', 'FreeText']):
-            raise ValueError("must be one of enum values ('NonCommittal', 'MajorityVote', 'SimpleMatchup', 'LocateCluster', 'Classification', 'Locate', 'BoundingBox', 'Line', 'Transcription', 'SinglePointLocate', 'FreeText')")
+        if value not in set(['NonCommittal', 'MajorityVote', 'SimpleMatchup', 'LocateCluster', 'Classification', 'Locate', 'BoundingBox', 'Line', 'Transcription', 'SinglePointLocate', 'FreeText', 'Scrub']):
+            raise ValueError("must be one of enum values ('NonCommittal', 'MajorityVote', 'SimpleMatchup', 'LocateCluster', 'Classification', 'Locate', 'BoundingBox', 'Line', 'Transcription', 'SinglePointLocate', 'FreeText', 'Scrub')")
         return value
 
     model_config = ConfigDict(

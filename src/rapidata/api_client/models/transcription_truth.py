@@ -17,8 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.transcription_word import TranscriptionWord
 from typing import Optional, Set
 from typing_extensions import Self
@@ -30,7 +30,9 @@ class TranscriptionTruth(BaseModel):
     t: StrictStr = Field(description="Discriminator value for TranscriptionTruth", alias="_t")
     correct_words: List[TranscriptionWord] = Field(alias="correctWords")
     strict_grading: Optional[StrictBool] = Field(default=None, alias="strictGrading")
-    __properties: ClassVar[List[str]] = ["_t", "correctWords", "strictGrading"]
+    required_precision: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="requiredPrecision")
+    required_completeness: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="requiredCompleteness")
+    __properties: ClassVar[List[str]] = ["_t", "correctWords", "strictGrading", "requiredPrecision", "requiredCompleteness"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -85,6 +87,21 @@ class TranscriptionTruth(BaseModel):
                 if _item_correct_words:
                     _items.append(_item_correct_words.to_dict())
             _dict['correctWords'] = _items
+        # set to None if strict_grading (nullable) is None
+        # and model_fields_set contains the field
+        if self.strict_grading is None and "strict_grading" in self.model_fields_set:
+            _dict['strictGrading'] = None
+
+        # set to None if required_precision (nullable) is None
+        # and model_fields_set contains the field
+        if self.required_precision is None and "required_precision" in self.model_fields_set:
+            _dict['requiredPrecision'] = None
+
+        # set to None if required_completeness (nullable) is None
+        # and model_fields_set contains the field
+        if self.required_completeness is None and "required_completeness" in self.model_fields_set:
+            _dict['requiredCompleteness'] = None
+
         return _dict
 
     @classmethod
@@ -99,7 +116,9 @@ class TranscriptionTruth(BaseModel):
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'TranscriptionTruth',
             "correctWords": [TranscriptionWord.from_dict(_item) for _item in obj["correctWords"]] if obj.get("correctWords") is not None else None,
-            "strictGrading": obj.get("strictGrading")
+            "strictGrading": obj.get("strictGrading"),
+            "requiredPrecision": obj.get("requiredPrecision"),
+            "requiredCompleteness": obj.get("requiredCompleteness")
         })
         return _obj
 
