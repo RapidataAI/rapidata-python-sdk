@@ -55,12 +55,23 @@ class SelectWordsRapid(Rapid):
             True means that all correct words and no wrong words have to be selected for the rapid to be marked as correct.
             False means that at least one correct word and no wrong words have to be selected for the rapid to be marked as correct.
     """
-    def __init__(self, instruction: str, truths: list[int], asset: MediaAsset, sentence: str, strict_grading: bool):
+    def __init__(self, instruction: str, truths: list[int], asset: MediaAsset, sentence: str, required_precision: float, required_completeness: float, metadata: Sequence[Metadata]):
+        if not isinstance(truths, list):
+            raise ValueError("The truths must be a list of integers.")
+        if not all(isinstance(x, int) for x in truths):
+            raise ValueError("The truths must be a list of integers.")
+        if required_completeness <= 0 or required_completeness > 1:
+            raise ValueError("The required completeness must be > 0 and <= 1.")
+        if required_precision <= 0 or required_precision > 1:
+            raise ValueError("The required precision must be > 0 and <= 1.")
+        
         self.instruction = instruction
         self.truths = truths
         self.asset = asset
         self.sentence = sentence
-        self.strict_grading = strict_grading
+        self.required_precision = required_precision
+        self.required_completeness = required_completeness
+        self.metadata = metadata
 
 class LocateRapid(Rapid):
     """

@@ -149,7 +149,8 @@ class ValidationSetManager:
         truths: list[list[int]],
         datapoints: list[str],
         sentences: list[str],
-        strict_grading: bool = True,
+        required_precision: float = 1.0,
+        required_completeness: float = 1.0,
         print_confirmation: bool = True
     ) -> RapidataValidationSet:
         """Create a select words validation set.
@@ -165,9 +166,8 @@ class ValidationSetManager:
             datapoints (list[str]): The datapoints that will be used for validation.
             sentences (list[str]): The sentences that will be used for validation. The sentece will be split up by spaces to be selected by the labeler.
                 Must be the same length as datapoints.
-            strict_grading (bool, optional): Whether to grade strictly. Defaults to True.\n
-                If True, the labeler must select all correct words to be graded as correct. (and no wrong words)
-                If False, the labeler must select at least one correct word to be graded as correct. (and no wrong words)
+            required_precision (float, optional): The required precision for the labeler to get the rapid correct (minimum ratio of the words selected that need to be correct). Defaults to 1.0 (no wrong word can be selected).
+            required_completeness (float, optional): The required completeness for the labeler to get the rapid correct (miminum ratio of total correct words selected). Defaults to 1.0 (all correct words need to be selected).
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
             """
         
@@ -185,7 +185,8 @@ class ValidationSetManager:
                     truths=truths[i],
                     datapoint=datapoints[i],
                     sentence=sentences[i],
-                    strict_grading=strict_grading
+                    required_precision=required_precision,
+                    required_completeness=required_completeness
                 )
             )
 
