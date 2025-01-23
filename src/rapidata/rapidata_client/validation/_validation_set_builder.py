@@ -107,7 +107,14 @@ class ValidationSetBuilder:
             self.__add_compare_rapid(rapid.asset, rapid.instruction, rapid.truth, rapid.metadata)
 
         elif isinstance(rapid, SelectWordsRapid):
-            self.__add_select_words_rapid(rapid.asset, rapid.instruction, rapid.sentence, rapid.truths, rapid.strict_grading)
+            self.__add_select_words_rapid(
+                rapid.asset, 
+                rapid.instruction, 
+                rapid.sentence, 
+                rapid.truths, 
+                rapid.required_precision,
+                rapid.required_completeness, 
+                rapid.metadata)
         
         elif isinstance(rapid, LocateRapid):
             self.__add_locate_rapid(rapid.asset, rapid.instruction, rapid.truths, rapid.metadata)
@@ -213,7 +220,8 @@ class ValidationSetBuilder:
         instruction: str,
         select_words: str,
         truths: list[int],
-        strict_grading: bool | None = None,
+        required_precision: float,
+        required_completeness: float,
         metadata: Sequence[Metadata] = [],
     ):
         """Add a select words rapid to the validation set.
@@ -223,7 +231,8 @@ class ValidationSetBuilder:
             instruction (str): The instruction for the rapid.
             select words (list[str]): The select words for the rapid.
             truths (list[int]): The list of indices of the true word selections.
-            strict_grading (bool | None, optional): The strict grading for the rapid. Defaults to None.
+            required_precision (float): The required precision for the rapid (minimum ratio of selected words that are correct).
+            required_completeness (float): The required completeness for the rapid (miminum ratio of total correct words selected).
             metadata (Sequence[Metadata], optional): The metadata for the rapid.
 
         Returns:
@@ -251,7 +260,8 @@ class ValidationSetBuilder:
         model_truth = TranscriptionTruth(
             _t="TranscriptionTruth",
             correctWords=true_words,
-            strictGrading=strict_grading,
+            requiredPrecision=required_precision,
+            requiredCompleteness=required_completeness,
         )
 
         self._rapid_parts.append(

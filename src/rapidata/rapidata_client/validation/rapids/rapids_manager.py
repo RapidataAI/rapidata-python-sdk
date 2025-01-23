@@ -91,7 +91,9 @@ class RapidsManager:
             truths: list[int],
             datapoint: str,
             sentence: str,
-            strict_grading: bool = True,
+            required_precision: float = 1,
+            required_completeness: float = 1,
+            metadata: Sequence[Metadata] = [],
     ) -> SelectWordsRapid:
         """Build a select words rapid
 
@@ -100,9 +102,9 @@ class RapidsManager:
             truths (list[int]): The indices of the words that are the correct answers.
             datapoint (str): The asset that the labeler will be selecting words from.
             sentence (str): The sentence that the labeler will be selecting words from. (split up by spaces)
-            strict_grading (bool, optional): Whether the grading should be strict or not. 
-                True means that all correct words and no wrong words have to be selected for the rapid to be marked as correct.
-                False means that at least one correct word and no wrong words have to be selected for the rapid to be marked as correct. Defaults to True.
+            required_precision (float): The required precision for the labeler to get the rapid correct (minimum ratio of the words selected that need to be correct). defaults to 1. (no wrong words can be selected)
+            required_completeness (float): The required completeness for the labeler to get the rapid correct (miminum ratio of total correct words selected). defaults to 1. (all correct words need to be selected)
+            metadata (Sequence[Metadata], optional): The metadata that is attached to the rapid. Defaults to [].
         """
         
         asset = MediaAsset(datapoint)
@@ -112,7 +114,9 @@ class RapidsManager:
                 truths=truths,
                 asset=asset,
                 sentence=sentence,
-                strict_grading=strict_grading,
+                required_precision=required_precision,
+                required_completeness=required_completeness,
+                metadata=metadata,
                 )
     
     def locate_rapid(self,
