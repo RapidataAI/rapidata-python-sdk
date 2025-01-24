@@ -1,3 +1,4 @@
+from pydantic import StrictBytes, StrictStr
 from rapidata.api_client import ClassifyPayload
 from rapidata.rapidata_client import assets
 from rapidata.rapidata_client.assets import MediaAsset, TextAsset, MultiAsset
@@ -33,7 +34,7 @@ class Rapid():
         self.randomCorrectProbability = randomCorrectProbability
         self.explanation = explanation 
 
-    def to_media_model(self, validationSetId: str) -> tuple[AddValidationRapidModel, list[str | tuple[str, bytes]]]:
+    def to_media_model(self, validationSetId: str) -> tuple[AddValidationRapidModel, list[StrictStr | tuple[StrictStr, StrictBytes] | StrictBytes]]:
         assets: list[MediaAsset] = [] 
         if isinstance(self.asset, MultiAsset):
             for asset in self.asset.assets:
@@ -58,15 +59,7 @@ class Rapid():
             ],
             randomCorrectProbability=self.randomCorrectProbability,
             explanation=self.explanation
-        ), [self._convert_asset(asset) for asset in assets])
-
-    def _convert_asset(self, asset: MediaAsset) -> str | tuple[str, bytes]:
-        if isinstance(asset.path, str):
-            return asset.path
-        elif isinstance(asset.path, bytes):
-            return (asset.name, asset.path)
-        else:
-            raise ValueError("upload file failed")
+        ), [asset.to_file() for asset in assets])
 
     def to_text_model(self, validationSetId: str) -> AddValidationTextRapidModel:
         texts: list[str] = []

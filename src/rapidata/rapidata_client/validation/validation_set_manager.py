@@ -431,7 +431,7 @@ class ValidationSetManager:
             else:
                 model = rapid.to_media_model(validation_set_id)
                 self.__openapi_service.validation_api.validation_add_validation_rapid_post(
-                   model=model[0], files=model[1] # type: ignore
+                   model=model[0], files=model[1]
                 )
 
         return RapidataValidationSet(
