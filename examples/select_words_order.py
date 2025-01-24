@@ -11,7 +11,8 @@ def create_validation_set(rapi: RapidataClient):
         datapoints=["https://assets.rapidata.ai/where_did_you__today.mp3"],
         sentences=["Where did you go today?"],
         truths=[[0, 1, 2, 4]],
-        strict_grading=True
+        required_completeness=1,
+        required_precision=1,
     )
     return validation_set
 
