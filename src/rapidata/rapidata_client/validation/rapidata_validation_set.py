@@ -253,7 +253,8 @@ class RapidataValidationSet:
         instruction: str,
         text: list[str],
         correct_words: list[str],
-        strict_grading: bool | None = None,
+        required_precision: float = 1,
+        required_completeness: float = 1,
         metadata: Sequence[Metadata] = [],
     ) -> None:
         """Add a transcription rapid to the validation set.
@@ -263,7 +264,8 @@ class RapidataValidationSet:
             instruction (str): The instruction for the rapid.
             text (list[str]): The text for the rapid.
             correct_words (list[str]): The list of correct words for the rapid.
-            strict_grading (bool | None, optional): The strict grading for the rapid. Defaults to None.
+            required_precision (float, optional): The required precision for the rapid. Defaults to 1.
+            required_completeness (float, optional): The required completeness for the rapid. Defaults to 1.
             metadata (Sequence[Metadata], optional): The metadata for the rapid. Defaults to an empty list.
 
         Returns:
@@ -292,7 +294,8 @@ class RapidataValidationSet:
         model_truth = TranscriptionTruth(
             _t="TranscriptionTruth",
             correctWords=correct_transcription_words,
-            strictGrading=strict_grading,
+            requiredPrecision=required_precision,
+            requiredCompleteness=required_completeness,
         )
 
         self._add_general_validation_rapid(
