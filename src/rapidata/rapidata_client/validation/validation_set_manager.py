@@ -380,7 +380,7 @@ class ValidationSetManager:
         except Exception:
             raise ValueError(f"ValidationSet with ID {validation_set_id} not found.")
         
-        return RapidataValidationSet(validation_set_id, self.__openapi_service, validation_set.name)
+        return RapidataValidationSet(validation_set_id, validation_set.name)
     
     def find_validation_sets(self, name: str = "", amount: int = 1) -> list[RapidataValidationSet]:
         """Find validation sets by name.
@@ -431,7 +431,7 @@ class ValidationSetManager:
             else:
                 model = rapid.to_media_model(validation_set_id)
                 self.__openapi_service.validation_api.validation_add_validation_rapid_post(
-                   model=model[0], files=model[1] 
+                   model=model[0], files=model[1] # type: ignore
                 )
 
         return RapidataValidationSet(
