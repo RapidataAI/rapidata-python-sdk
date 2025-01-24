@@ -428,7 +428,7 @@ class ValidationSetManager:
                 self.__openapi_service.validation_api.validation_add_validation_text_rapid_post(
                     add_validation_text_rapid_model=rapid.to_text_model(validation_set_id)
                 )
-            else
+            else:
                 model = rapid.to_media_model(validation_set_id)
                 self.__openapi_service.validation_api.validation_add_validation_rapid_post(
                    model=model[0], files=model[1] 
@@ -437,7 +437,6 @@ class ValidationSetManager:
         return RapidataValidationSet(
             name=name,
             validation_set_id=validation_set_id,
-            openapi_service=self.__openapi_service
         )
 
 
