@@ -1,4 +1,3 @@
-from rapidata.rapidata_client.validation._validation_set_builder import ValidationSetBuilder
 from rapidata.rapidata_client.validation.rapidata_validation_set import RapidataValidationSet
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.assets.data_type_enum import RapidataDataTypes
@@ -16,9 +15,6 @@ from urllib3._collections import HTTPHeaderDict
 from rapidata.rapidata_client.validation.rapids.box import Box
 
 from rapidata.api_client.models.query_validation_set_model import QueryValidationSetModel
-from rapidata.rapidata_client.validation._validation_rapid_parts import ValidatioRapidParts
-
-from typing import Sequence
 
 
 class ValidationSetManager:
@@ -41,7 +37,7 @@ class ValidationSetManager:
         data_type: str = RapidataDataTypes.MEDIA,
         contexts: list[str] | None = None,
         print_confirmation: bool = True,
-        reasoning: list[str | None] | None = None,
+        explanations: list[str | None] | None = None,
     ) -> RapidataValidationSet:
         """Create a classification validation set.
         
@@ -71,7 +67,7 @@ class ValidationSetManager:
         if contexts and len(contexts) != len(datapoints):
             raise ValueError("The number of contexts and datapoints must be equal")
 
-        if(reasoning and len(reasoning) != len(datapoints)):
+        if(explanations and len(explanations) != len(datapoints)):
             raise ValueError("The numeber of reasons and datapoints must be equal, the index must align, but can be padded with None")
        
         rapids: list[Rapid] = []
@@ -84,43 +80,11 @@ class ValidationSetManager:
                     truths=truths[i],
                     data_type=data_type,
                     metadata=[PromptMetadata(contexts[i])] if contexts else [],
-                    reasoning=reasoning[i] if reasoning != None else None
+                    explanation=explanations[i] if explanations != None else None
                 )
             )
 
         return self._submit(name=name, data_type=data_type, rapids=rapids, print_confirmation=print_confirmation)
-
-    def _submit(self, name: str, data_type: str, rapids: list[Rapid], print_confirmation: bool) -> RapidataValidationSet:
-        result = (
-            self.__openapi_service.validation_api.validation_create_validation_set_post(
-                name=name
-            )
-        )
-
-        validation_set_id = result.validation_set_id
-
-        if validation_set_id is None:
-            raise ValueError("Failed to create validation set")
-
-        if print_confirmation:
-            print(f"Validation set '{name}' created with ID {validation_set_id}")
-
-        for rapid in rapids:
-            if data_type == RapidataDataTypes.TEXT:
-                self.__openapi_service.validation_api.validation_add_validation_text_rapid_post(
-                    add_validation_text_rapid_model=rapid.to_text_model(validation_set_id)
-                )
-            else
-                model = rapid.to_media_model(validation_set_id)
-                self.__openapi_service.validation_api.validation_add_validation_rapid_post(
-                   model=model[0], files=model[1] 
-                )
-
-        return RapidataValidationSet(
-            name=name,
-            validation_set_id=validation_set_id,
-            openapi_service=self.__openapi_service
-        )
 
     def create_compare_set(self,
         name: str,
@@ -130,7 +94,7 @@ class ValidationSetManager:
         data_type: str = RapidataDataTypes.MEDIA,
         contexts: list[str] | None = None,
         print_confirmation: bool = True,
-        reasoning: list[str | None] | None = None,
+        explanation: list[str | None] | None = None,
     ) -> RapidataValidationSet:
         """Create a comparison validation set.
 
@@ -160,10 +124,10 @@ class ValidationSetManager:
         if contexts and len(contexts) != len(datapoints):
             raise ValueError("The number of contexts and datapoints must be equal")
  
-        if(reasoning and len(reasoning) != len(datapoints)):
+        if(explanation and len(explanation) != len(datapoints)):
             raise ValueError("The numeber of reasons and datapoints must be equal, the index must align, but can be padded with None")
               
-        rapids = []
+        rapids: list[Rapid] = []
         for i in range(len(datapoints)):
             rapids.append(
                 self.rapid.compare_rapid(
@@ -172,16 +136,12 @@ class ValidationSetManager:
                     datapoint=datapoints[i],
                     data_type=data_type,
                     metadata=[PromptMetadata(contexts[i])] if contexts else [],
-                    reasoning=reasoning[i] if reasoning != None else None
+                    explanation=explanation[i] if explanation != None else None
                 )
             )
-
-        validation_set_builder = ValidationSetBuilder(name, self.__openapi_service)
-        for rapid in rapids:
-            validation_set_builder._add_rapid(rapid)
-
-        return validation_set_builder._submit(print_confirmation)
-    
+ 
+        return self._submit(name=name, data_type=data_type, rapids=rapids, print_confirmation=print_confirmation)
+  
     def create_select_words_set(self,
         name: str,
         instruction: str,
@@ -191,7 +151,7 @@ class ValidationSetManager:
         required_precision: float = 1.0,
         required_completeness: float = 1.0,
         print_confirmation: bool = True,
-        reasoning: list[str | None] | None = None,
+        explanation: list[str | None] | None = None,
 
     ) -> RapidataValidationSet:
         """Create a select words validation set.
@@ -218,10 +178,10 @@ class ValidationSetManager:
         if len(datapoints) != len(truths) or len(datapoints) != len(sentences):
             raise ValueError("The number of datapoints, truths, and sentences must be equal")
  
-        if(reasoning and len(reasoning) != len(datapoints)):
+        if(explanation and len(explanation) != len(datapoints)):
             raise ValueError("The numeber of reasons and datapoints must be equal, the index must align, but can be padded with None")
               
-        rapids = []
+        rapids: list[Rapid] = []
         for i in range(len(datapoints)):
             rapids.append(
                 self.rapid.select_words_rapid(
@@ -230,19 +190,13 @@ class ValidationSetManager:
                     datapoint=datapoints[i],
                     sentence=sentences[i],
                     required_precision=required_precision,
-                    required_completeness=required_completeness
-                    strict_grading=strict_grading,
-                    reasoning=reasoning[i] if reasoning != None else None
-
+                    required_completeness=required_completeness,
+                    explanation=explanation[i] if explanation != None else None
                 )
             )
 
-        validation_set_builder = ValidationSetBuilder(name, self.__openapi_service)
-        for rapid in rapids:
-            validation_set_builder._add_rapid(rapid)
+        return self._submit(name=name, data_type=RapidataDataTypes.MEDIA, rapids=rapids, print_confirmation=print_confirmation)
 
-        return validation_set_builder._submit(print_confirmation)
-    
     def create_locate_set(self,
         name: str,
         instruction: str,
@@ -250,7 +204,7 @@ class ValidationSetManager:
         datapoints: list[str],
         contexts: list[str] | None = None,
         print_confirmation: bool = True,
-        reasoning: list[str | None] | None = None,
+        explanation: list[str | None] | None = None,
 
     ) -> RapidataValidationSet:
         """Create a locate validation set.
@@ -276,10 +230,11 @@ class ValidationSetManager:
         if contexts and len(contexts) != len(datapoints):
             raise ValueError("The number of contexts and datapoints must be equal")
  
-        if(reasoning and len(reasoning) != len(datapoints)):
+        if(explanation and len(explanation) != len(datapoints)):
             raise ValueError("The numeber of reasons and datapoints must be equal, the index must align, but can be padded with None")
               
         rapids = []
+        rapids: list[Rapid] = []
         for i in range(len(datapoints)):
             rapids.append(
                 self.rapid.locate_rapid(
@@ -287,16 +242,12 @@ class ValidationSetManager:
                     truths=truths[i],
                     datapoint=datapoints[i],
                     metadata=[PromptMetadata(contexts[i])] if contexts else [],
-                    reasoning=reasoning[i] if reasoning != None else None
+                    explanation=explanation[i] if explanation != None else None
 
                 )
             )
-
-        validation_set_builder = ValidationSetBuilder(name, self.__openapi_service)
-        for rapid in rapids:
-            validation_set_builder._add_rapid(rapid)
-
-        return validation_set_builder._submit(print_confirmation)
+        
+        return self._submit(name=name, data_type=RapidataDataTypes.MEDIA, rapids=rapids, print_confirmation=print_confirmation)
     
     def create_draw_set(self,
         name: str,
@@ -305,7 +256,7 @@ class ValidationSetManager:
         datapoints: list[str],
         contexts: list[str] | None = None,
         print_confirmation: bool = True,
-        reasoning: list[str | None] | None = None,
+        explanation: list[str | None] | None = None,
     ) -> RapidataValidationSet:
         """Create a draw validation set.
 
@@ -330,10 +281,10 @@ class ValidationSetManager:
         if contexts and len(contexts) != len(datapoints):
             raise ValueError("The number of contexts and datapoints must be equal")
  
-        if(reasoning and len(reasoning) != len(datapoints)):
+        if(explanation and len(explanation) != len(datapoints)):
             raise ValueError("The numeber of reasons and datapoints must be equal, the index must align, but can be padded with None")
               
-        rapids = []
+        rapids: list[Rapid] = []
         for i in range(len(datapoints)):
             rapids.append(
                 self.rapid.draw_rapid(
@@ -341,17 +292,12 @@ class ValidationSetManager:
                     truths=truths[i],
                     datapoint=datapoints[i],
                     metadata=[PromptMetadata(contexts[i])] if contexts else [],
-                    reasoning=reasoning[i] if reasoning != None else None
+                    explanation=explanation[i] if explanation != None else None
 
                 )
             )
 
-        validation_set_builder = ValidationSetBuilder(name, self.__openapi_service)
-        for rapid in rapids:
-            validation_set_builder._add_rapid(rapid)
-
-        return validation_set_builder._submit(print_confirmation)
-    
+        return self._submit(name=name, data_type=RapidataDataTypes.MEDIA, rapids=rapids, print_confirmation=print_confirmation)
 
     def create_timestamp_set(self,
         name: str,
@@ -360,7 +306,7 @@ class ValidationSetManager:
         datapoints: list[str],
         contexts: list[str] | None = None,
         print_confirmation: bool = True,
-        reasoning: list[str | None] | None = None,
+        explanation: list[str | None] | None = None,
     ) -> RapidataValidationSet:
         """Create a timestamp validation set.
 
@@ -386,48 +332,39 @@ class ValidationSetManager:
         if contexts and len(contexts) != len(datapoints):
             raise ValueError("The number of contexts and datapoints must be equal")
  
-        if(reasoning and len(reasoning) != len(datapoints)):
+        if(explanation and len(explanation) != len(datapoints)):
             raise ValueError("The numeber of reasons and datapoints must be equal, the index must align, but can be padded with None")
               
 
-        validation_set_builder = ValidationSetBuilder(name, self.__openapi_service)
+        rapids: list[Rapid] = []
         for i in range(len(datapoints)):
-            validation_set_builder._rapid_parts.append(ValidationRapidParts)
-
             rapids.append(
                 self.rapid.timestamp_rapid(
                     instruction=instruction,
                     truths=truths[i],
                     datapoint=datapoints[i],
                     metadata=[PromptMetadata(contexts[i])] if contexts else [],
-                    reasoning=reasoning[i] if reasoning != None else None
-
+                    explanation=explanation[i] if explanation != None else None
                 )
             )
 
-        for rapid in rapids:
-            validation_set_builder._add_rapid(rapid)
-
-        return validation_set_builder._submit(print_confirmation)
+        return self._submit(name=name, data_type=RapidataDataTypes.MEDIA, rapids=rapids, print_confirmation=print_confirmation)
     
     def create_mixed_set(self,
         name: str,
-        rapids: Sequence[Rapid],
+        data_type: str,
+        rapids: list[Rapid],
         print_confirmation: bool = True
     ) -> RapidataValidationSet:
         """Create a validation set with a list of rapids.
 
         Args:
             name (str): The name of the validation set. (will not be shown to the labeler)
-            rapids (Sequence[Rapid]): The list of rapids to add to the validation set.
+            rapids (list[Rapid]): The list of rapids to add to the validation set.
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
         """
 
-        validation_set_builder = ValidationSetBuilder(name, self.__openapi_service)
-        for rapid in rapids:
-            validation_set_builder._add_rapid(rapid)
-
-        return validation_set_builder._submit(print_confirmation)
+        return self._submit(name, data_type, rapids, print_confirmation)
     
     def get_validation_set_by_id(self, validation_set_id: str) -> RapidataValidationSet:
         """Get a validation set by ID.
@@ -470,4 +407,37 @@ class ValidationSetManager:
 
         validation_sets = [self.get_validation_set_by_id(validation_set.id) for validation_set in validation_page_result.items]
         return validation_sets
+
+    def _submit(self, name: str, data_type: str, rapids: list[Rapid], print_confirmation: bool) -> RapidataValidationSet:
+        result = (
+            self.__openapi_service.validation_api.validation_create_validation_set_post(
+                name=name
+            )
+        )
+
+        validation_set_id = result.validation_set_id
+
+        if validation_set_id is None:
+            raise ValueError("Failed to create validation set")
+
+        if print_confirmation:
+            print(f"Validation set '{name}' created with ID {validation_set_id}")
+
+        for rapid in rapids:
+            if data_type == RapidataDataTypes.TEXT:
+                self.__openapi_service.validation_api.validation_add_validation_text_rapid_post(
+                    add_validation_text_rapid_model=rapid.to_text_model(validation_set_id)
+                )
+            else
+                model = rapid.to_media_model(validation_set_id)
+                self.__openapi_service.validation_api.validation_add_validation_rapid_post(
+                   model=model[0], files=model[1] 
+                )
+
+        return RapidataValidationSet(
+            name=name,
+            validation_set_id=validation_set_id,
+            openapi_service=self.__openapi_service
+        )
+
 

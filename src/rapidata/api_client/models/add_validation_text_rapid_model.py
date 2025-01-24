@@ -35,8 +35,8 @@ class AddValidationTextRapidModel(BaseModel):
     truth: AddValidationRapidModelTruth
     texts: List[StrictStr] = Field(description="The texts to use for the rapid.")
     random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(description="The probability for an answer to be correct when randomly guessing.", alias="randomCorrectProbability")
-    reasoning: Optional[StrictStr]
-    __properties: ClassVar[List[str]] = ["validationSetId", "payload", "metadata", "truth", "texts", "randomCorrectProbability", "reasoning"]
+    explanation: Optional[StrictStr]
+    __properties: ClassVar[List[str]] = ["validationSetId", "payload", "metadata", "truth", "texts", "randomCorrectProbability", "explanation"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -95,10 +95,10 @@ class AddValidationTextRapidModel(BaseModel):
         if self.random_correct_probability is None and "random_correct_probability" in self.model_fields_set:
             _dict['randomCorrectProbability'] = None
 
-        # set to None if reasoning (nullable) is None
+        # set to None if explanation (nullable) is None
         # and model_fields_set contains the field
-        if self.reasoning is None and "reasoning" in self.model_fields_set:
-            _dict['reasoning'] = None
+        if self.explanation is None and "explanation" in self.model_fields_set:
+            _dict['explanation'] = None
 
         return _dict
 
@@ -118,7 +118,7 @@ class AddValidationTextRapidModel(BaseModel):
             "truth": AddValidationRapidModelTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
             "texts": obj.get("texts"),
             "randomCorrectProbability": obj.get("randomCorrectProbability"),
-            "reasoning": obj.get("reasoning")
+            "explanation": obj.get("explanation")
         })
         return _obj
 

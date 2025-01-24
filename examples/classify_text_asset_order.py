@@ -17,7 +17,7 @@ def new_classify_text_asset_order(rapi: RapidataClient):
         truths=[["Baby don't hurt me"]],
         datapoints=["What is love?"],
         data_type="text",
-        reasoning=["Somebody that I used to know"],
+        explanations=["Somebody that I used to know"],
     )
 
     # Configure order

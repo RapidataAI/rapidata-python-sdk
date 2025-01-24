@@ -6862,10 +6862,10 @@
       },
       "AddValidationRapidModel": {
         "required": [
+          "explanation",
           "metadata",
           "payload",
           "randomCorrectProbability",
-          "reasoning",
           "truth",
           "validationSetId"
         ],
@@ -6980,7 +6980,7 @@
             "format": "double",
             "nullable": true
           },
-          "reasoning": {
+          "explanation": {
             "type": "string",
             "nullable": true
           }
@@ -7002,10 +7002,10 @@
       },
       "AddValidationTextRapidModel": {
         "required": [
+          "explanation",
           "metadata",
           "payload",
           "randomCorrectProbability",
-          "reasoning",
           "texts",
           "truth",
           "validationSetId"
@@ -7128,7 +7128,7 @@
             "format": "double",
             "nullable": true
           },
-          "reasoning": {
+          "explanation": {
             "type": "string",
             "nullable": true
           }
@@ -8583,6 +8583,8 @@
       "QueryValidationRapidsResult": {
         "required": [
           "asset",
+          "correctValidationCount",
+          "invalidValidationCount",
           "metadata",
           "payload",
           "type"
@@ -8726,6 +8728,14 @@
                 "propertyName": "_t"
               }
             }
+          },
+          "correctValidationCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "invalidValidationCount": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false

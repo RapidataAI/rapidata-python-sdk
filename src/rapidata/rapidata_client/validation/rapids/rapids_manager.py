@@ -1,18 +1,13 @@
-from rapidata.api_client import AttachCategoryTruth, ClassifyPayload
+import os
+from rapidata.api_client import AttachCategoryTruth, BoundingBoxTruth, BoxShape, ClassifyPayload, ComparePayload, CompareTruth, LinePayload, LocateBoxTruth, LocatePayload, ScrubPayload, ScrubRange, ScrubTruth, TranscriptionPayload, TranscriptionTruth, TranscriptionWord
 from rapidata.rapidata_client.assets.data_type_enum import RapidataDataTypes
-from rapidata.rapidata_client.validation.rapids.rapids import (
-    ClassificationRapid, 
-    CompareRapid,
-    Rapid, 
-    SelectWordsRapid, 
-    LocateRapid, 
-    DrawRapid,
-    TimestampRapid)
 from rapidata.rapidata_client.assets import MediaAsset, TextAsset, MultiAsset
 from rapidata.rapidata_client.metadata import Metadata
 from rapidata.rapidata_client.validation.rapids.box import Box
 
 from typing import Sequence
+
+from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 
 class RapidsManager:
     """
@@ -28,7 +23,7 @@ class RapidsManager:
             truths: list[str],
             data_type: str = RapidataDataTypes.MEDIA,
             metadata: Sequence[Metadata] = [],
-            reasoning: str | None = None,
+            explanation: str | None = None,
     ) -> Rapid:
         """Build a classification rapid
         
@@ -61,7 +56,7 @@ class RapidsManager:
         return Rapid(
                 asset=asset,
                 metadata=metadata,
-                reasoning=reasoning,
+                explanation=explanation,
                 payload=payload,
                 truth=model_truth,
                 randomCorrectProbability= len(truths) / len(answer_options)
@@ -73,8 +68,8 @@ class RapidsManager:
             datapoint: list[str],
             data_type: str = RapidataDataTypes.MEDIA,
             metadata: Sequence[Metadata] = [],
-            reasoning: str | None = None,
-    ) -> CompareRapid:
+            explanation: str | None = None,
+    ) -> Rapid:
         """Build a compare rapid
 
         Args:
@@ -93,13 +88,23 @@ class RapidsManager:
             raise ValueError(f"Unsupported data type: {data_type}")
         
         asset = MultiAsset(assets)
+        
+        payload = ComparePayload(_t="ComparePayload", criteria=instruction)
+        # take only last part of truth path
+        truth = os.path.basename(truth)
+        model_truth = CompareTruth(_t="CompareTruth", winnerId=truth)
 
-        return CompareRapid(
-                instruction=instruction,
+        if len(asset) != 2:
+            raise ValueError("Compare rapid requires exactly two media paths")
+
+
+        return Rapid(
                 asset=asset,
-                truth=truth,
+                truth=model_truth,
                 metadata=metadata,
-                reasoning=reasoning,
+                payload=payload,
+                explanation=explanation,
+                randomCorrectProbability= 1 / len(asset.assets)
                 )
     
     def select_words_rapid(self,
@@ -110,8 +115,8 @@ class RapidsManager:
             required_precision: float = 1,
             required_completeness: float = 1,
             metadata: Sequence[Metadata] = [],
-            reasoning: str | None = None,
-    ) -> SelectWordsRapid:
+            explanation: str | None = None,
+    ) -> Rapid:
         """Build a select words rapid
 
         Args:
@@ -125,25 +130,44 @@ class RapidsManager:
         """
         
         asset = MediaAsset(datapoint)
+        transcription_words = [
+            TranscriptionWord(word=word, wordIndex=i)
+            for i, word in enumerate(sentence)
+        ]
 
-        return SelectWordsRapid(
-                instruction=instruction,
-                truths=truths,
+        correct_transcription_words: list[TranscriptionWord] = []
+        for index in truths:
+            correct_transcription_words.append(
+                TranscriptionWord(word=transcription_words[index].word, wordIndex=index)
+            )
+
+        payload = TranscriptionPayload(
+            _t="TranscriptionPayload", title=instruction, transcription=transcription_words
+        )
+
+        model_truth = TranscriptionTruth(
+            _t="TranscriptionTruth",
+            correctWords=correct_transcription_words,
+            requiredPrecision=required_precision,
+            requiredCompleteness=required_completeness,
+        )
+
+        return Rapid(
+                payload=payload,
+                truth=model_truth,
                 asset=asset,
-                sentence=sentence,
-                required_precision=required_precision,
-                required_completeness=required_completeness,
                 metadata=metadata,
-                reasoning=reasoning,
-                )
+                explanation=explanation,
+                randomCorrectProbability= len(correct_transcription_words) / len(transcription_words)
+            )
     
     def locate_rapid(self,
             instruction: str,
             truths: list[Box],
             datapoint: str,
             metadata: Sequence[Metadata] = [],
-            reasoning: str | None = None,
-    ) -> LocateRapid:
+            explanation: str | None = None,
+    ) -> Rapid:
         """Build a locate rapid
 
         Args:
@@ -154,12 +178,35 @@ class RapidsManager:
         """
         
         asset = MediaAsset(datapoint)
+        payload = LocatePayload(
+            _t="LocatePayload", target=instruction
+        )
 
-        return LocateRapid(
-                instruction=instruction,
-                truths=truths,
+        img_dimensions = asset.get_image_dimension()
+
+        if not img_dimensions:
+            raise ValueError("Failed to get image dimensions")
+
+        model_truth = LocateBoxTruth(
+            _t="LocateBoxTruth", 
+            boundingBoxes=[BoxShape(
+                _t="BoxShape",
+                xMin=truth.x_min / img_dimensions[0] * 100,
+                xMax=truth.x_max / img_dimensions[0] * 100,
+                yMax=truth.y_max / img_dimensions[1] * 100,
+                yMin=truth.y_min / img_dimensions[1] * 100,
+            ) for truth in truths]
+        )
+
+        coverage = self._calculate_boxes_coverage(truths, img_dimensions[0], img_dimensions[1])
+
+        return Rapid(
+                payload=payload,
+                truth=model_truth,
                 asset=asset,
                 metadata=metadata,
+                explanation=explanation,
+                randomCorrectProbability=coverage                
                 )
     
     def draw_rapid(self,
@@ -167,7 +214,8 @@ class RapidsManager:
             truths: list[Box],
             datapoint: str,
             metadata: Sequence[Metadata] = [],
-    ) -> DrawRapid:
+            explanation: str | None = None
+    ) -> Rapid:
         """Build a draw rapid
 
         Args:
@@ -179,19 +227,42 @@ class RapidsManager:
         
         asset = MediaAsset(datapoint)
 
-        return DrawRapid(
-                instruction=instruction,
-                truths=truths,
-                asset=asset,
-                metadata=metadata,
-                )
-    
+        payload = LinePayload(
+            _t="LinePayload", target=instruction
+        )
+
+        img_dimensions = asset.get_image_dimension()
+
+        if not img_dimensions:
+            raise ValueError("Failed to get image dimensions")
+
+        model_truth = BoundingBoxTruth(
+            _t="BoundingBoxTruth", 
+            xMax=truths[0].x_max / img_dimensions[0],
+            xMin=truths[0].x_min / img_dimensions[0],
+            yMax=truths[0].y_max / img_dimensions[1],
+            yMin=truths[0].y_min / img_dimensions[1],
+        )
+
+        coverage = self._calculate_boxes_coverage(truths, img_dimensions[0], img_dimensions[1])
+
+        return Rapid(
+            payload=payload,
+            truth=model_truth,
+            asset=asset,
+            metadata=metadata,
+            explanation=explanation,
+            randomCorrectProbability=coverage
+        )
+
+
     def timestamp_rapid(self,
             instruction: str,
             truths: list[tuple[int, int]],
             datapoint: str,
-            metadata: Sequence[Metadata] = []
-    ) -> TimestampRapid:
+            metadata: Sequence[Metadata] = [],
+            explanation: str | None = None
+    ) -> Rapid:
         """Build a timestamp rapid
 
         Args:
@@ -203,12 +274,86 @@ class RapidsManager:
         """
         
         asset = MediaAsset(datapoint)
+        
+        for truth in truths:
+            if len(truth) != 2:
+                raise ValueError("The truths per datapoint must be a tuple of exactly two integers.")
+            if truth[0] > truth[1]:
+                raise ValueError("The start of the interval must be smaller than the end of the interval.")
+        
+        payload = ScrubPayload(
+            _t="ScrubPayload", 
+            target=instruction
+        )
 
-        return TimestampRapid(
-                instruction=instruction,
-                truths=truths,
+        model_truth = ScrubTruth(
+            _t="ScrubTruth",
+            validRanges=[ScrubRange(
+                start=truth[0],
+                end=truth[1]
+            ) for truth in truths]
+        )
+
+        return Rapid(
+                payload=payload,
+                truth=model_truth,
                 asset=asset,
                 metadata=metadata,
+                explanation=explanation,
+                randomCorrectProbability=self._calculate_coverage_ratio(asset.get_duration(), truths),
                 )
 
+    def _calculate_boxes_coverage(self, boxes: list[Box], image_width: int, image_height: int) -> float:
+        if not boxes:
+            return 0.0
+        # Convert all coordinates to integers for pixel-wise coverage
+        pixels = set()
+        for box in boxes:
+            for x in range(int(box.x_min), int(box.x_max + 1)):
+                for y in range(int(box.y_min), int(box.y_max + 1)):
+                    if 0 <= x < image_width and 0 <= y < image_height:
+                        pixels.add((x,y))
+                        
+        total_covered = len(pixels)
+        return total_covered / (image_width * image_height)
+
+    def _calculate_coverage_ratio(self, total_duration: int, subsections: list[tuple[int, int]]) -> float:
+        """
+        Calculate the ratio of total_duration that is covered by subsections, handling overlaps.
         
+        Args:
+            total_duration: The total duration to consider
+            subsections: List of tuples containing (start, end) times
+            
+        Returns:
+            float: Ratio of coverage (0 to 1)
+        """
+        if not subsections:
+            return 0.0
+        
+        # Sort subsections by start time and clamp to valid range
+        sorted_ranges = sorted(
+            (max(0, start), min(end, total_duration)) 
+            for start, end in subsections
+        )
+        
+        # Merge overlapping ranges
+        merged_ranges = []
+        current_range = list(sorted_ranges[0])
+        
+        for next_start, next_end in sorted_ranges[1:]:
+            current_start, current_end = current_range
+            
+            # If ranges overlap or are adjacent
+            if next_start <= current_end:
+                current_range[1] = max(current_end, next_end)
+            else:
+                merged_ranges.append(current_range)
+                current_range = [next_start, next_end]
+        
+        merged_ranges.append(current_range)
+        
+        # Calculate total coverage
+        total_coverage = sum(end - start for start, end in merged_ranges)
+        
+        return total_coverage / total_duration
