@@ -13,3 +13,9 @@ class RapidataValidationSet:
     def __init__(self, validation_set_id, name: str):
         self.id = validation_set_id
         self.name = name
+
+    def __str__(self):
+        return f"name: '{self.name}' id: {self.id}"
+
+    def __repr__(self):
+        return f"name: '{self.name}' id: {self.id}"

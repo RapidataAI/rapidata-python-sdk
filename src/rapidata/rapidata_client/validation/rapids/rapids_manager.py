@@ -59,7 +59,7 @@ class RapidsManager:
                 explanation=explanation,
                 payload=payload,
                 truth=model_truth,
-                randomCorrectProbability= len(truths) / len(answer_options)
+                randomCorrectProbability=len(truths) / len(answer_options)
              )
     
     def compare_rapid(self,

@@ -152,7 +152,6 @@ class ValidationSetManager:
         required_completeness: float = 1.0,
         print_confirmation: bool = True,
         explanation: list[str | None] | None = None,
-
     ) -> RapidataValidationSet:
         """Create a select words validation set.
 
@@ -205,7 +204,6 @@ class ValidationSetManager:
         contexts: list[str] | None = None,
         print_confirmation: bool = True,
         explanation: list[str | None] | None = None,
-
     ) -> RapidataValidationSet:
         """Create a locate validation set.
 
@@ -381,7 +379,37 @@ class ValidationSetManager:
             raise ValueError(f"ValidationSet with ID {validation_set_id} not found.")
         
         return RapidataValidationSet(validation_set_id, validation_set.name)
-    
+
+    def _submit(self, name: str, data_type: str, rapids: list[Rapid], print_confirmation: bool) -> RapidataValidationSet:
+        validation_set_id = (
+            self.__openapi_service.validation_api.validation_create_validation_set_post(
+                name=name
+            )
+        ).validation_set_id
+
+        if validation_set_id is None:
+            raise ValueError("Failed to create validation set")
+
+        if print_confirmation:
+            print(f"Validation set '{name}' created with ID {validation_set_id}")
+
+        for rapid in rapids:
+            if data_type == RapidataDataTypes.TEXT:
+                self.__openapi_service.validation_api.validation_add_validation_text_rapid_post(
+                    add_validation_text_rapid_model=rapid.to_text_model(validation_set_id)
+                )
+            else:
+                model = rapid.to_media_model(validation_set_id)
+                self.__openapi_service.validation_api.validation_add_validation_rapid_post(
+                   model=model[0], files=model[1]
+                )
+
+        return RapidataValidationSet(
+            name=name,
+            validation_set_id=validation_set_id,
+        )
+
+
     def find_validation_sets(self, name: str = "", amount: int = 1) -> list[RapidataValidationSet]:
         """Find validation sets by name.
 
@@ -407,36 +435,4 @@ class ValidationSetManager:
 
         validation_sets = [self.get_validation_set_by_id(validation_set.id) for validation_set in validation_page_result.items]
         return validation_sets
-
-    def _submit(self, name: str, data_type: str, rapids: list[Rapid], print_confirmation: bool) -> RapidataValidationSet:
-        result = (
-            self.__openapi_service.validation_api.validation_create_validation_set_post(
-                name=name
-            )
-        )
-
-        validation_set_id = result.validation_set_id
-
-        if validation_set_id is None:
-            raise ValueError("Failed to create validation set")
-
-        if print_confirmation:
-            print(f"Validation set '{name}' created with ID {validation_set_id}")
-
-        for rapid in rapids:
-            if data_type == RapidataDataTypes.TEXT:
-                self.__openapi_service.validation_api.validation_add_validation_text_rapid_post(
-                    add_validation_text_rapid_model=rapid.to_text_model(validation_set_id)
-                )
-            else:
-                model = rapid.to_media_model(validation_set_id)
-                self.__openapi_service.validation_api.validation_add_validation_rapid_post(
-                   model=model[0], files=model[1]
-                )
-
-        return RapidataValidationSet(
-            name=name,
-            validation_set_id=validation_set_id,
-        )
-
 
