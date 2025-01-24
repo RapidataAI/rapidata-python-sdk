@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.file_asset_model1_metadata_inner import FileAssetModel1MetadataInner
 from rapidata.api_client.models.query_validation_rapids_result_asset import QueryValidationRapidsResultAsset
@@ -35,7 +35,9 @@ class QueryValidationRapidsResult(BaseModel):
     truth: Optional[QueryValidationRapidsResultTruth] = None
     payload: QueryValidationRapidsResultPayload
     metadata: List[FileAssetModel1MetadataInner]
-    __properties: ClassVar[List[str]] = ["type", "asset", "truth", "payload", "metadata"]
+    correct_validation_count: StrictInt = Field(alias="correctValidationCount")
+    invalid_validation_count: StrictInt = Field(alias="invalidValidationCount")
+    __properties: ClassVar[List[str]] = ["type", "asset", "truth", "payload", "metadata", "correctValidationCount", "invalidValidationCount"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -118,7 +120,9 @@ class QueryValidationRapidsResult(BaseModel):
             "asset": QueryValidationRapidsResultAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "truth": QueryValidationRapidsResultTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
             "payload": QueryValidationRapidsResultPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
-            "metadata": [FileAssetModel1MetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None
+            "metadata": [FileAssetModel1MetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
+            "correctValidationCount": obj.get("correctValidationCount"),
+            "invalidValidationCount": obj.get("invalidValidationCount")
         })
         return _obj
 
