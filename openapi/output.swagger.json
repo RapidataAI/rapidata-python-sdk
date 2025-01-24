@@ -2317,6 +2317,39 @@
         }
       }
     },
+    "/Rapid/Report": {
+      "post": {
+        "tags": [
+          "Rapid"
+        ],
+        "summary": "Used to report an issue with a rapid.",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
     "/CompareWorkflow/GetResultOverview": {
       "get": {
         "tags": [
@@ -6832,6 +6865,7 @@
           "metadata",
           "payload",
           "randomCorrectProbability",
+          "reasoning",
           "truth",
           "validationSetId"
         ],
@@ -6945,6 +6979,10 @@
             "description": "The probability for an answer to be correct when randomly guessing.",
             "format": "double",
             "nullable": true
+          },
+          "reasoning": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -6967,6 +7005,7 @@
           "metadata",
           "payload",
           "randomCorrectProbability",
+          "reasoning",
           "texts",
           "truth",
           "validationSetId"
@@ -7087,6 +7126,10 @@
             "type": "number",
             "description": "The probability for an answer to be correct when randomly guessing.",
             "format": "double",
+            "nullable": true
+          },
+          "reasoning": {
+            "type": "string",
             "nullable": true
           }
         },
@@ -8722,6 +8765,17 @@
         },
         "additionalProperties": false
       },
+      "RapidIssue": {
+        "enum": [
+          "Other",
+          "CannotSubmit",
+          "NoAsset",
+          "Inappropriate",
+          "NoCorrectOption",
+          "WrongLanguage"
+        ],
+        "type": "string"
+      },
       "RapidResultModel": {
         "required": [
           "result",
@@ -8798,6 +8852,38 @@
         },
         "additionalProperties": false,
         "description": "The model for a Rapid skipped."
+      },
+      "ReportModel": {
+        "required": [
+          "issue",
+          "message",
+          "rapidId"
+        ],
+        "type": "object",
+        "properties": {
+          "rapidId": {
+            "type": "string",
+            "description": ""
+          },
+          "issue": {
+            "enum": [
+              "Other",
+              "CannotSubmit",
+              "NoAsset",
+              "Inappropriate",
+              "NoCorrectOption",
+              "WrongLanguage"
+            ],
+            "type": "string"
+          },
+          "message": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for reporting an issue with a rapid."
       },
       "ScrubResult": {
         "title": "ScrubResult",

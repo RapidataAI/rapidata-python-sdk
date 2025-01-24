@@ -59,3 +59,4 @@ class ValidatioRapidParts:
     )
     metadata: Sequence[Metadata]
     randomCorrectProbability: float
+    reasoning: str | None

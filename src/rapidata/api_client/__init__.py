@@ -254,12 +254,14 @@ from rapidata.api_client.models.query_workflows_model import QueryWorkflowsModel
 from rapidata.api_client.models.ranked_datapoint_model import RankedDatapointModel
 from rapidata.api_client.models.rapid_answer import RapidAnswer
 from rapidata.api_client.models.rapid_answer_result import RapidAnswerResult
+from rapidata.api_client.models.rapid_issue import RapidIssue
 from rapidata.api_client.models.rapid_result_model import RapidResultModel
 from rapidata.api_client.models.rapid_result_model_result import RapidResultModelResult
 from rapidata.api_client.models.rapid_skipped_model import RapidSkippedModel
 from rapidata.api_client.models.read_bridge_token_keys_result import ReadBridgeTokenKeysResult
 from rapidata.api_client.models.register_temporary_customer_model import RegisterTemporaryCustomerModel
 from rapidata.api_client.models.register_temporary_customer_result import RegisterTemporaryCustomerResult
+from rapidata.api_client.models.report_model import ReportModel
 from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.scrub_payload import ScrubPayload
 from rapidata.api_client.models.scrub_range import ScrubRange

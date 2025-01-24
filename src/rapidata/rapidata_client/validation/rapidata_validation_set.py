@@ -105,6 +105,7 @@ class RapidataValidationSet:
         metadata: Sequence[Metadata],
         asset: MediaAsset | TextAsset | MultiAsset,
         randomCorrectProbability: float,
+        reasoning: str | None
     ) -> None:
         """Add a validation rapid to the validation set.
 
@@ -131,6 +132,7 @@ class RapidataValidationSet:
                 for meta in metadata
             ],
             randomCorrectProbability=randomCorrectProbability,
+            reasoning=reasoning
         )
         if isinstance(asset, MediaAsset):
             self.__upload_files(model=model, assets=[asset])
@@ -146,6 +148,7 @@ class RapidataValidationSet:
                 ],
                 randomCorrectProbability=randomCorrectProbability,
                 texts=[asset.text],
+                reasoning=reasoning
             )
             self.__openapi_service.validation_api.validation_add_validation_text_rapid_post(
                 add_validation_text_rapid_model=model
@@ -167,6 +170,7 @@ class RapidataValidationSet:
                     ],
                     randomCorrectProbability=randomCorrectProbability,
                     texts=texts,
+                    reasoning=reasoning
                 )
                 self.__openapi_service.validation_api.validation_add_validation_text_rapid_post(
                     add_validation_text_rapid_model=model

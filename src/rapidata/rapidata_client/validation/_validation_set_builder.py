@@ -83,6 +83,7 @@ class ValidationSetBuilder:
                 metadata=rapid_part.metadata,
                 asset=rapid_part.asset,
                 randomCorrectProbability=rapid_part.randomCorrectProbability,
+                reasoning=rapid_part.reasoning,
             )
 
         if print_confirmation:
@@ -101,7 +102,7 @@ class ValidationSetBuilder:
             raise ValueError("This method only accepts Rapid instances")
         
         elif isinstance(rapid, ClassificationRapid):
-            self.__add_classify_rapid(rapid.asset, rapid.instruction, rapid.answer_options, rapid.truths, rapid.metadata)
+            self.__add_classify_rapid(rapid.asset, rapid.instruction, rapid.answer_options, rapid.truths, rapid.metadata, rapid.reasoning)
 
         elif isinstance(rapid, CompareRapid):
             self.__add_compare_rapid(rapid.asset, rapid.instruction, rapid.truth, rapid.metadata)
@@ -137,6 +138,7 @@ class ValidationSetBuilder:
         answer_options: list[str],
         truths: list[str],
         metadata: Sequence[Metadata] = [],
+        reasoning: str | None = None,
     ):
         """Add a classify rapid to the validation set.
 
@@ -171,6 +173,7 @@ class ValidationSetBuilder:
                 metadata=metadata,
                 randomCorrectProbability=len(truths) / len(answer_options),
                 asset=asset,
+                reasoning=reasoning
             )
         )
     
@@ -180,6 +183,7 @@ class ValidationSetBuilder:
         instruction: str,
         truth: str,
         metadata: Sequence[Metadata] = [],
+        reasoning: str | None = None,
     ):
         """Add a compare rapid to the validation set.
 
@@ -211,6 +215,7 @@ class ValidationSetBuilder:
                 metadata=metadata,
                 randomCorrectProbability=1 / len(asset),
                 asset=asset,
+                reasoning=reasoning
             )
         )
     
@@ -223,6 +228,7 @@ class ValidationSetBuilder:
         required_precision: float,
         required_completeness: float,
         metadata: Sequence[Metadata] = [],
+        reasoning: str | None = None,
     ):
         """Add a select words rapid to the validation set.
 
@@ -272,6 +278,7 @@ class ValidationSetBuilder:
                 truths=model_truth,
                 metadata=metadata,
                 randomCorrectProbability = 1 / len(transcription_words),
+                reasoning=reasoning
             )
         )
     
@@ -281,6 +288,7 @@ class ValidationSetBuilder:
         instruction: str,
         truths: list[Box],
         metadata: Sequence[Metadata] = [],
+        reasoning: str | None = None,
     ):
         """Add a locate rapid to the validation set.
 
@@ -322,6 +330,7 @@ class ValidationSetBuilder:
                 metadata=metadata,
                 randomCorrectProbability=coverage,
                 asset=asset,
+                reasoning=reasoning
             )
         )
 
@@ -331,6 +340,7 @@ class ValidationSetBuilder:
         instruction: str,
         truths: list[Box],
         metadata: Sequence[Metadata] = [],
+        reasoning: str | None = None,
     ):
         """Add a draw rapid to the validation set.
 
@@ -370,6 +380,7 @@ class ValidationSetBuilder:
                 metadata=metadata,
                 randomCorrectProbability=coverage,
                 asset=asset,
+                reasoning=reasoning
             )
         )
 
@@ -379,6 +390,7 @@ class ValidationSetBuilder:
         instruction: str,
         truths: list[tuple[int, int]],
         metadata: Sequence[Metadata] = [],
+        reasoning: str | None = None,
     ):
         """Add a timestamp rapid to the validation set.
 
@@ -420,6 +432,7 @@ class ValidationSetBuilder:
                 metadata=metadata,
                 randomCorrectProbability=self._calculate_coverage_ratio(asset.get_duration(), truths),
                 asset=asset,
+                reasoning=reasoning
             )
         )
 

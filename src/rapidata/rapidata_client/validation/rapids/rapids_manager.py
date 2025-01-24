@@ -1,7 +1,9 @@
+from rapidata.api_client import AttachCategoryTruth, ClassifyPayload
 from rapidata.rapidata_client.assets.data_type_enum import RapidataDataTypes
 from rapidata.rapidata_client.validation.rapids.rapids import (
     ClassificationRapid, 
-    CompareRapid, 
+    CompareRapid,
+    Rapid, 
     SelectWordsRapid, 
     LocateRapid, 
     DrawRapid,
@@ -26,7 +28,8 @@ class RapidsManager:
             truths: list[str],
             data_type: str = RapidataDataTypes.MEDIA,
             metadata: Sequence[Metadata] = [],
-    ) -> ClassificationRapid:
+            reasoning: str | None = None,
+    ) -> Rapid:
         """Build a classification rapid
         
         Args:
@@ -45,13 +48,24 @@ class RapidsManager:
         else:
             raise ValueError(f"Unsupported data type: {data_type}")
 
-        return ClassificationRapid(
-                instruction=instruction,
-                answer_options=answer_options,
+        if not all(truth in answer_options for truth in truths):
+            raise ValueError("Truths must be part of the answer options")
+
+        payload = ClassifyPayload(
+            _t="ClassifyPayload", possibleCategories=answer_options, title=instruction
+        )
+        model_truth = AttachCategoryTruth(
+            correctCategories=truths, _t="AttachCategoryTruth"
+        )
+
+        return Rapid(
                 asset=asset,
-                truths=truths,
                 metadata=metadata,
-                )
+                reasoning=reasoning,
+                payload=payload,
+                truth=model_truth,
+                randomCorrectProbability= len(truths) / len(answer_options)
+             )
     
     def compare_rapid(self,
             instruction: str,
@@ -59,6 +73,7 @@ class RapidsManager:
             datapoint: list[str],
             data_type: str = RapidataDataTypes.MEDIA,
             metadata: Sequence[Metadata] = [],
+            reasoning: str | None = None,
     ) -> CompareRapid:
         """Build a compare rapid
 
@@ -84,6 +99,7 @@ class RapidsManager:
                 asset=asset,
                 truth=truth,
                 metadata=metadata,
+                reasoning=reasoning,
                 )
     
     def select_words_rapid(self,
@@ -94,6 +110,7 @@ class RapidsManager:
             required_precision: float = 1,
             required_completeness: float = 1,
             metadata: Sequence[Metadata] = [],
+            reasoning: str | None = None,
     ) -> SelectWordsRapid:
         """Build a select words rapid
 
@@ -117,6 +134,7 @@ class RapidsManager:
                 required_precision=required_precision,
                 required_completeness=required_completeness,
                 metadata=metadata,
+                reasoning=reasoning,
                 )
     
     def locate_rapid(self,
@@ -124,6 +142,7 @@ class RapidsManager:
             truths: list[Box],
             datapoint: str,
             metadata: Sequence[Metadata] = [],
+            reasoning: str | None = None,
     ) -> LocateRapid:
         """Build a locate rapid
 
