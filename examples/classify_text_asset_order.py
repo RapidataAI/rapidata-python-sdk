@@ -1,10 +1,7 @@
 """
 Classify order with a validation set
 """
-import sys
-sys.path.append('src')
-
-from rapidata.rapidata_client import RapidataClient
+from rapidata import RapidataClient
 
 
 def new_classify_text_asset_order(rapi: RapidataClient):
@@ -35,7 +32,7 @@ def new_classify_text_asset_order(rapi: RapidataClient):
 
 
 if __name__ == "__main__":
-    order = new_classify_text_asset_order(RapidataClient(enviroment="rabbitdata.ch"))
+    order = new_classify_text_asset_order(RapidataClient())
     order.display_progress_bar()
     results = order.get_results()
     print(results)
