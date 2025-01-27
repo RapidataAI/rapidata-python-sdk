@@ -34,7 +34,8 @@ class AddValidationRapidModel(BaseModel):
     metadata: List[DatapointMetadataModelMetadataInner] = Field(description="Some metadata to attach to the rapid.")
     truth: AddValidationRapidModelTruth
     random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(description="The probability for an answer to be correct when randomly guessing.", alias="randomCorrectProbability")
-    __properties: ClassVar[List[str]] = ["validationSetId", "payload", "metadata", "truth", "randomCorrectProbability"]
+    explanation: Optional[StrictStr]
+    __properties: ClassVar[List[str]] = ["validationSetId", "payload", "metadata", "truth", "randomCorrectProbability", "explanation"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -93,6 +94,11 @@ class AddValidationRapidModel(BaseModel):
         if self.random_correct_probability is None and "random_correct_probability" in self.model_fields_set:
             _dict['randomCorrectProbability'] = None
 
+        # set to None if explanation (nullable) is None
+        # and model_fields_set contains the field
+        if self.explanation is None and "explanation" in self.model_fields_set:
+            _dict['explanation'] = None
+
         return _dict
 
     @classmethod
@@ -109,7 +115,8 @@ class AddValidationRapidModel(BaseModel):
             "payload": AddValidationRapidModelPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
             "metadata": [DatapointMetadataModelMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
             "truth": AddValidationRapidModelTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
-            "randomCorrectProbability": obj.get("randomCorrectProbability")
+            "randomCorrectProbability": obj.get("randomCorrectProbability"),
+            "explanation": obj.get("explanation")
         })
         return _obj
 

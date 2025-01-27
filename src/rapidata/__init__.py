@@ -30,4 +30,4 @@ from .rapidata_client import (
     MultiAsset,
     RapidataDataTypes,
     Box,
-    )
+)

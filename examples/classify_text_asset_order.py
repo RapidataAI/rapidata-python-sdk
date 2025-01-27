@@ -1,7 +1,6 @@
 """
 Classify order with a validation set
 """
-
 from rapidata import RapidataClient
 
 
@@ -14,7 +13,8 @@ def new_classify_text_asset_order(rapi: RapidataClient):
         answer_options=["Baby don't hurt me", "No more", "Illusions", "Submarine", "Rock you"],
         truths=[["Baby don't hurt me"]],
         datapoints=["What is love?"],
-        data_type="text"
+        data_type="text",
+        explanations=["Somebody that I used to know"],
     )
 
     # Configure order

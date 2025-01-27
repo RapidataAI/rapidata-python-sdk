@@ -127,6 +127,7 @@ Class | Method | HTTP request | Description
 *RapidApi* | [**rapid_add_user_guess_post**](rapidata/api_client/docs/RapidApi.md#rapid_add_user_guess_post) | **POST** /Rapid/AddUserGuess | Submits a user guess for a Rapid.
 *RapidApi* | [**rapid_create_demographic_rapid_post**](rapidata/api_client/docs/RapidApi.md#rapid_create_demographic_rapid_post) | **POST** /Rapid/CreateDemographicRapid | Creates a new Demographic Rapid.
 *RapidApi* | [**rapid_query_validation_rapids_get**](rapidata/api_client/docs/RapidApi.md#rapid_query_validation_rapids_get) | **GET** /Rapid/QueryValidationRapids | Queries the validation rapids for a specific validation set.
+*RapidApi* | [**rapid_report_post**](rapidata/api_client/docs/RapidApi.md#rapid_report_post) | **POST** /Rapid/Report | Used to report an issue with a rapid.
 *RapidApi* | [**rapid_skip_user_guess_post**](rapidata/api_client/docs/RapidApi.md#rapid_skip_user_guess_post) | **POST** /Rapid/SkipUserGuess | Skips a Rapid for the user.
 *RapidApi* | [**rapid_validate_current_rapid_bag_get**](rapidata/api_client/docs/RapidApi.md#rapid_validate_current_rapid_bag_get) | **GET** /Rapid/ValidateCurrentRapidBag | Validates that the rapids associated with the current user are active.
 *RapidataIdentityAPIApi* | [**root_get**](rapidata/api_client/docs/RapidataIdentityAPIApi.md#root_get) | **GET** / | 
@@ -357,12 +358,14 @@ Class | Method | HTTP request | Description
  - [RankedDatapointModel](rapidata/api_client/docs/RankedDatapointModel.md)
  - [RapidAnswer](rapidata/api_client/docs/RapidAnswer.md)
  - [RapidAnswerResult](rapidata/api_client/docs/RapidAnswerResult.md)
+ - [RapidIssue](rapidata/api_client/docs/RapidIssue.md)
  - [RapidResultModel](rapidata/api_client/docs/RapidResultModel.md)
  - [RapidResultModelResult](rapidata/api_client/docs/RapidResultModelResult.md)
  - [RapidSkippedModel](rapidata/api_client/docs/RapidSkippedModel.md)
  - [ReadBridgeTokenKeysResult](rapidata/api_client/docs/ReadBridgeTokenKeysResult.md)
  - [RegisterTemporaryCustomerModel](rapidata/api_client/docs/RegisterTemporaryCustomerModel.md)
  - [RegisterTemporaryCustomerResult](rapidata/api_client/docs/RegisterTemporaryCustomerResult.md)
+ - [ReportModel](rapidata/api_client/docs/ReportModel.md)
  - [RootFilter](rapidata/api_client/docs/RootFilter.md)
  - [ScrubPayload](rapidata/api_client/docs/ScrubPayload.md)
  - [ScrubRange](rapidata/api_client/docs/ScrubRange.md)
