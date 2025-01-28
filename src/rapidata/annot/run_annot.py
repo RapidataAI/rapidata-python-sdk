@@ -54,9 +54,12 @@ def display_rapid_metadata(rapid: ValidationRapid):
     rapid.prompt = prompt
 
 def display_inventory():
-    st.markdown("## 🎒 <span style='color: #1E90FF;'>Inventory</span>", unsafe_allow_html=True)
     coll = get_collection()
-    for rapid in coll.rapids[::-1]:
+    rapids = coll.rapids
+    done_rapids = [r for r in rapids if r.is_done()]
+    not_done_rapids = [r for r in rapids if not r.is_done()]
+    st.markdown(f"## 🎒 <span style='color: #1E90FF;'>Inventory ({len(done_rapids)}/{len(rapids)} done)</span>", unsafe_allow_html=True)
+    for rapid in (not_done_rapids + done_rapids)[:5]:
         with st.container():
             display_rapid_metadata(rapid)
 
@@ -170,8 +173,13 @@ def display_creation_option():
 def display_canvas():
     st.markdown("## 🎨 <span style='color: #00bcd4;'>Annotate</span>", unsafe_allow_html=True)
 
-    if get_collection().current_rapid is None:
+    if len(get_collection().rapids) == 0:
         st.markdown("### No Rapids found. Upload an Image to start :scream:", unsafe_allow_html=True)
+        return
+
+    if get_collection().all_done():
+        st.markdown("### You are done annotating! Add more rapids or create a validation set :star2:",
+                    unsafe_allow_html=True)
         return
 
     current_rapid = get_collection().current_rapid
@@ -194,6 +202,8 @@ def display_canvas():
     )
     if canvas_result.json_data is not None and len(canvas_result.json_data['objects']) > 0:
         get_collection().current_rapid.set_annotation(canvas_result.json_data)
+        get_collection().set_next_unannotated_as_current()
+        st.rerun()
 
     reset = st.button('Reset This Annotation')
     if reset:

@@ -1,5 +1,6 @@
 import dataclasses
 import enum
+from collections import deque
 from typing import List, Union
 
 from PIL import Image
@@ -53,7 +54,7 @@ class ValidationRapidCollection:
 
         if starter_rapid is not None:
             self.rapids.append(starter_rapid)
-        self.set_last_as_current()
+        self.set_first_as_current()
 
 
     def add_rapids(self, rapids: Union[ValidationRapid, List[ValidationRapid]]):
@@ -62,16 +63,19 @@ class ValidationRapidCollection:
 
         for r in rapids:
             self.rapids.append(r)
-        self.set_last_as_current()
+        self.set_first_as_current()
+
+    def all_done(self):
+        return all(r.is_done() for r in self.rapids)
 
     def remove_rapid(self, rapid: ValidationRapid):
         self.rapids.remove(rapid)
         if rapid == self.current_rapid:
-            self.set_last_as_current()
+            self.set_first_as_current()
 
-    def set_last_as_current(self):
+    def set_first_as_current(self):
         if self.rapids:
-            self.current_rapid = self.rapids[-1]
+            self.current_rapid = self.rapids[0]
         else:
             self.current_rapid = None
 
@@ -80,6 +84,15 @@ class ValidationRapidCollection:
         if filtered:
             return filtered[0]
         return None
+
+    def set_next_unannotated_as_current(self):
+        for r in self.rapids:
+            if not r.is_done():
+                self.set_current(r.local_rapid_id)
+                return
+        self.current_rapid = None
+
+
     def set_current(self, rapid_id):
         r = self.get_by_id(rapid_id)
         if r is not None:
