@@ -52,9 +52,13 @@ class ValidationRapidCollection:
     def __init__(self, starter_rapid: Optional[ValidationRapid] = None):
         self.rapids: List[ValidationRapid] = list()
 
+        self.previous_rapids = []
+        self.current_rapid = None
+
         if starter_rapid is not None:
             self.rapids.append(starter_rapid)
         self.set_first_as_current()
+
 
 
     def add_rapids(self, rapids: Union[ValidationRapid, List[ValidationRapid]]):
@@ -70,12 +74,14 @@ class ValidationRapidCollection:
 
     def remove_rapid(self, rapid: ValidationRapid):
         self.rapids.remove(rapid)
+        if rapid in self.previous_rapids:
+            self.previous_rapids.remove(rapid)
         if rapid == self.current_rapid:
             self.set_first_as_current()
 
     def set_first_as_current(self):
         if self.rapids:
-            self.current_rapid = self.rapids[0]
+            self.set_current(self.rapids[0].local_rapid_id)
         else:
             self.current_rapid = None
 
@@ -90,10 +96,14 @@ class ValidationRapidCollection:
             if not r.is_done():
                 self.set_current(r.local_rapid_id)
                 return
-        self.current_rapid = None
+        self.set_current(None)
 
 
     def set_current(self, rapid_id):
         r = self.get_by_id(rapid_id)
-        if r is not None:
+        if r is not None: #noqa xdd
+            if self.current_rapid is not None:
+                if self.current_rapid in self.previous_rapids:
+                    self.previous_rapids.remove(self.current_rapid)
+                self.previous_rapids.append(self.current_rapid)
             self.current_rapid = r

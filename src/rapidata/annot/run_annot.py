@@ -24,7 +24,7 @@ def get_collection():
         )
     )
 
-def display_rapid_metadata(rapid: ValidationRapid):
+def display_rapid_metadata(rapid: ValidationRapid, list_id: str):
     cols = st.columns(5, vertical_alignment='center')
     with cols[0]:
         st.image(rapid.image, use_container_width=True)
@@ -36,21 +36,22 @@ def display_rapid_metadata(rapid: ValidationRapid):
         with cols[idx]:
             st.write(content[idx - 1])
     with cols[3]:
-        select = st.button('Select', key=f'bt_select_{rapid.local_rapid_id}')
+        select = st.button('Reset+Select', key=f'bt_select_{list_id}_{rapid.local_rapid_id}')
         if select:
-            get_collection().current_rapid = rapid
+            rapid.annotation = dict()
+            get_collection().set_current(rapid.local_rapid_id)
             update_canvas_key()
             st.rerun()
 
     with cols[4]:
-        delete = st.button('Delete', key=f'bt_delete_{rapid.local_rapid_id}')
+        delete = st.button('Delete', key=f'bt_delete_{list_id}_{rapid.local_rapid_id}')
         if delete:
             get_collection().remove_rapid(rapid)
             st.rerun()
     prompt = st.text_input(label='Supply Optional Custom Rapid Prompt?',
                            value=rapid.prompt,
                            placeholder='Where is the dog in this image?',
-                           key=f'tb_prompt_{rapid.local_rapid_id}')
+                           key=f'tb_prompt_{list_id}_{rapid.local_rapid_id}')
     rapid.prompt = prompt
 
 def display_inventory():
@@ -61,7 +62,14 @@ def display_inventory():
     st.markdown(f"## 🎒 <span style='color: #1E90FF;'>Inventory ({len(done_rapids)}/{len(rapids)} done)</span>", unsafe_allow_html=True)
     for rapid in (not_done_rapids + done_rapids)[:5]:
         with st.container():
-            display_rapid_metadata(rapid)
+            display_rapid_metadata(rapid, list_id='rapidList')
+    st.divider()
+    st.markdown(f"#### :rewind: <span style='color: #676b6a;'>Last Annotated Rapids </span>", unsafe_allow_html=True)
+    for rapid in coll.previous_rapids[-5:]:
+        with st.container():
+            display_rapid_metadata(rapid, list_id='rewindList')
+
+
 
 def get_next_rapid_id():
     st.session_state[CREATED_RAPIDS_COUNTER_KEY] += 1
