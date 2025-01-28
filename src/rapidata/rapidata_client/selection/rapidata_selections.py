@@ -17,7 +17,7 @@ class RapidataSelections:
                     LabelingSelection(2)]
     ```
 
-    The above example will create a session with a validation task followed by a labeling task.
+    The above example will create a session with a validation task followed by two labeling tasks.
 
     Attributes:
         labeling (LabelingSelection): The LabelingSelection instance.
