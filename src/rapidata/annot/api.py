@@ -107,14 +107,10 @@ def get_env_domain(env: str):
 def create_client(env: str):
     if env == PRODUCTION_ENVIRONMENT:
         return RapidataClient(
-            client_id=os.environ['CLIENT_ID'],
-            client_secret=os.environ['CLIENT_SECRET'],
             enviroment=get_env_domain(env),
         )
     else:
         return RapidataClient(
-            client_id=os.environ['TEST_CLIENT_ID'],
-            client_secret=os.environ['TEST_CLIENT_SECRET'],
             enviroment=get_env_domain(env)
         )
 
