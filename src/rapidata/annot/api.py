@@ -36,7 +36,6 @@ def _create_locate_rapids(rapids: List[ValidationRapid], global_prompt: str, env
 
         x, y, width, height = annotation["left"], annotation["top"], annotation["width"], annotation["height"]
         bbox = BBox(x, y, width, height, annotation_scale=1 / calc_image_scale(rapid.image)).get_scaled()
-        print(rapid.prompt)
         SUFFIX = "png"
         with tempfile.NamedTemporaryFile(delete=False, suffix=SUFFIX) as temp_file:
             temp_file_path = temp_file.name + '.' + SUFFIX
@@ -76,8 +75,7 @@ def _create_validation_set(name:str, rapids: List[Rapid], env: str):
     return val_set.id
 
 def validation_set_from_rapids(name: str, global_prompt: str, rapids: List[ValidationRapid], rapid_type: RapidTypes, env: str) -> str:
-
-    if rapid_type == RapidTypes.LOCATE or True:
+    if rapid_type.name == RapidTypes.LOCATE.name:
         rapids = _create_locate_rapids(rapids, global_prompt, env)
     else:
         raise ValueError(f"Unknown rapid type: {rapid_type}")
