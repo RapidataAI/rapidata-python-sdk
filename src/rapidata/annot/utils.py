@@ -1,10 +1,12 @@
 import base64
 from io import BytesIO
 
+import streamlit as st
 from PIL import Image
 
 from consts import CANVAS_WIDTH
 from models import BBox
+from rapidata.annot.consts import CREATED_RAPIDS_COUNTER_KEY
 
 
 def resize_image(image: Image, target_width=CANVAS_WIDTH) -> Image:
@@ -27,3 +29,8 @@ def image_to_base64(img):
         img.save(buffer, "png")
         raw_base64 = base64.b64encode(buffer.getvalue()).decode()
         return f"data:image/png;base64,{raw_base64}"
+
+
+def get_next_rapid_id():
+    st.session_state[CREATED_RAPIDS_COUNTER_KEY] += 1
+    return st.session_state[CREATED_RAPIDS_COUNTER_KEY]

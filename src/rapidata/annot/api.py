@@ -11,7 +11,7 @@ from rapidata import RapidataClient, Box
 from rapidata.annot.consts import PRODUCTION_ENVIRONMENT, TEST_ENVIRONMENT
 from rapidata.rapidata_client import PromptMetadata
 from rapidata.rapidata_client.validation.rapids.rapids import LocateRapid, Rapid
-from utils import calc_image_scale
+from utils import calc_image_scale, get_next_rapid_id
 
 modules = [
     'tempfile', 'io', 'PIL', 'requests', 'os',
@@ -133,7 +133,10 @@ def get_validation_rapids(validation_set_id: str, env: str) -> Optional[List[Val
     if r.status_code == 404:
         return None
 
-    return [ValidationRapid(name=r['asset']['fileName'], image=get_image_asset(r['asset']['fileName'], env))
+    return [ValidationRapid(
+        name=r['asset']['fileName'],
+        image=get_image_asset(r['asset']['fileName'], env),
+        rapid_id=get_next_rapid_id())
             for r in r.json()['items']]
 
 def get_validation_set_url(validation_set_id: str, env) -> str:

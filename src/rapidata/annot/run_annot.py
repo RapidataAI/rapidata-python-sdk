@@ -5,6 +5,7 @@ from streamlit_drawable_canvas import st_canvas
 import sys
 from pathlib import Path
 
+from rapidata.annot.utils import get_next_rapid_id
 
 sys.path.append(str(Path(__file__).parent.parent.parent.resolve()))
 
@@ -70,12 +71,6 @@ def display_inventory():
             display_rapid_metadata(rapid, list_id='rewindList')
 
 
-
-def get_next_rapid_id():
-    st.session_state[CREATED_RAPIDS_COUNTER_KEY] += 1
-    return st.session_state[CREATED_RAPIDS_COUNTER_KEY]
-
-
 def render_file_upload():
     uploaded_images = st.file_uploader("➕ Add Single Image:",
                                        type=["png", "jpg"],
@@ -96,14 +91,20 @@ def render_validation_set_cloning():
     st.write('➕ Add Images From an Existing Validation Set')
     col1, col2 = st.columns(2, vertical_alignment='center')
     with col1:
-        validation_set_name = st.text_input(label_visibility='collapsed',
+        validation_set_name = st.text_input(
                                             label="Clone an Existing Validation Set :panda_face: :panda_face:",
                                             placeholder="validation_set_id")
     with col2:
-        clone = st.button(label="Add All", use_container_width=True)
+        environment = st.selectbox(
+            "What environment would you like to use for cloning?",
+            (TEST_ENVIRONMENT, PRODUCTION_ENVIRONMENT),
+            on_change=lambda: set_env(environment)
+        )
+
+    clone = st.button(label="Add All", use_container_width=True)
 
     if clone:
-        rapids = get_validation_rapids(validation_set_name, get_env())
+        rapids = get_validation_rapids(validation_set_name, environment)
         if rapids is None:
             st.toast('🚫 **Validation set not found!**')
         else:
