@@ -71,6 +71,7 @@ class RapidataOrderManager:
             settings: Sequence[RapidataSetting] = [],
             sentences: list[str] | None = None,
             selections: Sequence[RapidataSelection] | None = None,
+            aggregator: str | None = None,
             default_labeling_amount: int = 3
         ) -> RapidataOrder:
         
@@ -118,6 +119,7 @@ class RapidataOrderManager:
                  ._selections(selections) 
                  ._settings(settings)
                  ._priority(self.__priority)
+                 ._aggregator(aggregator)
                  ._create()
                  )
         return order
@@ -138,6 +140,7 @@ class RapidataOrderManager:
             filters: Sequence[RapidataFilter] = [],
             settings: Sequence[RapidataSetting] = [],
             selections: Sequence[RapidataSelection] | None = None,
+            aggregator: str | None = None
         ) -> RapidataOrder:
         """Create a classification order.
         
@@ -159,6 +162,7 @@ class RapidataOrderManager:
             filters (Sequence[RapidataFilter], optional): The list of filters for the classification. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the classification. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the classification. Defaults to None. Decides in what order the tasks should be shown.
+            aggregator (str, optional): If provided will use a specific aggregator, otherwise will use the default one. Defaults to None. 
         """
         
         if data_type == RapidataDataTypes.MEDIA:
@@ -182,7 +186,8 @@ class RapidataOrderManager:
             confidence_threshold=confidence_threshold,
             filters=filters,
             selections=selections,
-            settings=settings
+            settings=settings,
+            aggregator=aggregator
         )
     
     def create_compare_order(self,
@@ -197,6 +202,7 @@ class RapidataOrderManager:
             filters: Sequence[RapidataFilter] = [],
             settings: Sequence[RapidataSetting] = [],
             selections: Sequence[RapidataSelection] | None = None,
+            aggregator: str | None = None
         ) -> RapidataOrder:
         """Create a compare order.
 
@@ -217,6 +223,7 @@ class RapidataOrderManager:
             filters (Sequence[RapidataFilter], optional): The list of filters for the comparison. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the comparison. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the comparison. Defaults to None. Decides in what order the tasks should be shown.
+            aggregator (str, optional): If provided will use a specific aggregator, otherwise will use the default one. Defaults to None.
         """
 
         if data_type == RapidataDataTypes.MEDIA:
@@ -239,7 +246,8 @@ class RapidataOrderManager:
             confidence_threshold=confidence_threshold,
             filters=filters,
             selections=selections,
-            settings=settings
+            settings=settings,
+            aggregator=aggregator
         )
     
     def create_free_text_order(self,
@@ -251,6 +259,7 @@ class RapidataOrderManager:
             filters: Sequence[RapidataFilter] = [],
             settings: Sequence[RapidataSetting] = [],
             selections: Sequence[RapidataSelection] | None = None,
+            aggregator: str | None = None
         ) -> RapidataOrder:
         """Create a free text order.
 
@@ -264,6 +273,7 @@ class RapidataOrderManager:
             filters (Sequence[RapidataFilter], optional): The list of filters for the free text. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the free text. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the free text. Defaults to None. Decides in what order the tasks should be shown.
+            aggregator (str, optional): If provided will use a specific aggregator, otherwise will use the default one. Defaults to None.
         """
 
         if data_type == RapidataDataTypes.MEDIA:
@@ -284,7 +294,8 @@ class RapidataOrderManager:
             filters=filters,
             selections=selections,
             settings=settings,
-            default_labeling_amount=1
+            default_labeling_amount=1,
+            aggregator=aggregator
         )
     
     def create_select_words_order(self,
@@ -297,6 +308,7 @@ class RapidataOrderManager:
             filters: Sequence[RapidataFilter] = [],
             settings: Sequence[RapidataSetting] = [],
             selections: Sequence[RapidataSelection] | None = None,
+            aggregator: str | None = None
         ) -> RapidataOrder:
         """Create a select words order.
 
@@ -312,6 +324,7 @@ class RapidataOrderManager:
             filters (Sequence[RapidataFilter], optional): The list of filters for the select words. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the select words. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the select words. Defaults to None. Decides in what order the tasks should be shown.
+            aggregator (str, optional): If provided will use a specific aggregator, otherwise will use the default one. Defaults to None.
         """
 
         assets = [MediaAsset(path=path) for path in datapoints]
@@ -328,7 +341,8 @@ class RapidataOrderManager:
             selections=selections,
             settings=settings,
             sentences=sentences,
-            default_labeling_amount=2
+            default_labeling_amount=2,
+            aggregator=aggregator
         )
     
     def create_locate_order(self,
@@ -341,6 +355,7 @@ class RapidataOrderManager:
             filters: Sequence[RapidataFilter] = [],
             settings: Sequence[RapidataSetting] = [],
             selections: Sequence[RapidataSelection] | None = None,
+            aggregator: str | None = None
         ) -> RapidataOrder:
         """Create a locate order.
 
@@ -357,6 +372,7 @@ class RapidataOrderManager:
             filters (Sequence[RapidataFilter], optional): The list of filters for the locate. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the locate. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the locate. Defaults to None. Decides in what order the tasks should be shown.
+            aggregator (str, optional): If provided will use a specific aggregator, otherwise will use the default one. Defaults to None.
         """
 
         assets = [MediaAsset(path=path) for path in datapoints]
@@ -370,7 +386,8 @@ class RapidataOrderManager:
             validation_set_id=validation_set_id,
             filters=filters,
             selections=selections,
-            settings=settings
+            settings=settings,
+            aggregator=aggregator
         )
 
     def create_draw_order(self,
@@ -383,6 +400,7 @@ class RapidataOrderManager:
             filters: Sequence[RapidataFilter] = [],
             settings: Sequence[RapidataSetting] = [],
             selections: Sequence[RapidataSelection] | None = None,
+            aggregator: str | None = None
         ) -> RapidataOrder:
         """Create a draw order.
 
@@ -399,6 +417,7 @@ class RapidataOrderManager:
             filters (Sequence[RapidataFilter], optional): The list of filters for the draw lines. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the draw lines. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the draw lines. Defaults to None. Decides in what order the tasks should be shown.
+            aggregator (str, optional): If provided will use a specific aggregator, otherwise will use the default one. Defaults to None.
         """
 
         assets = [MediaAsset(path=path) for path in datapoints]
@@ -412,7 +431,8 @@ class RapidataOrderManager:
             validation_set_id=validation_set_id,
             filters=filters,
             selections=selections,
-            settings=settings
+            settings=settings,
+            aggregator=aggregator
         )
     
     def create_timestamp_order(self,
@@ -425,6 +445,7 @@ class RapidataOrderManager:
             filters: Sequence[RapidataFilter] = [],
             settings: Sequence[RapidataSetting] = [],
             selections: Sequence[RapidataSelection] | None = None,
+            aggregator: str | None = None
         ) -> RapidataOrder:
         """Create a timestamp order.
 
@@ -440,6 +461,7 @@ class RapidataOrderManager:
             filters (Sequence[RapidataFilter], optional): The list of filters for the timestamp. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the timestamp. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the timestamp. Defaults to None. Decides in what order the tasks should be shown.
+            aggregator (str, optional): If provided will use a specific aggregator, otherwise will use the default one. Defaults to None.
         """
 
         assets = [MediaAsset(path=path) for path in datapoints]
@@ -460,7 +482,8 @@ class RapidataOrderManager:
             filters=filters,
             selections=selections,
             settings=settings,
-            default_labeling_amount=2
+            default_labeling_amount=2,
+            aggregator=aggregator
         )
 
     def get_order_by_id(self, order_id: str) -> RapidataOrder:

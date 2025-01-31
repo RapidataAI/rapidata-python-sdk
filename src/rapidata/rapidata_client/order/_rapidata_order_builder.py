@@ -56,7 +56,8 @@ class RapidataOrderBuilder:
         self.__settings: Sequence[RapidataSetting] | None = None
         self.__user_filters: list[RapidataFilter] = []
         self.__selections: list[RapidataSelection] = []
-        self.__priority: int = 50
+        self.__aggregator: str | None = None
+        self.__priority: int | None = None
         self.__assets: Sequence[BaseAsset] = []
 
     def _to_model(self) -> CreateOrderModel:
@@ -95,6 +96,7 @@ class RapidataOrderBuilder:
                 CappedSelectionSelectionsInner(selection._to_model())
                 for selection in self.__selections
             ],
+            aggregator=self.__aggregator,
             priority=self.__priority,
         )
 
@@ -346,6 +348,22 @@ class RapidataOrderBuilder:
                 raise TypeError("Selections must be of type Selection.")
 
         self.__selections = selections  # type: ignore
+        return self
+    
+    def _aggregator(self, aggregator: str | None) -> "RapidataOrderBuilder":
+        """
+        Set the aggregator for the order.
+
+        Args:
+            aggregator (str | None): The aggregator to be set.
+
+        Returns:
+            RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
+        """
+        if not isinstance(aggregator, str) and aggregator is not None:
+            raise TypeError("Aggregator must be of type str or None.")
+
+        self.__aggregator = aggregator
         return self
 
     def _priority(self, priority: int) -> "RapidataOrderBuilder":
