@@ -56,6 +56,7 @@ class ValidationSetManager:
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction and answer options. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
+            explanations (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
         """
         
         if len(datapoints) != len(truths):
@@ -113,6 +114,7 @@ class ValidationSetManager:
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction and truth. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
+            explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
         """
         
         if len(datapoints) != len(truths):
@@ -169,6 +171,7 @@ class ValidationSetManager:
             required_precision (float, optional): The required precision for the labeler to get the rapid correct (minimum ratio of the words selected that need to be correct). Defaults to 1.0 (no wrong word can be selected).
             required_completeness (float, optional): The required completeness for the labeler to get the rapid correct (miminum ratio of total correct words selected). Defaults to 1.0 (all correct words need to be selected).
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
+            explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
             """
         
         if not all([isinstance(truth, (list, tuple)) for truth in truths]):
@@ -217,6 +220,7 @@ class ValidationSetManager:
             datapoints (list[str]): The datapoints that will be used for validation.
             contexts (list[str], optional): The contexts for each datapoint. Defaults to None.
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
+            explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
         """
         
         if len(datapoints) != len(truths):
@@ -268,6 +272,7 @@ class ValidationSetManager:
             datapoints (list[str]): The datapoints that will be used for validation.
             contexts (list[str], optional): The contexts for each datapoint. Defaults to None.
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
+            explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
         """
         
         if len(datapoints) != len(truths):
@@ -319,6 +324,7 @@ class ValidationSetManager:
             datapoints (list[str]): The datapoints that will be used for validation.
             contexts (list[str], optional): The contexts for each datapoint. Defaults to None.
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
+            explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
         """
         
         if len(datapoints) != len(truths):
