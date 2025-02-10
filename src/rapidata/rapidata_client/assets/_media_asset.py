@@ -137,6 +137,7 @@ class MediaAsset(BaseAsset):
     def __get_media_bytes(self, url: str) -> bytes:
         """
         Downloads media files from URL and validates type and duration.
+        Supports both standard URLs and direct download links (e.g., S3).
         
         Args:
             url: URL of the media file
@@ -145,24 +146,102 @@ class MediaAsset(BaseAsset):
             bytes: Media data
             
         Raises:
-            ValueError: If media type is unsupported or duration exceeds limit
+            ValueError: If media type is unsupported or content validation fails
             requests.exceptions.RequestException: If download fails
         """
-        response = requests.get(url, stream=False)  # Don't stream, we need full file
+        response = requests.get(url, stream=False)
         response.raise_for_status()
 
         content_type = response.headers.get('content-type', '').lower()
+        content = response.content
         
-        # Validate content type
-        if not any(content_type.startswith(t) for t in self.ALLOWED_TYPES):
-            raise ValueError(
-                f'URL does not point to an allowed media type.\n'
-                f'Content-Type: {content_type}\n'
-                f'Allowed types: {self.ALLOWED_TYPES}'
-            )
-
-        content = BytesIO(response.content)
-        return content.getvalue()
+        # First check: Standard content-type validation
+        is_allowed_type = any(content_type.startswith(t) for t in self.ALLOWED_TYPES)
+        
+        # For binary/octet-stream or unknown types, try to detect from content
+        if content_type == 'binary/octet-stream' or not is_allowed_type:
+            file_start = content[:32]  # Get first 32 bytes for more reliable detection
+            
+            # Try to detect type from file extension first
+            ext = url.lower().split('?')[0].split('.')[-1]
+            
+            # Map common extensions to MIME types
+            ext_to_mime = {
+                'jpg': 'image/jpeg',
+                'jpeg': 'image/jpeg',
+                'png': 'image/png',
+                'gif': 'image/gif',
+                'webp': 'image/webp',
+                'mp3': 'audio/mp3',
+                'mp4': 'video/mp4'
+            }
+            
+            detected_mime = ext_to_mime.get(ext)
+            
+            if detected_mime and detected_mime.startswith(tuple(self.ALLOWED_TYPES)):
+                # Additional validation based on content
+                try:
+                    if detected_mime.startswith('image/'):
+                        # Verify it's a valid image
+                        img = Image.open(BytesIO(content))
+                        img.verify()
+                        return content
+                    elif detected_mime in ['audio/mp3', 'video/mp4']:
+                        # For audio/video, we'll save it and let get_duration() validate later
+                        return content
+                except Exception as e:
+                    # If validation fails, continue to signature-based detection
+                    print(f"Extension-based validation failed: {str(e)}")
+                    pass
+            
+            # Signature-based detection as fallback
+            signatures = {
+                b'\xFF\xD8\xFF': 'image/jpeg',
+                b'\x89PNG\r\n\x1a\n': 'image/png',
+                b'GIF87a': 'image/gif',
+                b'GIF89a': 'image/gif',
+                b'RIFF': 'image/webp',
+                b'ID3': 'audio/mp3',
+                b'\xFF\xFB': 'audio/mp3',
+                b'\xFF\xF3': 'audio/mp3',
+                b'ftyp': 'video/mp4',
+            }
+            
+            # Try to detect type from file signature
+            detected_type = None
+            for sig, mime in signatures.items():
+                if file_start.startswith(sig) or (sig in file_start[:10]):  # Check if signature appears in first 10 bytes
+                    detected_type = mime
+                    if detected_type.startswith(tuple(self.ALLOWED_TYPES)):
+                        try:
+                            if detected_type.startswith('image/'):
+                                # Verify it's a valid image
+                                img = Image.open(BytesIO(content))
+                                img.verify()
+                            return content
+                        except Exception as e:
+                            print(f"Signature validation failed: {str(e)}")
+                            continue
+                        
+            # If we get here and haven't returned, try one last validation for images
+            try:
+                img = Image.open(BytesIO(content))
+                img.verify()
+                return content
+            except Exception:
+                pass
+                
+        elif is_allowed_type:
+            # If content-type is already allowed, return content
+            return content
+            
+        # If we get here, we couldn't validate the content
+        raise ValueError(
+            f'Could not validate media type from content.\n'
+            f'Content-Type: {content_type}\n'
+            f'Allowed types: {self.ALLOWED_TYPES}\n'
+            f'URL extension: {url.split("?")[0].split(".")[-1]}'
+        )
     
     def to_file(self) -> StrictStr | tuple[StrictStr, StrictBytes] | StrictBytes: # types for autogenerated models
         if isinstance(self.path, str):
