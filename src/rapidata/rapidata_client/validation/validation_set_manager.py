@@ -85,7 +85,7 @@ class ValidationSetManager:
                 )
             )
 
-        return self._submit(name=name, data_type=data_type, rapids=rapids, print_confirmation=print_confirmation)
+        return self._submit(name=name, rapids=rapids, print_confirmation=print_confirmation)
 
     def create_compare_set(self,
         name: str,
@@ -142,7 +142,7 @@ class ValidationSetManager:
                 )
             )
  
-        return self._submit(name=name, data_type=data_type, rapids=rapids, print_confirmation=print_confirmation)
+        return self._submit(name=name, rapids=rapids, print_confirmation=print_confirmation)
   
     def create_select_words_set(self,
         name: str,
@@ -197,7 +197,7 @@ class ValidationSetManager:
                 )
             )
 
-        return self._submit(name=name, data_type=RapidataDataTypes.MEDIA, rapids=rapids, print_confirmation=print_confirmation)
+        return self._submit(name=name, rapids=rapids, print_confirmation=print_confirmation)
 
     def create_locate_set(self,
         name: str,
@@ -249,7 +249,7 @@ class ValidationSetManager:
                 )
             )
         
-        return self._submit(name=name, data_type=RapidataDataTypes.MEDIA, rapids=rapids, print_confirmation=print_confirmation)
+        return self._submit(name=name, rapids=rapids, print_confirmation=print_confirmation)
     
     def create_draw_set(self,
         name: str,
@@ -300,7 +300,7 @@ class ValidationSetManager:
                 )
             )
 
-        return self._submit(name=name, data_type=RapidataDataTypes.MEDIA, rapids=rapids, print_confirmation=print_confirmation)
+        return self._submit(name=name, rapids=rapids, print_confirmation=print_confirmation)
 
     def create_timestamp_set(self,
         name: str,
@@ -352,11 +352,10 @@ class ValidationSetManager:
                 )
             )
 
-        return self._submit(name=name, data_type=RapidataDataTypes.MEDIA, rapids=rapids, print_confirmation=print_confirmation)
+        return self._submit(name=name, rapids=rapids, print_confirmation=print_confirmation)
     
     def create_mixed_set(self,
         name: str,
-        data_type: str,
         rapids: list[Rapid],
         print_confirmation: bool = True
     ) -> RapidataValidationSet:
@@ -368,7 +367,7 @@ class ValidationSetManager:
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
         """
 
-        return self._submit(name, data_type, rapids, print_confirmation)
+        return self._submit(name, rapids, print_confirmation)
     
     def get_validation_set_by_id(self, validation_set_id: str) -> RapidataValidationSet:
         """Get a validation set by ID.
@@ -384,9 +383,9 @@ class ValidationSetManager:
         except Exception:
             raise ValueError(f"ValidationSet with ID {validation_set_id} not found.")
         
-        return RapidataValidationSet(validation_set_id, validation_set.name)
+        return RapidataValidationSet(validation_set_id, validation_set.name, self.__openapi_service)
 
-    def _submit(self, name: str, data_type: str, rapids: list[Rapid], print_confirmation: bool) -> RapidataValidationSet:
+    def _submit(self, name: str, rapids: list[Rapid], print_confirmation: bool) -> RapidataValidationSet:
         validation_set_id = (
             self.__openapi_service.validation_api.validation_create_validation_set_post(
                 name=name
@@ -399,21 +398,16 @@ class ValidationSetManager:
         if print_confirmation:
             print(f"Validation set '{name}' created with ID {validation_set_id}")
 
-        for rapid in rapids:
-            if data_type == RapidataDataTypes.TEXT:
-                self.__openapi_service.validation_api.validation_add_validation_text_rapid_post(
-                    add_validation_text_rapid_model=rapid.to_text_model(validation_set_id)
-                )
-            else:
-                model = rapid.to_media_model(validation_set_id)
-                self.__openapi_service.validation_api.validation_add_validation_rapid_post(
-                   model=model[0], files=model[1]
-                )
-
-        return RapidataValidationSet(
+        validation_set = RapidataValidationSet(
             name=name,
             validation_set_id=validation_set_id,
+            openapi_service=self.__openapi_service
         )
+
+        for rapid in rapids:
+            validation_set.add_rapid(rapid)
+        
+        return validation_set
 
 
     def find_validation_sets(self, name: str = "", amount: int = 1) -> list[RapidataValidationSet]:
