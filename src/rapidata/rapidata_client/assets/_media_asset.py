@@ -12,6 +12,8 @@ from PIL import Image
 from tinytag import TinyTag
 import tempfile
 from pydantic import StrictStr, StrictBytes
+from typing import Optional
+import logging
 
 
 class MediaAsset(BaseAsset):
@@ -26,12 +28,35 @@ class MediaAsset(BaseAsset):
     Raises:
         FileNotFoundError: If the provided file path does not exist.
     """
+    _logger = logging.getLogger(__name__ + '.MediaAsset')
 
     ALLOWED_TYPES = [
         'image/', 
         'audio/mp3',      # MP3
         'video/mp4',       # MP4
     ]
+
+    MIME_TYPES = {
+        'jpg': 'image/jpeg',
+        'jpeg': 'image/jpeg',
+        'png': 'image/png',
+        'gif': 'image/gif',
+        'webp': 'image/webp',
+        'mp3': 'audio/mp3',
+        'mp4': 'video/mp4'
+    }
+
+    FILE_SIGNATURES = {
+        b'\xFF\xD8\xFF': 'image/jpeg',
+        b'\x89PNG\r\n\x1a\n': 'image/png',
+        b'GIF87a': 'image/gif',
+        b'GIF89a': 'image/gif',
+        b'RIFF': 'image/webp',
+        b'ID3': 'audio/mp3',
+        b'\xFF\xFB': 'audio/mp3',
+        b'\xFF\xF3': 'audio/mp3',
+        b'ftyp': 'video/mp4',
+    }
 
     def __init__(self, path: str):
         """
@@ -134,35 +159,111 @@ class MediaAsset(BaseAsset):
             name = name + '.jpg'
         return name
 
+    def __get_media_type_from_extension(self, url: str) -> Optional[str]:
+        """
+        Determine media type from URL file extension.
+        
+        Args:
+            url: The URL to check
+            
+        Returns:
+            Optional[str]: MIME type if valid extension found, None otherwise
+        """
+        try:
+            ext = url.lower().split('?')[0].split('.')[-1]
+            return self.MIME_TYPES.get(ext)
+        except IndexError:
+            return None
+        
+    def __validate_image_content(self, content: bytes) -> bool:
+        """
+        Validate image content using PIL.
+        
+        Args:
+            content: Image bytes to validate
+            
+        Returns:
+            bool: True if valid image, False otherwise
+        """
+        try:
+            img = Image.open(BytesIO(content))
+            img.verify()
+            return True
+        except Exception as e:
+            self._logger.debug(f"Image validation failed: {str(e)}")
+            return False
+        
+    def __get_media_type_from_signature(self, content: bytes) -> Optional[str]:
+        """
+        Determine media type from file signature.
+        
+        Args:
+            content: File content bytes
+            
+        Returns:
+            Optional[str]: MIME type if valid signature found, None otherwise
+        """
+        file_start = content[:32]
+        for signature, mime_type in self.FILE_SIGNATURES.items():
+            if file_start.startswith(signature) or (signature in file_start[:10]):
+                return mime_type
+        return None
+
     def __get_media_bytes(self, url: str) -> bytes:
         """
-        Downloads media files from URL and validates type and duration.
+        Downloads and validates media files from URL.
         
         Args:
             url: URL of the media file
-                
+            
         Returns:
-            bytes: Media data
+            bytes: Validated media content
             
         Raises:
-            ValueError: If media type is unsupported or duration exceeds limit
+            ValueError: If media type is unsupported or content validation fails
             requests.exceptions.RequestException: If download fails
         """
-        response = requests.get(url, stream=False)  # Don't stream, we need full file
-        response.raise_for_status()
+        try:
+            response = requests.get(url, stream=False)
+            response.raise_for_status()
+        except requests.exceptions.RequestException as e:
+            self._logger.error(f"Failed to download media from {url}: {str(e)}")
+            raise
 
+        content = response.content
         content_type = response.headers.get('content-type', '').lower()
-        
-        # Validate content type
-        if not any(content_type.startswith(t) for t in self.ALLOWED_TYPES):
-            raise ValueError(
-                f'URL does not point to an allowed media type.\n'
-                f'Content-Type: {content_type}\n'
-                f'Allowed types: {self.ALLOWED_TYPES}'
-            )
 
-        content = BytesIO(response.content)
-        return content.getvalue()
+        # Case 1: Content-type is already allowed
+        if any(content_type.startswith(t) for t in self.ALLOWED_TYPES):
+            self._logger.debug(f"Content-type {content_type} is allowed")
+            return content
+
+        # Case 2: Try to validate based on extension
+        mime_type = self.__get_media_type_from_extension(url)
+        if mime_type and mime_type.startswith(tuple(self.ALLOWED_TYPES)):
+            self._logger.debug(f"Found valid mime type from extension: {mime_type}")
+            return content
+
+        # Case 3: Try to validate based on file signature
+        mime_type = self.__get_media_type_from_signature(content)
+        if mime_type and mime_type.startswith(tuple(self.ALLOWED_TYPES)):
+            self._logger.debug(f"Found valid mime type from signature: {mime_type}")
+            return content
+
+        # Case 4: Last resort - try direct image validation
+        if self.__validate_image_content(content):
+            self._logger.debug("Content validated as image through direct validation")
+            return content
+
+        # If we get here, validation failed
+        error_msg = (
+            f'Could not validate media type from content.\n'
+            f'Content-Type: {content_type}\n'
+            f'URL extension: {url.split("?")[0].split(".")[-1]}\n'
+            f'Allowed types: {self.ALLOWED_TYPES}'
+        )
+        self._logger.error(error_msg)
+        raise ValueError(error_msg)
     
     def to_file(self) -> StrictStr | tuple[StrictStr, StrictBytes] | StrictBytes: # types for autogenerated models
         if isinstance(self.path, str):
