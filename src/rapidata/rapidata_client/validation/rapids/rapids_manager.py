@@ -132,7 +132,7 @@ class RapidsManager:
         asset = MediaAsset(datapoint)
         transcription_words = [
             TranscriptionWord(word=word, wordIndex=i)
-            for i, word in enumerate(sentence)
+            for i, word in enumerate(sentence.split(" "))
         ]
 
         correct_transcription_words: list[TranscriptionWord] = []

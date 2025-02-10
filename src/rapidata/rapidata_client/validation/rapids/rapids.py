@@ -20,6 +20,7 @@ from rapidata.api_client.models.datapoint_metadata_model_metadata_inner import (
     DatapointMetadataModelMetadataInner,
 )
 
+from rapidata.service.openapi_service import OpenAPIService
 
 class Rapid():
     def __init__(self, asset: MediaAsset | TextAsset | MultiAsset, metadata: Sequence[Metadata], payload: Any, truth: Any, randomCorrectProbability: float, explanation: str | None):
@@ -30,7 +31,22 @@ class Rapid():
         self.randomCorrectProbability = randomCorrectProbability
         self.explanation = explanation 
 
-    def to_media_model(self, validationSetId: str) -> tuple[AddValidationRapidModel, list[StrictStr | tuple[StrictStr, StrictBytes] | StrictBytes]]:
+    def _add_to_validation_set(self, validationSetId: str, openapi_service: OpenAPIService):
+        if isinstance(self.asset, TextAsset) or (isinstance(self.asset, MultiAsset) and isinstance(self.asset.assets[0], TextAsset)):
+            openapi_service.validation_api.validation_add_validation_text_rapid_post(
+                add_validation_text_rapid_model=self.__to_text_model(validationSetId)
+            )
+
+        elif isinstance(self.asset, MediaAsset) or (isinstance(self.asset, MultiAsset) and isinstance(self.asset.assets[0], MediaAsset)):
+            model = self.__to_media_model(validationSetId)
+            openapi_service.validation_api.validation_add_validation_rapid_post(
+                model=model[0], files=model[1]
+            )
+            
+        else:
+            raise TypeError("The asset must be a MediaAsset, TextAsset, or MultiAsset")
+
+    def __to_media_model(self, validationSetId: str) -> tuple[AddValidationRapidModel, list[StrictStr | tuple[StrictStr, StrictBytes] | StrictBytes]]:
         assets: list[MediaAsset] = [] 
         if isinstance(self.asset, MultiAsset):
             for asset in self.asset.assets:
@@ -57,7 +73,7 @@ class Rapid():
             explanation=self.explanation
         ), [asset.to_file() for asset in assets])
 
-    def to_text_model(self, validationSetId: str) -> AddValidationTextRapidModel:
+    def __to_text_model(self, validationSetId: str) -> AddValidationTextRapidModel:
         texts: list[str] = []
         if isinstance(self.asset, MultiAsset):
             for asset in self.asset.assets:
