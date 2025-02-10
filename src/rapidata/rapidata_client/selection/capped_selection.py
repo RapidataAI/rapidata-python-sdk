@@ -1,8 +1,8 @@
 from rapidata.api_client.models.capped_selection import (
     CappedSelection as CappedSelectionModel,
 )
-from rapidata.api_client.models.capped_selection_selections_inner import (
-    CappedSelectionSelectionsInner,
+from rapidata.api_client.models.ab_test_selection_a_inner import (
+    AbTestSelectionAInner,
 )
 from rapidata.rapidata_client.selection._base_selection import RapidataSelection
 from typing import Sequence
@@ -28,7 +28,7 @@ class CappedSelection(RapidataSelection):
         return CappedSelectionModel(
             _t="CappedSelection",
             selections=[
-                CappedSelectionSelectionsInner(selection._to_model())
+                AbTestSelectionAInner(selection._to_model())
                 for selection in self.selections
             ],
             maxRapids=self.max_rapids,
