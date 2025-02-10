@@ -30,6 +30,7 @@ class QueryValidationRapidsResult(BaseModel):
     """
     QueryValidationRapidsResult
     """ # noqa: E501
+    id: StrictStr
     type: StrictStr
     asset: Optional[QueryValidationRapidsResultAsset]
     truth: Optional[QueryValidationRapidsResultTruth] = None
@@ -37,7 +38,8 @@ class QueryValidationRapidsResult(BaseModel):
     metadata: List[FileAssetModel1MetadataInner]
     correct_validation_count: StrictInt = Field(alias="correctValidationCount")
     invalid_validation_count: StrictInt = Field(alias="invalidValidationCount")
-    __properties: ClassVar[List[str]] = ["type", "asset", "truth", "payload", "metadata", "correctValidationCount", "invalidValidationCount"]
+    explanation: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = ["id", "type", "asset", "truth", "payload", "metadata", "correctValidationCount", "invalidValidationCount", "explanation"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -104,6 +106,11 @@ class QueryValidationRapidsResult(BaseModel):
         if self.truth is None and "truth" in self.model_fields_set:
             _dict['truth'] = None
 
+        # set to None if explanation (nullable) is None
+        # and model_fields_set contains the field
+        if self.explanation is None and "explanation" in self.model_fields_set:
+            _dict['explanation'] = None
+
         return _dict
 
     @classmethod
@@ -116,13 +123,15 @@ class QueryValidationRapidsResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "id": obj.get("id"),
             "type": obj.get("type"),
             "asset": QueryValidationRapidsResultAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "truth": QueryValidationRapidsResultTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
             "payload": QueryValidationRapidsResultPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
             "metadata": [FileAssetModel1MetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
             "correctValidationCount": obj.get("correctValidationCount"),
-            "invalidValidationCount": obj.get("invalidValidationCount")
+            "invalidValidationCount": obj.get("invalidValidationCount"),
+            "explanation": obj.get("explanation")
         })
         return _obj
 

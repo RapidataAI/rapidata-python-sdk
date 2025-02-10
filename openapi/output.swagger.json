@@ -2350,7 +2350,51 @@
         }
       }
     },
-    "/CompareWorkflow/GetResultOverview": {
+    "/rapid/validation/{rapidId}": {
+      "put": {
+        "tags": [
+          "Rapid"
+        ],
+        "summary": "Updates the validation information of a rapid.",
+        "parameters": [
+          {
+            "name": "rapidId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateValidationRapidModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateValidationRapidModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateValidationRapidModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/workflow/compare/{id}/results": {
       "get": {
         "tags": [
           "CompareWorkflow"
@@ -2358,38 +2402,44 @@
         "summary": "Get the result overview for a compare workflow.",
         "parameters": [
           {
-            "name": "WorkflowId",
-            "in": "query",
-            "description": "The ID of the workflow.",
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the workflow to get the results for.",
             "required": true,
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "DisplayCount",
+            "name": "model",
             "in": "query",
-            "description": "The number of datapoints to return.",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
+            "description": "The model for the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCompareWorkflowResultsModel"
+                }
+              }
             }
           }
         ],
         "responses": {
           "200": {
-            "description": null,
+            "description": "OK",
             "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCompareWorkflowResultsResultPagedResult"
+                }
+              },
               "application/json": {
                 "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/GetCompareWorkflowResultOverviewResult"
-                    },
-                    {
-                      "$ref": "#/components/schemas/GetCompareWorkflowResultOverviewSmallResult"
-                    }
-                  ]
+                  "$ref": "#/components/schemas/GetCompareWorkflowResultsResultPagedResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCompareWorkflowResultsResultPagedResult"
                 }
               }
             }
@@ -2397,7 +2447,7 @@
         }
       }
     },
-    "/SimpleWorkflow/GetResultOverview": {
+    "/workflow/simple/{id}/results": {
       "get": {
         "tags": [
           "SimpleWorkflow"
@@ -2405,56 +2455,44 @@
         "summary": "Get the result overview for a simple workflow.",
         "parameters": [
           {
-            "name": "WorkflowId",
-            "in": "query",
-            "description": "The ID of the workflow.",
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the workflow to get the results for.",
             "required": true,
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "NotStartedDisplayCount",
+            "name": "model",
             "in": "query",
-            "description": "The number of rapids that have not started to return.",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "InProgressDisplayCount",
-            "in": "query",
-            "description": "The number of rapids that are in progress to return.",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "CompletedDisplayCount",
-            "in": "query",
-            "description": "The number of rapids that are completed to return.",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
+            "description": "The model for the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSimpleWorkflowResultsModel"
+                }
+              }
             }
           }
         ],
         "responses": {
           "200": {
-            "description": null,
+            "description": "OK",
             "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSimpleWorkflowResultsResultPagedResult"
+                }
+              },
               "application/json": {
                 "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/GetClassifyWorkflowResultOverviewResult"
-                    },
-                    {
-                      "$ref": "#/components/schemas/GetSimpleWorkflowResultOverviewResult"
-                    }
-                  ]
+                  "$ref": "#/components/schemas/GetSimpleWorkflowResultsResultPagedResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSimpleWorkflowResultsResultPagedResult"
                 }
               }
             }
@@ -2539,46 +2577,6 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetWorkflowByIdResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/Workflow/GetResultOverview": {
-      "get": {
-        "tags": [
-          "Workflow"
-        ],
-        "summary": "Get the result overview for a workflow.",
-        "parameters": [
-          {
-            "name": "workflowId",
-            "in": "query",
-            "description": "The ID of the workflow to get the result overview for.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetWorkflowResultOverviewResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetWorkflowResultOverviewResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetWorkflowResultOverviewResult"
                 }
               }
             }
@@ -3007,6 +3005,114 @@
         "responses": {
           "204": {
             "description": "No Content"
+          }
+        }
+      }
+    },
+    "/pipeline/{pipelineId}/preliminary-download": {
+      "post": {
+        "tags": [
+          "Pipeline"
+        ],
+        "summary": "Initiates a preliminary download of the pipeline.",
+        "parameters": [
+          {
+            "name": "pipelineId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreliminaryDownloadModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreliminaryDownloadModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreliminaryDownloadModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PreliminaryDownloadResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PreliminaryDownloadResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PreliminaryDownloadResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pipeline/preliminary-download/{preliminaryDownloadId}": {
+      "get": {
+        "tags": [
+          "Pipeline"
+        ],
+        "summary": "Gets the preliminary download. If it's still processing the request will return 202 Accepted.",
+        "parameters": [
+          {
+            "name": "preliminaryDownloadId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Accepted"
           }
         }
       }
@@ -4540,6 +4646,93 @@
         "additionalProperties": false,
         "description": "The model for uploading text sources to a dataset."
       },
+      "AbTestSelection": {
+        "title": "AbTestSelection",
+        "required": [
+          "_t",
+          "a",
+          "b"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "AbTestSelection"
+            ],
+            "type": "string",
+            "description": "Discriminator value for AbTestSelection",
+            "default": "AbTestSelection",
+            "example": "AbTestSelection"
+          },
+          "userSegment": {
+            "type": "string",
+            "nullable": true
+          },
+          "a": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AbTestSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/CappedSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/ConditionalValidationSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/DemographicSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/LabelingSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/StaticSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/ValidationSelection"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          },
+          "b": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AbTestSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/CappedSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/ConditionalValidationSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/DemographicSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/LabelingSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/StaticSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/ValidationSelection"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          }
+        },
+        "additionalProperties": false
+      },
       "AgeGroup": {
         "enum": [
           "0-17",
@@ -4695,6 +4888,9 @@
             "type": "array",
             "items": {
               "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AbTestSelection"
+                },
                 {
                   "$ref": "#/components/schemas/CappedSelection"
                 },
@@ -5192,6 +5388,9 @@
             "type": "array",
             "items": {
               "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AbTestSelection"
+                },
                 {
                   "$ref": "#/components/schemas/CappedSelection"
                 },
@@ -5921,11 +6120,15 @@
           "isPublic",
           "orderDate",
           "orderName",
+          "pipelineId",
           "state"
         ],
         "type": "object",
         "properties": {
           "id": {
+            "type": "string"
+          },
+          "pipelineId": {
             "type": "string"
           },
           "orderDate": {
@@ -8584,6 +8787,7 @@
         "required": [
           "asset",
           "correctValidationCount",
+          "id",
           "invalidValidationCount",
           "metadata",
           "payload",
@@ -8591,6 +8795,9 @@
         ],
         "type": "object",
         "properties": {
+          "id": {
+            "type": "string"
+          },
           "type": {
             "type": "string"
           },
@@ -8736,6 +8943,10 @@
           "invalidValidationCount": {
             "type": "integer",
             "format": "int32"
+          },
+          "explanation": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -9124,6 +9335,75 @@
         },
         "additionalProperties": false
       },
+      "UpdateValidationRapidModel": {
+        "required": [
+          "explanation",
+          "prompt",
+          "truth"
+        ],
+        "type": "object",
+        "properties": {
+          "truth": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranscriptionTruth"
+              },
+              {
+                "$ref": "#/components/schemas/ScrubTruth"
+              },
+              {
+                "$ref": "#/components/schemas/PolygonTruth"
+              },
+              {
+                "$ref": "#/components/schemas/NamedEntityTruth"
+              },
+              {
+                "$ref": "#/components/schemas/LocateBoxTruth"
+              },
+              {
+                "$ref": "#/components/schemas/LineTruth"
+              },
+              {
+                "$ref": "#/components/schemas/EmptyValidationTruth"
+              },
+              {
+                "$ref": "#/components/schemas/CompareTruth"
+              },
+              {
+                "$ref": "#/components/schemas/AttachCategoryTruth"
+              },
+              {
+                "$ref": "#/components/schemas/BoundingBoxTruth"
+              }
+            ],
+            "description": "",
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "explanation": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          },
+          "prompt": {
+            "type": "string",
+            "description": "",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for updating a validation rapid."
+      },
+      "CompareMatchStatus": {
+        "enum": [
+          "Idle",
+          "Queued",
+          "Processing",
+          "Completed"
+        ],
+        "type": "string"
+      },
       "CompareWorkflowModel1": {
         "title": "CompareWorkflowModel",
         "required": [
@@ -9220,45 +9500,6 @@
         },
         "additionalProperties": false
       },
-      "CompletedRapidModel": {
-        "required": [
-          "answers",
-          "asset",
-          "rapidId"
-        ],
-        "type": "object",
-        "properties": {
-          "rapidId": {
-            "type": "string"
-          },
-          "asset": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/FileAssetModel2"
-              },
-              {
-                "$ref": "#/components/schemas/MultiAssetModel2"
-              },
-              {
-                "$ref": "#/components/schemas/NullAssetModel2"
-              },
-              {
-                "$ref": "#/components/schemas/TextAssetModel2"
-              }
-            ],
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          },
-          "answers": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RapidAnswer"
-            }
-          }
-        },
-        "additionalProperties": false
-      },
       "FileAssetModel2": {
         "title": "FileAssetModel",
         "required": [
@@ -9327,227 +9568,220 @@
         },
         "additionalProperties": false
       },
-      "GetClassifyWorkflowResultOverviewResult": {
-        "required": [
-          "completedRapids",
-          "hiddenCompletedRapidsCount",
-          "hiddenInProgressRapidsCount",
-          "hiddenNotStartedCount",
-          "inProgressRapids",
-          "notStartedRapids",
-          "occurrencesByCategory",
-          "progress",
-          "rapidType",
-          "state"
-        ],
+      "GetCompareWorkflowResultsModel": {
         "type": "object",
         "properties": {
-          "state": {
-            "enum": [
-              "Created",
-              "Started",
-              "Labeling",
-              "Paused",
-              "Done",
-              "Failed"
-            ],
-            "type": "string"
+          "page": {
+            "$ref": "#/components/schemas/PageInfo"
           },
-          "progress": {
-            "$ref": "#/components/schemas/GetWorkflowProgressResult"
-          },
-          "rapidType": {
-            "type": "string"
-          },
-          "notStartedRapids": {
+          "states": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/NotStartedRapidModel"
-            }
+              "$ref": "#/components/schemas/CompareMatchStatus"
+            },
+            "description": "An optional list of states to filter the results by.",
+            "nullable": true
           },
-          "hiddenNotStartedCount": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "inProgressRapids": {
+          "sortCriteria": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/InProgressRapidModel"
-            }
-          },
-          "hiddenInProgressRapidsCount": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "completedRapids": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CompletedRapidModel"
-            }
-          },
-          "hiddenCompletedRapidsCount": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "resultType": {
-            "type": "string",
-            "readOnly": true
-          },
-          "occurrencesByCategory": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "integer",
-              "format": "int32"
-            }
+              "$ref": "#/components/schemas/SortCriterion"
+            },
+            "description": "A list of criteria to sort the results by.",
+            "nullable": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Model for getting the overview of a compare workflow result."
       },
-      "GetCompareWorkflowResultOverviewResult": {
+      "GetCompareWorkflowResultsResult": {
         "required": [
-          "bottom",
-          "hiddenCount",
-          "progress",
+          "asset",
+          "elo",
           "state",
-          "top"
+          "workflowDatapointId"
         ],
         "type": "object",
         "properties": {
-          "state": {
-            "enum": [
-              "Created",
-              "Started",
-              "Labeling",
-              "Paused",
-              "Done",
-              "Failed"
-            ],
+          "workflowDatapointId": {
             "type": "string"
           },
-          "progress": {
-            "$ref": "#/components/schemas/GetWorkflowProgressResult"
-          },
-          "top": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RankedDatapointModel"
+          "asset": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/FileAssetModel2"
+              },
+              {
+                "$ref": "#/components/schemas/MultiAssetModel2"
+              },
+              {
+                "$ref": "#/components/schemas/NullAssetModel2"
+              },
+              {
+                "$ref": "#/components/schemas/TextAssetModel2"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
             }
           },
-          "bottom": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RankedDatapointModel"
-            }
+          "elo": {
+            "type": "integer",
+            "format": "int32"
           },
-          "hiddenCount": {
+          "state": {
+            "enum": [
+              "Idle",
+              "Queued",
+              "Processing",
+              "Completed"
+            ],
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetCompareWorkflowResultsResultPagedResult": {
+        "required": [
+          "items",
+          "page",
+          "pageSize",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
             "type": "integer",
             "format": "int64"
           },
-          "resultType": {
-            "type": "string",
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetCompareWorkflowResultsResult"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
             "readOnly": true
           }
         },
         "additionalProperties": false
       },
-      "GetCompareWorkflowResultOverviewSmallResult": {
+      "GetSimpleWorkflowResultsModel": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "$ref": "#/components/schemas/PageInfo"
+          },
+          "states": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RapidState"
+            },
+            "description": "An optional list of states to filter the rapids by.",
+            "nullable": true
+          },
+          "sortCriteria": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SortCriterion"
+            },
+            "description": "A list of criteria to sort the results by.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Model for getting the overview of a simple workflow result."
+      },
+      "GetSimpleWorkflowResultsResult": {
         "required": [
-          "datapoints",
-          "progress",
+          "asset",
+          "rapidId",
+          "responses",
           "state"
         ],
         "type": "object",
         "properties": {
-          "state": {
-            "enum": [
-              "Created",
-              "Started",
-              "Labeling",
-              "Paused",
-              "Done",
-              "Failed"
-            ],
+          "rapidId": {
             "type": "string"
           },
-          "progress": {
-            "$ref": "#/components/schemas/GetWorkflowProgressResult"
-          },
-          "datapoints": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RankedDatapointModel"
+          "asset": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/FileAssetModel2"
+              },
+              {
+                "$ref": "#/components/schemas/MultiAssetModel2"
+              },
+              {
+                "$ref": "#/components/schemas/NullAssetModel2"
+              },
+              {
+                "$ref": "#/components/schemas/TextAssetModel2"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
             }
           },
-          "resultType": {
-            "type": "string",
-            "readOnly": true
+          "responses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RapidResponse"
+            }
+          },
+          "state": {
+            "enum": [
+              "Labeling",
+              "Paused",
+              "Incomplete",
+              "Done",
+              "None"
+            ],
+            "type": "string"
           }
         },
         "additionalProperties": false
       },
-      "GetSimpleWorkflowResultOverviewResult": {
+      "GetSimpleWorkflowResultsResultPagedResult": {
         "required": [
-          "completedRapids",
-          "hiddenCompletedRapidsCount",
-          "hiddenInProgressRapidsCount",
-          "hiddenNotStartedCount",
-          "inProgressRapids",
-          "notStartedRapids",
-          "progress",
-          "rapidType",
-          "state"
+          "items",
+          "page",
+          "pageSize",
+          "total"
         ],
         "type": "object",
         "properties": {
-          "state": {
-            "enum": [
-              "Created",
-              "Started",
-              "Labeling",
-              "Paused",
-              "Done",
-              "Failed"
-            ],
-            "type": "string"
-          },
-          "progress": {
-            "$ref": "#/components/schemas/GetWorkflowProgressResult"
-          },
-          "rapidType": {
-            "type": "string"
-          },
-          "notStartedRapids": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/NotStartedRapidModel"
-            }
-          },
-          "hiddenNotStartedCount": {
+          "total": {
             "type": "integer",
             "format": "int64"
           },
-          "inProgressRapids": {
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/InProgressRapidModel"
+              "$ref": "#/components/schemas/GetSimpleWorkflowResultsResult"
             }
           },
-          "hiddenInProgressRapidsCount": {
+          "totalPages": {
             "type": "integer",
-            "format": "int64"
-          },
-          "completedRapids": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CompletedRapidModel"
-            }
-          },
-          "hiddenCompletedRapidsCount": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "resultType": {
-            "type": "string",
+            "format": "int32",
             "readOnly": true
           }
         },
@@ -9610,34 +9844,6 @@
         },
         "additionalProperties": false
       },
-      "GetWorkflowResultOverviewResult": {
-        "required": [
-          "progress",
-          "state"
-        ],
-        "type": "object",
-        "properties": {
-          "resultType": {
-            "type": "string",
-            "readOnly": true
-          },
-          "state": {
-            "enum": [
-              "Created",
-              "Started",
-              "Labeling",
-              "Paused",
-              "Done",
-              "Failed"
-            ],
-            "type": "string"
-          },
-          "progress": {
-            "$ref": "#/components/schemas/GetWorkflowProgressResult"
-          }
-        },
-        "additionalProperties": false
-      },
       "IWorkflowModelPagedResult": {
         "required": [
           "items",
@@ -9679,45 +9885,6 @@
             "type": "integer",
             "format": "int32",
             "readOnly": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "InProgressRapidModel": {
-        "required": [
-          "answers",
-          "asset",
-          "rapidId"
-        ],
-        "type": "object",
-        "properties": {
-          "rapidId": {
-            "type": "string"
-          },
-          "asset": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/FileAssetModel2"
-              },
-              {
-                "$ref": "#/components/schemas/MultiAssetModel2"
-              },
-              {
-                "$ref": "#/components/schemas/NullAssetModel2"
-              },
-              {
-                "$ref": "#/components/schemas/TextAssetModel2"
-              }
-            ],
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          },
-          "answers": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RapidAnswer"
-            }
           }
         },
         "additionalProperties": false
@@ -9847,38 +10014,6 @@
             "description": "Discriminator value for NeverEndingRefereeConfig",
             "default": "NeverEndingRefereeConfig",
             "example": "NeverEndingRefereeConfig"
-          }
-        },
-        "additionalProperties": false
-      },
-      "NotStartedRapidModel": {
-        "required": [
-          "asset",
-          "rapidId"
-        ],
-        "type": "object",
-        "properties": {
-          "rapidId": {
-            "type": "string"
-          },
-          "asset": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/FileAssetModel2"
-              },
-              {
-                "$ref": "#/components/schemas/MultiAssetModel2"
-              },
-              {
-                "$ref": "#/components/schemas/NullAssetModel2"
-              },
-              {
-                "$ref": "#/components/schemas/TextAssetModel2"
-              }
-            ],
-            "discriminator": {
-              "propertyName": "_t"
-            }
           }
         },
         "additionalProperties": false
@@ -10061,44 +10196,7 @@
         "additionalProperties": false,
         "description": "The model for the query request."
       },
-      "RankedDatapointModel": {
-        "required": [
-          "asset",
-          "elo",
-          "workflowDatapointId"
-        ],
-        "type": "object",
-        "properties": {
-          "workflowDatapointId": {
-            "type": "string"
-          },
-          "asset": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/FileAssetModel2"
-              },
-              {
-                "$ref": "#/components/schemas/MultiAssetModel2"
-              },
-              {
-                "$ref": "#/components/schemas/NullAssetModel2"
-              },
-              {
-                "$ref": "#/components/schemas/TextAssetModel2"
-              }
-            ],
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          },
-          "elo": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "RapidAnswer": {
+      "RapidResponse": {
         "required": [
           "country",
           "demographicInformation",
@@ -10170,6 +10268,16 @@
           }
         },
         "additionalProperties": false
+      },
+      "RapidState": {
+        "enum": [
+          "Labeling",
+          "Paused",
+          "Incomplete",
+          "Done",
+          "None"
+        ],
+        "type": "string"
       },
       "SimpleWorkflowModel1": {
         "title": "SimpleWorkflowModel",
@@ -10429,6 +10537,9 @@
             "type": "array",
             "items": {
               "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AbTestSelection"
+                },
                 {
                   "$ref": "#/components/schemas/CappedSelection"
                 },
@@ -10870,6 +10981,28 @@
           },
           "wrapAround": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PreliminaryDownloadModel": {
+        "type": "object",
+        "properties": {
+          "sendEmail": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PreliminaryDownloadResult": {
+        "required": [
+          "downloadId"
+        ],
+        "type": "object",
+        "properties": {
+          "downloadId": {
+            "type": "string"
           }
         },
         "additionalProperties": false

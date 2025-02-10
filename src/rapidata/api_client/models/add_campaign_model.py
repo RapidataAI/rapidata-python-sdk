@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.capped_selection_selections_inner import CappedSelectionSelectionsInner
+from rapidata.api_client.models.ab_test_selection_a_inner import AbTestSelectionAInner
 from rapidata.api_client.models.create_order_model_user_filters_inner import CreateOrderModelUserFiltersInner
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from typing import Optional, Set
@@ -34,7 +34,7 @@ class AddCampaignModel(BaseModel):
     campaign_name: StrictStr = Field(description="The name of the campaign.", alias="campaignName")
     user_filters: List[CreateOrderModelUserFiltersInner] = Field(description="The user filters to apply to the campaign.", alias="userFilters")
     validation_set_id: Optional[StrictStr] = Field(default=None, description="A validation set that should be used.", alias="validationSetId")
-    selections: Optional[List[CappedSelectionSelectionsInner]] = Field(description="The selections that the campaign should have.")
+    selections: Optional[List[AbTestSelectionAInner]] = Field(description="The selections that the campaign should have.")
     feature_flags: List[FeatureFlag] = Field(description="The feature flags that should be applied to the campaign.", alias="featureFlags")
     priority: StrictInt = Field(description="The priority of the campaign.")
     is_sticky: Optional[StrictBool] = Field(default=None, description="Indicates if the campaign is sticky.", alias="isSticky")
@@ -139,7 +139,7 @@ class AddCampaignModel(BaseModel):
             "campaignName": obj.get("campaignName"),
             "userFilters": [CreateOrderModelUserFiltersInner.from_dict(_item) for _item in obj["userFilters"]] if obj.get("userFilters") is not None else None,
             "validationSetId": obj.get("validationSetId"),
-            "selections": [CappedSelectionSelectionsInner.from_dict(_item) for _item in obj["selections"]] if obj.get("selections") is not None else None,
+            "selections": [AbTestSelectionAInner.from_dict(_item) for _item in obj["selections"]] if obj.get("selections") is not None else None,
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "priority": obj.get("priority"),
             "isSticky": obj.get("isSticky")

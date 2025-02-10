@@ -17,31 +17,23 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Union
+from rapidata.api_client.models.rapid_response_result import RapidResponseResult
 from typing import Optional, Set
 from typing_extensions import Self
 
-class OrderModel(BaseModel):
+class RapidResponse(BaseModel):
     """
-    OrderModel
+    RapidResponse
     """ # noqa: E501
     id: StrictStr
-    pipeline_id: StrictStr = Field(alias="pipelineId")
-    order_date: Optional[datetime] = Field(alias="orderDate")
-    customer_mail: StrictStr = Field(alias="customerMail")
-    state: StrictStr
-    order_name: StrictStr = Field(alias="orderName")
-    is_public: StrictBool = Field(alias="isPublic")
-    __properties: ClassVar[List[str]] = ["id", "pipelineId", "orderDate", "customerMail", "state", "orderName", "isPublic"]
-
-    @field_validator('state')
-    def state_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['Created', 'Submitted', 'ManualReview', 'Processing', 'Paused', 'Completed', 'Cancelled', 'Failed']):
-            raise ValueError("must be one of enum values ('Created', 'Submitted', 'ManualReview', 'Processing', 'Paused', 'Completed', 'Cancelled', 'Failed')")
-        return value
+    user_id: StrictStr = Field(alias="userId")
+    country: StrictStr
+    result: RapidResponseResult
+    user_score: Union[StrictFloat, StrictInt] = Field(alias="userScore")
+    demographic_information: Dict[str, StrictStr] = Field(alias="demographicInformation")
+    __properties: ClassVar[List[str]] = ["id", "userId", "country", "result", "userScore", "demographicInformation"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -61,7 +53,7 @@ class OrderModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of OrderModel from a JSON string"""
+        """Create an instance of RapidResponse from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -82,16 +74,14 @@ class OrderModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if order_date (nullable) is None
-        # and model_fields_set contains the field
-        if self.order_date is None and "order_date" in self.model_fields_set:
-            _dict['orderDate'] = None
-
+        # override the default output from pydantic by calling `to_dict()` of result
+        if self.result:
+            _dict['result'] = self.result.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of OrderModel from a dict"""
+        """Create an instance of RapidResponse from a dict"""
         if obj is None:
             return None
 
@@ -100,12 +90,11 @@ class OrderModel(BaseModel):
 
         _obj = cls.model_validate({
             "id": obj.get("id"),
-            "pipelineId": obj.get("pipelineId"),
-            "orderDate": obj.get("orderDate"),
-            "customerMail": obj.get("customerMail"),
-            "state": obj.get("state"),
-            "orderName": obj.get("orderName"),
-            "isPublic": obj.get("isPublic")
+            "userId": obj.get("userId"),
+            "country": obj.get("country"),
+            "result": RapidResponseResult.from_dict(obj["result"]) if obj.get("result") is not None else None,
+            "userScore": obj.get("userScore"),
+            "demographicInformation": obj.get("demographicInformation")
         })
         return _obj
 
