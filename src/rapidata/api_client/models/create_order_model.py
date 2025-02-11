@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.capped_selection_selections_inner import CappedSelectionSelectionsInner
+from rapidata.api_client.models.ab_test_selection_a_inner import AbTestSelectionAInner
 from rapidata.api_client.models.create_order_model_referee import CreateOrderModelReferee
 from rapidata.api_client.models.create_order_model_user_filters_inner import CreateOrderModelUserFiltersInner
 from rapidata.api_client.models.create_order_model_workflow import CreateOrderModelWorkflow
@@ -41,7 +41,7 @@ class CreateOrderModel(BaseModel):
     is_sticky: Optional[StrictBool] = Field(default=None, description="Indicates if the underlying campaign should be sticky.", alias="isSticky")
     user_filters: List[CreateOrderModelUserFiltersInner] = Field(description="The user filters are used to restrict the order to only collect votes from a specific demographic.", alias="userFilters")
     validation_set_id: Optional[StrictStr] = Field(default=None, description="The validation set id can be changed to point to a specific validation set. if not provided a sane default will be  used.", alias="validationSetId")
-    selections: Optional[List[CappedSelectionSelectionsInner]] = Field(default=None, description="The selections are used to determine which tasks are shown to a user.")
+    selections: Optional[List[AbTestSelectionAInner]] = Field(default=None, description="The selections are used to determine which tasks are shown to a user.")
     __properties: ClassVar[List[str]] = ["_t", "orderName", "workflow", "referee", "aggregator", "featureFlags", "priority", "isSticky", "userFilters", "validationSetId", "selections"]
 
     @field_validator('t')
@@ -174,7 +174,7 @@ class CreateOrderModel(BaseModel):
             "isSticky": obj.get("isSticky"),
             "userFilters": [CreateOrderModelUserFiltersInner.from_dict(_item) for _item in obj["userFilters"]] if obj.get("userFilters") is not None else None,
             "validationSetId": obj.get("validationSetId"),
-            "selections": [CappedSelectionSelectionsInner.from_dict(_item) for _item in obj["selections"]] if obj.get("selections") is not None else None
+            "selections": [AbTestSelectionAInner.from_dict(_item) for _item in obj["selections"]] if obj.get("selections") is not None else None
         })
         return _obj
 

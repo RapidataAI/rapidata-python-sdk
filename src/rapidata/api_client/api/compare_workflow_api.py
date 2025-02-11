@@ -16,10 +16,11 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictInt, StrictStr
+from pydantic import Field, StrictStr
 from typing import Optional
 from typing_extensions import Annotated
-from rapidata.api_client.models.compare_workflow_get_result_overview_get200_response import CompareWorkflowGetResultOverviewGet200Response
+from rapidata.api_client.models.get_compare_workflow_results_model import GetCompareWorkflowResultsModel
+from rapidata.api_client.models.get_compare_workflow_results_result_paged_result import GetCompareWorkflowResultsResultPagedResult
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -40,10 +41,10 @@ class CompareWorkflowApi:
 
 
     @validate_call
-    def compare_workflow_get_result_overview_get(
+    def workflow_compare_id_results_get(
         self,
-        workflow_id: Annotated[StrictStr, Field(description="The ID of the workflow.")],
-        display_count: Annotated[Optional[StrictInt], Field(description="The number of datapoints to return.")] = None,
+        id: Annotated[StrictStr, Field(description="The ID of the workflow to get the results for.")],
+        model: Annotated[Optional[GetCompareWorkflowResultsModel], Field(description="The model for the request.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -56,14 +57,14 @@ class CompareWorkflowApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> CompareWorkflowGetResultOverviewGet200Response:
+    ) -> GetCompareWorkflowResultsResultPagedResult:
         """Get the result overview for a compare workflow.
 
 
-        :param workflow_id: The ID of the workflow. (required)
-        :type workflow_id: str
-        :param display_count: The number of datapoints to return.
-        :type display_count: int
+        :param id: The ID of the workflow to get the results for. (required)
+        :type id: str
+        :param model: The model for the request.
+        :type model: GetCompareWorkflowResultsModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -86,9 +87,9 @@ class CompareWorkflowApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._compare_workflow_get_result_overview_get_serialize(
-            workflow_id=workflow_id,
-            display_count=display_count,
+        _param = self._workflow_compare_id_results_get_serialize(
+            id=id,
+            model=model,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -96,7 +97,7 @@ class CompareWorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CompareWorkflowGetResultOverviewGet200Response",
+            '200': "GetCompareWorkflowResultsResultPagedResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -110,10 +111,10 @@ class CompareWorkflowApi:
 
 
     @validate_call
-    def compare_workflow_get_result_overview_get_with_http_info(
+    def workflow_compare_id_results_get_with_http_info(
         self,
-        workflow_id: Annotated[StrictStr, Field(description="The ID of the workflow.")],
-        display_count: Annotated[Optional[StrictInt], Field(description="The number of datapoints to return.")] = None,
+        id: Annotated[StrictStr, Field(description="The ID of the workflow to get the results for.")],
+        model: Annotated[Optional[GetCompareWorkflowResultsModel], Field(description="The model for the request.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -126,14 +127,14 @@ class CompareWorkflowApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[CompareWorkflowGetResultOverviewGet200Response]:
+    ) -> ApiResponse[GetCompareWorkflowResultsResultPagedResult]:
         """Get the result overview for a compare workflow.
 
 
-        :param workflow_id: The ID of the workflow. (required)
-        :type workflow_id: str
-        :param display_count: The number of datapoints to return.
-        :type display_count: int
+        :param id: The ID of the workflow to get the results for. (required)
+        :type id: str
+        :param model: The model for the request.
+        :type model: GetCompareWorkflowResultsModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -156,9 +157,9 @@ class CompareWorkflowApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._compare_workflow_get_result_overview_get_serialize(
-            workflow_id=workflow_id,
-            display_count=display_count,
+        _param = self._workflow_compare_id_results_get_serialize(
+            id=id,
+            model=model,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -166,7 +167,7 @@ class CompareWorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CompareWorkflowGetResultOverviewGet200Response",
+            '200': "GetCompareWorkflowResultsResultPagedResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -180,10 +181,10 @@ class CompareWorkflowApi:
 
 
     @validate_call
-    def compare_workflow_get_result_overview_get_without_preload_content(
+    def workflow_compare_id_results_get_without_preload_content(
         self,
-        workflow_id: Annotated[StrictStr, Field(description="The ID of the workflow.")],
-        display_count: Annotated[Optional[StrictInt], Field(description="The number of datapoints to return.")] = None,
+        id: Annotated[StrictStr, Field(description="The ID of the workflow to get the results for.")],
+        model: Annotated[Optional[GetCompareWorkflowResultsModel], Field(description="The model for the request.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -200,10 +201,10 @@ class CompareWorkflowApi:
         """Get the result overview for a compare workflow.
 
 
-        :param workflow_id: The ID of the workflow. (required)
-        :type workflow_id: str
-        :param display_count: The number of datapoints to return.
-        :type display_count: int
+        :param id: The ID of the workflow to get the results for. (required)
+        :type id: str
+        :param model: The model for the request.
+        :type model: GetCompareWorkflowResultsModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -226,9 +227,9 @@ class CompareWorkflowApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._compare_workflow_get_result_overview_get_serialize(
-            workflow_id=workflow_id,
-            display_count=display_count,
+        _param = self._workflow_compare_id_results_get_serialize(
+            id=id,
+            model=model,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -236,7 +237,7 @@ class CompareWorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CompareWorkflowGetResultOverviewGet200Response",
+            '200': "GetCompareWorkflowResultsResultPagedResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -245,10 +246,10 @@ class CompareWorkflowApi:
         return response_data.response
 
 
-    def _compare_workflow_get_result_overview_get_serialize(
+    def _workflow_compare_id_results_get_serialize(
         self,
-        workflow_id,
-        display_count,
+        id,
+        model,
         _request_auth,
         _content_type,
         _headers,
@@ -270,14 +271,12 @@ class CompareWorkflowApi:
         _body_params: Optional[bytes] = None
 
         # process the path parameters
+        if id is not None:
+            _path_params['id'] = id
         # process the query parameters
-        if workflow_id is not None:
+        if model is not None:
             
-            _query_params.append(('WorkflowId', workflow_id))
-            
-        if display_count is not None:
-            
-            _query_params.append(('DisplayCount', display_count))
+            _query_params.append(('model', model))
             
         # process the header parameters
         # process the form parameters
@@ -288,7 +287,9 @@ class CompareWorkflowApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'application/json'
+                    'text/plain', 
+                    'application/json', 
+                    'text/json'
                 ]
             )
 
@@ -301,7 +302,7 @@ class CompareWorkflowApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/CompareWorkflow/GetResultOverview',
+            resource_path='/workflow/compare/{id}/results',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
