@@ -1,16 +1,16 @@
 # Quickstart Guide
 
-Directly ask real humans to classify your data. This guide will show you how to create a classification order using the Rapidata API.
+Directly ask real humans to compare your data. This guide will show you how to create a compare order using the Rapidata API.
 
 There are many other types of orders you can create which you can find in the examples on the [Overview](index.md).
 
-We will create an order, specify what question and answer options we want to have, as well as upload the data we want to classify.
+We will create an order, using 2 AI generated images to compare them against eachother based on which image followed the prompt more accurately.
 
-Our annotators will then label the data according to the question and answer options we provided.
+Our annotators will then label the data according to the instruction we provided.
 
 They see the following screen:
 
-![Classify Example](./media/order-types/classify-screen.png){ width="40%" }
+![Compare Example](./media/compare_quickstart.png){ width="40%" }
 
 ## Installation
 
@@ -45,22 +45,23 @@ rapi = RapidataClient(client_id="Your client ID", client_secret="Your client sec
 
 All order-related operations are performed using rapi.order.
 
-1. Here we create a classification order with a name and the instruction / question we want to ask:
+1. Here we create a compare order with a name and the instruction / question we want to ask. Additionally we provide the prompt as a context:
 
 ```py
-order = rapi.order.create_classification_order(
-    name="Example Classification Order",
-    instruction="What is shown in the image?",
-    answer_options=["Fish", "Cat", "Wallaby", "Airplane"],
-    datapoints=["https://assets.rapidata.ai/wallaby.jpg"]
+rapi.order.create_compare_order(
+    name="Example Alignment Order",
+    instruction="Which video aligns better with the description?",
+    contexts=["A small blue book sitting on a large red book."],
+    datapoints=[["https://assets.rapidata.ai/aurora-20-1-25_37_4.png", 
+                "https://assets.rapidata.ai/dalle-3_37_2.jpg"]],
 )
 ```
 The parameters are as follows:
 
 - `name`: The name of the order. This is used to identify the order in the [Rapidata Dashboard](https://app.rapidata.ai/dashboard/orders). This name is also be used to find the order again later.
-- `instruction`: The instruction you want to show the annotators to select the options by.
-- `answer_options`: The different answer options the annotators can choose from.
-- `datapoints`: The data you want to classify. This can be any public URL (that points to an image, video or audio) or a local file path. This is a list of all datapoints you want to classify. The same instruction and answer options will be asked for each datapoint. There is a limit of 100 datapoints per order. If you need more than that, you can reach out to us at <info@rapidata.ai>.
+- `instruction`: The instruction you want to show the annotators to select the image by.
+- `contexts`: The prompt that will be shown along side the two images and the instruction.
+- `datapoints`: The image pairs we want to compare. This can be any public URL (that points to an image, video or audio) or a local file path. This is a list of all datapoints you want to compare. Each datapoint consists of 2 files that are compared, as well as an optional context (which in this case is the prompt). The same instruction will be shown for each datapoint. There is a limit of 100 datapoints per order. If you need more than that, you can reach out to us at <info@rapidata.ai>.
 
 Optionally you may add additional specifications with the other parameters. As an example, the `responses_per_datapoint` that specifies how many responses you want per datapoint<sup>1</sup>.
 
@@ -77,7 +78,7 @@ order.run()
 To retrieve old orders, you can use the `find_orders` method. This method allows you to filter by name and amount of orders to retrieve:
 
 ```py
-example_orders = rapi.order.find_orders("Example Classification Order")
+example_orders = rapi.order.find_orders("Example Alignment Order")
 
 # if no name is provided it will just return the most recent one
 most_recent_order = rapi.order.find_orders()[0]
