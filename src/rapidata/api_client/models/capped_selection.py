@@ -27,7 +27,7 @@ class CappedSelection(BaseModel):
     CappedSelection
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for CappedSelection", alias="_t")
-    selections: List[CappedSelectionSelectionsInner]
+    selections: List[AbTestSelectionAInner]
     max_rapids: StrictInt = Field(alias="maxRapids")
     __properties: ClassVar[List[str]] = ["_t", "selections", "maxRapids"]
 
@@ -97,12 +97,12 @@ class CappedSelection(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'CappedSelection',
-            "selections": [CappedSelectionSelectionsInner.from_dict(_item) for _item in obj["selections"]] if obj.get("selections") is not None else None,
+            "selections": [AbTestSelectionAInner.from_dict(_item) for _item in obj["selections"]] if obj.get("selections") is not None else None,
             "maxRapids": obj.get("maxRapids")
         })
         return _obj
 
-from rapidata.api_client.models.capped_selection_selections_inner import CappedSelectionSelectionsInner
+from rapidata.api_client.models.ab_test_selection_a_inner import AbTestSelectionAInner
 # TODO: Rewrite to not use raise_errors
 CappedSelection.model_rebuild(raise_errors=False)
 

@@ -17,31 +17,20 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.update_validation_rapid_model_truth import UpdateValidationRapidModelTruth
 from typing import Optional, Set
 from typing_extensions import Self
 
-class OrderModel(BaseModel):
+class UpdateValidationRapidModel(BaseModel):
     """
-    OrderModel
+    The model for updating a validation rapid.
     """ # noqa: E501
-    id: StrictStr
-    pipeline_id: StrictStr = Field(alias="pipelineId")
-    order_date: Optional[datetime] = Field(alias="orderDate")
-    customer_mail: StrictStr = Field(alias="customerMail")
-    state: StrictStr
-    order_name: StrictStr = Field(alias="orderName")
-    is_public: StrictBool = Field(alias="isPublic")
-    __properties: ClassVar[List[str]] = ["id", "pipelineId", "orderDate", "customerMail", "state", "orderName", "isPublic"]
-
-    @field_validator('state')
-    def state_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['Created', 'Submitted', 'ManualReview', 'Processing', 'Paused', 'Completed', 'Cancelled', 'Failed']):
-            raise ValueError("must be one of enum values ('Created', 'Submitted', 'ManualReview', 'Processing', 'Paused', 'Completed', 'Cancelled', 'Failed')")
-        return value
+    truth: UpdateValidationRapidModelTruth
+    explanation: Optional[StrictStr]
+    prompt: Optional[StrictStr]
+    __properties: ClassVar[List[str]] = ["truth", "explanation", "prompt"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -61,7 +50,7 @@ class OrderModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of OrderModel from a JSON string"""
+        """Create an instance of UpdateValidationRapidModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -82,16 +71,24 @@ class OrderModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if order_date (nullable) is None
+        # override the default output from pydantic by calling `to_dict()` of truth
+        if self.truth:
+            _dict['truth'] = self.truth.to_dict()
+        # set to None if explanation (nullable) is None
         # and model_fields_set contains the field
-        if self.order_date is None and "order_date" in self.model_fields_set:
-            _dict['orderDate'] = None
+        if self.explanation is None and "explanation" in self.model_fields_set:
+            _dict['explanation'] = None
+
+        # set to None if prompt (nullable) is None
+        # and model_fields_set contains the field
+        if self.prompt is None and "prompt" in self.model_fields_set:
+            _dict['prompt'] = None
 
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of OrderModel from a dict"""
+        """Create an instance of UpdateValidationRapidModel from a dict"""
         if obj is None:
             return None
 
@@ -99,13 +96,9 @@ class OrderModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "id": obj.get("id"),
-            "pipelineId": obj.get("pipelineId"),
-            "orderDate": obj.get("orderDate"),
-            "customerMail": obj.get("customerMail"),
-            "state": obj.get("state"),
-            "orderName": obj.get("orderName"),
-            "isPublic": obj.get("isPublic")
+            "truth": UpdateValidationRapidModelTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
+            "explanation": obj.get("explanation"),
+            "prompt": obj.get("prompt")
         })
         return _obj
 

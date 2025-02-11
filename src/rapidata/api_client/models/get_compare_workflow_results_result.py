@@ -17,30 +17,27 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.get_compare_workflow_results_result_asset import GetCompareWorkflowResultsResultAsset
 from typing import Optional, Set
 from typing_extensions import Self
 
-class OrderModel(BaseModel):
+class GetCompareWorkflowResultsResult(BaseModel):
     """
-    OrderModel
+    GetCompareWorkflowResultsResult
     """ # noqa: E501
-    id: StrictStr
-    pipeline_id: StrictStr = Field(alias="pipelineId")
-    order_date: Optional[datetime] = Field(alias="orderDate")
-    customer_mail: StrictStr = Field(alias="customerMail")
+    workflow_datapoint_id: StrictStr = Field(alias="workflowDatapointId")
+    asset: GetCompareWorkflowResultsResultAsset
+    elo: StrictInt
     state: StrictStr
-    order_name: StrictStr = Field(alias="orderName")
-    is_public: StrictBool = Field(alias="isPublic")
-    __properties: ClassVar[List[str]] = ["id", "pipelineId", "orderDate", "customerMail", "state", "orderName", "isPublic"]
+    __properties: ClassVar[List[str]] = ["workflowDatapointId", "asset", "elo", "state"]
 
     @field_validator('state')
     def state_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['Created', 'Submitted', 'ManualReview', 'Processing', 'Paused', 'Completed', 'Cancelled', 'Failed']):
-            raise ValueError("must be one of enum values ('Created', 'Submitted', 'ManualReview', 'Processing', 'Paused', 'Completed', 'Cancelled', 'Failed')")
+        if value not in set(['Idle', 'Queued', 'Processing', 'Completed']):
+            raise ValueError("must be one of enum values ('Idle', 'Queued', 'Processing', 'Completed')")
         return value
 
     model_config = ConfigDict(
@@ -61,7 +58,7 @@ class OrderModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of OrderModel from a JSON string"""
+        """Create an instance of GetCompareWorkflowResultsResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -82,16 +79,14 @@ class OrderModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if order_date (nullable) is None
-        # and model_fields_set contains the field
-        if self.order_date is None and "order_date" in self.model_fields_set:
-            _dict['orderDate'] = None
-
+        # override the default output from pydantic by calling `to_dict()` of asset
+        if self.asset:
+            _dict['asset'] = self.asset.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of OrderModel from a dict"""
+        """Create an instance of GetCompareWorkflowResultsResult from a dict"""
         if obj is None:
             return None
 
@@ -99,13 +94,10 @@ class OrderModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "id": obj.get("id"),
-            "pipelineId": obj.get("pipelineId"),
-            "orderDate": obj.get("orderDate"),
-            "customerMail": obj.get("customerMail"),
-            "state": obj.get("state"),
-            "orderName": obj.get("orderName"),
-            "isPublic": obj.get("isPublic")
+            "workflowDatapointId": obj.get("workflowDatapointId"),
+            "asset": GetCompareWorkflowResultsResultAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
+            "elo": obj.get("elo"),
+            "state": obj.get("state")
         })
         return _obj
 

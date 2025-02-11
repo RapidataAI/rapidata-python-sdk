@@ -16,10 +16,11 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictInt, StrictStr
+from pydantic import Field, StrictStr
 from typing import Optional
 from typing_extensions import Annotated
-from rapidata.api_client.models.simple_workflow_get_result_overview_get200_response import SimpleWorkflowGetResultOverviewGet200Response
+from rapidata.api_client.models.get_simple_workflow_results_model import GetSimpleWorkflowResultsModel
+from rapidata.api_client.models.get_simple_workflow_results_result_paged_result import GetSimpleWorkflowResultsResultPagedResult
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -40,12 +41,10 @@ class SimpleWorkflowApi:
 
 
     @validate_call
-    def simple_workflow_get_result_overview_get(
+    def workflow_simple_id_results_get(
         self,
-        workflow_id: Annotated[StrictStr, Field(description="The ID of the workflow.")],
-        not_started_display_count: Annotated[Optional[StrictInt], Field(description="The number of rapids that have not started to return.")] = None,
-        in_progress_display_count: Annotated[Optional[StrictInt], Field(description="The number of rapids that are in progress to return.")] = None,
-        completed_display_count: Annotated[Optional[StrictInt], Field(description="The number of rapids that are completed to return.")] = None,
+        id: Annotated[StrictStr, Field(description="The ID of the workflow to get the results for.")],
+        model: Annotated[Optional[GetSimpleWorkflowResultsModel], Field(description="The model for the request.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -58,18 +57,14 @@ class SimpleWorkflowApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> SimpleWorkflowGetResultOverviewGet200Response:
+    ) -> GetSimpleWorkflowResultsResultPagedResult:
         """Get the result overview for a simple workflow.
 
 
-        :param workflow_id: The ID of the workflow. (required)
-        :type workflow_id: str
-        :param not_started_display_count: The number of rapids that have not started to return.
-        :type not_started_display_count: int
-        :param in_progress_display_count: The number of rapids that are in progress to return.
-        :type in_progress_display_count: int
-        :param completed_display_count: The number of rapids that are completed to return.
-        :type completed_display_count: int
+        :param id: The ID of the workflow to get the results for. (required)
+        :type id: str
+        :param model: The model for the request.
+        :type model: GetSimpleWorkflowResultsModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -92,11 +87,9 @@ class SimpleWorkflowApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._simple_workflow_get_result_overview_get_serialize(
-            workflow_id=workflow_id,
-            not_started_display_count=not_started_display_count,
-            in_progress_display_count=in_progress_display_count,
-            completed_display_count=completed_display_count,
+        _param = self._workflow_simple_id_results_get_serialize(
+            id=id,
+            model=model,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -104,7 +97,7 @@ class SimpleWorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "SimpleWorkflowGetResultOverviewGet200Response",
+            '200': "GetSimpleWorkflowResultsResultPagedResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -118,12 +111,10 @@ class SimpleWorkflowApi:
 
 
     @validate_call
-    def simple_workflow_get_result_overview_get_with_http_info(
+    def workflow_simple_id_results_get_with_http_info(
         self,
-        workflow_id: Annotated[StrictStr, Field(description="The ID of the workflow.")],
-        not_started_display_count: Annotated[Optional[StrictInt], Field(description="The number of rapids that have not started to return.")] = None,
-        in_progress_display_count: Annotated[Optional[StrictInt], Field(description="The number of rapids that are in progress to return.")] = None,
-        completed_display_count: Annotated[Optional[StrictInt], Field(description="The number of rapids that are completed to return.")] = None,
+        id: Annotated[StrictStr, Field(description="The ID of the workflow to get the results for.")],
+        model: Annotated[Optional[GetSimpleWorkflowResultsModel], Field(description="The model for the request.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -136,18 +127,14 @@ class SimpleWorkflowApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[SimpleWorkflowGetResultOverviewGet200Response]:
+    ) -> ApiResponse[GetSimpleWorkflowResultsResultPagedResult]:
         """Get the result overview for a simple workflow.
 
 
-        :param workflow_id: The ID of the workflow. (required)
-        :type workflow_id: str
-        :param not_started_display_count: The number of rapids that have not started to return.
-        :type not_started_display_count: int
-        :param in_progress_display_count: The number of rapids that are in progress to return.
-        :type in_progress_display_count: int
-        :param completed_display_count: The number of rapids that are completed to return.
-        :type completed_display_count: int
+        :param id: The ID of the workflow to get the results for. (required)
+        :type id: str
+        :param model: The model for the request.
+        :type model: GetSimpleWorkflowResultsModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -170,11 +157,9 @@ class SimpleWorkflowApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._simple_workflow_get_result_overview_get_serialize(
-            workflow_id=workflow_id,
-            not_started_display_count=not_started_display_count,
-            in_progress_display_count=in_progress_display_count,
-            completed_display_count=completed_display_count,
+        _param = self._workflow_simple_id_results_get_serialize(
+            id=id,
+            model=model,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -182,7 +167,7 @@ class SimpleWorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "SimpleWorkflowGetResultOverviewGet200Response",
+            '200': "GetSimpleWorkflowResultsResultPagedResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -196,12 +181,10 @@ class SimpleWorkflowApi:
 
 
     @validate_call
-    def simple_workflow_get_result_overview_get_without_preload_content(
+    def workflow_simple_id_results_get_without_preload_content(
         self,
-        workflow_id: Annotated[StrictStr, Field(description="The ID of the workflow.")],
-        not_started_display_count: Annotated[Optional[StrictInt], Field(description="The number of rapids that have not started to return.")] = None,
-        in_progress_display_count: Annotated[Optional[StrictInt], Field(description="The number of rapids that are in progress to return.")] = None,
-        completed_display_count: Annotated[Optional[StrictInt], Field(description="The number of rapids that are completed to return.")] = None,
+        id: Annotated[StrictStr, Field(description="The ID of the workflow to get the results for.")],
+        model: Annotated[Optional[GetSimpleWorkflowResultsModel], Field(description="The model for the request.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -218,14 +201,10 @@ class SimpleWorkflowApi:
         """Get the result overview for a simple workflow.
 
 
-        :param workflow_id: The ID of the workflow. (required)
-        :type workflow_id: str
-        :param not_started_display_count: The number of rapids that have not started to return.
-        :type not_started_display_count: int
-        :param in_progress_display_count: The number of rapids that are in progress to return.
-        :type in_progress_display_count: int
-        :param completed_display_count: The number of rapids that are completed to return.
-        :type completed_display_count: int
+        :param id: The ID of the workflow to get the results for. (required)
+        :type id: str
+        :param model: The model for the request.
+        :type model: GetSimpleWorkflowResultsModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -248,11 +227,9 @@ class SimpleWorkflowApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._simple_workflow_get_result_overview_get_serialize(
-            workflow_id=workflow_id,
-            not_started_display_count=not_started_display_count,
-            in_progress_display_count=in_progress_display_count,
-            completed_display_count=completed_display_count,
+        _param = self._workflow_simple_id_results_get_serialize(
+            id=id,
+            model=model,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -260,7 +237,7 @@ class SimpleWorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "SimpleWorkflowGetResultOverviewGet200Response",
+            '200': "GetSimpleWorkflowResultsResultPagedResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -269,12 +246,10 @@ class SimpleWorkflowApi:
         return response_data.response
 
 
-    def _simple_workflow_get_result_overview_get_serialize(
+    def _workflow_simple_id_results_get_serialize(
         self,
-        workflow_id,
-        not_started_display_count,
-        in_progress_display_count,
-        completed_display_count,
+        id,
+        model,
         _request_auth,
         _content_type,
         _headers,
@@ -296,22 +271,12 @@ class SimpleWorkflowApi:
         _body_params: Optional[bytes] = None
 
         # process the path parameters
+        if id is not None:
+            _path_params['id'] = id
         # process the query parameters
-        if workflow_id is not None:
+        if model is not None:
             
-            _query_params.append(('WorkflowId', workflow_id))
-            
-        if not_started_display_count is not None:
-            
-            _query_params.append(('NotStartedDisplayCount', not_started_display_count))
-            
-        if in_progress_display_count is not None:
-            
-            _query_params.append(('InProgressDisplayCount', in_progress_display_count))
-            
-        if completed_display_count is not None:
-            
-            _query_params.append(('CompletedDisplayCount', completed_display_count))
+            _query_params.append(('model', model))
             
         # process the header parameters
         # process the form parameters
@@ -322,7 +287,9 @@ class SimpleWorkflowApi:
         if 'Accept' not in _header_params:
             _header_params['Accept'] = self.api_client.select_header_accept(
                 [
-                    'application/json'
+                    'text/plain', 
+                    'application/json', 
+                    'text/json'
                 ]
             )
 
@@ -335,7 +302,7 @@ class SimpleWorkflowApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/SimpleWorkflow/GetResultOverview',
+            resource_path='/workflow/simple/{id}/results',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

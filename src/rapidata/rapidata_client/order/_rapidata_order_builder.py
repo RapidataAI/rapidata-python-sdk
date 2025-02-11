@@ -1,5 +1,5 @@
-from rapidata.api_client.models.capped_selection_selections_inner import (
-    CappedSelectionSelectionsInner,
+from rapidata.api_client.models.ab_test_selection_a_inner import (
+    AbTestSelectionAInner,
 )
 from rapidata.api_client.models.create_order_model import CreateOrderModel
 from rapidata.api_client.models.create_order_model_referee import (
@@ -92,7 +92,7 @@ class RapidataOrderBuilder:
                 else None
             ),
             selections=[
-                CappedSelectionSelectionsInner(selection._to_model())
+                AbTestSelectionAInner(selection._to_model())
                 for selection in self.__selections
             ],
             priority=self.__priority,
