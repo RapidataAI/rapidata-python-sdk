@@ -446,7 +446,7 @@ class RapidataOrderManager:
 
         assets = [MediaAsset(path=path) for path in datapoints]
 
-        for asset in tqdm(assets, desc="downloading assets and checking duration"):
+        for asset in tqdm(assets, desc="Downloading assets and checking duration"):
             if not asset.get_duration():
                 raise ValueError("The datapoints for this order must have a duration. (e.g. video or audio)")
 
