@@ -15,6 +15,7 @@ from urllib3._collections import HTTPHeaderDict
 from rapidata.rapidata_client.validation.rapids.box import Box
 
 from rapidata.api_client.models.query_validation_set_model import QueryValidationSetModel
+from tqdm import tqdm
 
 
 class ValidationSetManager:
@@ -404,7 +405,7 @@ class ValidationSetManager:
             openapi_service=self.__openapi_service
         )
 
-        for rapid in rapids:
+        for rapid in tqdm(rapids, desc="Uploading validation tasks"):
             validation_set.add_rapid(rapid)
         
         return validation_set

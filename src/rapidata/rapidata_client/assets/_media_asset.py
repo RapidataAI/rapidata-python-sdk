@@ -1,6 +1,7 @@
-"""Media Asset Module
+"""Media Asset Module with Lazy Loading
 
 Defines the MediaAsset class for handling media file paths within assets.
+Implements lazy loading for URL-based media to prevent unnecessary downloads.
 """
 
 import os
@@ -12,18 +13,20 @@ from PIL import Image
 from tinytag import TinyTag
 import tempfile
 from pydantic import StrictStr, StrictBytes
-from typing import Optional
+from typing import Optional, cast
 import logging
+from functools import cached_property
 
 
 class MediaAsset(BaseAsset):
-    """MediaAsset Class
+    """MediaAsset Class with Lazy Loading
 
-    Represents a media asset by storing the file path.
+    Represents a media asset by storing the file path or URL.
+    Only downloads URL content when needed.
     Supports local files and URLs for images, MP3, and MP4.
 
     Args:
-        path (str): The file system path to the media asset.
+        path (str): The file system path to the media asset or URL.
 
     Raises:
         FileNotFoundError: If the provided file path does not exist.
@@ -67,22 +70,39 @@ class MediaAsset(BaseAsset):
 
         Raises:
             FileNotFoundError: If the provided file path does not exist.
-            ValueError: If media type is unsupported or duration exceeds 25 seconds.
+            ValueError: If path is not a string.
         """
         if not isinstance(path, str):
             raise ValueError("Media must be a string, either a local file path or a URL")
         
+        self._url = None
+        self._content = None
+        
         if re.match(r'^https?://', path):
-            self.path = self.__get_media_bytes(path)
+            self._url = path
             self.name = path.split('/')[-1]
             self.name = self.__check_name_ending(self.name)
+            self.path = None  # Will be set when content is downloaded
             return
         
         if not os.path.exists(path):
             raise FileNotFoundError(f"File not found: {path}")
         
-        self.path: str | bytes = path
+        self.path = path
         self.name = path
+
+    @cached_property
+    def content(self) -> bytes:
+        """
+        Lazy loader for URL content. Only downloads when first accessed.
+        Uses cached_property to store the result after first download.
+        """
+        if self._url is None:
+            self.path = cast(str, self.path)
+            with open(self.path, 'rb') as f:
+                return f.read()
+            
+        return self.__get_media_bytes(self._url)
 
     def get_duration(self) -> int:
         """
@@ -97,27 +117,22 @@ class MediaAsset(BaseAsset):
         """
         path_to_check = self.name.lower()
         
-        # Return 0 for other static images
+        # Return 0 for static images
         if any(path_to_check.endswith(ext) for ext in ('.jpg', '.jpeg', '.png', '.webp', '.gif')):
             return 0
 
         try:
-            # For URL downloads (bytes), write to temporary file first
-            if isinstance(self.path, bytes):
-                with tempfile.NamedTemporaryFile(suffix=os.path.splitext(self.name)[1], delete=False) as tmp:
-                    tmp.write(self.path)
-                    tmp.flush()
-                    # Close the file so it can be read
-                    tmp_path = tmp.name
+            # Create temporary file from content
+            with tempfile.NamedTemporaryFile(suffix=os.path.splitext(self.name)[1], delete=False) as tmp:
+                tmp.write(self.content)
+                tmp.flush()
+                tmp_path = tmp.name
                 
                 try:
                     tag = TinyTag.get(tmp_path)
                 finally:
                     # Clean up the temporary file
                     os.unlink(tmp_path)
-            else:
-                # For local files, use path directly
-                tag = TinyTag.get(self.path)
             
             if tag.duration is None:
                 raise ValueError("Could not read duration from file")
@@ -136,17 +151,14 @@ class MediaAsset(BaseAsset):
             return None
             
         try:
-            if isinstance(self.path, bytes):
-                img = Image.open(BytesIO(self.path))
-            else:
-                img = Image.open(self.path)
+            img = Image.open(BytesIO(self.content))
             return img.size
         except Exception:
             return None
 
     def set_custom_name(self, name: str) -> 'MediaAsset':
         """Set a custom name for the media asset (only works with URLs)."""
-        if isinstance(self.path, bytes):
+        if self._url is not None:
             self.name = self.__check_name_ending(name)
         else:
             raise ValueError("Custom name can only be set for URLs.")
@@ -265,8 +277,10 @@ class MediaAsset(BaseAsset):
         self._logger.error(error_msg)
         raise ValueError(error_msg)
     
-    def to_file(self) -> StrictStr | tuple[StrictStr, StrictBytes] | StrictBytes: # types for autogenerated models
-        if isinstance(self.path, str):
+    def to_file(self) -> StrictStr | tuple[StrictStr, StrictBytes] | StrictBytes:
+        """Convert the media asset to a file representation."""
+        if self._url is None:
+            self.path = cast(str, self.path)
             return self.path
-        else: # isinstance(self.path, bytes)
-            return (self.name, self.path)
+        else:
+            return (self.name, self.content)
