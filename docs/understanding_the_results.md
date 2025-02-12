@@ -1,87 +1,77 @@
 # Interpreting the Results
 
-After running your order and collecting responses, you'll receive a structured result containing valuable insights from the annotators. Understanding each component of this result is crucial for analyzing and utilizing the data effectively.
+After running your comparison order and collecting responses, you'll receive a structured result containing valuable insights from the annotators. Understanding each component of this result is crucial for analyzing and utilizing the data effectively.
 
-Here's an example of the results you might receive when running the [Quickstart order](/quickstart/) (for simplicity, this example uses only 3 responses):
+Here's an example of the results you might receive when running a COMPARE task (for simplicity, this example uses 3 responses):
 
 ```json
 {
   "info": {
-    "createdAt": "2099-12-30T00:00:00.000000+00:00",
+    "createdAt": "2025-02-11T07:31:59.353232+00:00",
     "version": "3.0.0"
   },
-  "results": {
-    "globalAggregatedData": {
-      "Fish": 0,
-      "Cat": 0,
-      "Wallaby": 3,
-      "Airplane": 0
-    },
-    "data": [
-      {
-        "originalFileName": "wallaby.jpg",
-        "aggregatedResults": {
-          "Fish": 0,
-          "Cat": 0,
-          "Wallaby": 3,
-          "Airplane": 0
-        },
-        "aggregatedResultsRatios": {
-          "Fish": 0.0,
-          "Cat": 0.0,
-          "Wallaby": 1.0,
-          "Airplane": 0.0
-        },
-        "summedUserScores": {
-          "Fish": 0.0,
-          "Cat": 0.0,
-          "Wallaby": 1.77,
-          "Airplane": 0.0
-        },
-        "summedUserScoresRatios": {
-          "Fish": 0.0,
-          "Cat": 0.0,
-          "Wallaby": 1.0,
-          "Airplane": 0.0
-        },
-        "detailedResults": [
+  "summary": {
+    "A_wins_total": 0,
+    "B_wins_total": 1
+  },
+  "results": [
+    {
+      "context": "A small blue book sitting on a large red book.",
+      "winner_index": 1,
+      "winner": "dalle-3_37_2.jpg",
+      "aggregatedResults": {
+        "aurora-20-1-25_37_4.png": 0,
+        "dalle-3_37_2.jpg": 3
+      },
+      "aggregatedResultsRatios": {
+        "aurora-20-1-25_37_4.png": 0.0,
+        "dalle-3_37_2.jpg": 1.0
+      },
+      "summedUserScores": {
+        "aurora-20-1-25_37_4.png": 0.0,
+        "dalle-3_37_2.jpg": 1.196
+      },
+      "summedUserScoresRatios": {
+        "aurora-20-1-25_37_4.png": 0.0,
+        "dalle-3_37_2.jpg": 1.0
+      },
+      "detailedResults": [
           {
-            "selectedCategory": "Wallaby",
-            "userDetails": {
-              "country": "DZ",
-              "language": "ar",
-              "userScore": 0.6409,
-              "age": "40-49",
-              "gender": "Male",
-              "occupation": "Medical Technologists",
-            }
+              "votedFor": "dalle-3_37_2.jpg",
+              "userDetails": {
+                  "country": "BY",
+                  "language": "ru",
+                  "userScore": 0.4469,
+                  "age": "Unknown",
+                  "gender": "Unknown",
+                  "occupation": "Unknown"
+              }
           },
           {
-            "selectedCategory": "Wallaby",
-            "userDetails": {
-              "country": "EG",
-              "language": "ar",
-              "userScore": 0.7608,
-              "age": "30-39",
-              "gender": "Female",
-              "occupation": "Creative & Media"
-            }
+              "votedFor": "dalle-3_37_2.jpg",
+              "userDetails": {
+                  "country": "LY",
+                  "language": "ar",
+                  "userScore": 0.3923,
+                  "age": "0-17",
+                  "gender": "Other",
+                  "occupation": "Other Employment"
+              }
           },
           {
-            "selectedCategory": "Wallaby",
-            "userDetails": {
-              "country": "DZ",
-              "language": "ar",
-              "userScore": 0.3683,
-              "age": "Unknown",
-              "gender": "Unknown",
-              "occupation": "Unknown"
-            }
+              "votedFor": "dalle-3_37_2.jpg",
+              "userDetails": {
+                  "country": "BY",
+                  "language": "ru",
+                  "userScore": 0.3568,
+                  "age": "0-17",
+                  "gender": "Other",
+                  "occupation": "Healthcare"
+              }
           }
-        ]
-      }
-    ]
-  }
+      ]
+    }
+  ]
 }
 ```
 
@@ -90,98 +80,58 @@ Here's an example of the results you might receive when running the [Quickstart 
 1. `info`
     - `createdAt`: The timestamp indicating when the results overview was generated, in UTC time.
     - `version`: The version of the aggregator system that produced the results.
-2. `results`:
-This section contains the actual data collected from the annotators. The structure may vary slightly depending on the type of order, but the general idea stays the same. For classification orders, it includes:
-    - `globalAggregatedData`: Aggregated counts of all votes across all datapoints for each category
-    ```json
-    "globalAggregatedData": {
-        "Fish": 0,
-        "Cat": 0,
-        "Wallaby": 3,
-        "Airplane": 0
-    }
-    ```
-    - `data`: A list of results for each individual datapoint (e.g., each image/media or text you had labeled). Note that the order of datapoints may not match the order you submitted them in.
 
-Each item in the data list contains:
+2. `summary`
+    - `A_wins_total`: The total number of comparisons won by option A (index 0) across all pairs
+    - `B_wins_total`: The total number of comparisons won by option B (index 1) across all pairs
 
-- `originalFileName`: The name or identifier of the original file or datapoint.
+3. `results`: This section contains the actual comparison data collected from the annotators. For comparison orders, each item includes:
 
-    ```json
-    "originalFileName": "wallaby.jpg"
-    ```
-
-- `aggregatedResults`: The total number of votes each category received for this specific datapoint.
-
-    ```json
-    "aggregatedResults": {
-        "Fish": 0,
-        "Cat": 0,
-        "Wallaby": 3,
-        "Airplane": 0
-    }
-    ```
-
-- `aggregatedResultsRatios`: The proportion of votes each category received, calculated as the number of votes for the category divided by the total number of votes for the datapoint.
-
-    ```json
-    "aggregatedResultsRatios": {
-        "Fish": 0.0,
-        "Cat": 0.0,
-        "Wallaby": 1.0,
-        "Airplane": 0.0
-    }
-    ```
+    - `context`: The prompt or description provided for the comparison task
+    - `winner_index`: Index of the winning option (0 for first option, 1 for second option)
+    - `winner`: Filename or identifier of the winning option
     
-    In this example, all annotators selected "Wallaby," resulting in a ratio of 1.0 (or 100%) for that category.
-
-- `summedUserScores`: The sum of the annotators' userScore values for each category. This metric accounts for the reliability of each annotator's response.
-
-    ```json
-    "summedUserScores": {
-        "Fish": 0.0,
-        "Cat": 0.0,
-        "Wallaby": 1.77,
-        "Airplane": 0.0
-    }    
-    ```
-
-- `summedUserScoresRatios`: The proportion of the summed user scores for each category, providing a weighted ratio based on annotator reliability.
-
-    ```json
-    "summedUserScoresRatios": {
-        "Fish": 0.0,
-        "Cat": 0.0,
-        "Wallaby": 1.0,
-        "Airplane": 0.0
-    }
-    ```
-
-- `detailedResults`: A list of individual responses from each annotator, including:
-    - `selectedCategory`: The category chosen by the annotator.
-    - `userDetails`: Information about the annotator.
-        - `country`: Country code of the annotator.
-        - `language`: Language in which the annotator viewed the task.
-        - `userScore`: A score representing the annotator's reliability.
-        - `age`: Age group of the annotator.
-        - `gender` : The gender of the annotator.
-        - `occupation`: The occupation of the annotator.
-
-    Example:
-
-    ```json
-    {
-    "selectedCategory": "Wallaby",
-    "userDetails": {
-        "country": "DZ",
-        "language": "ar",
-        "userScore": 0.6409,
-        "age": "40-49",
-        "gender": "Male",
-        "occupation": "Medical Technologists",
+    - `aggregatedResults`: The total number of responses each option received for this specific comparison.
+        ```json
+        "aggregatedResults": {
+            "aurora-20-1-25_37_4.png": 0,
+            "dalle-3_37_2.jpg": 3
         }
-    }
-    ```
+        ```
+
+    - `aggregatedResultsRatios`: The proportion of responses each option received, calculated as the number of responses for the option divided by the total number of responses.
+        ```json
+        "aggregatedResultsRatios": {
+            "aurora-20-1-25_37_4.png": 0.0,
+            "dalle-3_37_2.jpg": 1.0
+        }
+        ```
+
+    - `summedUserScores`: The sum of the annotators' userScore values for each option. This metric accounts for the reliability of each annotator's response.
+        ```json
+        "summedUserScores": {
+            "aurora-20-1-25_37_4.png": 0.0,
+            "dalle-3_37_2.jpg": 1.196
+        }
+        ```
+
+    - `summedUserScoresRatios`: The proportion of the summed user scores for each option, providing a weighted ratio based on annotator reliability.
+        ```json
+        "summedUserScoresRatios": {
+            "aurora-20-1-25_37_4.png": 0.0,
+            "dalle-3_37_2.jpg": 1.0
+        }
+        ```
+
+    - `detailedResults`: A list of individual responses from each annotator, including:
+        - `votedFor`: The option chosen by the annotator
+        - `userDetails`: Information about the annotator
+            - `country`: Country code of the annotator
+            - `language`: Language in which the annotator viewed the task
+            - `userScore`: A score representing the annotator's reliability
+            - `age`: Age group of the annotator
+            - `gender`: The gender of the annotator
+            - `occupation`: The occupation of the annotator
 
 ## Understanding the User Scores
 
@@ -201,12 +151,14 @@ To know more about the Validation Tasks have a look at the [Improve Order Qualit
 
 ## Notes on Data Ordering
 
-The datapoints in the `data` list may not be in the same order as you submitted them. You can use the `originalFileName` to match the results to your original data.
+The datapoints in the `results` list may not be in the same order as you submitted them. You can use the `filenames` to match the results to your original data.
 
 ## Utilizing the Results
-- **Aggregated Insights**: Use `aggregatedResults` and `aggregatedResultsRatios` to understand the general consensus among annotators for each datapoint.
-- **Weighted Decisions**: Consider `summedUserScores` and `summedUserScoresRatios` to make decisions based on annotator reliability.
-- **Detailed Analysis**: Explore `detailedResults` to see individual responses and gather insights about annotator demographics and performance.
+
+- **Clear Winners**: Use `winner` and `winner_index` to quickly identify which option was preferred. It is calculated based on the userScores.
+- **Aggregated Insights**: Use `aggregatedResults` and `aggregatedResultsRatios` to understand the strength of preference between options
+- **Weighted Decisions**: Consider `summedUserScores` and `summedUserScoresRatios` to make decisions based on annotator reliability
+- **Detailed Analysis**: Explore `detailedResults` to see individual responses and gather insights about annotator demographics and performance
 
 ## Conclusion
 
