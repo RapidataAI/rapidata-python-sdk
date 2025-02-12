@@ -24,10 +24,10 @@ Set up your environment and make your first API request in minutes.
 
     order = rapi.order.create_compare_order(
         name="Example Alignment Order",
-        instruction="Which video aligns better with the description?",
+        instruction="Which image matches the description better?",
         contexts=["A small blue book sitting on a large red book."],
-        datapoints=[["https://assets.rapidata.ai/aurora-20-1-25_37_4.png", 
-                    "https://assets.rapidata.ai/dalle-3_37_2.jpg"]],
+        datapoints=[["https://assets.rapidata.ai/midjourney-5.2_37_3.jpg", 
+                    "https://assets.rapidata.ai/flux-1-pro_37_0.jpg"]],
     ).run()
 
     order.display_progress_bar()

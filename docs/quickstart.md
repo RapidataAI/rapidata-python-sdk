@@ -4,7 +4,7 @@ Directly ask real humans to compare your data. This guide will show you how to c
 
 There are many other types of orders you can create which you can find in the examples on the [Overview](index.md).
 
-We will create an order, using 2 AI generated images to compare them against eachother based on which image followed the prompt more accurately.
+We will create an order assessing image-prompt-alignment, using 2 AI generated images and compare them against eachother based on which image followed the prompt more accurately.
 
 Our annotators will then label the data according to the instruction we provided.
 
@@ -48,12 +48,12 @@ All order-related operations are performed using rapi.order.
 1. Here we create a compare order with a name and the instruction / question we want to ask. Additionally we provide the prompt as a context:
 
 ```py
-rapi.order.create_compare_order(
+order = rapi.order.create_compare_order(
     name="Example Alignment Order",
-    instruction="Which video aligns better with the description?",
+    instruction="Which image matches the description better?",
     contexts=["A small blue book sitting on a large red book."],
-    datapoints=[["https://assets.rapidata.ai/aurora-20-1-25_37_4.png", 
-                "https://assets.rapidata.ai/dalle-3_37_2.jpg"]],
+    datapoints=[["https://assets.rapidata.ai/midjourney-5.2_37_3.jpg", 
+                "https://assets.rapidata.ai/flux-1-pro_37_0.jpg"]],
 )
 ```
 The parameters are as follows:
@@ -61,7 +61,7 @@ The parameters are as follows:
 - `name`: The name of the order. This is used to identify the order in the [Rapidata Dashboard](https://app.rapidata.ai/dashboard/orders). This name is also be used to find the order again later.
 - `instruction`: The instruction you want to show the annotators to select the image by.
 - `contexts`: The prompt that will be shown along side the two images and the instruction.
-- `datapoints`: The image pairs we want to compare. This can be any public URL (that points to an image, video or audio) or a local file path. This is a list of all datapoints you want to compare. Each datapoint consists of 2 files that are compared, as well as an optional context (which in this case is the prompt). The same instruction will be shown for each datapoint. There is a limit of 100 datapoints per order. If you need more than that, you can reach out to us at <info@rapidata.ai>.
+- `datapoints`: The image pairs we want to compare (order is randomized for every annotator). This can be any public URL (that points to an image, video or audio) or a local file path. This is a list of all datapoints you want to compare. Each datapoint consists of 2 files that are compared, as well as an optional context (which in this case is the prompt). The same instruction will be shown for each datapoint. There is a limit of 100 datapoints per order. If you need more than that, you can reach out to us at <info@rapidata.ai>.
 
 Optionally you may add additional specifications with the other parameters. As an example, the `responses_per_datapoint` that specifies how many responses you want per datapoint<sup>1</sup>.
 
