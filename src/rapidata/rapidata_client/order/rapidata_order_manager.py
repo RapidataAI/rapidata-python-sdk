@@ -58,7 +58,7 @@ class RapidataOrderManager:
             return [ValidationSelection(validation_set_id=validation_set_id), LabelingSelection(amount=labeling_amount-1)]
         return [LabelingSelection(amount=labeling_amount)]
     
-    def __create_general_order(self,
+    def _create_general_order(self,
             name: str,
             workflow: Workflow,
             assets: list[MediaAsset] | list[TextAsset] | list[MultiAsset],
@@ -168,7 +168,7 @@ class RapidataOrderManager:
         else:
             raise ValueError(f"Unsupported data type: {data_type}, must be one of {RapidataDataTypes._possible_values()}")
         
-        return self.__create_general_order(
+        return self._create_general_order(
             name=name,
             workflow=ClassifyWorkflow(
                 instruction=instruction,
@@ -226,7 +226,7 @@ class RapidataOrderManager:
         else:
             raise ValueError(f"Unsupported data type: {data_type}, must be one of {RapidataDataTypes._possible_values()}")
         
-        return self.__create_general_order(
+        return self._create_general_order(
             name=name,
             workflow=CompareWorkflow(
                 instruction=instruction
@@ -273,7 +273,7 @@ class RapidataOrderManager:
         else:
             raise ValueError(f"Unsupported data type: {data_type}, must be one of {RapidataDataTypes._possible_values()}")
 
-        return self.__create_general_order(
+        return self._create_general_order(
             name=name,
             workflow=FreeTextWorkflow(
                 instruction=instruction
@@ -316,7 +316,7 @@ class RapidataOrderManager:
 
         assets = [MediaAsset(path=path) for path in datapoints]
         
-        return self.__create_general_order(
+        return self._create_general_order(
             name=name,
             workflow=SelectWordsWorkflow(
                 instruction=instruction
@@ -361,7 +361,7 @@ class RapidataOrderManager:
 
         assets = [MediaAsset(path=path) for path in datapoints]
 
-        return self.__create_general_order(
+        return self._create_general_order(
             name=name,
             workflow=LocateWorkflow(target=instruction),
             assets=assets,
@@ -403,7 +403,7 @@ class RapidataOrderManager:
 
         assets = [MediaAsset(path=path) for path in datapoints]
 
-        return self.__create_general_order(
+        return self._create_general_order(
             name=name,
             workflow=DrawWorkflow(target=instruction),
             assets=assets,
@@ -448,7 +448,7 @@ class RapidataOrderManager:
             if not asset.get_duration():
                 raise ValueError("The datapoints for this order must have a duration. (e.g. video or audio)")
 
-        return self.__create_general_order(
+        return self._create_general_order(
             name=name,
             workflow=TimestampWorkflow(
                 instruction=instruction
