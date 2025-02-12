@@ -36,6 +36,8 @@ from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.filter import Filter
 from rapidata.api_client.models.sort_criterion import SortCriterion
 
+from tqdm import tqdm
+
 
 class RapidataOrderManager:
     """
@@ -444,7 +446,7 @@ class RapidataOrderManager:
 
         assets = [MediaAsset(path=path) for path in datapoints]
 
-        for asset in assets:
+        for asset in tqdm(assets, desc="downloading assets and checking duration"):
             if not asset.get_duration():
                 raise ValueError("The datapoints for this order must have a duration. (e.g. video or audio)")
 
