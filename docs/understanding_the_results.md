@@ -155,7 +155,7 @@ The datapoints in the `results` list may not be in the same order as you submitt
 
 ## Utilizing the Results
 
-- **Clear Winners**: Use `winner` and `winner_index` to quickly identify which option was preferred
+- **Clear Winners**: Use `winner` and `winner_index` to quickly identify which option was preferred. It is calculated based on the userScores.
 - **Aggregated Insights**: Use `aggregatedResults` and `aggregatedResultsRatios` to understand the strength of preference between options
 - **Weighted Decisions**: Consider `summedUserScores` and `summedUserScoresRatios` to make decisions based on annotator reliability
 - **Detailed Analysis**: Explore `detailedResults` to see individual responses and gather insights about annotator demographics and performance
