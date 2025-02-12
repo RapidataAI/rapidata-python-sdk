@@ -22,11 +22,12 @@ Set up your environment and make your first API request in minutes.
 
     rapi = RapidataClient()
 
-    order = rapi.order.create_classification_order(
-        name="Example Classification Order",
-        instruction="What is shown in the image?",
-        answer_options=["Fish", "Cat", "Wallaby", "Airplane"],
-        datapoints=["https://assets.rapidata.ai/wallaby.jpg"]
+    order = rapi.order.create_compare_order(
+        name="Example Alignment Order",
+        instruction="Which image matches the description better?",
+        contexts=["A small blue book sitting on a large red book."],
+        datapoints=[["https://assets.rapidata.ai/midjourney-5.2_37_3.jpg", 
+                    "https://assets.rapidata.ai/flux-1-pro_37_0.jpg"]],
     ).run()
 
     order.display_progress_bar()
