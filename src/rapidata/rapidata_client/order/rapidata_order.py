@@ -6,6 +6,7 @@ from rapidata.api_client.exceptions import ApiException
 from rapidata.api_client.models.order_state import OrderState
 from typing import Optional, cast, Any
 from rapidata.api_client.models.workflow_artifact_model import WorkflowArtifactModel
+from rapidata.api_client.models.preliminary_download_model import PreliminaryDownloadModel
 from tqdm import tqdm
 
 class RapidataOrder:
@@ -34,6 +35,7 @@ class RapidataOrder:
         self.__openapi_service = openapi_service
         self.__dataset = dataset
         self.__workflow_id = None
+        self.__pipeline_id = ""
 
     def run(self, print_link: bool=True):
         """
@@ -103,20 +105,29 @@ class RapidataOrder:
 
                 sleep(refresh_rate)
 
+    def __get_pipeline_id(self):
+        if self.__pipeline_id:
+            return self.__pipeline_id
+
+        self.__pipeline_id = self.__openapi_service.order_api.order_get_by_id_get(self.order_id).pipeline_id
+        return self.__pipeline_id
+
     def __get_workflow_id(self):
         if self.__workflow_id:
             return self.__workflow_id
 
         for _ in range(10): # Try for 20 seconds to get the workflow id if workflow has not started by then, raise an exception
             try:
-                order_result = self.__openapi_service.order_api.order_get_by_id_get(self.order_id)
-                pipeline = self.__openapi_service.pipeline_api.pipeline_id_get(order_result.pipeline_id)
+                self.__get_pipeline_id()
+                pipeline = self.__openapi_service.pipeline_api.pipeline_id_get(self.__pipeline_id)
                 self.__workflow_id = cast(WorkflowArtifactModel, pipeline.artifacts["workflow-artifact"].actual_instance).workflow_id
                 break
             except Exception:
                 sleep(2)
+
         if not self.__workflow_id:
             raise Exception("Something went wrong when trying to get the order progress.")
+        
         return self.__workflow_id
     
     def __get_workflow_progress(self):
@@ -133,16 +144,42 @@ class RapidataOrder:
             raise Exception(f"Failed to get progress. Please try again in a few seconds.")
         
         return progress
-
+    
+    def __get_preliminary_results(self) -> dict[str, Any]:
+        pipeline_id = self.__get_pipeline_id()
+        try: 
+            download_id = self.__openapi_service.pipeline_api.pipeline_pipeline_id_preliminary_download_post(pipeline_id, PreliminaryDownloadModel(sendEmail=False)).download_id
+            while not (preliminary_results := self.__openapi_service.pipeline_api.pipeline_preliminary_download_preliminary_download_id_get(preliminary_download_id=download_id)):
+                sleep(1)
+            return json.loads(preliminary_results.decode())
         
-    def get_results(self) -> dict[str, Any]:
+        except ApiException as e:
+            # Handle API exceptions
+            raise Exception(f"Failed to get preliminary order results: {str(e)}") from e
+        except json.JSONDecodeError as e:
+            # Handle JSON parsing errors
+            raise Exception(f"Failed to parse preliminary order results: {str(e)}") from e
+
+    def get_results(self, preliminary_results=False) -> dict[str, Any]:
         """
         Gets the results of the order. 
         If the order is still processing, this method will block until the order is completed and then return the results.
 
+        Args:
+            preliminary_results: If True, returns the preliminary results of the order. Defaults to False. 
+                Note that preliminary results are not final and may not contain all the datapoints & responses. Only the onese that are already available.
+                This will throw an exception if there are no responses available yet.
+
         Returns: 
             The results of the order.
         """
+
+        if preliminary_results and self.get_status() not in [OrderState.COMPLETED]:
+            return self.__get_preliminary_results()
+        
+        elif preliminary_results and self.get_status() in [OrderState.COMPLETED]:
+            print("Order is already completed. Returning final results.")
+
         while self.get_status() not in [OrderState.COMPLETED, OrderState.PAUSED, OrderState.MANUALREVIEW, OrderState.FAILED]:
             sleep(5)
 
