@@ -65,6 +65,15 @@ class RapidataOrder:
     def get_status(self) -> str:
         """
         Gets the status of the order.
+
+        Different states are:
+            Created: The order has been created but not started yet.\n
+            Submitted: The order has been submitted and is being reviewed.\n
+            ManualReview: The order is in manual review - something went wrong with the automatic approval.\n
+            Processing: The order is actively being processed.\n
+            Paused: The order has been paused.\n
+            Completed: The order has been completed.\n
+            Failed: The order has failed.
         
         Returns: 
             The status of the order.
