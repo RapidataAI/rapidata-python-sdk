@@ -28,7 +28,7 @@ class ReportModel(BaseModel):
     """ # noqa: E501
     rapid_id: StrictStr = Field(alias="rapidId")
     issue: StrictStr
-    message: Optional[StrictStr]
+    message: Optional[StrictStr] = None
     __properties: ClassVar[List[str]] = ["rapidId", "issue", "message"]
 
     @field_validator('issue')

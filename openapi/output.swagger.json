@@ -241,120 +241,6 @@
         }
       }
     },
-    "/Dataset/UploadDatapoint": {
-      "post": {
-        "tags": [
-          "Dataset"
-        ],
-        "summary": "Creates a new multi asset datapoint.",
-        "parameters": [
-          {
-            "name": "datasetId",
-            "in": "query",
-            "description": "The id of the dataset to upload the datapoint to.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "files": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "format": "binary"
-                    },
-                    "description": "The image files to create the asset from."
-                  }
-                }
-              },
-              "encoding": {
-                "files": {
-                  "style": "form"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/UploadDatapointsResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UploadDatapointsResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UploadDatapointsResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
-    "/Dataset/UploadImagesToDataset": {
-      "post": {
-        "tags": [
-          "Dataset"
-        ],
-        "summary": "Uploads images to a dataset.",
-        "description": "If multiple files are uploaded, a new datapoint will be created for each file.",
-        "parameters": [
-          {
-            "name": "datasetId",
-            "in": "query",
-            "description": "The id of the dataset to upload the images to.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "files": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "format": "binary"
-                    },
-                    "description": "The image files to upload."
-                  }
-                }
-              },
-              "encoding": {
-                "files": {
-                  "style": "form"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/Dataset/CreatTextDatapoint": {
       "post": {
         "tags": [
@@ -2394,6 +2280,30 @@
         }
       }
     },
+    "/rapid/{rapidId}": {
+      "delete": {
+        "tags": [
+          "Rapid"
+        ],
+        "summary": "Deletes a rapid.",
+        "parameters": [
+          {
+            "name": "rapidId",
+            "in": "path",
+            "description": "The rapid to be deleted",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/workflow/compare/{id}/results": {
       "get": {
         "tags": [
@@ -2617,6 +2527,56 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetWorkflowProgressResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/workflow/{id}/compare-ab-summary": {
+      "get": {
+        "tags": [
+          "Workflow"
+        ],
+        "summary": "Calculates a summary of the results for a simple compare workflow.\r\nThe summary includes the number of times an asset at each index was the winner.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the workflow to get the summary for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "useUserScore",
+            "in": "query",
+            "description": "Whether to use the user score to determine the winner.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCompareAbSummaryResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCompareAbSummaryResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCompareAbSummaryResult"
                 }
               }
             }
@@ -3364,6 +3324,11 @@
             "default": "Datapoint",
             "example": "Datapoint"
           },
+          "sortIndex": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
           "asset": {
             "oneOf": [
               {
@@ -3439,6 +3404,12 @@
               }
             },
             "description": "The metadata of the datapoint."
+          },
+          "sortIndex": {
+            "type": "integer",
+            "description": "The index will be used to keep the datapoints in order. Useful if upload is parallelized",
+            "format": "int64",
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -4574,12 +4545,9 @@
       },
       "UploadFilesFromS3BucketModel": {
         "required": [
-          "accessKey",
           "bucketName",
           "clearDataset",
           "datasetId",
-          "region",
-          "secretKey",
           "sourcePrefix",
           "useCustomAwsCredentials"
         ],
@@ -4641,6 +4609,12 @@
               "type": "string"
             },
             "description": "The text sources to upload."
+          },
+          "sortIndex": {
+            "type": "integer",
+            "description": "The index will be used to keep the datapoints in order. Useful if upload is parallelized",
+            "format": "int64",
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -6118,7 +6092,6 @@
           "customerMail",
           "id",
           "isPublic",
-          "orderDate",
           "orderName",
           "pipelineId",
           "state"
@@ -6776,11 +6749,6 @@
         "description": "Model for the workflow split step"
       },
       "ClientsQueryResult": {
-        "required": [
-          "clientId",
-          "createdAt",
-          "displayName"
-        ],
         "type": "object",
         "properties": {
           "clientId": {
@@ -6958,13 +6926,7 @@
       "ReadBridgeTokenKeysResult": {
         "title": "ReadBridgeTokenKeysResult",
         "required": [
-          "_t",
-          "accessToken",
-          "expiresIn",
-          "idToken",
-          "refreshToken",
-          "scope",
-          "tokenType"
+          "_t"
         ],
         "type": "object",
         "properties": {
@@ -7065,10 +7027,8 @@
       },
       "AddValidationRapidModel": {
         "required": [
-          "explanation",
           "metadata",
           "payload",
-          "randomCorrectProbability",
           "truth",
           "validationSetId"
         ],
@@ -7185,6 +7145,7 @@
           },
           "explanation": {
             "type": "string",
+            "description": "An explanation for the users if they answer the rapid incorrectly.",
             "nullable": true
           }
         },
@@ -7205,10 +7166,8 @@
       },
       "AddValidationTextRapidModel": {
         "required": [
-          "explanation",
           "metadata",
           "payload",
-          "randomCorrectProbability",
           "texts",
           "truth",
           "validationSetId"
@@ -7333,6 +7292,7 @@
           },
           "explanation": {
             "type": "string",
+            "description": "An explanation for the users if they answer the rapid incorrectly.",
             "nullable": true
           }
         },
@@ -8282,9 +8242,7 @@
       "Coordinate": {
         "title": "Coordinate",
         "required": [
-          "_t",
-          "x",
-          "y"
+          "_t"
         ],
         "type": "object",
         "properties": {
@@ -8785,7 +8743,6 @@
       },
       "QueryValidationRapidsResult": {
         "required": [
-          "asset",
           "correctValidationCount",
           "id",
           "invalidValidationCount",
@@ -9077,7 +9034,6 @@
       "ReportModel": {
         "required": [
           "issue",
-          "message",
           "rapidId"
         ],
         "type": "object",
@@ -9337,8 +9293,6 @@
       },
       "UpdateValidationRapidModel": {
         "required": [
-          "explanation",
-          "prompt",
           "truth"
         ],
         "type": "object",
@@ -9409,12 +9363,10 @@
         "required": [
           "_t",
           "criteria",
-          "datasetId",
           "id",
           "kFactor",
           "matchesUntilCompleted",
           "name",
-          "ownerMail",
           "pairMakerInformation",
           "referee",
           "scalingFactor",
@@ -9564,6 +9516,22 @@
           },
           "identifier": {
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetCompareAbSummaryResult": {
+        "required": [
+          "winnerCounts"
+        ],
+        "type": "object",
+        "properties": {
+          "winnerCounts": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "format": "double"
+            }
           }
         },
         "additionalProperties": false
@@ -10284,10 +10252,8 @@
         "required": [
           "_t",
           "blueprint",
-          "datasetId",
           "id",
           "name",
-          "ownerMail",
           "referee",
           "state"
         ],
@@ -10473,7 +10439,6 @@
           "campaignName",
           "featureFlags",
           "priority",
-          "selections",
           "userFilters"
         ],
         "type": "object",
@@ -10990,10 +10955,12 @@
         "properties": {
           "sendEmail": {
             "type": "boolean",
+            "description": "Whether to email the user when the download is ready.",
             "default": true
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "The model for creating a preliminary download."
       },
       "PreliminaryDownloadResult": {
         "required": [
@@ -11173,10 +11140,6 @@
         "description": "The configuration for a simple workflow.\r\nA simple workflow creates a rapid for each datapoint in its dataset.\r\nIt is considered complete when all rapids have been completed."
       },
       "UpdateCampaignModel": {
-        "required": [
-          "featureFlags",
-          "priority"
-        ],
         "type": "object",
         "properties": {
           "priority": {

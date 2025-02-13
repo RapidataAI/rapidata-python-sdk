@@ -28,10 +28,10 @@ class UploadFilesFromS3BucketModel(BaseModel):
     """ # noqa: E501
     dataset_id: StrictStr = Field(description="The id of the dataset to upload the files to.", alias="datasetId")
     bucket_name: StrictStr = Field(description="The name of the S3 bucket to upload the files from.", alias="bucketName")
-    region: Optional[StrictStr] = Field(description="The region of the S3 bucket.")
+    region: Optional[StrictStr] = Field(default=None, description="The region of the S3 bucket.")
     source_prefix: StrictStr = Field(description="The prefix of the files to upload.", alias="sourcePrefix")
-    access_key: Optional[StrictStr] = Field(description="The access key to use for the S3 bucket.", alias="accessKey")
-    secret_key: Optional[StrictStr] = Field(description="The secret key to use for the S3 bucket.", alias="secretKey")
+    access_key: Optional[StrictStr] = Field(default=None, description="The access key to use for the S3 bucket.", alias="accessKey")
+    secret_key: Optional[StrictStr] = Field(default=None, description="The secret key to use for the S3 bucket.", alias="secretKey")
     use_custom_aws_credentials: StrictBool = Field(description="Whether to use custom AWS credentials.", alias="useCustomAwsCredentials")
     clear_dataset: StrictBool = Field(description="Whether to clear the dataset before uploading the files.", alias="clearDataset")
     __properties: ClassVar[List[str]] = ["datasetId", "bucketName", "region", "sourcePrefix", "accessKey", "secretKey", "useCustomAwsCredentials", "clearDataset"]

@@ -30,12 +30,12 @@ class SimpleWorkflowModel1(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for SimpleWorkflowModel", alias="_t")
     id: StrictStr
-    dataset_id: Optional[StrictStr] = Field(alias="datasetId")
+    dataset_id: Optional[StrictStr] = Field(default=None, alias="datasetId")
     state: StrictStr
     blueprint: ValidationImportPostRequestBlueprint
     referee: CompareWorkflowModel1Referee
     name: StrictStr
-    owner_mail: Optional[StrictStr] = Field(alias="ownerMail")
+    owner_mail: Optional[StrictStr] = Field(default=None, alias="ownerMail")
     __properties: ClassVar[List[str]] = ["_t", "id", "datasetId", "state", "blueprint", "referee", "name", "ownerMail"]
 
     @field_validator('t')

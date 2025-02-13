@@ -27,12 +27,12 @@ class ReadBridgeTokenKeysResult(BaseModel):
     ReadBridgeTokenKeysResult
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for ReadBridgeTokenKeysResult", alias="_t")
-    access_token: Optional[StrictStr] = Field(alias="accessToken")
-    expires_in: Optional[StrictInt] = Field(alias="expiresIn")
-    refresh_token: Optional[StrictStr] = Field(alias="refreshToken")
-    id_token: Optional[StrictStr] = Field(alias="idToken")
-    token_type: Optional[StrictStr] = Field(alias="tokenType")
-    scope: Optional[StrictStr]
+    access_token: Optional[StrictStr] = Field(default=None, alias="accessToken")
+    expires_in: Optional[StrictInt] = Field(default=None, alias="expiresIn")
+    refresh_token: Optional[StrictStr] = Field(default=None, alias="refreshToken")
+    id_token: Optional[StrictStr] = Field(default=None, alias="idToken")
+    token_type: Optional[StrictStr] = Field(default=None, alias="tokenType")
+    scope: Optional[StrictStr] = None
     __properties: ClassVar[List[str]] = ["_t", "accessToken", "expiresIn", "refreshToken", "idToken", "tokenType", "scope"]
 
     @field_validator('t')

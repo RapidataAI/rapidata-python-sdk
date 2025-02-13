@@ -30,13 +30,13 @@ class CompareWorkflowModel1(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for CompareWorkflowModel", alias="_t")
     id: StrictStr
-    dataset_id: Optional[StrictStr] = Field(alias="datasetId")
+    dataset_id: Optional[StrictStr] = Field(default=None, alias="datasetId")
     referee: CompareWorkflowModel1Referee
     pair_maker_information: CompareWorkflowModel1PairMakerInformation = Field(alias="pairMakerInformation")
     state: StrictStr
     criteria: StrictStr
     name: StrictStr
-    owner_mail: Optional[StrictStr] = Field(alias="ownerMail")
+    owner_mail: Optional[StrictStr] = Field(default=None, alias="ownerMail")
     starting_elo: StrictInt = Field(alias="startingElo")
     k_factor: StrictInt = Field(alias="kFactor")
     scaling_factor: StrictInt = Field(alias="scalingFactor")

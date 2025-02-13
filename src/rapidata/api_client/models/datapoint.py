@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.datapoint_asset import DatapointAsset
 from typing import Optional, Set
@@ -29,13 +29,14 @@ class Datapoint(BaseModel):
     Datapoint
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for Datapoint", alias="_t")
+    sort_index: Optional[StrictInt] = Field(default=None, alias="sortIndex")
     asset: DatapointAsset
     dataset_id: StrictStr = Field(alias="datasetId")
     id: Optional[StrictStr] = None
     deletion_date: Optional[datetime] = Field(default=None, alias="deletionDate")
     deleter_id: Optional[StrictStr] = Field(default=None, alias="deleterId")
     created_at: Optional[datetime] = Field(default=None, alias="createdAt")
-    __properties: ClassVar[List[str]] = ["_t", "asset", "datasetId", "id", "deletionDate", "deleterId", "createdAt"]
+    __properties: ClassVar[List[str]] = ["_t", "sortIndex", "asset", "datasetId", "id", "deletionDate", "deleterId", "createdAt"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -86,6 +87,11 @@ class Datapoint(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of asset
         if self.asset:
             _dict['asset'] = self.asset.to_dict()
+        # set to None if sort_index (nullable) is None
+        # and model_fields_set contains the field
+        if self.sort_index is None and "sort_index" in self.model_fields_set:
+            _dict['sortIndex'] = None
+
         # set to None if deletion_date (nullable) is None
         # and model_fields_set contains the field
         if self.deletion_date is None and "deletion_date" in self.model_fields_set:
@@ -109,6 +115,7 @@ class Datapoint(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'Datapoint',
+            "sortIndex": obj.get("sortIndex"),
             "asset": DatapointAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "datasetId": obj.get("datasetId"),
             "id": obj.get("id"),

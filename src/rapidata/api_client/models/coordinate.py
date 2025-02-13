@@ -27,8 +27,8 @@ class Coordinate(BaseModel):
     Coordinate
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for Coordinate", alias="_t")
-    x: Optional[Union[StrictFloat, StrictInt]]
-    y: Optional[Union[StrictFloat, StrictInt]]
+    x: Optional[Union[StrictFloat, StrictInt]] = None
+    y: Optional[Union[StrictFloat, StrictInt]] = None
     __properties: ClassVar[List[str]] = ["_t", "x", "y"]
 
     @field_validator('t')

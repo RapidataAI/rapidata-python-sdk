@@ -17,8 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,7 +28,8 @@ class UploadTextSourcesToDatasetModel(BaseModel):
     """ # noqa: E501
     dataset_id: StrictStr = Field(description="The id of the dataset to upload the text sources to.", alias="datasetId")
     text_sources: List[StrictStr] = Field(description="The text sources to upload.", alias="textSources")
-    __properties: ClassVar[List[str]] = ["datasetId", "textSources"]
+    sort_index: Optional[StrictInt] = Field(default=None, description="The index will be used to keep the datapoints in order. Useful if upload is parallelized", alias="sortIndex")
+    __properties: ClassVar[List[str]] = ["datasetId", "textSources", "sortIndex"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -69,6 +70,11 @@ class UploadTextSourcesToDatasetModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if sort_index (nullable) is None
+        # and model_fields_set contains the field
+        if self.sort_index is None and "sort_index" in self.model_fields_set:
+            _dict['sortIndex'] = None
+
         return _dict
 
     @classmethod
@@ -82,7 +88,8 @@ class UploadTextSourcesToDatasetModel(BaseModel):
 
         _obj = cls.model_validate({
             "datasetId": obj.get("datasetId"),
-            "textSources": obj.get("textSources")
+            "textSources": obj.get("textSources"),
+            "sortIndex": obj.get("sortIndex")
         })
         return _obj
 

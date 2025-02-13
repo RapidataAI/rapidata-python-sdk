@@ -17,8 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.datapoint_metadata_model_metadata_inner import DatapointMetadataModelMetadataInner
 from typing import Optional, Set
 from typing_extensions import Self
@@ -29,7 +29,8 @@ class DatapointMetadataModel(BaseModel):
     """ # noqa: E501
     dataset_id: StrictStr = Field(description="The id of the dataset to create the datapoint in.", alias="datasetId")
     metadata: List[DatapointMetadataModelMetadataInner] = Field(description="The metadata of the datapoint.")
-    __properties: ClassVar[List[str]] = ["datasetId", "metadata"]
+    sort_index: Optional[StrictInt] = Field(default=None, description="The index will be used to keep the datapoints in order. Useful if upload is parallelized", alias="sortIndex")
+    __properties: ClassVar[List[str]] = ["datasetId", "metadata", "sortIndex"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -77,6 +78,11 @@ class DatapointMetadataModel(BaseModel):
                 if _item_metadata:
                     _items.append(_item_metadata.to_dict())
             _dict['metadata'] = _items
+        # set to None if sort_index (nullable) is None
+        # and model_fields_set contains the field
+        if self.sort_index is None and "sort_index" in self.model_fields_set:
+            _dict['sortIndex'] = None
+
         return _dict
 
     @classmethod
@@ -90,7 +96,8 @@ class DatapointMetadataModel(BaseModel):
 
         _obj = cls.model_validate({
             "datasetId": obj.get("datasetId"),
-            "metadata": [DatapointMetadataModelMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None
+            "metadata": [DatapointMetadataModelMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
+            "sortIndex": obj.get("sortIndex")
         })
         return _obj
 
