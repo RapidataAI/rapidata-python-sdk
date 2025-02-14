@@ -90,9 +90,7 @@ Class | Method | HTTP request | Description
 *DatasetApi* | [**dataset_get_by_id_get**](rapidata/api_client/docs/DatasetApi.md#dataset_get_by_id_get) | **GET** /Dataset/GetById | Gets a dataset by its id.
 *DatasetApi* | [**dataset_import_post**](rapidata/api_client/docs/DatasetApi.md#dataset_import_post) | **POST** /Dataset/Import | Imports datapoints from a csv file.
 *DatasetApi* | [**dataset_update_name_post**](rapidata/api_client/docs/DatasetApi.md#dataset_update_name_post) | **POST** /Dataset/UpdateName | Updates the name of a dataset.
-*DatasetApi* | [**dataset_upload_datapoint_post**](rapidata/api_client/docs/DatasetApi.md#dataset_upload_datapoint_post) | **POST** /Dataset/UploadDatapoint | Creates a new multi asset datapoint.
 *DatasetApi* | [**dataset_upload_files_from_s3_post**](rapidata/api_client/docs/DatasetApi.md#dataset_upload_files_from_s3_post) | **POST** /Dataset/UploadFilesFromS3 | Uploads files from an S3 bucket to a dataset.
-*DatasetApi* | [**dataset_upload_images_to_dataset_post**](rapidata/api_client/docs/DatasetApi.md#dataset_upload_images_to_dataset_post) | **POST** /Dataset/UploadImagesToDataset | Uploads images to a dataset.
 *IdentityApi* | [**identity_create_bridge_token_post**](rapidata/api_client/docs/IdentityApi.md#identity_create_bridge_token_post) | **POST** /Identity/CreateBridgeToken | Creates a pair of read and write keys for a client.  The write key is used to store the authentication result.  The read key is used to retrieve the authentication result.
 *IdentityApi* | [**identity_read_bridge_token_get**](rapidata/api_client/docs/IdentityApi.md#identity_read_bridge_token_get) | **GET** /Identity/ReadBridgeToken | Tries to read the bridge token keys for a given read key.  The read key is used to retrieve the authentication result written by the write key.
 *IdentityApi* | [**identity_register_temporary_post**](rapidata/api_client/docs/IdentityApi.md#identity_register_temporary_post) | **POST** /Identity/RegisterTemporary | Registers and logs in a temporary customer.
@@ -129,6 +127,7 @@ Class | Method | HTTP request | Description
 *RapidApi* | [**rapid_add_user_guess_post**](rapidata/api_client/docs/RapidApi.md#rapid_add_user_guess_post) | **POST** /Rapid/AddUserGuess | Submits a user guess for a Rapid.
 *RapidApi* | [**rapid_create_demographic_rapid_post**](rapidata/api_client/docs/RapidApi.md#rapid_create_demographic_rapid_post) | **POST** /Rapid/CreateDemographicRapid | Creates a new Demographic Rapid.
 *RapidApi* | [**rapid_query_validation_rapids_get**](rapidata/api_client/docs/RapidApi.md#rapid_query_validation_rapids_get) | **GET** /Rapid/QueryValidationRapids | Queries the validation rapids for a specific validation set.
+*RapidApi* | [**rapid_rapid_id_delete**](rapidata/api_client/docs/RapidApi.md#rapid_rapid_id_delete) | **DELETE** /rapid/{rapidId} | Deletes a rapid.
 *RapidApi* | [**rapid_report_post**](rapidata/api_client/docs/RapidApi.md#rapid_report_post) | **POST** /Rapid/Report | Used to report an issue with a rapid.
 *RapidApi* | [**rapid_skip_user_guess_post**](rapidata/api_client/docs/RapidApi.md#rapid_skip_user_guess_post) | **POST** /Rapid/SkipUserGuess | Skips a Rapid for the user.
 *RapidApi* | [**rapid_validate_current_rapid_bag_get**](rapidata/api_client/docs/RapidApi.md#rapid_validate_current_rapid_bag_get) | **GET** /Rapid/ValidateCurrentRapidBag | Validates that the rapids associated with the current user are active.
@@ -147,6 +146,7 @@ Class | Method | HTTP request | Description
 *WorkflowApi* | [**workflow_delete_delete**](rapidata/api_client/docs/WorkflowApi.md#workflow_delete_delete) | **DELETE** /Workflow/Delete | Deletes a workflow.
 *WorkflowApi* | [**workflow_get_by_id_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_get_by_id_get) | **GET** /Workflow/GetById | Get a workflow by its ID.
 *WorkflowApi* | [**workflow_get_progress_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_get_progress_get) | **GET** /Workflow/GetProgress | Get the progress of a workflow.
+*WorkflowApi* | [**workflow_id_compare_ab_summary_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_id_compare_ab_summary_get) | **GET** /workflow/{id}/compare-ab-summary | Calculates a summary of the results for a simple compare workflow.  The summary includes the number of times an asset at each index was the winner.
 *WorkflowApi* | [**workflow_query_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_query_get) | **GET** /Workflow/Query | Queries workflows based on the provided filter, page, and sort criteria.
 
 
@@ -262,6 +262,7 @@ Class | Method | HTTP request | Description
  - [Gender](rapidata/api_client/docs/Gender.md)
  - [GenderUserFilterModel](rapidata/api_client/docs/GenderUserFilterModel.md)
  - [GetAvailableValidationSetsResult](rapidata/api_client/docs/GetAvailableValidationSetsResult.md)
+ - [GetCompareAbSummaryResult](rapidata/api_client/docs/GetCompareAbSummaryResult.md)
  - [GetCompareWorkflowResultsModel](rapidata/api_client/docs/GetCompareWorkflowResultsModel.md)
  - [GetCompareWorkflowResultsResult](rapidata/api_client/docs/GetCompareWorkflowResultsResult.md)
  - [GetCompareWorkflowResultsResultAsset](rapidata/api_client/docs/GetCompareWorkflowResultsResultAsset.md)

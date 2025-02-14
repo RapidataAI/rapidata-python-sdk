@@ -32,7 +32,7 @@ class QueryValidationRapidsResult(BaseModel):
     """ # noqa: E501
     id: StrictStr
     type: StrictStr
-    asset: Optional[QueryValidationRapidsResultAsset]
+    asset: Optional[QueryValidationRapidsResultAsset] = None
     truth: Optional[QueryValidationRapidsResultTruth] = None
     payload: QueryValidationRapidsResultPayload
     metadata: List[FileAssetModel1MetadataInner]

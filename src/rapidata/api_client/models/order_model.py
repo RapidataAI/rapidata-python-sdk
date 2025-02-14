@@ -29,7 +29,7 @@ class OrderModel(BaseModel):
     """ # noqa: E501
     id: StrictStr
     pipeline_id: StrictStr = Field(alias="pipelineId")
-    order_date: Optional[datetime] = Field(alias="orderDate")
+    order_date: Optional[datetime] = Field(default=None, alias="orderDate")
     customer_mail: StrictStr = Field(alias="customerMail")
     state: StrictStr
     order_name: StrictStr = Field(alias="orderName")

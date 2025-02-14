@@ -34,7 +34,7 @@ class AddCampaignModel(BaseModel):
     campaign_name: StrictStr = Field(description="The name of the campaign.", alias="campaignName")
     user_filters: List[CreateOrderModelUserFiltersInner] = Field(description="The user filters to apply to the campaign.", alias="userFilters")
     validation_set_id: Optional[StrictStr] = Field(default=None, description="A validation set that should be used.", alias="validationSetId")
-    selections: Optional[List[AbTestSelectionAInner]] = Field(description="The selections that the campaign should have.")
+    selections: Optional[List[AbTestSelectionAInner]] = Field(default=None, description="The selections that the campaign should have.")
     feature_flags: List[FeatureFlag] = Field(description="The feature flags that should be applied to the campaign.", alias="featureFlags")
     priority: StrictInt = Field(description="The priority of the campaign.")
     is_sticky: Optional[StrictBool] = Field(default=None, description="Indicates if the campaign is sticky.", alias="isSticky")

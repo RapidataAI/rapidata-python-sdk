@@ -28,8 +28,8 @@ class UpdateValidationRapidModel(BaseModel):
     The model for updating a validation rapid.
     """ # noqa: E501
     truth: UpdateValidationRapidModelTruth
-    explanation: Optional[StrictStr]
-    prompt: Optional[StrictStr]
+    explanation: Optional[StrictStr] = None
+    prompt: Optional[StrictStr] = None
     __properties: ClassVar[List[str]] = ["truth", "explanation", "prompt"]
 
     model_config = ConfigDict(
