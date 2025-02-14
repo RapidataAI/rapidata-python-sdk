@@ -149,10 +149,6 @@ To know more about the Validation Tasks have a look at the [Improve Order Qualit
 - **Quality Control**: It helps in identifying and filtering for the most reliable responses.
 - **Insight into Annotator Performance**: Provides transparency into who is contributing to your data and how reliably.
 
-## Notes on Data Ordering
-
-The datapoints in the `results` list may not be in the same order as you submitted them. You can use the `filenames` to match the results to your original data.
-
 ## Utilizing the Results
 
 - **Clear Winners**: Use `winner` and `winner_index` to quickly identify which option was preferred. It is calculated based on the userScores.
