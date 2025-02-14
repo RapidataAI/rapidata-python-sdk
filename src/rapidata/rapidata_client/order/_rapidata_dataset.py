@@ -36,7 +36,7 @@ class RapidataDataset:
                     isinstance(asset, TextAsset) for asset in text_asset.assets
                 ), "All assets in a MultiAsset must be of type TextAsset."
 
-        def upload_text_datapoint(text_asset: TextAsset | MultiAsset) -> None:
+        def upload_text_datapoint(text_asset: TextAsset | MultiAsset, index: int) -> None:
             if isinstance(text_asset, TextAsset):
                 texts = [text_asset.text]
             elif isinstance(text_asset, MultiAsset):
@@ -46,7 +46,8 @@ class RapidataDataset:
 
             model = UploadTextSourcesToDatasetModel(
                 datasetId=self.dataset_id,
-                textSources=texts
+                textSources=texts,
+                sortIndex=index,
             )
 
             upload_response = self.openapi_service.dataset_api.dataset_creat_text_datapoint_post(model)
@@ -57,8 +58,8 @@ class RapidataDataset:
         total_uploads = len(text_assets)
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
             futures = [
-                executor.submit(upload_text_datapoint, text_asset)
-                for text_asset in text_assets
+                executor.submit(upload_text_datapoint, text_asset, index=i)
+                for i, text_asset in enumerate(text_assets)
             ]
 
             with tqdm(total=total_uploads, desc="Uploading text datapoints") as pbar:
@@ -83,7 +84,7 @@ class RapidataDataset:
                     isinstance(asset, MediaAsset) for asset in media_path.assets
                 ), "All assets in a MultiAsset must be of type MediaAsset."
 
-        def upload_datapoint(media_asset: MediaAsset | MultiAsset, meta: Metadata | None) -> None:
+        def upload_datapoint(media_asset: MediaAsset | MultiAsset, meta: Metadata | None, index: int) -> None:
             if isinstance(media_asset, MediaAsset):
                 assets = [media_asset]
             elif isinstance(media_asset, MultiAsset):
@@ -99,6 +100,7 @@ class RapidataDataset:
                     if meta_model
                     else []
                 ),
+                sortIndex=index,
             )
 
             files: list[tuple[StrictStr, StrictBytes] | StrictStr | StrictBytes] = []
@@ -116,8 +118,8 @@ class RapidataDataset:
         total_uploads = len(media_paths)
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
             futures = [
-                executor.submit(upload_datapoint, media_asset, meta)
-                for media_asset, meta in zip_longest(media_paths, metadata or [])
+                executor.submit(upload_datapoint, media_asset, meta, index=i)
+                for i, (media_asset, meta) in enumerate(zip_longest(media_paths, metadata or []))
             ]
 
             with tqdm(total=total_uploads, desc="Uploading datapoints") as pbar:
