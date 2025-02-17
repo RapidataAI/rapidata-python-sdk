@@ -12,11 +12,11 @@ class RapidataResults(dict):
         """
         Converts the results to a pandas DataFrame.
         
-        For Compare results, creates standardized A/B columns for metrics like:
-        - aggregatedResults
-        - aggregatedResultsRatios
-        - summedUserScores
-        - summedUserScoresRatios
+        For Compare results, creates standardized A/B columns for metrics like:\n
+        - aggregatedResults\n
+        - aggregatedResultsRatios\n
+        - summedUserScores\n
+        - summedUserScoresRatios\n
         
         For regular results, flattens nested dictionaries into columns with underscore-separated names.
         
