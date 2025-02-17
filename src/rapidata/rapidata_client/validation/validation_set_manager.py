@@ -396,9 +396,6 @@ class ValidationSetManager:
         if validation_set_id is None:
             raise ValueError("Failed to create validation set")
 
-        if print_confirmation:
-            print(f"Validation set '{name}' created with ID {validation_set_id}")
-
         validation_set = RapidataValidationSet(
             name=name,
             validation_set_id=validation_set_id,
@@ -408,6 +405,12 @@ class ValidationSetManager:
         for rapid in tqdm(rapids, desc="Uploading validation tasks"):
             validation_set.add_rapid(rapid)
         
+        if print_confirmation:
+            print()
+            print(f"Validation set '{name}' created with ID {validation_set_id}\n",
+                  f"Now viewable under: https://app.{self.__openapi_service.enviroment}/validation-set/detail/{validation_set_id}",
+                  sep="")
+            
         return validation_set
 
 
