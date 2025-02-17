@@ -318,7 +318,7 @@ class ValidationSetManager:
             name (str): The name of the validation set. (will not be shown to the labeler)
             instruction (str): The instruction to show to the labeler.
             truths (list[list[tuple[int, int]]]): The truths for each datapoint defined as start and endpoint based on miliseconds. 
-            Outher list is for each datapoint, inner list is for each truth.\n
+                outher list is for each datapoint, inner list is for each truth.\n
                 example:
                     datapoints: ["datapoint1", "datapoint2"]
                     truths: [[(0, 10)], [(20, 30)]] -> first datapoint the correct interval is from 0 to 10, second datapoint the correct interval is from 20 to 30

@@ -1,6 +1,7 @@
 import pandas as pd
 from typing import Any
 from pandas.core.indexes.base import Index
+import json
 
 class RapidataResults(dict):
     """
@@ -130,3 +131,13 @@ class RapidataResults(dict):
             rows.append(row)
             
         return pd.DataFrame(rows)
+
+    def to_json(self, path: str="./results.json"):
+        """
+        Saves the results to a JSON file.
+        
+        Args:
+            path: The file path where the JSON should be saved. Defaults to "./results.json".
+        """
+        with open(path, 'w') as f:
+            json.dump(self, f)

@@ -170,7 +170,7 @@ class RapidataOrder:
             # Handle JSON parsing errors
             raise Exception(f"Failed to parse preliminary order results: {str(e)}") from e
 
-    def get_results(self, preliminary_results=False, as_dataframe=False) -> RapidataResults:
+    def get_results(self, preliminary_results: bool=False) -> RapidataResults:
         """
         Gets the results of the order. 
         If the order is still processing, this method will block until the order is completed and then return the results.
@@ -179,7 +179,6 @@ class RapidataOrder:
             preliminary_results: If True, returns the preliminary results of the order. Defaults to False. 
                 Note that preliminary results are not final and may not contain all the datapoints & responses. Only the onese that are already available.
                 This will throw an exception if there are no responses available yet.
-            as_dataframe: If True, returns the results as a pandas DataFrame. Defaults to False.
 
         Returns: 
             The results of the order.
