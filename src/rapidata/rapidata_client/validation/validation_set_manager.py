@@ -47,7 +47,7 @@ class ValidationSetManager:
             instruction (str): The instruction by which the labeler will answer.
             answer_options (list[str]): The options to choose from when answering.
             datapoints (list[str]): The datapoints that will be used for validation.
-            truths (list[list[str]]): The truths for each datapoint. Outher list is for each datapoint, inner list is for each truth.\n
+            truths (list[list[str]]): The truths for each datapoint. Outer list is for each datapoint, inner list is for each truth.\n
                 example:
                     options: ["yes", "no", "maybe"]
                     datapoints: ["datapoint1", "datapoint2"]
@@ -161,7 +161,7 @@ class ValidationSetManager:
         Args:
             name (str): The name of the validation set. (will not be shown to the labeler)
             instruction (str): The instruction to show to the labeler.
-            truths (list[list[int]]): The truths for each datapoint. Outher list is for each datapoint, inner list is for each truth.\n
+            truths (list[list[int]]): The truths for each datapoint. Outer list is for each datapoint, inner list is for each truth.\n
                 example:
                     datapoints: ["datapoint1", "datapoint2"]
                     sentences: ["this example 1", "this example 2"]
@@ -214,7 +214,7 @@ class ValidationSetManager:
         Args:
             name (str): The name of the validation set. (will not be shown to the labeler)
             instruction (str): The instruction to show to the labeler.
-            truths (list[list[Box]]): The truths for each datapoint. Outher list is for each datapoint, inner list is for each truth.\n
+            truths (list[list[Box]]): The truths for each datapoint. Outer list is for each datapoint, inner list is for each truth.\n
                 example:
                     datapoints: ["datapoint1", "datapoint2"]
                     truths: [[Box(0, 0, 100, 100)], [Box(50, 50, 150, 150)]] -> first datapoint the object is in the top left corner, second datapoint the object is in the center
@@ -266,7 +266,7 @@ class ValidationSetManager:
         Args:
             name (str): The name of the validation set. (will not be shown to the labeler)
             instruction (str): The instruction to show to the labeler.
-            truths (list[list[Box]]): The truths for each datapoint. Outher list is for each datapoint, inner list is for each truth.\n
+            truths (list[list[Box]]): The truths for each datapoint. Outer list is for each datapoint, inner list is for each truth.\n
                 example:
                     datapoints: ["datapoint1", "datapoint2"]
                     truths: [[Box(0, 0, 100, 100)], [Box(50, 50, 150, 150)]] -> first datapoint the object is in the top left corner, second datapoint the object is in the center
@@ -318,7 +318,7 @@ class ValidationSetManager:
             name (str): The name of the validation set. (will not be shown to the labeler)
             instruction (str): The instruction to show to the labeler.
             truths (list[list[tuple[int, int]]]): The truths for each datapoint defined as start and endpoint based on miliseconds. 
-            Outher list is for each datapoint, inner list is for each truth.\n
+                Outer list is for each datapoint, inner list is for each truth.\n
                 example:
                     datapoints: ["datapoint1", "datapoint2"]
                     truths: [[(0, 10)], [(20, 30)]] -> first datapoint the correct interval is from 0 to 10, second datapoint the correct interval is from 20 to 30

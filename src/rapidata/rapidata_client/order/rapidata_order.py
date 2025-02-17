@@ -8,6 +8,7 @@ from typing import Optional, cast, Any
 from rapidata.api_client.models.workflow_artifact_model import WorkflowArtifactModel
 from rapidata.api_client.models.preliminary_download_model import PreliminaryDownloadModel
 from tqdm import tqdm
+from rapidata.rapidata_client.order.rapidata_results import RapidataResults
 
 class RapidataOrder:
     """
@@ -154,13 +155,13 @@ class RapidataOrder:
         
         return progress
     
-    def __get_preliminary_results(self) -> dict[str, Any]:
+    def __get_preliminary_results(self) -> RapidataResults:
         pipeline_id = self.__get_pipeline_id()
         try: 
             download_id = self.__openapi_service.pipeline_api.pipeline_pipeline_id_preliminary_download_post(pipeline_id, PreliminaryDownloadModel(sendEmail=False)).download_id
             while not (preliminary_results := self.__openapi_service.pipeline_api.pipeline_preliminary_download_preliminary_download_id_get(preliminary_download_id=download_id)):
                 sleep(1)
-            return json.loads(preliminary_results.decode())
+            return RapidataResults(json.loads(preliminary_results.decode()))
         
         except ApiException as e:
             # Handle API exceptions
@@ -169,7 +170,7 @@ class RapidataOrder:
             # Handle JSON parsing errors
             raise Exception(f"Failed to parse preliminary order results: {str(e)}") from e
 
-    def get_results(self, preliminary_results=False) -> dict[str, Any]:
+    def get_results(self, preliminary_results: bool=False) -> RapidataResults:
         """
         Gets the results of the order. 
         If the order is still processing, this method will block until the order is completed and then return the results.
@@ -194,7 +195,7 @@ class RapidataOrder:
 
         try:
             # Get the raw result string
-            return self.__openapi_service.order_api.order_get_order_results_get(id=self.order_id) # type: ignore
+            return RapidataResults(self.__openapi_service.order_api.order_get_order_results_get(id=self.order_id)) # type: ignore
         
         except ApiException as e:
             # Handle API exceptions
