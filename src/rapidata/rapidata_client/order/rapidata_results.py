@@ -1,9 +1,26 @@
 import pandas as pd
+from typing import Any
+from pandas.core.indexes.base import Index
 
 class RapidataResults(dict):
+    """
+    A specialized dictionary class for handling Rapidata API results.
+    Extends the built-in dict class with specialized methods.
+    """
     def to_pandas(self) -> pd.DataFrame:
         """
-        Converts the results to a pandas DataFrame, optimized for consistent structure.
+        Converts the results to a pandas DataFrame.
+        
+        For Compare results, creates standardized A/B columns for metrics like:
+        - aggregatedResults
+        - aggregatedResultsRatios
+        - summedUserScores
+        - summedUserScoresRatios
+        
+        For regular results, flattens nested dictionaries into columns with underscore-separated names.
+        
+        Returns:
+            pd.DataFrame: A DataFrame containing the processed results
         """
         if "results" not in self or not self["results"]:
             return pd.DataFrame()
@@ -31,18 +48,32 @@ class RapidataResults(dict):
                 row.append(value)
             data.append(row)
             
-        return pd.DataFrame(data, columns=columns)
+        return pd.DataFrame(data, columns=Index(columns))
     
-    def _build_column_structure(self, d, columns, path_map, parent_key='', current_path=None):
+    def _build_column_structure(
+        self, 
+        d: dict[str, Any], 
+        columns: list[str], 
+        path_map: dict[str, list[str]], 
+        parent_key: str = '', 
+        current_path: list[str] | None = None
+    ) -> None:
         """
-        Builds the column structure and paths to reach values.
+        Builds the column structure and paths to reach values in nested dictionaries.
+        
+        Args:
+            d: The dictionary to analyze
+            columns: List to store column names
+            path_map: Dictionary mapping column names to paths for accessing values
+            parent_key: The parent key for nested dictionaries
+            current_path: The current path in the dictionary structure
         """
         if current_path is None:
             current_path = []
             
         for key, value in d.items():
             new_key = f"{parent_key}_{key}" if parent_key else key
-            new_path = current_path + [key]
+            new_path: list[str] = current_path + [key]
             
             if isinstance(value, dict):
                 self._build_column_structure(value, columns, path_map, new_key, new_path)
@@ -50,9 +81,16 @@ class RapidataResults(dict):
                 columns.append(new_key)
                 path_map[new_key] = new_path
     
-    def _get_value_from_path(self, d, path):
+    def _get_value_from_path(self, d: dict[str, Any], path: list[str]) -> Any:
         """
-        Gets a value from a dictionary using a path list.
+        Retrieves a value from a nested dictionary using a path list.
+        
+        Args:
+            d: The dictionary to retrieve the value from
+            path: List of keys forming the path to the desired value
+            
+        Returns:
+            The value at the specified path, or None if the path doesn't exist
         """
         for key in path[:-1]:
             d = d.get(key, {})
