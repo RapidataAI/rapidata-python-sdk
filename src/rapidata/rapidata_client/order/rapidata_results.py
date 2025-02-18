@@ -8,7 +8,7 @@ class RapidataResults(dict):
     A specialized dictionary class for handling Rapidata API results.
     Extends the built-in dict class with specialized methods.
     """
-    def to_pandas(self, split_detailed: bool = False) -> pd.DataFrame:
+    def to_pandas(self, split_details: bool = False) -> pd.DataFrame:
         """
         This method is currently under development.
 
@@ -18,14 +18,14 @@ class RapidataResults(dict):
         For regular results, flattens nested dictionaries into columns with underscore-separated names.
         
         Args:
-            split_detailed: If True, splits each datapoint by its detailed results,
+            split_details: If True, splits each datapoint by its detailed results,
                           creating a row for each response with global metrics copied.
                           
         Returns:
             pd.DataFrame: A DataFrame containing the processed results
             
         Raises:
-            ValueError: If split_detailed is True but no detailed results are found
+            ValueError: If split_details is True but no detailed results are found
         """
         if "results" not in self or not self["results"]:
             return pd.DataFrame()
@@ -33,8 +33,8 @@ class RapidataResults(dict):
         if self["info"].get("orderType") is None:
             print("Warning: Results are old and Order type is not specified. Dataframe might be wrong.")
         
-        # Check for detailed results if split_detailed is True
-        if split_detailed:
+        # Check for detailed results if split_details is True
+        if split_details:
             if not self._has_detailed_results():
                 raise ValueError("No detailed results found in the data")
             return self._to_pandas_with_detailed_results()
