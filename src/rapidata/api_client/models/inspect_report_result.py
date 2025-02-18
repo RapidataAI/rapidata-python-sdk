@@ -17,27 +17,17 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class ReportModel(BaseModel):
+class InspectReportResult(BaseModel):
     """
-    The model for reporting an issue with a rapid.
+    InspectReportResult
     """ # noqa: E501
-    rapid_id: StrictStr = Field(description="The rapid an issue was encountered with", alias="rapidId")
-    issue: StrictStr
-    message: Optional[StrictStr] = Field(default=None, description="An optional message typed by the user.")
-    dump: Optional[StrictStr] = Field(default=None, description="A dump, that the frontend defines and can read again")
-    __properties: ClassVar[List[str]] = ["rapidId", "issue", "message", "dump"]
-
-    @field_validator('issue')
-    def issue_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['Other', 'CannotSubmit', 'NoAsset', 'Inappropriate', 'NoCorrectOption', 'WrongLanguage']):
-            raise ValueError("must be one of enum values ('Other', 'CannotSubmit', 'NoAsset', 'Inappropriate', 'NoCorrectOption', 'WrongLanguage')")
-        return value
+    dump: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = ["dump"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -57,7 +47,7 @@ class ReportModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of ReportModel from a JSON string"""
+        """Create an instance of InspectReportResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -78,11 +68,6 @@ class ReportModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if message (nullable) is None
-        # and model_fields_set contains the field
-        if self.message is None and "message" in self.model_fields_set:
-            _dict['message'] = None
-
         # set to None if dump (nullable) is None
         # and model_fields_set contains the field
         if self.dump is None and "dump" in self.model_fields_set:
@@ -92,7 +77,7 @@ class ReportModel(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of ReportModel from a dict"""
+        """Create an instance of InspectReportResult from a dict"""
         if obj is None:
             return None
 
@@ -100,9 +85,6 @@ class ReportModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "rapidId": obj.get("rapidId"),
-            "issue": obj.get("issue"),
-            "message": obj.get("message"),
             "dump": obj.get("dump")
         })
         return _obj

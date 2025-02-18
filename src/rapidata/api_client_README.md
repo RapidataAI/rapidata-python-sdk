@@ -128,6 +128,7 @@ Class | Method | HTTP request | Description
 *RapidApi* | [**rapid_create_demographic_rapid_post**](rapidata/api_client/docs/RapidApi.md#rapid_create_demographic_rapid_post) | **POST** /Rapid/CreateDemographicRapid | Creates a new Demographic Rapid.
 *RapidApi* | [**rapid_query_validation_rapids_get**](rapidata/api_client/docs/RapidApi.md#rapid_query_validation_rapids_get) | **GET** /Rapid/QueryValidationRapids | Queries the validation rapids for a specific validation set.
 *RapidApi* | [**rapid_rapid_id_delete**](rapidata/api_client/docs/RapidApi.md#rapid_rapid_id_delete) | **DELETE** /rapid/{rapidId} | Deletes a rapid.
+*RapidApi* | [**rapid_report_id_get**](rapidata/api_client/docs/RapidApi.md#rapid_report_id_get) | **GET** /rapid/report/{id} | Inspects a report&#39;s dump. can be used to restore zustand state or anything alike.
 *RapidApi* | [**rapid_report_post**](rapidata/api_client/docs/RapidApi.md#rapid_report_post) | **POST** /Rapid/Report | Used to report an issue with a rapid.
 *RapidApi* | [**rapid_skip_user_guess_post**](rapidata/api_client/docs/RapidApi.md#rapid_skip_user_guess_post) | **POST** /Rapid/SkipUserGuess | Skips a Rapid for the user.
 *RapidApi* | [**rapid_validate_current_rapid_bag_get**](rapidata/api_client/docs/RapidApi.md#rapid_validate_current_rapid_bag_get) | **GET** /Rapid/ValidateCurrentRapidBag | Validates that the rapids associated with the current user are active.
@@ -286,6 +287,7 @@ Class | Method | HTTP request | Description
  - [ImageDimensionMetadataModel](rapidata/api_client/docs/ImageDimensionMetadataModel.md)
  - [ImportFromFileResult](rapidata/api_client/docs/ImportFromFileResult.md)
  - [ImportValidationSetFromFileResult](rapidata/api_client/docs/ImportValidationSetFromFileResult.md)
+ - [InspectReportResult](rapidata/api_client/docs/InspectReportResult.md)
  - [LabelingSelection](rapidata/api_client/docs/LabelingSelection.md)
  - [LanguageUserFilterModel](rapidata/api_client/docs/LanguageUserFilterModel.md)
  - [Line](rapidata/api_client/docs/Line.md)
