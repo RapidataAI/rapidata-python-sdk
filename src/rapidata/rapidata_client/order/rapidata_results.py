@@ -8,30 +8,40 @@ class RapidataResults(dict):
     A specialized dictionary class for handling Rapidata API results.
     Extends the built-in dict class with specialized methods.
     """
-    def to_pandas(self) -> pd.DataFrame:
+    def to_pandas(self, split_detailed: bool = False) -> pd.DataFrame:
         """
+        This method is currently under development.
+
         Converts the results to a pandas DataFrame.
         
-        For Compare results, creates standardized A/B columns for metrics like:\n
-        - aggregatedResults\n
-        - aggregatedResultsRatios\n
-        - summedUserScores\n
-        - summedUserScoresRatios\n
-        
+        For Compare results, creates standardized A/B columns for metrics.
         For regular results, flattens nested dictionaries into columns with underscore-separated names.
         
+        Args:
+            split_detailed: If True, splits each datapoint by its detailed results,
+                          creating a row for each response with global metrics copied.
+                          
         Returns:
             pd.DataFrame: A DataFrame containing the processed results
+            
+        Raises:
+            ValueError: If split_detailed is True but no detailed results are found
         """
         if "results" not in self or not self["results"]:
             return pd.DataFrame()
         
+        if self["info"].get("orderType") is None:
+            print("Warning: Results are old and Order type is not specified. Dataframe might be wrong.")
+        
+        # Check for detailed results if split_detailed is True
+        if split_detailed:
+            if not self._has_detailed_results():
+                raise ValueError("No detailed results found in the data")
+            return self._to_pandas_with_detailed_results()
+            
         if self["info"].get("orderType") == "Compare":
             return self._compare_to_pandas()
         
-        if self["info"].get("orderType") is None:
-            print("Warning: Results are old and Order type is not specified. Dataframe might be wrong.")
-
         # Get the structure from first item
         first_item = self["results"][0]
         columns = []
@@ -51,6 +61,68 @@ class RapidataResults(dict):
             
         return pd.DataFrame(data, columns=Index(columns))
     
+    def _has_detailed_results(self) -> bool:
+        """
+        Checks if the results contain detailed results.
+        
+        Returns:
+            bool: True if detailed results exist, False otherwise
+        """
+        if not self.get("results"):
+            return False
+        
+        first_result = self["results"][0]
+        return "detailedResults" in first_result and isinstance(first_result["detailedResults"], list)
+    
+    def _to_pandas_with_detailed_results(self) -> pd.DataFrame:
+        """
+        Converts results to a pandas DataFrame with detailed results split into separate rows.
+        
+        Returns:
+            pd.DataFrame: A DataFrame with one row per detailed result
+        """
+        rows = []
+        
+        for result in self["results"]:
+            # Get all non-detailed results fields
+            base_data = {k: v for k, v in result.items() if k != "detailedResults"}
+            
+            # Process each detailed result
+            for detailed_result in result["detailedResults"]:
+                row = base_data.copy()  # Copy base data for each detailed result
+                
+                # Add flattened detailed result data
+                flattened = self._flatten_dict(detailed_result)
+                for key, value in flattened.items():
+                    row[key] = value
+                
+                rows.append(row)
+        
+        return pd.DataFrame(rows)
+    
+    def _flatten_dict(self, d: dict[str, Any], parent_key: str = '') -> dict[str, Any]:
+        """
+        Flattens a nested dictionary into a single-level dictionary with underscore-separated keys.
+        
+        Args:
+            d: The dictionary to flatten
+            parent_key: The parent key for nested dictionaries
+            
+        Returns:
+            dict: A flattened dictionary
+        """
+        items: list[tuple[str, Any]] = []
+        
+        for key, value in d.items():
+            new_key = f"{parent_key}_{key}" if parent_key else key
+            
+            if isinstance(value, dict):
+                items.extend(self._flatten_dict(value, new_key).items())
+            else:
+                items.append((new_key, value))
+                
+        return dict(items)
+
     def _build_column_structure(
         self, 
         d: dict[str, Any], 
@@ -97,7 +169,7 @@ class RapidataResults(dict):
             d = d.get(key, {})
         return d.get(path[-1])
 
-    def _compare_to_pandas(self):
+    def _compare_to_pandas(self) -> pd.DataFrame:
         """
         Converts Compare results to a pandas DataFrame dynamically.
         """
@@ -132,7 +204,7 @@ class RapidataResults(dict):
             
         return pd.DataFrame(rows)
 
-    def to_json(self, path: str="./results.json"):
+    def to_json(self, path: str="./results.json") -> None:
         """
         Saves the results to a JSON file.
         
