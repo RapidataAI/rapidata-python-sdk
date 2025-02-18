@@ -1,6 +1,7 @@
-from typing import Sequence
+from typing import Sequence, Optional
 from urllib3._collections import HTTPHeaderDict
 
+from rapidata.rapidata_client.workflow._ranking_workflow import RankingWorkflow
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.assets.data_type_enum import RapidataDataTypes
 from rapidata.rapidata_client.assets import MediaAsset, TextAsset, MultiAsset
@@ -368,6 +369,65 @@ class RapidataOrderManager:
             workflow=LocateWorkflow(target=instruction),
             assets=assets,
             responses_per_datapoint=responses_per_datapoint,
+            contexts=contexts,
+            validation_set_id=validation_set_id,
+            filters=filters,
+            selections=selections,
+            settings=settings
+        )
+
+    def create_ranking_order(self,
+                             name: str,
+                             instruction: str,
+                             datapoints: list[str],
+                             total_comparison_budget: int,
+                             random_comparisons_ratio: float = 0.5,
+                             elo_start: int = 1200,
+                             elo_k_factor: int = 40,
+                             elo_scaling_factor: int = 400,
+                             responses_per_comparison: int = 10,
+                             contexts: Optional[list[str]] = None,
+                             validation_set_id: Optional[str] = None,
+                             filters: Sequence[RapidataFilter] = [],
+                             settings: Sequence[RapidataSetting] = [],
+                             selections: Optional[Sequence[RapidataSelection]] = None) -> RapidataOrder:
+        """
+        Create a ranking order.
+
+        Args:
+            name (str): The name of the order.
+            instruction (str): The question asked from People when They see two datapoints.
+            datapoints (list[str]): A list of datapoints that will participate in the ranking.
+            total_comparison_budget (int): The total number of (pairwise-)comparisons that can be made.
+            random_comparisons_ratio (float, optional): The fraction of random comparisons in the ranking process.
+            The rest will focus on pairing similarly ranked datapoints.
+            elo_start (int, optional): The initial ELO rating assigned to each datapoint.
+            elo_k_factor (int, optional): The K-factor used for ELO updates.
+            elo_scaling_factor (int, optional): The scaling factor used in the ELO calculation.
+            responses_per_comparison (int, optional): The number of responses collected per comparison.
+            contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
+                If provided has to be the same length as datapoints and will be shown in addition to the instruction.
+                (Therefore will be different for each datapoint) Will be match up with the datapoints using the list index.
+            validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
+                If provided, one validation task will be shown infront of the datapoints that will be labeled.
+            filters (Sequence[RapidataFilter], optional): The list of filters for the order. Defaults to []. Decides who the tasks should be shown to.
+            settings (Sequence[RapidataSetting], optional): The list of settings for the order. Defaults to []. Decides how the tasks should be shown.
+            selections (Sequence[RapidataSelection], optional): The list of selections for the order. Defaults to None. Decides in what order the tasks should be shown.
+        """
+
+        assets = [MediaAsset(path=path) for path in datapoints]
+        return self.__create_general_order(
+            name=name,
+            workflow=RankingWorkflow(
+                criteria=instruction,
+                starting_elo=elo_start,
+                k_factor=elo_k_factor,
+                scaling_factor=elo_scaling_factor,
+                total_comparison_budget=total_comparison_budget,
+                random_comparisons_ratio=random_comparisons_ratio
+            ),
+            assets=assets,
+            responses_per_datapoint=responses_per_comparison,
             contexts=contexts,
             validation_set_id=validation_set_id,
             filters=filters,
