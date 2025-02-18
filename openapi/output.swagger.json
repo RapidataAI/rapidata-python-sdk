@@ -2236,6 +2236,47 @@
         }
       }
     },
+    "/rapid/report/{id}": {
+      "get": {
+        "tags": [
+          "Rapid"
+        ],
+        "summary": "Inspects a report's dump. can be used to restore zustand state or anything alike.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The report id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectReportResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectReportResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectReportResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/rapid/validation/{rapidId}": {
       "put": {
         "tags": [
@@ -8381,6 +8422,16 @@
         },
         "additionalProperties": false
       },
+      "InspectReportResult": {
+        "type": "object",
+        "properties": {
+          "dump": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "Line": {
         "title": "Line",
         "required": [
@@ -9040,7 +9091,7 @@
         "properties": {
           "rapidId": {
             "type": "string",
-            "description": ""
+            "description": "The rapid an issue was encountered with"
           },
           "issue": {
             "enum": [
@@ -9055,7 +9106,12 @@
           },
           "message": {
             "type": "string",
-            "description": "",
+            "description": "An optional message typed by the user.",
+            "nullable": true
+          },
+          "dump": {
+            "type": "string",
+            "description": "A dump, that the frontend defines and can read again",
             "nullable": true
           }
         },

@@ -180,6 +180,7 @@ from rapidata.api_client.models.image_dimension_metadata import ImageDimensionMe
 from rapidata.api_client.models.image_dimension_metadata_model import ImageDimensionMetadataModel
 from rapidata.api_client.models.import_from_file_result import ImportFromFileResult
 from rapidata.api_client.models.import_validation_set_from_file_result import ImportValidationSetFromFileResult
+from rapidata.api_client.models.inspect_report_result import InspectReportResult
 from rapidata.api_client.models.labeling_selection import LabelingSelection
 from rapidata.api_client.models.language_user_filter_model import LanguageUserFilterModel
 from rapidata.api_client.models.line import Line
