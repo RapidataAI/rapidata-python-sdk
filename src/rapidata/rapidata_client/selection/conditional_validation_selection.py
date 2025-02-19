@@ -18,7 +18,7 @@ class ConditionalValidationSelection(RapidataSelection):
         chances (list[float]): The chances of showing a validation rapid for each threshold.
         rapid_counts (list[int]): The amount of validation rapids that will be shown per session of this validation set for each threshold if selected by probability. (all or nothing)
 
-    example:
+    Example:
         ```python
         ConditionalValidationSelection(
             validation_set_id="validation_set_id",
