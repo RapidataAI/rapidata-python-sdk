@@ -9,11 +9,16 @@ class LanguageFilter(RapidataFilter):
     """LanguageFilter Class
     
     Can be used to filter who to target based on language codes.
-    
-    example: LanguageFilter(["en", "de"]) -> will limit the order to be shown to only people who have their phone set to english or german
 
     Args:
-        language_codes (list[str]): List of language codes to filter by."""
+        language_codes (list[str]): List of language codes to filter by.
+            
+    Example: 
+        ```python
+        LanguageFilter(["en", "de"])
+        ```
+        This will limit the order to be shown to only people who have their phone set to english or german
+    """
     def __init__(self, language_codes: list[str]):
         if not isinstance(language_codes, list):
             raise ValueError("Language codes must be a list")

@@ -58,6 +58,14 @@ class ValidationSetManager:
                 Will be match up with the datapoints using the list index.
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
             explanations (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
+
+        Example:
+            ```python
+            options: ["yes", "no", "maybe"]
+            datapoints: ["datapoint1", "datapoint2"]
+            truths: [["yes"], ["no", "maybe"]]
+            ```
+            This would mean: first datapoint correct answer is "yes", second datapoint is "no" or "maybe"
         """
         
         if len(datapoints) != len(truths):
@@ -116,6 +124,14 @@ class ValidationSetManager:
                 Will be match up with the datapoints using the list index.
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
             explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
+
+        Example:
+            ```python
+            instruction: "Which image has a cat?"
+            datapoints = [["image1.jpg", "image2.jpg"], ["image3.jpg", "image4.jpg"]]
+            truths: ["image1.jpg", "image4.jpg"]
+            ```
+            This would mean: first comparison image1.jpg has a cat, second comparison image4.jpg has a cat
         """
         
         if len(datapoints) != len(truths):
@@ -164,8 +180,8 @@ class ValidationSetManager:
             truths (list[list[int]]): The truths for each datapoint. Outer list is for each datapoint, inner list is for each truth.\n
                 example:
                     datapoints: ["datapoint1", "datapoint2"]
-                    sentences: ["this example 1", "this example 2"]
-                    truths: [[0, 1], [2]] -> first datapoint correct words are "this" and "example", second datapoint is "2"
+                    sentences: ["this example 1", "this example with another text"]
+                    truths: [[0, 1], [2]] -> first datapoint correct words are "this" and "example", second datapoint is "with"
             datapoints (list[str]): The datapoints that will be used for validation.
             sentences (list[str]): The sentences that will be used for validation. The sentece will be split up by spaces to be selected by the labeler.
                 Must be the same length as datapoints.
@@ -173,6 +189,14 @@ class ValidationSetManager:
             required_completeness (float, optional): The required completeness for the labeler to get the rapid correct (miminum ratio of total correct words selected). Defaults to 1.0 (all correct words need to be selected).
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
             explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
+
+        Example:
+            ```python
+            datapoints: ["datapoint1", "datapoint2"]
+            sentences: ["this example 1", "this example with another text"]
+            truths: [[0, 1], [2]]
+            ```
+            This would mean: first datapoint the correct words are "this" and "example", second datapoint is "with"
             """
         
         if not all([isinstance(truth, (list, tuple)) for truth in truths]):
@@ -222,6 +246,13 @@ class ValidationSetManager:
             contexts (list[str], optional): The contexts for each datapoint. Defaults to None.
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
             explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
+
+        Example:
+            ```python
+            datapoints: ["datapoint1", "datapoint2"]
+            truths: [[Box(0, 0, 100, 100)], [Box(50, 50, 150, 150)]]
+            ```
+            This would mean: first datapoint the object is in the top left corner, second datapoint the object is in the center
         """
         
         if len(datapoints) != len(truths):
@@ -274,6 +305,13 @@ class ValidationSetManager:
             contexts (list[str], optional): The contexts for each datapoint. Defaults to None.
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
             explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
+
+        Example:
+            ```python
+            datapoints: ["datapoint1", "datapoint2"]
+            truths: [[Box(0, 0, 100, 100)], [Box(50, 50, 150, 150)]]
+            ```
+            This would mean: first datapoint the object is in the top left corner, second datapoint the object is in the center
         """
         
         if len(datapoints) != len(truths):
@@ -326,6 +364,13 @@ class ValidationSetManager:
             contexts (list[str], optional): The contexts for each datapoint. Defaults to None.
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
             explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
+
+        Example:
+            ```python
+            datapoints: ["datapoint1", "datapoint2"]
+            truths: [[(0, 10)], [(20, 30)]]
+            ```
+            This would mean: first datapoint the correct interval is from 0 to 10, second datapoint the correct interval is from 20 to 30
         """
         
         if len(datapoints) != len(truths):

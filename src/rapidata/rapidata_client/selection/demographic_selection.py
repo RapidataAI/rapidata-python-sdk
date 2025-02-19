@@ -14,7 +14,16 @@ class DemographicSelection(RapidataSelection):
     Args:
         keys (list[str]): List of keys for the demographic rapids to be shown. As an example: "age"
         max_rapids (int): The maximum number of rapids to run.\n
-            Allows to provide more keys, in case some of the earlier ones are not selected because of high confidence."""
+            Allows to provide more keys, in case some of the earlier ones are not selected because of high confidence.
+                 
+    Example:
+        ```python
+        DemographicSelection(["age", "gender"], 1)
+        ```
+        This will try to ask the user about their age, if that is not selected due to an already high confidence, it will try asking about their gender.
+        The gender question may also be skipped if the confidence is high enough.
+    """
+    
 
     def __init__(self, keys: list[str], max_rapids: int):
         self.keys = keys
