@@ -17,6 +17,19 @@ class ConditionalValidationSelection(RapidataSelection):
         thresholds (list[float]): The thresholds to use for the user score.
         chances (list[float]): The chances of showing a validation rapid for each threshold.
         rapid_counts (list[int]): The amount of validation rapids that will be shown per session of this validation set for each threshold if selected by probability. (all or nothing)
+
+    example:
+        ```python
+        ConditionalValidationSelection(
+            validation_set_id="validation_set_id",
+            thresholds=[0, 0.7], # (0 must be the first threshold)
+            chances=[1, 0.2],
+            rapid_counts=[1, 1]
+        )
+        ```
+        This means that there's a 100% chance of showing a validation rapid if the user score is between 0 and 0.7, 
+        and a 20% chance of showing a validation rapid if the user score is between 0.7 and 1.
+
     """
 
     def __init__(
