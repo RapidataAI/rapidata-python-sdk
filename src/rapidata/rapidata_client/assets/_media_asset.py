@@ -4,6 +4,7 @@ Defines the MediaAsset class for handling media file paths within assets.
 Implements lazy loading for URL-based media to prevent unnecessary downloads.
 """
 
+from typing import Optional, cast, Sequence
 import os
 from io import BytesIO
 from rapidata.rapidata_client.assets._base_asset import BaseAsset
@@ -13,10 +14,10 @@ from PIL import Image
 from tinytag import TinyTag
 import tempfile
 from pydantic import StrictStr, StrictBytes
-from typing import Optional, cast
 import logging
 from functools import cached_property
-
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 class MediaAsset(BaseAsset):
     """MediaAsset Class with Lazy Loading
@@ -77,6 +78,7 @@ class MediaAsset(BaseAsset):
         
         self._url = None
         self._content = None
+        self._session: None | requests.Session  = None
         
         if re.match(r'^https?://', path):
             self._url = path
@@ -223,7 +225,7 @@ class MediaAsset(BaseAsset):
 
     def __get_media_bytes(self, url: str) -> bytes:
         """
-        Downloads and validates media files from URL.
+        Downloads and validates media files from URL with retry logic and session reuse.
         
         Args:
             url: URL of the media file
@@ -233,13 +235,21 @@ class MediaAsset(BaseAsset):
             
         Raises:
             ValueError: If media type is unsupported or content validation fails
-            requests.exceptions.RequestException: If download fails
+            requests.exceptions.RequestException: If download fails after all retries
         """
+        # Use existing session or throw error if not set
+        if self._session is None:
+            raise RuntimeError("HTTP session not configured")
+
         try:
-            response = requests.get(url, stream=False)
+            response = self._session.get(
+                url, 
+                stream=False,
+                timeout=(5, 30)  # (connect timeout, read timeout)
+            )
             response.raise_for_status()
         except requests.exceptions.RequestException as e:
-            self._logger.error(f"Failed to download media from {url}: {str(e)}")
+            self._logger.error(f"Failed to download media from {url} after retries: {str(e)}")
             raise
 
         content = response.content

@@ -66,7 +66,7 @@ class Rapid():
             payload=AddValidationRapidModelPayload(self.payload),
             truth=AddValidationRapidModelTruth(self.truth),
             metadata=[
-              DatapointMetadataModelMetadataInner(meta._to_model())
+              DatapointMetadataModelMetadataInner(meta.to_model())
               for meta in self.metadata
             ],
             randomCorrectProbability=self.randomCorrectProbability,
@@ -93,7 +93,7 @@ class Rapid():
           payload=AddValidationRapidModelPayload(self.payload),
           truth=AddValidationRapidModelTruth(self.truth),
           metadata=[
-              DatapointMetadataModelMetadataInner(meta._to_model())
+              DatapointMetadataModelMetadataInner(meta.to_model())
               for meta in self.metadata
           ],
           randomCorrectProbability=self.randomCorrectProbability,

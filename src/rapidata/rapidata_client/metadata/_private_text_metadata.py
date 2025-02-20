@@ -10,7 +10,7 @@ class PrivateTextMetadata(Metadata):
         super().__init__(identifier=identifier)
         self._text = text
 
-    def _to_model(self):
+    def to_model(self):
         return PrivateTextMetadataInput(
             _t="PrivateTextMetadataInput", identifier=self._identifier, text=self._text
         )
