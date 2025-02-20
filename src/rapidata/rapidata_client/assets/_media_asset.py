@@ -237,7 +237,7 @@ class MediaAsset(BaseAsset):
             ValueError: If media type is unsupported or content validation fails
             requests.exceptions.RequestException: If download fails after all retries
         """
-        # Use existing session or create new one
+        # Use existing session or throw error if not set
         if self._session is None:
             raise RuntimeError("HTTP session not configured")
 
