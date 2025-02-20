@@ -238,10 +238,10 @@ class RapidsManager:
 
         model_truth = BoundingBoxTruth(
             _t="BoundingBoxTruth", 
-            xMax=truths[0].x_max / img_dimensions[0],
-            xMin=truths[0].x_min / img_dimensions[0],
-            yMax=truths[0].y_max / img_dimensions[1],
-            yMin=truths[0].y_min / img_dimensions[1],
+            xMax=truths[0].x_max / img_dimensions[0] * 100,
+            xMin=truths[0].x_min / img_dimensions[0] * 100,
+            yMax=truths[0].y_max / img_dimensions[1] * 100,
+            yMin=truths[0].y_min / img_dimensions[1] * 100,
         )
 
         coverage = self._calculate_boxes_coverage(truths, img_dimensions[0], img_dimensions[1])
