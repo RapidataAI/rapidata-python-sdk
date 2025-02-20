@@ -9,5 +9,5 @@ class Metadata:
         self._identifier = identifier
 
     @abstractmethod
-    def _to_model(self) -> Any:
+    def to_model(self) -> Any:
         pass

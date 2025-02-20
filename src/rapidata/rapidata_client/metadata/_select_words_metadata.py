@@ -12,7 +12,7 @@ class SelectWordsMetadata(Metadata):
         self.identifier = identifier
         self.select_words = select_words
 
-    def _to_model(self):
+    def to_model(self):
         return TranscriptionMetadataInput(
             _t="TranscriptionMetadataInput",
             identifier=self.identifier,

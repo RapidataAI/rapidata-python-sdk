@@ -14,5 +14,5 @@ class PromptMetadata(Metadata):
         self._prompt = prompt
     
 
-    def _to_model(self):
+    def to_model(self):
         return PromptMetadataInput(_t="PromptMetadataInput", identifier=self._identifier, prompt=self._prompt)
