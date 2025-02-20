@@ -11,7 +11,6 @@ from rapidata.service.credential_manager import CredentialManager
 
 logger = logging.getLogger(__name__)
 
-
 class TokenInfo(BaseModel):
     access_token: str
     expires_in: int
@@ -40,6 +39,7 @@ class TokenManager:
         cert_path: str | None = None,
         refresh_threshold: float = 0.8,
         max_sleep_time: float = 30,
+        max_token_lifetime: int = 60,
     ):
         self._client_id = client_id
         self._client_secret = client_secret
@@ -59,6 +59,7 @@ class TokenManager:
         self._cert_path = cert_path
         self._refresh_threshold = refresh_threshold
         self._max_sleep_time = max_sleep_time
+        self._max_token_lifetime = max_token_lifetime
 
         self._token_lock = threading.Lock()
         self._current_token: Optional[TokenInfo] = None
@@ -83,7 +84,7 @@ class TokenManager:
                 return TokenInfo(
                     access_token=data["access_token"],
                     token_type=data["token_type"],
-                    expires_in=data["expires_in"],
+                    expires_in=min(self._max_token_lifetime, data["expires_in"]),
                     issued_at=datetime.now(),
                 )
 
