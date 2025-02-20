@@ -193,7 +193,10 @@ class RapidataResults(dict):
                 key: value for key, value in result.items() 
                 if not isinstance(value, dict)
             }
-            
+
+            row["assetA"] = asset_a
+            row["assetB"] = asset_b
+
             # Handle comparative metrics
             for key, values in result.items():
                 if isinstance(values, dict) and len(values) == 2:
