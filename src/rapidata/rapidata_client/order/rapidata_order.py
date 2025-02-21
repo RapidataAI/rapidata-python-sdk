@@ -1,14 +1,23 @@
-from time import sleep
-from rapidata.rapidata_client.order._rapidata_dataset import RapidataDataset
-from rapidata.service.openapi_service import OpenAPIService
+# Standard library imports
 import json
-from rapidata.api_client.exceptions import ApiException
-from rapidata.api_client.models.order_state import OrderState
+import urllib.parse
+import webbrowser
+from time import sleep
 from typing import Optional, cast, Any
-from rapidata.api_client.models.workflow_artifact_model import WorkflowArtifactModel
-from rapidata.api_client.models.preliminary_download_model import PreliminaryDownloadModel
+from colorama import Fore
+
+# Third-party imports
 from tqdm import tqdm
+
+# Local/application imports
+from rapidata.api_client.exceptions import ApiException
+from rapidata.api_client.models.campaign_artifact_model import CampaignArtifactModel
+from rapidata.api_client.models.order_state import OrderState
+from rapidata.api_client.models.preliminary_download_model import PreliminaryDownloadModel
+from rapidata.api_client.models.workflow_artifact_model import WorkflowArtifactModel
+from rapidata.rapidata_client.order._rapidata_dataset import RapidataDataset
 from rapidata.rapidata_client.order.rapidata_results import RapidataResults
+from rapidata.service.openapi_service import OpenAPIService
 
 class RapidataOrder:
     """
@@ -35,7 +44,8 @@ class RapidataOrder:
         self.name = name
         self.__openapi_service = openapi_service
         self.__dataset = dataset
-        self.__workflow_id = None
+        self.__workflow_id = ""
+        self.__campaign_id = ""
         self.__pipeline_id = ""
 
     def run(self, print_link: bool=True):
@@ -122,15 +132,16 @@ class RapidataOrder:
         self.__pipeline_id = self.__openapi_service.order_api.order_get_by_id_get(self.order_id).pipeline_id
         return self.__pipeline_id
 
-    def __get_workflow_id(self):
-        if self.__workflow_id:
-            return self.__workflow_id
+    def __get_workflow_and_campaign_id(self) -> tuple[str, str]:
+        if self.__workflow_id and self.__campaign_id:
+            return self.__workflow_id, self.__campaign_id
 
         for _ in range(10): # Try for 20 seconds to get the workflow id if workflow has not started by then, raise an exception
             try:
                 self.__get_pipeline_id()
                 pipeline = self.__openapi_service.pipeline_api.pipeline_id_get(self.__pipeline_id)
                 self.__workflow_id = cast(WorkflowArtifactModel, pipeline.artifacts["workflow-artifact"].actual_instance).workflow_id
+                self.__campaign_id = cast(CampaignArtifactModel, pipeline.artifacts["campaign-artifact"].actual_instance).campaign_id
                 break
             except Exception:
                 sleep(2)
@@ -138,10 +149,10 @@ class RapidataOrder:
         if not self.__workflow_id:
             raise Exception("Something went wrong when trying to get the order progress.")
         
-        return self.__workflow_id
+        return self.__workflow_id, self.__campaign_id
     
     def __get_workflow_progress(self):
-        workflow_id = self.__get_workflow_id()
+        workflow_id = self.__get_workflow_and_campaign_id()[0]
         progress = None
         for _ in range(2):
             try:
@@ -203,6 +214,19 @@ class RapidataOrder:
         except json.JSONDecodeError as e:
             # Handle JSON parsing errors
             raise Exception(f"Failed to parse order results: {str(e)}") from e
+        
+    def preview(self) -> None:
+        campaign_id = self.__get_workflow_and_campaign_id()[1]
+        auth_url = f"https://rapids.{self.__openapi_service.enviroment}/preview/campaign?id={campaign_id}"
+        could_open_browser = webbrowser.open(auth_url)
+
+        if not could_open_browser:
+            encoded_url = urllib.parse.quote(auth_url, safe="%/:=&?~#+!$,;'@()*[]")
+            print(
+                Fore.RED
+                + f'Please open the following URL in your browser to log in: "{encoded_url}"'
+                + Fore.RESET
+            )
 
     @property
     def dataset(self) -> RapidataDataset | None:
