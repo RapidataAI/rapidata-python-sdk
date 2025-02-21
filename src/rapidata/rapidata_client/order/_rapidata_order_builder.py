@@ -134,23 +134,22 @@ class RapidataOrderBuilder:
 
         order = RapidataOrder(
             order_id=self.order_id,
-            dataset=self.__dataset,
             openapi_service=self.__openapi_service,
             name=self._name,
         )
 
-        if all(isinstance(item, MediaAsset) for item in self.__assets) and order.dataset:
+        if all(isinstance(item, MediaAsset) for item in self.__assets) and self.__dataset:
             assets = cast(list[MediaAsset], self.__assets)
-            order.dataset._add_media_from_paths(assets, self.__metadata, max_upload_workers)
+            self.__dataset._add_media_from_paths(assets, self.__metadata, max_upload_workers)
 
         elif (
-            all(isinstance(item, TextAsset) for item in self.__assets) and order.dataset
+            all(isinstance(item, TextAsset) for item in self.__assets) and self.__dataset
         ):
             assets = cast(list[TextAsset], self.__assets)
-            order.dataset._add_texts(assets)
+            self.__dataset._add_texts(assets)
 
         elif (
-            all(isinstance(item, MultiAsset) for item in self.__assets) and order.dataset
+            all(isinstance(item, MultiAsset) for item in self.__assets) and self.__dataset
         ):
             multi_assets = cast(list[MultiAsset], self.__assets)
 
@@ -167,19 +166,19 @@ class RapidataOrderBuilder:
 
             # Process based on the asset type
             if issubclass(first_asset_type, MediaAsset):
-                order.dataset._add_media_from_paths(
+                self.__dataset._add_media_from_paths(
                     multi_assets, self.__metadata, max_upload_workers
                 )
 
             elif issubclass(first_asset_type, TextAsset):
-                order.dataset._add_texts(multi_assets)
+                self.__dataset._add_texts(multi_assets)
 
             else:
                 raise ValueError(
                     "MultiAsset must contain MediaAssets or TextAssets objects."
                 )
 
-        elif order.dataset:
+        elif self.__dataset:
             raise ValueError(
                 "Media paths must all be of the same type: MediaAsset, TextAsset, or MultiAsset."
             )

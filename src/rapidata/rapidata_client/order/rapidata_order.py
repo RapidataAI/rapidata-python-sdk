@@ -3,7 +3,7 @@ import json
 import urllib.parse
 import webbrowser
 from time import sleep
-from typing import Optional, cast, Any
+from typing import Optional, cast, Any, Tuple
 from colorama import Fore
 
 # Third-party imports
@@ -15,7 +15,6 @@ from rapidata.api_client.models.campaign_artifact_model import CampaignArtifactM
 from rapidata.api_client.models.order_state import OrderState
 from rapidata.api_client.models.preliminary_download_model import PreliminaryDownloadModel
 from rapidata.api_client.models.workflow_artifact_model import WorkflowArtifactModel
-from rapidata.rapidata_client.order._rapidata_dataset import RapidataDataset
 from rapidata.rapidata_client.order.rapidata_results import RapidataResults
 from rapidata.service.openapi_service import OpenAPIService
 
@@ -30,7 +29,6 @@ class RapidataOrder:
         name: The name of the order.
         order_id: The ID of the order.
         openapi_service: The OpenAPIService instance used to interact with the Rapidata API.
-        dataset: The optional Dataset associated with the order.
     """
 
     def __init__(
@@ -38,17 +36,15 @@ class RapidataOrder:
         name: str,
         order_id: str,
         openapi_service: OpenAPIService,
-        dataset: Optional[RapidataDataset]=None,
     ):
         self.order_id = order_id
         self.name = name
         self.__openapi_service = openapi_service
-        self.__dataset = dataset
-        self.__workflow_id = ""
-        self.__campaign_id = ""
-        self.__pipeline_id = ""
+        self.__workflow_id: str = ""
+        self.__campaign_id: str = ""
+        self.__pipeline_id: str = ""
 
-    def run(self, print_link: bool=True):
+    def run(self, print_link: bool=True) -> "RapidataOrder":
         """
         Runs the order for to start collecting votes.
         """
@@ -59,14 +55,14 @@ class RapidataOrder:
         
         return self
     
-    def pause(self):
+    def pause(self) -> None:
         """
         Pauses the order.
         """
         self.__openapi_service.order_api.order_pause_post(self.order_id)
         print(f"Order '{self}' has been paused.")
 
-    def unpause(self):
+    def unpause(self) -> None:
         """
         Unpauses/resume the order.
         """
@@ -91,7 +87,7 @@ class RapidataOrder:
         """
         return self.__openapi_service.order_api.order_get_by_id_get(self.order_id).state
 
-    def display_progress_bar(self, refresh_rate: int=5):
+    def display_progress_bar(self, refresh_rate: int=5) -> None:
         """
         Displays a progress bar for the order processing using tqdm.
         
@@ -115,7 +111,7 @@ class RapidataOrder:
         with tqdm(total=100, desc="Processing order", unit="%", bar_format="{desc}: {percentage:3.0f}%|{bar}| completed [{elapsed}<{remaining}, {rate_fmt}]") as pbar:
             last_percentage = 0
             while True:
-                current_percentage = self.__get_workflow_progress().completion_percentage
+                current_percentage = self.workflow_progress.completion_percentage
                 if current_percentage > last_percentage:
                     pbar.update(current_percentage - last_percentage)
                     last_percentage = current_percentage
@@ -125,53 +121,108 @@ class RapidataOrder:
 
                 sleep(refresh_rate)
 
-    def __get_pipeline_id(self):
-        if self.__pipeline_id:
-            return self.__pipeline_id
-
-        self.__pipeline_id = self.__openapi_service.order_api.order_get_by_id_get(self.order_id).pipeline_id
+    @property
+    def pipeline_id(self) -> str:
+        """
+        Gets the pipeline ID for the order.
+        
+        Returns:
+            The pipeline ID.
+        """
+        if not self.__pipeline_id:
+            self.__pipeline_id = self.__openapi_service.order_api.order_get_by_id_get(self.order_id).pipeline_id
         return self.__pipeline_id
 
-    def __get_workflow_and_campaign_id(self) -> tuple[str, str]:
-        if self.__workflow_id and self.__campaign_id:
-            return self.__workflow_id, self.__campaign_id
+    @property
+    def workflow_id(self) -> str:
+        """
+        Gets the workflow ID for the order.
+        
+        Returns:
+            The workflow ID.
+        """
+        if not self.__workflow_id:
+            self._fetch_workflow_and_campaign_ids()
+        return self.__workflow_id
+    
+    @property
+    def campaign_id(self) -> str:
+        """
+        Gets the campaign ID for the order.
+        
+        Returns:
+            The campaign ID.
+        """
+        if not self.__campaign_id:
+            self._fetch_workflow_and_campaign_ids()
+        return self.__campaign_id
 
-        for _ in range(10): # Try for 20 seconds to get the workflow id if workflow has not started by then, raise an exception
+    def _fetch_workflow_and_campaign_ids(self) -> None:
+        """
+        Fetches the workflow and campaign IDs from the pipeline.
+        
+        Raises:
+            Exception: If the workflow ID cannot be retrieved.
+        """
+        if self.__workflow_id and self.__campaign_id:
+            return
+
+        for _ in range(10):  # Try for 20 seconds to get the workflow id
             try:
-                self.__get_pipeline_id()
-                pipeline = self.__openapi_service.pipeline_api.pipeline_id_get(self.__pipeline_id)
+                pipeline = self.__openapi_service.pipeline_api.pipeline_id_get(self.pipeline_id)
                 self.__workflow_id = cast(WorkflowArtifactModel, pipeline.artifacts["workflow-artifact"].actual_instance).workflow_id
                 self.__campaign_id = cast(CampaignArtifactModel, pipeline.artifacts["campaign-artifact"].actual_instance).campaign_id
-                break
+                return
             except Exception:
                 sleep(2)
 
-        if not self.__workflow_id:
-            raise Exception("Something went wrong when trying to get the order progress.")
+        raise Exception("Something went wrong when trying to get the order progress.")
+
+    @property
+    def workflow_progress(self):
+        """
+        Gets the workflow progress.
         
-        return self.__workflow_id, self.__campaign_id
-    
-    def __get_workflow_progress(self):
-        workflow_id = self.__get_workflow_and_campaign_id()[0]
+        Returns:
+            The workflow progress.
+            
+        Raises:
+            Exception: If the workflow progress cannot be retrieved.
+        """
         progress = None
         for _ in range(2):
             try:
-                progress = self.__openapi_service.workflow_api.workflow_get_progress_get(workflow_id)
+                progress = self.__openapi_service.workflow_api.workflow_get_progress_get(self.workflow_id)
                 break
             except Exception:
                 sleep(5)
 
         if not progress:
-            raise Exception(f"Failed to get progress. Please try again in a few seconds.")
+            raise Exception("Failed to get progress. Please try again in a few seconds.")
         
         return progress
     
     def __get_preliminary_results(self) -> RapidataResults:
-        pipeline_id = self.__get_pipeline_id()
+        """
+        Gets the preliminary results of the order.
+        
+        Returns:
+            The preliminary results.
+            
+        Raises:
+            Exception: If the preliminary results cannot be retrieved.
+        """
         try: 
-            download_id = self.__openapi_service.pipeline_api.pipeline_pipeline_id_preliminary_download_post(pipeline_id, PreliminaryDownloadModel(sendEmail=False)).download_id
-            while not (preliminary_results := self.__openapi_service.pipeline_api.pipeline_preliminary_download_preliminary_download_id_get(preliminary_download_id=download_id)):
+            download_id = self.__openapi_service.pipeline_api.pipeline_pipeline_id_preliminary_download_post(
+                self.pipeline_id, 
+                PreliminaryDownloadModel(sendEmail=False)
+            ).download_id
+            
+            while not (preliminary_results := self.__openapi_service.pipeline_api.pipeline_preliminary_download_preliminary_download_id_get(
+                preliminary_download_id=download_id
+            )):
                 sleep(1)
+                
             return RapidataResults(json.loads(preliminary_results.decode()))
         
         except ApiException as e:
@@ -216,8 +267,10 @@ class RapidataOrder:
             raise Exception(f"Failed to parse order results: {str(e)}") from e
         
     def preview(self) -> None:
-        campaign_id = self.__get_workflow_and_campaign_id()[1]
-        auth_url = f"https://rapids.{self.__openapi_service.enviroment}/preview/campaign?id={campaign_id}"
+        """
+        Opens a preview of the campaign in the browser.
+        """
+        auth_url = f"https://rapids.{self.__openapi_service.enviroment}/preview/campaign?id={self.campaign_id}"
         could_open_browser = webbrowser.open(auth_url)
 
         if not could_open_browser:
@@ -227,15 +280,6 @@ class RapidataOrder:
                 + f'Please open the following URL in your browser to log in: "{encoded_url}"'
                 + Fore.RESET
             )
-
-    @property
-    def dataset(self) -> RapidataDataset | None:
-        """
-        The dataset associated with the order.
-        Returns: 
-            The RapidataDataset instance.
-        """
-        return self.__dataset
     
     def __str__(self) -> str:
         return f"name: '{self.name}' order id: {self.order_id}"
