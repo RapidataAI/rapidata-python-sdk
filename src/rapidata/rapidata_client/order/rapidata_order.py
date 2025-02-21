@@ -18,6 +18,7 @@ from rapidata.api_client.models.workflow_artifact_model import WorkflowArtifactM
 from rapidata.rapidata_client.order.rapidata_results import RapidataResults
 from rapidata.service.openapi_service import OpenAPIService
 
+
 class RapidataOrder:
     """
     An instance of a Rapidata order.
@@ -67,7 +68,7 @@ class RapidataOrder:
         """
         Gets the status of the order.
 
-        Different states are:
+        States:
             Created: The order has been created but not started yet.\n
             Submitted: The order has been submitted and is being reviewed.\n
             ManualReview: The order is in manual review - something went wrong with the automatic approval.\n
@@ -75,9 +76,6 @@ class RapidataOrder:
             Paused: The order has been paused.\n
             Completed: The order has been completed.\n
             Failed: The order has failed.
-        
-        Returns: 
-            The status of the order.
         """
         return self.__openapi_service.order_api.order_get_by_id_get(self.order_id).state
 
@@ -108,7 +106,7 @@ class RapidataOrder:
         with tqdm(total=100, desc="Processing order", unit="%", bar_format="{desc}: {percentage:3.0f}%|{bar}| completed [{elapsed}<{remaining}, {rate_fmt}]") as pbar:
             last_percentage = 0
             while True:
-                current_percentage = self.workflow_progress.completion_percentage
+                current_percentage = self._workflow_progress.completion_percentage
                 if current_percentage > last_percentage:
                     pbar.update(current_percentage - last_percentage)
                     last_percentage = current_percentage
@@ -119,15 +117,9 @@ class RapidataOrder:
                 sleep(refresh_rate)
 
     @property
-    def workflow_progress(self):
+    def _workflow_progress(self):
         """
         Gets the workflow progress.
-        
-        Returns:
-            The workflow progress.
-            
-        Raises:
-            Exception: If the workflow progress cannot be retrieved.
         """
         progress = None
         for _ in range(self._max_retries // 2):
@@ -150,9 +142,6 @@ class RapidataOrder:
             preliminary_results: If True, returns the preliminary results of the order. Defaults to False. 
                 Note that preliminary results are not final and may not contain all the datapoints & responses. Only the onese that are already available.
                 This will throw an exception if there are no responses available yet.
-
-        Returns: 
-            The results of the order.
         """
 
         if preliminary_results and self.get_status() not in [OrderState.COMPLETED]:
@@ -171,7 +160,7 @@ class RapidataOrder:
         
     def preview(self) -> None:
         """
-        Opens a preview of the campaign in the browser.
+        Opens a preview of the order in the browser.
         
         Raises:
             Exception: If the order is not in processing state.
