@@ -78,7 +78,7 @@ class MediaAsset(BaseAsset):
         
         self._url = None
         self._content = None
-        self._session: None | requests.Session  = None
+        self.session: None | requests.Session  = None
         
         if re.match(r'^https?://', path):
             self._url = path
@@ -238,11 +238,11 @@ class MediaAsset(BaseAsset):
             requests.exceptions.RequestException: If download fails after all retries
         """
         # Use existing session or throw error if not set
-        if self._session is None:
+        if self.session is None:
             raise RuntimeError("HTTP session not configured")
 
         try:
-            response = self._session.get(
+            response = self.session.get(
                 url, 
                 stream=False,
                 timeout=(5, 30)  # (connect timeout, read timeout)

@@ -136,14 +136,14 @@ class RapidataDataset:
             try:
                 # Get identifier for this upload (URL or file path)
                 if isinstance(media_asset, MediaAsset):
-                    media_asset._session = session
+                    media_asset.session = session
                     assets = [media_asset]
                     identifier = media_asset._url if media_asset._url else media_asset.path
                     identifiers_to_track = [identifier] if identifier else []
                 elif isinstance(media_asset, MultiAsset):
                     assets = cast(list[MediaAsset], media_asset.assets)
                     for asset in assets:
-                        asset._session = session
+                        asset.session = session
                     identifiers_to_track: list[str] = [
                         (asset._url if asset._url else cast(str, asset.path)) 
                         for asset in assets
