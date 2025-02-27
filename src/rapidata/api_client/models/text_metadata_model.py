@@ -28,8 +28,7 @@ class TextMetadataModel(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for TextMetadata", alias="_t")
     text: StrictStr
-    identifier: StrictStr
-    __properties: ClassVar[List[str]] = ["_t", "text", "identifier"]
+    __properties: ClassVar[List[str]] = ["_t", "text"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -90,8 +89,7 @@ class TextMetadataModel(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'TextMetadata',
-            "text": obj.get("text"),
-            "identifier": obj.get("identifier")
+            "text": obj.get("text")
         })
         return _obj
 

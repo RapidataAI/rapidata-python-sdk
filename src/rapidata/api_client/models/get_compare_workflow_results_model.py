@@ -19,7 +19,6 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.compare_match_status import CompareMatchStatus
 from rapidata.api_client.models.page_info import PageInfo
 from rapidata.api_client.models.sort_criterion import SortCriterion
 from typing import Optional, Set
@@ -30,9 +29,8 @@ class GetCompareWorkflowResultsModel(BaseModel):
     Model for getting the overview of a compare workflow result.
     """ # noqa: E501
     page: Optional[PageInfo] = None
-    states: Optional[List[CompareMatchStatus]] = Field(default=None, description="An optional list of states to filter the results by.")
     sort_criteria: Optional[List[SortCriterion]] = Field(default=None, description="A list of criteria to sort the results by.", alias="sortCriteria")
-    __properties: ClassVar[List[str]] = ["page", "states", "sortCriteria"]
+    __properties: ClassVar[List[str]] = ["page", "sortCriteria"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -83,11 +81,6 @@ class GetCompareWorkflowResultsModel(BaseModel):
                 if _item_sort_criteria:
                     _items.append(_item_sort_criteria.to_dict())
             _dict['sortCriteria'] = _items
-        # set to None if states (nullable) is None
-        # and model_fields_set contains the field
-        if self.states is None and "states" in self.model_fields_set:
-            _dict['states'] = None
-
         # set to None if sort_criteria (nullable) is None
         # and model_fields_set contains the field
         if self.sort_criteria is None and "sort_criteria" in self.model_fields_set:
@@ -106,7 +99,6 @@ class GetCompareWorkflowResultsModel(BaseModel):
 
         _obj = cls.model_validate({
             "page": PageInfo.from_dict(obj["page"]) if obj.get("page") is not None else None,
-            "states": obj.get("states"),
             "sortCriteria": [SortCriterion.from_dict(_item) for _item in obj["sortCriteria"]] if obj.get("sortCriteria") is not None else None
         })
         return _obj

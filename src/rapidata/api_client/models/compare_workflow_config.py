@@ -17,10 +17,11 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.compare_workflow_config_pair_maker_config import CompareWorkflowConfigPairMakerConfig
 from rapidata.api_client.models.compare_workflow_model1_referee import CompareWorkflowModel1Referee
+from rapidata.api_client.models.elo_config import EloConfig
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -30,14 +31,11 @@ class CompareWorkflowConfig(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for CompareWorkflowConfig", alias="_t")
     criteria: StrictStr
-    starting_elo: Optional[StrictInt] = Field(default=None, alias="startingElo")
-    k_factor: Optional[StrictInt] = Field(default=None, alias="kFactor")
-    scaling_factor: Optional[StrictInt] = Field(default=None, alias="scalingFactor")
+    elo_config: Optional[EloConfig] = Field(default=None, alias="eloConfig")
     pair_maker_config: Optional[CompareWorkflowConfigPairMakerConfig] = Field(default=None, alias="pairMakerConfig")
-    matches_until_completed: Optional[StrictInt] = Field(default=None, alias="matchesUntilCompleted")
     referee: CompareWorkflowModel1Referee
     target_country_codes: List[StrictStr] = Field(alias="targetCountryCodes")
-    __properties: ClassVar[List[str]] = ["_t", "criteria", "startingElo", "kFactor", "scalingFactor", "pairMakerConfig", "matchesUntilCompleted", "referee", "targetCountryCodes"]
+    __properties: ClassVar[List[str]] = ["_t", "criteria", "eloConfig", "pairMakerConfig", "referee", "targetCountryCodes"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -85,6 +83,9 @@ class CompareWorkflowConfig(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of elo_config
+        if self.elo_config:
+            _dict['eloConfig'] = self.elo_config.to_dict()
         # override the default output from pydantic by calling `to_dict()` of pair_maker_config
         if self.pair_maker_config:
             _dict['pairMakerConfig'] = self.pair_maker_config.to_dict()
@@ -105,11 +106,8 @@ class CompareWorkflowConfig(BaseModel):
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'CompareWorkflowConfig',
             "criteria": obj.get("criteria"),
-            "startingElo": obj.get("startingElo"),
-            "kFactor": obj.get("kFactor"),
-            "scalingFactor": obj.get("scalingFactor"),
+            "eloConfig": EloConfig.from_dict(obj["eloConfig"]) if obj.get("eloConfig") is not None else None,
             "pairMakerConfig": CompareWorkflowConfigPairMakerConfig.from_dict(obj["pairMakerConfig"]) if obj.get("pairMakerConfig") is not None else None,
-            "matchesUntilCompleted": obj.get("matchesUntilCompleted"),
             "referee": CompareWorkflowModel1Referee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
             "targetCountryCodes": obj.get("targetCountryCodes")
         })

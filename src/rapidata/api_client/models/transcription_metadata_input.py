@@ -28,8 +28,7 @@ class TranscriptionMetadataInput(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for TranscriptionMetadataInput", alias="_t")
     transcription: StrictStr
-    identifier: StrictStr
-    __properties: ClassVar[List[str]] = ["_t", "transcription", "identifier"]
+    __properties: ClassVar[List[str]] = ["_t", "transcription"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -90,8 +89,7 @@ class TranscriptionMetadataInput(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'TranscriptionMetadataInput',
-            "transcription": obj.get("transcription"),
-            "identifier": obj.get("identifier")
+            "transcription": obj.get("transcription")
         })
         return _obj
 

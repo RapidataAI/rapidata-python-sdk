@@ -17,10 +17,11 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.compare_workflow_model1_pair_maker_information import CompareWorkflowModel1PairMakerInformation
 from rapidata.api_client.models.compare_workflow_model1_referee import CompareWorkflowModel1Referee
+from rapidata.api_client.models.elo_config import EloConfig
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -37,11 +38,8 @@ class CompareWorkflowModel1(BaseModel):
     criteria: StrictStr
     name: StrictStr
     owner_mail: Optional[StrictStr] = Field(default=None, alias="ownerMail")
-    starting_elo: StrictInt = Field(alias="startingElo")
-    k_factor: StrictInt = Field(alias="kFactor")
-    scaling_factor: StrictInt = Field(alias="scalingFactor")
-    matches_until_completed: StrictInt = Field(alias="matchesUntilCompleted")
-    __properties: ClassVar[List[str]] = ["_t", "id", "datasetId", "referee", "pairMakerInformation", "state", "criteria", "name", "ownerMail", "startingElo", "kFactor", "scalingFactor", "matchesUntilCompleted"]
+    elo_config: EloConfig = Field(alias="eloConfig")
+    __properties: ClassVar[List[str]] = ["_t", "id", "datasetId", "referee", "pairMakerInformation", "state", "criteria", "name", "ownerMail", "eloConfig"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -95,6 +93,9 @@ class CompareWorkflowModel1(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of pair_maker_information
         if self.pair_maker_information:
             _dict['pairMakerInformation'] = self.pair_maker_information.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of elo_config
+        if self.elo_config:
+            _dict['eloConfig'] = self.elo_config.to_dict()
         # set to None if dataset_id (nullable) is None
         # and model_fields_set contains the field
         if self.dataset_id is None and "dataset_id" in self.model_fields_set:
@@ -126,10 +127,7 @@ class CompareWorkflowModel1(BaseModel):
             "criteria": obj.get("criteria"),
             "name": obj.get("name"),
             "ownerMail": obj.get("ownerMail"),
-            "startingElo": obj.get("startingElo"),
-            "kFactor": obj.get("kFactor"),
-            "scalingFactor": obj.get("scalingFactor"),
-            "matchesUntilCompleted": obj.get("matchesUntilCompleted")
+            "eloConfig": EloConfig.from_dict(obj["eloConfig"]) if obj.get("eloConfig") is not None else None
         })
         return _obj
 

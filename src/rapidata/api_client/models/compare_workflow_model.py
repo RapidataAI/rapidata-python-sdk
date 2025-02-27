@@ -17,9 +17,10 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.compare_workflow_model_pair_maker_config import CompareWorkflowModelPairMakerConfig
+from rapidata.api_client.models.elo_config_model import EloConfigModel
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -29,12 +30,9 @@ class CompareWorkflowModel(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for CompareWorkflow", alias="_t")
     criteria: StrictStr = Field(description="The criteria that the datapoints should be compared based on. No default value.")
-    starting_elo: Optional[StrictInt] = Field(default=None, description="The Starting Elo is the Elo that all datapoints will start with. Default is usually between 1200-1500.", alias="startingElo")
-    k_factor: Optional[StrictInt] = Field(default=None, description="The KFactor is used to calculate the Elo change after each match. Per default this is between 20 and 40.", alias="kFactor")
     pair_maker_config: Optional[CompareWorkflowModelPairMakerConfig] = Field(default=None, alias="pairMakerConfig")
-    scaling_factor: Optional[StrictInt] = Field(default=None, description="The ScalingFactor is used to calculate the expected outcome before a match. Per default this is 400.", alias="scalingFactor")
-    matches_until_completed: Optional[StrictInt] = Field(default=None, description="The amount of matches that a datapoint should have played until it completes. Per default this is 10.", alias="matchesUntilCompleted")
-    __properties: ClassVar[List[str]] = ["_t", "criteria", "startingElo", "kFactor", "pairMakerConfig", "scalingFactor", "matchesUntilCompleted"]
+    elo_config: Optional[EloConfigModel] = Field(default=None, alias="eloConfig")
+    __properties: ClassVar[List[str]] = ["_t", "criteria", "pairMakerConfig", "eloConfig"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -85,6 +83,9 @@ class CompareWorkflowModel(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of pair_maker_config
         if self.pair_maker_config:
             _dict['pairMakerConfig'] = self.pair_maker_config.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of elo_config
+        if self.elo_config:
+            _dict['eloConfig'] = self.elo_config.to_dict()
         return _dict
 
     @classmethod
@@ -99,11 +100,8 @@ class CompareWorkflowModel(BaseModel):
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'CompareWorkflow',
             "criteria": obj.get("criteria"),
-            "startingElo": obj.get("startingElo"),
-            "kFactor": obj.get("kFactor"),
             "pairMakerConfig": CompareWorkflowModelPairMakerConfig.from_dict(obj["pairMakerConfig"]) if obj.get("pairMakerConfig") is not None else None,
-            "scalingFactor": obj.get("scalingFactor"),
-            "matchesUntilCompleted": obj.get("matchesUntilCompleted")
+            "eloConfig": EloConfigModel.from_dict(obj["eloConfig"]) if obj.get("eloConfig") is not None else None
         })
         return _obj
 

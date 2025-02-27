@@ -28,8 +28,7 @@ class PromptMetadataInput(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for PromptMetadataInput", alias="_t")
     prompt: StrictStr
-    identifier: StrictStr
-    __properties: ClassVar[List[str]] = ["_t", "prompt", "identifier"]
+    __properties: ClassVar[List[str]] = ["_t", "prompt"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -90,8 +89,7 @@ class PromptMetadataInput(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'PromptMetadataInput',
-            "prompt": obj.get("prompt"),
-            "identifier": obj.get("identifier")
+            "prompt": obj.get("prompt")
         })
         return _obj
 

@@ -19,8 +19,8 @@ from typing_extensions import Annotated
 from pydantic import Field, StrictStr
 from typing import Optional
 from typing_extensions import Annotated
-from rapidata.api_client.models.campaign_query_model_paged_result import CampaignQueryModelPagedResult
-from rapidata.api_client.models.query_campaigns_model import QueryCampaignsModel
+from rapidata.api_client.models.campaign_query_result_paged_result import CampaignQueryResultPagedResult
+from rapidata.api_client.models.query_model import QueryModel
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -534,7 +534,7 @@ class CampaignApi:
     @validate_call
     def campaign_query_get(
         self,
-        request: Annotated[Optional[QueryCampaignsModel], Field(description="The parameters for filtering, paging, and sorting")] = None,
+        request: Annotated[Optional[QueryModel], Field(description="The parameters for filtering, paging, and sorting")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -547,12 +547,12 @@ class CampaignApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> CampaignQueryModelPagedResult:
+    ) -> CampaignQueryResultPagedResult:
         """Queries orders based on a filter, page, and sort criteria.
 
 
         :param request: The parameters for filtering, paging, and sorting
-        :type request: QueryCampaignsModel
+        :type request: QueryModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -584,7 +584,7 @@ class CampaignApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CampaignQueryModelPagedResult",
+            '200': "CampaignQueryResultPagedResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -600,7 +600,7 @@ class CampaignApi:
     @validate_call
     def campaign_query_get_with_http_info(
         self,
-        request: Annotated[Optional[QueryCampaignsModel], Field(description="The parameters for filtering, paging, and sorting")] = None,
+        request: Annotated[Optional[QueryModel], Field(description="The parameters for filtering, paging, and sorting")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -613,12 +613,12 @@ class CampaignApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[CampaignQueryModelPagedResult]:
+    ) -> ApiResponse[CampaignQueryResultPagedResult]:
         """Queries orders based on a filter, page, and sort criteria.
 
 
         :param request: The parameters for filtering, paging, and sorting
-        :type request: QueryCampaignsModel
+        :type request: QueryModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -650,7 +650,7 @@ class CampaignApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CampaignQueryModelPagedResult",
+            '200': "CampaignQueryResultPagedResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -666,7 +666,7 @@ class CampaignApi:
     @validate_call
     def campaign_query_get_without_preload_content(
         self,
-        request: Annotated[Optional[QueryCampaignsModel], Field(description="The parameters for filtering, paging, and sorting")] = None,
+        request: Annotated[Optional[QueryModel], Field(description="The parameters for filtering, paging, and sorting")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -684,7 +684,7 @@ class CampaignApi:
 
 
         :param request: The parameters for filtering, paging, and sorting
-        :type request: QueryCampaignsModel
+        :type request: QueryModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -716,7 +716,7 @@ class CampaignApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CampaignQueryModelPagedResult",
+            '200': "CampaignQueryResultPagedResult",
         }
         response_data = self.api_client.call_api(
             *_param,

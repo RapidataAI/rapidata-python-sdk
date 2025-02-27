@@ -26,10 +26,11 @@ class ReportModel(BaseModel):
     """
     The model for reporting an issue with a rapid.
     """ # noqa: E501
-    rapid_id: StrictStr = Field(alias="rapidId")
+    rapid_id: StrictStr = Field(description="The rapid an issue was encountered with", alias="rapidId")
     issue: StrictStr
-    message: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["rapidId", "issue", "message"]
+    message: Optional[StrictStr] = Field(default=None, description="An optional message typed by the user.")
+    dump: Optional[StrictStr] = Field(default=None, description="A dump, that the frontend defines and can read again")
+    __properties: ClassVar[List[str]] = ["rapidId", "issue", "message", "dump"]
 
     @field_validator('issue')
     def issue_validate_enum(cls, value):
@@ -82,6 +83,11 @@ class ReportModel(BaseModel):
         if self.message is None and "message" in self.model_fields_set:
             _dict['message'] = None
 
+        # set to None if dump (nullable) is None
+        # and model_fields_set contains the field
+        if self.dump is None and "dump" in self.model_fields_set:
+            _dict['dump'] = None
+
         return _dict
 
     @classmethod
@@ -96,7 +102,8 @@ class ReportModel(BaseModel):
         _obj = cls.model_validate({
             "rapidId": obj.get("rapidId"),
             "issue": obj.get("issue"),
-            "message": obj.get("message")
+            "message": obj.get("message"),
+            "dump": obj.get("dump")
         })
         return _obj
 

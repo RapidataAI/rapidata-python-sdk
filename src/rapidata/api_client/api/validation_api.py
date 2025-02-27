@@ -26,7 +26,7 @@ from rapidata.api_client.models.create_empty_validation_set_result import Create
 from rapidata.api_client.models.get_available_validation_sets_result import GetAvailableValidationSetsResult
 from rapidata.api_client.models.get_validation_set_by_id_result import GetValidationSetByIdResult
 from rapidata.api_client.models.import_validation_set_from_file_result import ImportValidationSetFromFileResult
-from rapidata.api_client.models.query_validation_set_model import QueryValidationSetModel
+from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.validation_import_post_request_blueprint import ValidationImportPostRequestBlueprint
 from rapidata.api_client.models.validation_set_model_paged_result import ValidationSetModelPagedResult
 
@@ -1937,7 +1937,7 @@ class ValidationApi:
     @validate_call
     def validation_query_validation_sets_get(
         self,
-        model: Annotated[Optional[QueryValidationSetModel], Field(description="The model containing the query parameters.")] = None,
+        model: Annotated[Optional[QueryModel], Field(description="The model containing the query parameters.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1955,7 +1955,7 @@ class ValidationApi:
 
 
         :param model: The model containing the query parameters.
-        :type model: QueryValidationSetModel
+        :type model: QueryModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2003,7 +2003,7 @@ class ValidationApi:
     @validate_call
     def validation_query_validation_sets_get_with_http_info(
         self,
-        model: Annotated[Optional[QueryValidationSetModel], Field(description="The model containing the query parameters.")] = None,
+        model: Annotated[Optional[QueryModel], Field(description="The model containing the query parameters.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2021,7 +2021,7 @@ class ValidationApi:
 
 
         :param model: The model containing the query parameters.
-        :type model: QueryValidationSetModel
+        :type model: QueryModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2069,7 +2069,7 @@ class ValidationApi:
     @validate_call
     def validation_query_validation_sets_get_without_preload_content(
         self,
-        model: Annotated[Optional[QueryValidationSetModel], Field(description="The model containing the query parameters.")] = None,
+        model: Annotated[Optional[QueryModel], Field(description="The model containing the query parameters.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2087,7 +2087,7 @@ class ValidationApi:
 
 
         :param model: The model containing the query parameters.
-        :type model: QueryValidationSetModel
+        :type model: QueryModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of

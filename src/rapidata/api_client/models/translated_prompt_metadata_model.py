@@ -29,8 +29,7 @@ class TranslatedPromptMetadataModel(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for TranslatedPromptMetadata", alias="_t")
     prompt: TranslatedString
-    identifier: StrictStr
-    __properties: ClassVar[List[str]] = ["_t", "prompt", "identifier"]
+    __properties: ClassVar[List[str]] = ["_t", "prompt"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -94,8 +93,7 @@ class TranslatedPromptMetadataModel(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'TranslatedPromptMetadata',
-            "prompt": TranslatedString.from_dict(obj["prompt"]) if obj.get("prompt") is not None else None,
-            "identifier": obj.get("identifier")
+            "prompt": TranslatedString.from_dict(obj["prompt"]) if obj.get("prompt") is not None else None
         })
         return _obj
 

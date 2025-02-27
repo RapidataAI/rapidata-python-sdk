@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.file_asset_model1_metadata_inner import FileAssetModel1MetadataInner
+from rapidata.api_client.models.file_asset_model_metadata_value import FileAssetModelMetadataValue
 from rapidata.api_client.models.query_validation_rapids_result_asset import QueryValidationRapidsResultAsset
 from rapidata.api_client.models.query_validation_rapids_result_payload import QueryValidationRapidsResultPayload
 from rapidata.api_client.models.query_validation_rapids_result_truth import QueryValidationRapidsResultTruth
@@ -35,7 +35,7 @@ class QueryValidationRapidsResult(BaseModel):
     asset: Optional[QueryValidationRapidsResultAsset] = None
     truth: Optional[QueryValidationRapidsResultTruth] = None
     payload: QueryValidationRapidsResultPayload
-    metadata: List[FileAssetModel1MetadataInner]
+    metadata: Dict[str, FileAssetModelMetadataValue]
     correct_validation_count: StrictInt = Field(alias="correctValidationCount")
     invalid_validation_count: StrictInt = Field(alias="invalidValidationCount")
     explanation: Optional[StrictStr] = None
@@ -89,13 +89,13 @@ class QueryValidationRapidsResult(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of payload
         if self.payload:
             _dict['payload'] = self.payload.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in metadata (list)
-        _items = []
+        # override the default output from pydantic by calling `to_dict()` of each value in metadata (dict)
+        _field_dict = {}
         if self.metadata:
-            for _item_metadata in self.metadata:
-                if _item_metadata:
-                    _items.append(_item_metadata.to_dict())
-            _dict['metadata'] = _items
+            for _key_metadata in self.metadata:
+                if self.metadata[_key_metadata]:
+                    _field_dict[_key_metadata] = self.metadata[_key_metadata].to_dict()
+            _dict['metadata'] = _field_dict
         # set to None if asset (nullable) is None
         # and model_fields_set contains the field
         if self.asset is None and "asset" in self.model_fields_set:
@@ -128,7 +128,12 @@ class QueryValidationRapidsResult(BaseModel):
             "asset": QueryValidationRapidsResultAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "truth": QueryValidationRapidsResultTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
             "payload": QueryValidationRapidsResultPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
-            "metadata": [FileAssetModel1MetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
+            "metadata": dict(
+                (_k, FileAssetModelMetadataValue.from_dict(_v))
+                for _k, _v in obj["metadata"].items()
+            )
+            if obj.get("metadata") is not None
+            else None,
             "correctValidationCount": obj.get("correctValidationCount"),
             "invalidValidationCount": obj.get("invalidValidationCount"),
             "explanation": obj.get("explanation")

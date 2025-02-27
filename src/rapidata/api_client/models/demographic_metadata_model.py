@@ -17,8 +17,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Union
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.demographic import Demographic
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,10 +28,8 @@ class DemographicMetadataModel(BaseModel):
     DemographicMetadataModel
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for DemographicMetadata", alias="_t")
-    confidence: Union[StrictFloat, StrictInt]
-    value: StrictStr
-    identifier: StrictStr
-    __properties: ClassVar[List[str]] = ["_t", "confidence", "value", "identifier"]
+    demographics: Optional[Dict[str, Demographic]] = None
+    __properties: ClassVar[List[str]] = ["_t", "demographics"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -78,6 +77,13 @@ class DemographicMetadataModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each value in demographics (dict)
+        _field_dict = {}
+        if self.demographics:
+            for _key_demographics in self.demographics:
+                if self.demographics[_key_demographics]:
+                    _field_dict[_key_demographics] = self.demographics[_key_demographics].to_dict()
+            _dict['demographics'] = _field_dict
         return _dict
 
     @classmethod
@@ -91,9 +97,12 @@ class DemographicMetadataModel(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'DemographicMetadata',
-            "confidence": obj.get("confidence"),
-            "value": obj.get("value"),
-            "identifier": obj.get("identifier")
+            "demographics": dict(
+                (_k, Demographic.from_dict(_v))
+                for _k, _v in obj["demographics"].items()
+            )
+            if obj.get("demographics") is not None
+            else None
         })
         return _obj
 
