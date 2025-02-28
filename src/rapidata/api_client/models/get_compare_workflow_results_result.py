@@ -17,9 +17,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.get_compare_workflow_results_result_asset import GetCompareWorkflowResultsResultAsset
+from rapidata.api_client.models.datapoint_model_asset import DatapointModelAsset
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,17 +28,9 @@ class GetCompareWorkflowResultsResult(BaseModel):
     GetCompareWorkflowResultsResult
     """ # noqa: E501
     workflow_datapoint_id: StrictStr = Field(alias="workflowDatapointId")
-    asset: GetCompareWorkflowResultsResultAsset
+    asset: DatapointModelAsset
     elo: StrictInt
-    state: StrictStr
-    __properties: ClassVar[List[str]] = ["workflowDatapointId", "asset", "elo", "state"]
-
-    @field_validator('state')
-    def state_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['Idle', 'Queued', 'Processing', 'Completed']):
-            raise ValueError("must be one of enum values ('Idle', 'Queued', 'Processing', 'Completed')")
-        return value
+    __properties: ClassVar[List[str]] = ["workflowDatapointId", "asset", "elo"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -95,9 +87,8 @@ class GetCompareWorkflowResultsResult(BaseModel):
 
         _obj = cls.model_validate({
             "workflowDatapointId": obj.get("workflowDatapointId"),
-            "asset": GetCompareWorkflowResultsResultAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
-            "elo": obj.get("elo"),
-            "state": obj.get("state")
+            "asset": DatapointModelAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
+            "elo": obj.get("elo")
         })
         return _obj
 

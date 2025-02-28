@@ -29,8 +29,7 @@ class LocationMetadataModel(BaseModel):
     t: StrictStr = Field(description="Discriminator value for LocationMetadata", alias="_t")
     x: Union[StrictFloat, StrictInt]
     y: Union[StrictFloat, StrictInt]
-    identifier: StrictStr
-    __properties: ClassVar[List[str]] = ["_t", "x", "y", "identifier"]
+    __properties: ClassVar[List[str]] = ["_t", "x", "y"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -92,8 +91,7 @@ class LocationMetadataModel(BaseModel):
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'LocationMetadata',
             "x": obj.get("x"),
-            "y": obj.get("y"),
-            "identifier": obj.get("identifier")
+            "y": obj.get("y")
         })
         return _obj
 

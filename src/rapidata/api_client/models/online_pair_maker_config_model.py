@@ -28,7 +28,7 @@ class OnlinePairMakerConfigModel(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for OnlinePairMaker", alias="_t")
     random_matches_ratio: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The ratio of random matches for the algorithm to burn-in.", alias="randomMatchesRatio")
-    total_comparison_budget: StrictInt = Field(description="Total number of comparisons to carry out.", alias="totalComparisonBudget")
+    total_comparison_budget: Optional[StrictInt] = Field(default=None, description="Total number of comparisons to carry out.", alias="totalComparisonBudget")
     __properties: ClassVar[List[str]] = ["_t", "randomMatchesRatio", "totalComparisonBudget"]
 
     @field_validator('t')

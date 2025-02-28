@@ -19,7 +19,7 @@ from typing_extensions import Annotated
 from pydantic import Field, StrictStr
 from typing import Optional
 from typing_extensions import Annotated
-from rapidata.api_client.models.datapoint_get_by_id_get200_response import DatapointGetByIdGet200Response
+from rapidata.api_client.models.get_datapoint_by_id_result import GetDatapointByIdResult
 from rapidata.api_client.models.get_datapoints_by_dataset_id_result import GetDatapointsByDatasetIdResult
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
@@ -573,7 +573,7 @@ class DatapointApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> DatapointGetByIdGet200Response:
+    ) -> GetDatapointByIdResult:
         """Get a datapoint by its id.
 
 
@@ -610,7 +610,7 @@ class DatapointApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "DatapointGetByIdGet200Response",
+            '200': "GetDatapointByIdResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -639,7 +639,7 @@ class DatapointApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[DatapointGetByIdGet200Response]:
+    ) -> ApiResponse[GetDatapointByIdResult]:
         """Get a datapoint by its id.
 
 
@@ -676,7 +676,7 @@ class DatapointApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "DatapointGetByIdGet200Response",
+            '200': "GetDatapointByIdResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -742,7 +742,7 @@ class DatapointApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "DatapointGetByIdGet200Response",
+            '200': "GetDatapointByIdResult",
         }
         response_data = self.api_client.call_api(
             *_param,

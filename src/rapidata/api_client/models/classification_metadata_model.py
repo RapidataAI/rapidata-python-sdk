@@ -28,8 +28,7 @@ class ClassificationMetadataModel(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for ClassificationMetadata", alias="_t")
     classification: StrictStr
-    identifier: StrictStr
-    __properties: ClassVar[List[str]] = ["_t", "classification", "identifier"]
+    __properties: ClassVar[List[str]] = ["_t", "classification"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -90,8 +89,7 @@ class ClassificationMetadataModel(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'ClassificationMetadata',
-            "classification": obj.get("classification"),
-            "identifier": obj.get("identifier")
+            "classification": obj.get("classification")
         })
         return _obj
 

@@ -17,28 +17,19 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.file_asset_model_metadata_value import FileAssetModelMetadataValue
+from pydantic import BaseModel, ConfigDict, Field, StrictInt
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class TextAssetModel(BaseModel):
+class EloConfigModel(BaseModel):
     """
-    TextAssetModel
+    These parameters affect how the ELO algorithms behaves
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for TextAsset", alias="_t")
-    text: StrictStr
-    metadata: Dict[str, FileAssetModelMetadataValue]
-    identifier: StrictStr
-    __properties: ClassVar[List[str]] = ["_t", "text", "metadata", "identifier"]
-
-    @field_validator('t')
-    def t_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['TextAsset']):
-            raise ValueError("must be one of enum values ('TextAsset')")
-        return value
+    starting_elo: Optional[StrictInt] = Field(default=None, description="The starting ELO score for each datapoint.", alias="startingElo")
+    k_factor: Optional[StrictInt] = Field(default=None, description="The K-factor to use in the ELO calculation.  Determines the maximum possible change in a player's Elo rating after a single match.  Higher K-Factor values result in larger rating changes.", alias="kFactor")
+    scaling_factor: Optional[StrictInt] = Field(default=None, description="Scaling factor to use in the ELO calculation.  Adjusts the sensitivity of the Elo rating system to differences in player ratings.  It affects how much the rating changes based on the expected outcome versus the actual outcome.", alias="scalingFactor")
+    __properties: ClassVar[List[str]] = ["startingElo", "kFactor", "scalingFactor"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -58,7 +49,7 @@ class TextAssetModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of TextAssetModel from a JSON string"""
+        """Create an instance of EloConfigModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -79,18 +70,11 @@ class TextAssetModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each value in metadata (dict)
-        _field_dict = {}
-        if self.metadata:
-            for _key_metadata in self.metadata:
-                if self.metadata[_key_metadata]:
-                    _field_dict[_key_metadata] = self.metadata[_key_metadata].to_dict()
-            _dict['metadata'] = _field_dict
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of TextAssetModel from a dict"""
+        """Create an instance of EloConfigModel from a dict"""
         if obj is None:
             return None
 
@@ -98,15 +82,9 @@ class TextAssetModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'TextAsset',
-            "text": obj.get("text"),
-            "metadata": dict(
-                (_k, FileAssetModelMetadataValue.from_dict(_v))
-                for _k, _v in obj["metadata"].items()
-            )
-            if obj.get("metadata") is not None
-            else None,
-            "identifier": obj.get("identifier")
+            "startingElo": obj.get("startingElo"),
+            "kFactor": obj.get("kFactor"),
+            "scalingFactor": obj.get("scalingFactor")
         })
         return _obj
 

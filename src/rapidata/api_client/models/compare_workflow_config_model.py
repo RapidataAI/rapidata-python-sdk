@@ -17,10 +17,11 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.compare_workflow_config_model_pair_maker_config import CompareWorkflowConfigModelPairMakerConfig
 from rapidata.api_client.models.compare_workflow_model1_referee import CompareWorkflowModel1Referee
+from rapidata.api_client.models.elo_config import EloConfig
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -30,14 +31,11 @@ class CompareWorkflowConfigModel(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for CompareWorkflowConfig", alias="_t")
     criteria: StrictStr = Field(description="The criteria to add to each compare rapid.")
-    starting_elo: Optional[StrictInt] = Field(default=None, description="The starting ELO score for each datapoint.", alias="startingElo")
-    k_factor: Optional[StrictInt] = Field(default=None, description="The K-factor to use in the ELO calculation.  Determines the maximum possible change in a player's Elo rating after a single match.  Higher K-Factor values result in larger rating changes.", alias="kFactor")
-    scaling_factor: Optional[StrictInt] = Field(default=None, description="Scaling factor to use in the ELO calculation.  Adjusts the sensitivity of the Elo rating system to differences in player ratings.  It affects how much the rating changes based on the expected outcome versus the actual outcome.", alias="scalingFactor")
     pair_maker_config: CompareWorkflowConfigModelPairMakerConfig = Field(alias="pairMakerConfig")
-    matches_until_completed: Optional[StrictInt] = Field(default=None, description="The number of matches to run before each datapoint is considered \"completed\".", alias="matchesUntilCompleted")
     referee: CompareWorkflowModel1Referee
     target_country_codes: List[StrictStr] = Field(description="A list of country codes that this workflow is targeting.", alias="targetCountryCodes")
-    __properties: ClassVar[List[str]] = ["_t", "criteria", "startingElo", "kFactor", "scalingFactor", "pairMakerConfig", "matchesUntilCompleted", "referee", "targetCountryCodes"]
+    elo_config: Optional[EloConfig] = Field(default=None, alias="eloConfig")
+    __properties: ClassVar[List[str]] = ["_t", "criteria", "pairMakerConfig", "referee", "targetCountryCodes", "eloConfig"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -91,6 +89,9 @@ class CompareWorkflowConfigModel(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of referee
         if self.referee:
             _dict['referee'] = self.referee.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of elo_config
+        if self.elo_config:
+            _dict['eloConfig'] = self.elo_config.to_dict()
         return _dict
 
     @classmethod
@@ -105,13 +106,10 @@ class CompareWorkflowConfigModel(BaseModel):
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'CompareWorkflowConfig',
             "criteria": obj.get("criteria"),
-            "startingElo": obj.get("startingElo"),
-            "kFactor": obj.get("kFactor"),
-            "scalingFactor": obj.get("scalingFactor"),
             "pairMakerConfig": CompareWorkflowConfigModelPairMakerConfig.from_dict(obj["pairMakerConfig"]) if obj.get("pairMakerConfig") is not None else None,
-            "matchesUntilCompleted": obj.get("matchesUntilCompleted"),
             "referee": CompareWorkflowModel1Referee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
-            "targetCountryCodes": obj.get("targetCountryCodes")
+            "targetCountryCodes": obj.get("targetCountryCodes"),
+            "eloConfig": EloConfig.from_dict(obj["eloConfig"]) if obj.get("eloConfig") is not None else None
         })
         return _obj
 

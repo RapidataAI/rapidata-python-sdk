@@ -39,38 +39,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/Datapoint"
-                    }
-                  ],
-                  "discriminator": {
-                    "propertyName": "_t"
-                  }
+                  "$ref": "#/components/schemas/GetDatapointByIdResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/Datapoint"
-                    }
-                  ],
-                  "discriminator": {
-                    "propertyName": "_t"
-                  }
+                  "$ref": "#/components/schemas/GetDatapointByIdResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/Datapoint"
-                    }
-                  ],
-                  "discriminator": {
-                    "propertyName": "_t"
-                  }
+                  "$ref": "#/components/schemas/GetDatapointByIdResult"
                 }
               }
             }
@@ -141,6 +120,46 @@
         }
       }
     },
+    "/Dataset/GetById": {
+      "get": {
+        "tags": [
+          "Dataset"
+        ],
+        "summary": "Gets a dataset by its id.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "The id of the dataset to get.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDatasetByIdResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDatasetByIdResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDatasetByIdResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/Dataset/CreateDatapoint": {
       "post": {
         "tags": [
@@ -183,57 +202,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/UploadDatapointsResult"
+                  "$ref": "#/components/schemas/CreateDatapointResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UploadDatapointsResult"
+                  "$ref": "#/components/schemas/CreateDatapointResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UploadDatapointsResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/Dataset/GetById": {
-      "get": {
-        "tags": [
-          "Dataset"
-        ],
-        "summary": "Gets a dataset by its id.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "description": "The id of the dataset to get.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetDatasetByIdResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetDatasetByIdResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetDatasetByIdResult"
+                  "$ref": "#/components/schemas/CreateDatapointResult"
                 }
               }
             }
@@ -274,17 +253,79 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/UploadDatapointsResult"
+                  "$ref": "#/components/schemas/CreateDatapointResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UploadDatapointsResult"
+                  "$ref": "#/components/schemas/CreateDatapointResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UploadDatapointsResult"
+                  "$ref": "#/components/schemas/CreateDatapointResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dataset/{datasetId}/datapoints/urls": {
+      "post": {
+        "tags": [
+          "Dataset"
+        ],
+        "summary": "Creates new datapoint where the assets are fetched from the specified urls.",
+        "description": "Passing in multiple urls will create a single datapoint with a MultiAsset.\r\nEach url will be fetched and stored as a sub-asset of the MultiAsset.\r\n<para />\r\nIf any of the urls are not accessible, the request will fail.",
+        "parameters": [
+          {
+            "name": "datasetId",
+            "in": "path",
+            "description": "The id of the dataset to create the datapoint in.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The body of the request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDatapointFromUrlsModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDatapointFromUrlsModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDatapointFromUrlsModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateDatapointResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateDatapointResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateDatapointResult"
                 }
               }
             }
@@ -325,17 +366,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/UploadDatapointsResult"
+                  "$ref": "#/components/schemas/UploadFromS3Result"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UploadDatapointsResult"
+                  "$ref": "#/components/schemas/UploadFromS3Result"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UploadDatapointsResult"
+                  "$ref": "#/components/schemas/UploadFromS3Result"
                 }
               }
             }
@@ -428,6 +469,47 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ImportFromFileResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dataset/{datasetId}/progress": {
+      "get": {
+        "tags": [
+          "Dataset"
+        ],
+        "summary": "Gets the upload progress of a dataset.",
+        "parameters": [
+          {
+            "name": "datasetId",
+            "in": "path",
+            "description": "The id of the dataset to get the progress of.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDatasetProgressResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDatasetProgressResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDatasetProgressResult"
                 }
               }
             }
@@ -1505,18 +1587,6 @@
         }
       }
     },
-    "/": {
-      "get": {
-        "tags": [
-          "Rapidata.Identity.API"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/connect/userinfo": {
       "get": {
         "tags": [
@@ -1649,7 +1719,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/QueryValidationSetModel"
+                  "$ref": "#/components/schemas/QueryModel"
                 }
               }
             }
@@ -2232,6 +2302,47 @@
         "responses": {
           "204": {
             "description": "No Content"
+          }
+        }
+      }
+    },
+    "/rapid/report/{id}": {
+      "get": {
+        "tags": [
+          "Rapid"
+        ],
+        "summary": "Inspects a report's dump. can be used to restore zustand state or anything alike.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The report id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectReportResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectReportResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InspectReportResult"
+                }
+              }
+            }
           }
         }
       }
@@ -3104,7 +3215,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/QueryCampaignsModel"
+                  "$ref": "#/components/schemas/QueryModel"
                 }
               }
             }
@@ -3116,17 +3227,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/CampaignQueryModelPagedResult"
+                  "$ref": "#/components/schemas/CampaignQueryResultPagedResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CampaignQueryModelPagedResult"
+                  "$ref": "#/components/schemas/CampaignQueryResultPagedResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CampaignQueryModelPagedResult"
+                  "$ref": "#/components/schemas/CampaignQueryResultPagedResult"
                 }
               }
             }
@@ -3192,7 +3303,7 @@
         },
         "additionalProperties": false
       },
-      "ClassificationMetadata": {
+      "ClassificationMetadataModel": {
         "title": "ClassificationMetadata",
         "required": [
           "_t",
@@ -3211,44 +3322,11 @@
           },
           "classification": {
             "type": "string"
-          },
-          "visibilities": {
-            "type": "string"
-          },
-          "identifier": {
-            "type": "string"
           }
         },
         "additionalProperties": false
       },
-      "ClassificationMetadataModel": {
-        "title": "ClassificationMetadata",
-        "required": [
-          "_t",
-          "classification",
-          "identifier"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "ClassificationMetadata"
-            ],
-            "type": "string",
-            "description": "Discriminator value for ClassificationMetadata",
-            "default": "ClassificationMetadata",
-            "example": "ClassificationMetadata"
-          },
-          "classification": {
-            "type": "string"
-          },
-          "identifier": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "CountMetadata": {
+      "CountMetadataModel": {
         "title": "CountMetadata",
         "required": [
           "_t",
@@ -3268,105 +3346,42 @@
           "count": {
             "type": "integer",
             "format": "int32"
-          },
-          "identifier": {
-            "type": "string"
-          },
-          "visibilities": {
-            "type": "string"
           }
         },
         "additionalProperties": false
       },
-      "CountMetadataModel": {
-        "title": "CountMetadata",
+      "CreateDatapointFromUrlsModel": {
         "required": [
-          "_t",
-          "count",
-          "identifier"
+          "urls"
         ],
         "type": "object",
         "properties": {
-          "_t": {
-            "enum": [
-              "CountMetadata"
-            ],
-            "type": "string",
-            "description": "Discriminator value for CountMetadata",
-            "default": "CountMetadata",
-            "example": "CountMetadata"
-          },
-          "count": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "identifier": {
-            "type": "string"
+          "urls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The urls to fetch the assets from.\r\nThe urls must be publicly accessible.\r\nA HEAD request will be made to each url to check if it is accessible."
           }
         },
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "The model for creating a datapoint from urls."
       },
-      "Datapoint": {
-        "title": "Datapoint",
+      "CreateDatapointResult": {
         "required": [
-          "_t",
-          "asset",
-          "datasetId"
+          "datapointId"
         ],
         "type": "object",
         "properties": {
-          "_t": {
-            "enum": [
-              "Datapoint"
-            ],
-            "type": "string",
-            "description": "Discriminator value for Datapoint",
-            "default": "Datapoint",
-            "example": "Datapoint"
-          },
-          "sortIndex": {
-            "type": "integer",
-            "format": "int64",
-            "nullable": true
-          },
-          "asset": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/FileAsset"
-              },
-              {
-                "$ref": "#/components/schemas/MultiAsset"
-              },
-              {
-                "$ref": "#/components/schemas/NullAsset"
-              },
-              {
-                "$ref": "#/components/schemas/TextAsset"
-              }
-            ],
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          },
-          "datasetId": {
+          "datapointId": {
             "type": "string"
           },
-          "id": {
-            "type": "string"
-          },
-          "deletionDate": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "deleterId": {
-            "type": "string",
-            "format": "uuid",
-            "nullable": true
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BaseError"
+            },
+            "deprecated": true
           }
         },
         "additionalProperties": false
@@ -3451,13 +3466,35 @@
         },
         "additionalProperties": false
       },
+      "DatapointState": {
+        "enum": [
+          "Ready",
+          "Pending",
+          "Failed"
+        ],
+        "type": "string"
+      },
+      "Demographic": {
+        "required": [
+          "confidence",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "confidence": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
       "DemographicMetadataModel": {
         "title": "DemographicMetadata",
         "required": [
-          "_t",
-          "confidence",
-          "identifier",
-          "value"
+          "_t"
         ],
         "type": "object",
         "properties": {
@@ -3470,25 +3507,22 @@
             "default": "DemographicMetadata",
             "example": "DemographicMetadata"
           },
-          "confidence": {
-            "type": "number",
-            "format": "double"
-          },
-          "value": {
-            "type": "string"
-          },
-          "identifier": {
-            "type": "string"
+          "demographics": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/Demographic"
+            }
           }
         },
         "additionalProperties": false
       },
-      "FileAsset": {
+      "FileAssetModel": {
         "title": "FileAsset",
         "required": [
           "_t",
           "fileName",
-          "originalFileName"
+          "identifier",
+          "metadata"
         ],
         "type": "object",
         "properties": {
@@ -3504,71 +3538,9 @@
           "fileName": {
             "type": "string"
           },
-          "originalFileName": {
-            "type": "string"
-          },
           "metadata": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/ClassificationMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/CountMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/ImageDimensionMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/LocationMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/TextMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/TranscriptionMetadata"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
-          }
-        },
-        "additionalProperties": false
-      },
-      "FileAssetModel": {
-        "title": "FileAssetModel",
-        "required": [
-          "_t",
-          "fileName",
-          "identifier",
-          "metadata"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "FileAssetModel"
-            ],
-            "type": "string",
-            "description": "Discriminator value for FileAssetModel",
-            "default": "FileAssetModel",
-            "example": "FileAssetModel"
-          },
-          "fileName": {
-            "type": "string"
-          },
-          "metadata": {
-            "type": "array",
-            "items": {
+            "type": "object",
+            "additionalProperties": {
               "oneOf": [
                 {
                   "$ref": "#/components/schemas/ClassificationMetadataModel"
@@ -3592,10 +3564,16 @@
                   "$ref": "#/components/schemas/PromptMetadataModel"
                 },
                 {
+                  "$ref": "#/components/schemas/SourceUrlMetadataModel"
+                },
+                {
                   "$ref": "#/components/schemas/TextMetadataModel"
                 },
                 {
                   "$ref": "#/components/schemas/TranscriptionMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/TranslatedPromptMetadataModel"
                 }
               ],
               "discriminator": {
@@ -3605,6 +3583,61 @@
           },
           "identifier": {
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetDatapointByIdResult": {
+        "required": [
+          "asset",
+          "createdAt",
+          "datasetId",
+          "id",
+          "state"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "datasetId": {
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "Ready",
+              "Pending",
+              "Failed"
+            ],
+            "type": "string"
+          },
+          "sortIndex": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "asset": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/FileAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/MultiAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/NullAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/TextAssetModel"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
           }
         },
         "additionalProperties": false
@@ -3636,7 +3669,35 @@
         },
         "additionalProperties": false
       },
-      "ImageDimensionMetadata": {
+      "GetDatasetProgressResult": {
+        "required": [
+          "failed",
+          "pending",
+          "ready",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ready": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pending": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "failed": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ImageDimensionMetadataModel": {
         "title": "ImageDimensionMetadata",
         "required": [
           "_t"
@@ -3659,43 +3720,6 @@
           "width": {
             "type": "integer",
             "format": "int32"
-          },
-          "identifier": {
-            "type": "string"
-          },
-          "visibilities": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "ImageDimensionMetadataModel": {
-        "title": "ImageDimensionMetadata",
-        "required": [
-          "_t",
-          "identifier"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "ImageDimensionMetadata"
-            ],
-            "type": "string",
-            "description": "Discriminator value for ImageDimensionMetadata",
-            "default": "ImageDimensionMetadata",
-            "example": "ImageDimensionMetadata"
-          },
-          "height": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "width": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "identifier": {
-            "type": "string"
           }
         },
         "additionalProperties": false
@@ -3712,46 +3736,10 @@
         },
         "additionalProperties": false
       },
-      "LocationMetadata": {
-        "title": "LocationMetadata",
-        "required": [
-          "_t",
-          "x",
-          "y"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "LocationMetadata"
-            ],
-            "type": "string",
-            "description": "Discriminator value for LocationMetadata",
-            "default": "LocationMetadata",
-            "example": "LocationMetadata"
-          },
-          "x": {
-            "type": "number",
-            "format": "float"
-          },
-          "y": {
-            "type": "number",
-            "format": "float"
-          },
-          "visibilities": {
-            "type": "string"
-          },
-          "identifier": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "LocationMetadataModel": {
         "title": "LocationMetadata",
         "required": [
           "_t",
-          "identifier",
           "x",
           "y"
         ],
@@ -3773,28 +3761,17 @@
           "y": {
             "type": "number",
             "format": "float"
-          },
-          "identifier": {
-            "type": "string"
           }
         },
         "additionalProperties": false
       },
-      "MetadataVisibilities": {
-        "enum": [
-          "None",
-          "Users",
-          "Customers",
-          "Admins",
-          "All"
-        ],
-        "type": "string"
-      },
-      "MultiAsset": {
+      "MultiAssetModel": {
         "title": "MultiAsset",
         "required": [
           "_t",
-          "assets"
+          "assets",
+          "identifier",
+          "metadata"
         ],
         "type": "object",
         "properties": {
@@ -3806,84 +3783,6 @@
             "description": "Discriminator value for MultiAsset",
             "default": "MultiAsset",
             "example": "MultiAsset"
-          },
-          "assets": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/FileAsset"
-                },
-                {
-                  "$ref": "#/components/schemas/MultiAsset"
-                },
-                {
-                  "$ref": "#/components/schemas/NullAsset"
-                },
-                {
-                  "$ref": "#/components/schemas/TextAsset"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
-          },
-          "metadata": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/ClassificationMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/CountMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/ImageDimensionMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/LocationMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/TextMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/TranscriptionMetadata"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
-          }
-        },
-        "additionalProperties": false
-      },
-      "MultiAssetModel": {
-        "title": "MultiAssetModel",
-        "required": [
-          "_t",
-          "assets",
-          "identifier",
-          "metadata"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "MultiAssetModel"
-            ],
-            "type": "string",
-            "description": "Discriminator value for MultiAssetModel",
-            "default": "MultiAssetModel",
-            "example": "MultiAssetModel"
           },
           "assets": {
             "type": "array",
@@ -3908,8 +3807,8 @@
             }
           },
           "metadata": {
-            "type": "array",
-            "items": {
+            "type": "object",
+            "additionalProperties": {
               "oneOf": [
                 {
                   "$ref": "#/components/schemas/ClassificationMetadataModel"
@@ -3933,10 +3832,16 @@
                   "$ref": "#/components/schemas/PromptMetadataModel"
                 },
                 {
+                  "$ref": "#/components/schemas/SourceUrlMetadataModel"
+                },
+                {
                   "$ref": "#/components/schemas/TextMetadataModel"
                 },
                 {
                   "$ref": "#/components/schemas/TranscriptionMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/TranslatedPromptMetadataModel"
                 }
               ],
               "discriminator": {
@@ -3950,10 +3855,12 @@
         },
         "additionalProperties": false
       },
-      "NullAsset": {
+      "NullAssetModel": {
         "title": "NullAsset",
         "required": [
-          "_t"
+          "_t",
+          "identifier",
+          "metadata"
         ],
         "type": "object",
         "properties": {
@@ -3967,63 +3874,8 @@
             "example": "NullAsset"
           },
           "metadata": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/ClassificationMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/CountMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/ImageDimensionMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/LocationMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/TextMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/TranscriptionMetadata"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
-          }
-        },
-        "additionalProperties": false
-      },
-      "NullAssetModel": {
-        "title": "NullAssetModel",
-        "required": [
-          "_t",
-          "identifier",
-          "metadata"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "NullAssetModel"
-            ],
-            "type": "string",
-            "description": "Discriminator value for NullAssetModel",
-            "default": "NullAssetModel",
-            "example": "NullAssetModel"
-          },
-          "metadata": {
-            "type": "array",
-            "items": {
+            "type": "object",
+            "additionalProperties": {
               "oneOf": [
                 {
                   "$ref": "#/components/schemas/ClassificationMetadataModel"
@@ -4047,10 +3899,16 @@
                   "$ref": "#/components/schemas/PromptMetadataModel"
                 },
                 {
+                  "$ref": "#/components/schemas/SourceUrlMetadataModel"
+                },
+                {
                   "$ref": "#/components/schemas/TextMetadataModel"
                 },
                 {
                   "$ref": "#/components/schemas/TranscriptionMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/TranslatedPromptMetadataModel"
                 }
               ],
               "discriminator": {
@@ -4064,40 +3922,10 @@
         },
         "additionalProperties": false
       },
-      "OriginalFilenameMetadata": {
-        "title": "OriginalFilenameMetadata",
-        "required": [
-          "_t",
-          "originalFilename"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "OriginalFilenameMetadata"
-            ],
-            "type": "string",
-            "description": "Discriminator value for OriginalFilenameMetadata",
-            "default": "OriginalFilenameMetadata",
-            "example": "OriginalFilenameMetadata"
-          },
-          "originalFilename": {
-            "type": "string"
-          },
-          "visibilities": {
-            "type": "string"
-          },
-          "identifier": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "OriginalFilenameMetadataModel": {
         "title": "OriginalFilenameMetadata",
         "required": [
           "_t",
-          "identifier",
           "originalFilename"
         ],
         "type": "object",
@@ -4112,9 +3940,6 @@
             "example": "OriginalFilenameMetadata"
           },
           "originalFilename": {
-            "type": "string"
-          },
-          "identifier": {
             "type": "string"
           }
         },
@@ -4147,40 +3972,10 @@
         },
         "additionalProperties": false
       },
-      "PromptMetadata": {
-        "title": "PromptMetadata",
-        "required": [
-          "_t",
-          "prompt"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "PromptMetadata"
-            ],
-            "type": "string",
-            "description": "Discriminator value for PromptMetadata",
-            "default": "PromptMetadata",
-            "example": "PromptMetadata"
-          },
-          "prompt": {
-            "type": "string"
-          },
-          "identifier": {
-            "type": "string"
-          },
-          "visibilities": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "PromptMetadataInput": {
         "title": "PromptMetadataInput",
         "required": [
           "_t",
-          "identifier",
           "prompt"
         ],
         "type": "object",
@@ -4196,9 +3991,6 @@
           },
           "prompt": {
             "type": "string"
-          },
-          "identifier": {
-            "type": "string"
           }
         },
         "additionalProperties": false
@@ -4207,7 +3999,6 @@
         "title": "PromptMetadata",
         "required": [
           "_t",
-          "identifier",
           "prompt"
         ],
         "type": "object",
@@ -4222,9 +4013,6 @@
             "example": "PromptMetadata"
           },
           "prompt": {
-            "type": "string"
-          },
-          "identifier": {
             "type": "string"
           }
         },
@@ -4257,10 +4045,34 @@
         },
         "additionalProperties": false
       },
-      "TextAsset": {
+      "SourceUrlMetadataModel": {
+        "title": "SourceUrlMetadataModel",
+        "required": [
+          "_t",
+          "url"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "SourceUrlMetadataModel"
+            ],
+            "type": "string",
+            "description": "Discriminator value for SourceUrlMetadataModel",
+            "default": "SourceUrlMetadataModel",
+            "example": "SourceUrlMetadataModel"
+          },
+          "url": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TextAssetModel": {
         "title": "TextAsset",
         "required": [
           "_t",
+          "identifier",
           "metadata",
           "text"
         ],
@@ -4279,67 +4091,8 @@
             "type": "string"
           },
           "metadata": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/ClassificationMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/CountMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/ImageDimensionMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/LocationMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/TextMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/TranscriptionMetadata"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
-          }
-        },
-        "additionalProperties": false
-      },
-      "TextAssetModel": {
-        "title": "TextAssetModel",
-        "required": [
-          "_t",
-          "identifier",
-          "metadata",
-          "text"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "TextAssetModel"
-            ],
-            "type": "string",
-            "description": "Discriminator value for TextAssetModel",
-            "default": "TextAssetModel",
-            "example": "TextAssetModel"
-          },
-          "text": {
-            "type": "string"
-          },
-          "metadata": {
-            "type": "array",
-            "items": {
+            "type": "object",
+            "additionalProperties": {
               "oneOf": [
                 {
                   "$ref": "#/components/schemas/ClassificationMetadataModel"
@@ -4363,10 +4116,16 @@
                   "$ref": "#/components/schemas/PromptMetadataModel"
                 },
                 {
+                  "$ref": "#/components/schemas/SourceUrlMetadataModel"
+                },
+                {
                   "$ref": "#/components/schemas/TextMetadataModel"
                 },
                 {
                   "$ref": "#/components/schemas/TranscriptionMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/TranslatedPromptMetadataModel"
                 }
               ],
               "discriminator": {
@@ -4380,42 +4139,10 @@
         },
         "additionalProperties": false
       },
-      "TextMetadata": {
-        "title": "TextMetadata",
-        "required": [
-          "_t",
-          "identifier",
-          "text",
-          "visibilities"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "TextMetadata"
-            ],
-            "type": "string",
-            "description": "Discriminator value for TextMetadata",
-            "default": "TextMetadata",
-            "example": "TextMetadata"
-          },
-          "text": {
-            "type": "string"
-          },
-          "identifier": {
-            "type": "string"
-          },
-          "visibilities": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "TextMetadataModel": {
         "title": "TextMetadata",
         "required": [
           "_t",
-          "identifier",
           "text"
         ],
         "type": "object",
@@ -4431,40 +4158,6 @@
           },
           "text": {
             "type": "string"
-          },
-          "identifier": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "TranscriptionMetadata": {
-        "title": "TranscriptionMetadata",
-        "required": [
-          "_t",
-          "identifier",
-          "transcription",
-          "visibilities"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "TranscriptionMetadata"
-            ],
-            "type": "string",
-            "description": "Discriminator value for TranscriptionMetadata",
-            "default": "TranscriptionMetadata",
-            "example": "TranscriptionMetadata"
-          },
-          "transcription": {
-            "type": "string"
-          },
-          "identifier": {
-            "type": "string"
-          },
-          "visibilities": {
-            "type": "string"
           }
         },
         "additionalProperties": false
@@ -4473,7 +4166,6 @@
         "title": "TranscriptionMetadataInput",
         "required": [
           "_t",
-          "identifier",
           "transcription"
         ],
         "type": "object",
@@ -4489,9 +4181,6 @@
           },
           "transcription": {
             "type": "string"
-          },
-          "identifier": {
-            "type": "string"
           }
         },
         "additionalProperties": false
@@ -4500,7 +4189,6 @@
         "title": "TranscriptionMetadataModel",
         "required": [
           "_t",
-          "identifier",
           "transcription"
         ],
         "type": "object",
@@ -4514,31 +4202,55 @@
             "default": "TranscriptionMetadataModel",
             "example": "TranscriptionMetadataModel"
           },
-          "identifier": {
-            "type": "string"
-          },
           "transcription": {
             "type": "string"
           }
         },
         "additionalProperties": false
       },
-      "UploadDatapointsResult": {
+      "TranslatedPromptMetadataModel": {
+        "title": "TranslatedPromptMetadata",
         "required": [
-          "createdCount",
-          "errors"
+          "_t",
+          "prompt"
         ],
         "type": "object",
         "properties": {
-          "createdCount": {
-            "type": "integer",
-            "format": "int64"
+          "_t": {
+            "enum": [
+              "TranslatedPromptMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for TranslatedPromptMetadata",
+            "default": "TranslatedPromptMetadata",
+            "example": "TranslatedPromptMetadata"
           },
-          "errors": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BaseError"
-            }
+          "prompt": {
+            "$ref": "#/components/schemas/TranslatedString"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TranslatedString": {
+        "required": [
+          "englishText",
+          "targetLanguage",
+          "text",
+          "wasTranslated"
+        ],
+        "type": "object",
+        "properties": {
+          "wasTranslated": {
+            "type": "boolean"
+          },
+          "englishText": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "targetLanguage": {
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -4591,6 +4303,16 @@
         },
         "additionalProperties": false,
         "description": "The model for uploading files from an S3 bucket to a dataset."
+      },
+      "UploadFromS3Result": {
+        "type": "object",
+        "properties": {
+          "estimatedCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
       },
       "UploadTextSourcesToDatasetModel": {
         "required": [
@@ -5028,39 +4750,19 @@
             "type": "string",
             "description": "The criteria that the datapoints should be compared based on. No default value."
           },
-          "startingElo": {
-            "type": "integer",
-            "description": "The Starting Elo is the Elo that all datapoints will start with. Default is usually between 1200-1500.",
-            "format": "int32"
-          },
-          "kFactor": {
-            "type": "integer",
-            "description": "The KFactor is used to calculate the Elo change after each match. Per default this is between 20 and 40.",
-            "format": "int32"
-          },
           "pairMakerConfig": {
             "oneOf": [
-              {
-                "$ref": "#/components/schemas/PreArrangedPairMakerConfigModel"
-              },
               {
                 "$ref": "#/components/schemas/OnlinePairMakerConfigModel"
               }
             ],
-            "description": "PairMakerConfig is responsible for matchmaking. Use PreArrangedPairMakerConfig for\r\ncompletely random matches or use OnlinePairMakerConfig for more dynamic pairmaking",
+            "description": "The PairMaker config determines the pair making algorithm for compare workflows",
             "discriminator": {
               "propertyName": "_t"
             }
           },
-          "scalingFactor": {
-            "type": "integer",
-            "description": "The ScalingFactor is used to calculate the expected outcome before a match. Per default this is 400.",
-            "format": "int32"
-          },
-          "matchesUntilCompleted": {
-            "type": "integer",
-            "description": "The amount of matches that a datapoint should have played until it completes. Per default this is 10.",
-            "format": "int32"
+          "eloConfig": {
+            "$ref": "#/components/schemas/EloConfigModel"
           }
         },
         "additionalProperties": false,
@@ -5342,6 +5044,9 @@
                 },
                 {
                   "$ref": "#/components/schemas/LanguageUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/NewUserFilterModel"
                 },
                 {
                   "$ref": "#/components/schemas/UserScoreUserFilterModel"
@@ -5639,6 +5344,28 @@
         },
         "additionalProperties": false,
         "description": "The Early Stopping Referee can currently only be used for classification tasks and will stop once a certain threshold is reached or the maximum number of votes is collected."
+      },
+      "EloConfigModel": {
+        "type": "object",
+        "properties": {
+          "startingElo": {
+            "type": "integer",
+            "description": "The starting ELO score for each datapoint.",
+            "format": "int32"
+          },
+          "kFactor": {
+            "type": "integer",
+            "description": "The K-factor to use in the ELO calculation.\r\nDetermines the maximum possible change in a player's Elo rating after a single match.\r\nHigher K-Factor values result in larger rating changes.",
+            "format": "int32"
+          },
+          "scalingFactor": {
+            "type": "integer",
+            "description": "Scaling factor to use in the ELO calculation.\r\nAdjusts the sensitivity of the Elo rating system to differences in player ratings.\r\nIt affects how much the rating changes based on the expected outcome versus the actual outcome.",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "These parameters affect how the ELO algorithms behaves"
       },
       "EvaluationWorkflowModel": {
         "title": "EvaluationWorkflow",
@@ -6056,11 +5783,29 @@
         },
         "additionalProperties": false
       },
+      "NewUserFilterModel": {
+        "title": "NewUserFilter",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "NewUserFilter"
+            ],
+            "type": "string",
+            "description": "Discriminator value for NewUserFilter",
+            "default": "NewUserFilter",
+            "example": "NewUserFilter"
+          }
+        },
+        "additionalProperties": false
+      },
       "OnlinePairMakerConfigModel": {
         "title": "OnlinePairMaker",
         "required": [
-          "_t",
-          "totalComparisonBudget"
+          "_t"
         ],
         "type": "object",
         "properties": {
@@ -6219,31 +5964,6 @@
           }
         },
         "additionalProperties": false
-      },
-      "PreArrangedPairMakerConfigModel": {
-        "title": "PreArrangedPairMaker",
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "PreArrangedPairMaker"
-            ],
-            "type": "string",
-            "description": "Discriminator value for PreArrangedPairMaker",
-            "default": "PreArrangedPairMaker",
-            "example": "PreArrangedPairMaker"
-          },
-          "pairSize": {
-            "type": "integer",
-            "description": "The pair size in comparisons.",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false,
-        "description": "The PreArrangedPairMaker is used for completely random pairmaking from the beginning"
       },
       "PublicOrderModel": {
         "required": [
@@ -7830,28 +7550,6 @@
         },
         "additionalProperties": false
       },
-      "QueryValidationSetModel": {
-        "type": "object",
-        "properties": {
-          "pageInfo": {
-            "$ref": "#/components/schemas/PageInfo"
-          },
-          "filter": {
-            "$ref": "#/components/schemas/RootFilter"
-          },
-          "sortCriteria": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SortCriterion"
-            },
-            "description": "The sorting criteria to apply.",
-            "default": null,
-            "nullable": true
-          }
-        },
-        "additionalProperties": false,
-        "description": "The model for querying validation sets."
-      },
       "ScrubPayload": {
         "title": "ScrubPayload",
         "required": [
@@ -8286,74 +7984,6 @@
         "additionalProperties": false,
         "description": "The model for creating a demographic rapid."
       },
-      "FileAssetModel1": {
-        "title": "FileAssetModel",
-        "required": [
-          "_t",
-          "fileName",
-          "identifier",
-          "metadata"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "FileAssetModel"
-            ],
-            "type": "string",
-            "description": "Discriminator value for FileAssetModel",
-            "default": "FileAssetModel",
-            "example": "FileAssetModel"
-          },
-          "fileName": {
-            "type": "string"
-          },
-          "metadata": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/TranslatedPromptMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/ClassificationMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/CountMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/DemographicMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/ImageDimensionMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/LocationMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/OriginalFilenameMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/TextMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/TranscriptionMetadataModel"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
-          },
-          "identifier": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "FreeTextResult": {
         "title": "FreeTextResult",
         "required": [
@@ -8377,6 +8007,16 @@
           },
           "rapidId": {
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InspectReportResult": {
+        "type": "object",
+        "properties": {
+          "dump": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -8530,93 +8170,6 @@
         },
         "additionalProperties": false
       },
-      "MultiAssetModel1": {
-        "title": "MultiAssetModel",
-        "required": [
-          "_t",
-          "assets",
-          "identifier",
-          "metadata"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "MultiAssetModel"
-            ],
-            "type": "string",
-            "description": "Discriminator value for MultiAssetModel",
-            "default": "MultiAssetModel",
-            "example": "MultiAssetModel"
-          },
-          "assets": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/FileAssetModel1"
-                },
-                {
-                  "$ref": "#/components/schemas/MultiAssetModel1"
-                },
-                {
-                  "$ref": "#/components/schemas/NullAssetModel1"
-                },
-                {
-                  "$ref": "#/components/schemas/TextAssetModel1"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
-          },
-          "metadata": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/TranslatedPromptMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/ClassificationMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/CountMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/DemographicMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/ImageDimensionMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/LocationMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/OriginalFilenameMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/TextMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/TranscriptionMetadataModel"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
-          },
-          "identifier": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "NamedEntityResult": {
         "title": "NamedEntityResult",
         "required": [
@@ -8642,70 +8195,6 @@
             }
           },
           "rapidId": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "NullAssetModel1": {
-        "title": "NullAssetModel",
-        "required": [
-          "_t",
-          "identifier",
-          "metadata"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "NullAssetModel"
-            ],
-            "type": "string",
-            "description": "Discriminator value for NullAssetModel",
-            "default": "NullAssetModel",
-            "example": "NullAssetModel"
-          },
-          "metadata": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/TranslatedPromptMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/ClassificationMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/CountMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/DemographicMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/ImageDimensionMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/LocationMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/OriginalFilenameMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/TextMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/TranscriptionMetadataModel"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
-          },
-          "identifier": {
             "type": "string"
           }
         },
@@ -8761,16 +8250,16 @@
           "asset": {
             "oneOf": [
               {
-                "$ref": "#/components/schemas/FileAssetModel1"
+                "$ref": "#/components/schemas/FileAssetModel"
               },
               {
-                "$ref": "#/components/schemas/MultiAssetModel1"
+                "$ref": "#/components/schemas/MultiAssetModel"
               },
               {
-                "$ref": "#/components/schemas/NullAssetModel1"
+                "$ref": "#/components/schemas/NullAssetModel"
               },
               {
-                "$ref": "#/components/schemas/TextAssetModel1"
+                "$ref": "#/components/schemas/TextAssetModel"
               }
             ],
             "nullable": true,
@@ -8854,12 +8343,9 @@
             }
           },
           "metadata": {
-            "type": "array",
-            "items": {
+            "type": "object",
+            "additionalProperties": {
               "oneOf": [
-                {
-                  "$ref": "#/components/schemas/TranslatedPromptMetadataModel"
-                },
                 {
                   "$ref": "#/components/schemas/ClassificationMetadataModel"
                 },
@@ -8882,10 +8368,16 @@
                   "$ref": "#/components/schemas/PromptMetadataModel"
                 },
                 {
+                  "$ref": "#/components/schemas/SourceUrlMetadataModel"
+                },
+                {
                   "$ref": "#/components/schemas/TextMetadataModel"
                 },
                 {
                   "$ref": "#/components/schemas/TranscriptionMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/TranslatedPromptMetadataModel"
                 }
               ],
               "discriminator": {
@@ -9040,7 +8532,7 @@
         "properties": {
           "rapidId": {
             "type": "string",
-            "description": ""
+            "description": "The rapid an issue was encountered with"
           },
           "issue": {
             "enum": [
@@ -9055,7 +8547,12 @@
           },
           "message": {
             "type": "string",
-            "description": "",
+            "description": "An optional message typed by the user.",
+            "nullable": true
+          },
+          "dump": {
+            "type": "string",
+            "description": "A dump, that the frontend defines and can read again",
             "nullable": true
           }
         },
@@ -9142,74 +8639,6 @@
         },
         "additionalProperties": false
       },
-      "TextAssetModel1": {
-        "title": "TextAssetModel",
-        "required": [
-          "_t",
-          "identifier",
-          "metadata",
-          "text"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "TextAssetModel"
-            ],
-            "type": "string",
-            "description": "Discriminator value for TextAssetModel",
-            "default": "TextAssetModel",
-            "example": "TextAssetModel"
-          },
-          "text": {
-            "type": "string"
-          },
-          "metadata": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/TranslatedPromptMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/ClassificationMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/CountMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/DemographicMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/ImageDimensionMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/LocationMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/OriginalFilenameMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/TextMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/TranscriptionMetadataModel"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
-          },
-          "identifier": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "TranscriptionResult": {
         "title": "TranscriptionResult",
         "required": [
@@ -9235,57 +8664,6 @@
             }
           },
           "rapidId": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "TranslatedPromptMetadataModel": {
-        "title": "TranslatedPromptMetadata",
-        "required": [
-          "_t",
-          "identifier",
-          "prompt"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "TranslatedPromptMetadata"
-            ],
-            "type": "string",
-            "description": "Discriminator value for TranslatedPromptMetadata",
-            "default": "TranslatedPromptMetadata",
-            "example": "TranslatedPromptMetadata"
-          },
-          "prompt": {
-            "$ref": "#/components/schemas/TranslatedString"
-          },
-          "identifier": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "TranslatedString": {
-        "required": [
-          "englishText",
-          "targetLanguage",
-          "text",
-          "wasTranslated"
-        ],
-        "type": "object",
-        "properties": {
-          "wasTranslated": {
-            "type": "boolean"
-          },
-          "englishText": {
-            "type": "string"
-          },
-          "text": {
-            "type": "string"
-          },
-          "targetLanguage": {
             "type": "string"
           }
         },
@@ -9349,28 +8727,16 @@
         "additionalProperties": false,
         "description": "The model for updating a validation rapid."
       },
-      "CompareMatchStatus": {
-        "enum": [
-          "Idle",
-          "Queued",
-          "Processing",
-          "Completed"
-        ],
-        "type": "string"
-      },
       "CompareWorkflowModel1": {
         "title": "CompareWorkflowModel",
         "required": [
           "_t",
           "criteria",
+          "eloConfig",
           "id",
-          "kFactor",
-          "matchesUntilCompleted",
           "name",
           "pairMakerInformation",
           "referee",
-          "scalingFactor",
-          "startingElo",
           "state"
         ],
         "type": "object",
@@ -9411,9 +8777,6 @@
             "oneOf": [
               {
                 "$ref": "#/components/schemas/OnlinePairMakerInformation"
-              },
-              {
-                "$ref": "#/components/schemas/PreArrangedPairMakerInformation"
               }
             ],
             "discriminator": {
@@ -9433,6 +8796,15 @@
             "type": "string",
             "nullable": true
           },
+          "eloConfig": {
+            "$ref": "#/components/schemas/EloConfig"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EloConfig": {
+        "type": "object",
+        "properties": {
           "startingElo": {
             "type": "integer",
             "format": "int32"
@@ -9444,78 +8816,6 @@
           "scalingFactor": {
             "type": "integer",
             "format": "int32"
-          },
-          "matchesUntilCompleted": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "FileAssetModel2": {
-        "title": "FileAssetModel",
-        "required": [
-          "_t",
-          "fileName",
-          "identifier",
-          "metadata"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "FileAssetModel"
-            ],
-            "type": "string",
-            "description": "Discriminator value for FileAssetModel",
-            "default": "FileAssetModel",
-            "example": "FileAssetModel"
-          },
-          "fileName": {
-            "type": "string"
-          },
-          "metadata": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/TranslatedPromptMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/ClassificationMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/CountMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/DemographicMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/ImageDimensionMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/LocationMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/OriginalFilenameMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/TextMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/TranscriptionMetadataModel"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
-          },
-          "identifier": {
-            "type": "string"
           }
         },
         "additionalProperties": false
@@ -9542,14 +8842,6 @@
           "page": {
             "$ref": "#/components/schemas/PageInfo"
           },
-          "states": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CompareMatchStatus"
-            },
-            "description": "An optional list of states to filter the results by.",
-            "nullable": true
-          },
           "sortCriteria": {
             "type": "array",
             "items": {
@@ -9566,7 +8858,6 @@
         "required": [
           "asset",
           "elo",
-          "state",
           "workflowDatapointId"
         ],
         "type": "object",
@@ -9577,16 +8868,16 @@
           "asset": {
             "oneOf": [
               {
-                "$ref": "#/components/schemas/FileAssetModel2"
+                "$ref": "#/components/schemas/FileAssetModel"
               },
               {
-                "$ref": "#/components/schemas/MultiAssetModel2"
+                "$ref": "#/components/schemas/MultiAssetModel"
               },
               {
-                "$ref": "#/components/schemas/NullAssetModel2"
+                "$ref": "#/components/schemas/NullAssetModel"
               },
               {
-                "$ref": "#/components/schemas/TextAssetModel2"
+                "$ref": "#/components/schemas/TextAssetModel"
               }
             ],
             "discriminator": {
@@ -9596,15 +8887,6 @@
           "elo": {
             "type": "integer",
             "format": "int32"
-          },
-          "state": {
-            "enum": [
-              "Idle",
-              "Queued",
-              "Processing",
-              "Completed"
-            ],
-            "type": "string"
           }
         },
         "additionalProperties": false
@@ -9685,16 +8967,16 @@
           "asset": {
             "oneOf": [
               {
-                "$ref": "#/components/schemas/FileAssetModel2"
+                "$ref": "#/components/schemas/FileAssetModel"
               },
               {
-                "$ref": "#/components/schemas/MultiAssetModel2"
+                "$ref": "#/components/schemas/MultiAssetModel"
               },
               {
-                "$ref": "#/components/schemas/NullAssetModel2"
+                "$ref": "#/components/schemas/NullAssetModel"
               },
               {
-                "$ref": "#/components/schemas/TextAssetModel2"
+                "$ref": "#/components/schemas/TextAssetModel"
               }
             ],
             "discriminator": {
@@ -9857,93 +9139,6 @@
         },
         "additionalProperties": false
       },
-      "MultiAssetModel2": {
-        "title": "MultiAssetModel",
-        "required": [
-          "_t",
-          "assets",
-          "identifier",
-          "metadata"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "MultiAssetModel"
-            ],
-            "type": "string",
-            "description": "Discriminator value for MultiAssetModel",
-            "default": "MultiAssetModel",
-            "example": "MultiAssetModel"
-          },
-          "assets": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/FileAssetModel2"
-                },
-                {
-                  "$ref": "#/components/schemas/MultiAssetModel2"
-                },
-                {
-                  "$ref": "#/components/schemas/NullAssetModel2"
-                },
-                {
-                  "$ref": "#/components/schemas/TextAssetModel2"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
-          },
-          "metadata": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/TranslatedPromptMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/ClassificationMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/CountMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/DemographicMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/ImageDimensionMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/LocationMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/OriginalFilenameMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/TextMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/TranscriptionMetadataModel"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
-          },
-          "identifier": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "NaiveRefereeConfig": {
         "title": "NaiveRefereeConfig",
         "required": [
@@ -9986,70 +9181,6 @@
         },
         "additionalProperties": false
       },
-      "NullAssetModel2": {
-        "title": "NullAssetModel",
-        "required": [
-          "_t",
-          "identifier",
-          "metadata"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "NullAssetModel"
-            ],
-            "type": "string",
-            "description": "Discriminator value for NullAssetModel",
-            "default": "NullAssetModel",
-            "example": "NullAssetModel"
-          },
-          "metadata": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/TranslatedPromptMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/ClassificationMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/CountMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/DemographicMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/ImageDimensionMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/LocationMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/OriginalFilenameMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/TextMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/TranscriptionMetadataModel"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
-          },
-          "identifier": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "OnlinePairMakerInformation": {
         "title": "OnlinePairMakerInformation",
         "required": [
@@ -10077,38 +9208,6 @@
           "currentComparisonBudget": {
             "type": "integer",
             "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "PreArrangedPairMakerInformation": {
-        "title": "PreArrangedPairMakerInformation",
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "PreArrangedPairMakerInformation"
-            ],
-            "type": "string",
-            "description": "Discriminator value for PreArrangedPairMakerInformation",
-            "default": "PreArrangedPairMakerInformation",
-            "example": "PreArrangedPairMakerInformation"
-          },
-          "pairSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "randomize": {
-            "type": "boolean"
-          },
-          "wrapAround": {
-            "type": "boolean"
-          },
-          "matchesAlreadyMade": {
-            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -10341,74 +9440,6 @@
         },
         "additionalProperties": false
       },
-      "TextAssetModel2": {
-        "title": "TextAssetModel",
-        "required": [
-          "_t",
-          "identifier",
-          "metadata",
-          "text"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "TextAssetModel"
-            ],
-            "type": "string",
-            "description": "Discriminator value for TextAssetModel",
-            "default": "TextAssetModel",
-            "example": "TextAssetModel"
-          },
-          "text": {
-            "type": "string"
-          },
-          "metadata": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/TranslatedPromptMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/ClassificationMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/CountMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/DemographicMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/ImageDimensionMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/LocationMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/OriginalFilenameMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/TextMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/TranscriptionMetadataModel"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
-          },
-          "identifier": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "WorkflowState": {
         "enum": [
           "Created",
@@ -10482,6 +9513,9 @@
                 },
                 {
                   "$ref": "#/components/schemas/LanguageUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/NewUserFilterModel1"
                 },
                 {
                   "$ref": "#/components/schemas/UserScoreUserFilterModel"
@@ -10600,34 +9634,18 @@
           "criteria": {
             "type": "string"
           },
-          "startingElo": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "kFactor": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "scalingFactor": {
-            "type": "integer",
-            "format": "int32"
+          "eloConfig": {
+            "$ref": "#/components/schemas/EloConfig"
           },
           "pairMakerConfig": {
             "oneOf": [
               {
                 "$ref": "#/components/schemas/OnlinePairMakerConfig"
-              },
-              {
-                "$ref": "#/components/schemas/PreArrangedPairMakerConfig"
               }
             ],
             "discriminator": {
               "propertyName": "_t"
             }
-          },
-          "matchesUntilCompleted": {
-            "type": "integer",
-            "format": "int32"
           },
           "referee": {
             "oneOf": [
@@ -10678,39 +9696,16 @@
             "type": "string",
             "description": "The criteria to add to each compare rapid."
           },
-          "startingElo": {
-            "type": "integer",
-            "description": "The starting ELO score for each datapoint.",
-            "format": "int32"
-          },
-          "kFactor": {
-            "type": "integer",
-            "description": "The K-factor to use in the ELO calculation.\r\nDetermines the maximum possible change in a player's Elo rating after a single match.\r\nHigher K-Factor values result in larger rating changes.",
-            "format": "int32"
-          },
-          "scalingFactor": {
-            "type": "integer",
-            "description": "Scaling factor to use in the ELO calculation.\r\nAdjusts the sensitivity of the Elo rating system to differences in player ratings.\r\nIt affects how much the rating changes based on the expected outcome versus the actual outcome.",
-            "format": "int32"
-          },
           "pairMakerConfig": {
             "oneOf": [
               {
                 "$ref": "#/components/schemas/OnlinePairMakerConfig"
-              },
-              {
-                "$ref": "#/components/schemas/PreArrangedPairMakerConfig"
               }
             ],
             "description": "The PairMaker Algorithm's config that is used for making matchups",
             "discriminator": {
               "propertyName": "_t"
             }
-          },
-          "matchesUntilCompleted": {
-            "type": "integer",
-            "description": "The number of matches to run before each datapoint is considered \"completed\".",
-            "format": "int32"
           },
           "referee": {
             "oneOf": [
@@ -10734,6 +9729,9 @@
               "type": "string"
             },
             "description": "A list of country codes that this workflow is targeting."
+          },
+          "eloConfig": {
+            "$ref": "#/components/schemas/EloConfig"
           }
         },
         "additionalProperties": false,
@@ -10894,6 +9892,25 @@
         },
         "additionalProperties": false
       },
+      "NewUserFilterModel1": {
+        "title": "NewUserFilterModel",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "NewUserFilterModel"
+            ],
+            "type": "string",
+            "description": "Discriminator value for NewUserFilterModel",
+            "default": "NewUserFilterModel",
+            "example": "NewUserFilterModel"
+          }
+        },
+        "additionalProperties": false
+      },
       "OnlinePairMakerConfig": {
         "title": "OnlinePairMakerConfig",
         "required": [
@@ -10917,35 +9934,6 @@
           "totalComparisonBudget": {
             "type": "integer",
             "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "PreArrangedPairMakerConfig": {
-        "title": "PreArrangedPairMakerConfig",
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "PreArrangedPairMakerConfig"
-            ],
-            "type": "string",
-            "description": "Discriminator value for PreArrangedPairMakerConfig",
-            "default": "PreArrangedPairMakerConfig",
-            "example": "PreArrangedPairMakerConfig"
-          },
-          "pairSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "randomize": {
-            "type": "boolean"
-          },
-          "wrapAround": {
-            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -11227,12 +10215,12 @@
         },
         "additionalProperties": false
       },
-      "CampaignQueryModel": {
+      "CampaignQueryResult": {
         "required": [
           "createdAt",
           "id",
           "name",
-          "owner",
+          "ownerMail",
           "priority",
           "status"
         ],
@@ -11241,7 +10229,7 @@
           "id": {
             "type": "string"
           },
-          "owner": {
+          "ownerMail": {
             "type": "string"
           },
           "name": {
@@ -11267,7 +10255,7 @@
         },
         "additionalProperties": false
       },
-      "CampaignQueryModelPagedResult": {
+      "CampaignQueryResultPagedResult": {
         "required": [
           "items",
           "page",
@@ -11291,7 +10279,7 @@
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/CampaignQueryModel"
+              "$ref": "#/components/schemas/CampaignQueryResult"
             }
           },
           "totalPages": {
@@ -11310,28 +10298,6 @@
           "Completed"
         ],
         "type": "string"
-      },
-      "QueryCampaignsModel": {
-        "type": "object",
-        "properties": {
-          "page": {
-            "$ref": "#/components/schemas/PageInfo"
-          },
-          "filter": {
-            "$ref": "#/components/schemas/RootFilter"
-          },
-          "sortCriteria": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SortCriterion"
-            },
-            "description": "The sorting criteria",
-            "default": null,
-            "nullable": true
-          }
-        },
-        "additionalProperties": false,
-        "description": "The model for querying campaigns."
       }
     },
     "securitySchemes": {

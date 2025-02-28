@@ -1,3 +1,4 @@
+from rapidata.api_client import QueryModel
 from rapidata.rapidata_client.validation.rapidata_validation_set import RapidataValidationSet
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.assets.data_type_enum import RapidataDataTypes
@@ -470,8 +471,8 @@ class ValidationSetManager:
             list[RapidataValidationSet]: The list of validation sets.
         """
         try:
-            validation_page_result = self.__openapi_service.validation_api.validation_query_validation_sets_get(QueryValidationSetModel(
-                pageInfo=PageInfo(index=1, size=amount),
+            validation_page_result = self.__openapi_service.validation_api.validation_query_validation_sets_get(QueryModel(
+                page=PageInfo(index=1, size=amount),
                 filter=RootFilter(filters=[Filter(field="Name", operator="Contains", value=name)]),
                 sortCriteria=[SortCriterion(direction="Desc", propertyName="CreatedAt")]
                 ))

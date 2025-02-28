@@ -28,8 +28,7 @@ class CountMetadataModel(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for CountMetadata", alias="_t")
     count: StrictInt
-    identifier: StrictStr
-    __properties: ClassVar[List[str]] = ["_t", "count", "identifier"]
+    __properties: ClassVar[List[str]] = ["_t", "count"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -90,8 +89,7 @@ class CountMetadataModel(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'CountMetadata',
-            "count": obj.get("count"),
-            "identifier": obj.get("identifier")
+            "count": obj.get("count")
         })
         return _obj
 

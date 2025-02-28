@@ -18,12 +18,11 @@ import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
 from rapidata.api_client.models.online_pair_maker_information import OnlinePairMakerInformation
-from rapidata.api_client.models.pre_arranged_pair_maker_information import PreArrangedPairMakerInformation
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-COMPAREWORKFLOWMODEL1PAIRMAKERINFORMATION_ONE_OF_SCHEMAS = ["OnlinePairMakerInformation", "PreArrangedPairMakerInformation"]
+COMPAREWORKFLOWMODEL1PAIRMAKERINFORMATION_ONE_OF_SCHEMAS = ["OnlinePairMakerInformation"]
 
 class CompareWorkflowModel1PairMakerInformation(BaseModel):
     """
@@ -31,10 +30,8 @@ class CompareWorkflowModel1PairMakerInformation(BaseModel):
     """
     # data type: OnlinePairMakerInformation
     oneof_schema_1_validator: Optional[OnlinePairMakerInformation] = None
-    # data type: PreArrangedPairMakerInformation
-    oneof_schema_2_validator: Optional[PreArrangedPairMakerInformation] = None
-    actual_instance: Optional[Union[OnlinePairMakerInformation, PreArrangedPairMakerInformation]] = None
-    one_of_schemas: Set[str] = { "OnlinePairMakerInformation", "PreArrangedPairMakerInformation" }
+    actual_instance: Optional[Union[OnlinePairMakerInformation]] = None
+    one_of_schemas: Set[str] = { "OnlinePairMakerInformation" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -65,17 +62,12 @@ class CompareWorkflowModel1PairMakerInformation(BaseModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `OnlinePairMakerInformation`")
         else:
             match += 1
-        # validate data type: PreArrangedPairMakerInformation
-        if not isinstance(v, PreArrangedPairMakerInformation):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `PreArrangedPairMakerInformation`")
-        else:
-            match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in CompareWorkflowModel1PairMakerInformation with oneOf schemas: OnlinePairMakerInformation, PreArrangedPairMakerInformation. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in CompareWorkflowModel1PairMakerInformation with oneOf schemas: OnlinePairMakerInformation. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in CompareWorkflowModel1PairMakerInformation with oneOf schemas: OnlinePairMakerInformation, PreArrangedPairMakerInformation. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in CompareWorkflowModel1PairMakerInformation with oneOf schemas: OnlinePairMakerInformation. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -96,19 +88,13 @@ class CompareWorkflowModel1PairMakerInformation(BaseModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # deserialize data into PreArrangedPairMakerInformation
-        try:
-            instance.actual_instance = PreArrangedPairMakerInformation.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into CompareWorkflowModel1PairMakerInformation with oneOf schemas: OnlinePairMakerInformation, PreArrangedPairMakerInformation. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into CompareWorkflowModel1PairMakerInformation with oneOf schemas: OnlinePairMakerInformation. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into CompareWorkflowModel1PairMakerInformation with oneOf schemas: OnlinePairMakerInformation, PreArrangedPairMakerInformation. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into CompareWorkflowModel1PairMakerInformation with oneOf schemas: OnlinePairMakerInformation. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -122,7 +108,7 @@ class CompareWorkflowModel1PairMakerInformation(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], OnlinePairMakerInformation, PreArrangedPairMakerInformation]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], OnlinePairMakerInformation]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None
