@@ -21,14 +21,13 @@ def new_ranking_order(rapi: RapidataClient):
     ]
 
     order = rapi.order.create_ranking_order(
-        name="Example Compare Order",
+        name="Example Ranking Order",
         instruction="Which rabbit looks the coolest?",
         datapoints=rabbits,
         responses_per_comparison=3, #Each match is concluded after 3 votes
         total_comparison_budget= 24, #Make 24 comparisons, each comparison containing 2 datapoints
         random_comparisons_ratio=0.5 #First half of the comparisons are random, the second half are close matchups
-    )
-    exit()
+    ).run()
 
     return order
 
