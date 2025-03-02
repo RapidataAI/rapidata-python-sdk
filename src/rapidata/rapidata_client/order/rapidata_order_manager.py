@@ -1,18 +1,14 @@
 from typing import Sequence, Optional
 from urllib3._collections import HTTPHeaderDict
 
-from rapidata.rapidata_client.workflow._ranking_workflow import RankingWorkflow
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.assets.data_type_enum import RapidataDataTypes
-from rapidata.rapidata_client.assets import MediaAsset, TextAsset, MultiAsset
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 from rapidata.rapidata_client.order._rapidata_order_builder import RapidataOrderBuilder
 from rapidata.rapidata_client.metadata import PromptMetadata, SelectWordsMetadata
 from rapidata.rapidata_client.referee._naive_referee import NaiveReferee
 from rapidata.rapidata_client.referee._early_stopping_referee import EarlyStoppingReferee
 from rapidata.rapidata_client.selection._base_selection import RapidataSelection
-from rapidata.rapidata_client.selection.validation_selection import ValidationSelection
-from rapidata.rapidata_client.selection.labeling_selection import LabelingSelection
 from rapidata.rapidata_client.workflow import (
     Workflow,
     ClassifyWorkflow,
@@ -21,7 +17,9 @@ from rapidata.rapidata_client.workflow import (
     SelectWordsWorkflow,
     LocateWorkflow,
     DrawWorkflow,
-    TimestampWorkflow)
+    TimestampWorkflow,
+    RankingWorkflow
+)
 from rapidata.rapidata_client.selection.validation_selection import ValidationSelection
 from rapidata.rapidata_client.selection.labeling_selection import LabelingSelection
 from rapidata.rapidata_client.assets import MediaAsset, TextAsset, MultiAsset
@@ -416,7 +414,7 @@ class RapidataOrderManager:
         """
 
         assets = [MediaAsset(path=path) for path in datapoints]
-        return self.__create_general_order(
+        return self._create_general_order(
             name=name,
             workflow=RankingWorkflow(
                 criteria=instruction,
