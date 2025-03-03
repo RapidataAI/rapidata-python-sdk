@@ -1587,6 +1587,18 @@
         }
       }
     },
+    "/": {
+      "get": {
+        "tags": [
+          "Rapidata.Identity.API"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/connect/userinfo": {
       "get": {
         "tags": [
@@ -2695,6 +2707,65 @@
         }
       }
     },
+    "/workflow/{id}/responses": {
+      "get": {
+        "tags": [
+          "Workflow"
+        ],
+        "summary": "Gets the !:limit most recent or oldest responses for a workflow.\r\nThe responses are not guaranteed to be of any specific rapid.\r\nInstead, this endpoint returns all responses to any rapid in the workflow.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the workflow to get the responses for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The number of responses to get.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 100
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Whether the oldest or most recent responses should be returned.",
+            "schema": {
+              "$ref": "#/components/schemas/SortDirection"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetResponsesResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetResponsesResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetResponsesResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/Workflow/Delete": {
       "delete": {
         "tags": [
@@ -3381,6 +3452,11 @@
             "items": {
               "$ref": "#/components/schemas/BaseError"
             },
+            "deprecated": true
+          },
+          "createdCount": {
+            "type": "integer",
+            "format": "int32",
             "deprecated": true
           }
         },
@@ -8926,6 +9002,21 @@
         },
         "additionalProperties": false
       },
+      "GetResponsesResult": {
+        "required": [
+          "responses"
+        ],
+        "type": "object",
+        "properties": {
+          "responses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RapidResponse"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
       "GetSimpleWorkflowResultsModel": {
         "type": "object",
         "properties": {
@@ -9515,7 +9606,7 @@
                   "$ref": "#/components/schemas/LanguageUserFilterModel"
                 },
                 {
-                  "$ref": "#/components/schemas/NewUserFilterModel1"
+                  "$ref": "#/components/schemas/NewUserFilterModel"
                 },
                 {
                   "$ref": "#/components/schemas/UserScoreUserFilterModel"
@@ -9888,25 +9979,6 @@
             "items": {
               "$ref": "#/components/schemas/FeatureFlag"
             }
-          }
-        },
-        "additionalProperties": false
-      },
-      "NewUserFilterModel1": {
-        "title": "NewUserFilterModel",
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "NewUserFilterModel"
-            ],
-            "type": "string",
-            "description": "Discriminator value for NewUserFilterModel",
-            "default": "NewUserFilterModel",
-            "example": "NewUserFilterModel"
           }
         },
         "additionalProperties": false
