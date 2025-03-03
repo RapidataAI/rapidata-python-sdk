@@ -1,4 +1,4 @@
-from rapidata.api_client import CompareWorkflowModelPairMakerConfig, OnlinePairMakerConfigModel
+from rapidata.api_client import CompareWorkflowModelPairMakerConfig, OnlinePairMakerConfigModel, EloConfigModel
 from rapidata.api_client.models.compare_workflow_model import CompareWorkflowModel
 from rapidata.rapidata_client.workflow._base_workflow import Workflow
 
@@ -37,6 +37,6 @@ class RankingWorkflow(Workflow):
         return CompareWorkflowModel(
             _t="CompareWorkflow",
             criteria=self.criteria,
-            **self.elo_settings,
+            eloConfig=EloConfigModel(**self.elo_settings),
             pairMakerConfig=self.pair_maker_config
         )
