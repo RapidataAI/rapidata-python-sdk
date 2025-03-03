@@ -17,20 +17,18 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.base_error import BaseError
+from pydantic import BaseModel, ConfigDict
+from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.rapid_response import RapidResponse
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateDatapointResult(BaseModel):
+class GetResponsesResult(BaseModel):
     """
-    CreateDatapointResult
+    GetResponsesResult
     """ # noqa: E501
-    datapoint_id: StrictStr = Field(alias="datapointId")
-    errors: Optional[List[BaseError]] = None
-    created_count: Optional[StrictInt] = Field(default=None, alias="createdCount")
-    __properties: ClassVar[List[str]] = ["datapointId", "errors", "createdCount"]
+    responses: List[RapidResponse]
+    __properties: ClassVar[List[str]] = ["responses"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -50,7 +48,7 @@ class CreateDatapointResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateDatapointResult from a JSON string"""
+        """Create an instance of GetResponsesResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -71,18 +69,18 @@ class CreateDatapointResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in errors (list)
+        # override the default output from pydantic by calling `to_dict()` of each item in responses (list)
         _items = []
-        if self.errors:
-            for _item_errors in self.errors:
-                if _item_errors:
-                    _items.append(_item_errors.to_dict())
-            _dict['errors'] = _items
+        if self.responses:
+            for _item_responses in self.responses:
+                if _item_responses:
+                    _items.append(_item_responses.to_dict())
+            _dict['responses'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateDatapointResult from a dict"""
+        """Create an instance of GetResponsesResult from a dict"""
         if obj is None:
             return None
 
@@ -90,9 +88,7 @@ class CreateDatapointResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "datapointId": obj.get("datapointId"),
-            "errors": [BaseError.from_dict(_item) for _item in obj["errors"]] if obj.get("errors") is not None else None,
-            "createdCount": obj.get("createdCount")
+            "responses": [RapidResponse.from_dict(_item) for _item in obj["responses"]] if obj.get("responses") is not None else None
         })
         return _obj
 
