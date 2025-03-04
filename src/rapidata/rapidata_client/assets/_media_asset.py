@@ -84,7 +84,7 @@ class MediaAsset(BaseAsset):
             self._url = path
             self.name = path.split('/')[-1]
             self.name = self.__check_name_ending(self.name)
-            self.path = None  # Will be set when content is downloaded
+            self.path = path
             return
         
         if not os.path.exists(path):
@@ -286,6 +286,10 @@ class MediaAsset(BaseAsset):
         )
         self._logger.error(error_msg)
         raise ValueError(error_msg)
+    
+    def is_local(self) -> bool:
+        """Check if the media asset is a local file."""
+        return self._url is None
     
     def to_file(self) -> StrictStr | tuple[StrictStr, StrictBytes] | StrictBytes:
         """Convert the media asset to a file representation."""
