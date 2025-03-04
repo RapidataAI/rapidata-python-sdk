@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.create_datapoint_from_urls_model_metadata_inner import CreateDatapointFromUrlsModelMetadataInner
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,8 +28,9 @@ class CreateDatapointFromUrlsModel(BaseModel):
     The model for creating a datapoint from urls.
     """ # noqa: E501
     urls: List[StrictStr] = Field(description="The urls to fetch the assets from.  The urls must be publicly accessible.  A HEAD request will be made to each url to check if it is accessible.")
+    metadata: Optional[List[CreateDatapointFromUrlsModelMetadataInner]] = Field(default=None, description="Additional metadata to attach to the datapoint.  Most commonly used to add a prompt to the datapoint using the Rapidata.Shared.Assets.Abstraction.Models.Metadata.Input.PromptMetadataInput.")
     sort_index: Optional[StrictInt] = Field(default=None, description="The index will be used to keep the datapoints in order. Useful if upload is parallelized", alias="sortIndex")
-    __properties: ClassVar[List[str]] = ["urls", "sortIndex"]
+    __properties: ClassVar[List[str]] = ["urls", "metadata", "sortIndex"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -69,6 +71,18 @@ class CreateDatapointFromUrlsModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in metadata (list)
+        _items = []
+        if self.metadata:
+            for _item_metadata in self.metadata:
+                if _item_metadata:
+                    _items.append(_item_metadata.to_dict())
+            _dict['metadata'] = _items
+        # set to None if metadata (nullable) is None
+        # and model_fields_set contains the field
+        if self.metadata is None and "metadata" in self.model_fields_set:
+            _dict['metadata'] = None
+
         # set to None if sort_index (nullable) is None
         # and model_fields_set contains the field
         if self.sort_index is None and "sort_index" in self.model_fields_set:
@@ -87,6 +101,7 @@ class CreateDatapointFromUrlsModel(BaseModel):
 
         _obj = cls.model_validate({
             "urls": obj.get("urls"),
+            "metadata": [CreateDatapointFromUrlsModelMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
             "sortIndex": obj.get("sortIndex")
         })
         return _obj

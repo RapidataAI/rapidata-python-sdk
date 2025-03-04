@@ -3472,14 +3472,41 @@
           "urls": {
             "type": "array",
             "items": {
-              "type": "string"
+              "type": "string",
+              "format": "uri"
             },
             "description": "The urls to fetch the assets from.\r\nThe urls must be publicly accessible.\r\nA HEAD request will be made to each url to check if it is accessible."
+          },
+          "metadata": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/PrivateTextMetadataInput"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptMetadataInput"
+                },
+                {
+                  "$ref": "#/components/schemas/PublicTextMetadataInput"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadataInput"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            },
+            "description": "Additional metadata to attach to the datapoint.\r\nMost commonly used to add a prompt to the datapoint using the Rapidata.Shared.Assets.Abstraction.Models.Metadata.Input.PromptMetadataInput.",
+            "default": null,
+            "nullable": true
           },
           "sortIndex": {
             "type": "integer",
             "description": "The index will be used to keep the datapoints in order. Useful if upload is parallelized",
             "format": "int64",
+            "default": null,
             "nullable": true
           }
         },
@@ -4521,6 +4548,31 @@
             "type": "integer",
             "description": "The index will be used to keep the datapoints in order. Useful if upload is parallelized",
             "format": "int64",
+            "nullable": true
+          },
+          "metadata": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/PrivateTextMetadataInput"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptMetadataInput"
+                },
+                {
+                  "$ref": "#/components/schemas/PublicTextMetadataInput"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadataInput"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            },
+            "description": "Additional metadata to attach to the datapoint.\r\nMost commonly used to add a prompt to the datapoint using the Rapidata.Shared.Assets.Abstraction.Models.Metadata.Input.PromptMetadataInput.",
+            "default": null,
             "nullable": true
           }
         },

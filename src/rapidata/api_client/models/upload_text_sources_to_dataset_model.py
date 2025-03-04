@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.create_datapoint_from_urls_model_metadata_inner import CreateDatapointFromUrlsModelMetadataInner
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -29,7 +30,8 @@ class UploadTextSourcesToDatasetModel(BaseModel):
     dataset_id: StrictStr = Field(description="The id of the dataset to upload the text sources to.", alias="datasetId")
     text_sources: List[StrictStr] = Field(description="The text sources to upload.", alias="textSources")
     sort_index: Optional[StrictInt] = Field(default=None, description="The index will be used to keep the datapoints in order. Useful if upload is parallelized", alias="sortIndex")
-    __properties: ClassVar[List[str]] = ["datasetId", "textSources", "sortIndex"]
+    metadata: Optional[List[CreateDatapointFromUrlsModelMetadataInner]] = Field(default=None, description="Additional metadata to attach to the datapoint.  Most commonly used to add a prompt to the datapoint using the Rapidata.Shared.Assets.Abstraction.Models.Metadata.Input.PromptMetadataInput.")
+    __properties: ClassVar[List[str]] = ["datasetId", "textSources", "sortIndex", "metadata"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -70,10 +72,22 @@ class UploadTextSourcesToDatasetModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in metadata (list)
+        _items = []
+        if self.metadata:
+            for _item_metadata in self.metadata:
+                if _item_metadata:
+                    _items.append(_item_metadata.to_dict())
+            _dict['metadata'] = _items
         # set to None if sort_index (nullable) is None
         # and model_fields_set contains the field
         if self.sort_index is None and "sort_index" in self.model_fields_set:
             _dict['sortIndex'] = None
+
+        # set to None if metadata (nullable) is None
+        # and model_fields_set contains the field
+        if self.metadata is None and "metadata" in self.model_fields_set:
+            _dict['metadata'] = None
 
         return _dict
 
@@ -89,7 +103,8 @@ class UploadTextSourcesToDatasetModel(BaseModel):
         _obj = cls.model_validate({
             "datasetId": obj.get("datasetId"),
             "textSources": obj.get("textSources"),
-            "sortIndex": obj.get("sortIndex")
+            "sortIndex": obj.get("sortIndex"),
+            "metadata": [CreateDatapointFromUrlsModelMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None
         })
         return _obj
 
