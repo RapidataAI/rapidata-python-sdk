@@ -17,18 +17,18 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict
+from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.rapid_response import RapidResponse
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateDatapointFromUrlsModel(BaseModel):
+class GetResponsesResult(BaseModel):
     """
-    The model for creating a datapoint from urls.
+    GetResponsesResult
     """ # noqa: E501
-    urls: List[StrictStr] = Field(description="The urls to fetch the assets from.  The urls must be publicly accessible.  A HEAD request will be made to each url to check if it is accessible.")
-    sort_index: Optional[StrictInt] = Field(default=None, description="The index will be used to keep the datapoints in order. Useful if upload is parallelized", alias="sortIndex")
-    __properties: ClassVar[List[str]] = ["urls", "sortIndex"]
+    responses: List[RapidResponse]
+    __properties: ClassVar[List[str]] = ["responses"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +48,7 @@ class CreateDatapointFromUrlsModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateDatapointFromUrlsModel from a JSON string"""
+        """Create an instance of GetResponsesResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,16 +69,18 @@ class CreateDatapointFromUrlsModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if sort_index (nullable) is None
-        # and model_fields_set contains the field
-        if self.sort_index is None and "sort_index" in self.model_fields_set:
-            _dict['sortIndex'] = None
-
+        # override the default output from pydantic by calling `to_dict()` of each item in responses (list)
+        _items = []
+        if self.responses:
+            for _item_responses in self.responses:
+                if _item_responses:
+                    _items.append(_item_responses.to_dict())
+            _dict['responses'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateDatapointFromUrlsModel from a dict"""
+        """Create an instance of GetResponsesResult from a dict"""
         if obj is None:
             return None
 
@@ -86,8 +88,7 @@ class CreateDatapointFromUrlsModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "urls": obj.get("urls"),
-            "sortIndex": obj.get("sortIndex")
+            "responses": [RapidResponse.from_dict(_item) for _item in obj["responses"]] if obj.get("responses") is not None else None
         })
         return _obj
 

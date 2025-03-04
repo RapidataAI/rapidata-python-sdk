@@ -517,6 +517,48 @@
         }
       }
     },
+    "/dataset/{datasetId}/datapoints/failed": {
+      "get": {
+        "tags": [
+          "Dataset"
+        ],
+        "summary": "Gets a list of all datapoints that failed to upload.",
+        "description": "A datapoint usually fails to upload when using a deferred upload mechanism such as when providing a URL\r\nand the URL is not accessible.",
+        "parameters": [
+          {
+            "name": "datasetId",
+            "in": "path",
+            "description": "The id of the dataset to get the failed datapoints of.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetFailedDatapointsResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetFailedDatapointsResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetFailedDatapointsResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/Order/Query": {
       "get": {
         "tags": [
@@ -1580,6 +1622,18 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "tags": [
+          "Rapidata.Identity.API"
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -2695,6 +2749,65 @@
         }
       }
     },
+    "/workflow/{id}/responses": {
+      "get": {
+        "tags": [
+          "Workflow"
+        ],
+        "summary": "Gets the !:limit most recent or oldest responses for a workflow.\r\nThe responses are not guaranteed to be of any specific rapid.\r\nInstead, this endpoint returns all responses to any rapid in the workflow.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the workflow to get the responses for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The number of responses to get.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 100
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Whether the oldest or most recent responses should be returned.",
+            "schema": {
+              "$ref": "#/components/schemas/SortDirection"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetResponsesResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetResponsesResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetResponsesResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/Workflow/Delete": {
       "delete": {
         "tags": [
@@ -3362,6 +3475,12 @@
               "type": "string"
             },
             "description": "The urls to fetch the assets from.\r\nThe urls must be publicly accessible.\r\nA HEAD request will be made to each url to check if it is accessible."
+          },
+          "sortIndex": {
+            "type": "integer",
+            "description": "The index will be used to keep the datapoints in order. Useful if upload is parallelized",
+            "format": "int64",
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -3382,6 +3501,57 @@
               "$ref": "#/components/schemas/BaseError"
             },
             "deprecated": true
+          },
+          "createdCount": {
+            "type": "integer",
+            "format": "int32",
+            "deprecated": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Datapoint": {
+        "required": [
+          "asset",
+          "createdAt",
+          "datasetId",
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "datasetId": {
+            "type": "string"
+          },
+          "sortIndex": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "asset": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/FileAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/MultiAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/NullAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/TextAssetModel"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
           }
         },
         "additionalProperties": false
@@ -3693,6 +3863,21 @@
           "failed": {
             "type": "integer",
             "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetFailedDatapointsResult": {
+        "required": [
+          "datapoints"
+        ],
+        "type": "object",
+        "properties": {
+          "datapoints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Datapoint"
+            }
           }
         },
         "additionalProperties": false
@@ -8926,6 +9111,21 @@
         },
         "additionalProperties": false
       },
+      "GetResponsesResult": {
+        "required": [
+          "responses"
+        ],
+        "type": "object",
+        "properties": {
+          "responses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RapidResponse"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
       "GetSimpleWorkflowResultsModel": {
         "type": "object",
         "properties": {
@@ -9515,7 +9715,7 @@
                   "$ref": "#/components/schemas/LanguageUserFilterModel"
                 },
                 {
-                  "$ref": "#/components/schemas/NewUserFilterModel1"
+                  "$ref": "#/components/schemas/NewUserFilterModel"
                 },
                 {
                   "$ref": "#/components/schemas/UserScoreUserFilterModel"
@@ -9888,25 +10088,6 @@
             "items": {
               "$ref": "#/components/schemas/FeatureFlag"
             }
-          }
-        },
-        "additionalProperties": false
-      },
-      "NewUserFilterModel1": {
-        "title": "NewUserFilterModel",
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "NewUserFilterModel"
-            ],
-            "type": "string",
-            "description": "Discriminator value for NewUserFilterModel",
-            "default": "NewUserFilterModel",
-            "example": "NewUserFilterModel"
           }
         },
         "additionalProperties": false

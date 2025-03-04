@@ -17,29 +17,29 @@ import json
 import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
-from rapidata.api_client.models.file_asset import FileAsset
-from rapidata.api_client.models.null_asset import NullAsset
-from rapidata.api_client.models.text_asset import TextAsset
+from rapidata.api_client.models.file_asset_model import FileAssetModel
+from rapidata.api_client.models.null_asset_model import NullAssetModel
+from rapidata.api_client.models.text_asset_model import TextAssetModel
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-DATAPOINTASSET_ONE_OF_SCHEMAS = ["FileAsset", "MultiAsset", "NullAsset", "TextAsset"]
+DATAPOINTASSET_ONE_OF_SCHEMAS = ["FileAssetModel", "MultiAssetModel", "NullAssetModel", "TextAssetModel"]
 
 class DatapointAsset(BaseModel):
     """
     DatapointAsset
     """
-    # data type: FileAsset
-    oneof_schema_1_validator: Optional[FileAsset] = None
-    # data type: MultiAsset
-    oneof_schema_2_validator: Optional[MultiAsset] = None
-    # data type: NullAsset
-    oneof_schema_3_validator: Optional[NullAsset] = None
-    # data type: TextAsset
-    oneof_schema_4_validator: Optional[TextAsset] = None
-    actual_instance: Optional[Union[FileAsset, MultiAsset, NullAsset, TextAsset]] = None
-    one_of_schemas: Set[str] = { "FileAsset", "MultiAsset", "NullAsset", "TextAsset" }
+    # data type: FileAssetModel
+    oneof_schema_1_validator: Optional[FileAssetModel] = None
+    # data type: MultiAssetModel
+    oneof_schema_2_validator: Optional[MultiAssetModel] = None
+    # data type: NullAssetModel
+    oneof_schema_3_validator: Optional[NullAssetModel] = None
+    # data type: TextAssetModel
+    oneof_schema_4_validator: Optional[TextAssetModel] = None
+    actual_instance: Optional[Union[FileAssetModel, MultiAssetModel, NullAssetModel, TextAssetModel]] = None
+    one_of_schemas: Set[str] = { "FileAssetModel", "MultiAssetModel", "NullAssetModel", "TextAssetModel" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -65,32 +65,32 @@ class DatapointAsset(BaseModel):
         instance = DatapointAsset.model_construct()
         error_messages = []
         match = 0
-        # validate data type: FileAsset
-        if not isinstance(v, FileAsset):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `FileAsset`")
+        # validate data type: FileAssetModel
+        if not isinstance(v, FileAssetModel):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `FileAssetModel`")
         else:
             match += 1
-        # validate data type: MultiAsset
-        if not isinstance(v, MultiAsset):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `MultiAsset`")
+        # validate data type: MultiAssetModel
+        if not isinstance(v, MultiAssetModel):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `MultiAssetModel`")
         else:
             match += 1
-        # validate data type: NullAsset
-        if not isinstance(v, NullAsset):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `NullAsset`")
+        # validate data type: NullAssetModel
+        if not isinstance(v, NullAssetModel):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `NullAssetModel`")
         else:
             match += 1
-        # validate data type: TextAsset
-        if not isinstance(v, TextAsset):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `TextAsset`")
+        # validate data type: TextAssetModel
+        if not isinstance(v, TextAssetModel):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `TextAssetModel`")
         else:
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in DatapointAsset with oneOf schemas: FileAsset, MultiAsset, NullAsset, TextAsset. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in DatapointAsset with oneOf schemas: FileAssetModel, MultiAssetModel, NullAssetModel, TextAssetModel. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in DatapointAsset with oneOf schemas: FileAsset, MultiAsset, NullAsset, TextAsset. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in DatapointAsset with oneOf schemas: FileAssetModel, MultiAssetModel, NullAssetModel, TextAssetModel. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -105,37 +105,37 @@ class DatapointAsset(BaseModel):
         error_messages = []
         match = 0
 
-        # deserialize data into FileAsset
+        # deserialize data into FileAssetModel
         try:
-            instance.actual_instance = FileAsset.from_json(json_str)
+            instance.actual_instance = FileAssetModel.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # deserialize data into MultiAsset
+        # deserialize data into MultiAssetModel
         try:
-            instance.actual_instance = MultiAsset.from_json(json_str)
+            instance.actual_instance = MultiAssetModel.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # deserialize data into NullAsset
+        # deserialize data into NullAssetModel
         try:
-            instance.actual_instance = NullAsset.from_json(json_str)
+            instance.actual_instance = NullAssetModel.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # deserialize data into TextAsset
+        # deserialize data into TextAssetModel
         try:
-            instance.actual_instance = TextAsset.from_json(json_str)
+            instance.actual_instance = TextAssetModel.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into DatapointAsset with oneOf schemas: FileAsset, MultiAsset, NullAsset, TextAsset. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into DatapointAsset with oneOf schemas: FileAssetModel, MultiAssetModel, NullAssetModel, TextAssetModel. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into DatapointAsset with oneOf schemas: FileAsset, MultiAsset, NullAsset, TextAsset. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into DatapointAsset with oneOf schemas: FileAssetModel, MultiAssetModel, NullAssetModel, TextAssetModel. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -149,7 +149,7 @@ class DatapointAsset(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], FileAsset, MultiAsset, NullAsset, TextAsset]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], FileAssetModel, MultiAssetModel, NullAssetModel, TextAssetModel]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None
@@ -164,7 +164,7 @@ class DatapointAsset(BaseModel):
         """Returns the string representation of the actual instance"""
         return pprint.pformat(self.model_dump())
 
-from rapidata.api_client.models.multi_asset import MultiAsset
+from rapidata.api_client.models.multi_asset_model import MultiAssetModel
 # TODO: Rewrite to not use raise_errors
 DatapointAsset.model_rebuild(raise_errors=False)
 

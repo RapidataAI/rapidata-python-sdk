@@ -87,6 +87,7 @@ Class | Method | HTTP request | Description
 *DatapointApi* | [**datapoint_get_by_id_get**](rapidata/api_client/docs/DatapointApi.md#datapoint_get_by_id_get) | **GET** /Datapoint/GetById | Get a datapoint by its id.
 *DatasetApi* | [**dataset_creat_text_datapoint_post**](rapidata/api_client/docs/DatasetApi.md#dataset_creat_text_datapoint_post) | **POST** /Dataset/CreatTextDatapoint | Creates new datapoints from text sources.
 *DatasetApi* | [**dataset_create_datapoint_post**](rapidata/api_client/docs/DatasetApi.md#dataset_create_datapoint_post) | **POST** /Dataset/CreateDatapoint | Creates a single datapoint.
+*DatasetApi* | [**dataset_dataset_id_datapoints_failed_get**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_datapoints_failed_get) | **GET** /dataset/{datasetId}/datapoints/failed | Gets a list of all datapoints that failed to upload.
 *DatasetApi* | [**dataset_dataset_id_datapoints_urls_post**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_datapoints_urls_post) | **POST** /dataset/{datasetId}/datapoints/urls | Creates new datapoint where the assets are fetched from the specified urls.
 *DatasetApi* | [**dataset_dataset_id_progress_get**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_progress_get) | **GET** /dataset/{datasetId}/progress | Gets the upload progress of a dataset.
 *DatasetApi* | [**dataset_get_by_id_get**](rapidata/api_client/docs/DatasetApi.md#dataset_get_by_id_get) | **GET** /Dataset/GetById | Gets a dataset by its id.
@@ -135,6 +136,7 @@ Class | Method | HTTP request | Description
 *RapidApi* | [**rapid_skip_user_guess_post**](rapidata/api_client/docs/RapidApi.md#rapid_skip_user_guess_post) | **POST** /Rapid/SkipUserGuess | Skips a Rapid for the user.
 *RapidApi* | [**rapid_validate_current_rapid_bag_get**](rapidata/api_client/docs/RapidApi.md#rapid_validate_current_rapid_bag_get) | **GET** /Rapid/ValidateCurrentRapidBag | Validates that the rapids associated with the current user are active.
 *RapidApi* | [**rapid_validation_rapid_id_put**](rapidata/api_client/docs/RapidApi.md#rapid_validation_rapid_id_put) | **PUT** /rapid/validation/{rapidId} | Updates the validation information of a rapid.
+*RapidataIdentityAPIApi* | [**root_get**](rapidata/api_client/docs/RapidataIdentityAPIApi.md#root_get) | **GET** / | 
 *SimpleWorkflowApi* | [**workflow_simple_id_results_get**](rapidata/api_client/docs/SimpleWorkflowApi.md#workflow_simple_id_results_get) | **GET** /workflow/simple/{id}/results | Get the result overview for a simple workflow.
 *UserInfoApi* | [**connect_userinfo_get**](rapidata/api_client/docs/UserInfoApi.md#connect_userinfo_get) | **GET** /connect/userinfo | Retrieves information about the authenticated user.
 *ValidationApi* | [**validation_add_validation_rapid_post**](rapidata/api_client/docs/ValidationApi.md#validation_add_validation_rapid_post) | **POST** /Validation/AddValidationRapid | Adds a new validation rapid to the specified validation set.
@@ -149,6 +151,7 @@ Class | Method | HTTP request | Description
 *WorkflowApi* | [**workflow_get_by_id_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_get_by_id_get) | **GET** /Workflow/GetById | Get a workflow by its ID.
 *WorkflowApi* | [**workflow_get_progress_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_get_progress_get) | **GET** /Workflow/GetProgress | Get the progress of a workflow.
 *WorkflowApi* | [**workflow_id_compare_ab_summary_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_id_compare_ab_summary_get) | **GET** /workflow/{id}/compare-ab-summary | Calculates a summary of the results for a simple compare workflow.  The summary includes the number of times an asset at each index was the winner.
+*WorkflowApi* | [**workflow_id_responses_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_id_responses_get) | **GET** /workflow/{id}/responses | Gets the !:limit most recent or oldest responses for a workflow.  The responses are not guaranteed to be of any specific rapid.  Instead, this endpoint returns all responses to any rapid in the workflow.
 *WorkflowApi* | [**workflow_query_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_query_get) | **GET** /Workflow/Query | Queries workflows based on the provided filter, page, and sort criteria.
 
 
@@ -158,7 +161,6 @@ Class | Method | HTTP request | Description
  - [AbTestSelectionAInner](rapidata/api_client/docs/AbTestSelectionAInner.md)
  - [AddCampaignArtifactResult](rapidata/api_client/docs/AddCampaignArtifactResult.md)
  - [AddCampaignModel](rapidata/api_client/docs/AddCampaignModel.md)
- - [AddCampaignModelUserFiltersInner](rapidata/api_client/docs/AddCampaignModelUserFiltersInner.md)
  - [AddValidationRapidModel](rapidata/api_client/docs/AddValidationRapidModel.md)
  - [AddValidationRapidModelPayload](rapidata/api_client/docs/AddValidationRapidModelPayload.md)
  - [AddValidationRapidModelTruth](rapidata/api_client/docs/AddValidationRapidModelTruth.md)
@@ -230,10 +232,11 @@ Class | Method | HTTP request | Description
  - [CreateSimplePipelineModelPipelineStepsInner](rapidata/api_client/docs/CreateSimplePipelineModelPipelineStepsInner.md)
  - [CreateUnsupportedOrderModel](rapidata/api_client/docs/CreateUnsupportedOrderModel.md)
  - [CustomUserFilterModel](rapidata/api_client/docs/CustomUserFilterModel.md)
+ - [Datapoint](rapidata/api_client/docs/Datapoint.md)
+ - [DatapointAsset](rapidata/api_client/docs/DatapointAsset.md)
  - [DatapointMetadataModel](rapidata/api_client/docs/DatapointMetadataModel.md)
  - [DatapointMetadataModelMetadataInner](rapidata/api_client/docs/DatapointMetadataModelMetadataInner.md)
  - [DatapointModel](rapidata/api_client/docs/DatapointModel.md)
- - [DatapointModelAsset](rapidata/api_client/docs/DatapointModelAsset.md)
  - [DatapointState](rapidata/api_client/docs/DatapointState.md)
  - [DatasetArtifactModel](rapidata/api_client/docs/DatasetArtifactModel.md)
  - [DatasetEvaluationStepModel](rapidata/api_client/docs/DatasetEvaluationStepModel.md)
@@ -268,10 +271,12 @@ Class | Method | HTTP request | Description
  - [GetDatapointsByDatasetIdResult](rapidata/api_client/docs/GetDatapointsByDatasetIdResult.md)
  - [GetDatasetByIdResult](rapidata/api_client/docs/GetDatasetByIdResult.md)
  - [GetDatasetProgressResult](rapidata/api_client/docs/GetDatasetProgressResult.md)
+ - [GetFailedDatapointsResult](rapidata/api_client/docs/GetFailedDatapointsResult.md)
  - [GetOrderByIdResult](rapidata/api_client/docs/GetOrderByIdResult.md)
  - [GetPipelineByIdResult](rapidata/api_client/docs/GetPipelineByIdResult.md)
  - [GetPipelineByIdResultArtifactsValue](rapidata/api_client/docs/GetPipelineByIdResultArtifactsValue.md)
  - [GetPublicOrdersResult](rapidata/api_client/docs/GetPublicOrdersResult.md)
+ - [GetResponsesResult](rapidata/api_client/docs/GetResponsesResult.md)
  - [GetSimpleWorkflowResultsModel](rapidata/api_client/docs/GetSimpleWorkflowResultsModel.md)
  - [GetSimpleWorkflowResultsResult](rapidata/api_client/docs/GetSimpleWorkflowResultsResult.md)
  - [GetSimpleWorkflowResultsResultPagedResult](rapidata/api_client/docs/GetSimpleWorkflowResultsResultPagedResult.md)
@@ -311,7 +316,6 @@ Class | Method | HTTP request | Description
  - [NamedEntityTruth](rapidata/api_client/docs/NamedEntityTruth.md)
  - [NeverEndingRefereeConfig](rapidata/api_client/docs/NeverEndingRefereeConfig.md)
  - [NewUserFilterModel](rapidata/api_client/docs/NewUserFilterModel.md)
- - [NewUserFilterModel1](rapidata/api_client/docs/NewUserFilterModel1.md)
  - [NewsletterModel](rapidata/api_client/docs/NewsletterModel.md)
  - [NotAvailableYetResult](rapidata/api_client/docs/NotAvailableYetResult.md)
  - [NullAssetModel](rapidata/api_client/docs/NullAssetModel.md)
