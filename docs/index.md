@@ -1,4 +1,9 @@
-# Rapidata developer documentation
+<div style="display: flex; justify-content: space-between; align-items: center;">
+  <h1 style="margin: 0;">Rapidata developer documentation</h1>
+  <a href="https://www.python.org/downloads/">
+    <img src="https://img.shields.io/badge/python-3.10+-blue.svg?style=flat-square&padding=0" alt="Python 3.10+">
+  </a>
+</div>
 
 ## Developer Quickstart
 Set up your environment and make your first API request in minutes.
