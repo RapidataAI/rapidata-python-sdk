@@ -9,13 +9,11 @@ class RankingWorkflow(Workflow):
                  criteria: str,
                  total_comparison_budget: int,
                  random_comparisons_ratio,
-                 starting_elo: int,
-                 k_factor: int,
-                 scaling_factor: int,
+                 elo_start: int,
+                 elo_k_factor: int,
+                 elo_scaling_factor: int,
                  ):
         super().__init__(type="CompareWorkflowConfig")
-        assert total_comparison_budget > 0, 'The comparison budget must be positive'
-        assert 0 <= random_comparisons_ratio <= 1, 'The ratio of randomly arranged matches should be between 0 and 1 (inclusive)'
 
         self.criteria = criteria
         self.pair_maker_config = CompareWorkflowModelPairMakerConfig(
@@ -26,10 +24,10 @@ class RankingWorkflow(Workflow):
             )
         )
 
-        self.elo_settings = dict(
-            startingElo=starting_elo,
-            kFactor=k_factor,
-            scalingFactor=scaling_factor,
+        self.elo_config = EloConfigModel(
+            startingElo=elo_start,
+            kFactor=elo_k_factor,
+            scalingFactor=elo_scaling_factor,
         )
 
     def _to_model(self) -> CompareWorkflowModel:
@@ -37,6 +35,6 @@ class RankingWorkflow(Workflow):
         return CompareWorkflowModel(
             _t="CompareWorkflow",
             criteria=self.criteria,
-            eloConfig=EloConfigModel(**self.elo_settings),
+            eloConfig=self.elo_config,
             pairMakerConfig=self.pair_maker_config
         )

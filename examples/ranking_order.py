@@ -5,7 +5,7 @@ from rapidata.rapidata_client import RapidataClient
 
 
 def new_ranking_order(rapi: RapidataClient):
-    rabbits = [
+    datapoints = [
         "https://assets.rapidata.ai/f9d92460-a362-493c-af91-bf50046453ae.webp",
         "https://assets.rapidata.ai/9bcd8b18-e9ad-4449-84d4-b3d72e200e9c.webp",
         "https://assets.rapidata.ai/266f6446-3ca8-4c2d-b070-13558b35a4e0.webp",
@@ -23,7 +23,7 @@ def new_ranking_order(rapi: RapidataClient):
     order = rapi.order.create_ranking_order(
         name="Example Ranking Order",
         instruction="Which rabbit looks the coolest?",
-        datapoints=rabbits,
+        datapoints=datapoints,
         responses_per_comparison=3, #Each match is concluded after 3 votes
         total_comparison_budget= 24, #Make 24 comparisons, each comparison containing 2 datapoints
         random_comparisons_ratio=0.5 #First half of the comparisons are random, the second half are close matchups
