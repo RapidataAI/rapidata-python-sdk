@@ -1,8 +1,8 @@
 from itertools import zip_longest
 
 from rapidata.api_client.models.datapoint_metadata_model import DatapointMetadataModel
-from rapidata.api_client.models.datapoint_metadata_model_metadata_inner import (
-    DatapointMetadataModelMetadataInner,
+from rapidata.api_client.models.create_datapoint_from_urls_model import (
+    CreateDatapointFromUrlsModelMetadataInner,
 )
 from rapidata.api_client.models.upload_text_sources_to_dataset_model import (
     UploadTextSourcesToDatasetModel,
@@ -154,7 +154,7 @@ class RapidataDataset:
                 meta_model = meta.to_model() if meta else None
                 model = DatapointMetadataModel(
                     datasetId=self.dataset_id,
-                    metadata=([DatapointMetadataModelMetadataInner(meta_model)] if meta_model else []),
+                    metadata=([CreateDatapointFromUrlsModelMetadataInner(meta_model)] if meta_model else []),
                     sortIndex=index,
                 )
 

@@ -106,6 +106,7 @@ from rapidata.api_client.models.create_complex_order_model import CreateComplexO
 from rapidata.api_client.models.create_complex_order_model_pipeline import CreateComplexOrderModelPipeline
 from rapidata.api_client.models.create_complex_order_result import CreateComplexOrderResult
 from rapidata.api_client.models.create_datapoint_from_urls_model import CreateDatapointFromUrlsModel
+from rapidata.api_client.models.create_datapoint_from_urls_model_metadata_inner import CreateDatapointFromUrlsModelMetadataInner
 from rapidata.api_client.models.create_datapoint_result import CreateDatapointResult
 from rapidata.api_client.models.create_dataset_artifact_model import CreateDatasetArtifactModel
 from rapidata.api_client.models.create_dataset_artifact_model_dataset import CreateDatasetArtifactModelDataset
@@ -124,7 +125,6 @@ from rapidata.api_client.models.custom_user_filter_model import CustomUserFilter
 from rapidata.api_client.models.datapoint import Datapoint
 from rapidata.api_client.models.datapoint_asset import DatapointAsset
 from rapidata.api_client.models.datapoint_metadata_model import DatapointMetadataModel
-from rapidata.api_client.models.datapoint_metadata_model_metadata_inner import DatapointMetadataModelMetadataInner
 from rapidata.api_client.models.datapoint_model import DatapointModel
 from rapidata.api_client.models.datapoint_state import DatapointState
 from rapidata.api_client.models.dataset_artifact_model import DatasetArtifactModel
