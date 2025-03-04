@@ -9,7 +9,7 @@ class CountryFilter(RapidataFilter):
     Can be used to filter who to target based on country codes.
     
     Args:
-        country_codes (list[str]): List of country codes (capizalized) to filter by.
+        country_codes (list[str]): List of country codes (capitalized) to filter by.
     """
 
     def __init__(self, country_codes: list[str]):
