@@ -79,42 +79,11 @@ class RapidataDataset:
                     future.result()  # This will raise any exceptions that occurred during execution
                     pbar.update(1)
 
-    def _create_session_with_retries(self, max_workers: int, max_retries: int) -> requests.Session:
-        """
-        Create and configure a requests session with retry logic.
-        
-        Args:
-            max_workers: Maximum number of concurrent workers
-            max_retries: Maximum number of retry attempts per failed request
-            
-        Returns:
-            requests.Session: Configured session with retry logic
-        """
-        session = requests.Session()
-        retries = Retry(
-            total=max_retries,
-            backoff_factor=1,
-            status_forcelist=[500, 502, 503, 504],
-            allowed_methods=["GET"],
-            respect_retry_after_header=True
-        )
-        
-        adapter = HTTPAdapter(
-            pool_connections=max_workers * 2,
-            pool_maxsize=max_workers * 4,
-            max_retries=retries
-        )
-        session.mount('http://', adapter)
-        session.mount('https://', adapter)
-        
-        return session
-
     def _process_single_upload(
         self,
         media_asset: MediaAsset | MultiAsset, 
         meta: Metadata | None, 
         index: int,
-        session: requests.Session
     ) -> tuple[list[str], list[str]]:
         """
         Process single upload with error tracking.
@@ -135,14 +104,11 @@ class RapidataDataset:
         try:
             # Get identifier for this upload (URL or file path)
             if isinstance(media_asset, MediaAsset):
-                media_asset.session = session
                 assets = [media_asset]
                 identifier = media_asset._url if media_asset._url else media_asset.path
                 identifiers_to_track = [identifier] if identifier else []
             elif isinstance(media_asset, MultiAsset):
                 assets = cast(list[MediaAsset], media_asset.assets)
-                for asset in assets:
-                    asset.session = session
                 identifiers_to_track: list[str] = [
                     (asset._url if asset._url else cast(str, asset.path)) 
                     for asset in assets
@@ -309,7 +275,6 @@ class RapidataDataset:
         self,
         media_paths: list[MediaAsset] | list[MultiAsset],
         metadata: Sequence[Metadata] | None,
-        session: requests.Session,
         max_workers: int,
         chunk_size: int,
         stop_progress_tracking: threading.Event,
@@ -344,8 +309,7 @@ class RapidataDataset:
                             self._process_single_upload, 
                             media_asset, 
                             meta, 
-                            index=(chunk_idx * chunk_size + i),
-                            session=session
+                            index=(chunk_idx * chunk_size + i)
                         )
                         for i, (media_asset, meta) in enumerate(zip_longest(chunk, chunk_metadata or []))
                     ]
@@ -421,7 +385,7 @@ class RapidataDataset:
         self,
         media_paths: list[MediaAsset] | list[MultiAsset],
         metadata: Sequence[Metadata] | None = None,
-        max_workers: int = 10,
+        max_workers: int = 1,
         max_retries: int = 5,
         chunk_size: int = 50,
         progress_poll_interval: float = 0.5,
@@ -447,9 +411,6 @@ class RapidataDataset:
         """
         if metadata is not None and len(metadata) != len(media_paths):
             raise ValueError("metadata must be None or have the same length as media_paths")
-
-        # Configure session with retry logic
-        session = self._create_session_with_retries(max_workers, max_retries)
 
         # Get initial progress state
         initial_progress = self.openapi_service.dataset_api.dataset_dataset_id_progress_get(self.dataset_id)
@@ -479,7 +440,6 @@ class RapidataDataset:
             successful_uploads, failed_uploads = self._process_uploads_in_chunks(
                 media_paths,
                 metadata,
-                session,
                 max_workers,
                 chunk_size,
                 stop_progress_tracking,
