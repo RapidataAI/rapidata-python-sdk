@@ -137,7 +137,10 @@ class RapidataDataset:
             else:
                 upload_response = self.openapi_service.dataset_api.dataset_dataset_id_datapoints_urls_post(
                     dataset_id=self.dataset_id,
-                    create_datapoint_from_urls_model=CreateDatapointFromUrlsModel(urls=files),
+                    create_datapoint_from_urls_model=CreateDatapointFromUrlsModel(
+                        urls=files,
+                        sortIndex=index
+                    ),
                 )
                 
             if upload_response.errors:
@@ -385,8 +388,7 @@ class RapidataDataset:
         self,
         media_paths: list[MediaAsset] | list[MultiAsset],
         metadata: Sequence[Metadata] | None = None,
-        max_workers: int = 1,
-        max_retries: int = 5,
+        max_workers: int = 10,
         chunk_size: int = 50,
         progress_poll_interval: float = 0.5,
         progress_timeout: int = 300,  # 5 minutes timeout for progress
@@ -398,7 +400,6 @@ class RapidataDataset:
             media_paths: List of MediaAsset or MultiAsset objects to upload
             metadata: Optional sequence of metadata matching media_paths length
             max_workers: Maximum number of concurrent upload workers
-            max_retries: Maximum number of retry attempts per failed request
             chunk_size: Number of items to process in each batch
             progress_poll_interval: Time in seconds between progress checks
             progress_timeout: Maximum time in seconds to wait for progress to complete
