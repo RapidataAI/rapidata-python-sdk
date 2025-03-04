@@ -28,6 +28,7 @@ from rapidata.api_client.api.newsletter_api import NewsletterApi
 from rapidata.api_client.api.order_api import OrderApi
 from rapidata.api_client.api.pipeline_api import PipelineApi
 from rapidata.api_client.api.rapid_api import RapidApi
+from rapidata.api_client.api.rapidata_identity_api_api import RapidataIdentityAPIApi
 from rapidata.api_client.api.simple_workflow_api import SimpleWorkflowApi
 from rapidata.api_client.api.user_info_api import UserInfoApi
 from rapidata.api_client.api.validation_api import ValidationApi
@@ -49,7 +50,6 @@ from rapidata.api_client.models.ab_test_selection import AbTestSelection
 from rapidata.api_client.models.ab_test_selection_a_inner import AbTestSelectionAInner
 from rapidata.api_client.models.add_campaign_artifact_result import AddCampaignArtifactResult
 from rapidata.api_client.models.add_campaign_model import AddCampaignModel
-from rapidata.api_client.models.add_campaign_model_user_filters_inner import AddCampaignModelUserFiltersInner
 from rapidata.api_client.models.add_validation_rapid_model import AddValidationRapidModel
 from rapidata.api_client.models.add_validation_rapid_model_payload import AddValidationRapidModelPayload
 from rapidata.api_client.models.add_validation_rapid_model_truth import AddValidationRapidModelTruth
@@ -121,10 +121,11 @@ from rapidata.api_client.models.create_simple_pipeline_model_artifacts_inner imp
 from rapidata.api_client.models.create_simple_pipeline_model_pipeline_steps_inner import CreateSimplePipelineModelPipelineStepsInner
 from rapidata.api_client.models.create_unsupported_order_model import CreateUnsupportedOrderModel
 from rapidata.api_client.models.custom_user_filter_model import CustomUserFilterModel
+from rapidata.api_client.models.datapoint import Datapoint
+from rapidata.api_client.models.datapoint_asset import DatapointAsset
 from rapidata.api_client.models.datapoint_metadata_model import DatapointMetadataModel
 from rapidata.api_client.models.datapoint_metadata_model_metadata_inner import DatapointMetadataModelMetadataInner
 from rapidata.api_client.models.datapoint_model import DatapointModel
-from rapidata.api_client.models.datapoint_model_asset import DatapointModelAsset
 from rapidata.api_client.models.datapoint_state import DatapointState
 from rapidata.api_client.models.dataset_artifact_model import DatasetArtifactModel
 from rapidata.api_client.models.dataset_evaluation_step_model import DatasetEvaluationStepModel
@@ -159,10 +160,12 @@ from rapidata.api_client.models.get_datapoint_by_id_result import GetDatapointBy
 from rapidata.api_client.models.get_datapoints_by_dataset_id_result import GetDatapointsByDatasetIdResult
 from rapidata.api_client.models.get_dataset_by_id_result import GetDatasetByIdResult
 from rapidata.api_client.models.get_dataset_progress_result import GetDatasetProgressResult
+from rapidata.api_client.models.get_failed_datapoints_result import GetFailedDatapointsResult
 from rapidata.api_client.models.get_order_by_id_result import GetOrderByIdResult
 from rapidata.api_client.models.get_pipeline_by_id_result import GetPipelineByIdResult
 from rapidata.api_client.models.get_pipeline_by_id_result_artifacts_value import GetPipelineByIdResultArtifactsValue
 from rapidata.api_client.models.get_public_orders_result import GetPublicOrdersResult
+from rapidata.api_client.models.get_responses_result import GetResponsesResult
 from rapidata.api_client.models.get_simple_workflow_results_model import GetSimpleWorkflowResultsModel
 from rapidata.api_client.models.get_simple_workflow_results_result import GetSimpleWorkflowResultsResult
 from rapidata.api_client.models.get_simple_workflow_results_result_paged_result import GetSimpleWorkflowResultsResultPagedResult
@@ -202,7 +205,6 @@ from rapidata.api_client.models.named_entity_result import NamedEntityResult
 from rapidata.api_client.models.named_entity_truth import NamedEntityTruth
 from rapidata.api_client.models.never_ending_referee_config import NeverEndingRefereeConfig
 from rapidata.api_client.models.new_user_filter_model import NewUserFilterModel
-from rapidata.api_client.models.new_user_filter_model1 import NewUserFilterModel1
 from rapidata.api_client.models.newsletter_model import NewsletterModel
 from rapidata.api_client.models.not_available_yet_result import NotAvailableYetResult
 from rapidata.api_client.models.null_asset_model import NullAssetModel

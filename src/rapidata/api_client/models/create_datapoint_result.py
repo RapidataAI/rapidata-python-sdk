@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.base_error import BaseError
 from typing import Optional, Set
@@ -29,7 +29,8 @@ class CreateDatapointResult(BaseModel):
     """ # noqa: E501
     datapoint_id: StrictStr = Field(alias="datapointId")
     errors: Optional[List[BaseError]] = None
-    __properties: ClassVar[List[str]] = ["datapointId", "errors"]
+    created_count: Optional[StrictInt] = Field(default=None, alias="createdCount")
+    __properties: ClassVar[List[str]] = ["datapointId", "errors", "createdCount"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -90,7 +91,8 @@ class CreateDatapointResult(BaseModel):
 
         _obj = cls.model_validate({
             "datapointId": obj.get("datapointId"),
-            "errors": [BaseError.from_dict(_item) for _item in obj["errors"]] if obj.get("errors") is not None else None
+            "errors": [BaseError.from_dict(_item) for _item in obj["errors"]] if obj.get("errors") is not None else None,
+            "createdCount": obj.get("createdCount")
         })
         return _obj
 
