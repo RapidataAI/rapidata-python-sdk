@@ -116,6 +116,8 @@ class RapidataDataset:
 
             meta_model = meta.to_model() if meta else None
 
+            metadata = [CreateDatapointFromUrlsModelMetadataInner(meta_model)] if meta_model else []
+
             local_paths: bool = assets[0].is_local()
             files: list[StrictStr] = []
             for asset in assets:
@@ -125,7 +127,7 @@ class RapidataDataset:
             if local_paths:
                 model = DatapointMetadataModel(
                     datasetId=self.dataset_id,
-                    metadata=([CreateDatapointFromUrlsModelMetadataInner(meta_model)] if meta_model else []),
+                    metadata=metadata,
                     sortIndex=index,
                 )
                 upload_response = self.openapi_service.dataset_api.dataset_create_datapoint_post(
@@ -137,7 +139,7 @@ class RapidataDataset:
                     dataset_id=self.dataset_id,
                     create_datapoint_from_urls_model=CreateDatapointFromUrlsModel(
                         urls=files,
-                        metadata=[CreateDatapointFromUrlsModelMetadataInner(meta_model)] if meta_model else [],
+                        metadata=metadata,
                         sortIndex=index
                     ),
                 )
