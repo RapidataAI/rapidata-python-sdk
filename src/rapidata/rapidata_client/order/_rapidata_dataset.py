@@ -233,7 +233,7 @@ class RapidataDataset:
                                     # If we're not at 100% but it's been a while with no progress
                                     if stall_count > 5:
                                         # We've polled several times with no progress, assume we're done
-                                        self._logger.warning(f"\nProgress seems stalled at {total_completed}/{total_uploads}. Completing progress bar.")
+                                        self._logger.warning(f"\nProgress seems stalled at {total_completed}/{total_uploads}. Please try again.")
                                         break
                                 
                         except Exception as e:
