@@ -139,6 +139,7 @@ class RapidataDataset:
                     dataset_id=self.dataset_id,
                     create_datapoint_from_urls_model=CreateDatapointFromUrlsModel(
                         urls=files,
+                        metadata=[CreateDatapointFromUrlsModelMetadataInner(meta_model)] if meta_model else [],
                         sortIndex=index
                     ),
                 )
@@ -165,7 +166,6 @@ class RapidataDataset:
         stop_event: threading.Event, 
         progress_error_event: threading.Event,
         progress_poll_interval: float,
-        progress_timeout: int
     ) -> threading.Thread:
         """
         Create and return a progress tracking thread that shows actual API progress.
@@ -177,7 +177,6 @@ class RapidataDataset:
             stop_event: Event to signal thread to stop
             progress_error_event: Event to signal an error in progress tracking
             progress_poll_interval: Time between progress checks
-            progress_timeout: Maximum time to wait for progress
             
         Returns:
             threading.Thread: The progress tracking thread
@@ -189,8 +188,7 @@ class RapidataDataset:
                     prev_ready = initial_ready
                     prev_failed = initial_progress.failed or 0
                     stall_count = 0
-                    start_time = time.time()
-                    last_progress_time = start_time
+                    last_progress_time = time.time()
                     
                     # We'll wait for all uploads to finish + some extra time
                     # for the backend to fully process everything
@@ -239,23 +237,11 @@ class RapidataDataset:
                                     # If we're not at 100% but it's been a while with no progress
                                     if stall_count > 5:
                                         # We've polled several times with no progress, assume we're done
-                                        self._logger.warning(f"Progress seems stalled at {total_completed}/{total_uploads}. Completing progress bar.")
-                                        pbar.n = total_uploads  # Force to 100%
-                                        pbar.refresh()
-                                        all_uploads_complete.set()
+                                        self._logger.warning(f"\nProgress seems stalled at {total_completed}/{total_uploads}. Completing progress bar.")
                                         break
-                            
-                            # Check for overall timeout
-                            if time.time() - start_time > progress_timeout:
-                                self._logger.warning(f"Progress tracking timed out after {progress_timeout} seconds")
-                                # Force to 100% on timeout
-                                pbar.n = total_uploads
-                                pbar.refresh()
-                                all_uploads_complete.set()
-                                break
                                 
                         except Exception as e:
-                            self._logger.error(f"Error checking progress: {str(e)}")
+                            self._logger.error(f"\nError checking progress: {str(e)}")
                             stall_count += 1
                             
                             if stall_count > 10:  # Too many consecutive errors
@@ -356,10 +342,7 @@ class RapidataDataset:
             successful_uploads: List of successful uploads for fallback reporting
             failed_uploads: List of failed uploads for fallback reporting
         """
-        try:
-            # Wait a bit for the final counts to stabilize
-            time.sleep(2 * progress_poll_interval)
-            
+        try:            
             # Get final progress
             final_progress = self.openapi_service.dataset_api.dataset_dataset_id_progress_get(self.dataset_id)
             total_ready = final_progress.ready - initial_ready
@@ -375,8 +358,8 @@ class RapidataDataset:
             
             success_rate = (total_ready / total_uploads * 100) if total_uploads > 0 else 0
             
-            self._logger.info(f"Upload complete: {total_ready} ready, {total_failed} failed ({success_rate:.1f}% success rate)")
-            print(f"Upload complete, {total_ready} ready, {total_failed} failed ({success_rate:.1f}% success rate)")
+            self._logger.info(f"Upload complete: {total_ready} ready, {total_uploads-total_ready} failed ({success_rate:.2f}% success rate)")
+            print(f"Upload complete, {total_ready} ready, {total_uploads-total_ready} failed ({success_rate:.2f}% success rate)")
         except Exception as e:
             self._logger.error(f"Error getting final progress: {str(e)}")
             self._logger.info(f"Upload summary from local tracking: {len(successful_uploads)} succeeded, {len(failed_uploads)} failed")
@@ -388,10 +371,9 @@ class RapidataDataset:
         self,
         media_paths: list[MediaAsset] | list[MultiAsset],
         metadata: Sequence[Metadata] | None = None,
-        max_workers: int = 10,
+        max_workers: int = 5,
         chunk_size: int = 50,
         progress_poll_interval: float = 0.5,
-        progress_timeout: int = 300,  # 5 minutes timeout for progress
     ) -> tuple[list[str], list[str]]:
         """
         Upload media paths in chunks with managed resources.
@@ -402,7 +384,6 @@ class RapidataDataset:
             max_workers: Maximum number of concurrent upload workers
             chunk_size: Number of items to process in each batch
             progress_poll_interval: Time in seconds between progress checks
-            progress_timeout: Maximum time in seconds to wait for progress to complete
             
         Returns:
             tuple[list[str], list[str]]: Lists of successful and failed URLs
@@ -431,8 +412,7 @@ class RapidataDataset:
             initial_progress, 
             stop_progress_tracking, 
             progress_tracking_error,
-            progress_poll_interval,
-            progress_timeout
+            progress_poll_interval
         )
         progress_thread.start()
         
@@ -449,7 +429,7 @@ class RapidataDataset:
         finally:
             # Wait for progress thread to finish naturally
             # It will exit after either finishing all processing or timeout
-            progress_thread.join(timeout=progress_timeout + 10)  # Add margin to the timeout
+            progress_thread.join(10)  # Add margin to the timeout
         
         # Log final progress
         self._log_final_progress(
