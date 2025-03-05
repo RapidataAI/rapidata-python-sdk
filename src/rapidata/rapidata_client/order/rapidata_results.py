@@ -10,7 +10,8 @@ class RapidataResults(dict):
     """
     def to_pandas(self, split_details: bool = False) -> pd.DataFrame:
         """
-        This method is currently under development.
+        Warning:
+            This method is currently under development. The structure of the results may change in the future.
 
         Converts the results to a pandas DataFrame.
         

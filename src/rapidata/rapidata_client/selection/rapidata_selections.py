@@ -11,21 +11,22 @@ class RapidataSelections:
     Selections are used to define what type of tasks and in what order they are shown to the user. 
     All Tasks are called a "Session". A session can contain multiple tasks of different types.
 
-    Example:
-    ```python
-        selections=[ValidationSelection("your-validation-set-id", 1), 
-                    LabelingSelection(2)]
-    ```
-
-    The above example will create a session with a validation task followed by two labeling tasks.
-
     Attributes:
         labeling (LabelingSelection): The LabelingSelection instance.
         validation (ValidationSelection): The ValidationSelection instance.
         conditional_validation (ConditionalValidationSelection): The ConditionalValidationSelection instance.
         demographic (DemographicSelection): The DemographicSelection instance.
-        capped (CappedSelection): The CappedSelection instance."""
+        capped (CappedSelection): The CappedSelection instance.
     
+    Example:
+        ```python
+        from rapidata import LabelingSelection, ValidationSelection
+        selections=[ValidationSelection("your-validation-set-id", 1), 
+                    LabelingSelection(2)]
+        ```
+
+        This will make it so the annotators will have to solve 1 validation task followed by two labeling tasks.
+    """
     labeling = LabelingSelection
     validation = ValidationSelection
     conditional_validation = ConditionalValidationSelection

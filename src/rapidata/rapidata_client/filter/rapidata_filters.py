@@ -14,17 +14,25 @@ class RapidataFilters:
 
     Note that adding multiple filters to the same order will result in a logical AND operation between the filters.
 
-    Warning: this might significantly slow down the number of responses you receive.
+    Warning: 
+        This might significantly slow down the number of responses you receive.
     
     Attributes:
         user_score (UserScoreFilter): The UserScoreFilter instance.
         age (AgeFilter): The AgeFilter instance.
         campaign (CampaignFilter): The CampaignFilter instance.
         country (CountryFilter): The CountryFilter instance.
-        campaign (CampaignFilter): The CampaignFilter instance
         gender (GenderFilter): The GenderFilter instance.
         language (LanguageFilter): The LanguageFilter instance.
         custom_filter (CustomFilter): The CustomFilter instance.
+
+    Example:
+        ```python
+        from rapidata import CountryFilter, LanguageFilter
+        filters=[CountryFilter(["US", "DE"]), LanguageFilter(["en"])]
+        ```
+
+        This will make it so the order is only shown to users from the US and Germany that have their phone set to English. 
     """
     user_score = UserScoreFilter
     age = AgeFilter 
