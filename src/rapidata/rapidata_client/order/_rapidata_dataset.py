@@ -15,12 +15,10 @@ from rapidata.service.openapi_service import OpenAPIService
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
 
-from pydantic import StrictBytes, StrictStr
-from typing import Optional, cast, Sequence, Generator, Any
+from pydantic import StrictStr
+from typing import cast, Sequence, Generator
 from logging import Logger
-from requests.adapters import HTTPAdapter, Retry
 import time
-import requests
 import threading
 
 
@@ -161,8 +159,6 @@ class RapidataDataset:
     def _get_progress_tracker(
         self, 
         total_uploads: int, 
-        initial_ready: int, 
-        initial_progress: Any, 
         stop_event: threading.Event, 
         progress_error_event: threading.Event,
         progress_poll_interval: float,
@@ -185,8 +181,8 @@ class RapidataDataset:
             try:
                 # Initialize progress bar with 0 completions
                 with tqdm(total=total_uploads, desc="Uploading datapoints") as pbar:
-                    prev_ready = initial_ready
-                    prev_failed = initial_progress.failed or 0
+                    prev_ready = 0
+                    prev_failed = 0
                     stall_count = 0
                     last_progress_time = time.time()
                     
@@ -199,13 +195,13 @@ class RapidataDataset:
                             current_progress = self.openapi_service.dataset_api.dataset_dataset_id_progress_get(self.dataset_id)
                             
                             # Calculate items completed since our initialization
-                            completed_ready = current_progress.ready - initial_ready
-                            completed_failed = (current_progress.failed or 0) - (initial_progress.failed or 0)
+                            completed_ready = current_progress.ready
+                            completed_failed = current_progress.failed
                             total_completed = completed_ready + completed_failed
                             
                             # Calculate newly completed items since our last check
                             new_ready = current_progress.ready - prev_ready
-                            new_failed = (current_progress.failed or 0) - prev_failed
+                            new_failed = current_progress.failed - prev_failed
                             
                             # Update progress bar position to show actual completed items
                             # First reset to match the actual completed count
@@ -320,13 +316,9 @@ class RapidataDataset:
                 
         return successful_uploads, failed_uploads
 
-
-
     def _log_final_progress(
         self, 
         total_uploads: int, 
-        initial_ready: int, 
-        initial_progress: Any, 
         progress_poll_interval: float,
         successful_uploads: list[str],
         failed_uploads: list[str]
@@ -345,21 +337,21 @@ class RapidataDataset:
         try:            
             # Get final progress
             final_progress = self.openapi_service.dataset_api.dataset_dataset_id_progress_get(self.dataset_id)
-            total_ready = final_progress.ready - initial_ready
-            total_failed = final_progress.failed - (initial_progress.failed or 0)
+            total_ready = final_progress.ready
+            total_failed = final_progress.failed
             
             # Make sure we account for all uploads
             if total_ready + total_failed < total_uploads:
                 # Try one more time after a longer wait
                 time.sleep(5 * progress_poll_interval)
                 final_progress = self.openapi_service.dataset_api.dataset_dataset_id_progress_get(self.dataset_id)
-                total_ready = final_progress.ready - initial_ready
-                total_failed = final_progress.failed - (initial_progress.failed or 0)
+                total_ready = final_progress.ready
+                total_failed = final_progress.failed
             
             success_rate = (total_ready / total_uploads * 100) if total_uploads > 0 else 0
             
-            self._logger.info(f"Upload complete: {total_ready} ready, {total_uploads-total_ready} failed ({success_rate:.2f}% success rate)")
-            print(f"Upload complete, {total_ready} ready, {total_uploads-total_ready} failed ({success_rate:.2f}% success rate)")
+            self._logger.info(f"Upload complete: {total_ready} ready, {total_uploads-total_ready} failed ({success_rate:.1f}% success rate)")
+            print(f"Upload complete, {total_ready} ready, {total_uploads-total_ready} failed ({success_rate:.1f}% success rate)")
         except Exception as e:
             self._logger.error(f"Error getting final progress: {str(e)}")
             self._logger.info(f"Upload summary from local tracking: {len(successful_uploads)} succeeded, {len(failed_uploads)} failed")
@@ -393,10 +385,6 @@ class RapidataDataset:
         """
         if metadata is not None and len(metadata) != len(media_paths):
             raise ValueError("metadata must be None or have the same length as media_paths")
-
-        # Get initial progress state
-        initial_progress = self.openapi_service.dataset_api.dataset_dataset_id_progress_get(self.dataset_id)
-        initial_ready = initial_progress.ready
         
         # Setup tracking variables
         total_uploads = len(media_paths)
@@ -408,8 +396,6 @@ class RapidataDataset:
         # Create and start progress tracking thread
         progress_thread = self._get_progress_tracker(
             total_uploads, 
-            initial_ready, 
-            initial_progress, 
             stop_progress_tracking, 
             progress_tracking_error,
             progress_poll_interval
@@ -427,15 +413,11 @@ class RapidataDataset:
                 progress_tracking_error
             )
         finally:
-            # Wait for progress thread to finish naturally
-            # It will exit after either finishing all processing or timeout
-            progress_thread.join(10)  # Add margin to the timeout
+            progress_thread.join(10)  # Add margin to the timeout for tqdm
         
         # Log final progress
         self._log_final_progress(
             total_uploads, 
-            initial_ready, 
-            initial_progress, 
             progress_poll_interval,
             successful_uploads,
             failed_uploads
