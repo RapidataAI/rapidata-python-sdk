@@ -32,7 +32,7 @@ class RapidataFilters:
         filters=[CountryFilter(["US", "DE"]), LanguageFilter(["en"])]
         ```
 
-        This will make it so the order is only shown to users from the US and Germany that have their phone set to English. 
+        This ensures the order is only shown to users in the US and Germany whose phones are set to English.
     """
     user_score = UserScoreFilter
     age = AgeFilter 
