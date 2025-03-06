@@ -24,13 +24,13 @@ The Early Stopping feature leverages the trustworthiness, quantified through the
 
 ## Understanding the Confidence Threshold
 
-We've created a plot to give you an estimate of the number of responses required to reach a certain confidence level.
+We've created a plot based on empircal data aided by simulations to give you an estimate of the number of responses required to reach a certain confidence level.
 
 There are a few things to keep in mind when interpreting the results:
 
-- **Ideal Scenario**: The graph represents an ideal situation with no ambiguity which category is the correct one.
+- **Unambiguous Scenario**: The graph represents an ideal situation such as in the [example below](#using-early-stopping-in-your-order) with no ambiguity which category is the correct one. A counter-example would be subjective tasks like "Which image do you prefer?", where there's no clear correct answer.
 - **Real-World Variability**: Actual required responses may vary based on task complexity.
-- **Guidance Tool**: Use the graph as a guideline to set realistic expectations for your orders.
+- **Guidance Tool**: Use the graph as a reference to set realistic expectations for your orders. 
 - **Response Overflow**: The number of responses per datapoint may exceed the specified amount due to multiple users answering simultaneously.
 
 
@@ -44,7 +44,7 @@ There are a few things to keep in mind when interpreting the results:
     </iframe>
 </div>
 
-The Early Stopping feature is supported for the Classification and Comparison workflows. The number of categories is the number of options in the Classification task. For the Comparison task, the number of categories is always 2.
+>**Note:** The Early Stopping feature is supported for the Classification and Comparison workflows. The number of categories is the number of options in the Classification task. For the Comparison task, the number of categories is always 2.
 
 ## Using Early Stopping in Your Order
 
