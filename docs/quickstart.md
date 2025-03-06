@@ -62,7 +62,7 @@ The parameters are as follows:
 
 - `name`: The name of the order. This is used to identify the order in the [Rapidata Dashboard](https://app.rapidata.ai/dashboard/orders). This name is also be used to find the order again later.
 - `instruction`: The instruction you want to show the annotators to select the image by.
-- `contexts`: The prompt that will be shown along side the two images and the instruction.
+- `contexts`: The prompt that will be shown along side the two images and the instruction. (optional parameter)
 - `datapoints`: The image pairs we want to compare (order is randomized for every annotator). This can be any public URL (that points to an image, video or audio) or a local file path. This is a list of all datapoints you want to compare. Each datapoint consists of 2 files that are compared, as well as an optional context (which in this case is the prompt). The same instruction will be shown for each datapoint. There is a limit of 100 datapoints per order. If you need more than that, you can reach out to us at <info@rapidata.ai>.
 
 Optionally you may add additional specifications with the [other parameters](../reference/rapidata/rapidata_client/order/rapidata_order_manager/#rapidata.rapidata_client.order.rapidata_order_manager.RapidataOrderManager.create_compare_order). As an example, the `responses_per_datapoint` that specifies how many responses you want per datapoint<sup>1</sup>.

@@ -24,7 +24,7 @@ The Early Stopping feature leverages the trustworthiness, quantified through the
 
 ## Understanding the Confidence Threshold
 
-We've created a plot based on empircal data aided by simulations to give you an estimate of the number of responses required to reach a certain confidence level.
+We've created a plot based on empirical data aided by simulations to give you an estimate of the number of responses required to reach a certain confidence level.
 
 There are a few things to keep in mind when interpreting the results:
 
