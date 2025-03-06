@@ -4,7 +4,7 @@ Directly ask real humans to compare your data. This guide will show you how to c
 
 There are many other types of orders you can create which you can find in the examples on the [Overview](index.md).
 
-We will create an order assessing image-prompt-alignment, using 2 AI generated images and compare them against eachother based on which image followed the prompt more accurately.
+We will create an order assessing image-prompt-alignment, using 2 AI generated images and compare them against each other based on which image followed the prompt more accurately.
 
 Our annotators will then label the data according to the instruction we provided.
 
@@ -45,7 +45,7 @@ rapi = RapidataClient(client_id="Your client ID", client_secret="Your client sec
 
 All order-related operations are performed using rapi.order.
 
-1. Here we create a compare order with a name and the instruction / question we want to ask. Additionally we provide the prompt as a context:
+Here we create a compare order with a name and the instruction / question we want to ask. Additionally, we provide the prompt as context:
 
 ```py
 order = rapi.order.create_compare_order(
@@ -56,6 +56,8 @@ order = rapi.order.create_compare_order(
                 "https://assets.rapidata.ai/flux-1-pro_37_0.jpg"]],
 )
 ```
+> **Note:** When calling this function the data gets uploaded and prepared, but no annotators will start working on it yet.
+
 The parameters are as follows:
 
 - `name`: The name of the order. This is used to identify the order in the [Rapidata Dashboard](https://app.rapidata.ai/dashboard/orders). This name is also be used to find the order again later.
@@ -63,15 +65,25 @@ The parameters are as follows:
 - `contexts`: The prompt that will be shown along side the two images and the instruction.
 - `datapoints`: The image pairs we want to compare (order is randomized for every annotator). This can be any public URL (that points to an image, video or audio) or a local file path. This is a list of all datapoints you want to compare. Each datapoint consists of 2 files that are compared, as well as an optional context (which in this case is the prompt). The same instruction will be shown for each datapoint. There is a limit of 100 datapoints per order. If you need more than that, you can reach out to us at <info@rapidata.ai>.
 
-Optionally you may add additional specifications with the other parameters. As an example, the `responses_per_datapoint` that specifies how many responses you want per datapoint<sup>1</sup>.
+Optionally you may add additional specifications with the [other parameters](../reference/rapidata/rapidata_client/order/rapidata_order_manager/#rapidata.rapidata_client.order.rapidata_order_manager.RapidataOrderManager.create_compare_order). As an example, the `responses_per_datapoint` that specifies how many responses you want per datapoint<sup>1</sup>.
 
-When calling this function the data gets uploaded and prepared, but no annotators will start working on it yet.
+Further more you can customize to whom, how and in what sequence the tasks are shown:
 
-2. To start the order and collect responses, call the `run` method:
+- [Filters](../reference/rapidata/rapidata_client/filter/rapidata_filters/) to specify who should work on the order
+- [Settings](../reference/rapidata/rapidata_client/settings/rapidata_settings/) to specify how the order should be shown
+- [Selections](../reference/rapidata/rapidata_client/selection/rapidata_selections/) to specify in what sequence the tasks are shown
+
+These customizations can be added to the order through the `filters`, `settings` and `selections` parameters respectively.
+
+### Start Collecting Responses
+To start the order and collect responses, call the `run` method:
 
 ```py
 order.run()
 ```
+
+Once you call this method, annotators will start working on your order immediately.
+
 
 ### Retrieve Orders
 
