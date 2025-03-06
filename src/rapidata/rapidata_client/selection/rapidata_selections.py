@@ -25,7 +25,7 @@ class RapidataSelections:
                     LabelingSelection(2)]
         ```
 
-        This will make it so the annotators will have to solve 1 validation task followed by two labeling tasks.
+        This will require annotators to complete one validation task followed by two labeling tasks.
     """
     labeling = LabelingSelection
     validation = ValidationSelection
