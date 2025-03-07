@@ -29,8 +29,7 @@ class ClassificationMetadata(BaseModel):
     t: StrictStr = Field(description="Discriminator value for ClassificationMetadata", alias="_t")
     classification: StrictStr
     visibilities: Optional[StrictStr] = None
-    identifier: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["_t", "classification", "visibilities", "identifier"]
+    __properties: ClassVar[List[str]] = ["_t", "classification", "visibilities"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -92,8 +91,7 @@ class ClassificationMetadata(BaseModel):
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'ClassificationMetadata',
             "classification": obj.get("classification"),
-            "visibilities": obj.get("visibilities"),
-            "identifier": obj.get("identifier")
+            "visibilities": obj.get("visibilities")
         })
         return _obj
 
