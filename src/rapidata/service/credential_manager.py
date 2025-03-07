@@ -133,6 +133,13 @@ class CredentialManager:
                 return credential
 
         return self._create_new_credentials()
+    
+    def reset_credentials(self) -> None:
+        """Reset the stored credentials for current enviroment."""
+        credentials = self._read_credentials()
+        if self.endpoint in credentials:
+            del credentials[self.endpoint]
+            self._write_credentials(credentials)
 
     def _get_bridge_tokens(self) -> Optional[BridgeToken]:
         """Get bridge tokens from the identity endpoint."""

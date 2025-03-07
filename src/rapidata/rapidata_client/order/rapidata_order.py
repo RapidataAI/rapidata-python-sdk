@@ -165,8 +165,8 @@ class RapidataOrder:
         Raises:
             Exception: If the order is not in processing state.
         """
-        if self.get_status() != OrderState.PROCESSING:
-            raise Exception("Order is not processing. Preview unavailable.")
+        if (status := self.get_status()) != OrderState.PROCESSING:
+            raise Exception(f"Preview only available if order is processing. current status: {status}")
         
         campaign_id = self.__get_campaign_id()
         auth_url = f"https://rapids.{self.__openapi_service.enviroment}/preview/campaign?id={campaign_id}"

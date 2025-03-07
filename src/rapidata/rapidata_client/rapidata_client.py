@@ -42,3 +42,7 @@ class RapidataClient:
         self.validation = ValidationSetManager(openapi_service=self._openapi_service)
 
         self._demographic = DemographicManager(openapi_service=self._openapi_service)
+
+    def reset_credentials(self):
+        """Reset the credentials saved in the configuration file for the current enviroment."""
+        self._openapi_service.reset_credentials()

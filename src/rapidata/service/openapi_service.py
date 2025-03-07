@@ -8,6 +8,7 @@ from rapidata.api_client.api.workflow_api import WorkflowApi
 from rapidata.api_client.api_client import ApiClient
 from rapidata.api_client.configuration import Configuration
 from rapidata.service.token_manager import TokenManager, TokenInfo
+from rapidata.service.credential_manager import CredentialManager
 
 from importlib.metadata import version, PackageNotFoundError
 
@@ -23,11 +24,11 @@ class OpenAPIService:
     ):
         self.enviroment = enviroment
         endpoint = f"https://api.{enviroment}"
-        token_url = f"https://auth.{enviroment}"
+        self._token_url = f"https://auth.{enviroment}"
         token_manager = TokenManager(
             client_id=client_id,
             client_secret=client_secret,
-            endpoint=token_url,
+            endpoint=self._token_url,
             oauth_scope=oauth_scope,
             cert_path=cert_path,
         )
@@ -42,13 +43,12 @@ class OpenAPIService:
             f"Bearer {token_manager.fetch_token().access_token}"
         )
 
-        self._client_id = client_id
-        self._client_secret = client_secret
-        self._oauth_scope = oauth_scope
-        self._token_url = f"{token_url}/connect/token"
         self._cert_path = cert_path
 
         token_manager.start_token_refresh(token_callback=self._set_token)
+
+    def reset_credentials(self):
+        CredentialManager(endpoint=self._token_url, cert_path=self._cert_path).reset_credentials()
 
     @property
     def order_api(self) -> OrderApi:
