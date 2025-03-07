@@ -27,9 +27,9 @@ class ScrubResult(BaseModel):
     ScrubResult
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for ScrubResult", alias="_t")
-    rapid_id: StrictStr = Field(alias="rapidId")
     timestamps: List[StrictInt]
-    __properties: ClassVar[List[str]] = ["_t", "rapidId", "timestamps"]
+    rapid_id: StrictStr = Field(alias="rapidId")
+    __properties: ClassVar[List[str]] = ["_t", "timestamps", "rapidId"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -90,8 +90,8 @@ class ScrubResult(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'ScrubResult',
-            "rapidId": obj.get("rapidId"),
-            "timestamps": obj.get("timestamps")
+            "timestamps": obj.get("timestamps"),
+            "rapidId": obj.get("rapidId")
         })
         return _obj
 

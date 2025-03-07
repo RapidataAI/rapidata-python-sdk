@@ -29,8 +29,7 @@ class OriginalFilenameMetadata(BaseModel):
     t: StrictStr = Field(description="Discriminator value for OriginalFilenameMetadata", alias="_t")
     original_filename: StrictStr = Field(alias="originalFilename")
     visibilities: Optional[StrictStr] = None
-    identifier: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["_t", "originalFilename", "visibilities", "identifier"]
+    __properties: ClassVar[List[str]] = ["_t", "originalFilename", "visibilities"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -92,8 +91,7 @@ class OriginalFilenameMetadata(BaseModel):
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'OriginalFilenameMetadata',
             "originalFilename": obj.get("originalFilename"),
-            "visibilities": obj.get("visibilities"),
-            "identifier": obj.get("identifier")
+            "visibilities": obj.get("visibilities")
         })
         return _obj
 
