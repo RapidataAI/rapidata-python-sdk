@@ -30,8 +30,7 @@ class LocationMetadata(BaseModel):
     x: Union[StrictFloat, StrictInt]
     y: Union[StrictFloat, StrictInt]
     visibilities: Optional[StrictStr] = None
-    identifier: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["_t", "x", "y", "visibilities", "identifier"]
+    __properties: ClassVar[List[str]] = ["_t", "x", "y", "visibilities"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -94,8 +93,7 @@ class LocationMetadata(BaseModel):
             "_t": obj.get("_t") if obj.get("_t") is not None else 'LocationMetadata',
             "x": obj.get("x"),
             "y": obj.get("y"),
-            "visibilities": obj.get("visibilities"),
-            "identifier": obj.get("identifier")
+            "visibilities": obj.get("visibilities")
         })
         return _obj
 

@@ -131,6 +131,7 @@ Class | Method | HTTP request | Description
 *RapidApi* | [**rapid_create_demographic_rapid_post**](rapidata/api_client/docs/RapidApi.md#rapid_create_demographic_rapid_post) | **POST** /Rapid/CreateDemographicRapid | Creates a new Demographic Rapid.
 *RapidApi* | [**rapid_query_validation_rapids_get**](rapidata/api_client/docs/RapidApi.md#rapid_query_validation_rapids_get) | **GET** /Rapid/QueryValidationRapids | Queries the validation rapids for a specific validation set.
 *RapidApi* | [**rapid_rapid_id_delete**](rapidata/api_client/docs/RapidApi.md#rapid_rapid_id_delete) | **DELETE** /rapid/{rapidId} | Deletes a rapid.
+*RapidApi* | [**rapid_rapid_id_responses_get**](rapidata/api_client/docs/RapidApi.md#rapid_rapid_id_responses_get) | **GET** /rapid/{rapidId}/responses | Gets all responses for a given rapid.
 *RapidApi* | [**rapid_report_id_get**](rapidata/api_client/docs/RapidApi.md#rapid_report_id_get) | **GET** /rapid/report/{id} | Inspects a report&#39;s dump. can be used to restore zustand state or anything alike.
 *RapidApi* | [**rapid_report_post**](rapidata/api_client/docs/RapidApi.md#rapid_report_post) | **POST** /Rapid/Report | Used to report an issue with a rapid.
 *RapidApi* | [**rapid_skip_user_guess_post**](rapidata/api_client/docs/RapidApi.md#rapid_skip_user_guess_post) | **POST** /Rapid/SkipUserGuess | Skips a Rapid for the user.
@@ -151,7 +152,7 @@ Class | Method | HTTP request | Description
 *WorkflowApi* | [**workflow_get_by_id_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_get_by_id_get) | **GET** /Workflow/GetById | Get a workflow by its ID.
 *WorkflowApi* | [**workflow_get_progress_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_get_progress_get) | **GET** /Workflow/GetProgress | Get the progress of a workflow.
 *WorkflowApi* | [**workflow_id_compare_ab_summary_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_id_compare_ab_summary_get) | **GET** /workflow/{id}/compare-ab-summary | Calculates a summary of the results for a simple compare workflow.  The summary includes the number of times an asset at each index was the winner.
-*WorkflowApi* | [**workflow_id_responses_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_id_responses_get) | **GET** /workflow/{id}/responses | Gets the !:limit most recent or oldest responses for a workflow.  The responses are not guaranteed to be of any specific rapid.  Instead, this endpoint returns all responses to any rapid in the workflow.
+*WorkflowApi* | [**workflow_id_responses_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_id_responses_get) | **GET** /workflow/{id}/responses | Gets the limit most recent or oldest responses for a workflow.  The responses are not guaranteed to be of any specific rapid.  Instead, this endpoint returns all responses to any rapid in the workflow.
 *WorkflowApi* | [**workflow_query_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_query_get) | **GET** /Workflow/Query | Queries workflows based on the provided filter, page, and sort criteria.
 
 
@@ -184,6 +185,7 @@ Class | Method | HTTP request | Description
  - [CampaignStatus](rapidata/api_client/docs/CampaignStatus.md)
  - [CampaignUserFilterModel](rapidata/api_client/docs/CampaignUserFilterModel.md)
  - [CappedSelection](rapidata/api_client/docs/CappedSelection.md)
+ - [ClassificationMetadata](rapidata/api_client/docs/ClassificationMetadata.md)
  - [ClassificationMetadataFilterConfig](rapidata/api_client/docs/ClassificationMetadataFilterConfig.md)
  - [ClassificationMetadataModel](rapidata/api_client/docs/ClassificationMetadataModel.md)
  - [ClassifyPayload](rapidata/api_client/docs/ClassifyPayload.md)
@@ -197,6 +199,7 @@ Class | Method | HTTP request | Description
  - [CompareResult](rapidata/api_client/docs/CompareResult.md)
  - [CompareTruth](rapidata/api_client/docs/CompareTruth.md)
  - [CompareWorkflowConfig](rapidata/api_client/docs/CompareWorkflowConfig.md)
+ - [CompareWorkflowConfigMetadataValue](rapidata/api_client/docs/CompareWorkflowConfigMetadataValue.md)
  - [CompareWorkflowConfigModel](rapidata/api_client/docs/CompareWorkflowConfigModel.md)
  - [CompareWorkflowConfigModelPairMakerConfig](rapidata/api_client/docs/CompareWorkflowConfigModelPairMakerConfig.md)
  - [CompareWorkflowConfigPairMakerConfig](rapidata/api_client/docs/CompareWorkflowConfigPairMakerConfig.md)
@@ -208,6 +211,7 @@ Class | Method | HTTP request | Description
  - [ConditionalValidationSelection](rapidata/api_client/docs/ConditionalValidationSelection.md)
  - [Coordinate](rapidata/api_client/docs/Coordinate.md)
  - [CountClassificationMetadataFilterConfig](rapidata/api_client/docs/CountClassificationMetadataFilterConfig.md)
+ - [CountMetadata](rapidata/api_client/docs/CountMetadata.md)
  - [CountMetadataModel](rapidata/api_client/docs/CountMetadataModel.md)
  - [CountryUserFilterModel](rapidata/api_client/docs/CountryUserFilterModel.md)
  - [CreateBridgeTokenResult](rapidata/api_client/docs/CreateBridgeTokenResult.md)
@@ -276,6 +280,7 @@ Class | Method | HTTP request | Description
  - [GetPipelineByIdResult](rapidata/api_client/docs/GetPipelineByIdResult.md)
  - [GetPipelineByIdResultArtifactsValue](rapidata/api_client/docs/GetPipelineByIdResultArtifactsValue.md)
  - [GetPublicOrdersResult](rapidata/api_client/docs/GetPublicOrdersResult.md)
+ - [GetRapidResponsesResult](rapidata/api_client/docs/GetRapidResponsesResult.md)
  - [GetResponsesResult](rapidata/api_client/docs/GetResponsesResult.md)
  - [GetSimpleWorkflowResultsModel](rapidata/api_client/docs/GetSimpleWorkflowResultsModel.md)
  - [GetSimpleWorkflowResultsResult](rapidata/api_client/docs/GetSimpleWorkflowResultsResult.md)
@@ -286,6 +291,7 @@ Class | Method | HTTP request | Description
  - [GetWorkflowProgressResult](rapidata/api_client/docs/GetWorkflowProgressResult.md)
  - [IWorkflowModelPagedResult](rapidata/api_client/docs/IWorkflowModelPagedResult.md)
  - [IdentityReadBridgeTokenGet202Response](rapidata/api_client/docs/IdentityReadBridgeTokenGet202Response.md)
+ - [ImageDimensionMetadata](rapidata/api_client/docs/ImageDimensionMetadata.md)
  - [ImageDimensionMetadataModel](rapidata/api_client/docs/ImageDimensionMetadataModel.md)
  - [ImportFromFileResult](rapidata/api_client/docs/ImportFromFileResult.md)
  - [ImportValidationSetFromFileResult](rapidata/api_client/docs/ImportValidationSetFromFileResult.md)
@@ -303,9 +309,11 @@ Class | Method | HTTP request | Description
  - [LocatePayload](rapidata/api_client/docs/LocatePayload.md)
  - [LocateRapidBlueprint](rapidata/api_client/docs/LocateRapidBlueprint.md)
  - [LocateResult](rapidata/api_client/docs/LocateResult.md)
+ - [LocationMetadata](rapidata/api_client/docs/LocationMetadata.md)
  - [LocationMetadataExistsFilterConfig](rapidata/api_client/docs/LocationMetadataExistsFilterConfig.md)
  - [LocationMetadataModel](rapidata/api_client/docs/LocationMetadataModel.md)
  - [LogicOperator](rapidata/api_client/docs/LogicOperator.md)
+ - [MetadataVisibilities](rapidata/api_client/docs/MetadataVisibilities.md)
  - [MultiAssetModel](rapidata/api_client/docs/MultiAssetModel.md)
  - [NaiveRefereeConfig](rapidata/api_client/docs/NaiveRefereeConfig.md)
  - [NaiveRefereeModel](rapidata/api_client/docs/NaiveRefereeModel.md)
@@ -325,6 +333,7 @@ Class | Method | HTTP request | Description
  - [OrderModel](rapidata/api_client/docs/OrderModel.md)
  - [OrderModelPagedResult](rapidata/api_client/docs/OrderModelPagedResult.md)
  - [OrderState](rapidata/api_client/docs/OrderState.md)
+ - [OriginalFilenameMetadata](rapidata/api_client/docs/OriginalFilenameMetadata.md)
  - [OriginalFilenameMetadataModel](rapidata/api_client/docs/OriginalFilenameMetadataModel.md)
  - [PageInfo](rapidata/api_client/docs/PageInfo.md)
  - [PipelineIdWorkflowPutRequest](rapidata/api_client/docs/PipelineIdWorkflowPutRequest.md)
@@ -337,6 +346,7 @@ Class | Method | HTTP request | Description
  - [PrivateTextMetadataInput](rapidata/api_client/docs/PrivateTextMetadataInput.md)
  - [ProbabilisticAttachCategoryRefereeConfig](rapidata/api_client/docs/ProbabilisticAttachCategoryRefereeConfig.md)
  - [ProblemDetails](rapidata/api_client/docs/ProblemDetails.md)
+ - [PromptMetadata](rapidata/api_client/docs/PromptMetadata.md)
  - [PromptMetadataInput](rapidata/api_client/docs/PromptMetadataInput.md)
  - [PromptMetadataModel](rapidata/api_client/docs/PromptMetadataModel.md)
  - [PublicOrderModel](rapidata/api_client/docs/PublicOrderModel.md)
@@ -376,12 +386,15 @@ Class | Method | HTTP request | Description
  - [SkipResult](rapidata/api_client/docs/SkipResult.md)
  - [SortCriterion](rapidata/api_client/docs/SortCriterion.md)
  - [SortDirection](rapidata/api_client/docs/SortDirection.md)
+ - [SourceUrlMetadata](rapidata/api_client/docs/SourceUrlMetadata.md)
  - [SourceUrlMetadataModel](rapidata/api_client/docs/SourceUrlMetadataModel.md)
  - [StaticSelection](rapidata/api_client/docs/StaticSelection.md)
  - [SubmitCocoModel](rapidata/api_client/docs/SubmitCocoModel.md)
  - [SubmitCocoResult](rapidata/api_client/docs/SubmitCocoResult.md)
  - [TextAssetModel](rapidata/api_client/docs/TextAssetModel.md)
+ - [TextMetadata](rapidata/api_client/docs/TextMetadata.md)
  - [TextMetadataModel](rapidata/api_client/docs/TextMetadataModel.md)
+ - [TranscriptionMetadata](rapidata/api_client/docs/TranscriptionMetadata.md)
  - [TranscriptionMetadataInput](rapidata/api_client/docs/TranscriptionMetadataInput.md)
  - [TranscriptionMetadataModel](rapidata/api_client/docs/TranscriptionMetadataModel.md)
  - [TranscriptionPayload](rapidata/api_client/docs/TranscriptionPayload.md)

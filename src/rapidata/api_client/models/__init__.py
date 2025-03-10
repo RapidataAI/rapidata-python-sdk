@@ -41,6 +41,7 @@ from rapidata.api_client.models.campaign_query_result_paged_result import Campai
 from rapidata.api_client.models.campaign_status import CampaignStatus
 from rapidata.api_client.models.campaign_user_filter_model import CampaignUserFilterModel
 from rapidata.api_client.models.capped_selection import CappedSelection
+from rapidata.api_client.models.classification_metadata import ClassificationMetadata
 from rapidata.api_client.models.classification_metadata_filter_config import ClassificationMetadataFilterConfig
 from rapidata.api_client.models.classification_metadata_model import ClassificationMetadataModel
 from rapidata.api_client.models.classify_payload import ClassifyPayload
@@ -54,6 +55,7 @@ from rapidata.api_client.models.compare_rapid_blueprint import CompareRapidBluep
 from rapidata.api_client.models.compare_result import CompareResult
 from rapidata.api_client.models.compare_truth import CompareTruth
 from rapidata.api_client.models.compare_workflow_config import CompareWorkflowConfig
+from rapidata.api_client.models.compare_workflow_config_metadata_value import CompareWorkflowConfigMetadataValue
 from rapidata.api_client.models.compare_workflow_config_model import CompareWorkflowConfigModel
 from rapidata.api_client.models.compare_workflow_config_model_pair_maker_config import CompareWorkflowConfigModelPairMakerConfig
 from rapidata.api_client.models.compare_workflow_config_pair_maker_config import CompareWorkflowConfigPairMakerConfig
@@ -65,6 +67,7 @@ from rapidata.api_client.models.compare_workflow_model_pair_maker_config import 
 from rapidata.api_client.models.conditional_validation_selection import ConditionalValidationSelection
 from rapidata.api_client.models.coordinate import Coordinate
 from rapidata.api_client.models.count_classification_metadata_filter_config import CountClassificationMetadataFilterConfig
+from rapidata.api_client.models.count_metadata import CountMetadata
 from rapidata.api_client.models.count_metadata_model import CountMetadataModel
 from rapidata.api_client.models.country_user_filter_model import CountryUserFilterModel
 from rapidata.api_client.models.create_bridge_token_result import CreateBridgeTokenResult
@@ -133,6 +136,7 @@ from rapidata.api_client.models.get_order_by_id_result import GetOrderByIdResult
 from rapidata.api_client.models.get_pipeline_by_id_result import GetPipelineByIdResult
 from rapidata.api_client.models.get_pipeline_by_id_result_artifacts_value import GetPipelineByIdResultArtifactsValue
 from rapidata.api_client.models.get_public_orders_result import GetPublicOrdersResult
+from rapidata.api_client.models.get_rapid_responses_result import GetRapidResponsesResult
 from rapidata.api_client.models.get_responses_result import GetResponsesResult
 from rapidata.api_client.models.get_simple_workflow_results_model import GetSimpleWorkflowResultsModel
 from rapidata.api_client.models.get_simple_workflow_results_result import GetSimpleWorkflowResultsResult
@@ -143,6 +147,7 @@ from rapidata.api_client.models.get_workflow_by_id_result_workflow import GetWor
 from rapidata.api_client.models.get_workflow_progress_result import GetWorkflowProgressResult
 from rapidata.api_client.models.i_workflow_model_paged_result import IWorkflowModelPagedResult
 from rapidata.api_client.models.identity_read_bridge_token_get202_response import IdentityReadBridgeTokenGet202Response
+from rapidata.api_client.models.image_dimension_metadata import ImageDimensionMetadata
 from rapidata.api_client.models.image_dimension_metadata_model import ImageDimensionMetadataModel
 from rapidata.api_client.models.import_from_file_result import ImportFromFileResult
 from rapidata.api_client.models.import_validation_set_from_file_result import ImportValidationSetFromFileResult
@@ -160,9 +165,11 @@ from rapidata.api_client.models.locate_coordinate import LocateCoordinate
 from rapidata.api_client.models.locate_payload import LocatePayload
 from rapidata.api_client.models.locate_rapid_blueprint import LocateRapidBlueprint
 from rapidata.api_client.models.locate_result import LocateResult
+from rapidata.api_client.models.location_metadata import LocationMetadata
 from rapidata.api_client.models.location_metadata_exists_filter_config import LocationMetadataExistsFilterConfig
 from rapidata.api_client.models.location_metadata_model import LocationMetadataModel
 from rapidata.api_client.models.logic_operator import LogicOperator
+from rapidata.api_client.models.metadata_visibilities import MetadataVisibilities
 from rapidata.api_client.models.multi_asset_model import MultiAssetModel
 from rapidata.api_client.models.naive_referee_config import NaiveRefereeConfig
 from rapidata.api_client.models.naive_referee_model import NaiveRefereeModel
@@ -182,6 +189,7 @@ from rapidata.api_client.models.online_pair_maker_information import OnlinePairM
 from rapidata.api_client.models.order_model import OrderModel
 from rapidata.api_client.models.order_model_paged_result import OrderModelPagedResult
 from rapidata.api_client.models.order_state import OrderState
+from rapidata.api_client.models.original_filename_metadata import OriginalFilenameMetadata
 from rapidata.api_client.models.original_filename_metadata_model import OriginalFilenameMetadataModel
 from rapidata.api_client.models.page_info import PageInfo
 from rapidata.api_client.models.pipeline_id_workflow_put_request import PipelineIdWorkflowPutRequest
@@ -194,6 +202,7 @@ from rapidata.api_client.models.preliminary_download_result import PreliminaryDo
 from rapidata.api_client.models.private_text_metadata_input import PrivateTextMetadataInput
 from rapidata.api_client.models.probabilistic_attach_category_referee_config import ProbabilisticAttachCategoryRefereeConfig
 from rapidata.api_client.models.problem_details import ProblemDetails
+from rapidata.api_client.models.prompt_metadata import PromptMetadata
 from rapidata.api_client.models.prompt_metadata_input import PromptMetadataInput
 from rapidata.api_client.models.prompt_metadata_model import PromptMetadataModel
 from rapidata.api_client.models.public_order_model import PublicOrderModel
@@ -233,12 +242,15 @@ from rapidata.api_client.models.simple_workflow_model_blueprint import SimpleWor
 from rapidata.api_client.models.skip_result import SkipResult
 from rapidata.api_client.models.sort_criterion import SortCriterion
 from rapidata.api_client.models.sort_direction import SortDirection
+from rapidata.api_client.models.source_url_metadata import SourceUrlMetadata
 from rapidata.api_client.models.source_url_metadata_model import SourceUrlMetadataModel
 from rapidata.api_client.models.static_selection import StaticSelection
 from rapidata.api_client.models.submit_coco_model import SubmitCocoModel
 from rapidata.api_client.models.submit_coco_result import SubmitCocoResult
 from rapidata.api_client.models.text_asset_model import TextAssetModel
+from rapidata.api_client.models.text_metadata import TextMetadata
 from rapidata.api_client.models.text_metadata_model import TextMetadataModel
+from rapidata.api_client.models.transcription_metadata import TranscriptionMetadata
 from rapidata.api_client.models.transcription_metadata_input import TranscriptionMetadataInput
 from rapidata.api_client.models.transcription_metadata_model import TranscriptionMetadataModel
 from rapidata.api_client.models.transcription_payload import TranscriptionPayload

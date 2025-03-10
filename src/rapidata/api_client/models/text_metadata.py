@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,9 +28,8 @@ class TextMetadata(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for TextMetadata", alias="_t")
     text: StrictStr
-    identifier: StrictStr
-    visibilities: StrictStr
-    __properties: ClassVar[List[str]] = ["_t", "text", "identifier", "visibilities"]
+    visibilities: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = ["_t", "text", "visibilities"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -92,7 +91,6 @@ class TextMetadata(BaseModel):
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'TextMetadata',
             "text": obj.get("text"),
-            "identifier": obj.get("identifier"),
             "visibilities": obj.get("visibilities")
         })
         return _obj

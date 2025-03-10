@@ -29,9 +29,8 @@ class ImageDimensionMetadata(BaseModel):
     t: StrictStr = Field(description="Discriminator value for ImageDimensionMetadata", alias="_t")
     height: Optional[StrictInt] = None
     width: Optional[StrictInt] = None
-    identifier: Optional[StrictStr] = None
     visibilities: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["_t", "height", "width", "identifier", "visibilities"]
+    __properties: ClassVar[List[str]] = ["_t", "height", "width", "visibilities"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -94,7 +93,6 @@ class ImageDimensionMetadata(BaseModel):
             "_t": obj.get("_t") if obj.get("_t") is not None else 'ImageDimensionMetadata',
             "height": obj.get("height"),
             "width": obj.get("width"),
-            "identifier": obj.get("identifier"),
             "visibilities": obj.get("visibilities")
         })
         return _obj
