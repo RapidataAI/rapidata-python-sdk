@@ -235,11 +235,11 @@ class RapidataOrderBuilder:
         if not isinstance(asset, list):
             raise TypeError("Media paths must be provided as a list of paths.")
 
-        # for a in asset:
-        #     if not isinstance(a, (MediaAsset, TextAsset, MultiAsset)):
-        #         raise TypeError(
-        #             "Media paths must be of type MediaAsset, TextAsset, or MultiAsset."
-        #         )
+        for a in asset:
+            if not isinstance(a, (MediaAsset, TextAsset, MultiAsset)):
+                raise TypeError(
+                    "Media paths must be of type MediaAsset, TextAsset, or MultiAsset."
+                )
 
         if metadata:
             for data in metadata:
