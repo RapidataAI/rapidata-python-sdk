@@ -247,17 +247,15 @@ class RapidataOrderManager:
                              name: str,
                              instruction: str,
                              datapoints: list[str],
-                             responses_per_comparison: int,
                              total_comparison_budget: int,
+                             responses_per_comparison: int = 5,
                              random_comparisons_ratio: float = 0.5,
-                             elo_start: int = 1200,
-                             elo_k_factor: int = 40,
-                             elo_scaling_factor: int = 400,
-                             contexts: Optional[list[str]] = None,
+                             context: Optional[str] = None,
                              validation_set_id: Optional[str] = None,
                              filters: Sequence[RapidataFilter] = [],
                              settings: Sequence[RapidataSetting] = [],
-                             selections: Optional[Sequence[RapidataSelection]] = None) -> RapidataOrder:
+                             selections: Optional[Sequence[RapidataSelection]] = None
+                             ) -> RapidataOrder:
         """
         Create a ranking order.
 
@@ -266,15 +264,11 @@ class RapidataOrderManager:
             instruction (str): The question asked from People when They see two datapoints.
             datapoints (list[str]): A list of datapoints that will participate in the ranking.
             total_comparison_budget (int): The total number of (pairwise-)comparisons that can be made.
-            random_comparisons_ratio (float, optional): The fraction of random comparisons in the ranking process.
-            The rest will focus on pairing similarly ranked datapoints.
-            elo_start (int, optional): The initial ELO rating assigned to each datapoint.
-            elo_k_factor (int, optional): The K-factor used for ELO updates.
-            elo_scaling_factor (int, optional): The scaling factor used in the ELO calculation.
             responses_per_comparison (int, optional): The number of responses collected per comparison.
-            contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
-                If provided has to be the same length as datapoints and will be shown in addition to the instruction.
-                (Therefore will be different for each datapoint) Will be match up with the datapoints using the list index.
+            random_comparisons_ratio (float, optional): The fraction of random comparisons in the ranking process.
+                The rest will focus on pairing similarly ranked datapoints. Defaults to 0.5 and can be left untouched.
+            context (str, optional): The context for all the comparison. Defaults to None.\n
+                If provided will be shown in addition to the instruction for all the matchups.
             validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
             filters (Sequence[RapidataFilter], optional): The list of filters for the order. Defaults to []. Decides who the tasks should be shown to.
@@ -287,15 +281,12 @@ class RapidataOrderManager:
             name=name,
             workflow=RankingWorkflow(
                 criteria=instruction,
-                elo_start=elo_start,
-                elo_k_factor=elo_k_factor,
-                elo_scaling_factor=elo_scaling_factor,
                 total_comparison_budget=total_comparison_budget,
-                random_comparisons_ratio=random_comparisons_ratio
+                random_comparisons_ratio=random_comparisons_ratio,
+                context=context
             ),
             assets=assets,
             responses_per_datapoint=responses_per_comparison,
-            contexts=contexts,
             validation_set_id=validation_set_id,
             filters=filters,
             selections=selections,

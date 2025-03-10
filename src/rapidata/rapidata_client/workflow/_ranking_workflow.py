@@ -1,6 +1,11 @@
 from rapidata.api_client import CompareWorkflowModelPairMakerConfig, OnlinePairMakerConfigModel, EloConfigModel
 from rapidata.api_client.models.compare_workflow_model import CompareWorkflowModel
 from rapidata.rapidata_client.workflow._base_workflow import Workflow
+from rapidata.rapidata_client.metadata import PromptMetadata
+from rapidata.api_client.models.create_datapoint_from_urls_model import (
+    CreateDatapointFromUrlsModelMetadataInner,
+)
+
 
 class RankingWorkflow(Workflow):
 
@@ -9,11 +14,16 @@ class RankingWorkflow(Workflow):
                  criteria: str,
                  total_comparison_budget: int,
                  random_comparisons_ratio,
-                 elo_start: int,
-                 elo_k_factor: int,
-                 elo_scaling_factor: int,
+                 elo_start: int = 1200,
+                 elo_k_factor: int = 40,
+                 elo_scaling_factor: int = 400,
+                 context: str | None = None,
                  ):
         super().__init__(type="CompareWorkflowConfig")
+
+        self.context = [CreateDatapointFromUrlsModelMetadataInner(
+            PromptMetadata(context).to_model())
+            ] if context else None
 
         self.criteria = criteria
         self.pair_maker_config = CompareWorkflowModelPairMakerConfig(
@@ -36,5 +46,6 @@ class RankingWorkflow(Workflow):
             _t="CompareWorkflow",
             criteria=self.criteria,
             eloConfig=self.elo_config,
-            pairMakerConfig=self.pair_maker_config
+            pairMakerConfig=self.pair_maker_config,
+            metadata=self.context,
         )
