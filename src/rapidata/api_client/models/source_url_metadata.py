@@ -18,24 +18,24 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class TranscriptionMetadata(BaseModel):
+class SourceUrlMetadata(BaseModel):
     """
-    TranscriptionMetadata
+    SourceUrlMetadata
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for TranscriptionMetadata", alias="_t")
-    transcription: StrictStr
-    visibilities: StrictStr
-    __properties: ClassVar[List[str]] = ["_t", "transcription", "visibilities"]
+    t: StrictStr = Field(description="Discriminator value for SourceUrlMetadata", alias="_t")
+    url: StrictStr
+    visibilities: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = ["_t", "url", "visibilities"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['TranscriptionMetadata']):
-            raise ValueError("must be one of enum values ('TranscriptionMetadata')")
+        if value not in set(['SourceUrlMetadata']):
+            raise ValueError("must be one of enum values ('SourceUrlMetadata')")
         return value
 
     model_config = ConfigDict(
@@ -56,7 +56,7 @@ class TranscriptionMetadata(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of TranscriptionMetadata from a JSON string"""
+        """Create an instance of SourceUrlMetadata from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -81,7 +81,7 @@ class TranscriptionMetadata(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of TranscriptionMetadata from a dict"""
+        """Create an instance of SourceUrlMetadata from a dict"""
         if obj is None:
             return None
 
@@ -89,8 +89,8 @@ class TranscriptionMetadata(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'TranscriptionMetadata',
-            "transcription": obj.get("transcription"),
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'SourceUrlMetadata',
+            "url": obj.get("url"),
             "visibilities": obj.get("visibilities")
         })
         return _obj

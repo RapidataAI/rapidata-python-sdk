@@ -19,23 +19,26 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.datapoint_asset import DatapointAsset
+from rapidata.api_client.models.rapid_response import RapidResponse
 from typing import Optional, Set
 from typing_extensions import Self
 
-class TranscriptionMetadata(BaseModel):
+class GetRapidResponsesResult(BaseModel):
     """
-    TranscriptionMetadata
+    GetRapidResponsesResult
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for TranscriptionMetadata", alias="_t")
-    transcription: StrictStr
-    visibilities: StrictStr
-    __properties: ClassVar[List[str]] = ["_t", "transcription", "visibilities"]
+    rapid_id: StrictStr = Field(alias="rapidId")
+    asset: DatapointAsset
+    responses: List[RapidResponse]
+    state: StrictStr
+    __properties: ClassVar[List[str]] = ["rapidId", "asset", "responses", "state"]
 
-    @field_validator('t')
-    def t_validate_enum(cls, value):
+    @field_validator('state')
+    def state_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['TranscriptionMetadata']):
-            raise ValueError("must be one of enum values ('TranscriptionMetadata')")
+        if value not in set(['Labeling', 'Paused', 'Incomplete', 'Done', 'None']):
+            raise ValueError("must be one of enum values ('Labeling', 'Paused', 'Incomplete', 'Done', 'None')")
         return value
 
     model_config = ConfigDict(
@@ -56,7 +59,7 @@ class TranscriptionMetadata(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of TranscriptionMetadata from a JSON string"""
+        """Create an instance of GetRapidResponsesResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -77,11 +80,21 @@ class TranscriptionMetadata(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of asset
+        if self.asset:
+            _dict['asset'] = self.asset.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in responses (list)
+        _items = []
+        if self.responses:
+            for _item_responses in self.responses:
+                if _item_responses:
+                    _items.append(_item_responses.to_dict())
+            _dict['responses'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of TranscriptionMetadata from a dict"""
+        """Create an instance of GetRapidResponsesResult from a dict"""
         if obj is None:
             return None
 
@@ -89,9 +102,10 @@ class TranscriptionMetadata(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'TranscriptionMetadata',
-            "transcription": obj.get("transcription"),
-            "visibilities": obj.get("visibilities")
+            "rapidId": obj.get("rapidId"),
+            "asset": DatapointAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
+            "responses": [RapidResponse.from_dict(_item) for _item in obj["responses"]] if obj.get("responses") is not None else None,
+            "state": obj.get("state")
         })
         return _obj
 

@@ -30,6 +30,7 @@ class MetadataVisibilities(str, Enum):
     USERS = 'Users'
     CUSTOMERS = 'Customers'
     ADMINS = 'Admins'
+    DASHBOARD = 'Dashboard'
     ALL = 'All'
 
     @classmethod

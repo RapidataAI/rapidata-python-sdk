@@ -2469,6 +2469,47 @@
         }
       }
     },
+    "/rapid/{rapidId}/responses": {
+      "get": {
+        "tags": [
+          "Rapid"
+        ],
+        "summary": "Gets all responses for a given rapid.",
+        "parameters": [
+          {
+            "name": "rapidId",
+            "in": "path",
+            "description": "The rapid to get the responses for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRapidResponsesResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRapidResponsesResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRapidResponsesResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/workflow/compare/{id}/results": {
       "get": {
         "tags": [
@@ -2754,7 +2795,7 @@
         "tags": [
           "Workflow"
         ],
-        "summary": "Gets the !:limit most recent or oldest responses for a workflow.\r\nThe responses are not guaranteed to be of any specific rapid.\r\nInstead, this endpoint returns all responses to any rapid in the workflow.",
+        "summary": "Gets the limit most recent or oldest responses for a workflow.\r\nThe responses are not guaranteed to be of any specific rapid.\r\nInstead, this endpoint returns all responses to any rapid in the workflow.",
         "parameters": [
           {
             "name": "id",
@@ -5000,6 +5041,30 @@
           },
           "eloConfig": {
             "$ref": "#/components/schemas/EloConfigModel"
+          },
+          "metadata": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/PrivateTextMetadataInput"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptMetadataInput"
+                },
+                {
+                  "$ref": "#/components/schemas/PublicTextMetadataInput"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadataInput"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            },
+            "description": "The metadata is attached to every single rapid and can be used for something like the prompt.",
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -5580,7 +5645,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "The Early Stopping Referee can currently only be used for classification tasks and will stop once a certain threshold is reached or the maximum number of votes is collected."
+        "description": "The Early Stopping Referee can currently only be used for classification tasks and will stop once a certain\r\nthreshold is reached or the maximum number of votes is collected."
       },
       "EloConfigModel": {
         "type": "object",
@@ -8248,6 +8313,56 @@
         },
         "additionalProperties": false
       },
+      "GetRapidResponsesResult": {
+        "required": [
+          "asset",
+          "rapidId",
+          "responses",
+          "state"
+        ],
+        "type": "object",
+        "properties": {
+          "rapidId": {
+            "type": "string"
+          },
+          "asset": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/FileAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/MultiAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/NullAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/TextAssetModel"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "responses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RapidResponse"
+            }
+          },
+          "state": {
+            "enum": [
+              "Labeling",
+              "Paused",
+              "Incomplete",
+              "Done",
+              "None"
+            ],
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "InspectReportResult": {
         "type": "object",
         "properties": {
@@ -8683,6 +8798,79 @@
         ],
         "type": "string"
       },
+      "RapidResponse": {
+        "required": [
+          "country",
+          "demographicInformation",
+          "id",
+          "result",
+          "userId",
+          "userScore"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "result": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranscriptionResult"
+              },
+              {
+                "$ref": "#/components/schemas/ScrubResult"
+              },
+              {
+                "$ref": "#/components/schemas/PolygonResult"
+              },
+              {
+                "$ref": "#/components/schemas/NamedEntityResult"
+              },
+              {
+                "$ref": "#/components/schemas/LocateResult"
+              },
+              {
+                "$ref": "#/components/schemas/LineResult"
+              },
+              {
+                "$ref": "#/components/schemas/FreeTextResult"
+              },
+              {
+                "$ref": "#/components/schemas/CompareResult"
+              },
+              {
+                "$ref": "#/components/schemas/SkipResult"
+              },
+              {
+                "$ref": "#/components/schemas/AttachCategoryResult"
+              },
+              {
+                "$ref": "#/components/schemas/BoundingBoxResult"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "userScore": {
+            "type": "number",
+            "format": "double"
+          },
+          "demographicInformation": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
       "RapidResultModel": {
         "required": [
           "result",
@@ -8760,6 +8948,16 @@
         "additionalProperties": false,
         "description": "The model for a Rapid skipped."
       },
+      "RapidState": {
+        "enum": [
+          "Labeling",
+          "Paused",
+          "Incomplete",
+          "Done",
+          "None"
+        ],
+        "type": "string"
+      },
       "ReportModel": {
         "required": [
           "issue",
@@ -8814,15 +9012,15 @@
             "default": "ScrubResult",
             "example": "ScrubResult"
           },
-          "rapidId": {
-            "type": "string"
-          },
           "timestamps": {
             "type": "array",
             "items": {
               "type": "integer",
               "format": "int32"
             }
+          },
+          "rapidId": {
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -9207,6 +9405,7 @@
       "GetSimpleWorkflowResultsResult": {
         "required": [
           "asset",
+          "payload",
           "rapidId",
           "responses",
           "state"
@@ -9215,6 +9414,43 @@
         "properties": {
           "rapidId": {
             "type": "string"
+          },
+          "payload": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranscriptionPayload"
+              },
+              {
+                "$ref": "#/components/schemas/ScrubPayload"
+              },
+              {
+                "$ref": "#/components/schemas/PolygonPayload"
+              },
+              {
+                "$ref": "#/components/schemas/NamedEntityPayload"
+              },
+              {
+                "$ref": "#/components/schemas/LocatePayload"
+              },
+              {
+                "$ref": "#/components/schemas/LinePayload"
+              },
+              {
+                "$ref": "#/components/schemas/FreeTextPayload"
+              },
+              {
+                "$ref": "#/components/schemas/ComparePayload"
+              },
+              {
+                "$ref": "#/components/schemas/ClassifyPayload"
+              },
+              {
+                "$ref": "#/components/schemas/BoundingBoxPayload"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
           },
           "asset": {
             "oneOf": [
@@ -9515,89 +9751,6 @@
         "additionalProperties": false,
         "description": "The model for the query request."
       },
-      "RapidResponse": {
-        "required": [
-          "country",
-          "demographicInformation",
-          "id",
-          "result",
-          "userId",
-          "userScore"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "userId": {
-            "type": "string"
-          },
-          "country": {
-            "type": "string"
-          },
-          "result": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/TranscriptionResult"
-              },
-              {
-                "$ref": "#/components/schemas/ScrubResult"
-              },
-              {
-                "$ref": "#/components/schemas/PolygonResult"
-              },
-              {
-                "$ref": "#/components/schemas/NamedEntityResult"
-              },
-              {
-                "$ref": "#/components/schemas/LocateResult"
-              },
-              {
-                "$ref": "#/components/schemas/LineResult"
-              },
-              {
-                "$ref": "#/components/schemas/FreeTextResult"
-              },
-              {
-                "$ref": "#/components/schemas/CompareResult"
-              },
-              {
-                "$ref": "#/components/schemas/SkipResult"
-              },
-              {
-                "$ref": "#/components/schemas/AttachCategoryResult"
-              },
-              {
-                "$ref": "#/components/schemas/BoundingBoxResult"
-              }
-            ],
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          },
-          "userScore": {
-            "type": "number",
-            "format": "double"
-          },
-          "demographicInformation": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
-            }
-          }
-        },
-        "additionalProperties": false
-      },
-      "RapidState": {
-        "enum": [
-          "Labeling",
-          "Paused",
-          "Incomplete",
-          "Done",
-          "None"
-        ],
-        "type": "string"
-      },
       "SimpleWorkflowModel1": {
         "title": "SimpleWorkflowModel",
         "required": [
@@ -9864,11 +10017,38 @@
         },
         "additionalProperties": false
       },
+      "ClassificationMetadata": {
+        "title": "ClassificationMetadata",
+        "required": [
+          "_t",
+          "classification"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "ClassificationMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for ClassificationMetadata",
+            "default": "ClassificationMetadata",
+            "example": "ClassificationMetadata"
+          },
+          "classification": {
+            "type": "string"
+          },
+          "visibilities": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "CompareWorkflowConfig": {
         "title": "CompareWorkflowConfig",
         "required": [
           "_t",
           "criteria",
+          "metadata",
           "referee",
           "targetCountryCodes"
         ],
@@ -9920,6 +10100,43 @@
             "items": {
               "type": "string"
             }
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/ClassificationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/CountMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageDimensionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/LocationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/SourceUrlMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TextMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadata"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
           }
         },
         "additionalProperties": false
@@ -9929,6 +10146,7 @@
         "required": [
           "_t",
           "criteria",
+          "metadata",
           "pairMakerConfig",
           "referee",
           "targetCountryCodes"
@@ -9984,10 +10202,75 @@
           },
           "eloConfig": {
             "$ref": "#/components/schemas/EloConfig"
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/ClassificationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/CountMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageDimensionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/LocationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/SourceUrlMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TextMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadata"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            },
+            "description": "The metadata is attached to every single rapid and can be used for something like the prompt."
           }
         },
         "additionalProperties": false,
         "description": "The configuration for creating a compare workflow.\r\nA compare workflow is a workflow that continuously matches datapoints against each other and updates their\r\nrespective ELO scores. The ELO scores are used to determine the relative strength of the datapoints,\r\nand datapoints are matched against other datapoints with similar ELO scores.\r\nThe end goal is a ranking of the datapoints based on their relative strength."
+      },
+      "CountMetadata": {
+        "title": "CountMetadata",
+        "required": [
+          "_t",
+          "count"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "CountMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for CountMetadata",
+            "default": "CountMetadata",
+            "example": "CountMetadata"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "visibilities": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
       },
       "DatasetArtifactModel": {
         "title": "DatasetArtifactModel",
@@ -10144,6 +10427,79 @@
         },
         "additionalProperties": false
       },
+      "ImageDimensionMetadata": {
+        "title": "ImageDimensionMetadata",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "ImageDimensionMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for ImageDimensionMetadata",
+            "default": "ImageDimensionMetadata",
+            "example": "ImageDimensionMetadata"
+          },
+          "height": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "width": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "visibilities": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LocationMetadata": {
+        "title": "LocationMetadata",
+        "required": [
+          "_t",
+          "x",
+          "y"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "LocationMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for LocationMetadata",
+            "default": "LocationMetadata",
+            "example": "LocationMetadata"
+          },
+          "x": {
+            "type": "number",
+            "format": "float"
+          },
+          "y": {
+            "type": "number",
+            "format": "float"
+          },
+          "visibilities": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MetadataVisibilities": {
+        "enum": [
+          "None",
+          "Users",
+          "Customers",
+          "Admins",
+          "Dashboard",
+          "All"
+        ],
+        "type": "string"
+      },
       "OnlinePairMakerConfig": {
         "title": "OnlinePairMakerConfig",
         "required": [
@@ -10171,6 +10527,32 @@
         },
         "additionalProperties": false
       },
+      "OriginalFilenameMetadata": {
+        "title": "OriginalFilenameMetadata",
+        "required": [
+          "_t",
+          "originalFilename"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "OriginalFilenameMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for OriginalFilenameMetadata",
+            "default": "OriginalFilenameMetadata",
+            "example": "OriginalFilenameMetadata"
+          },
+          "originalFilename": {
+            "type": "string"
+          },
+          "visibilities": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "PreliminaryDownloadModel": {
         "type": "object",
         "properties": {
@@ -10190,6 +10572,32 @@
         "type": "object",
         "properties": {
           "downloadId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PromptMetadata": {
+        "title": "PromptMetadata",
+        "required": [
+          "_t",
+          "prompt"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "PromptMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for PromptMetadata",
+            "default": "PromptMetadata",
+            "example": "PromptMetadata"
+          },
+          "prompt": {
+            "type": "string"
+          },
+          "visibilities": {
             "type": "string"
           }
         },
@@ -10359,6 +10767,85 @@
         },
         "additionalProperties": false,
         "description": "The configuration for a simple workflow.\r\nA simple workflow creates a rapid for each datapoint in its dataset.\r\nIt is considered complete when all rapids have been completed."
+      },
+      "SourceUrlMetadata": {
+        "title": "SourceUrlMetadata",
+        "required": [
+          "_t",
+          "url"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "SourceUrlMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for SourceUrlMetadata",
+            "default": "SourceUrlMetadata",
+            "example": "SourceUrlMetadata"
+          },
+          "url": {
+            "type": "string"
+          },
+          "visibilities": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TextMetadata": {
+        "title": "TextMetadata",
+        "required": [
+          "_t",
+          "text"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "TextMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for TextMetadata",
+            "default": "TextMetadata",
+            "example": "TextMetadata"
+          },
+          "text": {
+            "type": "string"
+          },
+          "visibilities": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TranscriptionMetadata": {
+        "title": "TranscriptionMetadata",
+        "required": [
+          "_t",
+          "transcription",
+          "visibilities"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "TranscriptionMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for TranscriptionMetadata",
+            "default": "TranscriptionMetadata",
+            "example": "TranscriptionMetadata"
+          },
+          "transcription": {
+            "type": "string"
+          },
+          "visibilities": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
       },
       "UpdateCampaignModel": {
         "type": "object",
