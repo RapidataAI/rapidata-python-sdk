@@ -249,6 +249,7 @@ class RapidataOrderManager:
                              datapoints: list[str],
                              total_comparison_budget: int,
                              responses_per_comparison: int = 5,
+                             data_type: str = RapidataDataTypes.MEDIA,
                              random_comparisons_ratio: float = 0.5,
                              context: Optional[str] = None,
                              validation_set_id: Optional[str] = None,
@@ -265,6 +266,8 @@ class RapidataOrderManager:
             datapoints (list[str]): A list of datapoints that will participate in the ranking.
             total_comparison_budget (int): The total number of (pairwise-)comparisons that can be made.
             responses_per_comparison (int, optional): The number of responses collected per comparison.
+            data_type (str, optional): The data type of the datapoints. Defaults to RapidataDataTypes.MEDIA. \n
+                Other option: RapidataDataTypes.TEXT ("text").
             random_comparisons_ratio (float, optional): The fraction of random comparisons in the ranking process.
                 The rest will focus on pairing similarly ranked datapoints. Defaults to 0.5 and can be left untouched.
             context (str, optional): The context for all the comparison. Defaults to None.\n
@@ -276,7 +279,13 @@ class RapidataOrderManager:
             selections (Sequence[RapidataSelection], optional): The list of selections for the order. Defaults to None. Decides in what order the tasks should be shown.
         """
 
-        assets = [MediaAsset(path=path) for path in datapoints]
+        if data_type == RapidataDataTypes.MEDIA:
+            assets = [MediaAsset(path=path) for path in datapoints]
+        elif data_type == RapidataDataTypes.TEXT:
+            assets = [TextAsset(text=text) for text in datapoints]
+        else:
+            raise ValueError(f"Unsupported data type: {data_type}, must be one of {RapidataDataTypes._possible_values()}")
+
         return self._create_general_order(
             name=name,
             workflow=RankingWorkflow(
