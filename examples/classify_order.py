@@ -28,8 +28,6 @@ def get_emotions_of_images_order(rapi: RapidataClient):
 
 if __name__ == "__main__":
     order = get_emotions_of_images_order(RapidataClient())
-
-    order.preview()
     order.display_progress_bar()
     results = order.get_results()
     print(results)
