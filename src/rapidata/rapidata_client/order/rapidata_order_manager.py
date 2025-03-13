@@ -250,6 +250,7 @@ class RapidataOrderManager:
                              total_comparison_budget: int,
                              responses_per_comparison: int = 5,
                              data_type: str = RapidataDataTypes.MEDIA,
+                             confidence_threshold: float | None = None,
                              random_comparisons_ratio: float = 0.5,
                              context: Optional[str] = None,
                              validation_set_id: Optional[str] = None,
@@ -268,6 +269,8 @@ class RapidataOrderManager:
             responses_per_comparison (int, optional): The number of responses collected per comparison.
             data_type (str, optional): The data type of the datapoints. Defaults to RapidataDataTypes.MEDIA. \n
                 Other option: RapidataDataTypes.TEXT ("text").
+            confidence_threshold (float, optional): The threshold for the confidence of the ranking. Defaults to None.\n
+                If provided, the matchups will stop after the threshold is reached or at the number of responses, whatever happens first.
             random_comparisons_ratio (float, optional): The fraction of random comparisons in the ranking process.
                 The rest will focus on pairing similarly ranked datapoints. Defaults to 0.5 and can be left untouched.
             context (str, optional): The context for all the comparison. Defaults to None.\n
@@ -296,6 +299,7 @@ class RapidataOrderManager:
             ),
             assets=assets,
             responses_per_datapoint=responses_per_comparison,
+            confidence_threshold=confidence_threshold,
             validation_set_id=validation_set_id,
             filters=filters,
             selections=selections,
