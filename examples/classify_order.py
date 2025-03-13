@@ -17,7 +17,7 @@ def get_emotions_of_images_order(rapi: RapidataClient):
     # Configure order
     order = rapi.order.create_classification_order(
         name="emotions from images",
-        instruction="What emotions do you feel when looking at the image?",
+        instruction="How do you feel when looking at the image?",
         answer_options=["happy", "sad", "angry", "surprised", "disgusted", "scared", "neutral"],
         datapoints=generated_images_urls,
         responses_per_datapoint=50
@@ -28,6 +28,8 @@ def get_emotions_of_images_order(rapi: RapidataClient):
 
 if __name__ == "__main__":
     order = get_emotions_of_images_order(RapidataClient())
+
+    order.preview()
     order.display_progress_bar()
     results = order.get_results()
     print(results)
