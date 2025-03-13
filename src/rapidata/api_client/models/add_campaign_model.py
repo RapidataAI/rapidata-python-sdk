@@ -38,7 +38,8 @@ class AddCampaignModel(BaseModel):
     feature_flags: List[FeatureFlag] = Field(description="The feature flags that should be applied to the campaign.", alias="featureFlags")
     priority: StrictInt = Field(description="The priority of the campaign.")
     is_sticky: Optional[StrictBool] = Field(default=None, description="Indicates if the campaign is sticky.", alias="isSticky")
-    __properties: ClassVar[List[str]] = ["_t", "artifactId", "campaignName", "userFilters", "validationSetId", "selections", "featureFlags", "priority", "isSticky"]
+    is_preview_enabled: Optional[StrictBool] = Field(default=None, description="A flag to indicate whether the campaign should be put into preview mode after creation.  This way the campaign will not start automatically and the user will have to manually start it.", alias="isPreviewEnabled")
+    __properties: ClassVar[List[str]] = ["_t", "artifactId", "campaignName", "userFilters", "validationSetId", "selections", "featureFlags", "priority", "isSticky", "isPreviewEnabled"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -122,6 +123,11 @@ class AddCampaignModel(BaseModel):
         if self.selections is None and "selections" in self.model_fields_set:
             _dict['selections'] = None
 
+        # set to None if is_preview_enabled (nullable) is None
+        # and model_fields_set contains the field
+        if self.is_preview_enabled is None and "is_preview_enabled" in self.model_fields_set:
+            _dict['isPreviewEnabled'] = None
+
         return _dict
 
     @classmethod
@@ -142,7 +148,8 @@ class AddCampaignModel(BaseModel):
             "selections": [AbTestSelectionAInner.from_dict(_item) for _item in obj["selections"]] if obj.get("selections") is not None else None,
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "priority": obj.get("priority"),
-            "isSticky": obj.get("isSticky")
+            "isSticky": obj.get("isSticky"),
+            "isPreviewEnabled": obj.get("isPreviewEnabled")
         })
         return _obj
 

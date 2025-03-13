@@ -2154,6 +2154,50 @@
         }
       }
     },
+    "/validation/{validationSetId}/dimensions": {
+      "patch": {
+        "tags": [
+          "Validation"
+        ],
+        "summary": "Updates the dimensions of all rapids within a validation set.",
+        "parameters": [
+          {
+            "name": "validationSetId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The model containing the dimensions",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDimensionsModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDimensionsModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDimensionsModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/Rapid/AddUserGuess": {
       "post": {
         "tags": [
@@ -3441,6 +3485,30 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/campaign/{campaignId}/release": {
+      "post": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "Releases a campaign from the preview state.\r\nThis will make the campaign available for the users to be labeled.",
+        "parameters": [
+          {
+            "name": "campaignId",
+            "in": "path",
+            "description": "The campaign id that should be released",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
           }
         }
       }
@@ -5325,6 +5393,22 @@
             "type": "boolean",
             "description": "Indicates if the underlying campaign should be sticky."
           },
+          "userScoreDimensions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The user score dimensions are used to determine the score of the responses from the user.",
+            "nullable": true
+          },
+          "demographicKeys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The demographic keys are used to determine which demographics to store on the resposnes from the user.",
+            "nullable": true
+          },
           "userFilters": {
             "type": "array",
             "items": {
@@ -5397,6 +5481,10 @@
             },
             "description": "The selections are used to determine which tasks are shown to a user.",
             "nullable": true
+          },
+          "isPreviewEnabled": {
+            "type": "boolean",
+            "description": "Whether the campaign should be in preview mode before it is started.\r\nSetting this to true will require the user to manually start the campaign."
           }
         },
         "additionalProperties": false,
@@ -5689,7 +5777,7 @@
           },
           "validationSetId": {
             "type": "string",
-            "description": "The Validation Set Id is used to as a source for the tasks that will be sent to the user."
+            "description": "The Validation Set id is used to as a source for the tasks that will be sent to the user."
           },
           "shouldAcceptIncorrect": {
             "type": "boolean",
@@ -8045,6 +8133,23 @@
         },
         "additionalProperties": false
       },
+      "UpdateDimensionsModel": {
+        "required": [
+          "dimensions"
+        ],
+        "type": "object",
+        "properties": {
+          "dimensions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": ""
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for updating the dimensions of all rapids within a validation set."
+      },
       "UploadCocoResult": {
         "required": [
           "categories",
@@ -9985,6 +10090,11 @@
           "isSticky": {
             "type": "boolean",
             "description": "Indicates if the campaign is sticky."
+          },
+          "isPreviewEnabled": {
+            "type": "boolean",
+            "description": "A flag to indicate whether the campaign should be put into preview mode after creation.\r\nThis way the campaign will not start automatically and the user will have to manually start it.",
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -10960,6 +11070,7 @@
               "Created",
               "Active",
               "Paused",
+              "Preview",
               "Completed"
             ],
             "type": "string"
@@ -11015,6 +11126,7 @@
           "Created",
           "Active",
           "Paused",
+          "Preview",
           "Completed"
         ],
         "type": "string"

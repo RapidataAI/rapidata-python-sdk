@@ -29,6 +29,7 @@ class CampaignStatus(str, Enum):
     CREATED = 'Created'
     ACTIVE = 'Active'
     PAUSED = 'Paused'
+    PREVIEW = 'Preview'
     COMPLETED = 'Completed'
 
     @classmethod

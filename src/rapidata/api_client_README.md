@@ -56,12 +56,13 @@ configuration.api_key['bearer'] = os.environ["API_KEY"]
 with rapidata.api_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = rapidata.api_client.CampaignApi(api_client)
+    campaign_id = 'campaign_id_example' # str | The campaign id that should be released
 
     try:
-        # The monitor endpoint is used to monitor the health of the service
-        api_instance.campaign_monitor_get()
+        # Releases a campaign from the preview state.  This will make the campaign available for the users to be labeled.
+        api_instance.campaign_campaign_id_release_post(campaign_id)
     except ApiException as e:
-        print("Exception when calling CampaignApi->campaign_monitor_get: %s\n" % e)
+        print("Exception when calling CampaignApi->campaign_campaign_id_release_post: %s\n" % e)
 
 ```
 
@@ -71,6 +72,7 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*CampaignApi* | [**campaign_campaign_id_release_post**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_release_post) | **POST** /campaign/{campaignId}/release | Releases a campaign from the preview state.  This will make the campaign available for the users to be labeled.
 *CampaignApi* | [**campaign_monitor_get**](rapidata/api_client/docs/CampaignApi.md#campaign_monitor_get) | **GET** /Campaign/Monitor | The monitor endpoint is used to monitor the health of the service
 *CampaignApi* | [**campaign_pause_post**](rapidata/api_client/docs/CampaignApi.md#campaign_pause_post) | **POST** /Campaign/Pause | Pauses a campaign.
 *CampaignApi* | [**campaign_query_get**](rapidata/api_client/docs/CampaignApi.md#campaign_query_get) | **GET** /Campaign/Query | Queries orders based on a filter, page, and sort criteria.
@@ -148,6 +150,7 @@ Class | Method | HTTP request | Description
 *ValidationApi* | [**validation_import_compare_post**](rapidata/api_client/docs/ValidationApi.md#validation_import_compare_post) | **POST** /Validation/ImportCompare | Imports a compare validation set from a zip file.
 *ValidationApi* | [**validation_import_post**](rapidata/api_client/docs/ValidationApi.md#validation_import_post) | **POST** /Validation/Import | Imports a validation set from a zip file.
 *ValidationApi* | [**validation_query_validation_sets_get**](rapidata/api_client/docs/ValidationApi.md#validation_query_validation_sets_get) | **GET** /Validation/QueryValidationSets | Queries validation sets based on the provided filter, paging and sorting criteria.
+*ValidationApi* | [**validation_validation_set_id_dimensions_patch**](rapidata/api_client/docs/ValidationApi.md#validation_validation_set_id_dimensions_patch) | **PATCH** /validation/{validationSetId}/dimensions | Updates the dimensions of all rapids within a validation set.
 *WorkflowApi* | [**workflow_delete_delete**](rapidata/api_client/docs/WorkflowApi.md#workflow_delete_delete) | **DELETE** /Workflow/Delete | Deletes a workflow.
 *WorkflowApi* | [**workflow_get_by_id_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_get_by_id_get) | **GET** /Workflow/GetById | Get a workflow by its ID.
 *WorkflowApi* | [**workflow_get_progress_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_get_progress_get) | **GET** /Workflow/GetProgress | Get the progress of a workflow.
@@ -407,6 +410,7 @@ Class | Method | HTTP request | Description
  - [UnlockOrderResult](rapidata/api_client/docs/UnlockOrderResult.md)
  - [UpdateAccessModel](rapidata/api_client/docs/UpdateAccessModel.md)
  - [UpdateCampaignModel](rapidata/api_client/docs/UpdateCampaignModel.md)
+ - [UpdateDimensionsModel](rapidata/api_client/docs/UpdateDimensionsModel.md)
  - [UpdateOrderModel](rapidata/api_client/docs/UpdateOrderModel.md)
  - [UpdateValidationRapidModel](rapidata/api_client/docs/UpdateValidationRapidModel.md)
  - [UpdateValidationRapidModelTruth](rapidata/api_client/docs/UpdateValidationRapidModelTruth.md)
