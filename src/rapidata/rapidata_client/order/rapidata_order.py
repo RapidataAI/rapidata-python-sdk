@@ -169,7 +169,7 @@ class RapidataOrder:
             raise Exception(f"Preview only available if order is processing. current status: {status}")
         
         campaign_id = self.__get_campaign_id()
-        auth_url = f"https://rapids.{self.__openapi_service.enviroment}/preview/campaign?id={campaign_id}"
+        auth_url = f"https://app.{self.__openapi_service.enviroment}/order/detail/{self.order_id}/preview?campaignId={campaign_id}"
         could_open_browser = webbrowser.open(auth_url)
         if not could_open_browser:
             encoded_url = urllib.parse.quote(auth_url, safe="%/:=&?~#+!$,;'@()*[]")
