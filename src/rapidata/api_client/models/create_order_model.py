@@ -39,10 +39,13 @@ class CreateOrderModel(BaseModel):
     feature_flags: Optional[List[FeatureFlagModel]] = Field(default=None, description="The feature flags are used to enable or disable certain features.", alias="featureFlags")
     priority: Optional[StrictInt] = Field(default=None, description="The priority is used to prioritize over other orders.")
     is_sticky: Optional[StrictBool] = Field(default=None, description="Indicates if the underlying campaign should be sticky.", alias="isSticky")
+    user_score_dimensions: Optional[List[StrictStr]] = Field(default=None, description="The user score dimensions are used to determine the score of the responses from the user.", alias="userScoreDimensions")
+    demographic_keys: Optional[List[StrictStr]] = Field(default=None, description="The demographic keys are used to determine which demographics to store on the resposnes from the user.", alias="demographicKeys")
     user_filters: List[CreateOrderModelUserFiltersInner] = Field(description="The user filters are used to restrict the order to only collect votes from a specific demographic.", alias="userFilters")
     validation_set_id: Optional[StrictStr] = Field(default=None, description="The validation set id can be changed to point to a specific validation set. if not provided a sane default will be  used.", alias="validationSetId")
     selections: Optional[List[AbTestSelectionAInner]] = Field(default=None, description="The selections are used to determine which tasks are shown to a user.")
-    __properties: ClassVar[List[str]] = ["_t", "orderName", "workflow", "referee", "aggregator", "featureFlags", "priority", "isSticky", "userFilters", "validationSetId", "selections"]
+    is_preview_enabled: Optional[StrictBool] = Field(default=None, description="Whether the campaign should be in preview mode before it is started.  Setting this to true will require the user to manually start the campaign.", alias="isPreviewEnabled")
+    __properties: ClassVar[List[str]] = ["_t", "orderName", "workflow", "referee", "aggregator", "featureFlags", "priority", "isSticky", "userScoreDimensions", "demographicKeys", "userFilters", "validationSetId", "selections", "isPreviewEnabled"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -142,6 +145,16 @@ class CreateOrderModel(BaseModel):
         if self.priority is None and "priority" in self.model_fields_set:
             _dict['priority'] = None
 
+        # set to None if user_score_dimensions (nullable) is None
+        # and model_fields_set contains the field
+        if self.user_score_dimensions is None and "user_score_dimensions" in self.model_fields_set:
+            _dict['userScoreDimensions'] = None
+
+        # set to None if demographic_keys (nullable) is None
+        # and model_fields_set contains the field
+        if self.demographic_keys is None and "demographic_keys" in self.model_fields_set:
+            _dict['demographicKeys'] = None
+
         # set to None if validation_set_id (nullable) is None
         # and model_fields_set contains the field
         if self.validation_set_id is None and "validation_set_id" in self.model_fields_set:
@@ -172,9 +185,12 @@ class CreateOrderModel(BaseModel):
             "featureFlags": [FeatureFlagModel.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "priority": obj.get("priority"),
             "isSticky": obj.get("isSticky"),
+            "userScoreDimensions": obj.get("userScoreDimensions"),
+            "demographicKeys": obj.get("demographicKeys"),
             "userFilters": [CreateOrderModelUserFiltersInner.from_dict(_item) for _item in obj["userFilters"]] if obj.get("userFilters") is not None else None,
             "validationSetId": obj.get("validationSetId"),
-            "selections": [AbTestSelectionAInner.from_dict(_item) for _item in obj["selections"]] if obj.get("selections") is not None else None
+            "selections": [AbTestSelectionAInner.from_dict(_item) for _item in obj["selections"]] if obj.get("selections") is not None else None,
+            "isPreviewEnabled": obj.get("isPreviewEnabled")
         })
         return _obj
 

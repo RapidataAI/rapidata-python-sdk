@@ -17,30 +17,17 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CampaignQueryResult(BaseModel):
+class UpdateDimensionsModel(BaseModel):
     """
-    CampaignQueryResult
+    The model for updating the dimensions of all rapids within a validation set.
     """ # noqa: E501
-    id: StrictStr
-    owner_mail: StrictStr = Field(alias="ownerMail")
-    name: StrictStr
-    status: StrictStr
-    priority: StrictInt
-    created_at: datetime = Field(alias="createdAt")
-    __properties: ClassVar[List[str]] = ["id", "ownerMail", "name", "status", "priority", "createdAt"]
-
-    @field_validator('status')
-    def status_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['Created', 'Active', 'Paused', 'Preview', 'Completed']):
-            raise ValueError("must be one of enum values ('Created', 'Active', 'Paused', 'Preview', 'Completed')")
-        return value
+    dimensions: List[StrictStr]
+    __properties: ClassVar[List[str]] = ["dimensions"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -60,7 +47,7 @@ class CampaignQueryResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CampaignQueryResult from a JSON string"""
+        """Create an instance of UpdateDimensionsModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -85,7 +72,7 @@ class CampaignQueryResult(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CampaignQueryResult from a dict"""
+        """Create an instance of UpdateDimensionsModel from a dict"""
         if obj is None:
             return None
 
@@ -93,12 +80,7 @@ class CampaignQueryResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "id": obj.get("id"),
-            "ownerMail": obj.get("ownerMail"),
-            "name": obj.get("name"),
-            "status": obj.get("status"),
-            "priority": obj.get("priority"),
-            "createdAt": obj.get("createdAt")
+            "dimensions": obj.get("dimensions")
         })
         return _obj
 

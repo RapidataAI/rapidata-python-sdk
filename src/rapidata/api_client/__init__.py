@@ -295,6 +295,7 @@ from rapidata.api_client.models.translated_string import TranslatedString
 from rapidata.api_client.models.unlock_order_result import UnlockOrderResult
 from rapidata.api_client.models.update_access_model import UpdateAccessModel
 from rapidata.api_client.models.update_campaign_model import UpdateCampaignModel
+from rapidata.api_client.models.update_dimensions_model import UpdateDimensionsModel
 from rapidata.api_client.models.update_order_model import UpdateOrderModel
 from rapidata.api_client.models.update_validation_rapid_model import UpdateValidationRapidModel
 from rapidata.api_client.models.update_validation_rapid_model_truth import UpdateValidationRapidModelTruth

@@ -27,7 +27,7 @@ class EvaluationWorkflowModel(BaseModel):
     If the EvaluationWorkflow is chosen a validation set will be used as a source for all tasks.  It functions similarly to the SimpleWorkflow as there is a 1:1 mapping between validation rapids and tasks.
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for EvaluationWorkflow", alias="_t")
-    validation_set_id: StrictStr = Field(description="The Validation Set Id is used to as a source for the tasks that will be sent to the user.", alias="validationSetId")
+    validation_set_id: StrictStr = Field(description="The Validation Set id is used to as a source for the tasks that will be sent to the user.", alias="validationSetId")
     should_accept_incorrect: StrictBool = Field(description="Indicates if the user should get feedback on their answers if they answer wrong. If set to true the user will not  notice that he was tested.", alias="shouldAcceptIncorrect")
     __properties: ClassVar[List[str]] = ["_t", "validationSetId", "shouldAcceptIncorrect"]
 
