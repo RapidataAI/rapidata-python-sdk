@@ -1,6 +1,6 @@
 # Effective Instruction Design for Rapidata Tasks
 
-When creating tasks for human annotators using the Rapidata API, the way you phrase your instructions can significantly impact the quality and consistency of the responses you receive. This guide provides best practices for designing effective instructions for your Rapidata tasks.
+When creating tasks for human annotators using the Rapidata API, phrasing your instructions well can significantly improve quality and consistency of the responses you receive. This guide provides best practices for designing effective instructions for your Rapidata tasks.
 
 ## Time Constraints
 
