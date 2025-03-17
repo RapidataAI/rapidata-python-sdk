@@ -111,6 +111,7 @@ Class | Method | HTTP request | Description
 *OrderApi* | [**order_get_by_id_get**](rapidata/api_client/docs/OrderApi.md#order_get_by_id_get) | **GET** /Order/GetById | Retrieves an order by its id.
 *OrderApi* | [**order_get_order_results_get**](rapidata/api_client/docs/OrderApi.md#order_get_order_results_get) | **GET** /Order/GetOrderResults | Aggregates the results of an order.
 *OrderApi* | [**order_get_public_get**](rapidata/api_client/docs/OrderApi.md#order_get_public_get) | **GET** /Order/GetPublic | Retrieves orders that are public and can be cloned by any user.
+*OrderApi* | [**order_order_id_preview_post**](rapidata/api_client/docs/OrderApi.md#order_order_id_preview_post) | **POST** /order/{orderId}/preview | Puts the order into preview mode, where it one can inspect what our labelers receive.
 *OrderApi* | [**order_pause_post**](rapidata/api_client/docs/OrderApi.md#order_pause_post) | **POST** /Order/Pause | Pauses an order that is processing. Meaning all campaigns in the order will be paused.
 *OrderApi* | [**order_query_get**](rapidata/api_client/docs/OrderApi.md#order_query_get) | **GET** /Order/Query | Queries orders based on a filter, page, and sort criteria.
 *OrderApi* | [**order_result_get**](rapidata/api_client/docs/OrderApi.md#order_result_get) | **GET** /Order/Result | Aggregates the results of an order.

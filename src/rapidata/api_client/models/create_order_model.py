@@ -44,8 +44,7 @@ class CreateOrderModel(BaseModel):
     user_filters: List[CreateOrderModelUserFiltersInner] = Field(description="The user filters are used to restrict the order to only collect votes from a specific demographic.", alias="userFilters")
     validation_set_id: Optional[StrictStr] = Field(default=None, description="The validation set id can be changed to point to a specific validation set. if not provided a sane default will be  used.", alias="validationSetId")
     selections: Optional[List[AbTestSelectionAInner]] = Field(default=None, description="The selections are used to determine which tasks are shown to a user.")
-    is_preview_enabled: Optional[StrictBool] = Field(default=None, description="Whether the campaign should be in preview mode before it is started.  Setting this to true will require the user to manually start the campaign.", alias="isPreviewEnabled")
-    __properties: ClassVar[List[str]] = ["_t", "orderName", "workflow", "referee", "aggregator", "featureFlags", "priority", "isSticky", "userScoreDimensions", "demographicKeys", "userFilters", "validationSetId", "selections", "isPreviewEnabled"]
+    __properties: ClassVar[List[str]] = ["_t", "orderName", "workflow", "referee", "aggregator", "featureFlags", "priority", "isSticky", "userScoreDimensions", "demographicKeys", "userFilters", "validationSetId", "selections"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -189,8 +188,7 @@ class CreateOrderModel(BaseModel):
             "demographicKeys": obj.get("demographicKeys"),
             "userFilters": [CreateOrderModelUserFiltersInner.from_dict(_item) for _item in obj["userFilters"]] if obj.get("userFilters") is not None else None,
             "validationSetId": obj.get("validationSetId"),
-            "selections": [AbTestSelectionAInner.from_dict(_item) for _item in obj["selections"]] if obj.get("selections") is not None else None,
-            "isPreviewEnabled": obj.get("isPreviewEnabled")
+            "selections": [AbTestSelectionAInner.from_dict(_item) for _item in obj["selections"]] if obj.get("selections") is not None else None
         })
         return _obj
 

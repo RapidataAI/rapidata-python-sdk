@@ -1255,6 +1255,30 @@
         }
       }
     },
+    "/order/{orderId}/preview": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Puts the order into preview mode, where it one can inspect what our labelers receive.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/Client/Query": {
       "get": {
         "tags": [
@@ -5481,10 +5505,6 @@
             },
             "description": "The selections are used to determine which tasks are shown to a user.",
             "nullable": true
-          },
-          "isPreviewEnabled": {
-            "type": "boolean",
-            "description": "Whether the campaign should be in preview mode before it is started.\r\nSetting this to true will require the user to manually start the campaign."
           }
         },
         "additionalProperties": false,
@@ -6250,6 +6270,7 @@
           "state": {
             "enum": [
               "Created",
+              "Preview",
               "Submitted",
               "ManualReview",
               "Processing",
@@ -6307,6 +6328,7 @@
       "OrderState": {
         "enum": [
           "Created",
+          "Preview",
           "Submitted",
           "ManualReview",
           "Processing",
