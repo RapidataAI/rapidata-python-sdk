@@ -70,6 +70,7 @@ class RapidataOrder:
 
         States:
             Created: The order has been created but not started yet.\n
+            Preview: The order has been set up and ready but not collecting responses yet.\n
             Submitted: The order has been submitted and is being reviewed.\n
             ManualReview: The order is in manual review - something went wrong with the automatic approval.\n
             Processing: The order is actively being processed.\n
@@ -164,12 +165,9 @@ class RapidataOrder:
         
         Raises:
             Exception: If the order is not in processing state.
-        """
-        if (status := self.get_status()) != OrderState.PROCESSING:
-            raise Exception(f"Preview only available if order is processing. current status: {status}")
-        
+        """        
         campaign_id = self.__get_campaign_id()
-        auth_url = f"https://rapids.{self.__openapi_service.enviroment}/preview/campaign?id={campaign_id}"
+        auth_url = f"https://app.{self.__openapi_service.enviroment}/order/detail/{self.order_id}/preview?campaignId={campaign_id}"
         could_open_browser = webbrowser.open(auth_url)
         if not could_open_browser:
             encoded_url = urllib.parse.quote(auth_url, safe="%/:=&?~#+!$,;'@()*[]")

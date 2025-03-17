@@ -75,6 +75,14 @@ Further more you can customize to whom, how and in what sequence the tasks are s
 
 These customizations can be added to the order through the `filters`, `settings` and `selections` parameters respectively.
 
+### Preview the Order
+
+You can see how the users will be presented with the task by calling the `.preview()` method on the order object to make sure everything looks as expected:
+
+```py
+order.preview()
+```
+
 ### Start Collecting Responses
 To start the order and collect responses, call the `run` method:
 

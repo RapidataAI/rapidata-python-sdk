@@ -182,6 +182,8 @@ class RapidataOrderBuilder:
             raise ValueError(
                 "Media paths must all be of the same type: MediaAsset, TextAsset, or MultiAsset."
             )
+        
+        self.__openapi_service.order_api.order_order_id_preview_post(self.order_id)
 
         return order
 
