@@ -27,6 +27,7 @@ class OrderState(str, Enum):
     allowed enum values
     """
     CREATED = 'Created'
+    PREVIEW = 'Preview'
     SUBMITTED = 'Submitted'
     MANUALREVIEW = 'ManualReview'
     PROCESSING = 'Processing'
