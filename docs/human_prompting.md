@@ -71,7 +71,7 @@ from rapidata import LabelingSelection, ValidationSelection
 # Keep the total number of tasks manageable for the 25-second window
 selections=[
     ValidationSelection("67cafc95bc71604b08d8aa62", 1),  # Start with one validation task (id is the validation set id)
-    LabelingSelection(1)  # Follow with one labeling task
+    LabelingSelection(2)  # Follow with one labeling task
 ]
 ```
 
