@@ -104,7 +104,7 @@ instruction="Which image matches the description better?"
 instruction="Which images has more glitches and is more likely to be AI generated?"
 
 # Comparing two texts
-instruction="Which of these sentences make more sense?"
+instruction="Which of these sentences makes more sense?"
 ```
 
 ### Classification Tasks
