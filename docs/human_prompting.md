@@ -113,8 +113,13 @@ instruction="Which of these sentences make more sense?"
 # Simple classification
 instruction="What object is in the image?"
 
-# Sentiment classification
-instruction="What is the mood of this text? - positive/neutral/negative"
+# Likert classification (add no shuffling setting)
+instruction="How well does the video match the description?
+answer_options=["1: Perfectly", 
+                "2: Very well", 
+                "3: Moderately", 
+                "4: A little", 
+                "5: Not at all"]
 ```
 
 ## Monitoring and Iteration

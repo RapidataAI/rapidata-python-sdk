@@ -65,6 +65,7 @@ nav:
   - Understanding the Results: understanding_the_results.md
   - Improve Quality: improve_order_quality.md
   - Improve Efficency: confidence_stopping.md
+  - Human Prompting Guide: human_prompting.md
   - Examples:
     - Classification: examples/classify_order.md
     - Compare: examples/compare_order.md
