@@ -124,7 +124,7 @@ class RapidataOrderBuilder:
             create_order_model=order_model
         )
 
-        self.order_id = result.order_id
+        self.order_id = str(result.order_id)
 
         self.__dataset = (
             RapidataDataset(result.dataset_id, self.__openapi_service)

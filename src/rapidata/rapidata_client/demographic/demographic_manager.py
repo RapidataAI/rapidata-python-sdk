@@ -28,7 +28,7 @@ class DemographicManager:
         session = self._get_session()
         media.session = session
         
-        self._openapi_service.rapid_api.rapid_create_demographic_rapid_post(model=model, file=[media.to_file()])
+        self._openapi_service.rapid_api.rapid_demographic_post(model=model, file=[media.to_file()])
 
     def _get_session(self, max_retries: int = 5, max_workers: int = 10) -> requests.Session:   
         """Get a requests session with retry logic.

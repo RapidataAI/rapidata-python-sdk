@@ -40,7 +40,7 @@ class RapidataResults(dict):
                 raise ValueError("No detailed results found in the data")
             return self._to_pandas_with_detailed_results()
             
-        if self["info"].get("orderType") == "Compare":
+        if self["info"].get("orderType") == "Compare" or self["info"].get("orderType") == "Ranking":
             return self._compare_to_pandas()
         
         # Get the structure from first item

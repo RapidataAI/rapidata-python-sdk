@@ -15,10 +15,8 @@ from rapidata.api_client.models.add_validation_rapid_model_payload import (
 from rapidata.api_client.models.add_validation_rapid_model_truth import (
     AddValidationRapidModelTruth,
 )
+from rapidata.api_client.models.create_datapoint_from_files_model_metadata_inner import CreateDatapointFromFilesModelMetadataInner
 
-from rapidata.api_client.models.create_datapoint_from_urls_model import (
-    CreateDatapointFromUrlsModelMetadataInner,
-)
 from rapidata.service.openapi_service import OpenAPIService
 
 import requests
@@ -70,7 +68,7 @@ class Rapid():
             payload=AddValidationRapidModelPayload(self.payload),
             truth=AddValidationRapidModelTruth(self.truth),
             metadata=[
-              CreateDatapointFromUrlsModelMetadataInner(meta.to_model())
+              CreateDatapointFromFilesModelMetadataInner(meta.to_model())
               for meta in self.metadata
             ],
             randomCorrectProbability=self.randomCorrectProbability,
@@ -97,7 +95,7 @@ class Rapid():
           payload=AddValidationRapidModelPayload(self.payload),
           truth=AddValidationRapidModelTruth(self.truth),
           metadata=[
-              CreateDatapointFromUrlsModelMetadataInner(meta.to_model())
+              CreateDatapointFromFilesModelMetadataInner(meta.to_model())
               for meta in self.metadata
           ],
           randomCorrectProbability=self.randomCorrectProbability,
