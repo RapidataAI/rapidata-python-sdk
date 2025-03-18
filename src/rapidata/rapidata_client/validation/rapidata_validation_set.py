@@ -31,13 +31,13 @@ class RapidataValidationSet:
         rapid._add_to_validation_set(self.id, self.__openapi_service, self.__session)
         return self
 
-    def update_dimensions(self, dimensions: list[str]):
+    def update_dimensions(self, dimensions: list[str] | None):
         """Update the dimensions of the validation set.
 
         Args:
             dimensions (list[str]): The new dimensions of the validation set.
         """
-        self.__openapi_service.validation_api.validation_validation_set_id_dimensions_patch(self.id, UpdateDimensionsModel(dimensions=dimensions))
+        self.__openapi_service.validation_api.validation_validation_set_id_dimensions_patch(self.id, UpdateDimensionsModel(dimensions=dimensions) if dimensions else None)
         return self
 
     def _get_session(self, max_retries: int = 5, max_workers: int = 10) -> requests.Session:   
