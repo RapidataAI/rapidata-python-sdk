@@ -1116,7 +1116,7 @@ class WorkflowApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> GetCompareAbSummaryResult:
-        """Calculates a summary of the results for a simple compare workflow.  The summary includes the number of times an asset at each index was the winner.
+        """Calculates a summary of the results for a simple compare workflow. The summary includes the number of times an asset at each index was the winner.
 
 
         :param workflow_id: The ID of the workflow to get the summary for. (required)
@@ -1186,7 +1186,7 @@ class WorkflowApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[GetCompareAbSummaryResult]:
-        """Calculates a summary of the results for a simple compare workflow.  The summary includes the number of times an asset at each index was the winner.
+        """Calculates a summary of the results for a simple compare workflow. The summary includes the number of times an asset at each index was the winner.
 
 
         :param workflow_id: The ID of the workflow to get the summary for. (required)
@@ -1256,7 +1256,7 @@ class WorkflowApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Calculates a summary of the results for a simple compare workflow.  The summary includes the number of times an asset at each index was the winner.
+        """Calculates a summary of the results for a simple compare workflow. The summary includes the number of times an asset at each index was the winner.
 
 
         :param workflow_id: The ID of the workflow to get the summary for. (required)
@@ -1917,7 +1917,7 @@ class WorkflowApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> GetResponsesResult:
-        """Gets the limit most recent or oldest responses for a workflow.  The responses are not guaranteed to be of any specific rapid.  Instead, this endpoint returns all responses to any rapid in the workflow.
+        """Gets the limit most recent or oldest responses for a workflow. The responses are not guaranteed to be of any specific rapid. Instead, this endpoint returns all responses to any rapid in the workflow.
 
 
         :param workflow_id: The ID of the workflow to get the responses for. (required)
@@ -1991,7 +1991,7 @@ class WorkflowApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[GetResponsesResult]:
-        """Gets the limit most recent or oldest responses for a workflow.  The responses are not guaranteed to be of any specific rapid.  Instead, this endpoint returns all responses to any rapid in the workflow.
+        """Gets the limit most recent or oldest responses for a workflow. The responses are not guaranteed to be of any specific rapid. Instead, this endpoint returns all responses to any rapid in the workflow.
 
 
         :param workflow_id: The ID of the workflow to get the responses for. (required)
@@ -2065,7 +2065,7 @@ class WorkflowApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Gets the limit most recent or oldest responses for a workflow.  The responses are not guaranteed to be of any specific rapid.  Instead, this endpoint returns all responses to any rapid in the workflow.
+        """Gets the limit most recent or oldest responses for a workflow. The responses are not guaranteed to be of any specific rapid. Instead, this endpoint returns all responses to any rapid in the workflow.
 
 
         :param workflow_id: The ID of the workflow to get the responses for. (required)

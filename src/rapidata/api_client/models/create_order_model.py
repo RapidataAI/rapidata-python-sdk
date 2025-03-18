@@ -42,7 +42,7 @@ class CreateOrderModel(BaseModel):
     user_score_dimensions: Optional[List[StrictStr]] = Field(default=None, description="The user score dimensions are used to determine the score of the responses from the user.", alias="userScoreDimensions")
     demographic_keys: Optional[List[StrictStr]] = Field(default=None, description="The demographic keys are used to determine which demographics to store on the resposnes from the user.", alias="demographicKeys")
     user_filters: List[CreateOrderModelUserFiltersInner] = Field(description="The user filters are used to restrict the order to only collect votes from a specific demographic.", alias="userFilters")
-    validation_set_id: Optional[StrictStr] = Field(default=None, description="The validation set id can be changed to point to a specific validation set. if not provided a sane default will be  used.", alias="validationSetId")
+    validation_set_id: Optional[StrictStr] = Field(default=None, description="The validation set id can be changed to point to a specific validation set. if not provided a sane default will be used.", alias="validationSetId")
     selections: Optional[List[AbTestSelectionAInner]] = Field(default=None, description="The selections are used to determine which tasks are shown to a user.")
     __properties: ClassVar[List[str]] = ["_t", "orderName", "workflow", "referee", "aggregator", "featureFlags", "priority", "isSticky", "userScoreDimensions", "demographicKeys", "userFilters", "validationSetId", "selections"]
 

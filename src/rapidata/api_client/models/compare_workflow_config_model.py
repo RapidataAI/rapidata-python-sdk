@@ -28,7 +28,7 @@ from typing_extensions import Self
 
 class CompareWorkflowConfigModel(BaseModel):
     """
-    The configuration for creating a compare workflow.  A compare workflow is a workflow that continuously matches datapoints against each other and updates their  respective ELO scores. The ELO scores are used to determine the relative strength of the datapoints,  and datapoints are matched against other datapoints with similar ELO scores.  The end goal is a ranking of the datapoints based on their relative strength.
+    The configuration for creating a compare workflow. A compare workflow is a workflow that continuously matches datapoints against each other and updates their respective ELO scores. The ELO scores are used to determine the relative strength of the datapoints, and datapoints are matched against other datapoints with similar ELO scores. The end goal is a ranking of the datapoints based on their relative strength.
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for CompareWorkflowConfig", alias="_t")
     criteria: StrictStr = Field(description="The criteria to add to each compare rapid.")

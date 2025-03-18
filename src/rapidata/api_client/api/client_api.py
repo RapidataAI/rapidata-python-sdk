@@ -589,7 +589,7 @@ class ClientApi:
     ) -> ClientsQueryResultPagedResult:
         """(Deprecated) Gets the clients for the current customer.
 
-        A client allows a customer to authenticate with the APIs without using their own credentials.  This is useful for creating service accounts or other automated processes,  as when using the Rapidata Python SDK.
+        A client allows a customer to authenticate with the APIs without using their own credentials. This is useful for creating service accounts or other automated processes, as when using the Rapidata Python SDK.
 
         :param request:
         :type request: QueryModel
@@ -657,7 +657,7 @@ class ClientApi:
     ) -> ApiResponse[ClientsQueryResultPagedResult]:
         """(Deprecated) Gets the clients for the current customer.
 
-        A client allows a customer to authenticate with the APIs without using their own credentials.  This is useful for creating service accounts or other automated processes,  as when using the Rapidata Python SDK.
+        A client allows a customer to authenticate with the APIs without using their own credentials. This is useful for creating service accounts or other automated processes, as when using the Rapidata Python SDK.
 
         :param request:
         :type request: QueryModel
@@ -725,7 +725,7 @@ class ClientApi:
     ) -> RESTResponseType:
         """(Deprecated) Gets the clients for the current customer.
 
-        A client allows a customer to authenticate with the APIs without using their own credentials.  This is useful for creating service accounts or other automated processes,  as when using the Rapidata Python SDK.
+        A client allows a customer to authenticate with the APIs without using their own credentials. This is useful for creating service accounts or other automated processes, as when using the Rapidata Python SDK.
 
         :param request:
         :type request: QueryModel
@@ -1115,7 +1115,7 @@ class ClientApi:
     ) -> ClientsQueryResultPagedResult:
         """Queries the clients for the current customer.
 
-        A client allows a customer to authenticate with the APIs without using their own credentials.  This is useful for creating service accounts or other automated processes,  as when using the Rapidata Python SDK.
+        A client allows a customer to authenticate with the APIs without using their own credentials. This is useful for creating service accounts or other automated processes, as when using the Rapidata Python SDK.
 
         :param request:
         :type request: QueryModel
@@ -1182,7 +1182,7 @@ class ClientApi:
     ) -> ApiResponse[ClientsQueryResultPagedResult]:
         """Queries the clients for the current customer.
 
-        A client allows a customer to authenticate with the APIs without using their own credentials.  This is useful for creating service accounts or other automated processes,  as when using the Rapidata Python SDK.
+        A client allows a customer to authenticate with the APIs without using their own credentials. This is useful for creating service accounts or other automated processes, as when using the Rapidata Python SDK.
 
         :param request:
         :type request: QueryModel
@@ -1249,7 +1249,7 @@ class ClientApi:
     ) -> RESTResponseType:
         """Queries the clients for the current customer.
 
-        A client allows a customer to authenticate with the APIs without using their own credentials.  This is useful for creating service accounts or other automated processes,  as when using the Rapidata Python SDK.
+        A client allows a customer to authenticate with the APIs without using their own credentials. This is useful for creating service accounts or other automated processes, as when using the Rapidata Python SDK.
 
         :param request:
         :type request: QueryModel

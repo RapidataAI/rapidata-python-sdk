@@ -25,7 +25,7 @@ from typing_extensions import Self
 
 class SimpleWorkflowModel(BaseModel):
     """
-    If the SimpleWorkflow is chosen, each datapoint uploaded will correspond to a single task to be solved.  This is the most commonly chosen workflow.
+    If the SimpleWorkflow is chosen, each datapoint uploaded will correspond to a single task to be solved. This is the most commonly chosen workflow.
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for SimpleWorkflow", alias="_t")
     blueprint: SimpleWorkflowModelBlueprint

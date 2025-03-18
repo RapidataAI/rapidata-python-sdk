@@ -27,8 +27,8 @@ class CreateDatapointFromUrlsModel(BaseModel):
     """
     The body request for creating a datapoint from urls.
     """ # noqa: E501
-    urls: List[StrictStr] = Field(description="The urls to fetch the assets from.  The urls must be publicly accessible.  A HEAD request will be made to each url to check if it is accessible.")
-    metadata: Optional[List[CreateDatapointFromFilesModelMetadataInner]] = Field(default=None, description="Additional metadata to attach to the datapoint.  Most commonly used to add a prompt to the datapoint using the Rapidata.Shared.Assets.Abstraction.Models.Metadata.Input.PromptMetadataInput.")
+    urls: List[StrictStr] = Field(description="The urls to fetch the assets from. The urls must be publicly accessible. A HEAD request will be made to each url to check if it is accessible.")
+    metadata: Optional[List[CreateDatapointFromFilesModelMetadataInner]] = Field(default=None, description="Additional metadata to attach to the datapoint. Most commonly used to add a prompt to the datapoint using the Rapidata.Shared.Assets.Abstraction.Models.Metadata.Input.PromptMetadataInput.")
     sort_index: Optional[StrictInt] = Field(default=None, description="The index will be used to keep the datapoints in order. Useful if upload is parallelized", alias="sortIndex")
     __properties: ClassVar[List[str]] = ["urls", "metadata", "sortIndex"]
 

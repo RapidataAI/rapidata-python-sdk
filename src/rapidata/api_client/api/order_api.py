@@ -71,7 +71,7 @@ class OrderApi:
     ) -> None:
         """(Deprecated) Approves an order that has been submitted for manual approval.
 
-        An order is submitted for manual approval when the automatic approval process could not automatically  determine if the order is safe to process.  Once an order is approved, the pipeline will start processing the order.
+        An order is submitted for manual approval when the automatic approval process could not automatically determine if the order is safe to process. Once an order is approved, the pipeline will start processing the order.
 
         :param order_id: The id of the order to approve
         :type order_id: str
@@ -139,7 +139,7 @@ class OrderApi:
     ) -> ApiResponse[None]:
         """(Deprecated) Approves an order that has been submitted for manual approval.
 
-        An order is submitted for manual approval when the automatic approval process could not automatically  determine if the order is safe to process.  Once an order is approved, the pipeline will start processing the order.
+        An order is submitted for manual approval when the automatic approval process could not automatically determine if the order is safe to process. Once an order is approved, the pipeline will start processing the order.
 
         :param order_id: The id of the order to approve
         :type order_id: str
@@ -207,7 +207,7 @@ class OrderApi:
     ) -> RESTResponseType:
         """(Deprecated) Approves an order that has been submitted for manual approval.
 
-        An order is submitted for manual approval when the automatic approval process could not automatically  determine if the order is safe to process.  Once an order is approved, the pipeline will start processing the order.
+        An order is submitted for manual approval when the automatic approval process could not automatically determine if the order is safe to process. Once an order is approved, the pipeline will start processing the order.
 
         :param order_id: The id of the order to approve
         :type order_id: str
@@ -2240,7 +2240,7 @@ class OrderApi:
     ) -> object:
         """(Deprecated) Aggregates the results of an order.
 
-        Returns the aggregated result as a file with a given name.  The annotated type of the response represents the content type of the file.
+        Returns the aggregated result as a file with a given name. The annotated type of the response represents the content type of the file.
 
         :param id: The id of the order
         :type id: str
@@ -2308,7 +2308,7 @@ class OrderApi:
     ) -> ApiResponse[object]:
         """(Deprecated) Aggregates the results of an order.
 
-        Returns the aggregated result as a file with a given name.  The annotated type of the response represents the content type of the file.
+        Returns the aggregated result as a file with a given name. The annotated type of the response represents the content type of the file.
 
         :param id: The id of the order
         :type id: str
@@ -2376,7 +2376,7 @@ class OrderApi:
     ) -> RESTResponseType:
         """(Deprecated) Aggregates the results of an order.
 
-        Returns the aggregated result as a file with a given name.  The annotated type of the response represents the content type of the file.
+        Returns the aggregated result as a file with a given name. The annotated type of the response represents the content type of the file.
 
         :param id: The id of the order
         :type id: str
@@ -2758,7 +2758,7 @@ class OrderApi:
     ) -> None:
         """Approves an order that has been submitted for manual approval.
 
-        An order is submitted for manual approval when the automatic approval process could not automatically  determine if the order is safe to process.  Once an order is approved, the pipeline will start processing the order.
+        An order is submitted for manual approval when the automatic approval process could not automatically determine if the order is safe to process. Once an order is approved, the pipeline will start processing the order.
 
         :param order_id: The id of the order to approve (required)
         :type order_id: str
@@ -2825,7 +2825,7 @@ class OrderApi:
     ) -> ApiResponse[None]:
         """Approves an order that has been submitted for manual approval.
 
-        An order is submitted for manual approval when the automatic approval process could not automatically  determine if the order is safe to process.  Once an order is approved, the pipeline will start processing the order.
+        An order is submitted for manual approval when the automatic approval process could not automatically determine if the order is safe to process. Once an order is approved, the pipeline will start processing the order.
 
         :param order_id: The id of the order to approve (required)
         :type order_id: str
@@ -2892,7 +2892,7 @@ class OrderApi:
     ) -> RESTResponseType:
         """Approves an order that has been submitted for manual approval.
 
-        An order is submitted for manual approval when the automatic approval process could not automatically  determine if the order is safe to process.  Once an order is approved, the pipeline will start processing the order.
+        An order is submitted for manual approval when the automatic approval process could not automatically determine if the order is safe to process. Once an order is approved, the pipeline will start processing the order.
 
         :param order_id: The id of the order to approve (required)
         :type order_id: str
@@ -3828,7 +3828,7 @@ class OrderApi:
     ) -> bytearray:
         """Aggregates the results of an order and returns it as a file attachment.
 
-        Returns the aggregated result as a file with a given name.  The annotated type of the response represents the content type of the file.
+        Returns the aggregated result as a file with a given name. The annotated type of the response represents the content type of the file.
 
         :param order_id: The id of the order (required)
         :type order_id: str
@@ -3895,7 +3895,7 @@ class OrderApi:
     ) -> ApiResponse[bytearray]:
         """Aggregates the results of an order and returns it as a file attachment.
 
-        Returns the aggregated result as a file with a given name.  The annotated type of the response represents the content type of the file.
+        Returns the aggregated result as a file with a given name. The annotated type of the response represents the content type of the file.
 
         :param order_id: The id of the order (required)
         :type order_id: str
@@ -3962,7 +3962,7 @@ class OrderApi:
     ) -> RESTResponseType:
         """Aggregates the results of an order and returns it as a file attachment.
 
-        Returns the aggregated result as a file with a given name.  The annotated type of the response represents the content type of the file.
+        Returns the aggregated result as a file with a given name. The annotated type of the response represents the content type of the file.
 
         :param order_id: The id of the order (required)
         :type order_id: str
@@ -6176,7 +6176,7 @@ class OrderApi:
     ) -> None:
         """Submits an order for approval.
 
-        Once an order is created its order id and dataset id is returned.  The dataset id can be used to fill the dataset with data points.  Once submitted, the order will be locked and no further changes can be made.
+        Once an order is created its order id and dataset id is returned. The dataset id can be used to fill the dataset with data points. Once submitted, the order will be locked and no further changes can be made.
 
         :param order_id: The id of the order to submit (required)
         :type order_id: str
@@ -6243,7 +6243,7 @@ class OrderApi:
     ) -> ApiResponse[None]:
         """Submits an order for approval.
 
-        Once an order is created its order id and dataset id is returned.  The dataset id can be used to fill the dataset with data points.  Once submitted, the order will be locked and no further changes can be made.
+        Once an order is created its order id and dataset id is returned. The dataset id can be used to fill the dataset with data points. Once submitted, the order will be locked and no further changes can be made.
 
         :param order_id: The id of the order to submit (required)
         :type order_id: str
@@ -6310,7 +6310,7 @@ class OrderApi:
     ) -> RESTResponseType:
         """Submits an order for approval.
 
-        Once an order is created its order id and dataset id is returned.  The dataset id can be used to fill the dataset with data points.  Once submitted, the order will be locked and no further changes can be made.
+        Once an order is created its order id and dataset id is returned. The dataset id can be used to fill the dataset with data points. Once submitted, the order will be locked and no further changes can be made.
 
         :param order_id: The id of the order to submit (required)
         :type order_id: str
@@ -6431,7 +6431,7 @@ class OrderApi:
     ) -> UnlockOrderResult:
         """Unlocks a newly cloned order.
 
-        When an order is cloned only the necessary information is copied.  In order to make changes to the order, it must be unlocked first.  Unlocking the order will clone the entire dataset and its datapoints.
+        When an order is cloned only the necessary information is copied. In order to make changes to the order, it must be unlocked first. Unlocking the order will clone the entire dataset and its datapoints.
 
         :param order_id: The id of the order to unlock (required)
         :type order_id: str
@@ -6498,7 +6498,7 @@ class OrderApi:
     ) -> ApiResponse[UnlockOrderResult]:
         """Unlocks a newly cloned order.
 
-        When an order is cloned only the necessary information is copied.  In order to make changes to the order, it must be unlocked first.  Unlocking the order will clone the entire dataset and its datapoints.
+        When an order is cloned only the necessary information is copied. In order to make changes to the order, it must be unlocked first. Unlocking the order will clone the entire dataset and its datapoints.
 
         :param order_id: The id of the order to unlock (required)
         :type order_id: str
@@ -6565,7 +6565,7 @@ class OrderApi:
     ) -> RESTResponseType:
         """Unlocks a newly cloned order.
 
-        When an order is cloned only the necessary information is copied.  In order to make changes to the order, it must be unlocked first.  Unlocking the order will clone the entire dataset and its datapoints.
+        When an order is cloned only the necessary information is copied. In order to make changes to the order, it must be unlocked first. Unlocking the order will clone the entire dataset and its datapoints.
 
         :param order_id: The id of the order to unlock (required)
         :type order_id: str
@@ -8531,7 +8531,7 @@ class OrderApi:
     ) -> None:
         """(Deprecated) Submits an order for approval.
 
-        Once an order is created its order id and dataset id is returned.  The dataset id can be used to fill the dataset with data points.  Once submitted, the order will be locked and no further changes can be made.
+        Once an order is created its order id and dataset id is returned. The dataset id can be used to fill the dataset with data points. Once submitted, the order will be locked and no further changes can be made.
 
         :param order_id: The id of the order to submit
         :type order_id: str
@@ -8599,7 +8599,7 @@ class OrderApi:
     ) -> ApiResponse[None]:
         """(Deprecated) Submits an order for approval.
 
-        Once an order is created its order id and dataset id is returned.  The dataset id can be used to fill the dataset with data points.  Once submitted, the order will be locked and no further changes can be made.
+        Once an order is created its order id and dataset id is returned. The dataset id can be used to fill the dataset with data points. Once submitted, the order will be locked and no further changes can be made.
 
         :param order_id: The id of the order to submit
         :type order_id: str
@@ -8667,7 +8667,7 @@ class OrderApi:
     ) -> RESTResponseType:
         """(Deprecated) Submits an order for approval.
 
-        Once an order is created its order id and dataset id is returned.  The dataset id can be used to fill the dataset with data points.  Once submitted, the order will be locked and no further changes can be made.
+        Once an order is created its order id and dataset id is returned. The dataset id can be used to fill the dataset with data points. Once submitted, the order will be locked and no further changes can be made.
 
         :param order_id: The id of the order to submit
         :type order_id: str
@@ -8791,7 +8791,7 @@ class OrderApi:
     ) -> UnlockOrderResult:
         """(Deprecated) Unlocks a newly cloned order.
 
-        When an order is cloned only the necessary information is copied.  In order to make changes to the order, it must be unlocked first.  Unlocking the order will clone the entire dataset and its datapoints.
+        When an order is cloned only the necessary information is copied. In order to make changes to the order, it must be unlocked first. Unlocking the order will clone the entire dataset and its datapoints.
 
         :param order_id: The id of the order to unlock
         :type order_id: str
@@ -8859,7 +8859,7 @@ class OrderApi:
     ) -> ApiResponse[UnlockOrderResult]:
         """(Deprecated) Unlocks a newly cloned order.
 
-        When an order is cloned only the necessary information is copied.  In order to make changes to the order, it must be unlocked first.  Unlocking the order will clone the entire dataset and its datapoints.
+        When an order is cloned only the necessary information is copied. In order to make changes to the order, it must be unlocked first. Unlocking the order will clone the entire dataset and its datapoints.
 
         :param order_id: The id of the order to unlock
         :type order_id: str
@@ -8927,7 +8927,7 @@ class OrderApi:
     ) -> RESTResponseType:
         """(Deprecated) Unlocks a newly cloned order.
 
-        When an order is cloned only the necessary information is copied.  In order to make changes to the order, it must be unlocked first.  Unlocking the order will clone the entire dataset and its datapoints.
+        When an order is cloned only the necessary information is copied. In order to make changes to the order, it must be unlocked first. Unlocking the order will clone the entire dataset and its datapoints.
 
         :param order_id: The id of the order to unlock
         :type order_id: str

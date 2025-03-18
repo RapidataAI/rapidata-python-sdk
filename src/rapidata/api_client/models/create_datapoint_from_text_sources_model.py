@@ -29,7 +29,7 @@ class CreateDatapointFromTextSourcesModel(BaseModel):
     """ # noqa: E501
     text_sources: List[StrictStr] = Field(description="The text sources to upload.", alias="textSources")
     sort_index: Optional[StrictInt] = Field(default=None, description="The index will be used to keep the datapoints in order. Useful if upload is parallelized", alias="sortIndex")
-    metadata: Optional[List[CreateDatapointFromFilesModelMetadataInner]] = Field(default=None, description="Additional metadata to attach to the datapoint.  Most commonly used to add a prompt to the datapoint using the Rapidata.Shared.Assets.Abstraction.Models.Metadata.Input.PromptMetadataInput.")
+    metadata: Optional[List[CreateDatapointFromFilesModelMetadataInner]] = Field(default=None, description="Additional metadata to attach to the datapoint. Most commonly used to add a prompt to the datapoint using the Rapidata.Shared.Assets.Abstraction.Models.Metadata.Input.PromptMetadataInput.")
     __properties: ClassVar[List[str]] = ["textSources", "sortIndex", "metadata"]
 
     model_config = ConfigDict(

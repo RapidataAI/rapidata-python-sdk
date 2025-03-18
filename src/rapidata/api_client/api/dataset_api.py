@@ -939,7 +939,7 @@ class DatasetApi:
     ) -> GetFailedDatapointsResult:
         """Gets a list of all datapoints that failed to upload.
 
-        A datapoint usually fails to upload when using a deferred upload mechanism such as when providing a URL  and the URL is not accessible.
+        A datapoint usually fails to upload when using a deferred upload mechanism such as when providing a URL and the URL is not accessible.
 
         :param dataset_id: The id of the dataset to get the failed datapoints of. (required)
         :type dataset_id: str
@@ -1006,7 +1006,7 @@ class DatasetApi:
     ) -> ApiResponse[GetFailedDatapointsResult]:
         """Gets a list of all datapoints that failed to upload.
 
-        A datapoint usually fails to upload when using a deferred upload mechanism such as when providing a URL  and the URL is not accessible.
+        A datapoint usually fails to upload when using a deferred upload mechanism such as when providing a URL and the URL is not accessible.
 
         :param dataset_id: The id of the dataset to get the failed datapoints of. (required)
         :type dataset_id: str
@@ -1073,7 +1073,7 @@ class DatasetApi:
     ) -> RESTResponseType:
         """Gets a list of all datapoints that failed to upload.
 
-        A datapoint usually fails to upload when using a deferred upload mechanism such as when providing a URL  and the URL is not accessible.
+        A datapoint usually fails to upload when using a deferred upload mechanism such as when providing a URL and the URL is not accessible.
 
         :param dataset_id: The id of the dataset to get the failed datapoints of. (required)
         :type dataset_id: str
@@ -2361,7 +2361,7 @@ class DatasetApi:
     ) -> CreateDatapointResult:
         """Creates a single datapoint where the assets are fetched from the specified urls.
 
-        Passing in multiple urls will create a single datapoint with a MultiAsset.  Each url will be fetched and stored as a sub-asset of the MultiAsset.  <para />  If any of the urls are not accessible, the request will fail.
+        Passing in multiple urls will create a single datapoint with a MultiAsset. Each url will be fetched and stored as a sub-asset of the MultiAsset. <para /> If any of the urls are not accessible, the request will fail.
 
         :param dataset_id: The id of the dataset to create the datapoint in. (required)
         :type dataset_id: str
@@ -2432,7 +2432,7 @@ class DatasetApi:
     ) -> ApiResponse[CreateDatapointResult]:
         """Creates a single datapoint where the assets are fetched from the specified urls.
 
-        Passing in multiple urls will create a single datapoint with a MultiAsset.  Each url will be fetched and stored as a sub-asset of the MultiAsset.  <para />  If any of the urls are not accessible, the request will fail.
+        Passing in multiple urls will create a single datapoint with a MultiAsset. Each url will be fetched and stored as a sub-asset of the MultiAsset. <para /> If any of the urls are not accessible, the request will fail.
 
         :param dataset_id: The id of the dataset to create the datapoint in. (required)
         :type dataset_id: str
@@ -2503,7 +2503,7 @@ class DatasetApi:
     ) -> RESTResponseType:
         """Creates a single datapoint where the assets are fetched from the specified urls.
 
-        Passing in multiple urls will create a single datapoint with a MultiAsset.  Each url will be fetched and stored as a sub-asset of the MultiAsset.  <para />  If any of the urls are not accessible, the request will fail.
+        Passing in multiple urls will create a single datapoint with a MultiAsset. Each url will be fetched and stored as a sub-asset of the MultiAsset. <para /> If any of the urls are not accessible, the request will fail.
 
         :param dataset_id: The id of the dataset to create the datapoint in. (required)
         :type dataset_id: str

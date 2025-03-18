@@ -24,7 +24,7 @@ from typing_extensions import Self
 
 class OnlinePairMakerConfigModel(BaseModel):
     """
-    The OnlinePairMaker creates random pairs in the beginning and then continues to create pairs  that are close in ranking.
+    The OnlinePairMaker creates random pairs in the beginning and then continues to create pairs that are close in ranking.
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for OnlinePairMaker", alias="_t")
     random_matches_ratio: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The ratio of random matches for the algorithm to burn-in.", alias="randomMatchesRatio")
