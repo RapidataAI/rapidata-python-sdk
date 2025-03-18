@@ -582,7 +582,7 @@
           "Dataset"
         ],
         "summary": "Creates a single datapoint from text sources.",
-        "description": "If multiple text sources are uploaded, a new datapoint will be created for each text source.",
+        "description": "If multiple text sources are uploaded, a multi asset datapoint will be created.",
         "parameters": [
           {
             "name": "datasetId",
@@ -11825,7 +11825,11 @@
           "NoAsset",
           "Inappropriate",
           "NoCorrectOption",
-          "WrongLanguage"
+          "WrongLanguage",
+          "DoNotUnderstand",
+          "DoNotCare",
+          "NotSeeOptionsOrMediaDidntLoad",
+          "MyAnswerIsCorrect"
         ],
         "type": "string"
       },
@@ -12007,7 +12011,11 @@
               "NoAsset",
               "Inappropriate",
               "NoCorrectOption",
-              "WrongLanguage"
+              "WrongLanguage",
+              "DoNotUnderstand",
+              "DoNotCare",
+              "NotSeeOptionsOrMediaDidntLoad",
+              "MyAnswerIsCorrect"
             ],
             "type": "string"
           },

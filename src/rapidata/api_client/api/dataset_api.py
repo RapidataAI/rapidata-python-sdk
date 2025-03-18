@@ -2067,7 +2067,7 @@ class DatasetApi:
     ) -> CreateDatapointResult:
         """Creates a single datapoint from text sources.
 
-        If multiple text sources are uploaded, a new datapoint will be created for each text source.
+        If multiple text sources are uploaded, a multi asset datapoint will be created.
 
         :param dataset_id: The id of the dataset to create the datapoint in. (required)
         :type dataset_id: str
@@ -2138,7 +2138,7 @@ class DatasetApi:
     ) -> ApiResponse[CreateDatapointResult]:
         """Creates a single datapoint from text sources.
 
-        If multiple text sources are uploaded, a new datapoint will be created for each text source.
+        If multiple text sources are uploaded, a multi asset datapoint will be created.
 
         :param dataset_id: The id of the dataset to create the datapoint in. (required)
         :type dataset_id: str
@@ -2209,7 +2209,7 @@ class DatasetApi:
     ) -> RESTResponseType:
         """Creates a single datapoint from text sources.
 
-        If multiple text sources are uploaded, a new datapoint will be created for each text source.
+        If multiple text sources are uploaded, a multi asset datapoint will be created.
 
         :param dataset_id: The id of the dataset to create the datapoint in. (required)
         :type dataset_id: str

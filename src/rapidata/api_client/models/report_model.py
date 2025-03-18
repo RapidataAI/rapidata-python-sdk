@@ -35,8 +35,8 @@ class ReportModel(BaseModel):
     @field_validator('issue')
     def issue_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['Other', 'CannotSubmit', 'NoAsset', 'Inappropriate', 'NoCorrectOption', 'WrongLanguage']):
-            raise ValueError("must be one of enum values ('Other', 'CannotSubmit', 'NoAsset', 'Inappropriate', 'NoCorrectOption', 'WrongLanguage')")
+        if value not in set(['Other', 'CannotSubmit', 'NoAsset', 'Inappropriate', 'NoCorrectOption', 'WrongLanguage', 'DoNotUnderstand', 'DoNotCare', 'NotSeeOptionsOrMediaDidntLoad', 'MyAnswerIsCorrect']):
+            raise ValueError("must be one of enum values ('Other', 'CannotSubmit', 'NoAsset', 'Inappropriate', 'NoCorrectOption', 'WrongLanguage', 'DoNotUnderstand', 'DoNotCare', 'NotSeeOptionsOrMediaDidntLoad', 'MyAnswerIsCorrect')")
         return value
 
     model_config = ConfigDict(
