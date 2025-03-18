@@ -2,6 +2,7 @@ from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 from rapidata.service.openapi_service import OpenAPIService
 from requests.adapters import HTTPAdapter, Retry
 import requests
+from rapidata.api_client.models.update_dimensions_model import UpdateDimensionsModel
 
 class RapidataValidationSet:
     """A class for interacting with a Rapidata validation set.
@@ -28,6 +29,16 @@ class RapidataValidationSet:
             rapid (Rapid): The Rapid to add to the validation set.
         """
         rapid._add_to_validation_set(self.id, self.__openapi_service, self.__session)
+        return self
+
+    def update_dimensions(self, dimensions: list[str]):
+        """Update the dimensions of the validation set.
+
+        Args:
+            dimensions (list[str]): The new dimensions of the validation set.
+        """
+        self.__openapi_service.validation_api.validation_validation_set_id_dimensions_patch(self.id, UpdateDimensionsModel(dimensions=dimensions))
+        return self
 
     def _get_session(self, max_retries: int = 5, max_workers: int = 10) -> requests.Session:   
         """Get a requests session with retry logic.

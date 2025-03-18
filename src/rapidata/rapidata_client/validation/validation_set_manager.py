@@ -38,8 +38,9 @@ class ValidationSetManager:
         truths: list[list[str]],
         data_type: str = RapidataDataTypes.MEDIA,
         contexts: list[str] | None = None,
-        print_confirmation: bool = True,
         explanations: list[str | None] | None = None,
+        dimensions: list[str] = ["global"],
+        print_confirmation: bool = True,
     ) -> RapidataValidationSet:
         """Create a classification validation set.
         
@@ -57,8 +58,9 @@ class ValidationSetManager:
             contexts (list[str], optional): The contexts for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction and answer options. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
-            print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
             explanations (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
+            dimensions (list[str], optional): The dimensions of the validation set. Defaults to ["global"].
+            print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
 
         Example:
             ```python
@@ -95,7 +97,7 @@ class ValidationSetManager:
                 )
             )
 
-        return self._submit(name=name, rapids=rapids, print_confirmation=print_confirmation)
+        return self._submit(name=name, rapids=rapids, print_confirmation=print_confirmation, dimensions=dimensions)
 
     def create_compare_set(self,
         name: str,
@@ -104,8 +106,9 @@ class ValidationSetManager:
         truths: list[str],
         data_type: str = RapidataDataTypes.MEDIA,
         contexts: list[str] | None = None,
-        print_confirmation: bool = True,
         explanation: list[str | None] | None = None,
+        dimensions: list[str] = ["global"],
+        print_confirmation: bool = True,
     ) -> RapidataValidationSet:
         """Create a comparison validation set.
 
@@ -123,8 +126,9 @@ class ValidationSetManager:
             contexts (list[str], optional): The contexts for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction and truth. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
-            print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
             explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
+            dimensions (list[str], optional): The dimensions of the validation set. Defaults to ["global"].
+            print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
 
         Example:
             ```python
@@ -160,7 +164,7 @@ class ValidationSetManager:
                 )
             )
  
-        return self._submit(name=name, rapids=rapids, print_confirmation=print_confirmation)
+        return self._submit(name=name, rapids=rapids, dimensions=dimensions, print_confirmation=print_confirmation)
   
     def create_select_words_set(self,
         name: str,
@@ -170,8 +174,9 @@ class ValidationSetManager:
         sentences: list[str],
         required_precision: float = 1.0,
         required_completeness: float = 1.0,
-        print_confirmation: bool = True,
         explanation: list[str | None] | None = None,
+        dimensions: list[str] = ["global"],
+        print_confirmation: bool = True,
     ) -> RapidataValidationSet:
         """Create a select words validation set.
 
@@ -188,8 +193,9 @@ class ValidationSetManager:
                 Must be the same length as datapoints.
             required_precision (float, optional): The required precision for the labeler to get the rapid correct (minimum ratio of the words selected that need to be correct). Defaults to 1.0 (no wrong word can be selected).
             required_completeness (float, optional): The required completeness for the labeler to get the rapid correct (miminum ratio of total correct words selected). Defaults to 1.0 (all correct words need to be selected).
-            print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
             explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
+            dimensions (list[str], optional): The dimensions of the validation set. Defaults to ["global"].
+            print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
 
         Example:
             ```python
@@ -223,7 +229,7 @@ class ValidationSetManager:
                 )
             )
 
-        return self._submit(name=name, rapids=rapids, print_confirmation=print_confirmation)
+        return self._submit(name=name, rapids=rapids, dimensions=dimensions, print_confirmation=print_confirmation)
 
     def create_locate_set(self,
         name: str,
@@ -231,8 +237,9 @@ class ValidationSetManager:
         truths: list[list[Box]],
         datapoints: list[str],
         contexts: list[str] | None = None,
-        print_confirmation: bool = True,
         explanation: list[str | None] | None = None,
+        dimensions: list[str] = ["global"],
+        print_confirmation: bool = True,
     ) -> RapidataValidationSet:
         """Create a locate validation set.
 
@@ -245,8 +252,9 @@ class ValidationSetManager:
                     truths: [[Box(0, 0, 100, 100)], [Box(50, 50, 150, 150)]] -> first datapoint the object is in the top left corner, second datapoint the object is in the center
             datapoints (list[str]): The datapoints that will be used for validation.
             contexts (list[str], optional): The contexts for each datapoint. Defaults to None.
-            print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
             explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
+            dimensions (list[str], optional): The dimensions of the validation set. Defaults to ["global"].
+            print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
 
         Example:
             ```python
@@ -282,7 +290,7 @@ class ValidationSetManager:
                 )
             )
         
-        return self._submit(name=name, rapids=rapids, print_confirmation=print_confirmation)
+        return self._submit(name=name, rapids=rapids, dimensions=dimensions, print_confirmation=print_confirmation)
     
     def create_draw_set(self,
         name: str,
@@ -290,8 +298,9 @@ class ValidationSetManager:
         truths: list[list[Box]],
         datapoints: list[str],
         contexts: list[str] | None = None,
-        print_confirmation: bool = True,
         explanation: list[str | None] | None = None,
+        dimensions: list[str] = ["global"],
+        print_confirmation: bool = True,
     ) -> RapidataValidationSet:
         """Create a draw validation set.
 
@@ -304,8 +313,9 @@ class ValidationSetManager:
                     truths: [[Box(0, 0, 100, 100)], [Box(50, 50, 150, 150)]] -> first datapoint the object is in the top left corner, second datapoint the object is in the center
             datapoints (list[str]): The datapoints that will be used for validation.
             contexts (list[str], optional): The contexts for each datapoint. Defaults to None.
-            print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
             explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
+            dimensions (list[str], optional): The dimensions of the validation set. Defaults to ["global"].
+            print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
 
         Example:
             ```python
@@ -340,7 +350,7 @@ class ValidationSetManager:
                 )
             )
 
-        return self._submit(name=name, rapids=rapids, print_confirmation=print_confirmation)
+        return self._submit(name=name, rapids=rapids, dimensions=dimensions, print_confirmation=print_confirmation)
 
     def create_timestamp_set(self,
         name: str,
@@ -348,8 +358,9 @@ class ValidationSetManager:
         truths: list[list[tuple[int, int]]],
         datapoints: list[str],
         contexts: list[str] | None = None,
-        print_confirmation: bool = True,
         explanation: list[str | None] | None = None,
+        dimensions: list[str] = ["global"],
+        print_confirmation: bool = True,
     ) -> RapidataValidationSet:
         """Create a timestamp validation set.
 
@@ -363,8 +374,9 @@ class ValidationSetManager:
                     truths: [[(0, 10)], [(20, 30)]] -> first datapoint the correct interval is from 0 to 10, second datapoint the correct interval is from 20 to 30
             datapoints (list[str]): The datapoints that will be used for validation.
             contexts (list[str], optional): The contexts for each datapoint. Defaults to None.
-            print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
             explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
+            dimensions (list[str], optional): The dimensions of the validation set. Defaults to ["global"].
+            print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
 
         Example:
             ```python
@@ -399,11 +411,12 @@ class ValidationSetManager:
                 )
             )
 
-        return self._submit(name=name, rapids=rapids, print_confirmation=print_confirmation)
+        return self._submit(name=name, rapids=rapids, dimensions=dimensions, print_confirmation=print_confirmation)
     
     def create_mixed_set(self,
         name: str,
         rapids: list[Rapid],
+        dimensions: list[str] = ["global"],
         print_confirmation: bool = True
     ) -> RapidataValidationSet:
         """Create a validation set with a list of rapids.
@@ -411,10 +424,11 @@ class ValidationSetManager:
         Args:
             name (str): The name of the validation set. (will not be shown to the labeler)
             rapids (list[Rapid]): The list of rapids to add to the validation set.
+            dimensions (list[str], optional): The dimensions of the validation set. Defaults to ["global"].
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
         """
 
-        return self._submit(name, rapids, print_confirmation)
+        return self._submit(name=name, rapids=rapids, dimensions=dimensions, print_confirmation=print_confirmation)
     
     def get_validation_set_by_id(self, validation_set_id: str) -> RapidataValidationSet:
         """Get a validation set by ID.
@@ -432,7 +446,7 @@ class ValidationSetManager:
         
         return RapidataValidationSet(validation_set_id, validation_set.name, self.__openapi_service)
 
-    def _submit(self, name: str, rapids: list[Rapid], print_confirmation: bool) -> RapidataValidationSet:
+    def _submit(self, name: str, rapids: list[Rapid], dimensions:list[str], print_confirmation: bool) -> RapidataValidationSet:
         validation_set_id = (
             self.__openapi_service.validation_api.validation_create_validation_set_post(
                 name=name
@@ -456,7 +470,8 @@ class ValidationSetManager:
             print(f"Validation set '{name}' created with ID {validation_set_id}\n",
                   f"Now viewable under: https://app.{self.__openapi_service.enviroment}/validation-set/detail/{validation_set_id}",
                   sep="")
-            
+        
+        validation_set.update_dimensions(dimensions)
         return validation_set
 
 
