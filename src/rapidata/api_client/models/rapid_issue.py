@@ -32,6 +32,10 @@ class RapidIssue(str, Enum):
     INAPPROPRIATE = 'Inappropriate'
     NOCORRECTOPTION = 'NoCorrectOption'
     WRONGLANGUAGE = 'WrongLanguage'
+    DONOTUNDERSTAND = 'DoNotUnderstand'
+    DONOTCARE = 'DoNotCare'
+    NOTSEEOPTIONSORMEDIADIDNTLOAD = 'NotSeeOptionsOrMediaDidntLoad'
+    MYANSWERISCORRECT = 'MyAnswerIsCorrect'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
