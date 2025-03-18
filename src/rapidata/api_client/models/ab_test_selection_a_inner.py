@@ -26,7 +26,7 @@ from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-ABTESTSELECTIONAINNER_ONE_OF_SCHEMAS = ["AbTestSelection", "CappedSelection", "ConditionalValidationSelection", "DemographicSelection", "LabelingSelection", "StaticSelection", "ValidationSelection"]
+ABTESTSELECTIONAINNER_ONE_OF_SCHEMAS = ["AbTestSelection", "CappedSelection", "ConditionalValidationSelection", "DemographicSelection", "LabelingSelection", "ShufflingSelection", "StaticSelection", "ValidationSelection"]
 
 class AbTestSelectionAInner(BaseModel):
     """
@@ -42,12 +42,14 @@ class AbTestSelectionAInner(BaseModel):
     oneof_schema_4_validator: Optional[DemographicSelection] = None
     # data type: LabelingSelection
     oneof_schema_5_validator: Optional[LabelingSelection] = None
+    # data type: ShufflingSelection
+    oneof_schema_6_validator: Optional[ShufflingSelection] = None
     # data type: StaticSelection
-    oneof_schema_6_validator: Optional[StaticSelection] = None
+    oneof_schema_7_validator: Optional[StaticSelection] = None
     # data type: ValidationSelection
-    oneof_schema_7_validator: Optional[ValidationSelection] = None
-    actual_instance: Optional[Union[AbTestSelection, CappedSelection, ConditionalValidationSelection, DemographicSelection, LabelingSelection, StaticSelection, ValidationSelection]] = None
-    one_of_schemas: Set[str] = { "AbTestSelection", "CappedSelection", "ConditionalValidationSelection", "DemographicSelection", "LabelingSelection", "StaticSelection", "ValidationSelection" }
+    oneof_schema_8_validator: Optional[ValidationSelection] = None
+    actual_instance: Optional[Union[AbTestSelection, CappedSelection, ConditionalValidationSelection, DemographicSelection, LabelingSelection, ShufflingSelection, StaticSelection, ValidationSelection]] = None
+    one_of_schemas: Set[str] = { "AbTestSelection", "CappedSelection", "ConditionalValidationSelection", "DemographicSelection", "LabelingSelection", "ShufflingSelection", "StaticSelection", "ValidationSelection" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -98,6 +100,11 @@ class AbTestSelectionAInner(BaseModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `LabelingSelection`")
         else:
             match += 1
+        # validate data type: ShufflingSelection
+        if not isinstance(v, ShufflingSelection):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `ShufflingSelection`")
+        else:
+            match += 1
         # validate data type: StaticSelection
         if not isinstance(v, StaticSelection):
             error_messages.append(f"Error! Input type `{type(v)}` is not `StaticSelection`")
@@ -110,10 +117,10 @@ class AbTestSelectionAInner(BaseModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in AbTestSelectionAInner with oneOf schemas: AbTestSelection, CappedSelection, ConditionalValidationSelection, DemographicSelection, LabelingSelection, StaticSelection, ValidationSelection. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in AbTestSelectionAInner with oneOf schemas: AbTestSelection, CappedSelection, ConditionalValidationSelection, DemographicSelection, LabelingSelection, ShufflingSelection, StaticSelection, ValidationSelection. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in AbTestSelectionAInner with oneOf schemas: AbTestSelection, CappedSelection, ConditionalValidationSelection, DemographicSelection, LabelingSelection, StaticSelection, ValidationSelection. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in AbTestSelectionAInner with oneOf schemas: AbTestSelection, CappedSelection, ConditionalValidationSelection, DemographicSelection, LabelingSelection, ShufflingSelection, StaticSelection, ValidationSelection. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -158,6 +165,12 @@ class AbTestSelectionAInner(BaseModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
+        # deserialize data into ShufflingSelection
+        try:
+            instance.actual_instance = ShufflingSelection.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
         # deserialize data into StaticSelection
         try:
             instance.actual_instance = StaticSelection.from_json(json_str)
@@ -173,10 +186,10 @@ class AbTestSelectionAInner(BaseModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into AbTestSelectionAInner with oneOf schemas: AbTestSelection, CappedSelection, ConditionalValidationSelection, DemographicSelection, LabelingSelection, StaticSelection, ValidationSelection. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into AbTestSelectionAInner with oneOf schemas: AbTestSelection, CappedSelection, ConditionalValidationSelection, DemographicSelection, LabelingSelection, ShufflingSelection, StaticSelection, ValidationSelection. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into AbTestSelectionAInner with oneOf schemas: AbTestSelection, CappedSelection, ConditionalValidationSelection, DemographicSelection, LabelingSelection, StaticSelection, ValidationSelection. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into AbTestSelectionAInner with oneOf schemas: AbTestSelection, CappedSelection, ConditionalValidationSelection, DemographicSelection, LabelingSelection, ShufflingSelection, StaticSelection, ValidationSelection. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -190,7 +203,7 @@ class AbTestSelectionAInner(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], AbTestSelection, CappedSelection, ConditionalValidationSelection, DemographicSelection, LabelingSelection, StaticSelection, ValidationSelection]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], AbTestSelection, CappedSelection, ConditionalValidationSelection, DemographicSelection, LabelingSelection, ShufflingSelection, StaticSelection, ValidationSelection]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None
@@ -207,6 +220,7 @@ class AbTestSelectionAInner(BaseModel):
 
 from rapidata.api_client.models.ab_test_selection import AbTestSelection
 from rapidata.api_client.models.capped_selection import CappedSelection
+from rapidata.api_client.models.shuffling_selection import ShufflingSelection
 # TODO: Rewrite to not use raise_errors
 AbTestSelectionAInner.model_rebuild(raise_errors=False)
 

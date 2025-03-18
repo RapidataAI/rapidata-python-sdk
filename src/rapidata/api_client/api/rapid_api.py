@@ -19,7 +19,10 @@ from typing_extensions import Annotated
 from pydantic import Field, StrictBytes, StrictStr
 from typing import List, Optional, Tuple, Union
 from typing_extensions import Annotated
+from rapidata.api_client.models.add_user_response_result import AddUserResponseResult
+from rapidata.api_client.models.are_rapids_active_result import AreRapidsActiveResult
 from rapidata.api_client.models.create_demographic_rapid_model import CreateDemographicRapidModel
+from rapidata.api_client.models.create_rapid_result import CreateRapidResult
 from rapidata.api_client.models.get_rapid_responses_result import GetRapidResponsesResult
 from rapidata.api_client.models.inspect_report_result import InspectReportResult
 from rapidata.api_client.models.query_model import QueryModel
@@ -48,7 +51,7 @@ class RapidApi:
 
 
     @validate_call
-    def rapid_add_user_guess_post(
+    def rapid_adduserguess_post(
         self,
         rapid_result_model: Annotated[Optional[RapidResultModel], Field(description="The model containing the user guess.")] = None,
         _request_timeout: Union[
@@ -64,7 +67,7 @@ class RapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Submits a user guess for a Rapid.
+        """(Deprecated) Submits a user guess for a Rapid.
 
 
         :param rapid_result_model: The model containing the user guess.
@@ -90,8 +93,9 @@ class RapidApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("POST /rapid/adduserguess is deprecated.", DeprecationWarning)
 
-        _param = self._rapid_add_user_guess_post_serialize(
+        _param = self._rapid_adduserguess_post_serialize(
             rapid_result_model=rapid_result_model,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -114,7 +118,7 @@ class RapidApi:
 
 
     @validate_call
-    def rapid_add_user_guess_post_with_http_info(
+    def rapid_adduserguess_post_with_http_info(
         self,
         rapid_result_model: Annotated[Optional[RapidResultModel], Field(description="The model containing the user guess.")] = None,
         _request_timeout: Union[
@@ -130,7 +134,7 @@ class RapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Submits a user guess for a Rapid.
+        """(Deprecated) Submits a user guess for a Rapid.
 
 
         :param rapid_result_model: The model containing the user guess.
@@ -156,8 +160,9 @@ class RapidApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("POST /rapid/adduserguess is deprecated.", DeprecationWarning)
 
-        _param = self._rapid_add_user_guess_post_serialize(
+        _param = self._rapid_adduserguess_post_serialize(
             rapid_result_model=rapid_result_model,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -180,7 +185,7 @@ class RapidApi:
 
 
     @validate_call
-    def rapid_add_user_guess_post_without_preload_content(
+    def rapid_adduserguess_post_without_preload_content(
         self,
         rapid_result_model: Annotated[Optional[RapidResultModel], Field(description="The model containing the user guess.")] = None,
         _request_timeout: Union[
@@ -196,7 +201,7 @@ class RapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Submits a user guess for a Rapid.
+        """(Deprecated) Submits a user guess for a Rapid.
 
 
         :param rapid_result_model: The model containing the user guess.
@@ -222,8 +227,9 @@ class RapidApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("POST /rapid/adduserguess is deprecated.", DeprecationWarning)
 
-        _param = self._rapid_add_user_guess_post_serialize(
+        _param = self._rapid_adduserguess_post_serialize(
             rapid_result_model=rapid_result_model,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -241,7 +247,7 @@ class RapidApi:
         return response_data.response
 
 
-    def _rapid_add_user_guess_post_serialize(
+    def _rapid_adduserguess_post_serialize(
         self,
         rapid_result_model,
         _request_auth,
@@ -298,7 +304,7 @@ class RapidApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/Rapid/AddUserGuess',
+            resource_path='/rapid/adduserguess',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -315,7 +321,7 @@ class RapidApi:
 
 
     @validate_call
-    def rapid_create_demographic_rapid_post(
+    def rapid_createdemographicrapid_post(
         self,
         model: Optional[CreateDemographicRapidModel] = None,
         file: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
@@ -332,7 +338,7 @@ class RapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Creates a new Demographic Rapid.
+        """(Deprecated) Creates a new Demographic Rapid.
 
 
         :param model:
@@ -360,8 +366,9 @@ class RapidApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("POST /rapid/createdemographicrapid is deprecated.", DeprecationWarning)
 
-        _param = self._rapid_create_demographic_rapid_post_serialize(
+        _param = self._rapid_createdemographicrapid_post_serialize(
             model=model,
             file=file,
             _request_auth=_request_auth,
@@ -385,7 +392,7 @@ class RapidApi:
 
 
     @validate_call
-    def rapid_create_demographic_rapid_post_with_http_info(
+    def rapid_createdemographicrapid_post_with_http_info(
         self,
         model: Optional[CreateDemographicRapidModel] = None,
         file: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
@@ -402,7 +409,7 @@ class RapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Creates a new Demographic Rapid.
+        """(Deprecated) Creates a new Demographic Rapid.
 
 
         :param model:
@@ -430,8 +437,9 @@ class RapidApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("POST /rapid/createdemographicrapid is deprecated.", DeprecationWarning)
 
-        _param = self._rapid_create_demographic_rapid_post_serialize(
+        _param = self._rapid_createdemographicrapid_post_serialize(
             model=model,
             file=file,
             _request_auth=_request_auth,
@@ -455,7 +463,7 @@ class RapidApi:
 
 
     @validate_call
-    def rapid_create_demographic_rapid_post_without_preload_content(
+    def rapid_createdemographicrapid_post_without_preload_content(
         self,
         model: Optional[CreateDemographicRapidModel] = None,
         file: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
@@ -472,7 +480,7 @@ class RapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Creates a new Demographic Rapid.
+        """(Deprecated) Creates a new Demographic Rapid.
 
 
         :param model:
@@ -500,8 +508,9 @@ class RapidApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("POST /rapid/createdemographicrapid is deprecated.", DeprecationWarning)
 
-        _param = self._rapid_create_demographic_rapid_post_serialize(
+        _param = self._rapid_createdemographicrapid_post_serialize(
             model=model,
             file=file,
             _request_auth=_request_auth,
@@ -520,7 +529,7 @@ class RapidApi:
         return response_data.response
 
 
-    def _rapid_create_demographic_rapid_post_serialize(
+    def _rapid_createdemographicrapid_post_serialize(
         self,
         model,
         file,
@@ -579,7 +588,7 @@ class RapidApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/Rapid/CreateDemographicRapid',
+            resource_path='/rapid/createdemographicrapid',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -596,7 +605,297 @@ class RapidApi:
 
 
     @validate_call
-    def rapid_query_validation_rapids_get(
+    def rapid_demographic_post(
+        self,
+        model: Optional[CreateDemographicRapidModel] = None,
+        file: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> CreateRapidResult:
+        """Creates a new Demographic Rapid.
+
+
+        :param model:
+        :type model: CreateDemographicRapidModel
+        :param file:
+        :type file: List[bytearray]
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._rapid_demographic_post_serialize(
+            model=model,
+            file=file,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CreateRapidResult",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def rapid_demographic_post_with_http_info(
+        self,
+        model: Optional[CreateDemographicRapidModel] = None,
+        file: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[CreateRapidResult]:
+        """Creates a new Demographic Rapid.
+
+
+        :param model:
+        :type model: CreateDemographicRapidModel
+        :param file:
+        :type file: List[bytearray]
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._rapid_demographic_post_serialize(
+            model=model,
+            file=file,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CreateRapidResult",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def rapid_demographic_post_without_preload_content(
+        self,
+        model: Optional[CreateDemographicRapidModel] = None,
+        file: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Creates a new Demographic Rapid.
+
+
+        :param model:
+        :type model: CreateDemographicRapidModel
+        :param file:
+        :type file: List[bytearray]
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._rapid_demographic_post_serialize(
+            model=model,
+            file=file,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "CreateRapidResult",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _rapid_demographic_post_serialize(
+        self,
+        model,
+        file,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+            'file': 'multi',
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        if model is not None:
+            _form_params.append(('model', model))
+        if file is not None:
+            _files['file'] = file
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'text/plain', 
+                    'application/json', 
+                    'text/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'multipart/form-data'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'bearer', 
+            'oauth2'
+        ]
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/rapid/demographic',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def rapid_queryvalidationrapids_get(
         self,
         validation_set_id: Annotated[Optional[StrictStr], Field(description="The validation set to query.")] = None,
         model: Annotated[Optional[QueryModel], Field(description="The query model.")] = None,
@@ -613,7 +912,7 @@ class RapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> QueryValidationRapidsResultPagedResult:
-        """Queries the validation rapids for a specific validation set.
+        """(Deprecated) Queries the validation rapids for a specific validation set.
 
 
         :param validation_set_id: The validation set to query.
@@ -641,8 +940,9 @@ class RapidApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("GET /rapid/queryvalidationrapids is deprecated.", DeprecationWarning)
 
-        _param = self._rapid_query_validation_rapids_get_serialize(
+        _param = self._rapid_queryvalidationrapids_get_serialize(
             validation_set_id=validation_set_id,
             model=model,
             _request_auth=_request_auth,
@@ -666,7 +966,7 @@ class RapidApi:
 
 
     @validate_call
-    def rapid_query_validation_rapids_get_with_http_info(
+    def rapid_queryvalidationrapids_get_with_http_info(
         self,
         validation_set_id: Annotated[Optional[StrictStr], Field(description="The validation set to query.")] = None,
         model: Annotated[Optional[QueryModel], Field(description="The query model.")] = None,
@@ -683,7 +983,7 @@ class RapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[QueryValidationRapidsResultPagedResult]:
-        """Queries the validation rapids for a specific validation set.
+        """(Deprecated) Queries the validation rapids for a specific validation set.
 
 
         :param validation_set_id: The validation set to query.
@@ -711,8 +1011,9 @@ class RapidApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("GET /rapid/queryvalidationrapids is deprecated.", DeprecationWarning)
 
-        _param = self._rapid_query_validation_rapids_get_serialize(
+        _param = self._rapid_queryvalidationrapids_get_serialize(
             validation_set_id=validation_set_id,
             model=model,
             _request_auth=_request_auth,
@@ -736,7 +1037,7 @@ class RapidApi:
 
 
     @validate_call
-    def rapid_query_validation_rapids_get_without_preload_content(
+    def rapid_queryvalidationrapids_get_without_preload_content(
         self,
         validation_set_id: Annotated[Optional[StrictStr], Field(description="The validation set to query.")] = None,
         model: Annotated[Optional[QueryModel], Field(description="The query model.")] = None,
@@ -753,7 +1054,7 @@ class RapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Queries the validation rapids for a specific validation set.
+        """(Deprecated) Queries the validation rapids for a specific validation set.
 
 
         :param validation_set_id: The validation set to query.
@@ -781,8 +1082,9 @@ class RapidApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("GET /rapid/queryvalidationrapids is deprecated.", DeprecationWarning)
 
-        _param = self._rapid_query_validation_rapids_get_serialize(
+        _param = self._rapid_queryvalidationrapids_get_serialize(
             validation_set_id=validation_set_id,
             model=model,
             _request_auth=_request_auth,
@@ -801,7 +1103,7 @@ class RapidApi:
         return response_data.response
 
 
-    def _rapid_query_validation_rapids_get_serialize(
+    def _rapid_queryvalidationrapids_get_serialize(
         self,
         validation_set_id,
         model,
@@ -859,7 +1161,253 @@ class RapidApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/Rapid/QueryValidationRapids',
+            resource_path='/rapid/queryvalidationrapids',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def rapid_rapid_bag_is_valid_get(
+        self,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> AreRapidsActiveResult:
+        """Validates that the rapids associated with the current user are active.
+
+
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._rapid_rapid_bag_is_valid_get_serialize(
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "AreRapidsActiveResult",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def rapid_rapid_bag_is_valid_get_with_http_info(
+        self,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[AreRapidsActiveResult]:
+        """Validates that the rapids associated with the current user are active.
+
+
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._rapid_rapid_bag_is_valid_get_serialize(
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "AreRapidsActiveResult",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def rapid_rapid_bag_is_valid_get_without_preload_content(
+        self,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Validates that the rapids associated with the current user are active.
+
+
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._rapid_rapid_bag_is_valid_get_serialize(
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "AreRapidsActiveResult",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _rapid_rapid_bag_is_valid_get_serialize(
+        self,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'text/plain', 
+                    'application/json', 
+                    'text/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'bearer', 
+            'oauth2'
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/rapid/rapid-bag/is-valid',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -928,7 +1476,7 @@ class RapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '204': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -994,7 +1542,7 @@ class RapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '204': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1060,7 +1608,7 @@ class RapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '204': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1112,6 +1660,288 @@ class RapidApi:
         return self.api_client.param_serialize(
             method='DELETE',
             resource_path='/rapid/{rapidId}',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def rapid_rapid_id_report_post(
+        self,
+        rapid_id: Annotated[StrictStr, Field(description="The rapid to report.")],
+        report_model: Annotated[Optional[ReportModel], Field(description="The body request.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> None:
+        """Used to report an issue with a rapid.
+
+
+        :param rapid_id: The rapid to report. (required)
+        :type rapid_id: str
+        :param report_model: The body request.
+        :type report_model: ReportModel
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._rapid_rapid_id_report_post_serialize(
+            rapid_id=rapid_id,
+            report_model=report_model,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def rapid_rapid_id_report_post_with_http_info(
+        self,
+        rapid_id: Annotated[StrictStr, Field(description="The rapid to report.")],
+        report_model: Annotated[Optional[ReportModel], Field(description="The body request.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
+        """Used to report an issue with a rapid.
+
+
+        :param rapid_id: The rapid to report. (required)
+        :type rapid_id: str
+        :param report_model: The body request.
+        :type report_model: ReportModel
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._rapid_rapid_id_report_post_serialize(
+            rapid_id=rapid_id,
+            report_model=report_model,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def rapid_rapid_id_report_post_without_preload_content(
+        self,
+        rapid_id: Annotated[StrictStr, Field(description="The rapid to report.")],
+        report_model: Annotated[Optional[ReportModel], Field(description="The body request.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Used to report an issue with a rapid.
+
+
+        :param rapid_id: The rapid to report. (required)
+        :type rapid_id: str
+        :param report_model: The body request.
+        :type report_model: ReportModel
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._rapid_rapid_id_report_post_serialize(
+            rapid_id=rapid_id,
+            report_model=report_model,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _rapid_rapid_id_report_post_serialize(
+        self,
+        rapid_id,
+        report_model,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if rapid_id is not None:
+            _path_params['rapidId'] = rapid_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if report_model is not None:
+            _body_params = report_model
+
+
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json', 
+                        'text/json', 
+                        'application/*+json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'bearer', 
+            'oauth2'
+        ]
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/rapid/{rapidId}/report',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1389,267 +2219,6 @@ class RapidApi:
 
 
     @validate_call
-    def rapid_report_id_get(
-        self,
-        id: Annotated[StrictStr, Field(description="The report id")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> InspectReportResult:
-        """Inspects a report's dump. can be used to restore zustand state or anything alike.
-
-
-        :param id: The report id (required)
-        :type id: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._rapid_report_id_get_serialize(
-            id=id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "InspectReportResult",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def rapid_report_id_get_with_http_info(
-        self,
-        id: Annotated[StrictStr, Field(description="The report id")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[InspectReportResult]:
-        """Inspects a report's dump. can be used to restore zustand state or anything alike.
-
-
-        :param id: The report id (required)
-        :type id: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._rapid_report_id_get_serialize(
-            id=id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "InspectReportResult",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def rapid_report_id_get_without_preload_content(
-        self,
-        id: Annotated[StrictStr, Field(description="The report id")],
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Inspects a report's dump. can be used to restore zustand state or anything alike.
-
-
-        :param id: The report id (required)
-        :type id: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._rapid_report_id_get_serialize(
-            id=id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "InspectReportResult",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _rapid_report_id_get_serialize(
-        self,
-        id,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if id is not None:
-            _path_params['id'] = id
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
-                ]
-            )
-
-
-        # authentication setting
-        _auth_settings: List[str] = [
-            'bearer', 
-            'oauth2'
-        ]
-
-        return self.api_client.param_serialize(
-            method='GET',
-            resource_path='/rapid/report/{id}',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
     def rapid_report_post(
         self,
         report_model: Optional[ReportModel] = None,
@@ -1666,7 +2235,7 @@ class RapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Used to report an issue with a rapid.
+        """(Deprecated) Used to report an issue with a rapid.
 
 
         :param report_model: 
@@ -1692,6 +2261,7 @@ class RapidApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("POST /rapid/report is deprecated.", DeprecationWarning)
 
         _param = self._rapid_report_post_serialize(
             report_model=report_model,
@@ -1732,7 +2302,7 @@ class RapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Used to report an issue with a rapid.
+        """(Deprecated) Used to report an issue with a rapid.
 
 
         :param report_model: 
@@ -1758,6 +2328,7 @@ class RapidApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("POST /rapid/report is deprecated.", DeprecationWarning)
 
         _param = self._rapid_report_post_serialize(
             report_model=report_model,
@@ -1798,7 +2369,7 @@ class RapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Used to report an issue with a rapid.
+        """(Deprecated) Used to report an issue with a rapid.
 
 
         :param report_model: 
@@ -1824,6 +2395,7 @@ class RapidApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("POST /rapid/report is deprecated.", DeprecationWarning)
 
         _param = self._rapid_report_post_serialize(
             report_model=report_model,
@@ -1900,7 +2472,7 @@ class RapidApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/Rapid/Report',
+            resource_path='/rapid/report',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1917,9 +2489,9 @@ class RapidApi:
 
 
     @validate_call
-    def rapid_skip_user_guess_post(
+    def rapid_report_report_id_get(
         self,
-        rapid_skipped_model: Annotated[Optional[RapidSkippedModel], Field(description="The model containing the Rapid to skip.")] = None,
+        report_id: Annotated[StrictStr, Field(description="The report id")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1932,12 +2504,12 @@ class RapidApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> None:
-        """Skips a Rapid for the user.
+    ) -> InspectReportResult:
+        """Inspects a report's dump. can be used to restore zustand state or anything alike.
 
 
-        :param rapid_skipped_model: The model containing the Rapid to skip.
-        :type rapid_skipped_model: RapidSkippedModel
+        :param report_id: The report id (required)
+        :type report_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1960,8 +2532,8 @@ class RapidApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._rapid_skip_user_guess_post_serialize(
-            rapid_skipped_model=rapid_skipped_model,
+        _param = self._rapid_report_report_id_get_serialize(
+            report_id=report_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1969,7 +2541,7 @@ class RapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '200': "InspectReportResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1983,7 +2555,478 @@ class RapidApi:
 
 
     @validate_call
-    def rapid_skip_user_guess_post_with_http_info(
+    def rapid_report_report_id_get_with_http_info(
+        self,
+        report_id: Annotated[StrictStr, Field(description="The report id")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[InspectReportResult]:
+        """Inspects a report's dump. can be used to restore zustand state or anything alike.
+
+
+        :param report_id: The report id (required)
+        :type report_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._rapid_report_report_id_get_serialize(
+            report_id=report_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "InspectReportResult",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def rapid_report_report_id_get_without_preload_content(
+        self,
+        report_id: Annotated[StrictStr, Field(description="The report id")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Inspects a report's dump. can be used to restore zustand state or anything alike.
+
+
+        :param report_id: The report id (required)
+        :type report_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._rapid_report_report_id_get_serialize(
+            report_id=report_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "InspectReportResult",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _rapid_report_report_id_get_serialize(
+        self,
+        report_id,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if report_id is not None:
+            _path_params['reportId'] = report_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'text/plain', 
+                    'application/json', 
+                    'text/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'bearer', 
+            'oauth2'
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/rapid/report/{reportId}',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def rapid_response_post(
+        self,
+        rapid_result_model: Annotated[Optional[RapidResultModel], Field(description="The model containing the user guess.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> AddUserResponseResult:
+        """Submits a response for a Rapid.
+
+
+        :param rapid_result_model: The model containing the user guess.
+        :type rapid_result_model: RapidResultModel
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._rapid_response_post_serialize(
+            rapid_result_model=rapid_result_model,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "AddUserResponseResult",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def rapid_response_post_with_http_info(
+        self,
+        rapid_result_model: Annotated[Optional[RapidResultModel], Field(description="The model containing the user guess.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[AddUserResponseResult]:
+        """Submits a response for a Rapid.
+
+
+        :param rapid_result_model: The model containing the user guess.
+        :type rapid_result_model: RapidResultModel
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._rapid_response_post_serialize(
+            rapid_result_model=rapid_result_model,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "AddUserResponseResult",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def rapid_response_post_without_preload_content(
+        self,
+        rapid_result_model: Annotated[Optional[RapidResultModel], Field(description="The model containing the user guess.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Submits a response for a Rapid.
+
+
+        :param rapid_result_model: The model containing the user guess.
+        :type rapid_result_model: RapidResultModel
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._rapid_response_post_serialize(
+            rapid_result_model=rapid_result_model,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "AddUserResponseResult",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _rapid_response_post_serialize(
+        self,
+        rapid_result_model,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if rapid_result_model is not None:
+            _body_params = rapid_result_model
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'text/plain', 
+                    'application/json', 
+                    'text/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json', 
+                        'text/json', 
+                        'application/*+json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'bearer', 
+            'oauth2'
+        ]
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/rapid/response',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def rapid_skip_post(
         self,
         rapid_skipped_model: Annotated[Optional[RapidSkippedModel], Field(description="The model containing the Rapid to skip.")] = None,
         _request_timeout: Union[
@@ -1998,7 +3041,7 @@ class RapidApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
+    ) -> AddUserResponseResult:
         """Skips a Rapid for the user.
 
 
@@ -2026,7 +3069,7 @@ class RapidApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._rapid_skip_user_guess_post_serialize(
+        _param = self._rapid_skip_post_serialize(
             rapid_skipped_model=rapid_skipped_model,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -2035,7 +3078,73 @@ class RapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': None,
+            '200': "AddUserResponseResult",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def rapid_skip_post_with_http_info(
+        self,
+        rapid_skipped_model: Annotated[Optional[RapidSkippedModel], Field(description="The model containing the Rapid to skip.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[AddUserResponseResult]:
+        """Skips a Rapid for the user.
+
+
+        :param rapid_skipped_model: The model containing the Rapid to skip.
+        :type rapid_skipped_model: RapidSkippedModel
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._rapid_skip_post_serialize(
+            rapid_skipped_model=rapid_skipped_model,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "AddUserResponseResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2049,7 +3158,7 @@ class RapidApi:
 
 
     @validate_call
-    def rapid_skip_user_guess_post_without_preload_content(
+    def rapid_skip_post_without_preload_content(
         self,
         rapid_skipped_model: Annotated[Optional[RapidSkippedModel], Field(description="The model containing the Rapid to skip.")] = None,
         _request_timeout: Union[
@@ -2092,7 +3201,286 @@ class RapidApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._rapid_skip_user_guess_post_serialize(
+        _param = self._rapid_skip_post_serialize(
+            rapid_skipped_model=rapid_skipped_model,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "AddUserResponseResult",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _rapid_skip_post_serialize(
+        self,
+        rapid_skipped_model,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if rapid_skipped_model is not None:
+            _body_params = rapid_skipped_model
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'text/plain', 
+                    'application/json', 
+                    'text/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json', 
+                        'text/json', 
+                        'application/*+json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'bearer', 
+            'oauth2'
+        ]
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/rapid/skip',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def rapid_skipuserguess_post(
+        self,
+        rapid_skipped_model: Annotated[Optional[RapidSkippedModel], Field(description="The model containing the Rapid to skip.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> None:
+        """(Deprecated) Skips a Rapid for the user.
+
+
+        :param rapid_skipped_model: The model containing the Rapid to skip.
+        :type rapid_skipped_model: RapidSkippedModel
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+        warnings.warn("POST /rapid/skipuserguess is deprecated.", DeprecationWarning)
+
+        _param = self._rapid_skipuserguess_post_serialize(
+            rapid_skipped_model=rapid_skipped_model,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def rapid_skipuserguess_post_with_http_info(
+        self,
+        rapid_skipped_model: Annotated[Optional[RapidSkippedModel], Field(description="The model containing the Rapid to skip.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
+        """(Deprecated) Skips a Rapid for the user.
+
+
+        :param rapid_skipped_model: The model containing the Rapid to skip.
+        :type rapid_skipped_model: RapidSkippedModel
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+        warnings.warn("POST /rapid/skipuserguess is deprecated.", DeprecationWarning)
+
+        _param = self._rapid_skipuserguess_post_serialize(
+            rapid_skipped_model=rapid_skipped_model,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def rapid_skipuserguess_post_without_preload_content(
+        self,
+        rapid_skipped_model: Annotated[Optional[RapidSkippedModel], Field(description="The model containing the Rapid to skip.")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """(Deprecated) Skips a Rapid for the user.
+
+
+        :param rapid_skipped_model: The model containing the Rapid to skip.
+        :type rapid_skipped_model: RapidSkippedModel
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+        warnings.warn("POST /rapid/skipuserguess is deprecated.", DeprecationWarning)
+
+        _param = self._rapid_skipuserguess_post_serialize(
             rapid_skipped_model=rapid_skipped_model,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -2110,7 +3498,7 @@ class RapidApi:
         return response_data.response
 
 
-    def _rapid_skip_user_guess_post_serialize(
+    def _rapid_skipuserguess_post_serialize(
         self,
         rapid_skipped_model,
         _request_auth,
@@ -2167,7 +3555,7 @@ class RapidApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/Rapid/SkipUserGuess',
+            resource_path='/rapid/skipuserguess',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -2184,7 +3572,7 @@ class RapidApi:
 
 
     @validate_call
-    def rapid_validate_current_rapid_bag_get(
+    def rapid_validatecurrentrapidbag_get(
         self,
         _request_timeout: Union[
             None,
@@ -2199,7 +3587,7 @@ class RapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Validates that the rapids associated with the current user are active.
+        """(Deprecated) Validates that the rapids associated with the current user are active.
 
 
         :param _request_timeout: timeout setting for this request. If one
@@ -2223,8 +3611,9 @@ class RapidApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("GET /rapid/validatecurrentrapidbag is deprecated.", DeprecationWarning)
 
-        _param = self._rapid_validate_current_rapid_bag_get_serialize(
+        _param = self._rapid_validatecurrentrapidbag_get_serialize(
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2246,7 +3635,7 @@ class RapidApi:
 
 
     @validate_call
-    def rapid_validate_current_rapid_bag_get_with_http_info(
+    def rapid_validatecurrentrapidbag_get_with_http_info(
         self,
         _request_timeout: Union[
             None,
@@ -2261,7 +3650,7 @@ class RapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Validates that the rapids associated with the current user are active.
+        """(Deprecated) Validates that the rapids associated with the current user are active.
 
 
         :param _request_timeout: timeout setting for this request. If one
@@ -2285,8 +3674,9 @@ class RapidApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("GET /rapid/validatecurrentrapidbag is deprecated.", DeprecationWarning)
 
-        _param = self._rapid_validate_current_rapid_bag_get_serialize(
+        _param = self._rapid_validatecurrentrapidbag_get_serialize(
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2308,7 +3698,7 @@ class RapidApi:
 
 
     @validate_call
-    def rapid_validate_current_rapid_bag_get_without_preload_content(
+    def rapid_validatecurrentrapidbag_get_without_preload_content(
         self,
         _request_timeout: Union[
             None,
@@ -2323,7 +3713,7 @@ class RapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Validates that the rapids associated with the current user are active.
+        """(Deprecated) Validates that the rapids associated with the current user are active.
 
 
         :param _request_timeout: timeout setting for this request. If one
@@ -2347,8 +3737,9 @@ class RapidApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("GET /rapid/validatecurrentrapidbag is deprecated.", DeprecationWarning)
 
-        _param = self._rapid_validate_current_rapid_bag_get_serialize(
+        _param = self._rapid_validatecurrentrapidbag_get_serialize(
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2365,7 +3756,7 @@ class RapidApi:
         return response_data.response
 
 
-    def _rapid_validate_current_rapid_bag_get_serialize(
+    def _rapid_validatecurrentrapidbag_get_serialize(
         self,
         _request_auth,
         _content_type,
@@ -2404,7 +3795,289 @@ class RapidApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/Rapid/ValidateCurrentRapidBag',
+            resource_path='/rapid/validatecurrentrapidbag',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def rapid_validation_rapid_id_patch(
+        self,
+        rapid_id: Annotated[StrictStr, Field(description="The id of the rapid to update")],
+        update_validation_rapid_model: Annotated[Optional[UpdateValidationRapidModel], Field(description="The body request")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> None:
+        """Updates the validation information of a rapid.
+
+
+        :param rapid_id: The id of the rapid to update (required)
+        :type rapid_id: str
+        :param update_validation_rapid_model: The body request
+        :type update_validation_rapid_model: UpdateValidationRapidModel
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._rapid_validation_rapid_id_patch_serialize(
+            rapid_id=rapid_id,
+            update_validation_rapid_model=update_validation_rapid_model,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def rapid_validation_rapid_id_patch_with_http_info(
+        self,
+        rapid_id: Annotated[StrictStr, Field(description="The id of the rapid to update")],
+        update_validation_rapid_model: Annotated[Optional[UpdateValidationRapidModel], Field(description="The body request")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
+        """Updates the validation information of a rapid.
+
+
+        :param rapid_id: The id of the rapid to update (required)
+        :type rapid_id: str
+        :param update_validation_rapid_model: The body request
+        :type update_validation_rapid_model: UpdateValidationRapidModel
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._rapid_validation_rapid_id_patch_serialize(
+            rapid_id=rapid_id,
+            update_validation_rapid_model=update_validation_rapid_model,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def rapid_validation_rapid_id_patch_without_preload_content(
+        self,
+        rapid_id: Annotated[StrictStr, Field(description="The id of the rapid to update")],
+        update_validation_rapid_model: Annotated[Optional[UpdateValidationRapidModel], Field(description="The body request")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Updates the validation information of a rapid.
+
+
+        :param rapid_id: The id of the rapid to update (required)
+        :type rapid_id: str
+        :param update_validation_rapid_model: The body request
+        :type update_validation_rapid_model: UpdateValidationRapidModel
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._rapid_validation_rapid_id_patch_serialize(
+            rapid_id=rapid_id,
+            update_validation_rapid_model=update_validation_rapid_model,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _rapid_validation_rapid_id_patch_serialize(
+        self,
+        rapid_id,
+        update_validation_rapid_model,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if rapid_id is not None:
+            _path_params['rapidId'] = rapid_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if update_validation_rapid_model is not None:
+            _body_params = update_validation_rapid_model
+
+
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json', 
+                        'text/json', 
+                        'application/*+json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'bearer', 
+            'oauth2'
+        ]
+
+        return self.api_client.param_serialize(
+            method='PATCH',
+            resource_path='/rapid/validation/{rapidId}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -2438,7 +4111,7 @@ class RapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Updates the validation information of a rapid.
+        """(Deprecated) Updates the validation information of a rapid.
 
 
         :param rapid_id:  (required)
@@ -2466,6 +4139,7 @@ class RapidApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("PUT /rapid/validation/{rapidId} is deprecated.", DeprecationWarning)
 
         _param = self._rapid_validation_rapid_id_put_serialize(
             rapid_id=rapid_id,
@@ -2508,7 +4182,7 @@ class RapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Updates the validation information of a rapid.
+        """(Deprecated) Updates the validation information of a rapid.
 
 
         :param rapid_id:  (required)
@@ -2536,6 +4210,7 @@ class RapidApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("PUT /rapid/validation/{rapidId} is deprecated.", DeprecationWarning)
 
         _param = self._rapid_validation_rapid_id_put_serialize(
             rapid_id=rapid_id,
@@ -2578,7 +4253,7 @@ class RapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Updates the validation information of a rapid.
+        """(Deprecated) Updates the validation information of a rapid.
 
 
         :param rapid_id:  (required)
@@ -2606,6 +4281,7 @@ class RapidApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("PUT /rapid/validation/{rapidId} is deprecated.", DeprecationWarning)
 
         _param = self._rapid_validation_rapid_id_put_serialize(
             rapid_id=rapid_id,

@@ -17,27 +17,17 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from pydantic import BaseModel, ConfigDict, Field, StrictBool
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class UserScoreUserFilterModel(BaseModel):
+class AreRapidsActiveResult(BaseModel):
     """
-    UserScoreUserFilterModel
+    AreRapidsActiveResult
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for UserScoreFilter", alias="_t")
-    lowerbound: Optional[Union[StrictFloat, StrictInt]] = None
-    upperbound: Optional[Union[StrictFloat, StrictInt]] = None
-    dimension: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["_t", "lowerbound", "upperbound", "dimension"]
-
-    @field_validator('t')
-    def t_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['UserScoreFilter']):
-            raise ValueError("must be one of enum values ('UserScoreFilter')")
-        return value
+    is_valid: StrictBool = Field(alias="isValid")
+    __properties: ClassVar[List[str]] = ["isValid"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -57,7 +47,7 @@ class UserScoreUserFilterModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of UserScoreUserFilterModel from a JSON string"""
+        """Create an instance of AreRapidsActiveResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -78,16 +68,11 @@ class UserScoreUserFilterModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if dimension (nullable) is None
-        # and model_fields_set contains the field
-        if self.dimension is None and "dimension" in self.model_fields_set:
-            _dict['dimension'] = None
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of UserScoreUserFilterModel from a dict"""
+        """Create an instance of AreRapidsActiveResult from a dict"""
         if obj is None:
             return None
 
@@ -95,10 +80,7 @@ class UserScoreUserFilterModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'UserScoreFilter',
-            "lowerbound": obj.get("lowerbound"),
-            "upperbound": obj.get("upperbound"),
-            "dimension": obj.get("dimension")
+            "isValid": obj.get("isValid")
         })
         return _obj
 

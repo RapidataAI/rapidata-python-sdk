@@ -59,7 +59,7 @@ class ClientApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Deletes a customers client.
+        """Deletes a customers' client.
 
 
         :param client_id: The id of the client to delete. (required)
@@ -125,7 +125,7 @@ class ClientApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Deletes a customers client.
+        """Deletes a customers' client.
 
 
         :param client_id: The id of the client to delete. (required)
@@ -191,7 +191,7 @@ class ClientApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Deletes a customers client.
+        """Deletes a customers' client.
 
 
         :param client_id: The id of the client to delete. (required)
@@ -278,7 +278,7 @@ class ClientApi:
 
         return self.api_client.param_serialize(
             method='DELETE',
-            resource_path='/Client/{clientId}',
+            resource_path='/client/{clientId}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -554,7 +554,7 @@ class ClientApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/Client',
+            resource_path='/client',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -587,7 +587,7 @@ class ClientApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ClientsQueryResultPagedResult:
-        """Gets the clients for the current customer.
+        """(Deprecated) Gets the clients for the current customer.
 
         A client allows a customer to authenticate with the APIs without using their own credentials.  This is useful for creating service accounts or other automated processes,  as when using the Rapidata Python SDK.
 
@@ -614,6 +614,7 @@ class ClientApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("GET /client/query is deprecated.", DeprecationWarning)
 
         _param = self._client_query_get_serialize(
             request=request,
@@ -654,7 +655,7 @@ class ClientApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[ClientsQueryResultPagedResult]:
-        """Gets the clients for the current customer.
+        """(Deprecated) Gets the clients for the current customer.
 
         A client allows a customer to authenticate with the APIs without using their own credentials.  This is useful for creating service accounts or other automated processes,  as when using the Rapidata Python SDK.
 
@@ -681,6 +682,7 @@ class ClientApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("GET /client/query is deprecated.", DeprecationWarning)
 
         _param = self._client_query_get_serialize(
             request=request,
@@ -721,7 +723,7 @@ class ClientApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Gets the clients for the current customer.
+        """(Deprecated) Gets the clients for the current customer.
 
         A client allows a customer to authenticate with the APIs without using their own credentials.  This is useful for creating service accounts or other automated processes,  as when using the Rapidata Python SDK.
 
@@ -748,6 +750,7 @@ class ClientApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("GET /client/query is deprecated.", DeprecationWarning)
 
         _param = self._client_query_get_serialize(
             request=request,
@@ -820,7 +823,7 @@ class ClientApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/Client/Query',
+            resource_path='/client/query',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -837,7 +840,7 @@ class ClientApi:
 
 
     @validate_call
-    def client_set_referrer_post(
+    def client_setreferrer_post(
         self,
         referrer: Optional[StrictStr] = None,
         _request_timeout: Union[
@@ -853,7 +856,7 @@ class ClientApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Sets the referrer for the current customer.
+        """(Deprecated) Sets the referrer for the current customer.
 
 
         :param referrer: 
@@ -879,8 +882,9 @@ class ClientApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("POST /client/setreferrer is deprecated.", DeprecationWarning)
 
-        _param = self._client_set_referrer_post_serialize(
+        _param = self._client_setreferrer_post_serialize(
             referrer=referrer,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -903,7 +907,7 @@ class ClientApi:
 
 
     @validate_call
-    def client_set_referrer_post_with_http_info(
+    def client_setreferrer_post_with_http_info(
         self,
         referrer: Optional[StrictStr] = None,
         _request_timeout: Union[
@@ -919,7 +923,7 @@ class ClientApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Sets the referrer for the current customer.
+        """(Deprecated) Sets the referrer for the current customer.
 
 
         :param referrer: 
@@ -945,8 +949,9 @@ class ClientApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("POST /client/setreferrer is deprecated.", DeprecationWarning)
 
-        _param = self._client_set_referrer_post_serialize(
+        _param = self._client_setreferrer_post_serialize(
             referrer=referrer,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -969,7 +974,7 @@ class ClientApi:
 
 
     @validate_call
-    def client_set_referrer_post_without_preload_content(
+    def client_setreferrer_post_without_preload_content(
         self,
         referrer: Optional[StrictStr] = None,
         _request_timeout: Union[
@@ -985,7 +990,7 @@ class ClientApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Sets the referrer for the current customer.
+        """(Deprecated) Sets the referrer for the current customer.
 
 
         :param referrer: 
@@ -1011,8 +1016,9 @@ class ClientApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("POST /client/setreferrer is deprecated.", DeprecationWarning)
 
-        _param = self._client_set_referrer_post_serialize(
+        _param = self._client_setreferrer_post_serialize(
             referrer=referrer,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1030,7 +1036,7 @@ class ClientApi:
         return response_data.response
 
 
-    def _client_set_referrer_post_serialize(
+    def _client_setreferrer_post_serialize(
         self,
         referrer,
         _request_auth,
@@ -1074,7 +1080,273 @@ class ClientApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/Client/SetReferrer',
+            resource_path='/client/setreferrer',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def clients_get(
+        self,
+        request: Optional[QueryModel] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ClientsQueryResultPagedResult:
+        """Queries the clients for the current customer.
+
+        A client allows a customer to authenticate with the APIs without using their own credentials.  This is useful for creating service accounts or other automated processes,  as when using the Rapidata Python SDK.
+
+        :param request:
+        :type request: QueryModel
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._clients_get_serialize(
+            request=request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "ClientsQueryResultPagedResult",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def clients_get_with_http_info(
+        self,
+        request: Optional[QueryModel] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[ClientsQueryResultPagedResult]:
+        """Queries the clients for the current customer.
+
+        A client allows a customer to authenticate with the APIs without using their own credentials.  This is useful for creating service accounts or other automated processes,  as when using the Rapidata Python SDK.
+
+        :param request:
+        :type request: QueryModel
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._clients_get_serialize(
+            request=request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "ClientsQueryResultPagedResult",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def clients_get_without_preload_content(
+        self,
+        request: Optional[QueryModel] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Queries the clients for the current customer.
+
+        A client allows a customer to authenticate with the APIs without using their own credentials.  This is useful for creating service accounts or other automated processes,  as when using the Rapidata Python SDK.
+
+        :param request:
+        :type request: QueryModel
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._clients_get_serialize(
+            request=request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "ClientsQueryResultPagedResult",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _clients_get_serialize(
+        self,
+        request,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        # process the query parameters
+        if request is not None:
+            
+            _query_params.append(('request', request))
+            
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'text/plain', 
+                    'application/json', 
+                    'text/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'bearer', 
+            'oauth2'
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/clients',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

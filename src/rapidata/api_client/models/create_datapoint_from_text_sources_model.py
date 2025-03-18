@@ -23,14 +23,14 @@ from rapidata.api_client.models.create_datapoint_from_files_model_metadata_inner
 from typing import Optional, Set
 from typing_extensions import Self
 
-class DatapointMetadataModel(BaseModel):
+class CreateDatapointFromTextSourcesModel(BaseModel):
     """
-    The model for creating a datapoint.
+    The body request for uploading text sources to a dataset.
     """ # noqa: E501
-    dataset_id: StrictStr = Field(description="The id of the dataset to create the datapoint in.", alias="datasetId")
-    metadata: List[CreateDatapointFromFilesModelMetadataInner] = Field(description="The metadata of the datapoint.")
+    text_sources: List[StrictStr] = Field(description="The text sources to upload.", alias="textSources")
     sort_index: Optional[StrictInt] = Field(default=None, description="The index will be used to keep the datapoints in order. Useful if upload is parallelized", alias="sortIndex")
-    __properties: ClassVar[List[str]] = ["datasetId", "metadata", "sortIndex"]
+    metadata: Optional[List[CreateDatapointFromFilesModelMetadataInner]] = Field(default=None, description="Additional metadata to attach to the datapoint.  Most commonly used to add a prompt to the datapoint using the Rapidata.Shared.Assets.Abstraction.Models.Metadata.Input.PromptMetadataInput.")
+    __properties: ClassVar[List[str]] = ["textSources", "sortIndex", "metadata"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -50,7 +50,7 @@ class DatapointMetadataModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of DatapointMetadataModel from a JSON string"""
+        """Create an instance of CreateDatapointFromTextSourcesModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -83,11 +83,16 @@ class DatapointMetadataModel(BaseModel):
         if self.sort_index is None and "sort_index" in self.model_fields_set:
             _dict['sortIndex'] = None
 
+        # set to None if metadata (nullable) is None
+        # and model_fields_set contains the field
+        if self.metadata is None and "metadata" in self.model_fields_set:
+            _dict['metadata'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of DatapointMetadataModel from a dict"""
+        """Create an instance of CreateDatapointFromTextSourcesModel from a dict"""
         if obj is None:
             return None
 
@@ -95,9 +100,9 @@ class DatapointMetadataModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "datasetId": obj.get("datasetId"),
-            "metadata": [CreateDatapointFromFilesModelMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
-            "sortIndex": obj.get("sortIndex")
+            "textSources": obj.get("textSources"),
+            "sortIndex": obj.get("sortIndex"),
+            "metadata": [CreateDatapointFromFilesModelMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None
         })
         return _obj
 

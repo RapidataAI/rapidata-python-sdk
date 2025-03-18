@@ -17,27 +17,19 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from pydantic import BaseModel, ConfigDict, Field, StrictInt
+from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.create_datapoint_from_files_model_metadata_inner import CreateDatapointFromFilesModelMetadataInner
 from typing import Optional, Set
 from typing_extensions import Self
 
-class UserScoreUserFilterModel(BaseModel):
+class CreateDatapointFromFilesModel(BaseModel):
     """
-    UserScoreUserFilterModel
+    The form request for creating a datapoint from files.  Needs to be encoded as a json string in the form request.
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for UserScoreFilter", alias="_t")
-    lowerbound: Optional[Union[StrictFloat, StrictInt]] = None
-    upperbound: Optional[Union[StrictFloat, StrictInt]] = None
-    dimension: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["_t", "lowerbound", "upperbound", "dimension"]
-
-    @field_validator('t')
-    def t_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['UserScoreFilter']):
-            raise ValueError("must be one of enum values ('UserScoreFilter')")
-        return value
+    metadata: List[CreateDatapointFromFilesModelMetadataInner] = Field(description="The metadata of the datapoint.")
+    sort_index: Optional[StrictInt] = Field(default=None, description="The index will be used to keep the datapoints in order. Useful if upload is parallelized", alias="sortIndex")
+    __properties: ClassVar[List[str]] = ["metadata", "sortIndex"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -57,7 +49,7 @@ class UserScoreUserFilterModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of UserScoreUserFilterModel from a JSON string"""
+        """Create an instance of CreateDatapointFromFilesModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -78,16 +70,23 @@ class UserScoreUserFilterModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if dimension (nullable) is None
+        # override the default output from pydantic by calling `to_dict()` of each item in metadata (list)
+        _items = []
+        if self.metadata:
+            for _item_metadata in self.metadata:
+                if _item_metadata:
+                    _items.append(_item_metadata.to_dict())
+            _dict['metadata'] = _items
+        # set to None if sort_index (nullable) is None
         # and model_fields_set contains the field
-        if self.dimension is None and "dimension" in self.model_fields_set:
-            _dict['dimension'] = None
+        if self.sort_index is None and "sort_index" in self.model_fields_set:
+            _dict['sortIndex'] = None
 
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of UserScoreUserFilterModel from a dict"""
+        """Create an instance of CreateDatapointFromFilesModel from a dict"""
         if obj is None:
             return None
 
@@ -95,10 +94,8 @@ class UserScoreUserFilterModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'UserScoreFilter',
-            "lowerbound": obj.get("lowerbound"),
-            "upperbound": obj.get("upperbound"),
-            "dimension": obj.get("dimension")
+            "metadata": [CreateDatapointFromFilesModelMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
+            "sortIndex": obj.get("sortIndex")
         })
         return _obj
 

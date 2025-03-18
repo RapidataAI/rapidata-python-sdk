@@ -20,7 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.compare_workflow_model_pair_maker_config import CompareWorkflowModelPairMakerConfig
-from rapidata.api_client.models.create_datapoint_from_urls_model_metadata_inner import CreateDatapointFromUrlsModelMetadataInner
+from rapidata.api_client.models.create_datapoint_from_files_model_metadata_inner import CreateDatapointFromFilesModelMetadataInner
 from rapidata.api_client.models.elo_config_model import EloConfigModel
 from typing import Optional, Set
 from typing_extensions import Self
@@ -33,7 +33,7 @@ class CompareWorkflowModel(BaseModel):
     criteria: StrictStr = Field(description="The criteria that the datapoints should be compared based on. No default value.")
     pair_maker_config: Optional[CompareWorkflowModelPairMakerConfig] = Field(default=None, alias="pairMakerConfig")
     elo_config: Optional[EloConfigModel] = Field(default=None, alias="eloConfig")
-    metadata: Optional[List[CreateDatapointFromUrlsModelMetadataInner]] = Field(default=None, description="The metadata is attached to every single rapid and can be used for something like the prompt.")
+    metadata: Optional[List[CreateDatapointFromFilesModelMetadataInner]] = Field(default=None, description="The metadata is attached to every single rapid and can be used for something like the prompt.")
     __properties: ClassVar[List[str]] = ["_t", "criteria", "pairMakerConfig", "eloConfig", "metadata"]
 
     @field_validator('t')
@@ -116,7 +116,7 @@ class CompareWorkflowModel(BaseModel):
             "criteria": obj.get("criteria"),
             "pairMakerConfig": CompareWorkflowModelPairMakerConfig.from_dict(obj["pairMakerConfig"]) if obj.get("pairMakerConfig") is not None else None,
             "eloConfig": EloConfigModel.from_dict(obj["eloConfig"]) if obj.get("eloConfig") is not None else None,
-            "metadata": [CreateDatapointFromUrlsModelMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None
+            "metadata": [CreateDatapointFromFilesModelMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None
         })
         return _obj
 
