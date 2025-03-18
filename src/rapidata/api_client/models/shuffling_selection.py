@@ -17,26 +17,24 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class UserScoreUserFilterModel(BaseModel):
+class ShufflingSelection(BaseModel):
     """
-    UserScoreUserFilterModel
+    ShufflingSelection
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for UserScoreFilter", alias="_t")
-    lowerbound: Optional[Union[StrictFloat, StrictInt]] = None
-    upperbound: Optional[Union[StrictFloat, StrictInt]] = None
-    dimension: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["_t", "lowerbound", "upperbound", "dimension"]
+    t: StrictStr = Field(description="Discriminator value for ShufflingSelection", alias="_t")
+    selections: List[AbTestSelectionAInner]
+    __properties: ClassVar[List[str]] = ["_t", "selections"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['UserScoreFilter']):
-            raise ValueError("must be one of enum values ('UserScoreFilter')")
+        if value not in set(['ShufflingSelection']):
+            raise ValueError("must be one of enum values ('ShufflingSelection')")
         return value
 
     model_config = ConfigDict(
@@ -57,7 +55,7 @@ class UserScoreUserFilterModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of UserScoreUserFilterModel from a JSON string"""
+        """Create an instance of ShufflingSelection from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -78,16 +76,18 @@ class UserScoreUserFilterModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if dimension (nullable) is None
-        # and model_fields_set contains the field
-        if self.dimension is None and "dimension" in self.model_fields_set:
-            _dict['dimension'] = None
-
+        # override the default output from pydantic by calling `to_dict()` of each item in selections (list)
+        _items = []
+        if self.selections:
+            for _item_selections in self.selections:
+                if _item_selections:
+                    _items.append(_item_selections.to_dict())
+            _dict['selections'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of UserScoreUserFilterModel from a dict"""
+        """Create an instance of ShufflingSelection from a dict"""
         if obj is None:
             return None
 
@@ -95,11 +95,12 @@ class UserScoreUserFilterModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'UserScoreFilter',
-            "lowerbound": obj.get("lowerbound"),
-            "upperbound": obj.get("upperbound"),
-            "dimension": obj.get("dimension")
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'ShufflingSelection',
+            "selections": [AbTestSelectionAInner.from_dict(_item) for _item in obj["selections"]] if obj.get("selections") is not None else None
         })
         return _obj
 
+from rapidata.api_client.models.ab_test_selection_a_inner import AbTestSelectionAInner
+# TODO: Rewrite to not use raise_errors
+ShufflingSelection.model_rebuild(raise_errors=False)
 

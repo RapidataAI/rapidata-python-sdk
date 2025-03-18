@@ -3,7 +3,7 @@ from rapidata.api_client.models.compare_workflow_model import CompareWorkflowMod
 from rapidata.rapidata_client.workflow._base_workflow import Workflow
 from rapidata.rapidata_client.metadata import PromptMetadata
 from rapidata.api_client.models.create_datapoint_from_urls_model import (
-    CreateDatapointFromUrlsModelMetadataInner,
+    CreateDatapointFromFilesModelMetadataInner,
 )
 
 
@@ -21,7 +21,7 @@ class RankingWorkflow(Workflow):
                  ):
         super().__init__(type="CompareWorkflowConfig")
 
-        self.context = [CreateDatapointFromUrlsModelMetadataInner(
+        self.context = [CreateDatapointFromFilesModelMetadataInner(
             PromptMetadata(context).to_model())
             ] if context else None
 

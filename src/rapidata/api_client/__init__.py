@@ -23,6 +23,7 @@ from rapidata.api_client.api.coco_api import CocoApi
 from rapidata.api_client.api.compare_workflow_api import CompareWorkflowApi
 from rapidata.api_client.api.datapoint_api import DatapointApi
 from rapidata.api_client.api.dataset_api import DatasetApi
+from rapidata.api_client.api.feedback_api import FeedbackApi
 from rapidata.api_client.api.identity_api import IdentityApi
 from rapidata.api_client.api.newsletter_api import NewsletterApi
 from rapidata.api_client.api.order_api import OrderApi
@@ -31,7 +32,7 @@ from rapidata.api_client.api.rapid_api import RapidApi
 from rapidata.api_client.api.rapidata_identity_api_api import RapidataIdentityAPIApi
 from rapidata.api_client.api.simple_workflow_api import SimpleWorkflowApi
 from rapidata.api_client.api.user_info_api import UserInfoApi
-from rapidata.api_client.api.validation_api import ValidationApi
+from rapidata.api_client.api.validation_set_api import ValidationSetApi
 from rapidata.api_client.api.workflow_api import WorkflowApi
 
 # import ApiClient
@@ -50,6 +51,8 @@ from rapidata.api_client.models.ab_test_selection import AbTestSelection
 from rapidata.api_client.models.ab_test_selection_a_inner import AbTestSelectionAInner
 from rapidata.api_client.models.add_campaign_artifact_result import AddCampaignArtifactResult
 from rapidata.api_client.models.add_campaign_model import AddCampaignModel
+from rapidata.api_client.models.add_user_response_result import AddUserResponseResult
+from rapidata.api_client.models.add_user_response_result_validation_truth import AddUserResponseResultValidationTruth
 from rapidata.api_client.models.add_validation_rapid_model import AddValidationRapidModel
 from rapidata.api_client.models.add_validation_rapid_model_payload import AddValidationRapidModelPayload
 from rapidata.api_client.models.add_validation_rapid_model_truth import AddValidationRapidModelTruth
@@ -58,6 +61,7 @@ from rapidata.api_client.models.add_validation_text_rapid_model import AddValida
 from rapidata.api_client.models.age_group import AgeGroup
 from rapidata.api_client.models.age_user_filter_model import AgeUserFilterModel
 from rapidata.api_client.models.aggregator_type import AggregatorType
+from rapidata.api_client.models.are_rapids_active_result import AreRapidsActiveResult
 from rapidata.api_client.models.attach_category_rapid_blueprint import AttachCategoryRapidBlueprint
 from rapidata.api_client.models.attach_category_result import AttachCategoryResult
 from rapidata.api_client.models.attach_category_truth import AttachCategoryTruth
@@ -108,9 +112,12 @@ from rapidata.api_client.models.create_client_result import CreateClientResult
 from rapidata.api_client.models.create_complex_order_model import CreateComplexOrderModel
 from rapidata.api_client.models.create_complex_order_model_pipeline import CreateComplexOrderModelPipeline
 from rapidata.api_client.models.create_complex_order_result import CreateComplexOrderResult
+from rapidata.api_client.models.create_datapoint_from_files_model import CreateDatapointFromFilesModel
+from rapidata.api_client.models.create_datapoint_from_files_model_metadata_inner import CreateDatapointFromFilesModelMetadataInner
+from rapidata.api_client.models.create_datapoint_from_text_sources_model import CreateDatapointFromTextSourcesModel
 from rapidata.api_client.models.create_datapoint_from_urls_model import CreateDatapointFromUrlsModel
-from rapidata.api_client.models.create_datapoint_from_urls_model_metadata_inner import CreateDatapointFromUrlsModelMetadataInner
 from rapidata.api_client.models.create_datapoint_result import CreateDatapointResult
+from rapidata.api_client.models.create_datapoints_from_s3_bucket_model import CreateDatapointsFromS3BucketModel
 from rapidata.api_client.models.create_dataset_artifact_model import CreateDatasetArtifactModel
 from rapidata.api_client.models.create_dataset_artifact_model_dataset import CreateDatasetArtifactModelDataset
 from rapidata.api_client.models.create_demographic_rapid_model import CreateDemographicRapidModel
@@ -120,10 +127,12 @@ from rapidata.api_client.models.create_order_model_referee import CreateOrderMod
 from rapidata.api_client.models.create_order_model_user_filters_inner import CreateOrderModelUserFiltersInner
 from rapidata.api_client.models.create_order_model_workflow import CreateOrderModelWorkflow
 from rapidata.api_client.models.create_order_result import CreateOrderResult
+from rapidata.api_client.models.create_rapid_result import CreateRapidResult
 from rapidata.api_client.models.create_simple_pipeline_model import CreateSimplePipelineModel
 from rapidata.api_client.models.create_simple_pipeline_model_artifacts_inner import CreateSimplePipelineModelArtifactsInner
 from rapidata.api_client.models.create_simple_pipeline_model_pipeline_steps_inner import CreateSimplePipelineModelPipelineStepsInner
 from rapidata.api_client.models.create_unsupported_order_model import CreateUnsupportedOrderModel
+from rapidata.api_client.models.create_validation_set_model import CreateValidationSetModel
 from rapidata.api_client.models.custom_user_filter_model import CustomUserFilterModel
 from rapidata.api_client.models.datapoint import Datapoint
 from rapidata.api_client.models.datapoint_asset import DatapointAsset
@@ -173,12 +182,13 @@ from rapidata.api_client.models.get_responses_result import GetResponsesResult
 from rapidata.api_client.models.get_simple_workflow_results_model import GetSimpleWorkflowResultsModel
 from rapidata.api_client.models.get_simple_workflow_results_result import GetSimpleWorkflowResultsResult
 from rapidata.api_client.models.get_simple_workflow_results_result_paged_result import GetSimpleWorkflowResultsResultPagedResult
+from rapidata.api_client.models.get_validation_rapids_query import GetValidationRapidsQuery
+from rapidata.api_client.models.get_validation_rapids_query_paged_result import GetValidationRapidsQueryPagedResult
 from rapidata.api_client.models.get_validation_set_by_id_result import GetValidationSetByIdResult
 from rapidata.api_client.models.get_workflow_by_id_result import GetWorkflowByIdResult
 from rapidata.api_client.models.get_workflow_by_id_result_workflow import GetWorkflowByIdResultWorkflow
 from rapidata.api_client.models.get_workflow_progress_result import GetWorkflowProgressResult
 from rapidata.api_client.models.i_workflow_model_paged_result import IWorkflowModelPagedResult
-from rapidata.api_client.models.identity_read_bridge_token_get202_response import IdentityReadBridgeTokenGet202Response
 from rapidata.api_client.models.image_dimension_metadata import ImageDimensionMetadata
 from rapidata.api_client.models.image_dimension_metadata_model import ImageDimensionMetadataModel
 from rapidata.api_client.models.import_from_file_result import ImportFromFileResult
@@ -224,7 +234,7 @@ from rapidata.api_client.models.order_state import OrderState
 from rapidata.api_client.models.original_filename_metadata import OriginalFilenameMetadata
 from rapidata.api_client.models.original_filename_metadata_model import OriginalFilenameMetadataModel
 from rapidata.api_client.models.page_info import PageInfo
-from rapidata.api_client.models.pipeline_id_workflow_put_request import PipelineIdWorkflowPutRequest
+from rapidata.api_client.models.pipeline_id_workflow_artifact_id_put_request import PipelineIdWorkflowArtifactIdPutRequest
 from rapidata.api_client.models.polygon_payload import PolygonPayload
 from rapidata.api_client.models.polygon_rapid_blueprint import PolygonRapidBlueprint
 from rapidata.api_client.models.polygon_result import PolygonResult
@@ -233,7 +243,6 @@ from rapidata.api_client.models.preliminary_download_model import PreliminaryDow
 from rapidata.api_client.models.preliminary_download_result import PreliminaryDownloadResult
 from rapidata.api_client.models.private_text_metadata_input import PrivateTextMetadataInput
 from rapidata.api_client.models.probabilistic_attach_category_referee_config import ProbabilisticAttachCategoryRefereeConfig
-from rapidata.api_client.models.problem_details import ProblemDetails
 from rapidata.api_client.models.prompt_metadata import PromptMetadata
 from rapidata.api_client.models.prompt_metadata_input import PromptMetadataInput
 from rapidata.api_client.models.prompt_metadata_model import PromptMetadataModel
@@ -244,7 +253,6 @@ from rapidata.api_client.models.query_validation_rapids_result import QueryValid
 from rapidata.api_client.models.query_validation_rapids_result_asset import QueryValidationRapidsResultAsset
 from rapidata.api_client.models.query_validation_rapids_result_paged_result import QueryValidationRapidsResultPagedResult
 from rapidata.api_client.models.query_validation_rapids_result_payload import QueryValidationRapidsResultPayload
-from rapidata.api_client.models.query_validation_rapids_result_truth import QueryValidationRapidsResultTruth
 from rapidata.api_client.models.query_workflows_model import QueryWorkflowsModel
 from rapidata.api_client.models.rapid_issue import RapidIssue
 from rapidata.api_client.models.rapid_response import RapidResponse
@@ -265,6 +273,7 @@ from rapidata.api_client.models.scrub_result import ScrubResult
 from rapidata.api_client.models.scrub_truth import ScrubTruth
 from rapidata.api_client.models.send_completion_mail_step_model import SendCompletionMailStepModel
 from rapidata.api_client.models.shape import Shape
+from rapidata.api_client.models.shuffling_selection import ShufflingSelection
 from rapidata.api_client.models.simple_workflow_config import SimpleWorkflowConfig
 from rapidata.api_client.models.simple_workflow_config_model import SimpleWorkflowConfigModel
 from rapidata.api_client.models.simple_workflow_config_model_blueprint import SimpleWorkflowConfigModelBlueprint
@@ -295,8 +304,9 @@ from rapidata.api_client.models.translated_string import TranslatedString
 from rapidata.api_client.models.unlock_order_result import UnlockOrderResult
 from rapidata.api_client.models.update_access_model import UpdateAccessModel
 from rapidata.api_client.models.update_campaign_model import UpdateCampaignModel
+from rapidata.api_client.models.update_dataset_name_model import UpdateDatasetNameModel
 from rapidata.api_client.models.update_dimensions_model import UpdateDimensionsModel
-from rapidata.api_client.models.update_order_model import UpdateOrderModel
+from rapidata.api_client.models.update_order_name_model import UpdateOrderNameModel
 from rapidata.api_client.models.update_validation_rapid_model import UpdateValidationRapidModel
 from rapidata.api_client.models.update_validation_rapid_model_truth import UpdateValidationRapidModelTruth
 from rapidata.api_client.models.upload_coco_result import UploadCocoResult

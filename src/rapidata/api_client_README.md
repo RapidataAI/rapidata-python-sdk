@@ -56,13 +56,13 @@ configuration.api_key['bearer'] = os.environ["API_KEY"]
 with rapidata.api_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = rapidata.api_client.CampaignApi(api_client)
-    campaign_id = 'campaign_id_example' # str | The campaign id that should be released
+    campaign_id = 'campaign_id_example' # str | id of the campaign that should be paused
 
     try:
-        # Releases a campaign from the preview state.  This will make the campaign available for the users to be labeled.
-        api_instance.campaign_campaign_id_release_post(campaign_id)
+        # Pauses a campaign.
+        api_instance.campaign_campaign_id_pause_post(campaign_id)
     except ApiException as e:
-        print("Exception when calling CampaignApi->campaign_campaign_id_release_post: %s\n" % e)
+        print("Exception when calling CampaignApi->campaign_campaign_id_pause_post: %s\n" % e)
 
 ```
 
@@ -72,92 +72,148 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*CampaignApi* | [**campaign_campaign_id_release_post**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_release_post) | **POST** /campaign/{campaignId}/release | Releases a campaign from the preview state.  This will make the campaign available for the users to be labeled.
-*CampaignApi* | [**campaign_monitor_get**](rapidata/api_client/docs/CampaignApi.md#campaign_monitor_get) | **GET** /Campaign/Monitor | The monitor endpoint is used to monitor the health of the service
-*CampaignApi* | [**campaign_pause_post**](rapidata/api_client/docs/CampaignApi.md#campaign_pause_post) | **POST** /Campaign/Pause | Pauses a campaign.
-*CampaignApi* | [**campaign_query_get**](rapidata/api_client/docs/CampaignApi.md#campaign_query_get) | **GET** /Campaign/Query | Queries orders based on a filter, page, and sort criteria.
-*CampaignApi* | [**campaign_resume_post**](rapidata/api_client/docs/CampaignApi.md#campaign_resume_post) | **POST** /Campaign/Resume | Resumes a campaign.
-*ClientApi* | [**client_client_id_delete**](rapidata/api_client/docs/ClientApi.md#client_client_id_delete) | **DELETE** /Client/{clientId} | Deletes a customers client.
-*ClientApi* | [**client_post**](rapidata/api_client/docs/ClientApi.md#client_post) | **POST** /Client | Creates a new client for the current customer.
-*ClientApi* | [**client_query_get**](rapidata/api_client/docs/ClientApi.md#client_query_get) | **GET** /Client/Query | Gets the clients for the current customer.
-*ClientApi* | [**client_set_referrer_post**](rapidata/api_client/docs/ClientApi.md#client_set_referrer_post) | **POST** /Client/SetReferrer | Sets the referrer for the current customer.
-*CocoApi* | [**coco_submit_post**](rapidata/api_client/docs/CocoApi.md#coco_submit_post) | **POST** /Coco/Submit | Creates a new validation set based on a previously uploaded CoCo set.
-*CocoApi* | [**coco_upload_post**](rapidata/api_client/docs/CocoApi.md#coco_upload_post) | **POST** /Coco/Upload | Uploads a CoCo set to the system.
-*CompareWorkflowApi* | [**workflow_compare_id_results_get**](rapidata/api_client/docs/CompareWorkflowApi.md#workflow_compare_id_results_get) | **GET** /workflow/compare/{id}/results | Get the result overview for a compare workflow.
-*DatapointApi* | [**datapoint_delete_delete**](rapidata/api_client/docs/DatapointApi.md#datapoint_delete_delete) | **DELETE** /Datapoint/Delete | Delete a datapoint.
-*DatapointApi* | [**datapoint_get_all_datapoints_by_dataset_id_get**](rapidata/api_client/docs/DatapointApi.md#datapoint_get_all_datapoints_by_dataset_id_get) | **GET** /Datapoint/GetAllDatapointsByDatasetId | Get all datapoints of a dataset.
-*DatapointApi* | [**datapoint_get_by_id_get**](rapidata/api_client/docs/DatapointApi.md#datapoint_get_by_id_get) | **GET** /Datapoint/GetById | Get a datapoint by its id.
-*DatasetApi* | [**dataset_creat_text_datapoint_post**](rapidata/api_client/docs/DatasetApi.md#dataset_creat_text_datapoint_post) | **POST** /Dataset/CreatTextDatapoint | Creates new datapoints from text sources.
-*DatasetApi* | [**dataset_create_datapoint_post**](rapidata/api_client/docs/DatasetApi.md#dataset_create_datapoint_post) | **POST** /Dataset/CreateDatapoint | Creates a single datapoint.
+*CampaignApi* | [**campaign_campaign_id_pause_post**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_pause_post) | **POST** /campaign/{campaignId}/pause | Pauses a campaign.
+*CampaignApi* | [**campaign_campaign_id_resume_post**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_resume_post) | **POST** /campaign/{campaignId}/resume | Resumes a campaign.
+*CampaignApi* | [**campaign_monitor_get**](rapidata/api_client/docs/CampaignApi.md#campaign_monitor_get) | **GET** /campaign/monitor | The monitor endpoint is used to monitor the health of the service
+*CampaignApi* | [**campaign_pause_post**](rapidata/api_client/docs/CampaignApi.md#campaign_pause_post) | **POST** /campaign/pause | Pauses a campaign.
+*CampaignApi* | [**campaign_query_get**](rapidata/api_client/docs/CampaignApi.md#campaign_query_get) | **GET** /campaign/query | Queries orders based on a filter, page, and sort criteria.
+*CampaignApi* | [**campaign_resume_post**](rapidata/api_client/docs/CampaignApi.md#campaign_resume_post) | **POST** /campaign/resume | Resumes a campaign.
+*CampaignApi* | [**campaigns_get**](rapidata/api_client/docs/CampaignApi.md#campaigns_get) | **GET** /campaigns | Queries orders based on a filter, page, and sort criteria.
+*ClientApi* | [**client_client_id_delete**](rapidata/api_client/docs/ClientApi.md#client_client_id_delete) | **DELETE** /client/{clientId} | Deletes a customers&#39; client.
+*ClientApi* | [**client_post**](rapidata/api_client/docs/ClientApi.md#client_post) | **POST** /client | Creates a new client for the current customer.
+*ClientApi* | [**client_query_get**](rapidata/api_client/docs/ClientApi.md#client_query_get) | **GET** /client/query | Gets the clients for the current customer.
+*ClientApi* | [**client_setreferrer_post**](rapidata/api_client/docs/ClientApi.md#client_setreferrer_post) | **POST** /client/setreferrer | Sets the referrer for the current customer.
+*ClientApi* | [**clients_get**](rapidata/api_client/docs/ClientApi.md#clients_get) | **GET** /clients | Queries the clients for the current customer.
+*CocoApi* | [**coco_coco_set_id_submit_post**](rapidata/api_client/docs/CocoApi.md#coco_coco_set_id_submit_post) | **POST** /coco/{cocoSetId}/submit | Creates a new validation set based on a previously uploaded CoCo set.
+*CocoApi* | [**coco_post**](rapidata/api_client/docs/CocoApi.md#coco_post) | **POST** /coco | Uploads a CoCo set to the system.
+*CocoApi* | [**coco_submit_post**](rapidata/api_client/docs/CocoApi.md#coco_submit_post) | **POST** /coco/submit | Creates a new validation set based on a previously uploaded CoCo set.
+*CocoApi* | [**coco_upload_post**](rapidata/api_client/docs/CocoApi.md#coco_upload_post) | **POST** /coco/upload | Uploads a CoCo set to the system.
+*CompareWorkflowApi* | [**workflow_compare_workflow_id_results_get**](rapidata/api_client/docs/CompareWorkflowApi.md#workflow_compare_workflow_id_results_get) | **GET** /workflow/compare/{workflowId}/results | Get the result overview for a compare workflow.
+*DatapointApi* | [**datapoint_datapoint_id_delete**](rapidata/api_client/docs/DatapointApi.md#datapoint_datapoint_id_delete) | **DELETE** /datapoint/{datapointId} | Deletes a datapoint by its id.
+*DatapointApi* | [**datapoint_datapoint_id_get**](rapidata/api_client/docs/DatapointApi.md#datapoint_datapoint_id_get) | **GET** /datapoint/{datapointId} | Gets a datapoint by its id.
+*DatapointApi* | [**datapoint_delete_delete**](rapidata/api_client/docs/DatapointApi.md#datapoint_delete_delete) | **DELETE** /datapoint/delete | Delete a datapoint.
+*DatapointApi* | [**datapoint_getalldatapointsbydatasetid_get**](rapidata/api_client/docs/DatapointApi.md#datapoint_getalldatapointsbydatasetid_get) | **GET** /datapoint/getalldatapointsbydatasetid | Get all datapoints of a dataset.
+*DatapointApi* | [**datapoint_getbyid_get**](rapidata/api_client/docs/DatapointApi.md#datapoint_getbyid_get) | **GET** /datapoint/getbyid | Get a datapoint by its id.
+*DatasetApi* | [**dataset_createdatapoint_post**](rapidata/api_client/docs/DatasetApi.md#dataset_createdatapoint_post) | **POST** /dataset/createdatapoint | Creates a single datapoint.
+*DatasetApi* | [**dataset_creattextdatapoint_post**](rapidata/api_client/docs/DatasetApi.md#dataset_creattextdatapoint_post) | **POST** /dataset/creattextdatapoint | Creates new datapoints from text sources.
+*DatasetApi* | [**dataset_dataset_id_datapoints_csv_post**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_datapoints_csv_post) | **POST** /dataset/{datasetId}/datapoints/csv | Creates multiple datapoints from a csv.
 *DatasetApi* | [**dataset_dataset_id_datapoints_failed_get**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_datapoints_failed_get) | **GET** /dataset/{datasetId}/datapoints/failed | Gets a list of all datapoints that failed to upload.
-*DatasetApi* | [**dataset_dataset_id_datapoints_urls_post**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_datapoints_urls_post) | **POST** /dataset/{datasetId}/datapoints/urls | Creates new datapoint where the assets are fetched from the specified urls.
+*DatasetApi* | [**dataset_dataset_id_datapoints_files_post**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_datapoints_files_post) | **POST** /dataset/{datasetId}/datapoints/files | Creates a single datapoint by uploading files.
+*DatasetApi* | [**dataset_dataset_id_datapoints_get**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_datapoints_get) | **GET** /dataset/{datasetId}/datapoints | Gets all datapoints of a dataset.
+*DatasetApi* | [**dataset_dataset_id_datapoints_s3_post**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_datapoints_s3_post) | **POST** /dataset/{datasetId}/datapoints/s3 | Uploads files from an S3 bucket to a dataset.
+*DatasetApi* | [**dataset_dataset_id_datapoints_texts_post**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_datapoints_texts_post) | **POST** /dataset/{datasetId}/datapoints/texts | Creates a single datapoint from text sources.
+*DatasetApi* | [**dataset_dataset_id_datapoints_urls_post**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_datapoints_urls_post) | **POST** /dataset/{datasetId}/datapoints/urls | Creates a single datapoint where the assets are fetched from the specified urls.
+*DatasetApi* | [**dataset_dataset_id_get**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_get) | **GET** /dataset/{datasetId} | Gets a dataset by its id.
+*DatasetApi* | [**dataset_dataset_id_name_patch**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_name_patch) | **PATCH** /dataset/{datasetId}/name | Updates the name of a dataset.
 *DatasetApi* | [**dataset_dataset_id_progress_get**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_progress_get) | **GET** /dataset/{datasetId}/progress | Gets the upload progress of a dataset.
-*DatasetApi* | [**dataset_get_by_id_get**](rapidata/api_client/docs/DatasetApi.md#dataset_get_by_id_get) | **GET** /Dataset/GetById | Gets a dataset by its id.
-*DatasetApi* | [**dataset_import_post**](rapidata/api_client/docs/DatasetApi.md#dataset_import_post) | **POST** /Dataset/Import | Imports datapoints from a csv file.
-*DatasetApi* | [**dataset_update_name_post**](rapidata/api_client/docs/DatasetApi.md#dataset_update_name_post) | **POST** /Dataset/UpdateName | Updates the name of a dataset.
-*DatasetApi* | [**dataset_upload_files_from_s3_post**](rapidata/api_client/docs/DatasetApi.md#dataset_upload_files_from_s3_post) | **POST** /Dataset/UploadFilesFromS3 | Uploads files from an S3 bucket to a dataset.
-*IdentityApi* | [**identity_create_bridge_token_post**](rapidata/api_client/docs/IdentityApi.md#identity_create_bridge_token_post) | **POST** /Identity/CreateBridgeToken | Creates a pair of read and write keys for a client.  The write key is used to store the authentication result.  The read key is used to retrieve the authentication result.
-*IdentityApi* | [**identity_read_bridge_token_get**](rapidata/api_client/docs/IdentityApi.md#identity_read_bridge_token_get) | **GET** /Identity/ReadBridgeToken | Tries to read the bridge token keys for a given read key.  The read key is used to retrieve the authentication result written by the write key.
-*IdentityApi* | [**identity_register_temporary_post**](rapidata/api_client/docs/IdentityApi.md#identity_register_temporary_post) | **POST** /Identity/RegisterTemporary | Registers and logs in a temporary customer.
-*NewsletterApi* | [**newsletter_post**](rapidata/api_client/docs/NewsletterApi.md#newsletter_post) | **POST** /Newsletter | Signs a user up to the newsletter.
-*NewsletterApi* | [**newsletter_unsubscribe_post**](rapidata/api_client/docs/NewsletterApi.md#newsletter_unsubscribe_post) | **POST** /Newsletter/Unsubscribe | Unsubscribes a user from the newsletter.
-*OrderApi* | [**order_approve_post**](rapidata/api_client/docs/OrderApi.md#order_approve_post) | **POST** /Order/Approve | Approves an order that has been submitted for manual approval.
-*OrderApi* | [**order_clone_order_post**](rapidata/api_client/docs/OrderApi.md#order_clone_order_post) | **POST** /Order/CloneOrder | Clones an existing order.
-*OrderApi* | [**order_create_complex_order_post**](rapidata/api_client/docs/OrderApi.md#order_create_complex_order_post) | **POST** /Order/CreateComplexOrder | Creates a new order with a custom pipeline.
-*OrderApi* | [**order_create_post**](rapidata/api_client/docs/OrderApi.md#order_create_post) | **POST** /Order/Create | Used to create a new order.
-*OrderApi* | [**order_create_unsupported_order_post**](rapidata/api_client/docs/OrderApi.md#order_create_unsupported_order_post) | **POST** /Order/CreateUnsupportedOrder | Notifies the admins that a user wants to create an order with an unsupported label type or data type.
-*OrderApi* | [**order_delete_delete**](rapidata/api_client/docs/OrderApi.md#order_delete_delete) | **DELETE** /Order/Delete | Deletes an order.
-*OrderApi* | [**order_feedback_post**](rapidata/api_client/docs/OrderApi.md#order_feedback_post) | **POST** /Order/Feedback | Submits feedback about our services.
-*OrderApi* | [**order_get_by_id_get**](rapidata/api_client/docs/OrderApi.md#order_get_by_id_get) | **GET** /Order/GetById | Retrieves an order by its id.
-*OrderApi* | [**order_get_order_results_get**](rapidata/api_client/docs/OrderApi.md#order_get_order_results_get) | **GET** /Order/GetOrderResults | Aggregates the results of an order.
-*OrderApi* | [**order_get_public_get**](rapidata/api_client/docs/OrderApi.md#order_get_public_get) | **GET** /Order/GetPublic | Retrieves orders that are public and can be cloned by any user.
-*OrderApi* | [**order_order_id_preview_post**](rapidata/api_client/docs/OrderApi.md#order_order_id_preview_post) | **POST** /order/{orderId}/preview | Puts the order into preview mode, where it one can inspect what our labelers receive.
-*OrderApi* | [**order_pause_post**](rapidata/api_client/docs/OrderApi.md#order_pause_post) | **POST** /Order/Pause | Pauses an order that is processing. Meaning all campaigns in the order will be paused.
-*OrderApi* | [**order_query_get**](rapidata/api_client/docs/OrderApi.md#order_query_get) | **GET** /Order/Query | Queries orders based on a filter, page, and sort criteria.
-*OrderApi* | [**order_result_get**](rapidata/api_client/docs/OrderApi.md#order_result_get) | **GET** /Order/Result | Aggregates the results of an order.
-*OrderApi* | [**order_resume_post**](rapidata/api_client/docs/OrderApi.md#order_resume_post) | **POST** /Order/Resume | Resumes a paused order. Meaning all campaigns in the order will be resumed.
-*OrderApi* | [**order_retry_failed_post**](rapidata/api_client/docs/OrderApi.md#order_retry_failed_post) | **POST** /Order/RetryFailed | Retries a failed order.
-*OrderApi* | [**order_share_put**](rapidata/api_client/docs/OrderApi.md#order_share_put) | **PUT** /Order/Share | Updates whether an order is public or not.
-*OrderApi* | [**order_submit_post**](rapidata/api_client/docs/OrderApi.md#order_submit_post) | **POST** /Order/Submit | Submits an order for approval.
-*OrderApi* | [**order_unlock_post**](rapidata/api_client/docs/OrderApi.md#order_unlock_post) | **POST** /Order/Unlock | Unlocks a newly cloned order.
-*OrderApi* | [**order_update_access_put**](rapidata/api_client/docs/OrderApi.md#order_update_access_put) | **PUT** /Order/UpdateAccess | Updates whether an order is public or not.
-*OrderApi* | [**order_update_order_name_put**](rapidata/api_client/docs/OrderApi.md#order_update_order_name_put) | **PUT** /Order/UpdateOrderName | Updates the name of an order.
-*PipelineApi* | [**pipeline_id_campaign_artifact_id_put**](rapidata/api_client/docs/PipelineApi.md#pipeline_id_campaign_artifact_id_put) | **PUT** /pipeline/{id}/campaign/{artifact-id} | Updates a specific campaign for a pipeline.
-*PipelineApi* | [**pipeline_id_campaign_post**](rapidata/api_client/docs/PipelineApi.md#pipeline_id_campaign_post) | **POST** /pipeline/{id}/campaign | Adds a campaign to a pipeline.
-*PipelineApi* | [**pipeline_id_campaign_put**](rapidata/api_client/docs/PipelineApi.md#pipeline_id_campaign_put) | **PUT** /pipeline/{id}/campaign | Updates the default campaign for a pipeline.
-*PipelineApi* | [**pipeline_id_get**](rapidata/api_client/docs/PipelineApi.md#pipeline_id_get) | **GET** /Pipeline/{id} | Gets a pipeline by its id.
-*PipelineApi* | [**pipeline_id_workflow_artifact_id_put**](rapidata/api_client/docs/PipelineApi.md#pipeline_id_workflow_artifact_id_put) | **PUT** /pipeline/{id}/workflow/{artifact-id} | Updates the workflow configuration for a pipeline.
-*PipelineApi* | [**pipeline_id_workflow_put**](rapidata/api_client/docs/PipelineApi.md#pipeline_id_workflow_put) | **PUT** /pipeline/{id}/workflow | Updates the workflow configuration for a pipeline.
+*DatasetApi* | [**dataset_getbyid_get**](rapidata/api_client/docs/DatasetApi.md#dataset_getbyid_get) | **GET** /dataset/getbyid | Gets a dataset by its id.
+*DatasetApi* | [**dataset_import_post**](rapidata/api_client/docs/DatasetApi.md#dataset_import_post) | **POST** /dataset/import | Imports datapoints from a csv file.
+*DatasetApi* | [**dataset_updatename_post**](rapidata/api_client/docs/DatasetApi.md#dataset_updatename_post) | **POST** /dataset/updatename | Updates the name of a dataset.
+*DatasetApi* | [**dataset_uploadfilesfroms3_post**](rapidata/api_client/docs/DatasetApi.md#dataset_uploadfilesfroms3_post) | **POST** /dataset/uploadfilesfroms3 | Uploads files from an S3 bucket to a dataset.
+*FeedbackApi* | [**feedback_feedback_post**](rapidata/api_client/docs/FeedbackApi.md#feedback_feedback_post) | **POST** /feedback/feedback | Submits feedback about our services.
+*IdentityApi* | [**identity_bridge_token_get**](rapidata/api_client/docs/IdentityApi.md#identity_bridge_token_get) | **GET** /identity/bridge-token | Tries to read the bridge token keys for a given read key.  The read key is used to retrieve the authentication result written by the write key.
+*IdentityApi* | [**identity_bridge_token_post**](rapidata/api_client/docs/IdentityApi.md#identity_bridge_token_post) | **POST** /identity/bridge-token | Creates a pair of read and write keys for a client.  The write key is used to store the authentication result.  The read key is used to retrieve the authentication result.
+*IdentityApi* | [**identity_createbridgetoken_post**](rapidata/api_client/docs/IdentityApi.md#identity_createbridgetoken_post) | **POST** /identity/createbridgetoken | Creates a pair of read and write keys for a client.  The write key is used to store the authentication result.  The read key is used to retrieve the authentication result.
+*IdentityApi* | [**identity_readbridgetoken_get**](rapidata/api_client/docs/IdentityApi.md#identity_readbridgetoken_get) | **GET** /identity/readbridgetoken | Tries to read the bridge token keys for a given read key.  The read key is used to retrieve the authentication result written by the write key.
+*IdentityApi* | [**identity_referrer_post**](rapidata/api_client/docs/IdentityApi.md#identity_referrer_post) | **POST** /identity/referrer | Sets the referrer for the current customer.
+*IdentityApi* | [**identity_registertemporary_post**](rapidata/api_client/docs/IdentityApi.md#identity_registertemporary_post) | **POST** /identity/registertemporary | Registers and logs in a temporary customer.
+*IdentityApi* | [**identity_temporary_post**](rapidata/api_client/docs/IdentityApi.md#identity_temporary_post) | **POST** /identity/temporary | Registers and logs in a temporary customer.
+*NewsletterApi* | [**newsletter_post**](rapidata/api_client/docs/NewsletterApi.md#newsletter_post) | **POST** /newsletter | Signs a user up to the newsletter.
+*NewsletterApi* | [**newsletter_subscribe_post**](rapidata/api_client/docs/NewsletterApi.md#newsletter_subscribe_post) | **POST** /newsletter/subscribe | Signs a user up to the newsletter.
+*NewsletterApi* | [**newsletter_unsubscribe_post**](rapidata/api_client/docs/NewsletterApi.md#newsletter_unsubscribe_post) | **POST** /newsletter/unsubscribe | Unsubscribes a user from the newsletter.
+*OrderApi* | [**order_approve_post**](rapidata/api_client/docs/OrderApi.md#order_approve_post) | **POST** /order/approve | Approves an order that has been submitted for manual approval.
+*OrderApi* | [**order_cloneorder_post**](rapidata/api_client/docs/OrderApi.md#order_cloneorder_post) | **POST** /order/cloneorder | Clones an existing order.
+*OrderApi* | [**order_complex_post**](rapidata/api_client/docs/OrderApi.md#order_complex_post) | **POST** /order/complex | Creates a new order with a custom pipeline.
+*OrderApi* | [**order_create_post**](rapidata/api_client/docs/OrderApi.md#order_create_post) | **POST** /order/create | Used to create a new order.
+*OrderApi* | [**order_createcomplexorder_post**](rapidata/api_client/docs/OrderApi.md#order_createcomplexorder_post) | **POST** /order/createcomplexorder | Creates a new order with a custom pipeline.
+*OrderApi* | [**order_createunsupportedorder_post**](rapidata/api_client/docs/OrderApi.md#order_createunsupportedorder_post) | **POST** /order/createunsupportedorder | Notifies the admins that a user wants to create an order with an unsupported label type or data type.
+*OrderApi* | [**order_delete_delete**](rapidata/api_client/docs/OrderApi.md#order_delete_delete) | **DELETE** /order/delete | Deletes an order.
+*OrderApi* | [**order_getbyid_get**](rapidata/api_client/docs/OrderApi.md#order_getbyid_get) | **GET** /order/getbyid | Retrieves an order by its id.
+*OrderApi* | [**order_getorderresults_get**](rapidata/api_client/docs/OrderApi.md#order_getorderresults_get) | **GET** /order/getorderresults | Aggregates the results of an order.
+*OrderApi* | [**order_getpublic_get**](rapidata/api_client/docs/OrderApi.md#order_getpublic_get) | **GET** /order/getpublic | Retrieves orders that are public and can be cloned by any user.
+*OrderApi* | [**order_order_id_approve_post**](rapidata/api_client/docs/OrderApi.md#order_order_id_approve_post) | **POST** /order/{orderId}/approve | Approves an order that has been submitted for manual approval.
+*OrderApi* | [**order_order_id_clone_post**](rapidata/api_client/docs/OrderApi.md#order_order_id_clone_post) | **POST** /order/{orderId}/clone | Clones an existing order.
+*OrderApi* | [**order_order_id_delete**](rapidata/api_client/docs/OrderApi.md#order_order_id_delete) | **DELETE** /order/{orderId} | Deletes an order.
+*OrderApi* | [**order_order_id_demo_patch**](rapidata/api_client/docs/OrderApi.md#order_order_id_demo_patch) | **PATCH** /order/{orderId}/demo | Updates whether an order is a demo or not.
+*OrderApi* | [**order_order_id_download_results_get**](rapidata/api_client/docs/OrderApi.md#order_order_id_download_results_get) | **GET** /order/{orderId}/download-results | Aggregates the results of an order and returns it as a file attachment.
+*OrderApi* | [**order_order_id_get**](rapidata/api_client/docs/OrderApi.md#order_order_id_get) | **GET** /order/{orderId} | Retrieves an order by its id.
+*OrderApi* | [**order_order_id_name_patch**](rapidata/api_client/docs/OrderApi.md#order_order_id_name_patch) | **PATCH** /order/{orderId}/name | Updates the name of an order.
+*OrderApi* | [**order_order_id_pause_post**](rapidata/api_client/docs/OrderApi.md#order_order_id_pause_post) | **POST** /order/{orderId}/pause | Pauses an order that is processing. Meaning all campaigns in the order will be paused.
+*OrderApi* | [**order_order_id_preview_post**](rapidata/api_client/docs/OrderApi.md#order_order_id_preview_post) | **POST** /order/{orderId}/preview | Puts the order into preview mode, where one can inspect what our labelers receive.
+*OrderApi* | [**order_order_id_results_get**](rapidata/api_client/docs/OrderApi.md#order_order_id_results_get) | **GET** /order/{orderId}/results | Aggregates the results of an order and returns the result as a json body.
+*OrderApi* | [**order_order_id_resume_post**](rapidata/api_client/docs/OrderApi.md#order_order_id_resume_post) | **POST** /order/{orderId}/resume | Resumes a paused order. Meaning all campaigns in the order will be resumed.
+*OrderApi* | [**order_order_id_retry_post**](rapidata/api_client/docs/OrderApi.md#order_order_id_retry_post) | **POST** /order/{orderId}/retry | Retries a failed order.
+*OrderApi* | [**order_order_id_share_patch**](rapidata/api_client/docs/OrderApi.md#order_order_id_share_patch) | **PATCH** /order/{orderId}/share | Updates whether an order is public or not.
+*OrderApi* | [**order_order_id_submit_post**](rapidata/api_client/docs/OrderApi.md#order_order_id_submit_post) | **POST** /order/{orderId}/submit | Submits an order for approval.
+*OrderApi* | [**order_order_id_unlock_post**](rapidata/api_client/docs/OrderApi.md#order_order_id_unlock_post) | **POST** /order/{orderId}/unlock | Unlocks a newly cloned order.
+*OrderApi* | [**order_pause_post**](rapidata/api_client/docs/OrderApi.md#order_pause_post) | **POST** /order/pause | Pauses an order that is processing. Meaning all campaigns in the order will be paused.
+*OrderApi* | [**order_post**](rapidata/api_client/docs/OrderApi.md#order_post) | **POST** /order | Used to create a new order.
+*OrderApi* | [**order_query_get**](rapidata/api_client/docs/OrderApi.md#order_query_get) | **GET** /order/query | Queries orders based on a filter, page, and sort criteria.
+*OrderApi* | [**order_result_get**](rapidata/api_client/docs/OrderApi.md#order_result_get) | **GET** /order/result | Aggregates the results of an order.
+*OrderApi* | [**order_resume_post**](rapidata/api_client/docs/OrderApi.md#order_resume_post) | **POST** /order/resume | Resumes a paused order. Meaning all campaigns in the order will be resumed.
+*OrderApi* | [**order_retryfailed_post**](rapidata/api_client/docs/OrderApi.md#order_retryfailed_post) | **POST** /order/retryfailed | Retries a failed order.
+*OrderApi* | [**order_share_put**](rapidata/api_client/docs/OrderApi.md#order_share_put) | **PUT** /order/share | Updates whether an order is public or not.
+*OrderApi* | [**order_submit_post**](rapidata/api_client/docs/OrderApi.md#order_submit_post) | **POST** /order/submit | Submits an order for approval.
+*OrderApi* | [**order_unlock_post**](rapidata/api_client/docs/OrderApi.md#order_unlock_post) | **POST** /order/unlock | Unlocks a newly cloned order.
+*OrderApi* | [**order_unsupported_post**](rapidata/api_client/docs/OrderApi.md#order_unsupported_post) | **POST** /order/unsupported | Notifies the admins that a user wants to create an order with an unsupported label type or data type.
+*OrderApi* | [**order_updateaccess_put**](rapidata/api_client/docs/OrderApi.md#order_updateaccess_put) | **PUT** /order/updateaccess | Updates whether an order is public or not.
+*OrderApi* | [**order_updateordername_put**](rapidata/api_client/docs/OrderApi.md#order_updateordername_put) | **PUT** /order/updateordername | Updates the name of an order.
+*OrderApi* | [**orders_get**](rapidata/api_client/docs/OrderApi.md#orders_get) | **GET** /orders | Queries orders based on a filter, page, and sort criteria.
+*OrderApi* | [**orders_public_get**](rapidata/api_client/docs/OrderApi.md#orders_public_get) | **GET** /orders/public | Retrieves orders that are public and can be cloned by any user.
+*PipelineApi* | [**pipeline_id_workflow_artifact_id_put**](rapidata/api_client/docs/PipelineApi.md#pipeline_id_workflow_artifact_id_put) | **PUT** /pipeline/{id}/workflow/{artifactId} | Updates the workflow configuration for a pipeline.
+*PipelineApi* | [**pipeline_id_workflow_config_artifact_id_put**](rapidata/api_client/docs/PipelineApi.md#pipeline_id_workflow_config_artifact_id_put) | **PUT** /pipeline/{id}/workflow-config/{artifactId} | Updates the workflow configuration for a pipeline.
+*PipelineApi* | [**pipeline_pipeline_id_campaign_artifact_id_put**](rapidata/api_client/docs/PipelineApi.md#pipeline_pipeline_id_campaign_artifact_id_put) | **PUT** /pipeline/{pipelineId}/campaign/{artifactId} | Updates a specific campaign for a pipeline.
+*PipelineApi* | [**pipeline_pipeline_id_campaign_post**](rapidata/api_client/docs/PipelineApi.md#pipeline_pipeline_id_campaign_post) | **POST** /pipeline/{pipelineId}/campaign | Adds a campaign to a pipeline.
+*PipelineApi* | [**pipeline_pipeline_id_get**](rapidata/api_client/docs/PipelineApi.md#pipeline_pipeline_id_get) | **GET** /pipeline/{pipelineId} | Gets a pipeline by its id.
 *PipelineApi* | [**pipeline_pipeline_id_preliminary_download_post**](rapidata/api_client/docs/PipelineApi.md#pipeline_pipeline_id_preliminary_download_post) | **POST** /pipeline/{pipelineId}/preliminary-download | Initiates a preliminary download of the pipeline.
-*PipelineApi* | [**pipeline_preliminary_download_preliminary_download_id_get**](rapidata/api_client/docs/PipelineApi.md#pipeline_preliminary_download_preliminary_download_id_get) | **GET** /pipeline/preliminary-download/{preliminaryDownloadId} | Gets the preliminary download. If it&#39;s still processing the request will return 202 Accepted.
-*RapidApi* | [**rapid_add_user_guess_post**](rapidata/api_client/docs/RapidApi.md#rapid_add_user_guess_post) | **POST** /Rapid/AddUserGuess | Submits a user guess for a Rapid.
-*RapidApi* | [**rapid_create_demographic_rapid_post**](rapidata/api_client/docs/RapidApi.md#rapid_create_demographic_rapid_post) | **POST** /Rapid/CreateDemographicRapid | Creates a new Demographic Rapid.
-*RapidApi* | [**rapid_query_validation_rapids_get**](rapidata/api_client/docs/RapidApi.md#rapid_query_validation_rapids_get) | **GET** /Rapid/QueryValidationRapids | Queries the validation rapids for a specific validation set.
+*PipelineApi* | [**pipeline_preliminary_download_preliminary_download_id_get**](rapidata/api_client/docs/PipelineApi.md#pipeline_preliminary_download_preliminary_download_id_get) | **GET** /pipeline/preliminary-download/{preliminaryDownloadId} | Gets the preliminary download.
+*RapidApi* | [**rapid_adduserguess_post**](rapidata/api_client/docs/RapidApi.md#rapid_adduserguess_post) | **POST** /rapid/adduserguess | Submits a user guess for a Rapid.
+*RapidApi* | [**rapid_createdemographicrapid_post**](rapidata/api_client/docs/RapidApi.md#rapid_createdemographicrapid_post) | **POST** /rapid/createdemographicrapid | Creates a new Demographic Rapid.
+*RapidApi* | [**rapid_demographic_post**](rapidata/api_client/docs/RapidApi.md#rapid_demographic_post) | **POST** /rapid/demographic | Creates a new Demographic Rapid.
+*RapidApi* | [**rapid_queryvalidationrapids_get**](rapidata/api_client/docs/RapidApi.md#rapid_queryvalidationrapids_get) | **GET** /rapid/queryvalidationrapids | Queries the validation rapids for a specific validation set.
+*RapidApi* | [**rapid_rapid_bag_is_valid_get**](rapidata/api_client/docs/RapidApi.md#rapid_rapid_bag_is_valid_get) | **GET** /rapid/rapid-bag/is-valid | Validates that the rapids associated with the current user are active.
 *RapidApi* | [**rapid_rapid_id_delete**](rapidata/api_client/docs/RapidApi.md#rapid_rapid_id_delete) | **DELETE** /rapid/{rapidId} | Deletes a rapid.
+*RapidApi* | [**rapid_rapid_id_report_post**](rapidata/api_client/docs/RapidApi.md#rapid_rapid_id_report_post) | **POST** /rapid/{rapidId}/report | Used to report an issue with a rapid.
 *RapidApi* | [**rapid_rapid_id_responses_get**](rapidata/api_client/docs/RapidApi.md#rapid_rapid_id_responses_get) | **GET** /rapid/{rapidId}/responses | Gets all responses for a given rapid.
-*RapidApi* | [**rapid_report_id_get**](rapidata/api_client/docs/RapidApi.md#rapid_report_id_get) | **GET** /rapid/report/{id} | Inspects a report&#39;s dump. can be used to restore zustand state or anything alike.
-*RapidApi* | [**rapid_report_post**](rapidata/api_client/docs/RapidApi.md#rapid_report_post) | **POST** /Rapid/Report | Used to report an issue with a rapid.
-*RapidApi* | [**rapid_skip_user_guess_post**](rapidata/api_client/docs/RapidApi.md#rapid_skip_user_guess_post) | **POST** /Rapid/SkipUserGuess | Skips a Rapid for the user.
-*RapidApi* | [**rapid_validate_current_rapid_bag_get**](rapidata/api_client/docs/RapidApi.md#rapid_validate_current_rapid_bag_get) | **GET** /Rapid/ValidateCurrentRapidBag | Validates that the rapids associated with the current user are active.
+*RapidApi* | [**rapid_report_post**](rapidata/api_client/docs/RapidApi.md#rapid_report_post) | **POST** /rapid/report | Used to report an issue with a rapid.
+*RapidApi* | [**rapid_report_report_id_get**](rapidata/api_client/docs/RapidApi.md#rapid_report_report_id_get) | **GET** /rapid/report/{reportId} | Inspects a report&#39;s dump. can be used to restore zustand state or anything alike.
+*RapidApi* | [**rapid_response_post**](rapidata/api_client/docs/RapidApi.md#rapid_response_post) | **POST** /rapid/response | Submits a response for a Rapid.
+*RapidApi* | [**rapid_skip_post**](rapidata/api_client/docs/RapidApi.md#rapid_skip_post) | **POST** /rapid/skip | Skips a Rapid for the user.
+*RapidApi* | [**rapid_skipuserguess_post**](rapidata/api_client/docs/RapidApi.md#rapid_skipuserguess_post) | **POST** /rapid/skipuserguess | Skips a Rapid for the user.
+*RapidApi* | [**rapid_validatecurrentrapidbag_get**](rapidata/api_client/docs/RapidApi.md#rapid_validatecurrentrapidbag_get) | **GET** /rapid/validatecurrentrapidbag | Validates that the rapids associated with the current user are active.
+*RapidApi* | [**rapid_validation_rapid_id_patch**](rapidata/api_client/docs/RapidApi.md#rapid_validation_rapid_id_patch) | **PATCH** /rapid/validation/{rapidId} | Updates the validation information of a rapid.
 *RapidApi* | [**rapid_validation_rapid_id_put**](rapidata/api_client/docs/RapidApi.md#rapid_validation_rapid_id_put) | **PUT** /rapid/validation/{rapidId} | Updates the validation information of a rapid.
 *RapidataIdentityAPIApi* | [**root_get**](rapidata/api_client/docs/RapidataIdentityAPIApi.md#root_get) | **GET** / | 
-*SimpleWorkflowApi* | [**workflow_simple_id_results_get**](rapidata/api_client/docs/SimpleWorkflowApi.md#workflow_simple_id_results_get) | **GET** /workflow/simple/{id}/results | Get the result overview for a simple workflow.
+*SimpleWorkflowApi* | [**workflow_simple_workflow_id_results_get**](rapidata/api_client/docs/SimpleWorkflowApi.md#workflow_simple_workflow_id_results_get) | **GET** /workflow/simple/{workflowId}/results | Get the result overview for a simple workflow.
 *UserInfoApi* | [**connect_userinfo_get**](rapidata/api_client/docs/UserInfoApi.md#connect_userinfo_get) | **GET** /connect/userinfo | Retrieves information about the authenticated user.
-*ValidationApi* | [**validation_add_validation_rapid_post**](rapidata/api_client/docs/ValidationApi.md#validation_add_validation_rapid_post) | **POST** /Validation/AddValidationRapid | Adds a new validation rapid to the specified validation set.
-*ValidationApi* | [**validation_add_validation_text_rapid_post**](rapidata/api_client/docs/ValidationApi.md#validation_add_validation_text_rapid_post) | **POST** /Validation/AddValidationTextRapid | Adds a new validation rapid to the specified validation set.
-*ValidationApi* | [**validation_create_validation_set_post**](rapidata/api_client/docs/ValidationApi.md#validation_create_validation_set_post) | **POST** /Validation/CreateValidationSet | Creates a new empty validation set.
-*ValidationApi* | [**validation_get_available_validation_sets_get**](rapidata/api_client/docs/ValidationApi.md#validation_get_available_validation_sets_get) | **GET** /Validation/GetAvailableValidationSets | Gets the available validation sets for the current user.
-*ValidationApi* | [**validation_get_by_id_get**](rapidata/api_client/docs/ValidationApi.md#validation_get_by_id_get) | **GET** /Validation/GetById | Gets a validation set by the id.
-*ValidationApi* | [**validation_import_compare_post**](rapidata/api_client/docs/ValidationApi.md#validation_import_compare_post) | **POST** /Validation/ImportCompare | Imports a compare validation set from a zip file.
-*ValidationApi* | [**validation_import_post**](rapidata/api_client/docs/ValidationApi.md#validation_import_post) | **POST** /Validation/Import | Imports a validation set from a zip file.
-*ValidationApi* | [**validation_query_validation_sets_get**](rapidata/api_client/docs/ValidationApi.md#validation_query_validation_sets_get) | **GET** /Validation/QueryValidationSets | Queries validation sets based on the provided filter, paging and sorting criteria.
-*ValidationApi* | [**validation_validation_set_id_dimensions_patch**](rapidata/api_client/docs/ValidationApi.md#validation_validation_set_id_dimensions_patch) | **PATCH** /validation/{validationSetId}/dimensions | Updates the dimensions of all rapids within a validation set.
-*WorkflowApi* | [**workflow_delete_delete**](rapidata/api_client/docs/WorkflowApi.md#workflow_delete_delete) | **DELETE** /Workflow/Delete | Deletes a workflow.
-*WorkflowApi* | [**workflow_get_by_id_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_get_by_id_get) | **GET** /Workflow/GetById | Get a workflow by its ID.
-*WorkflowApi* | [**workflow_get_progress_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_get_progress_get) | **GET** /Workflow/GetProgress | Get the progress of a workflow.
-*WorkflowApi* | [**workflow_id_compare_ab_summary_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_id_compare_ab_summary_get) | **GET** /workflow/{id}/compare-ab-summary | Calculates a summary of the results for a simple compare workflow.  The summary includes the number of times an asset at each index was the winner.
-*WorkflowApi* | [**workflow_id_responses_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_id_responses_get) | **GET** /workflow/{id}/responses | Gets the limit most recent or oldest responses for a workflow.  The responses are not guaranteed to be of any specific rapid.  Instead, this endpoint returns all responses to any rapid in the workflow.
-*WorkflowApi* | [**workflow_query_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_query_get) | **GET** /Workflow/Query | Queries workflows based on the provided filter, page, and sort criteria.
+*ValidationSetApi* | [**validation_addvalidationrapid_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_addvalidationrapid_post) | **POST** /validation/addvalidationrapid | Adds a new validation rapid to the specified validation set.
+*ValidationSetApi* | [**validation_addvalidationtextrapid_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_addvalidationtextrapid_post) | **POST** /validation/addvalidationtextrapid | Adds a new validation rapid to the specified validation set.
+*ValidationSetApi* | [**validation_createvalidationset_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_createvalidationset_post) | **POST** /validation/createvalidationset | Creates a new empty validation set.
+*ValidationSetApi* | [**validation_getavailablevalidationsets_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_getavailablevalidationsets_get) | **GET** /validation/getavailablevalidationsets | Gets the available validation sets for the current user.
+*ValidationSetApi* | [**validation_getbyid_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_getbyid_get) | **GET** /validation/getbyid | Gets a validation set by the id.
+*ValidationSetApi* | [**validation_import_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_import_post) | **POST** /validation/import | Imports a validation set from a zip file.
+*ValidationSetApi* | [**validation_importcompare_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_importcompare_post) | **POST** /validation/importcompare | Imports a compare validation set from a zip file.
+*ValidationSetApi* | [**validation_queryvalidationsets_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_queryvalidationsets_get) | **GET** /validation/queryvalidationsets | Queries validation sets based on the provided filter, paging and sorting criteria.
+*ValidationSetApi* | [**validation_set_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_post) | **POST** /validation-set | Creates a new empty validation set.
+*ValidationSetApi* | [**validation_set_validation_set_id_dimensions_put**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_dimensions_put) | **PUT** /validation-set/{validationSetId}/dimensions | Updates the dimensions of all rapids within a validation set.
+*ValidationSetApi* | [**validation_set_validation_set_id_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_get) | **GET** /validation-set/{validationSetId} | Gets a validation set by the id.
+*ValidationSetApi* | [**validation_set_validation_set_id_rapid_files_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_rapid_files_post) | **POST** /validation-set/{validationSetId}/rapid/files | Adds a new validation rapid to the specified validation set using files to create the assets.
+*ValidationSetApi* | [**validation_set_validation_set_id_rapid_texts_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_rapid_texts_post) | **POST** /validation-set/{validationSetId}/rapid/texts | Adds a new validation rapid to the specified validation set using text sources to create the assets.
+*ValidationSetApi* | [**validation_set_validation_set_id_rapids_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_rapids_get) | **GET** /validation-set/{validationSetId}/rapids | Queries the validation rapids for a specific validation set.
+*ValidationSetApi* | [**validation_set_zip_compare_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_zip_compare_post) | **POST** /validation-set/zip/compare | Imports a compare validation set from a zip file.
+*ValidationSetApi* | [**validation_set_zip_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_zip_post) | **POST** /validation-set/zip | Imports a validation set from a zip file.
+*ValidationSetApi* | [**validation_sets_available_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_sets_available_get) | **GET** /validation-sets/available | Gets the available validation sets for the current user.
+*ValidationSetApi* | [**validation_sets_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_sets_get) | **GET** /validation-sets | Queries validation sets based on the provided filter, paging and sorting criteria.
+*ValidationSetApi* | [**validation_validation_set_id_dimensions_patch**](rapidata/api_client/docs/ValidationSetApi.md#validation_validation_set_id_dimensions_patch) | **PATCH** /validation/{validationSetId}/dimensions | Updates the dimensions of all rapids within a validation set.
+*WorkflowApi* | [**workflow_delete_delete**](rapidata/api_client/docs/WorkflowApi.md#workflow_delete_delete) | **DELETE** /workflow/delete | Deletes a workflow.
+*WorkflowApi* | [**workflow_getbyid_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_getbyid_get) | **GET** /workflow/getbyid | Get a workflow by its ID.
+*WorkflowApi* | [**workflow_getprogress_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_getprogress_get) | **GET** /workflow/getprogress | Get the progress of a workflow.
+*WorkflowApi* | [**workflow_query_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_query_get) | **GET** /workflow/query | Queries workflows based on the provided filter, page, and sort criteria.
+*WorkflowApi* | [**workflow_workflow_id_compare_ab_summary_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_workflow_id_compare_ab_summary_get) | **GET** /workflow/{workflowId}/compare-ab-summary | Calculates a summary of the results for a simple compare workflow.  The summary includes the number of times an asset at each index was the winner.
+*WorkflowApi* | [**workflow_workflow_id_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_workflow_id_get) | **GET** /workflow/{workflowId} | Get a workflow by its ID.
+*WorkflowApi* | [**workflow_workflow_id_progress_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_workflow_id_progress_get) | **GET** /workflow/{workflowId}/progress | Get the progress of a workflow.
+*WorkflowApi* | [**workflow_workflow_id_responses_get**](rapidata/api_client/docs/WorkflowApi.md#workflow_workflow_id_responses_get) | **GET** /workflow/{workflowId}/responses | Gets the limit most recent or oldest responses for a workflow.  The responses are not guaranteed to be of any specific rapid.  Instead, this endpoint returns all responses to any rapid in the workflow.
+*WorkflowApi* | [**workflows_get**](rapidata/api_client/docs/WorkflowApi.md#workflows_get) | **GET** /workflows | Queries workflows based on the provided filter, page, and sort criteria.
 
 
 ## Documentation For Models
@@ -166,6 +222,8 @@ Class | Method | HTTP request | Description
  - [AbTestSelectionAInner](rapidata/api_client/docs/AbTestSelectionAInner.md)
  - [AddCampaignArtifactResult](rapidata/api_client/docs/AddCampaignArtifactResult.md)
  - [AddCampaignModel](rapidata/api_client/docs/AddCampaignModel.md)
+ - [AddUserResponseResult](rapidata/api_client/docs/AddUserResponseResult.md)
+ - [AddUserResponseResultValidationTruth](rapidata/api_client/docs/AddUserResponseResultValidationTruth.md)
  - [AddValidationRapidModel](rapidata/api_client/docs/AddValidationRapidModel.md)
  - [AddValidationRapidModelPayload](rapidata/api_client/docs/AddValidationRapidModelPayload.md)
  - [AddValidationRapidModelTruth](rapidata/api_client/docs/AddValidationRapidModelTruth.md)
@@ -174,6 +232,7 @@ Class | Method | HTTP request | Description
  - [AgeGroup](rapidata/api_client/docs/AgeGroup.md)
  - [AgeUserFilterModel](rapidata/api_client/docs/AgeUserFilterModel.md)
  - [AggregatorType](rapidata/api_client/docs/AggregatorType.md)
+ - [AreRapidsActiveResult](rapidata/api_client/docs/AreRapidsActiveResult.md)
  - [AttachCategoryRapidBlueprint](rapidata/api_client/docs/AttachCategoryRapidBlueprint.md)
  - [AttachCategoryResult](rapidata/api_client/docs/AttachCategoryResult.md)
  - [AttachCategoryTruth](rapidata/api_client/docs/AttachCategoryTruth.md)
@@ -224,9 +283,12 @@ Class | Method | HTTP request | Description
  - [CreateComplexOrderModel](rapidata/api_client/docs/CreateComplexOrderModel.md)
  - [CreateComplexOrderModelPipeline](rapidata/api_client/docs/CreateComplexOrderModelPipeline.md)
  - [CreateComplexOrderResult](rapidata/api_client/docs/CreateComplexOrderResult.md)
+ - [CreateDatapointFromFilesModel](rapidata/api_client/docs/CreateDatapointFromFilesModel.md)
+ - [CreateDatapointFromFilesModelMetadataInner](rapidata/api_client/docs/CreateDatapointFromFilesModelMetadataInner.md)
+ - [CreateDatapointFromTextSourcesModel](rapidata/api_client/docs/CreateDatapointFromTextSourcesModel.md)
  - [CreateDatapointFromUrlsModel](rapidata/api_client/docs/CreateDatapointFromUrlsModel.md)
- - [CreateDatapointFromUrlsModelMetadataInner](rapidata/api_client/docs/CreateDatapointFromUrlsModelMetadataInner.md)
  - [CreateDatapointResult](rapidata/api_client/docs/CreateDatapointResult.md)
+ - [CreateDatapointsFromS3BucketModel](rapidata/api_client/docs/CreateDatapointsFromS3BucketModel.md)
  - [CreateDatasetArtifactModel](rapidata/api_client/docs/CreateDatasetArtifactModel.md)
  - [CreateDatasetArtifactModelDataset](rapidata/api_client/docs/CreateDatasetArtifactModelDataset.md)
  - [CreateDemographicRapidModel](rapidata/api_client/docs/CreateDemographicRapidModel.md)
@@ -236,10 +298,12 @@ Class | Method | HTTP request | Description
  - [CreateOrderModelUserFiltersInner](rapidata/api_client/docs/CreateOrderModelUserFiltersInner.md)
  - [CreateOrderModelWorkflow](rapidata/api_client/docs/CreateOrderModelWorkflow.md)
  - [CreateOrderResult](rapidata/api_client/docs/CreateOrderResult.md)
+ - [CreateRapidResult](rapidata/api_client/docs/CreateRapidResult.md)
  - [CreateSimplePipelineModel](rapidata/api_client/docs/CreateSimplePipelineModel.md)
  - [CreateSimplePipelineModelArtifactsInner](rapidata/api_client/docs/CreateSimplePipelineModelArtifactsInner.md)
  - [CreateSimplePipelineModelPipelineStepsInner](rapidata/api_client/docs/CreateSimplePipelineModelPipelineStepsInner.md)
  - [CreateUnsupportedOrderModel](rapidata/api_client/docs/CreateUnsupportedOrderModel.md)
+ - [CreateValidationSetModel](rapidata/api_client/docs/CreateValidationSetModel.md)
  - [CustomUserFilterModel](rapidata/api_client/docs/CustomUserFilterModel.md)
  - [Datapoint](rapidata/api_client/docs/Datapoint.md)
  - [DatapointAsset](rapidata/api_client/docs/DatapointAsset.md)
@@ -289,12 +353,13 @@ Class | Method | HTTP request | Description
  - [GetSimpleWorkflowResultsModel](rapidata/api_client/docs/GetSimpleWorkflowResultsModel.md)
  - [GetSimpleWorkflowResultsResult](rapidata/api_client/docs/GetSimpleWorkflowResultsResult.md)
  - [GetSimpleWorkflowResultsResultPagedResult](rapidata/api_client/docs/GetSimpleWorkflowResultsResultPagedResult.md)
+ - [GetValidationRapidsQuery](rapidata/api_client/docs/GetValidationRapidsQuery.md)
+ - [GetValidationRapidsQueryPagedResult](rapidata/api_client/docs/GetValidationRapidsQueryPagedResult.md)
  - [GetValidationSetByIdResult](rapidata/api_client/docs/GetValidationSetByIdResult.md)
  - [GetWorkflowByIdResult](rapidata/api_client/docs/GetWorkflowByIdResult.md)
  - [GetWorkflowByIdResultWorkflow](rapidata/api_client/docs/GetWorkflowByIdResultWorkflow.md)
  - [GetWorkflowProgressResult](rapidata/api_client/docs/GetWorkflowProgressResult.md)
  - [IWorkflowModelPagedResult](rapidata/api_client/docs/IWorkflowModelPagedResult.md)
- - [IdentityReadBridgeTokenGet202Response](rapidata/api_client/docs/IdentityReadBridgeTokenGet202Response.md)
  - [ImageDimensionMetadata](rapidata/api_client/docs/ImageDimensionMetadata.md)
  - [ImageDimensionMetadataModel](rapidata/api_client/docs/ImageDimensionMetadataModel.md)
  - [ImportFromFileResult](rapidata/api_client/docs/ImportFromFileResult.md)
@@ -340,7 +405,7 @@ Class | Method | HTTP request | Description
  - [OriginalFilenameMetadata](rapidata/api_client/docs/OriginalFilenameMetadata.md)
  - [OriginalFilenameMetadataModel](rapidata/api_client/docs/OriginalFilenameMetadataModel.md)
  - [PageInfo](rapidata/api_client/docs/PageInfo.md)
- - [PipelineIdWorkflowPutRequest](rapidata/api_client/docs/PipelineIdWorkflowPutRequest.md)
+ - [PipelineIdWorkflowArtifactIdPutRequest](rapidata/api_client/docs/PipelineIdWorkflowArtifactIdPutRequest.md)
  - [PolygonPayload](rapidata/api_client/docs/PolygonPayload.md)
  - [PolygonRapidBlueprint](rapidata/api_client/docs/PolygonRapidBlueprint.md)
  - [PolygonResult](rapidata/api_client/docs/PolygonResult.md)
@@ -349,7 +414,6 @@ Class | Method | HTTP request | Description
  - [PreliminaryDownloadResult](rapidata/api_client/docs/PreliminaryDownloadResult.md)
  - [PrivateTextMetadataInput](rapidata/api_client/docs/PrivateTextMetadataInput.md)
  - [ProbabilisticAttachCategoryRefereeConfig](rapidata/api_client/docs/ProbabilisticAttachCategoryRefereeConfig.md)
- - [ProblemDetails](rapidata/api_client/docs/ProblemDetails.md)
  - [PromptMetadata](rapidata/api_client/docs/PromptMetadata.md)
  - [PromptMetadataInput](rapidata/api_client/docs/PromptMetadataInput.md)
  - [PromptMetadataModel](rapidata/api_client/docs/PromptMetadataModel.md)
@@ -360,7 +424,6 @@ Class | Method | HTTP request | Description
  - [QueryValidationRapidsResultAsset](rapidata/api_client/docs/QueryValidationRapidsResultAsset.md)
  - [QueryValidationRapidsResultPagedResult](rapidata/api_client/docs/QueryValidationRapidsResultPagedResult.md)
  - [QueryValidationRapidsResultPayload](rapidata/api_client/docs/QueryValidationRapidsResultPayload.md)
- - [QueryValidationRapidsResultTruth](rapidata/api_client/docs/QueryValidationRapidsResultTruth.md)
  - [QueryWorkflowsModel](rapidata/api_client/docs/QueryWorkflowsModel.md)
  - [RapidIssue](rapidata/api_client/docs/RapidIssue.md)
  - [RapidResponse](rapidata/api_client/docs/RapidResponse.md)
@@ -381,6 +444,7 @@ Class | Method | HTTP request | Description
  - [ScrubTruth](rapidata/api_client/docs/ScrubTruth.md)
  - [SendCompletionMailStepModel](rapidata/api_client/docs/SendCompletionMailStepModel.md)
  - [Shape](rapidata/api_client/docs/Shape.md)
+ - [ShufflingSelection](rapidata/api_client/docs/ShufflingSelection.md)
  - [SimpleWorkflowConfig](rapidata/api_client/docs/SimpleWorkflowConfig.md)
  - [SimpleWorkflowConfigModel](rapidata/api_client/docs/SimpleWorkflowConfigModel.md)
  - [SimpleWorkflowConfigModelBlueprint](rapidata/api_client/docs/SimpleWorkflowConfigModelBlueprint.md)
@@ -411,8 +475,9 @@ Class | Method | HTTP request | Description
  - [UnlockOrderResult](rapidata/api_client/docs/UnlockOrderResult.md)
  - [UpdateAccessModel](rapidata/api_client/docs/UpdateAccessModel.md)
  - [UpdateCampaignModel](rapidata/api_client/docs/UpdateCampaignModel.md)
+ - [UpdateDatasetNameModel](rapidata/api_client/docs/UpdateDatasetNameModel.md)
  - [UpdateDimensionsModel](rapidata/api_client/docs/UpdateDimensionsModel.md)
- - [UpdateOrderModel](rapidata/api_client/docs/UpdateOrderModel.md)
+ - [UpdateOrderNameModel](rapidata/api_client/docs/UpdateOrderNameModel.md)
  - [UpdateValidationRapidModel](rapidata/api_client/docs/UpdateValidationRapidModel.md)
  - [UpdateValidationRapidModelTruth](rapidata/api_client/docs/UpdateValidationRapidModelTruth.md)
  - [UploadCocoResult](rapidata/api_client/docs/UploadCocoResult.md)

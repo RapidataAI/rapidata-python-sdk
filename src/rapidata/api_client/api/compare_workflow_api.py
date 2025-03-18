@@ -41,9 +41,9 @@ class CompareWorkflowApi:
 
 
     @validate_call
-    def workflow_compare_id_results_get(
+    def workflow_compare_workflow_id_results_get(
         self,
-        id: Annotated[StrictStr, Field(description="The ID of the workflow to get the results for.")],
+        workflow_id: Annotated[StrictStr, Field(description="The ID of the workflow to get the results for.")],
         model: Annotated[Optional[GetCompareWorkflowResultsModel], Field(description="The model for the request.")] = None,
         _request_timeout: Union[
             None,
@@ -61,8 +61,8 @@ class CompareWorkflowApi:
         """Get the result overview for a compare workflow.
 
 
-        :param id: The ID of the workflow to get the results for. (required)
-        :type id: str
+        :param workflow_id: The ID of the workflow to get the results for. (required)
+        :type workflow_id: str
         :param model: The model for the request.
         :type model: GetCompareWorkflowResultsModel
         :param _request_timeout: timeout setting for this request. If one
@@ -87,8 +87,8 @@ class CompareWorkflowApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._workflow_compare_id_results_get_serialize(
-            id=id,
+        _param = self._workflow_compare_workflow_id_results_get_serialize(
+            workflow_id=workflow_id,
             model=model,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -111,9 +111,9 @@ class CompareWorkflowApi:
 
 
     @validate_call
-    def workflow_compare_id_results_get_with_http_info(
+    def workflow_compare_workflow_id_results_get_with_http_info(
         self,
-        id: Annotated[StrictStr, Field(description="The ID of the workflow to get the results for.")],
+        workflow_id: Annotated[StrictStr, Field(description="The ID of the workflow to get the results for.")],
         model: Annotated[Optional[GetCompareWorkflowResultsModel], Field(description="The model for the request.")] = None,
         _request_timeout: Union[
             None,
@@ -131,8 +131,8 @@ class CompareWorkflowApi:
         """Get the result overview for a compare workflow.
 
 
-        :param id: The ID of the workflow to get the results for. (required)
-        :type id: str
+        :param workflow_id: The ID of the workflow to get the results for. (required)
+        :type workflow_id: str
         :param model: The model for the request.
         :type model: GetCompareWorkflowResultsModel
         :param _request_timeout: timeout setting for this request. If one
@@ -157,8 +157,8 @@ class CompareWorkflowApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._workflow_compare_id_results_get_serialize(
-            id=id,
+        _param = self._workflow_compare_workflow_id_results_get_serialize(
+            workflow_id=workflow_id,
             model=model,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -181,9 +181,9 @@ class CompareWorkflowApi:
 
 
     @validate_call
-    def workflow_compare_id_results_get_without_preload_content(
+    def workflow_compare_workflow_id_results_get_without_preload_content(
         self,
-        id: Annotated[StrictStr, Field(description="The ID of the workflow to get the results for.")],
+        workflow_id: Annotated[StrictStr, Field(description="The ID of the workflow to get the results for.")],
         model: Annotated[Optional[GetCompareWorkflowResultsModel], Field(description="The model for the request.")] = None,
         _request_timeout: Union[
             None,
@@ -201,8 +201,8 @@ class CompareWorkflowApi:
         """Get the result overview for a compare workflow.
 
 
-        :param id: The ID of the workflow to get the results for. (required)
-        :type id: str
+        :param workflow_id: The ID of the workflow to get the results for. (required)
+        :type workflow_id: str
         :param model: The model for the request.
         :type model: GetCompareWorkflowResultsModel
         :param _request_timeout: timeout setting for this request. If one
@@ -227,8 +227,8 @@ class CompareWorkflowApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._workflow_compare_id_results_get_serialize(
-            id=id,
+        _param = self._workflow_compare_workflow_id_results_get_serialize(
+            workflow_id=workflow_id,
             model=model,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -246,9 +246,9 @@ class CompareWorkflowApi:
         return response_data.response
 
 
-    def _workflow_compare_id_results_get_serialize(
+    def _workflow_compare_workflow_id_results_get_serialize(
         self,
-        id,
+        workflow_id,
         model,
         _request_auth,
         _content_type,
@@ -271,8 +271,8 @@ class CompareWorkflowApi:
         _body_params: Optional[bytes] = None
 
         # process the path parameters
-        if id is not None:
-            _path_params['id'] = id
+        if workflow_id is not None:
+            _path_params['workflowId'] = workflow_id
         # process the query parameters
         if model is not None:
             
@@ -302,7 +302,7 @@ class CompareWorkflowApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/workflow/compare/{id}/results',
+            resource_path='/workflow/compare/{workflowId}/results',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

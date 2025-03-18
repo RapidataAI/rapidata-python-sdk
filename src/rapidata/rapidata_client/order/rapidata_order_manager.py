@@ -534,7 +534,7 @@ class RapidataOrderManager:
         """
 
         try:
-            order = self._openapi_service.order_api.order_get_by_id_get(order_id)
+            order = self._openapi_service.order_api.order_order_id_get(order_id)
         except Exception:
             raise ValueError(f"Order with ID {order_id} not found.")
 

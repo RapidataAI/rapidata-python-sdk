@@ -41,6 +41,519 @@ class DatapointApi:
 
 
     @validate_call
+    def datapoint_datapoint_id_delete(
+        self,
+        datapoint_id: Annotated[StrictStr, Field(description="The id of the datapoint to delete.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> None:
+        """Deletes a datapoint by its id.
+
+
+        :param datapoint_id: The id of the datapoint to delete. (required)
+        :type datapoint_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._datapoint_datapoint_id_delete_serialize(
+            datapoint_id=datapoint_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def datapoint_datapoint_id_delete_with_http_info(
+        self,
+        datapoint_id: Annotated[StrictStr, Field(description="The id of the datapoint to delete.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
+        """Deletes a datapoint by its id.
+
+
+        :param datapoint_id: The id of the datapoint to delete. (required)
+        :type datapoint_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._datapoint_datapoint_id_delete_serialize(
+            datapoint_id=datapoint_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def datapoint_datapoint_id_delete_without_preload_content(
+        self,
+        datapoint_id: Annotated[StrictStr, Field(description="The id of the datapoint to delete.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Deletes a datapoint by its id.
+
+
+        :param datapoint_id: The id of the datapoint to delete. (required)
+        :type datapoint_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._datapoint_datapoint_id_delete_serialize(
+            datapoint_id=datapoint_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _datapoint_datapoint_id_delete_serialize(
+        self,
+        datapoint_id,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if datapoint_id is not None:
+            _path_params['datapointId'] = datapoint_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'bearer', 
+            'oauth2'
+        ]
+
+        return self.api_client.param_serialize(
+            method='DELETE',
+            resource_path='/datapoint/{datapointId}',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def datapoint_datapoint_id_get(
+        self,
+        datapoint_id: Annotated[StrictStr, Field(description="The id of the datapoint to get.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> GetDatapointByIdResult:
+        """Gets a datapoint by its id.
+
+
+        :param datapoint_id: The id of the datapoint to get. (required)
+        :type datapoint_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._datapoint_datapoint_id_get_serialize(
+            datapoint_id=datapoint_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetDatapointByIdResult",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def datapoint_datapoint_id_get_with_http_info(
+        self,
+        datapoint_id: Annotated[StrictStr, Field(description="The id of the datapoint to get.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[GetDatapointByIdResult]:
+        """Gets a datapoint by its id.
+
+
+        :param datapoint_id: The id of the datapoint to get. (required)
+        :type datapoint_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._datapoint_datapoint_id_get_serialize(
+            datapoint_id=datapoint_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetDatapointByIdResult",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def datapoint_datapoint_id_get_without_preload_content(
+        self,
+        datapoint_id: Annotated[StrictStr, Field(description="The id of the datapoint to get.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Gets a datapoint by its id.
+
+
+        :param datapoint_id: The id of the datapoint to get. (required)
+        :type datapoint_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._datapoint_datapoint_id_get_serialize(
+            datapoint_id=datapoint_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "GetDatapointByIdResult",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _datapoint_datapoint_id_get_serialize(
+        self,
+        datapoint_id,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if datapoint_id is not None:
+            _path_params['datapointId'] = datapoint_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'text/plain', 
+                    'application/json', 
+                    'text/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'bearer', 
+            'oauth2'
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/datapoint/{datapointId}',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
     def datapoint_delete_delete(
         self,
         id: Annotated[Optional[StrictStr], Field(description="The id of the datapoint to delete.")] = None,
@@ -57,7 +570,7 @@ class DatapointApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Delete a datapoint.
+        """(Deprecated) Delete a datapoint.
 
 
         :param id: The id of the datapoint to delete.
@@ -83,6 +596,7 @@ class DatapointApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("DELETE /datapoint/delete is deprecated.", DeprecationWarning)
 
         _param = self._datapoint_delete_delete_serialize(
             id=id,
@@ -123,7 +637,7 @@ class DatapointApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Delete a datapoint.
+        """(Deprecated) Delete a datapoint.
 
 
         :param id: The id of the datapoint to delete.
@@ -149,6 +663,7 @@ class DatapointApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("DELETE /datapoint/delete is deprecated.", DeprecationWarning)
 
         _param = self._datapoint_delete_delete_serialize(
             id=id,
@@ -189,7 +704,7 @@ class DatapointApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Delete a datapoint.
+        """(Deprecated) Delete a datapoint.
 
 
         :param id: The id of the datapoint to delete.
@@ -215,6 +730,7 @@ class DatapointApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("DELETE /datapoint/delete is deprecated.", DeprecationWarning)
 
         _param = self._datapoint_delete_delete_serialize(
             id=id,
@@ -278,7 +794,7 @@ class DatapointApi:
 
         return self.api_client.param_serialize(
             method='DELETE',
-            resource_path='/Datapoint/Delete',
+            resource_path='/datapoint/delete',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -295,7 +811,7 @@ class DatapointApi:
 
 
     @validate_call
-    def datapoint_get_all_datapoints_by_dataset_id_get(
+    def datapoint_getalldatapointsbydatasetid_get(
         self,
         dataset_id: Annotated[Optional[StrictStr], Field(description="The id of the dataset to get the datapoints of.")] = None,
         _request_timeout: Union[
@@ -311,7 +827,7 @@ class DatapointApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> GetDatapointsByDatasetIdResult:
-        """Get all datapoints of a dataset.
+        """(Deprecated) Get all datapoints of a dataset.
 
 
         :param dataset_id: The id of the dataset to get the datapoints of.
@@ -337,8 +853,9 @@ class DatapointApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("GET /datapoint/getalldatapointsbydatasetid is deprecated.", DeprecationWarning)
 
-        _param = self._datapoint_get_all_datapoints_by_dataset_id_get_serialize(
+        _param = self._datapoint_getalldatapointsbydatasetid_get_serialize(
             dataset_id=dataset_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -361,7 +878,7 @@ class DatapointApi:
 
 
     @validate_call
-    def datapoint_get_all_datapoints_by_dataset_id_get_with_http_info(
+    def datapoint_getalldatapointsbydatasetid_get_with_http_info(
         self,
         dataset_id: Annotated[Optional[StrictStr], Field(description="The id of the dataset to get the datapoints of.")] = None,
         _request_timeout: Union[
@@ -377,7 +894,7 @@ class DatapointApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[GetDatapointsByDatasetIdResult]:
-        """Get all datapoints of a dataset.
+        """(Deprecated) Get all datapoints of a dataset.
 
 
         :param dataset_id: The id of the dataset to get the datapoints of.
@@ -403,8 +920,9 @@ class DatapointApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("GET /datapoint/getalldatapointsbydatasetid is deprecated.", DeprecationWarning)
 
-        _param = self._datapoint_get_all_datapoints_by_dataset_id_get_serialize(
+        _param = self._datapoint_getalldatapointsbydatasetid_get_serialize(
             dataset_id=dataset_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -427,7 +945,7 @@ class DatapointApi:
 
 
     @validate_call
-    def datapoint_get_all_datapoints_by_dataset_id_get_without_preload_content(
+    def datapoint_getalldatapointsbydatasetid_get_without_preload_content(
         self,
         dataset_id: Annotated[Optional[StrictStr], Field(description="The id of the dataset to get the datapoints of.")] = None,
         _request_timeout: Union[
@@ -443,7 +961,7 @@ class DatapointApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Get all datapoints of a dataset.
+        """(Deprecated) Get all datapoints of a dataset.
 
 
         :param dataset_id: The id of the dataset to get the datapoints of.
@@ -469,8 +987,9 @@ class DatapointApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("GET /datapoint/getalldatapointsbydatasetid is deprecated.", DeprecationWarning)
 
-        _param = self._datapoint_get_all_datapoints_by_dataset_id_get_serialize(
+        _param = self._datapoint_getalldatapointsbydatasetid_get_serialize(
             dataset_id=dataset_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -488,7 +1007,7 @@ class DatapointApi:
         return response_data.response
 
 
-    def _datapoint_get_all_datapoints_by_dataset_id_get_serialize(
+    def _datapoint_getalldatapointsbydatasetid_get_serialize(
         self,
         dataset_id,
         _request_auth,
@@ -541,7 +1060,7 @@ class DatapointApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/Datapoint/GetAllDatapointsByDatasetId',
+            resource_path='/datapoint/getalldatapointsbydatasetid',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -558,7 +1077,7 @@ class DatapointApi:
 
 
     @validate_call
-    def datapoint_get_by_id_get(
+    def datapoint_getbyid_get(
         self,
         id: Annotated[Optional[StrictStr], Field(description="The id of the datapoint to get.")] = None,
         _request_timeout: Union[
@@ -574,7 +1093,7 @@ class DatapointApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> GetDatapointByIdResult:
-        """Get a datapoint by its id.
+        """(Deprecated) Get a datapoint by its id.
 
 
         :param id: The id of the datapoint to get.
@@ -600,8 +1119,9 @@ class DatapointApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("GET /datapoint/getbyid is deprecated.", DeprecationWarning)
 
-        _param = self._datapoint_get_by_id_get_serialize(
+        _param = self._datapoint_getbyid_get_serialize(
             id=id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -624,7 +1144,7 @@ class DatapointApi:
 
 
     @validate_call
-    def datapoint_get_by_id_get_with_http_info(
+    def datapoint_getbyid_get_with_http_info(
         self,
         id: Annotated[Optional[StrictStr], Field(description="The id of the datapoint to get.")] = None,
         _request_timeout: Union[
@@ -640,7 +1160,7 @@ class DatapointApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[GetDatapointByIdResult]:
-        """Get a datapoint by its id.
+        """(Deprecated) Get a datapoint by its id.
 
 
         :param id: The id of the datapoint to get.
@@ -666,8 +1186,9 @@ class DatapointApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("GET /datapoint/getbyid is deprecated.", DeprecationWarning)
 
-        _param = self._datapoint_get_by_id_get_serialize(
+        _param = self._datapoint_getbyid_get_serialize(
             id=id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -690,7 +1211,7 @@ class DatapointApi:
 
 
     @validate_call
-    def datapoint_get_by_id_get_without_preload_content(
+    def datapoint_getbyid_get_without_preload_content(
         self,
         id: Annotated[Optional[StrictStr], Field(description="The id of the datapoint to get.")] = None,
         _request_timeout: Union[
@@ -706,7 +1227,7 @@ class DatapointApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Get a datapoint by its id.
+        """(Deprecated) Get a datapoint by its id.
 
 
         :param id: The id of the datapoint to get.
@@ -732,8 +1253,9 @@ class DatapointApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("GET /datapoint/getbyid is deprecated.", DeprecationWarning)
 
-        _param = self._datapoint_get_by_id_get_serialize(
+        _param = self._datapoint_getbyid_get_serialize(
             id=id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -751,7 +1273,7 @@ class DatapointApi:
         return response_data.response
 
 
-    def _datapoint_get_by_id_get_serialize(
+    def _datapoint_getbyid_get_serialize(
         self,
         id,
         _request_auth,
@@ -804,7 +1326,7 @@ class DatapointApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/Datapoint/GetById',
+            resource_path='/datapoint/getbyid',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

@@ -78,7 +78,7 @@ class RapidataOrder:
             Completed: The order has been completed.\n
             Failed: The order has failed.
         """
-        return self.__openapi_service.order_api.order_get_by_id_get(self.order_id).state
+        return self.__openapi_service.order_api.order_order_id_get(self.order_id).state
 
     def display_progress_bar(self, refresh_rate: int=5) -> None:
         """
@@ -126,7 +126,7 @@ class RapidataOrder:
         for _ in range(self._max_retries // 2):
             try:
                 workflow_id = self.__get_workflow_id()
-                progress = self.__openapi_service.workflow_api.workflow_get_progress_get(workflow_id)
+                progress = self.__openapi_service.workflow_api.workflow_workflow_id_progress_get(workflow_id)
                 break
             except Exception:
                 sleep(self._retry_delay * 2)
@@ -155,7 +155,7 @@ class RapidataOrder:
             sleep(5)
 
         try:
-            return RapidataResults(self.__openapi_service.order_api.order_get_order_results_get(id=self.order_id)) # type: ignore
+            return RapidataResults(json.loads(self.__openapi_service.order_api.order_order_id_download_results_get(order_id=self.order_id)))
         except (ApiException, json.JSONDecodeError) as e:
             raise Exception(f"Failed to get order results: {str(e)}") from e
         
@@ -178,7 +178,7 @@ class RapidataOrder:
         if not self.__pipeline_id:
             for _ in range(self._max_retries):
                 try:
-                    self.__pipeline_id = self.__openapi_service.order_api.order_get_by_id_get(self.order_id).pipeline_id
+                    self.__pipeline_id = self.__openapi_service.order_api.order_order_id_get(self.order_id).pipeline_id
                     break
                 except Exception:
                     sleep(self._retry_delay)
@@ -205,7 +205,7 @@ class RapidataOrder:
         pipeline_id = self.__get_pipeline_id()
         for _ in range(self._max_retries):
             try:
-                pipeline = self.__openapi_service.pipeline_api.pipeline_id_get(pipeline_id)
+                pipeline = self.__openapi_service.pipeline_api.pipeline_pipeline_id_get(pipeline_id)
                 self.__workflow_id = cast(WorkflowArtifactModel, pipeline.artifacts["workflow-artifact"].actual_instance).workflow_id
                 self.__campaign_id = cast(CampaignArtifactModel, pipeline.artifacts["campaign-artifact"].actual_instance).campaign_id
                 return

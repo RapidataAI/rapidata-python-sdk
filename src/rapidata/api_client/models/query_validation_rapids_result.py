@@ -19,10 +19,10 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.add_user_response_result_validation_truth import AddUserResponseResultValidationTruth
 from rapidata.api_client.models.file_asset_model_metadata_value import FileAssetModelMetadataValue
 from rapidata.api_client.models.query_validation_rapids_result_asset import QueryValidationRapidsResultAsset
 from rapidata.api_client.models.query_validation_rapids_result_payload import QueryValidationRapidsResultPayload
-from rapidata.api_client.models.query_validation_rapids_result_truth import QueryValidationRapidsResultTruth
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -33,7 +33,7 @@ class QueryValidationRapidsResult(BaseModel):
     id: StrictStr
     type: StrictStr
     asset: Optional[QueryValidationRapidsResultAsset] = None
-    truth: Optional[QueryValidationRapidsResultTruth] = None
+    truth: Optional[AddUserResponseResultValidationTruth] = None
     payload: QueryValidationRapidsResultPayload
     metadata: Dict[str, FileAssetModelMetadataValue]
     correct_validation_count: StrictInt = Field(alias="correctValidationCount")
@@ -126,7 +126,7 @@ class QueryValidationRapidsResult(BaseModel):
             "id": obj.get("id"),
             "type": obj.get("type"),
             "asset": QueryValidationRapidsResultAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
-            "truth": QueryValidationRapidsResultTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
+            "truth": AddUserResponseResultValidationTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
             "payload": QueryValidationRapidsResultPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
             "metadata": dict(
                 (_k, FileAssetModelMetadataValue.from_dict(_v))

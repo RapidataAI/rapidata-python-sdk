@@ -26,10 +26,10 @@ class ReportModel(BaseModel):
     """
     The model for reporting an issue with a rapid.
     """ # noqa: E501
-    rapid_id: StrictStr = Field(description="The rapid an issue was encountered with", alias="rapidId")
+    rapid_id: Optional[StrictStr] = Field(default=None, description="The rapid an issue was encountered with.", alias="rapidId")
     issue: StrictStr
     message: Optional[StrictStr] = Field(default=None, description="An optional message typed by the user.")
-    dump: Optional[StrictStr] = Field(default=None, description="A dump, that the frontend defines and can read again")
+    dump: Optional[StrictStr] = Field(default=None, description="A dump, that the frontend defines and can read again.")
     __properties: ClassVar[List[str]] = ["rapidId", "issue", "message", "dump"]
 
     @field_validator('issue')

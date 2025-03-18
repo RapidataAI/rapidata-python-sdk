@@ -2,12 +2,12 @@ from itertools import zip_longest
 
 from rapidata.api_client.models.datapoint_metadata_model import DatapointMetadataModel
 from rapidata.api_client.models.create_datapoint_from_urls_model import (
-    CreateDatapointFromUrlsModelMetadataInner,
+    CreateDatapointFromUrlsModel,
 )
+from rapidata.api_client.models.create_datapoint_from_files_model import CreateDatapointFromFilesModel
 from rapidata.api_client.models.create_datapoint_from_urls_model import CreateDatapointFromUrlsModel
-from rapidata.api_client.models.upload_text_sources_to_dataset_model import (
-    UploadTextSourcesToDatasetModel,
-)
+from rapidata.api_client.models.create_datapoint_from_text_sources_model import CreateDatapointFromTextSourcesModel
+from rapidata.api_client.models.create_datapoint_from_files_model_metadata_inner import CreateDatapointFromFilesModelMetadataInner
 from rapidata.rapidata_client.metadata._base_metadata import Metadata
 from rapidata.rapidata_client.assets import TextAsset, MediaAsset, MultiAsset
 from rapidata.service import LocalFileService
@@ -54,13 +54,12 @@ class RapidataDataset:
             else:
                 raise ValueError(f"Unsupported asset type: {type(text_asset)}")
 
-            model = UploadTextSourcesToDatasetModel(
-                datasetId=self.dataset_id,
+            model = CreateDatapointFromTextSourcesModel(
                 textSources=texts,
                 sortIndex=index,
             )
 
-            upload_response = self.openapi_service.dataset_api.dataset_creat_text_datapoint_post(model)
+            upload_response = self.openapi_service.dataset_api.dataset_dataset_id_datapoints_texts_post(dataset_id=self.dataset_id, create_datapoint_from_text_sources_model=model)
 
             if upload_response.errors:
                 raise ValueError(f"Error uploading text datapoint: {upload_response.errors}")
@@ -116,7 +115,7 @@ class RapidataDataset:
 
             meta_model = meta.to_model() if meta else None
 
-            metadata = [CreateDatapointFromUrlsModelMetadataInner(meta_model)] if meta_model else []
+            metadata = [CreateDatapointFromFilesModelMetadataInner(meta_model)] if meta_model else []
 
             local_paths: bool = assets[0].is_local()
             files: list[StrictStr] = []
@@ -125,12 +124,12 @@ class RapidataDataset:
                     files.append(asset.path)
 
             if local_paths:
-                model = DatapointMetadataModel(
-                    datasetId=self.dataset_id,
+                model = CreateDatapointFromFilesModel(
                     metadata=metadata,
                     sortIndex=index,
                 )
-                upload_response = self.openapi_service.dataset_api.dataset_create_datapoint_post(
+                upload_response = self.openapi_service.dataset_api.dataset_dataset_id_datapoints_files_post(
+                    dataset_id=self.dataset_id,
                     model=model,
                     files=files # type: ignore
                 )
