@@ -5,6 +5,7 @@ from .rapidata_client import (
     ValidationSelection,
     ConditionalValidationSelection,
     CappedSelection,
+    ShufflingSelection,
     RapidataSettings,
     TranslationBehaviourOptions,
     AlertOnFastResponse,

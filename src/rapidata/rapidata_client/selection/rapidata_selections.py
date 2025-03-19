@@ -3,7 +3,8 @@ from rapidata.rapidata_client.selection import (
     LabelingSelection, 
     ValidationSelection, 
     ConditionalValidationSelection, 
-    CappedSelection)
+    CappedSelection,
+    ShufflingSelection)
 
 class RapidataSelections:
     """RapidataSelections Classes
@@ -17,6 +18,7 @@ class RapidataSelections:
         conditional_validation (ConditionalValidationSelection): The ConditionalValidationSelection instance.
         demographic (DemographicSelection): The DemographicSelection instance.
         capped (CappedSelection): The CappedSelection instance.
+        shuffling (ShufflingSelection): The ShufflingSelection instance.
     
     Example:
         ```python
@@ -32,3 +34,4 @@ class RapidataSelections:
     conditional_validation = ConditionalValidationSelection
     demographic = DemographicSelection
     capped = CappedSelection
+    shuffling = ShufflingSelection
