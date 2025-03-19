@@ -5,6 +5,7 @@ from .selection import (
     ValidationSelection,
     ConditionalValidationSelection,
     CappedSelection,
+    ShufflingSelection,
 )
 from .metadata import (
     PrivateTextMetadata,
