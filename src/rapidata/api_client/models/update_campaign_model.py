@@ -26,7 +26,7 @@ class UpdateCampaignModel(BaseModel):
     """
     The model containing the new configuration for a campaign.
     """ # noqa: E501
-    priority: Optional[StrictInt] = Field(default=None, description="A value above 0 indicating how much the campaign should be prioritized.  The higher the value the more weight it will be given during campaign selection.")
+    priority: Optional[StrictInt] = Field(default=None, description="A value above 0 indicating how much the campaign should be prioritized. The higher the value the more weight it will be given during campaign selection.")
     feature_flags: Optional[Dict[str, StrictStr]] = Field(default=None, description="The feature flags to assign this campaign.", alias="featureFlags")
     __properties: ClassVar[List[str]] = ["priority", "featureFlags"]
 

@@ -59,7 +59,7 @@ class IdentityApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ReadBridgeTokenKeysResult:
-        """Tries to read the bridge token keys for a given read key.  The read key is used to retrieve the authentication result written by the write key.
+        """Tries to read the bridge token keys for a given read key. The read key is used to retrieve the authentication result written by the write key.
 
 
         :param read_key: The read key to read the bridge token keys for.
@@ -126,7 +126,7 @@ class IdentityApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[ReadBridgeTokenKeysResult]:
-        """Tries to read the bridge token keys for a given read key.  The read key is used to retrieve the authentication result written by the write key.
+        """Tries to read the bridge token keys for a given read key. The read key is used to retrieve the authentication result written by the write key.
 
 
         :param read_key: The read key to read the bridge token keys for.
@@ -193,7 +193,7 @@ class IdentityApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Tries to read the bridge token keys for a given read key.  The read key is used to retrieve the authentication result written by the write key.
+        """Tries to read the bridge token keys for a given read key. The read key is used to retrieve the authentication result written by the write key.
 
 
         :param read_key: The read key to read the bridge token keys for.
@@ -325,7 +325,7 @@ class IdentityApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> CreateBridgeTokenResult:
-        """Creates a pair of read and write keys for a client.  The write key is used to store the authentication result.  The read key is used to retrieve the authentication result.
+        """Creates a pair of read and write keys for a client. The write key is used to store the authentication result. The read key is used to retrieve the authentication result.
 
 
         :param client_id: The client ID to create the keys for.
@@ -391,7 +391,7 @@ class IdentityApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[CreateBridgeTokenResult]:
-        """Creates a pair of read and write keys for a client.  The write key is used to store the authentication result.  The read key is used to retrieve the authentication result.
+        """Creates a pair of read and write keys for a client. The write key is used to store the authentication result. The read key is used to retrieve the authentication result.
 
 
         :param client_id: The client ID to create the keys for.
@@ -457,7 +457,7 @@ class IdentityApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Creates a pair of read and write keys for a client.  The write key is used to store the authentication result.  The read key is used to retrieve the authentication result.
+        """Creates a pair of read and write keys for a client. The write key is used to store the authentication result. The read key is used to retrieve the authentication result.
 
 
         :param client_id: The client ID to create the keys for.
@@ -588,7 +588,7 @@ class IdentityApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> CreateBridgeTokenResult:
-        """(Deprecated) Creates a pair of read and write keys for a client.  The write key is used to store the authentication result.  The read key is used to retrieve the authentication result.
+        """(Deprecated) Creates a pair of read and write keys for a client. The write key is used to store the authentication result. The read key is used to retrieve the authentication result.
 
 
         :param client_id: The client ID to create the keys for.
@@ -655,7 +655,7 @@ class IdentityApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[CreateBridgeTokenResult]:
-        """(Deprecated) Creates a pair of read and write keys for a client.  The write key is used to store the authentication result.  The read key is used to retrieve the authentication result.
+        """(Deprecated) Creates a pair of read and write keys for a client. The write key is used to store the authentication result. The read key is used to retrieve the authentication result.
 
 
         :param client_id: The client ID to create the keys for.
@@ -722,7 +722,7 @@ class IdentityApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """(Deprecated) Creates a pair of read and write keys for a client.  The write key is used to store the authentication result.  The read key is used to retrieve the authentication result.
+        """(Deprecated) Creates a pair of read and write keys for a client. The write key is used to store the authentication result. The read key is used to retrieve the authentication result.
 
 
         :param client_id: The client ID to create the keys for.
@@ -854,7 +854,7 @@ class IdentityApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ReadBridgeTokenKeysResult:
-        """(Deprecated) Tries to read the bridge token keys for a given read key.  The read key is used to retrieve the authentication result written by the write key.
+        """(Deprecated) Tries to read the bridge token keys for a given read key. The read key is used to retrieve the authentication result written by the write key.
 
 
         :param read_key: The read key to read the bridge token keys for.
@@ -922,7 +922,7 @@ class IdentityApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[ReadBridgeTokenKeysResult]:
-        """(Deprecated) Tries to read the bridge token keys for a given read key.  The read key is used to retrieve the authentication result written by the write key.
+        """(Deprecated) Tries to read the bridge token keys for a given read key. The read key is used to retrieve the authentication result written by the write key.
 
 
         :param read_key: The read key to read the bridge token keys for.
@@ -990,7 +990,7 @@ class IdentityApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """(Deprecated) Tries to read the bridge token keys for a given read key.  The read key is used to retrieve the authentication result written by the write key.
+        """(Deprecated) Tries to read the bridge token keys for a given read key. The read key is used to retrieve the authentication result written by the write key.
 
 
         :param read_key: The read key to read the bridge token keys for.

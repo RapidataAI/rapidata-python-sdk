@@ -26,7 +26,7 @@ from typing_extensions import Self
 
 class SimpleWorkflowConfigModel(BaseModel):
     """
-    The configuration for a simple workflow.  A simple workflow creates a rapid for each datapoint in its dataset.  It is considered complete when all rapids have been completed.
+    The configuration for a simple workflow. A simple workflow creates a rapid for each datapoint in its dataset. It is considered complete when all rapids have been completed.
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for SimpleWorkflowConfig", alias="_t")
     referee: CompareWorkflowModel1Referee

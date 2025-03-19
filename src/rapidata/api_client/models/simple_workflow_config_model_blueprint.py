@@ -35,7 +35,7 @@ SIMPLEWORKFLOWCONFIGMODELBLUEPRINT_ONE_OF_SCHEMAS = ["AttachCategoryRapidBluepri
 
 class SimpleWorkflowConfigModelBlueprint(BaseModel):
     """
-    The blueprint to use when creating rapids for this workflow.  The blueprint determines what kind of rapids will be created and what data they will contain.
+    The blueprint to use when creating rapids for this workflow. The blueprint determines what kind of rapids will be created and what data they will contain.
     """
     # data type: TranscriptionRapidBlueprint
     oneof_schema_1_validator: Optional[TranscriptionRapidBlueprint] = None

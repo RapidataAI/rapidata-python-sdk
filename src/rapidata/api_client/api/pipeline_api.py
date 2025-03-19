@@ -66,7 +66,7 @@ class PipelineApi:
     ) -> None:
         """(Deprecated) Updates the workflow configuration for a pipeline.
 
-        This method needs to be called before the pipeline is started.  Otherwise, the changes will not take effect unless the pipeline is restarted.
+        This method needs to be called before the pipeline is started. Otherwise, the changes will not take effect unless the pipeline is restarted.
 
         :param id: The id of the pipeline to update. (required)
         :type id: str
@@ -142,7 +142,7 @@ class PipelineApi:
     ) -> ApiResponse[None]:
         """(Deprecated) Updates the workflow configuration for a pipeline.
 
-        This method needs to be called before the pipeline is started.  Otherwise, the changes will not take effect unless the pipeline is restarted.
+        This method needs to be called before the pipeline is started. Otherwise, the changes will not take effect unless the pipeline is restarted.
 
         :param id: The id of the pipeline to update. (required)
         :type id: str
@@ -218,7 +218,7 @@ class PipelineApi:
     ) -> RESTResponseType:
         """(Deprecated) Updates the workflow configuration for a pipeline.
 
-        This method needs to be called before the pipeline is started.  Otherwise, the changes will not take effect unless the pipeline is restarted.
+        This method needs to be called before the pipeline is started. Otherwise, the changes will not take effect unless the pipeline is restarted.
 
         :param id: The id of the pipeline to update. (required)
         :type id: str
@@ -369,7 +369,7 @@ class PipelineApi:
     ) -> None:
         """Updates the workflow configuration for a pipeline.
 
-        This method needs to be called before the pipeline is started.  Otherwise, the changes will not take effect unless the pipeline is restarted.
+        This method needs to be called before the pipeline is started. Otherwise, the changes will not take effect unless the pipeline is restarted.
 
         :param id: The id of the pipeline to update. (required)
         :type id: str
@@ -444,7 +444,7 @@ class PipelineApi:
     ) -> ApiResponse[None]:
         """Updates the workflow configuration for a pipeline.
 
-        This method needs to be called before the pipeline is started.  Otherwise, the changes will not take effect unless the pipeline is restarted.
+        This method needs to be called before the pipeline is started. Otherwise, the changes will not take effect unless the pipeline is restarted.
 
         :param id: The id of the pipeline to update. (required)
         :type id: str
@@ -519,7 +519,7 @@ class PipelineApi:
     ) -> RESTResponseType:
         """Updates the workflow configuration for a pipeline.
 
-        This method needs to be called before the pipeline is started.  Otherwise, the changes will not take effect unless the pipeline is restarted.
+        This method needs to be called before the pipeline is started. Otherwise, the changes will not take effect unless the pipeline is restarted.
 
         :param id: The id of the pipeline to update. (required)
         :type id: str

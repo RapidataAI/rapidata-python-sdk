@@ -356,7 +356,7 @@
           "Dataset"
         ],
         "summary": "Gets a list of all datapoints that failed to upload.",
-        "description": "A datapoint usually fails to upload when using a deferred upload mechanism such as when providing a URL\r\nand the URL is not accessible.",
+        "description": "A datapoint usually fails to upload when using a deferred upload mechanism such as when providing a URL\nand the URL is not accessible.",
         "parameters": [
           {
             "name": "datasetId",
@@ -644,7 +644,7 @@
           "Dataset"
         ],
         "summary": "Creates a single datapoint where the assets are fetched from the specified urls.",
-        "description": "Passing in multiple urls will create a single datapoint with a MultiAsset.\r\nEach url will be fetched and stored as a sub-asset of the MultiAsset.\r\n<para />\r\nIf any of the urls are not accessible, the request will fail.",
+        "description": "Passing in multiple urls will create a single datapoint with a MultiAsset.\nEach url will be fetched and stored as a sub-asset of the MultiAsset.\n<para />\nIf any of the urls are not accessible, the request will fail.",
         "parameters": [
           {
             "name": "datasetId",
@@ -1389,7 +1389,7 @@
           "Order"
         ],
         "summary": "Aggregates the results of an order.",
-        "description": "Returns the aggregated result as a file with a given name.\r\nThe annotated type of the response represents the content type of the file.",
+        "description": "Returns the aggregated result as a file with a given name.\nThe annotated type of the response represents the content type of the file.",
         "parameters": [
           {
             "name": "id",
@@ -1425,7 +1425,7 @@
           "Order"
         ],
         "summary": "Aggregates the results of an order and returns it as a file attachment.",
-        "description": "Returns the aggregated result as a file with a given name.\r\nThe annotated type of the response represents the content type of the file.",
+        "description": "Returns the aggregated result as a file with a given name.\nThe annotated type of the response represents the content type of the file.",
         "parameters": [
           {
             "name": "orderId",
@@ -1853,7 +1853,7 @@
           "Order"
         ],
         "summary": "Unlocks a newly cloned order.",
-        "description": "When an order is cloned only the necessary information is copied.\r\nIn order to make changes to the order, it must be unlocked first.\r\nUnlocking the order will clone the entire dataset and its datapoints.",
+        "description": "When an order is cloned only the necessary information is copied.\nIn order to make changes to the order, it must be unlocked first.\nUnlocking the order will clone the entire dataset and its datapoints.",
         "parameters": [
           {
             "name": "orderId",
@@ -1895,7 +1895,7 @@
           "Order"
         ],
         "summary": "Unlocks a newly cloned order.",
-        "description": "When an order is cloned only the necessary information is copied.\r\nIn order to make changes to the order, it must be unlocked first.\r\nUnlocking the order will clone the entire dataset and its datapoints.",
+        "description": "When an order is cloned only the necessary information is copied.\nIn order to make changes to the order, it must be unlocked first.\nUnlocking the order will clone the entire dataset and its datapoints.",
         "parameters": [
           {
             "name": "orderId",
@@ -2071,7 +2071,7 @@
           "Order"
         ],
         "summary": "Submits an order for approval.",
-        "description": "Once an order is created its order id and dataset id is returned.\r\nThe dataset id can be used to fill the dataset with data points.\r\nOnce submitted, the order will be locked and no further changes can be made.",
+        "description": "Once an order is created its order id and dataset id is returned.\nThe dataset id can be used to fill the dataset with data points.\nOnce submitted, the order will be locked and no further changes can be made.",
         "parameters": [
           {
             "name": "orderId",
@@ -2096,7 +2096,7 @@
           "Order"
         ],
         "summary": "Submits an order for approval.",
-        "description": "Once an order is created its order id and dataset id is returned.\r\nThe dataset id can be used to fill the dataset with data points.\r\nOnce submitted, the order will be locked and no further changes can be made.",
+        "description": "Once an order is created its order id and dataset id is returned.\nThe dataset id can be used to fill the dataset with data points.\nOnce submitted, the order will be locked and no further changes can be made.",
         "parameters": [
           {
             "name": "orderId",
@@ -2121,7 +2121,7 @@
           "Order"
         ],
         "summary": "Approves an order that has been submitted for manual approval.",
-        "description": "An order is submitted for manual approval when the automatic approval process could not automatically\r\ndetermine if the order is safe to process.\r\nOnce an order is approved, the pipeline will start processing the order.",
+        "description": "An order is submitted for manual approval when the automatic approval process could not automatically\ndetermine if the order is safe to process.\nOnce an order is approved, the pipeline will start processing the order.",
         "parameters": [
           {
             "name": "orderId",
@@ -2146,7 +2146,7 @@
           "Order"
         ],
         "summary": "Approves an order that has been submitted for manual approval.",
-        "description": "An order is submitted for manual approval when the automatic approval process could not automatically\r\ndetermine if the order is safe to process.\r\nOnce an order is approved, the pipeline will start processing the order.",
+        "description": "An order is submitted for manual approval when the automatic approval process could not automatically\ndetermine if the order is safe to process.\nOnce an order is approved, the pipeline will start processing the order.",
         "parameters": [
           {
             "name": "orderId",
@@ -2452,7 +2452,7 @@
           "Client"
         ],
         "summary": "Gets the clients for the current customer.",
-        "description": "A client allows a customer to authenticate with the APIs without using their own credentials.\r\nThis is useful for creating service accounts or other automated processes,\r\nas when using the Rapidata Python SDK.",
+        "description": "A client allows a customer to authenticate with the APIs without using their own credentials.\nThis is useful for creating service accounts or other automated processes,\nas when using the Rapidata Python SDK.",
         "parameters": [
           {
             "name": "request",
@@ -2497,7 +2497,7 @@
           "Client"
         ],
         "summary": "Queries the clients for the current customer.",
-        "description": "A client allows a customer to authenticate with the APIs without using their own credentials.\r\nThis is useful for creating service accounts or other automated processes,\r\nas when using the Rapidata Python SDK.",
+        "description": "A client allows a customer to authenticate with the APIs without using their own credentials.\nThis is useful for creating service accounts or other automated processes,\nas when using the Rapidata Python SDK.",
         "parameters": [
           {
             "name": "request",
@@ -2739,7 +2739,7 @@
         "tags": [
           "Identity"
         ],
-        "summary": "Creates a pair of read and write keys for a client.\r\nThe write key is used to store the authentication result.\r\nThe read key is used to retrieve the authentication result.",
+        "summary": "Creates a pair of read and write keys for a client.\nThe write key is used to store the authentication result.\nThe read key is used to retrieve the authentication result.",
         "parameters": [
           {
             "name": "clientId",
@@ -2780,7 +2780,7 @@
         "tags": [
           "Identity"
         ],
-        "summary": "Creates a pair of read and write keys for a client.\r\nThe write key is used to store the authentication result.\r\nThe read key is used to retrieve the authentication result.",
+        "summary": "Creates a pair of read and write keys for a client.\nThe write key is used to store the authentication result.\nThe read key is used to retrieve the authentication result.",
         "parameters": [
           {
             "name": "clientId",
@@ -2818,7 +2818,7 @@
         "tags": [
           "Identity"
         ],
-        "summary": "Tries to read the bridge token keys for a given read key.\r\nThe read key is used to retrieve the authentication result written by the write key.",
+        "summary": "Tries to read the bridge token keys for a given read key.\nThe read key is used to retrieve the authentication result written by the write key.",
         "parameters": [
           {
             "name": "readKey",
@@ -2878,7 +2878,7 @@
         "tags": [
           "Identity"
         ],
-        "summary": "Tries to read the bridge token keys for a given read key.\r\nThe read key is used to retrieve the authentication result written by the write key.",
+        "summary": "Tries to read the bridge token keys for a given read key.\nThe read key is used to retrieve the authentication result written by the write key.",
         "parameters": [
           {
             "name": "readKey",
@@ -5314,7 +5314,7 @@
         "tags": [
           "Workflow"
         ],
-        "summary": "Calculates a summary of the results for a simple compare workflow.\r\nThe summary includes the number of times an asset at each index was the winner.",
+        "summary": "Calculates a summary of the results for a simple compare workflow.\nThe summary includes the number of times an asset at each index was the winner.",
         "parameters": [
           {
             "name": "workflowId",
@@ -5364,7 +5364,7 @@
         "tags": [
           "Workflow"
         ],
-        "summary": "Gets the limit most recent or oldest responses for a workflow.\r\nThe responses are not guaranteed to be of any specific rapid.\r\nInstead, this endpoint returns all responses to any rapid in the workflow.",
+        "summary": "Gets the limit most recent or oldest responses for a workflow.\nThe responses are not guaranteed to be of any specific rapid.\nInstead, this endpoint returns all responses to any rapid in the workflow.",
         "parameters": [
           {
             "name": "workflowId",
@@ -5602,7 +5602,7 @@
           "Pipeline"
         ],
         "summary": "Updates the workflow configuration for a pipeline.",
-        "description": "This method needs to be called before the pipeline is started.\r\nOtherwise, the changes will not take effect unless the pipeline is restarted.",
+        "description": "This method needs to be called before the pipeline is started.\nOtherwise, the changes will not take effect unless the pipeline is restarted.",
         "parameters": [
           {
             "name": "id",
@@ -5690,7 +5690,7 @@
           "Pipeline"
         ],
         "summary": "Updates the workflow configuration for a pipeline.",
-        "description": "This method needs to be called before the pipeline is started.\r\nOtherwise, the changes will not take effect unless the pipeline is restarted.",
+        "description": "This method needs to be called before the pipeline is started.\nOtherwise, the changes will not take effect unless the pipeline is restarted.",
         "parameters": [
           {
             "name": "id",
@@ -6174,7 +6174,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "The form request for creating a datapoint from files.\r\nNeeds to be encoded as a json string in the form request."
+        "description": "The form request for creating a datapoint from files.\nNeeds to be encoded as a json string in the form request."
       },
       "CreateDatapointFromTextSourcesModel": {
         "required": [
@@ -6216,7 +6216,7 @@
                 "propertyName": "_t"
               }
             },
-            "description": "Additional metadata to attach to the datapoint.\r\nMost commonly used to add a prompt to the datapoint using the Rapidata.Shared.Assets.Abstraction.Models.Metadata.Input.PromptMetadataInput.",
+            "description": "Additional metadata to attach to the datapoint.\nMost commonly used to add a prompt to the datapoint using the Rapidata.Shared.Assets.Abstraction.Models.Metadata.Input.PromptMetadataInput.",
             "default": null,
             "nullable": true
           }
@@ -6236,7 +6236,7 @@
               "type": "string",
               "format": "uri"
             },
-            "description": "The urls to fetch the assets from.\r\nThe urls must be publicly accessible.\r\nA HEAD request will be made to each url to check if it is accessible."
+            "description": "The urls to fetch the assets from.\nThe urls must be publicly accessible.\nA HEAD request will be made to each url to check if it is accessible."
           },
           "metadata": {
             "type": "array",
@@ -6259,7 +6259,7 @@
                 "propertyName": "_t"
               }
             },
-            "description": "Additional metadata to attach to the datapoint.\r\nMost commonly used to add a prompt to the datapoint using the Rapidata.Shared.Assets.Abstraction.Models.Metadata.Input.PromptMetadataInput.",
+            "description": "Additional metadata to attach to the datapoint.\nMost commonly used to add a prompt to the datapoint using the Rapidata.Shared.Assets.Abstraction.Models.Metadata.Input.PromptMetadataInput.",
             "default": null,
             "nullable": true
           },
@@ -7390,7 +7390,7 @@
                 "propertyName": "_t"
               }
             },
-            "description": "Additional metadata to attach to the datapoint.\r\nMost commonly used to add a prompt to the datapoint using the Rapidata.Shared.Assets.Abstraction.Models.Metadata.Input.PromptMetadataInput.",
+            "description": "Additional metadata to attach to the datapoint.\nMost commonly used to add a prompt to the datapoint using the Rapidata.Shared.Assets.Abstraction.Models.Metadata.Input.PromptMetadataInput.",
             "default": null,
             "nullable": true
           }
@@ -7856,7 +7856,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "If the SimpleWorkflow is chosen, each datapoint uploaded will correspond to a single task to be solved.\r\nThis is the most commonly chosen workflow."
+        "description": "If the SimpleWorkflow is chosen, each datapoint uploaded will correspond to a single task to be solved.\nThis is the most commonly chosen workflow."
       },
       "ConditionalValidationSelection": {
         "title": "ConditionalValidationSelection",
@@ -8166,7 +8166,7 @@
           },
           "validationSetId": {
             "type": "string",
-            "description": "The validation set id can be changed to point to a specific validation set. if not provided a sane default will be\r\nused.",
+            "description": "The validation set id can be changed to point to a specific validation set. if not provided a sane default will be\nused.",
             "nullable": true
           },
           "selections": {
@@ -8452,7 +8452,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "The Early Stopping Referee can currently only be used for classification tasks and will stop once a certain\r\nthreshold is reached or the maximum number of votes is collected."
+        "description": "The Early Stopping Referee can currently only be used for classification tasks and will stop once a certain\nthreshold is reached or the maximum number of votes is collected."
       },
       "EloConfigModel": {
         "type": "object",
@@ -8464,12 +8464,12 @@
           },
           "kFactor": {
             "type": "integer",
-            "description": "The K-factor to use in the ELO calculation.\r\nDetermines the maximum possible change in a player's Elo rating after a single match.\r\nHigher K-Factor values result in larger rating changes.",
+            "description": "The K-factor to use in the ELO calculation.\nDetermines the maximum possible change in a player's Elo rating after a single match.\nHigher K-Factor values result in larger rating changes.",
             "format": "int32"
           },
           "scalingFactor": {
             "type": "integer",
-            "description": "Scaling factor to use in the ELO calculation.\r\nAdjusts the sensitivity of the Elo rating system to differences in player ratings.\r\nIt affects how much the rating changes based on the expected outcome versus the actual outcome.",
+            "description": "Scaling factor to use in the ELO calculation.\nAdjusts the sensitivity of the Elo rating system to differences in player ratings.\nIt affects how much the rating changes based on the expected outcome versus the actual outcome.",
             "format": "int32"
           }
         },
@@ -8500,11 +8500,11 @@
           },
           "shouldAcceptIncorrect": {
             "type": "boolean",
-            "description": "Indicates if the user should get feedback on their answers if they answer wrong. If set to true the user will not\r\nnotice that he was tested."
+            "description": "Indicates if the user should get feedback on their answers if they answer wrong. If set to true the user will not\nnotice that he was tested."
           }
         },
         "additionalProperties": false,
-        "description": "If the EvaluationWorkflow is chosen a validation set will be used as a source for all tasks.\r\nIt functions similarly to the SimpleWorkflow as there is a 1:1 mapping between validation rapids and tasks."
+        "description": "If the EvaluationWorkflow is chosen a validation set will be used as a source for all tasks.\nIt functions similarly to the SimpleWorkflow as there is a 1:1 mapping between validation rapids and tasks."
       },
       "FeatureFlagModel": {
         "required": [
@@ -8939,7 +8939,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "The OnlinePairMaker creates random pairs in the beginning and then continues to create pairs\r\nthat are close in ranking."
+        "description": "The OnlinePairMaker creates random pairs in the beginning and then continues to create pairs\nthat are close in ranking."
       },
       "OrderModel": {
         "required": [
@@ -9292,14 +9292,14 @@
                 "$ref": "#/components/schemas/BoundingBoxRapidBlueprint"
               }
             ],
-            "description": "The blueprint is used to create the tasks that will be shown to the users. They contain the common information\r\nacross all tasks. For example, the tasks question.",
+            "description": "The blueprint is used to create the tasks that will be shown to the users. They contain the common information\nacross all tasks. For example, the tasks question.",
             "discriminator": {
               "propertyName": "_t"
             }
           }
         },
         "additionalProperties": false,
-        "description": "If the SimpleWorkflow is chosen, each datapoint uploaded will correspond to a single task to be solved.\r\nThis is the most commonly chosen workflow."
+        "description": "If the SimpleWorkflow is chosen, each datapoint uploaded will correspond to a single task to be solved.\nThis is the most commonly chosen workflow."
       },
       "SortCriterion": {
         "required": [
@@ -13030,7 +13030,7 @@
           },
           "isPreviewEnabled": {
             "type": "boolean",
-            "description": "A flag to indicate whether the campaign should be put into preview mode after creation.\r\nThis way the campaign will not start automatically and the user will have to manually start it.",
+            "description": "A flag to indicate whether the campaign should be put into preview mode after creation.\nThis way the campaign will not start automatically and the user will have to manually start it.",
             "nullable": true
           }
         },
@@ -13290,7 +13290,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "The configuration for creating a compare workflow.\r\nA compare workflow is a workflow that continuously matches datapoints against each other and updates their\r\nrespective ELO scores. The ELO scores are used to determine the relative strength of the datapoints,\r\nand datapoints are matched against other datapoints with similar ELO scores.\r\nThe end goal is a ranking of the datapoints based on their relative strength."
+        "description": "The configuration for creating a compare workflow.\nA compare workflow is a workflow that continuously matches datapoints against each other and updates their\nrespective ELO scores. The ELO scores are used to determine the relative strength of the datapoints,\nand datapoints are matched against other datapoints with similar ELO scores.\nThe end goal is a ranking of the datapoints based on their relative strength."
       },
       "CountMetadata": {
         "title": "CountMetadata",
@@ -13799,7 +13799,7 @@
                 "$ref": "#/components/schemas/BoundingBoxRapidBlueprint"
               }
             ],
-            "description": "The blueprint to use when creating rapids for this workflow.\r\nThe blueprint determines what kind of rapids will be created and what data they will contain.",
+            "description": "The blueprint to use when creating rapids for this workflow.\nThe blueprint determines what kind of rapids will be created and what data they will contain.",
             "discriminator": {
               "propertyName": "_t"
             }
@@ -13813,7 +13813,7 @@
           }
         },
         "additionalProperties": false,
-        "description": "The configuration for a simple workflow.\r\nA simple workflow creates a rapid for each datapoint in its dataset.\r\nIt is considered complete when all rapids have been completed."
+        "description": "The configuration for a simple workflow.\nA simple workflow creates a rapid for each datapoint in its dataset.\nIt is considered complete when all rapids have been completed."
       },
       "SourceUrlMetadata": {
         "title": "SourceUrlMetadata",
@@ -13899,7 +13899,7 @@
         "properties": {
           "priority": {
             "type": "integer",
-            "description": "A value above 0 indicating how much the campaign should be prioritized.\r\nThe higher the value the more weight it will be given during campaign selection.",
+            "description": "A value above 0 indicating how much the campaign should be prioritized.\nThe higher the value the more weight it will be given during campaign selection.",
             "format": "int32",
             "nullable": true
           },

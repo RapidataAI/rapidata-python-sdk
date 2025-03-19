@@ -25,7 +25,7 @@ from typing_extensions import Self
 
 class CreateDatapointFromFilesModel(BaseModel):
     """
-    The form request for creating a datapoint from files.  Needs to be encoded as a json string in the form request.
+    The form request for creating a datapoint from files. Needs to be encoded as a json string in the form request.
     """ # noqa: E501
     metadata: List[CreateDatapointFromFilesModelMetadataInner] = Field(description="The metadata of the datapoint.")
     sort_index: Optional[StrictInt] = Field(default=None, description="The index will be used to keep the datapoints in order. Useful if upload is parallelized", alias="sortIndex")

@@ -27,7 +27,7 @@ from typing_extensions import Self
 
 class CompareWorkflowModel(BaseModel):
     """
-    If the SimpleWorkflow is chosen, each datapoint uploaded will correspond to a single task to be solved.  This is the most commonly chosen workflow.
+    If the SimpleWorkflow is chosen, each datapoint uploaded will correspond to a single task to be solved. This is the most commonly chosen workflow.
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for CompareWorkflow", alias="_t")
     criteria: StrictStr = Field(description="The criteria that the datapoints should be compared based on. No default value.")
