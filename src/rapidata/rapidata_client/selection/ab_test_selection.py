@@ -20,7 +20,7 @@ class AbTestSelection(RapidataSelection):
         b_selections (Sequence[RapidataSelection]): List of selections for group B.
     """
 
-    def __init__(self, a_selections: Sequence[RapidataSelection], b_selections: Sequence[RapidataSelection], max_rapids: int):
+    def __init__(self, a_selections: Sequence[RapidataSelection], b_selections: Sequence[RapidataSelection]):
         self.a_selections = a_selections
         self.b_selections = b_selections
 
