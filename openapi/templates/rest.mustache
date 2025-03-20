@@ -8,7 +8,6 @@ from typing import Dict, Optional
 
 import requests
 from authlib.integrations.requests_client import OAuth2Session
-from oauthlib.oauth2 import OAuth2Token
 from requests.adapters import HTTPAdapter
 from urllib3 import Retry
 
@@ -59,12 +58,18 @@ class RESTClientObject:
         self._configure_session_defaults()
         self.session.fetch_token()
 
-    def setup_oauth_with_token(self, token: OAuth2Token, token_endpoint: str):
-        print("Setup tokens")
+    def setup_oauth_with_token(self,
+                               client_id: str | None,
+                               client_secret: str | None,
+                               token: dict,
+                               token_endpoint: str,
+                               leeway: int = 60):
         self.session = OAuth2Session(
             token=token,
             token_endpoint=token_endpoint,
-            update_token=lambda _: print("Token updated"),
+            client_id=client_id,
+            client_secret=client_secret,
+            leeway=leeway,
         )
         self._configure_session_defaults()
 
@@ -133,7 +138,7 @@ class RESTClientObject:
                     del headers['Content-Type']
                     files = []
                     data = {}
-                
+
                     for key, value in post_params:
                         if isinstance(value, tuple) and len(value) >= 2:
                             # This is a file tuple (filename, file_data, [content_type])

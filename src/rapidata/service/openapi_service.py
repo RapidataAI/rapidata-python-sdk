@@ -1,8 +1,6 @@
 import subprocess
 from importlib.metadata import version, PackageNotFoundError
 
-from oauthlib.oauth2 import OAuth2Token
-
 from rapidata.api_client.api.campaign_api import CampaignApi
 from rapidata.api_client.api.dataset_api import DatasetApi
 from rapidata.api_client.api.order_api import OrderApi
@@ -17,13 +15,14 @@ from rapidata.service.credential_manager import CredentialManager
 
 class OpenAPIService:
     def __init__(
-        self,
-        client_id: str | None,
-        client_secret: str | None,
-        environment: str,
-        oauth_scope: str,
-        cert_path: str | None = None,
-        token: OAuth2Token | None = None,
+            self,
+            client_id: str | None,
+            client_secret: str | None,
+            environment: str,
+            oauth_scope: str,
+            cert_path: str | None = None,
+            token: dict | None = None,
+            leeway: int = 60,
     ):
         self.environment = environment
         endpoint = f"https://api.{environment}"
@@ -45,7 +44,11 @@ class OpenAPIService:
 
         if token:
             self.api_client.rest_client.setup_oauth_with_token(
-                token=token, token_endpoint=f"{auth_endpoint}/connect/token"
+                token=token,
+                token_endpoint=f"{auth_endpoint}/connect/token",
+                client_id=client_id,
+                client_secret=client_secret,
+                leeway=leeway,
             )
             return
 
