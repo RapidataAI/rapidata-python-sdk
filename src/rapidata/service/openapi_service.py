@@ -1,3 +1,6 @@
+import subprocess
+from importlib.metadata import version, PackageNotFoundError
+
 from rapidata.api_client.api.campaign_api import CampaignApi
 from rapidata.api_client.api.dataset_api import DatasetApi
 from rapidata.api_client.api.order_api import OrderApi
@@ -7,31 +10,31 @@ from rapidata.api_client.api.validation_api import ValidationApi
 from rapidata.api_client.api.workflow_api import WorkflowApi
 from rapidata.api_client.api_client import ApiClient
 from rapidata.api_client.configuration import Configuration
-from rapidata.service.token_manager import TokenManager, TokenInfo
 from rapidata.service.credential_manager import CredentialManager
-
-from importlib.metadata import version, PackageNotFoundError
 
 
 class OpenAPIService:
     def __init__(
-        self,
-        client_id: str | None,
-        client_secret: str | None,
-        enviroment: str,
-        oauth_scope: str,
-        cert_path: str | None = None,
+            self,
+            client_id: str | None,
+            client_secret: str | None,
+            environment: str,
+            oauth_scope: str,
+            cert_path: str | None = None,
+            token: dict | None = None,
+            leeway: int = 60,
     ):
-        self.enviroment = enviroment
-        endpoint = f"https://api.{enviroment}"
-        self._token_url = f"https://auth.{enviroment}"
-        token_manager = TokenManager(
-            client_id=client_id,
-            client_secret=client_secret,
-            endpoint=self._token_url,
-            oauth_scope=oauth_scope,
-            cert_path=cert_path,
+        self.environment = environment
+        endpoint = f"https://api.{environment}"
+        auth_endpoint = f"https://auth.{environment}"
+
+        if environment == "rapidata.dev" and not cert_path:
+            cert_path = _get_local_certificate()
+
+        self.credential_manager = CredentialManager(
+            endpoint=auth_endpoint, cert_path=cert_path
         )
+
         client_configuration = Configuration(host=endpoint, ssl_ca_cert=cert_path)
         self.api_client = ApiClient(
             configuration=client_configuration,
@@ -39,16 +42,32 @@ class OpenAPIService:
             header_value=f"RapidataPythonSDK/{self._get_rapidata_package_version()}",
         )
 
-        self.api_client.configuration.api_key["bearer"] = (
-            f"Bearer {token_manager.fetch_token().access_token}"
+        if token:
+            self.api_client.rest_client.setup_oauth_with_token(
+                token=token,
+                token_endpoint=f"{auth_endpoint}/connect/token",
+                client_id=client_id,
+                client_secret=client_secret,
+                leeway=leeway,
+            )
+            return
+
+        if not client_id or not client_secret:
+            credentials = self.credential_manager.get_client_credentials()
+            if not credentials:
+                raise ValueError("Failed to fetch client credentials")
+            client_id = credentials.client_id
+            client_secret = credentials.client_secret
+
+        self.api_client.rest_client.setup_oauth_client_credentials(
+            client_id=client_id,
+            client_secret=client_secret,
+            token_endpoint=f"{auth_endpoint}/connect/token",
+            scope=oauth_scope,
         )
 
-        self._cert_path = cert_path
-
-        token_manager.start_token_refresh(token_callback=self._set_token)
-
     def reset_credentials(self):
-        CredentialManager(endpoint=self._token_url, cert_path=self._cert_path).reset_credentials()
+        self.credential_manager.reset_credentials()
 
     @property
     def order_api(self) -> OrderApi:
@@ -78,9 +97,6 @@ class OpenAPIService:
     def workflow_api(self) -> WorkflowApi:
         return WorkflowApi(self.api_client)
 
-    def _set_token(self, token: TokenInfo):
-        self.api_client.configuration.api_key["bearer"] = f"Bearer {token.access_token}"
-
     def _get_rapidata_package_version(self):
         """
         Returns the version of the currently installed rapidata package.
@@ -93,3 +109,15 @@ class OpenAPIService:
             return version("rapidata")
         except PackageNotFoundError:
             return None
+
+
+def _get_local_certificate() -> str | None:
+    result = subprocess.run(["mkcert", "-CAROOT"], capture_output=True)
+    if result.returncode != 0:
+        return None
+
+    output = result.stdout.decode("utf-8").strip()
+    if not output:
+        return None
+
+    return f"{output}/rootCA.pem"

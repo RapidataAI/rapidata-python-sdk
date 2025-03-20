@@ -468,7 +468,7 @@ class ValidationSetManager:
         if print_confirmation:
             print()
             print(f"Validation set '{name}' created with ID {validation_set_id}\n",
-                  f"Now viewable under: https://app.{self.__openapi_service.enviroment}/validation-set/detail/{validation_set_id}",
+                  f"Now viewable under: https://app.{self.__openapi_service.environment}/validation-set/detail/{validation_set_id}",
                   sep="")
         
         if dimensions:

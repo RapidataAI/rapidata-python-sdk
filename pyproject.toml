@@ -19,6 +19,7 @@ deprecated = "^1.2.14"
 colorama = "0.4.6"
 tinytag = "^2.0.0"
 pandas = "^2.2.3"
+authlib = "^1.5.1"
 
 [tool.poetry.group.dev.dependencies]
 python-dotenv = "^1.0.1"
