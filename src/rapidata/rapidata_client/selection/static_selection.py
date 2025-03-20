@@ -1,5 +1,4 @@
 
-from rapidata.api_client.models.ab_test_selection_a_inner import AbTestSelectionAInner
 from rapidata.api_client.models.static_selection import StaticSelection as StaticSelectionModel
 from rapidata.rapidata_client.selection._base_selection import RapidataSelection
 
