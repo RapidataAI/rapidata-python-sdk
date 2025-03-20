@@ -5,7 +5,7 @@ from rapidata.rapidata_client.selection._base_selection import RapidataSelection
 class StaticSelection(RapidataSelection):
     """StaticSelection Class
 
-    Given a list of RapidIds, will statically show these rapids.
+    Given a list of RapidIds, theses specific rapids will be shown.
     
     Args:
         selections (list[str]): List of rapid ids to show.
