@@ -1,1 +1,1 @@
-npx openapi-generator-cli generate --global-property modelTests=false,modelDocs=false,apiTests=false,apiDocs=false -i openapi/output.swagger.json -g python -o ./src -c openapi/config.yaml
+npx openapi-generator-cli generate --global-property modelTests=false,modelDocs=false,apiTests=false,apiDocs=false -i openapi/output.swagger.json -g python -o ./src -c openapi/config.yaml -t openapi/templates

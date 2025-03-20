@@ -51,7 +51,7 @@ class RapidataOrder:
         """Runs the order to start collecting responses."""
         self.__openapi_service.order_api.order_submit_post(self.order_id)
         if print_link:
-            print(f"Order '{self.name}' is now viewable under: https://app.{self.__openapi_service.enviroment}/order/detail/{self.order_id}")
+            print(f"Order '{self.name}' is now viewable under: https://app.{self.__openapi_service.environment}/order/detail/{self.order_id}")
         return self
 
     def pause(self) -> None:
@@ -167,7 +167,7 @@ class RapidataOrder:
             Exception: If the order is not in processing state.
         """        
         campaign_id = self.__get_campaign_id()
-        auth_url = f"https://app.{self.__openapi_service.enviroment}/order/detail/{self.order_id}/preview?campaignId={campaign_id}"
+        auth_url = f"https://app.{self.__openapi_service.environment}/order/detail/{self.order_id}/preview?campaignId={campaign_id}"
         could_open_browser = webbrowser.open(auth_url)
         if not could_open_browser:
             encoded_url = urllib.parse.quote(auth_url, safe="%/:=&?~#+!$,;'@()*[]")
