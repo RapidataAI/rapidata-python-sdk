@@ -5,3 +5,5 @@ from .validation_selection import ValidationSelection
 from .conditional_validation_selection import ConditionalValidationSelection
 from .capped_selection import CappedSelection
 from .shuffling_selection import ShufflingSelection
+from .ab_test_selection import AbTestSelection
+from .static_selection import StaticSelection
