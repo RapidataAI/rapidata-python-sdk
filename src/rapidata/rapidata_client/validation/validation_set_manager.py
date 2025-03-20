@@ -39,7 +39,7 @@ class ValidationSetManager:
         data_type: str = RapidataDataTypes.MEDIA,
         contexts: list[str] | None = None,
         explanations: list[str | None] | None = None,
-        dimensions: list[str] | None = None,
+        dimensions: list[str] = [],
         print_confirmation: bool = True,
     ) -> RapidataValidationSet:
         """Create a classification validation set.
@@ -59,7 +59,7 @@ class ValidationSetManager:
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction and answer options. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
             explanations (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
-            dimensions (list[str] | None, optional): The dimensions of the validation set. If not provided will be set to the default dimensions.
+            dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
 
         Example:
@@ -107,7 +107,7 @@ class ValidationSetManager:
         data_type: str = RapidataDataTypes.MEDIA,
         contexts: list[str] | None = None,
         explanation: list[str | None] | None = None,
-        dimensions: list[str] | None = None,
+        dimensions: list[str] = [],
         print_confirmation: bool = True,
     ) -> RapidataValidationSet:
         """Create a comparison validation set.
@@ -127,7 +127,7 @@ class ValidationSetManager:
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction and truth. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
             explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
-            dimensions (list[str] | None, optional): The dimensions of the validation set. If not provided will be set to the default dimensions.
+            dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
 
         Example:
@@ -175,7 +175,7 @@ class ValidationSetManager:
         required_precision: float = 1.0,
         required_completeness: float = 1.0,
         explanation: list[str | None] | None = None,
-        dimensions: list[str] | None = None,
+        dimensions: list[str] = [],
         print_confirmation: bool = True,
     ) -> RapidataValidationSet:
         """Create a select words validation set.
@@ -194,7 +194,7 @@ class ValidationSetManager:
             required_precision (float, optional): The required precision for the labeler to get the rapid correct (minimum ratio of the words selected that need to be correct). Defaults to 1.0 (no wrong word can be selected).
             required_completeness (float, optional): The required completeness for the labeler to get the rapid correct (miminum ratio of total correct words selected). Defaults to 1.0 (all correct words need to be selected).
             explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
-            dimensions (list[str] | None, optional): The dimensions of the validation set. If not provided will be set to the default dimensions.
+            dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
 
         Example:
@@ -238,7 +238,7 @@ class ValidationSetManager:
         datapoints: list[str],
         contexts: list[str] | None = None,
         explanation: list[str | None] | None = None,
-        dimensions: list[str] | None = None,
+        dimensions: list[str] = [],
         print_confirmation: bool = True,
     ) -> RapidataValidationSet:
         """Create a locate validation set.
@@ -253,7 +253,7 @@ class ValidationSetManager:
             datapoints (list[str]): The datapoints that will be used for validation.
             contexts (list[str], optional): The contexts for each datapoint. Defaults to None.
             explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
-            dimensions (list[str] | None, optional): The dimensions of the validation set. If not provided will be set to the default dimensions.
+            dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
 
         Example:
@@ -299,7 +299,7 @@ class ValidationSetManager:
         datapoints: list[str],
         contexts: list[str] | None = None,
         explanation: list[str | None] | None = None,
-        dimensions: list[str] | None = None,
+        dimensions: list[str] = [],
         print_confirmation: bool = True,
     ) -> RapidataValidationSet:
         """Create a draw validation set.
@@ -314,7 +314,7 @@ class ValidationSetManager:
             datapoints (list[str]): The datapoints that will be used for validation.
             contexts (list[str], optional): The contexts for each datapoint. Defaults to None.
             explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
-            dimensions (list[str] | None, optional): The dimensions of the validation set. If not provided will be set to the default dimensions.
+            dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
 
         Example:
@@ -359,7 +359,7 @@ class ValidationSetManager:
         datapoints: list[str],
         contexts: list[str] | None = None,
         explanation: list[str | None] | None = None,
-        dimensions: list[str] | None = None,
+        dimensions: list[str] = [],
         print_confirmation: bool = True,
     ) -> RapidataValidationSet:
         """Create a timestamp validation set.
@@ -375,7 +375,7 @@ class ValidationSetManager:
             datapoints (list[str]): The datapoints that will be used for validation.
             contexts (list[str], optional): The contexts for each datapoint. Defaults to None.
             explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
-            dimensions (list[str] | None, optional): The dimensions of the validation set. If not provided will be set to the default dimensions.
+            dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
 
         Example:
@@ -416,7 +416,7 @@ class ValidationSetManager:
     def create_mixed_set(self,
         name: str,
         rapids: list[Rapid],
-        dimensions: list[str] | None = None,
+        dimensions: list[str] = [],
         print_confirmation: bool = True
     ) -> RapidataValidationSet:
         """Create a validation set with a list of rapids.
@@ -424,7 +424,7 @@ class ValidationSetManager:
         Args:
             name (str): The name of the validation set. (will not be shown to the labeler)
             rapids (list[Rapid]): The list of rapids to add to the validation set.
-            dimensions (list[str] | None, optional): The dimensions of the validation set. If not provided will be set to the default dimensions.
+            dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
         """
 
@@ -471,7 +471,9 @@ class ValidationSetManager:
                   f"Now viewable under: https://app.{self.__openapi_service.enviroment}/validation-set/detail/{validation_set_id}",
                   sep="")
         
-        validation_set.update_dimensions(dimensions)
+        if dimensions:
+            validation_set.update_dimensions(dimensions)
+        
         return validation_set
 
 
