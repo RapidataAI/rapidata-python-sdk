@@ -1,3 +1,5 @@
+from oauthlib.oauth2 import OAuth2Token
+
 from rapidata.service.openapi_service import OpenAPIService
 
 from rapidata.rapidata_client.order.rapidata_order_manager import RapidataOrderManager
@@ -19,6 +21,7 @@ class RapidataClient:
         environment: str = "rapidata.ai",
         oauth_scope: str = "openid",
         cert_path: str | None = None,
+        token: OAuth2Token | None = None,
     ):
         """Initialize the RapidataClient. If both the client_id and client_secret are None, it will try using your credentials under "~/.config/rapidata/credentials.json".
         If this is not successful, it will open a browser window and ask you to log in, then save your new credentials in said json file.
@@ -38,6 +41,7 @@ class RapidataClient:
             environment=environment,
             oauth_scope=oauth_scope,
             cert_path=cert_path,
+            token=token,
         )
 
         self.order = RapidataOrderManager(openapi_service=self._openapi_service)

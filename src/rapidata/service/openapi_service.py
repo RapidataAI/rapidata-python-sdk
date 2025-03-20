@@ -1,6 +1,8 @@
 import subprocess
 from importlib.metadata import version, PackageNotFoundError
 
+from oauthlib.oauth2 import OAuth2Token
+
 from rapidata.api_client.api.campaign_api import CampaignApi
 from rapidata.api_client.api.dataset_api import DatasetApi
 from rapidata.api_client.api.order_api import OrderApi
@@ -21,6 +23,7 @@ class OpenAPIService:
         environment: str,
         oauth_scope: str,
         cert_path: str | None = None,
+        token: OAuth2Token | None = None,
     ):
         self.environment = environment
         endpoint = f"https://api.{environment}"
@@ -32,12 +35,6 @@ class OpenAPIService:
         self.credential_manager = CredentialManager(
             endpoint=auth_endpoint, cert_path=cert_path
         )
-        if not client_id or not client_secret:
-            credentials = self.credential_manager.get_client_credentials()
-            if not credentials:
-                raise ValueError("Failed to fetch client credentials")
-            client_id = credentials.client_id
-            client_secret = credentials.client_secret
 
         client_configuration = Configuration(host=endpoint, ssl_ca_cert=cert_path)
         self.api_client = ApiClient(
@@ -45,6 +42,20 @@ class OpenAPIService:
             header_name="X-Client",
             header_value=f"RapidataPythonSDK/{self._get_rapidata_package_version()}",
         )
+
+        if token:
+            self.api_client.rest_client.setup_oauth_with_token(
+                token=token, token_endpoint=f"{auth_endpoint}/connect/token"
+            )
+            return
+
+        if not client_id or not client_secret:
+            credentials = self.credential_manager.get_client_credentials()
+            if not credentials:
+                raise ValueError("Failed to fetch client credentials")
+            client_id = credentials.client_id
+            client_secret = credentials.client_secret
+
         self.api_client.rest_client.setup_oauth_client_credentials(
             client_id=client_id,
             client_secret=client_secret,

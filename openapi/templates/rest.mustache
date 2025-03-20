@@ -8,6 +8,7 @@ from typing import Dict, Optional
 
 import requests
 from authlib.integrations.requests_client import OAuth2Session
+from oauthlib.oauth2 import OAuth2Token
 from requests.adapters import HTTPAdapter
 from urllib3 import Retry
 
@@ -57,6 +58,15 @@ class RESTClientObject:
         )
         self._configure_session_defaults()
         self.session.fetch_token()
+
+    def setup_oauth_with_token(self, token: OAuth2Token, token_endpoint: str):
+        print("Setup tokens")
+        self.session = OAuth2Session(
+            token=token,
+            token_endpoint=token_endpoint,
+            update_token=lambda _: print("Token updated"),
+        )
+        self._configure_session_defaults()
 
     def request(
             self,
