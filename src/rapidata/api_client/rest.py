@@ -131,15 +131,31 @@ class RESTClientObject:
 
                 elif content_type == 'multipart/form-data':
                     del headers['Content-Type']
-                    files = {}
+                    files = []
                     data = {}
-
+                
                     for key, value in post_params:
-                        if isinstance(value, dict):
-                            data[key] = json.dumps(value)
+                        if isinstance(value, tuple) and len(value) >= 2:
+                            # This is a file tuple (filename, file_data, [content_type])
+                            filename, file_data = value[0], value[1]
+                            content_type = value[2] if len(value) > 2 else None
+                            files.append((key, (filename, file_data, content_type)))
+                        elif isinstance(value, dict):
+                            # JSON-serialize dictionary values
+                            if key in data:
+                                # If we already have this key, handle as needed
+                                # (convert to list or append to existing list)
+                                if not isinstance(data[key], list):
+                                    data[key] = [data[key]]
+                                data[key].append(json.dumps(value))
+                            else:
+                                data[key] = json.dumps(value)
                         else:
-                            if hasattr(value, 'read'):
-                                files[key] = value
+                            # Regular form data
+                            if key in data:
+                                if not isinstance(data[key], list):
+                                    data[key] = [data[key]]
+                                data[key].append(value)
                             else:
                                 data[key] = value
                     r = session.request(method, url, files=files, data=data, timeout=timeout, headers=headers)
