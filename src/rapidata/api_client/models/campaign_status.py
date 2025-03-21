@@ -27,9 +27,10 @@ class CampaignStatus(str, Enum):
     allowed enum values
     """
     CREATED = 'Created'
-    ACTIVE = 'Active'
-    PAUSED = 'Paused'
     PREVIEW = 'Preview'
+    ACTIVE = 'Active'
+    ANALYSIS = 'Analysis'
+    PAUSED = 'Paused'
     COMPLETED = 'Completed'
 
     @classmethod

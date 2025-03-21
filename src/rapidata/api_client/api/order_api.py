@@ -5650,7 +5650,7 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """(Deprecated) Retries a failed order.
+        """Retries a failed order.
 
 
         :param order_id: The id of the order to retry (required)
@@ -5676,7 +5676,6 @@ class OrderApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
-        warnings.warn("POST /order/{orderId}/retry is deprecated.", DeprecationWarning)
 
         _param = self._order_order_id_retry_post_serialize(
             order_id=order_id,
@@ -5717,7 +5716,7 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """(Deprecated) Retries a failed order.
+        """Retries a failed order.
 
 
         :param order_id: The id of the order to retry (required)
@@ -5743,7 +5742,6 @@ class OrderApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
-        warnings.warn("POST /order/{orderId}/retry is deprecated.", DeprecationWarning)
 
         _param = self._order_order_id_retry_post_serialize(
             order_id=order_id,
@@ -5784,7 +5782,7 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """(Deprecated) Retries a failed order.
+        """Retries a failed order.
 
 
         :param order_id: The id of the order to retry (required)
@@ -5810,7 +5808,6 @@ class OrderApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
-        warnings.warn("POST /order/{orderId}/retry is deprecated.", DeprecationWarning)
 
         _param = self._order_order_id_retry_post_serialize(
             order_id=order_id,

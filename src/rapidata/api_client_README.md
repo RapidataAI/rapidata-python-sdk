@@ -162,8 +162,10 @@ Class | Method | HTTP request | Description
 *OrderApi* | [**orders_public_get**](rapidata/api_client/docs/OrderApi.md#orders_public_get) | **GET** /orders/public | Retrieves orders that are public and can be cloned by any user.
 *PipelineApi* | [**pipeline_id_workflow_artifact_id_put**](rapidata/api_client/docs/PipelineApi.md#pipeline_id_workflow_artifact_id_put) | **PUT** /pipeline/{id}/workflow/{artifactId} | Updates the workflow configuration for a pipeline.
 *PipelineApi* | [**pipeline_id_workflow_config_artifact_id_put**](rapidata/api_client/docs/PipelineApi.md#pipeline_id_workflow_config_artifact_id_put) | **PUT** /pipeline/{id}/workflow-config/{artifactId} | Updates the workflow configuration for a pipeline.
+*PipelineApi* | [**pipeline_id_workflow_config_put**](rapidata/api_client/docs/PipelineApi.md#pipeline_id_workflow_config_put) | **PUT** /pipeline/{id}/workflow-config | Updates the workflow configuration for a pipeline.
 *PipelineApi* | [**pipeline_pipeline_id_campaign_artifact_id_put**](rapidata/api_client/docs/PipelineApi.md#pipeline_pipeline_id_campaign_artifact_id_put) | **PUT** /pipeline/{pipelineId}/campaign/{artifactId} | Updates a specific campaign for a pipeline.
 *PipelineApi* | [**pipeline_pipeline_id_campaign_post**](rapidata/api_client/docs/PipelineApi.md#pipeline_pipeline_id_campaign_post) | **POST** /pipeline/{pipelineId}/campaign | Adds a campaign to a pipeline.
+*PipelineApi* | [**pipeline_pipeline_id_campaign_put**](rapidata/api_client/docs/PipelineApi.md#pipeline_pipeline_id_campaign_put) | **PUT** /pipeline/{pipelineId}/campaign | Updates a specific campaign for a pipeline.
 *PipelineApi* | [**pipeline_pipeline_id_get**](rapidata/api_client/docs/PipelineApi.md#pipeline_pipeline_id_get) | **GET** /pipeline/{pipelineId} | Gets a pipeline by its id.
 *PipelineApi* | [**pipeline_pipeline_id_preliminary_download_post**](rapidata/api_client/docs/PipelineApi.md#pipeline_pipeline_id_preliminary_download_post) | **POST** /pipeline/{pipelineId}/preliminary-download | Initiates a preliminary download of the pipeline.
 *PipelineApi* | [**pipeline_preliminary_download_preliminary_download_id_get**](rapidata/api_client/docs/PipelineApi.md#pipeline_preliminary_download_preliminary_download_id_get) | **GET** /pipeline/preliminary-download/{preliminaryDownloadId} | Gets the preliminary download.
@@ -223,7 +225,6 @@ Class | Method | HTTP request | Description
  - [AddCampaignArtifactResult](rapidata/api_client/docs/AddCampaignArtifactResult.md)
  - [AddCampaignModel](rapidata/api_client/docs/AddCampaignModel.md)
  - [AddUserResponseResult](rapidata/api_client/docs/AddUserResponseResult.md)
- - [AddUserResponseResultValidationTruth](rapidata/api_client/docs/AddUserResponseResultValidationTruth.md)
  - [AddValidationRapidModel](rapidata/api_client/docs/AddValidationRapidModel.md)
  - [AddValidationRapidModelPayload](rapidata/api_client/docs/AddValidationRapidModelPayload.md)
  - [AddValidationRapidModelTruth](rapidata/api_client/docs/AddValidationRapidModelTruth.md)
@@ -353,8 +354,11 @@ Class | Method | HTTP request | Description
  - [GetSimpleWorkflowResultsModel](rapidata/api_client/docs/GetSimpleWorkflowResultsModel.md)
  - [GetSimpleWorkflowResultsResult](rapidata/api_client/docs/GetSimpleWorkflowResultsResult.md)
  - [GetSimpleWorkflowResultsResultPagedResult](rapidata/api_client/docs/GetSimpleWorkflowResultsResultPagedResult.md)
- - [GetValidationRapidsQuery](rapidata/api_client/docs/GetValidationRapidsQuery.md)
- - [GetValidationRapidsQueryPagedResult](rapidata/api_client/docs/GetValidationRapidsQueryPagedResult.md)
+ - [GetValidationRapidsResult](rapidata/api_client/docs/GetValidationRapidsResult.md)
+ - [GetValidationRapidsResultAsset](rapidata/api_client/docs/GetValidationRapidsResultAsset.md)
+ - [GetValidationRapidsResultPagedResult](rapidata/api_client/docs/GetValidationRapidsResultPagedResult.md)
+ - [GetValidationRapidsResultPayload](rapidata/api_client/docs/GetValidationRapidsResultPayload.md)
+ - [GetValidationRapidsResultTruth](rapidata/api_client/docs/GetValidationRapidsResultTruth.md)
  - [GetValidationSetByIdResult](rapidata/api_client/docs/GetValidationSetByIdResult.md)
  - [GetWorkflowByIdResult](rapidata/api_client/docs/GetWorkflowByIdResult.md)
  - [GetWorkflowByIdResultWorkflow](rapidata/api_client/docs/GetWorkflowByIdResultWorkflow.md)
@@ -395,10 +399,12 @@ Class | Method | HTTP request | Description
  - [NewUserFilterModel](rapidata/api_client/docs/NewUserFilterModel.md)
  - [NewsletterModel](rapidata/api_client/docs/NewsletterModel.md)
  - [NotAvailableYetResult](rapidata/api_client/docs/NotAvailableYetResult.md)
+ - [NotUserFilterModel](rapidata/api_client/docs/NotUserFilterModel.md)
  - [NullAssetModel](rapidata/api_client/docs/NullAssetModel.md)
  - [OnlinePairMakerConfig](rapidata/api_client/docs/OnlinePairMakerConfig.md)
  - [OnlinePairMakerConfigModel](rapidata/api_client/docs/OnlinePairMakerConfigModel.md)
  - [OnlinePairMakerInformation](rapidata/api_client/docs/OnlinePairMakerInformation.md)
+ - [OrUserFilterModel](rapidata/api_client/docs/OrUserFilterModel.md)
  - [OrderModel](rapidata/api_client/docs/OrderModel.md)
  - [OrderModelPagedResult](rapidata/api_client/docs/OrderModelPagedResult.md)
  - [OrderState](rapidata/api_client/docs/OrderState.md)
@@ -421,9 +427,7 @@ Class | Method | HTTP request | Description
  - [PublicTextMetadataInput](rapidata/api_client/docs/PublicTextMetadataInput.md)
  - [QueryModel](rapidata/api_client/docs/QueryModel.md)
  - [QueryValidationRapidsResult](rapidata/api_client/docs/QueryValidationRapidsResult.md)
- - [QueryValidationRapidsResultAsset](rapidata/api_client/docs/QueryValidationRapidsResultAsset.md)
  - [QueryValidationRapidsResultPagedResult](rapidata/api_client/docs/QueryValidationRapidsResultPagedResult.md)
- - [QueryValidationRapidsResultPayload](rapidata/api_client/docs/QueryValidationRapidsResultPayload.md)
  - [QueryWorkflowsModel](rapidata/api_client/docs/QueryWorkflowsModel.md)
  - [RapidIssue](rapidata/api_client/docs/RapidIssue.md)
  - [RapidResponse](rapidata/api_client/docs/RapidResponse.md)
