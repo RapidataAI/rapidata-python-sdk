@@ -5,7 +5,8 @@ from rapidata.rapidata_client.filter import (
     GenderFilter, 
     LanguageFilter, 
     UserScoreFilter,
-    CustomFilter)
+    NotFilter,
+    OrFilter)
 
 class RapidataFilters:
     """RapidataFilters Classes
@@ -24,7 +25,8 @@ class RapidataFilters:
         country (CountryFilter): The CountryFilter instance.
         gender (GenderFilter): The GenderFilter instance.
         language (LanguageFilter): The LanguageFilter instance.
-        custom_filter (CustomFilter): The CustomFilter instance.
+        not_filter (NotFilter): The NotFilter instance.
+        or_filter (OrFilter): The OrFilter instance.
 
     Example:
         ```python
@@ -40,4 +42,5 @@ class RapidataFilters:
     country = CountryFilter
     gender = GenderFilter
     language = LanguageFilter
-    custom_filter = CustomFilter
+    not_filter = NotFilter
+    or_filter = OrFilter

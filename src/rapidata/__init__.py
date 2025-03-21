@@ -19,6 +19,8 @@ from .rapidata_client import (
     UserScoreFilter,
     CampaignFilter,
     CustomFilter,
+    NotFilter,
+    OrFilter,
     AgeGroup,
     Gender,
     CountryCodes,
