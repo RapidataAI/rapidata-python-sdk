@@ -6,20 +6,19 @@ import json
 import re
 from typing import Dict, Optional
 
-import requests
-from authlib.integrations.requests_client import OAuth2Session
-from requests.adapters import HTTPAdapter
-from urllib3 import Retry
+import httpx
+from authlib.integrations.httpx_client import OAuth2Client
+from httpx import Timeout
 
 from rapidata.api_client.exceptions import ApiException, ApiValueError
 
 
 class RESTResponse(io.IOBase):
 
-    def __init__(self, resp: requests.Response) -> None:
+    def __init__(self, resp: httpx.Response) -> None:
         self.response = resp
         self.status = resp.status_code
-        self.reason = resp.reason
+        self.reason = resp.reason_phrase
         self.data = None
 
     def read(self):
@@ -44,43 +43,48 @@ class RESTClientObject:
     def __init__(self, configuration) -> None:
         self.configuration = configuration
 
-        self.session: Optional[OAuth2Session] = None
+        self.session: Optional[OAuth2Client] = None
 
     def setup_oauth_client_credentials(
-            self, client_id: str, client_secret: str, token_endpoint: str, scope: str
+        self, client_id: str, client_secret: str, token_endpoint: str, scope: str
     ):
-        self.session = OAuth2Session(
+        client_args = self._get_session_defaults()
+        self.session = OAuth2Client(
             client_id=client_id,
             client_secret=client_secret,
             token_endpoint=token_endpoint,
             scope=scope,
+            **client_args,
         )
-        self._configure_session_defaults()
+
         self.session.fetch_token()
 
-    def setup_oauth_with_token(self,
-                               client_id: str | None,
-                               client_secret: str | None,
-                               token: dict,
-                               token_endpoint: str,
-                               leeway: int = 60):
-        self.session = OAuth2Session(
+    def setup_oauth_with_token(
+        self,
+        client_id: str | None,
+        client_secret: str | None,
+        token: dict,
+        token_endpoint: str,
+        leeway: int = 60,
+    ):
+        client_args = self._get_session_defaults()
+        self.session = OAuth2Client(
             token=token,
             token_endpoint=token_endpoint,
             client_id=client_id,
             client_secret=client_secret,
             leeway=leeway,
+            **client_args,
         )
-        self._configure_session_defaults()
 
     def request(
-            self,
-            method,
-            url,
-            headers=None,
-            body=None,
-            post_params=None,
-            _request_timeout=None,
+        self,
+        method,
+        url,
+        headers=None,
+        body=None,
+        post_params=None,
+        _request_timeout=None,
     ):
         """Perform requests.
 
@@ -117,9 +121,10 @@ class RESTClientObject:
         timeout = None
         if _request_timeout:
             if isinstance(_request_timeout, (int, float)):
-                timeout = _request_timeout
+                timeout = Timeout(timeout=_request_timeout)
             elif isinstance(_request_timeout, tuple) and len(_request_timeout) == 2:
-                timeout = _request_timeout
+                connect_timeout, read_timeout = _request_timeout
+                timeout = Timeout(timeout=connect_timeout, read=read_timeout)
 
         try:
             if method in ["POST", "PUT", "PATCH", "OPTIONS", "DELETE"]:
@@ -129,13 +134,21 @@ class RESTClientObject:
                     request_body = None
                     if body is not None:
                         request_body = json.dumps(body)
-                    r = session.request(method, url, data=request_body, timeout=timeout, headers=headers)
+                    r = session.request(
+                        method,
+                        url,
+                        content=request_body,
+                        timeout=timeout,
+                        headers=headers,
+                    )
 
-                elif content_type == 'application/x-www-form-urlencoded':
-                    r = session.request(method, url, data=post_params, timeout=timeout, headers=headers)
+                elif content_type == "application/x-www-form-urlencoded":
+                    r = session.request(
+                        method, url, data=post_params, timeout=timeout, headers=headers
+                    )
 
-                elif content_type == 'multipart/form-data':
-                    del headers['Content-Type']
+                elif content_type == "multipart/form-data":
+                    del headers["Content-Type"]
                     files = []
                     data = {}
 
@@ -163,59 +176,68 @@ class RESTClientObject:
                                 data[key].append(value)
                             else:
                                 data[key] = value
-                    r = session.request(method, url, files=files, data=data, timeout=timeout, headers=headers)
+                    r = session.request(
+                        method,
+                        url,
+                        files=files,
+                        data=data,
+                        timeout=timeout,
+                        headers=headers,
+                    )
 
                 elif isinstance(body, str) or isinstance(body, bytes):
-                    r = session.request(method, url, data=body, timeout=timeout, headers=headers)
+                    r = session.request(
+                        method, url, content=body, timeout=timeout, headers=headers
+                    )
 
-                elif headers['Content-Type'].startswith('text/') and isinstance(body, bool):
-                    request_body = 'true' if body else 'false'
-                    r = session.request(method, url, data=request_body, timeout=timeout, headers=headers)
+                elif headers["Content-Type"].startswith("text/") and isinstance(
+                    body, bool
+                ):
+                    request_body = "true" if body else "false"
+                    r = session.request(
+                        method,
+                        url,
+                        content=request_body,
+                        timeout=timeout,
+                        headers=headers,
+                    )
 
                 else:
-                    msg = '''Cannot prepare a request message for provided arguments.
-                             Please check that your arguments match declared content type.'''
+                    msg = """Cannot prepare a request message for provided arguments.
+                             Please check that your arguments match declared content type."""
                     raise ApiException(status=0, reason=msg)
 
             else:
-                r = session.request(method, url, params={}, timeout=timeout, headers=headers)
+                r = session.request(
+                    method, url, params={}, timeout=timeout, headers=headers
+                )
 
-        except requests.exceptions.SSLError as e:
-            msg = '\n'.join([type(e).__name__, str(e)])
+        except httpx.HTTPError as e:
+            msg = "\n".join([type(e).__name__, str(e)])
             raise ApiException(status=0, reason=msg)
 
         return RESTResponse(r)
 
-    def _configure_session_defaults(self):
-        self.session.verify = (
-            self.configuration.ssl_ca_cert
-            if self.configuration.ssl_ca_cert
-            else self.configuration.verify_ssl
-        )
-
-        if self.configuration.cert_file and self.configuration.key_file:
-            self.session.cert = (
-                self.configuration.cert_file,
-                self.configuration.key_file,
+    def _get_session_defaults(self):
+        client_kwargs = {
+            "verify": (
+                self.configuration.ssl_ca_cert
+                if self.configuration.ssl_ca_cert
+                else self.configuration.verify_ssl
             )
-
-        if self.configuration.retries is not None:
-            retry = Retry(
-                total=self.configuration.retries,
-                backoff_factor=0.3,
-                status_forcelist=[429, 500, 502, 503, 504],
-            )
-            adapter = HTTPAdapter(max_retries=retry)
-            self.session.mount("https://", adapter)
-            # noinspection HttpUrlsUsage
-            self.session.mount("http://", adapter)
+        }
 
         if self.configuration.proxy:
-            self.session.proxies = {
-                "http": self.configuration.proxy,
-                "https": self.configuration.proxy,
-            }
+            client_kwargs["proxy"] = self.configuration.proxy
 
+            existing_headers = client_kwargs.pop("headers")
             if self.configuration.proxy_headers:
                 for key, value in self.configuration.proxy_headers.items():
-                    self.session.headers[key] = value
+                    existing_headers[key] = value
+            client_kwargs["headers"] = existing_headers
+
+        if self.configuration.retries is not None:
+            transport = httpx.HTTPTransport(retries=self.configuration.retries)
+            client_kwargs["transport"] = transport
+
+        return client_kwargs
