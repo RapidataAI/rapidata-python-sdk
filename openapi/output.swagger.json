@@ -2298,8 +2298,7 @@
           "204": {
             "description": "No Content"
           }
-        },
-        "deprecated": true
+        }
       }
     },
     "/order/pause": {
@@ -3697,17 +3696,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetValidationRapidsQueryPagedResult"
+                  "$ref": "#/components/schemas/GetValidationRapidsResultPagedResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetValidationRapidsQueryPagedResult"
+                  "$ref": "#/components/schemas/GetValidationRapidsResultPagedResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetValidationRapidsQueryPagedResult"
+                  "$ref": "#/components/schemas/GetValidationRapidsResultPagedResult"
                 }
               }
             }
@@ -5541,6 +5540,48 @@
             }
           }
         }
+      },
+      "put": {
+        "tags": [
+          "Pipeline"
+        ],
+        "summary": "Updates a specific campaign for a pipeline.",
+        "parameters": [
+          {
+            "name": "pipelineId",
+            "in": "path",
+            "description": "The id of the pipeline to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The new campaign settings.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCampaignModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCampaignModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCampaignModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
       }
     },
     "/pipeline/{pipelineId}/campaign/{artifactId}": {
@@ -5682,6 +5723,84 @@
           }
         },
         "deprecated": true
+      }
+    },
+    "/pipeline/{id}/workflow-config": {
+      "put": {
+        "tags": [
+          "Pipeline"
+        ],
+        "summary": "Updates the workflow configuration for a pipeline.",
+        "description": "This method needs to be called before the pipeline is started.\nOtherwise, the changes will not take effect unless the pipeline is restarted.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The id of the pipeline to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The new workflow configuration.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/CompareWorkflowConfigModel"
+                  },
+                  {
+                    "$ref": "#/components/schemas/SimpleWorkflowConfigModel"
+                  }
+                ],
+                "description": "The base configuration for a workflow.",
+                "discriminator": {
+                  "propertyName": "_t"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/CompareWorkflowConfigModel"
+                  },
+                  {
+                    "$ref": "#/components/schemas/SimpleWorkflowConfigModel"
+                  }
+                ],
+                "description": "The base configuration for a workflow.",
+                "discriminator": {
+                  "propertyName": "_t"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/CompareWorkflowConfigModel"
+                  },
+                  {
+                    "$ref": "#/components/schemas/SimpleWorkflowConfigModel"
+                  }
+                ],
+                "description": "The base configuration for a workflow.",
+                "discriminator": {
+                  "propertyName": "_t"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
       }
     },
     "/pipeline/{id}/workflow-config/{artifactId}": {
@@ -8155,6 +8274,12 @@
                   "$ref": "#/components/schemas/NewUserFilterModel"
                 },
                 {
+                  "$ref": "#/components/schemas/NotUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/OrUserFilterModel"
+                },
+                {
                   "$ref": "#/components/schemas/UserScoreUserFilterModel"
                 }
               ],
@@ -8911,6 +9036,63 @@
         },
         "additionalProperties": false
       },
+      "NotUserFilterModel": {
+        "title": "NotFilter",
+        "required": [
+          "_t",
+          "filter"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "NotFilter"
+            ],
+            "type": "string",
+            "description": "Discriminator value for NotFilter",
+            "default": "NotFilter",
+            "example": "NotFilter"
+          },
+          "filter": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AgeUserFilterModel"
+              },
+              {
+                "$ref": "#/components/schemas/CampaignUserFilterModel"
+              },
+              {
+                "$ref": "#/components/schemas/CountryUserFilterModel"
+              },
+              {
+                "$ref": "#/components/schemas/CustomUserFilterModel"
+              },
+              {
+                "$ref": "#/components/schemas/GenderUserFilterModel"
+              },
+              {
+                "$ref": "#/components/schemas/LanguageUserFilterModel"
+              },
+              {
+                "$ref": "#/components/schemas/NewUserFilterModel"
+              },
+              {
+                "$ref": "#/components/schemas/NotUserFilterModel"
+              },
+              {
+                "$ref": "#/components/schemas/OrUserFilterModel"
+              },
+              {
+                "$ref": "#/components/schemas/UserScoreUserFilterModel"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
       "OnlinePairMakerConfigModel": {
         "title": "OnlinePairMaker",
         "required": [
@@ -8940,6 +9122,66 @@
         },
         "additionalProperties": false,
         "description": "The OnlinePairMaker creates random pairs in the beginning and then continues to create pairs\nthat are close in ranking."
+      },
+      "OrUserFilterModel": {
+        "title": "OrFilter",
+        "required": [
+          "_t",
+          "filters"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "OrFilter"
+            ],
+            "type": "string",
+            "description": "Discriminator value for OrFilter",
+            "default": "OrFilter",
+            "example": "OrFilter"
+          },
+          "filters": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AgeUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/CampaignUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/CountryUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/CustomUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/GenderUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/LanguageUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/NewUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/NotUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/OrUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/UserScoreUserFilterModel"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          }
+        },
+        "additionalProperties": false
       },
       "OrderModel": {
         "required": [
@@ -10453,43 +10695,177 @@
         },
         "additionalProperties": false
       },
-      "GetValidationRapidsQuery": {
-        "title": "GetValidationRapidsQuery",
+      "GetValidationRapidsResult": {
         "required": [
-          "_t",
-          "validationSetId"
+          "correctValidationCount",
+          "id",
+          "invalidValidationCount",
+          "metadata",
+          "payload",
+          "type"
         ],
         "type": "object",
         "properties": {
-          "_t": {
-            "enum": [
-              "GetValidationRapidsQuery"
-            ],
-            "type": "string",
-            "description": "Discriminator value for GetValidationRapidsQuery",
-            "default": "GetValidationRapidsQuery",
-            "example": "GetValidationRapidsQuery"
-          },
-          "pageInfo": {
-            "$ref": "#/components/schemas/PageInfo"
-          },
-          "rootFilter": {
-            "$ref": "#/components/schemas/RootFilter"
-          },
-          "sortCriteria": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SortCriterion"
-            },
-            "nullable": true
-          },
-          "validationSetId": {
+          "id": {
             "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "asset": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/FileAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/MultiAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/NullAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/TextAssetModel"
+              }
+            ],
+            "nullable": true,
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "truth": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranscriptionTruth"
+              },
+              {
+                "$ref": "#/components/schemas/ScrubTruth"
+              },
+              {
+                "$ref": "#/components/schemas/PolygonTruth"
+              },
+              {
+                "$ref": "#/components/schemas/NamedEntityTruth"
+              },
+              {
+                "$ref": "#/components/schemas/LocateBoxTruth"
+              },
+              {
+                "$ref": "#/components/schemas/LineTruth"
+              },
+              {
+                "$ref": "#/components/schemas/EmptyValidationTruth"
+              },
+              {
+                "$ref": "#/components/schemas/CompareTruth"
+              },
+              {
+                "$ref": "#/components/schemas/AttachCategoryTruth"
+              },
+              {
+                "$ref": "#/components/schemas/BoundingBoxTruth"
+              }
+            ],
+            "nullable": true,
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "payload": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranscriptionPayload"
+              },
+              {
+                "$ref": "#/components/schemas/ScrubPayload"
+              },
+              {
+                "$ref": "#/components/schemas/PolygonPayload"
+              },
+              {
+                "$ref": "#/components/schemas/NamedEntityPayload"
+              },
+              {
+                "$ref": "#/components/schemas/LocatePayload"
+              },
+              {
+                "$ref": "#/components/schemas/LinePayload"
+              },
+              {
+                "$ref": "#/components/schemas/FreeTextPayload"
+              },
+              {
+                "$ref": "#/components/schemas/ComparePayload"
+              },
+              {
+                "$ref": "#/components/schemas/ClassifyPayload"
+              },
+              {
+                "$ref": "#/components/schemas/BoundingBoxPayload"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/ClassificationMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/CountMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/DemographicMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageDimensionMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/LocationMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/OriginalFilenameMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/SourceUrlMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/TextMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/TranslatedPromptMetadataModel"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          },
+          "correctValidationCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "invalidValidationCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "explanation": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
       },
-      "GetValidationRapidsQueryPagedResult": {
+      "GetValidationRapidsResultPagedResult": {
         "required": [
           "items",
           "page",
@@ -10513,7 +10889,7 @@
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/GetValidationRapidsQuery"
+              "$ref": "#/components/schemas/GetValidationRapidsResult"
             }
           },
           "totalPages": {
@@ -12962,6 +13338,12 @@
                   "$ref": "#/components/schemas/NewUserFilterModel"
                 },
                 {
+                  "$ref": "#/components/schemas/NotUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/OrUserFilterModel"
+                },
+                {
                   "$ref": "#/components/schemas/UserScoreUserFilterModel"
                 }
               ],
@@ -14005,9 +14387,10 @@
           "status": {
             "enum": [
               "Created",
-              "Active",
-              "Paused",
               "Preview",
+              "Active",
+              "Analysis",
+              "Paused",
               "Completed"
             ],
             "type": "string"
@@ -14061,9 +14444,10 @@
       "CampaignStatus": {
         "enum": [
           "Created",
-          "Active",
-          "Paused",
           "Preview",
+          "Active",
+          "Analysis",
+          "Paused",
           "Completed"
         ],
         "type": "string"

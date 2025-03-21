@@ -38,8 +38,8 @@ class CampaignQueryResult(BaseModel):
     @field_validator('status')
     def status_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['Created', 'Active', 'Paused', 'Preview', 'Completed']):
-            raise ValueError("must be one of enum values ('Created', 'Active', 'Paused', 'Preview', 'Completed')")
+        if value not in set(['Created', 'Preview', 'Active', 'Analysis', 'Paused', 'Completed']):
+            raise ValueError("must be one of enum values ('Created', 'Preview', 'Active', 'Analysis', 'Paused', 'Completed')")
         return value
 
     model_config = ConfigDict(

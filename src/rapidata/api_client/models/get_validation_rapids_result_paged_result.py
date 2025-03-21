@@ -17,22 +17,22 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt
-from typing import Any, ClassVar, Dict, List, Optional, Union
-from rapidata.api_client.models.get_validation_rapids_result_truth import GetValidationRapidsResultTruth
-from rapidata.api_client.models.translated_string import TranslatedString
+from pydantic import BaseModel, ConfigDict, Field, StrictInt
+from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.get_validation_rapids_result import GetValidationRapidsResult
 from typing import Optional, Set
 from typing_extensions import Self
 
-class AddUserResponseResult(BaseModel):
+class GetValidationRapidsResultPagedResult(BaseModel):
     """
-    AddUserResponseResult
+    GetValidationRapidsResultPagedResult
     """ # noqa: E501
-    is_accepted: StrictBool = Field(alias="isAccepted")
-    validation_truth: Optional[GetValidationRapidsResultTruth] = Field(default=None, alias="validationTruth")
-    explanation: Optional[TranslatedString] = None
-    user_score: Union[StrictFloat, StrictInt] = Field(alias="userScore")
-    __properties: ClassVar[List[str]] = ["isAccepted", "validationTruth", "explanation", "userScore"]
+    total: StrictInt
+    page: StrictInt
+    page_size: StrictInt = Field(alias="pageSize")
+    items: List[GetValidationRapidsResult]
+    total_pages: Optional[StrictInt] = Field(default=None, alias="totalPages")
+    __properties: ClassVar[List[str]] = ["total", "page", "pageSize", "items", "totalPages"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -52,7 +52,7 @@ class AddUserResponseResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of AddUserResponseResult from a JSON string"""
+        """Create an instance of GetValidationRapidsResultPagedResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -64,8 +64,10 @@ class AddUserResponseResult(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * OpenAPI `readOnly` fields are excluded.
         """
         excluded_fields: Set[str] = set([
+            "total_pages",
         ])
 
         _dict = self.model_dump(
@@ -73,22 +75,18 @@ class AddUserResponseResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of validation_truth
-        if self.validation_truth:
-            _dict['validationTruth'] = self.validation_truth.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of explanation
-        if self.explanation:
-            _dict['explanation'] = self.explanation.to_dict()
-        # set to None if validation_truth (nullable) is None
-        # and model_fields_set contains the field
-        if self.validation_truth is None and "validation_truth" in self.model_fields_set:
-            _dict['validationTruth'] = None
-
+        # override the default output from pydantic by calling `to_dict()` of each item in items (list)
+        _items = []
+        if self.items:
+            for _item_items in self.items:
+                if _item_items:
+                    _items.append(_item_items.to_dict())
+            _dict['items'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of AddUserResponseResult from a dict"""
+        """Create an instance of GetValidationRapidsResultPagedResult from a dict"""
         if obj is None:
             return None
 
@@ -96,10 +94,11 @@ class AddUserResponseResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "isAccepted": obj.get("isAccepted"),
-            "validationTruth": GetValidationRapidsResultTruth.from_dict(obj["validationTruth"]) if obj.get("validationTruth") is not None else None,
-            "explanation": TranslatedString.from_dict(obj["explanation"]) if obj.get("explanation") is not None else None,
-            "userScore": obj.get("userScore")
+            "total": obj.get("total"),
+            "page": obj.get("page"),
+            "pageSize": obj.get("pageSize"),
+            "items": [GetValidationRapidsResult.from_dict(_item) for _item in obj["items"]] if obj.get("items") is not None else None,
+            "totalPages": obj.get("totalPages")
         })
         return _obj
 

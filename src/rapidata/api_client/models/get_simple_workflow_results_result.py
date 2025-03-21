@@ -20,7 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.datapoint_asset import DatapointAsset
-from rapidata.api_client.models.query_validation_rapids_result_payload import QueryValidationRapidsResultPayload
+from rapidata.api_client.models.get_validation_rapids_result_payload import GetValidationRapidsResultPayload
 from rapidata.api_client.models.rapid_response import RapidResponse
 from typing import Optional, Set
 from typing_extensions import Self
@@ -30,7 +30,7 @@ class GetSimpleWorkflowResultsResult(BaseModel):
     GetSimpleWorkflowResultsResult
     """ # noqa: E501
     rapid_id: StrictStr = Field(alias="rapidId")
-    payload: QueryValidationRapidsResultPayload
+    payload: GetValidationRapidsResultPayload
     asset: DatapointAsset
     responses: List[RapidResponse]
     state: StrictStr
@@ -108,7 +108,7 @@ class GetSimpleWorkflowResultsResult(BaseModel):
 
         _obj = cls.model_validate({
             "rapidId": obj.get("rapidId"),
-            "payload": QueryValidationRapidsResultPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
+            "payload": GetValidationRapidsResultPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
             "asset": DatapointAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "responses": [RapidResponse.from_dict(_item) for _item in obj["responses"]] if obj.get("responses") is not None else None,
             "state": obj.get("state")

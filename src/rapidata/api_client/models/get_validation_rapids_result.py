@@ -26,9 +26,9 @@ from rapidata.api_client.models.get_validation_rapids_result_truth import GetVal
 from typing import Optional, Set
 from typing_extensions import Self
 
-class QueryValidationRapidsResult(BaseModel):
+class GetValidationRapidsResult(BaseModel):
     """
-    QueryValidationRapidsResult
+    GetValidationRapidsResult
     """ # noqa: E501
     id: StrictStr
     type: StrictStr
@@ -59,7 +59,7 @@ class QueryValidationRapidsResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of QueryValidationRapidsResult from a JSON string"""
+        """Create an instance of GetValidationRapidsResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -115,7 +115,7 @@ class QueryValidationRapidsResult(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of QueryValidationRapidsResult from a dict"""
+        """Create an instance of GetValidationRapidsResult from a dict"""
         if obj is None:
             return None
 

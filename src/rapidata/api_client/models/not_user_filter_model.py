@@ -17,22 +17,25 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt
-from typing import Any, ClassVar, Dict, List, Optional, Union
-from rapidata.api_client.models.get_validation_rapids_result_truth import GetValidationRapidsResultTruth
-from rapidata.api_client.models.translated_string import TranslatedString
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class AddUserResponseResult(BaseModel):
+class NotUserFilterModel(BaseModel):
     """
-    AddUserResponseResult
+    NotUserFilterModel
     """ # noqa: E501
-    is_accepted: StrictBool = Field(alias="isAccepted")
-    validation_truth: Optional[GetValidationRapidsResultTruth] = Field(default=None, alias="validationTruth")
-    explanation: Optional[TranslatedString] = None
-    user_score: Union[StrictFloat, StrictInt] = Field(alias="userScore")
-    __properties: ClassVar[List[str]] = ["isAccepted", "validationTruth", "explanation", "userScore"]
+    t: StrictStr = Field(description="Discriminator value for NotFilter", alias="_t")
+    filter: CreateOrderModelUserFiltersInner
+    __properties: ClassVar[List[str]] = ["_t", "filter"]
+
+    @field_validator('t')
+    def t_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['NotFilter']):
+            raise ValueError("must be one of enum values ('NotFilter')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -52,7 +55,7 @@ class AddUserResponseResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of AddUserResponseResult from a JSON string"""
+        """Create an instance of NotUserFilterModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,22 +76,14 @@ class AddUserResponseResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of validation_truth
-        if self.validation_truth:
-            _dict['validationTruth'] = self.validation_truth.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of explanation
-        if self.explanation:
-            _dict['explanation'] = self.explanation.to_dict()
-        # set to None if validation_truth (nullable) is None
-        # and model_fields_set contains the field
-        if self.validation_truth is None and "validation_truth" in self.model_fields_set:
-            _dict['validationTruth'] = None
-
+        # override the default output from pydantic by calling `to_dict()` of filter
+        if self.filter:
+            _dict['filter'] = self.filter.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of AddUserResponseResult from a dict"""
+        """Create an instance of NotUserFilterModel from a dict"""
         if obj is None:
             return None
 
@@ -96,11 +91,12 @@ class AddUserResponseResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "isAccepted": obj.get("isAccepted"),
-            "validationTruth": GetValidationRapidsResultTruth.from_dict(obj["validationTruth"]) if obj.get("validationTruth") is not None else None,
-            "explanation": TranslatedString.from_dict(obj["explanation"]) if obj.get("explanation") is not None else None,
-            "userScore": obj.get("userScore")
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'NotFilter',
+            "filter": CreateOrderModelUserFiltersInner.from_dict(obj["filter"]) if obj.get("filter") is not None else None
         })
         return _obj
 
+from rapidata.api_client.models.create_order_model_user_filters_inner import CreateOrderModelUserFiltersInner
+# TODO: Rewrite to not use raise_errors
+NotUserFilterModel.model_rebuild(raise_errors=False)
 
