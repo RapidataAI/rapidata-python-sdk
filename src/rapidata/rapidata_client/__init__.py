@@ -40,6 +40,8 @@ from .filter import (
     CustomFilter,
     AgeGroup,
     Gender,
+    NotFilter,
+    OrFilter,
 )
 
 from .validation import Box
