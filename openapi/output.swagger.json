@@ -8003,6 +8003,10 @@
             "items": {
               "$ref": "#/components/schemas/ValidationChance"
             }
+          },
+          "dimension": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
