@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.validation_chance import ValidationChance
 from typing import Optional, Set
 from typing_extensions import Self
@@ -30,7 +30,8 @@ class ConditionalValidationSelection(BaseModel):
     t: StrictStr = Field(description="Discriminator value for ConditionalValidationSelection", alias="_t")
     validation_set_id: StrictStr = Field(alias="validationSetId")
     validation_chances: List[ValidationChance] = Field(alias="validationChances")
-    __properties: ClassVar[List[str]] = ["_t", "validationSetId", "validationChances"]
+    dimension: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = ["_t", "validationSetId", "validationChances", "dimension"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -85,6 +86,11 @@ class ConditionalValidationSelection(BaseModel):
                 if _item_validation_chances:
                     _items.append(_item_validation_chances.to_dict())
             _dict['validationChances'] = _items
+        # set to None if dimension (nullable) is None
+        # and model_fields_set contains the field
+        if self.dimension is None and "dimension" in self.model_fields_set:
+            _dict['dimension'] = None
+
         return _dict
 
     @classmethod
@@ -99,7 +105,8 @@ class ConditionalValidationSelection(BaseModel):
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'ConditionalValidationSelection',
             "validationSetId": obj.get("validationSetId"),
-            "validationChances": [ValidationChance.from_dict(_item) for _item in obj["validationChances"]] if obj.get("validationChances") is not None else None
+            "validationChances": [ValidationChance.from_dict(_item) for _item in obj["validationChances"]] if obj.get("validationChances") is not None else None,
+            "dimension": obj.get("dimension")
         })
         return _obj
 
