@@ -5,6 +5,7 @@ from rapidata.api_client.models.conditional_validation_rapid_selection_config im
 from rapidata.api_client.models.conditional_validation_selection import (
     ConditionalValidationSelection as ConditionalValidationSelectionModel,
 )
+from typing import Optional
 
 
 class ConditionalValidationSelection(RapidataSelection):
@@ -17,6 +18,7 @@ class ConditionalValidationSelection(RapidataSelection):
         thresholds (list[float]): The thresholds to use for the user score.
         chances (list[float]): The chances of showing a validation rapid for each threshold.
         rapid_counts (list[int]): The amount of validation rapids that will be shown per session of this validation set for each threshold if selected by probability. (all or nothing)
+        dimension (Optional[str], optional): The dimension of the userScore that will be used in the thresholds. Defaults to None.
 
     Example:
         ```python
@@ -38,15 +40,18 @@ class ConditionalValidationSelection(RapidataSelection):
         thresholds: list[float],
         chances: list[float],
         rapid_counts: list[int],
+        dimension: Optional[str] = None,
     ):
         if len(thresholds) != len(chances) or len(thresholds) != len(rapid_counts):
             raise ValueError(
                 "The lengths of thresholds, chances and rapid_counts must be equal."
             )
+        
         self.validation_set_id = validation_set_id
         self.thresholds = thresholds
         self.chances = chances
         self.rapid_counts = rapid_counts
+        self.dimension = dimension
 
     def _to_model(self):
         return ConditionalValidationSelectionModel(
@@ -60,4 +65,5 @@ class ConditionalValidationSelection(RapidataSelection):
                     self.thresholds, self.chances, self.rapid_counts
                 )
             ],
+            dimension=self.dimension,
         )
