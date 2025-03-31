@@ -21,4 +21,5 @@ jobs:
       
       - uses: jakebailey/pyright-action@v2
         with:
+          version: v1.1.396
           working-directory: src/rapidata/rapidata_client
