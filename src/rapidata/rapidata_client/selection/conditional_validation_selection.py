@@ -31,7 +31,6 @@ class ConditionalValidationSelection(RapidataSelection):
         ```
         This means that there's a 100% chance of showing a validation rapid if the user score is between 0 and 0.7, 
         and a 20% chance of showing a validation rapid if the user score is between 0.7 and 1.
-
     """
 
     def __init__(
