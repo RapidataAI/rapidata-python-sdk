@@ -209,7 +209,7 @@ class RESTClientObject:
 
             else:
                 r = session.request(
-                    method, url, params={}, timeout=timeout, headers=headers
+                    method, url, timeout=timeout, headers=headers
                 )
 
         except httpx.HTTPError as e:
