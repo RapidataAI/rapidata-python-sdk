@@ -111,6 +111,7 @@ Class | Method | HTTP request | Description
 *DatasetApi* | [**dataset_updatename_post**](rapidata/api_client/docs/DatasetApi.md#dataset_updatename_post) | **POST** /dataset/updatename | Updates the name of a dataset.
 *DatasetApi* | [**dataset_uploadfilesfroms3_post**](rapidata/api_client/docs/DatasetApi.md#dataset_uploadfilesfroms3_post) | **POST** /dataset/uploadfilesfroms3 | Uploads files from an S3 bucket to a dataset.
 *FeedbackApi* | [**feedback_feedback_post**](rapidata/api_client/docs/FeedbackApi.md#feedback_feedback_post) | **POST** /feedback/feedback | Submits feedback about our services.
+*FeedbackApi* | [**feedback_post**](rapidata/api_client/docs/FeedbackApi.md#feedback_post) | **POST** /feedback | Submits feedback about our services.
 *IdentityApi* | [**identity_bridge_token_get**](rapidata/api_client/docs/IdentityApi.md#identity_bridge_token_get) | **GET** /identity/bridge-token | Tries to read the bridge token keys for a given read key. The read key is used to retrieve the authentication result written by the write key.
 *IdentityApi* | [**identity_bridge_token_post**](rapidata/api_client/docs/IdentityApi.md#identity_bridge_token_post) | **POST** /identity/bridge-token | Creates a pair of read and write keys for a client. The write key is used to store the authentication result. The read key is used to retrieve the authentication result.
 *IdentityApi* | [**identity_createbridgetoken_post**](rapidata/api_client/docs/IdentityApi.md#identity_createbridgetoken_post) | **POST** /identity/createbridgetoken | Creates a pair of read and write keys for a client. The write key is used to store the authentication result. The read key is used to retrieve the authentication result.
@@ -198,6 +199,7 @@ Class | Method | HTTP request | Description
 *ValidationSetApi* | [**validation_queryvalidationsets_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_queryvalidationsets_get) | **GET** /validation/queryvalidationsets | Queries validation sets based on the provided filter, paging and sorting criteria.
 *ValidationSetApi* | [**validation_set_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_post) | **POST** /validation-set | Creates a new empty validation set.
 *ValidationSetApi* | [**validation_set_validation_set_id_dimensions_put**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_dimensions_put) | **PUT** /validation-set/{validationSetId}/dimensions | Updates the dimensions of all rapids within a validation set.
+*ValidationSetApi* | [**validation_set_validation_set_id_export_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_export_get) | **GET** /validation-set/{validationSetId}/export | Exports all rapids of a validationset to a file.
 *ValidationSetApi* | [**validation_set_validation_set_id_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_get) | **GET** /validation-set/{validationSetId} | Gets a validation set by the id.
 *ValidationSetApi* | [**validation_set_validation_set_id_rapid_files_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_rapid_files_post) | **POST** /validation-set/{validationSetId}/rapid/files | Adds a new validation rapid to the specified validation set using files to create the assets.
 *ValidationSetApi* | [**validation_set_validation_set_id_rapid_texts_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_rapid_texts_post) | **POST** /validation-set/{validationSetId}/rapid/texts | Adds a new validation rapid to the specified validation set using text sources to create the assets.
@@ -272,6 +274,7 @@ Class | Method | HTTP request | Description
  - [CompareWorkflowModel1PairMakerInformation](rapidata/api_client/docs/CompareWorkflowModel1PairMakerInformation.md)
  - [CompareWorkflowModel1Referee](rapidata/api_client/docs/CompareWorkflowModel1Referee.md)
  - [CompareWorkflowModelPairMakerConfig](rapidata/api_client/docs/CompareWorkflowModelPairMakerConfig.md)
+ - [ComparisonOperator](rapidata/api_client/docs/ComparisonOperator.md)
  - [ConditionalValidationSelection](rapidata/api_client/docs/ConditionalValidationSelection.md)
  - [Coordinate](rapidata/api_client/docs/Coordinate.md)
  - [CountClassificationMetadataFilterConfig](rapidata/api_client/docs/CountClassificationMetadataFilterConfig.md)
@@ -440,6 +443,7 @@ Class | Method | HTTP request | Description
  - [RegisterTemporaryCustomerModel](rapidata/api_client/docs/RegisterTemporaryCustomerModel.md)
  - [RegisterTemporaryCustomerResult](rapidata/api_client/docs/RegisterTemporaryCustomerResult.md)
  - [ReportModel](rapidata/api_client/docs/ReportModel.md)
+ - [ResponseCountUserFilterModel](rapidata/api_client/docs/ResponseCountUserFilterModel.md)
  - [RootFilter](rapidata/api_client/docs/RootFilter.md)
  - [ScrubPayload](rapidata/api_client/docs/ScrubPayload.md)
  - [ScrubRange](rapidata/api_client/docs/ScrubRange.md)

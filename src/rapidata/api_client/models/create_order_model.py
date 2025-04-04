@@ -41,7 +41,7 @@ class CreateOrderModel(BaseModel):
     is_sticky: Optional[StrictBool] = Field(default=None, description="Indicates if the underlying campaign should be sticky.", alias="isSticky")
     user_score_dimensions: Optional[List[StrictStr]] = Field(default=None, description="The user score dimensions are used to determine the score of the responses from the user.", alias="userScoreDimensions")
     demographic_keys: Optional[List[StrictStr]] = Field(default=None, description="The demographic keys are used to determine which demographics to store on the resposnes from the user.", alias="demographicKeys")
-    user_filters: List[CreateOrderModelUserFiltersInner] = Field(description="The user filters are used to restrict the order to only collect votes from a specific demographic.", alias="userFilters")
+    user_filters: Optional[List[CreateOrderModelUserFiltersInner]] = Field(default=None, description="The user filters are used to restrict the order to only collect votes from a specific demographic.", alias="userFilters")
     validation_set_id: Optional[StrictStr] = Field(default=None, description="The validation set id can be changed to point to a specific validation set. if not provided a sane default will be used.", alias="validationSetId")
     selections: Optional[List[AbTestSelectionAInner]] = Field(default=None, description="The selections are used to determine which tasks are shown to a user.")
     __properties: ClassVar[List[str]] = ["_t", "orderName", "workflow", "referee", "aggregator", "featureFlags", "priority", "isSticky", "userScoreDimensions", "demographicKeys", "userFilters", "validationSetId", "selections"]
@@ -153,6 +153,11 @@ class CreateOrderModel(BaseModel):
         # and model_fields_set contains the field
         if self.demographic_keys is None and "demographic_keys" in self.model_fields_set:
             _dict['demographicKeys'] = None
+
+        # set to None if user_filters (nullable) is None
+        # and model_fields_set contains the field
+        if self.user_filters is None and "user_filters" in self.model_fields_set:
+            _dict['userFilters'] = None
 
         # set to None if validation_set_id (nullable) is None
         # and model_fields_set contains the field
