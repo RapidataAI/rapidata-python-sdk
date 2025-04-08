@@ -11,7 +11,7 @@ from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.filter import Filter
 from rapidata.api_client.models.sort_criterion import SortCriterion
 from rapidata.api_client.exceptions import BadRequestException
-from urllib3._collections import HTTPHeaderDict
+from urllib3._collections import HTTPHeaderDict # type: ignore[import]
 
 from rapidata.rapidata_client.validation.rapids.box import Box
 
