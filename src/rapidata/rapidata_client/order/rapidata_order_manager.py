@@ -1,5 +1,5 @@
 from typing import Sequence, Optional
-from urllib3._collections import HTTPHeaderDict
+from urllib3._collections import HTTPHeaderDict # type: ignore[import]
 
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.assets.data_type_enum import RapidataDataTypes

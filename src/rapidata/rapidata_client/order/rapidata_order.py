@@ -45,13 +45,14 @@ class RapidataOrder:
         self.__campaign_id: str = ""
         self.__pipeline_id: str = ""
         self._max_retries = 10  
-        self._retry_delay = 2   
+        self._retry_delay = 2
+        self.order_details_page = f"https://app.{self.__openapi_service.environment}/order/detail/{self.order_id}"
 
     def run(self, print_link: bool = True) -> "RapidataOrder":
         """Runs the order to start collecting responses."""
         self.__openapi_service.order_api.order_submit_post(self.order_id)
         if print_link:
-            print(f"Order '{self.name}' is now viewable under: https://app.{self.__openapi_service.environment}/order/detail/{self.order_id}")
+            print(f"Order '{self.name}' is now viewable under: {self.order_details_page}")
         return self
 
     def pause(self) -> None:
@@ -158,6 +159,18 @@ class RapidataOrder:
             return RapidataResults(json.loads(self.__openapi_service.order_api.order_order_id_download_results_get(order_id=self.order_id)))
         except (ApiException, json.JSONDecodeError) as e:
             raise Exception(f"Failed to get order results: {str(e)}") from e
+        
+    def view(self) -> None:
+        """
+        Opens the order details page in the browser.
+        
+        Raises:
+            Exception: If the order is not in processing state.
+        """
+        could_open_browser = webbrowser.open(self.order_details_page)
+        if not could_open_browser:
+            encoded_url = urllib.parse.quote(self.order_details_page, safe="%/:=&?~#+!$,;'@()*[]")
+            print(Fore.RED + f'Please open this URL in your browser: "{encoded_url}"' + Fore.RESET)
         
     def preview(self) -> None:
         """
