@@ -8,7 +8,7 @@ class ResponseCountFilter(RapidataFilter):
     """ResponseCountFilter Class
     Can be used to filter users based on the number of responses they have given on validation tasks with the specified dimension.
 
-        response_count (int): The number of user responses to filtery by.
+        response_count (int): The number of user responses to filter by.
         dimension (str): The dimension to apply the filter on (e.g. "default", "electrical", etc.).
         operator (str): The comparison operator to use. Must be one of:
             - "Equal"
