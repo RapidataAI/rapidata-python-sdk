@@ -32,7 +32,7 @@ class AddCampaignModel(BaseModel):
     t: StrictStr = Field(description="Discriminator value for AddCampaignModel", alias="_t")
     artifact_id: Optional[StrictStr] = Field(default=None, description="The id of the campaign artifact. If not provided a random value will be used.", alias="artifactId")
     campaign_name: StrictStr = Field(description="The name of the campaign.", alias="campaignName")
-    user_filters: List[CreateOrderModelUserFiltersInner] = Field(description="The user filters to apply to the campaign.", alias="userFilters")
+    user_filters: Optional[List[CreateOrderModelUserFiltersInner]] = Field(default=None, description="The user filters to apply to the campaign.", alias="userFilters")
     validation_set_id: Optional[StrictStr] = Field(default=None, description="A validation set that should be used.", alias="validationSetId")
     selections: Optional[List[AbTestSelectionAInner]] = Field(default=None, description="The selections that the campaign should have.")
     feature_flags: List[FeatureFlag] = Field(description="The feature flags that should be applied to the campaign.", alias="featureFlags")
@@ -112,6 +112,11 @@ class AddCampaignModel(BaseModel):
         # and model_fields_set contains the field
         if self.artifact_id is None and "artifact_id" in self.model_fields_set:
             _dict['artifactId'] = None
+
+        # set to None if user_filters (nullable) is None
+        # and model_fields_set contains the field
+        if self.user_filters is None and "user_filters" in self.model_fields_set:
+            _dict['userFilters'] = None
 
         # set to None if validation_set_id (nullable) is None
         # and model_fields_set contains the field

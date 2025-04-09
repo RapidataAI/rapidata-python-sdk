@@ -1044,6 +1044,40 @@
           "204": {
             "description": "No Content"
           }
+        },
+        "deprecated": true
+      }
+    },
+    "/feedback": {
+      "post": {
+        "tags": [
+          "Feedback"
+        ],
+        "summary": "Submits feedback about our services.",
+        "requestBody": {
+          "description": "The body content of the request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeedbackModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeedbackModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeedbackModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
         }
       }
     },
@@ -3427,6 +3461,69 @@
         }
       }
     },
+    "/validation-set/{validationSetId}": {
+      "delete": {
+        "tags": [
+          "ValidationSet"
+        ],
+        "summary": "Gets a validation set by the id.",
+        "parameters": [
+          {
+            "name": "validationSetId",
+            "in": "path",
+            "description": "The id of the validation set to get.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "ValidationSet"
+        ],
+        "summary": "Gets a validation set by the id.",
+        "parameters": [
+          {
+            "name": "validationSetId",
+            "in": "path",
+            "description": "The id of the validation set to get.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetValidationSetByIdResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetValidationSetByIdResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetValidationSetByIdResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/validation/getavailablevalidationsets": {
       "get": {
         "tags": [
@@ -3527,47 +3624,6 @@
           }
         },
         "deprecated": true
-      }
-    },
-    "/validation-set/{validationSetId}": {
-      "get": {
-        "tags": [
-          "ValidationSet"
-        ],
-        "summary": "Gets a validation set by the id.",
-        "parameters": [
-          {
-            "name": "validationSetId",
-            "in": "path",
-            "description": "The id of the validation set to get.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetValidationSetByIdResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetValidationSetByIdResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetValidationSetByIdResult"
-                }
-              }
-            }
-          }
-        }
       }
     },
     "/validation/createvalidationset": {
@@ -4311,6 +4367,50 @@
         }
       }
     },
+    "/validation-set/{validationSetId}/export": {
+      "get": {
+        "tags": [
+          "ValidationSet"
+        ],
+        "summary": "Exports all rapids of a validationset to a file.",
+        "parameters": [
+          {
+            "name": "validationSetId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/rapid/queryvalidationrapids": {
       "get": {
         "tags": [
@@ -4717,40 +4817,6 @@
             }
           }
         }
-      }
-    },
-    "/rapid/report": {
-      "post": {
-        "tags": [
-          "Rapid"
-        ],
-        "summary": "Used to report an issue with a rapid.",
-        "requestBody": {
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ReportModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ReportModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/ReportModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        },
-        "deprecated": true
       }
     },
     "/rapid/{rapidId}/report": {
@@ -7977,6 +8043,17 @@
         "additionalProperties": false,
         "description": "If the SimpleWorkflow is chosen, each datapoint uploaded will correspond to a single task to be solved.\nThis is the most commonly chosen workflow."
       },
+      "ComparisonOperator": {
+        "enum": [
+          "Equal",
+          "NotEqual",
+          "LessThan",
+          "LessThanOrEqual",
+          "GreaterThan",
+          "GreaterThanOrEqual"
+        ],
+        "type": "string"
+      },
       "ConditionalValidationSelection": {
         "title": "ConditionalValidationSelection",
         "required": [
@@ -8150,7 +8227,6 @@
           "_t",
           "orderName",
           "referee",
-          "userFilters",
           "workflow"
         ],
         "type": "object",
@@ -8284,6 +8360,9 @@
                   "$ref": "#/components/schemas/OrUserFilterModel"
                 },
                 {
+                  "$ref": "#/components/schemas/ResponseCountUserFilterModel"
+                },
+                {
                   "$ref": "#/components/schemas/UserScoreUserFilterModel"
                 }
               ],
@@ -8291,7 +8370,8 @@
                 "propertyName": "_t"
               }
             },
-            "description": "The user filters are used to restrict the order to only collect votes from a specific demographic."
+            "description": "The user filters are used to restrict the order to only collect votes from a specific demographic.",
+            "nullable": true
           },
           "validationSetId": {
             "type": "string",
@@ -9087,6 +9167,9 @@
                 "$ref": "#/components/schemas/OrUserFilterModel"
               },
               {
+                "$ref": "#/components/schemas/ResponseCountUserFilterModel"
+              },
+              {
                 "$ref": "#/components/schemas/UserScoreUserFilterModel"
               }
             ],
@@ -9174,6 +9257,9 @@
                 },
                 {
                   "$ref": "#/components/schemas/OrUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/ResponseCountUserFilterModel"
                 },
                 {
                   "$ref": "#/components/schemas/UserScoreUserFilterModel"
@@ -9358,6 +9444,46 @@
             },
             "default": null,
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ResponseCountUserFilterModel": {
+        "title": "ResponseCountFilter",
+        "required": [
+          "_t",
+          "dimension",
+          "operator",
+          "responseCount"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "ResponseCountFilter"
+            ],
+            "type": "string",
+            "description": "Discriminator value for ResponseCountFilter",
+            "default": "ResponseCountFilter",
+            "example": "ResponseCountFilter"
+          },
+          "responseCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dimension": {
+            "type": "string"
+          },
+          "operator": {
+            "enum": [
+              "Equal",
+              "NotEqual",
+              "LessThan",
+              "LessThanOrEqual",
+              "GreaterThan",
+              "GreaterThanOrEqual"
+            ],
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -11615,8 +11741,7 @@
         "title": "CompareResult",
         "required": [
           "_t",
-          "rapidId",
-          "winnerId"
+          "rapidId"
         ],
         "type": "object",
         "properties": {
@@ -11630,7 +11755,15 @@
             "example": "CompareResult"
           },
           "winnerId": {
-            "type": "string"
+            "type": "string",
+            "nullable": true,
+            "deprecated": true
+          },
+          "winners": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "rapidId": {
             "type": "string"
@@ -12379,11 +12512,6 @@
         ],
         "type": "object",
         "properties": {
-          "rapidId": {
-            "type": "string",
-            "description": "The rapid an issue was encountered with.",
-            "deprecated": true
-          },
           "issue": {
             "enum": [
               "Other",
@@ -12407,6 +12535,11 @@
           "dump": {
             "type": "string",
             "description": "A dump, that the frontend defines and can read again.",
+            "nullable": true
+          },
+          "source": {
+            "type": "string",
+            "description": "An optional identifier where the report originated from.",
             "nullable": true
           }
         },
@@ -13293,8 +13426,7 @@
           "_t",
           "campaignName",
           "featureFlags",
-          "priority",
-          "userFilters"
+          "priority"
         ],
         "type": "object",
         "properties": {
@@ -13348,6 +13480,9 @@
                   "$ref": "#/components/schemas/OrUserFilterModel"
                 },
                 {
+                  "$ref": "#/components/schemas/ResponseCountUserFilterModel"
+                },
+                {
                   "$ref": "#/components/schemas/UserScoreUserFilterModel"
                 }
               ],
@@ -13355,7 +13490,8 @@
                 "propertyName": "_t"
               }
             },
-            "description": "The user filters to apply to the campaign."
+            "description": "The user filters to apply to the campaign.",
+            "nullable": true
           },
           "validationSetId": {
             "type": "string",

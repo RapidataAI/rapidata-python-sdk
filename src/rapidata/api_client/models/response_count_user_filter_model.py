@@ -17,26 +17,33 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CompareResult(BaseModel):
+class ResponseCountUserFilterModel(BaseModel):
     """
-    CompareResult
+    ResponseCountUserFilterModel
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for CompareResult", alias="_t")
-    winner_id: Optional[StrictStr] = Field(default=None, alias="winnerId")
-    winners: Optional[List[StrictStr]] = None
-    rapid_id: StrictStr = Field(alias="rapidId")
-    __properties: ClassVar[List[str]] = ["_t", "winnerId", "winners", "rapidId"]
+    t: StrictStr = Field(description="Discriminator value for ResponseCountFilter", alias="_t")
+    response_count: StrictInt = Field(alias="responseCount")
+    dimension: StrictStr
+    operator: StrictStr
+    __properties: ClassVar[List[str]] = ["_t", "responseCount", "dimension", "operator"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['CompareResult']):
-            raise ValueError("must be one of enum values ('CompareResult')")
+        if value not in set(['ResponseCountFilter']):
+            raise ValueError("must be one of enum values ('ResponseCountFilter')")
+        return value
+
+    @field_validator('operator')
+    def operator_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['Equal', 'NotEqual', 'LessThan', 'LessThanOrEqual', 'GreaterThan', 'GreaterThanOrEqual']):
+            raise ValueError("must be one of enum values ('Equal', 'NotEqual', 'LessThan', 'LessThanOrEqual', 'GreaterThan', 'GreaterThanOrEqual')")
         return value
 
     model_config = ConfigDict(
@@ -57,7 +64,7 @@ class CompareResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CompareResult from a JSON string"""
+        """Create an instance of ResponseCountUserFilterModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -78,16 +85,11 @@ class CompareResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if winner_id (nullable) is None
-        # and model_fields_set contains the field
-        if self.winner_id is None and "winner_id" in self.model_fields_set:
-            _dict['winnerId'] = None
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CompareResult from a dict"""
+        """Create an instance of ResponseCountUserFilterModel from a dict"""
         if obj is None:
             return None
 
@@ -95,10 +97,10 @@ class CompareResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'CompareResult',
-            "winnerId": obj.get("winnerId"),
-            "winners": obj.get("winners"),
-            "rapidId": obj.get("rapidId")
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'ResponseCountFilter',
+            "responseCount": obj.get("responseCount"),
+            "dimension": obj.get("dimension"),
+            "operator": obj.get("operator")
         })
         return _obj
 
