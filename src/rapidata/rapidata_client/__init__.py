@@ -42,6 +42,7 @@ from .filter import (
     Gender,
     NotFilter,
     OrFilter,
+    ResponseCountFilter,
 )
 
 from .validation import Box

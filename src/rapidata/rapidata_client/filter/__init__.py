@@ -8,3 +8,4 @@ from .user_score_filter import UserScoreFilter
 from .custom_filter import CustomFilter
 from .not_filter import NotFilter
 from .or_filter import OrFilter
+from .response_count_filter import ResponseCountFilter
