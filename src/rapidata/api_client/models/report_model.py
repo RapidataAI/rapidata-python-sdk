@@ -26,11 +26,11 @@ class ReportModel(BaseModel):
     """
     The model for reporting an issue with a rapid.
     """ # noqa: E501
-    rapid_id: Optional[StrictStr] = Field(default=None, description="The rapid an issue was encountered with.", alias="rapidId")
     issue: StrictStr
     message: Optional[StrictStr] = Field(default=None, description="An optional message typed by the user.")
     dump: Optional[StrictStr] = Field(default=None, description="A dump, that the frontend defines and can read again.")
-    __properties: ClassVar[List[str]] = ["rapidId", "issue", "message", "dump"]
+    source: Optional[StrictStr] = Field(default=None, description="An optional identifier where the report originated from.")
+    __properties: ClassVar[List[str]] = ["issue", "message", "dump", "source"]
 
     @field_validator('issue')
     def issue_validate_enum(cls, value):
@@ -88,6 +88,11 @@ class ReportModel(BaseModel):
         if self.dump is None and "dump" in self.model_fields_set:
             _dict['dump'] = None
 
+        # set to None if source (nullable) is None
+        # and model_fields_set contains the field
+        if self.source is None and "source" in self.model_fields_set:
+            _dict['source'] = None
+
         return _dict
 
     @classmethod
@@ -100,10 +105,10 @@ class ReportModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "rapidId": obj.get("rapidId"),
             "issue": obj.get("issue"),
             "message": obj.get("message"),
-            "dump": obj.get("dump")
+            "dump": obj.get("dump"),
+            "source": obj.get("source")
         })
         return _obj
 

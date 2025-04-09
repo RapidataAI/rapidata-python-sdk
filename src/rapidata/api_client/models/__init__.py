@@ -66,6 +66,7 @@ from rapidata.api_client.models.compare_workflow_model1 import CompareWorkflowMo
 from rapidata.api_client.models.compare_workflow_model1_pair_maker_information import CompareWorkflowModel1PairMakerInformation
 from rapidata.api_client.models.compare_workflow_model1_referee import CompareWorkflowModel1Referee
 from rapidata.api_client.models.compare_workflow_model_pair_maker_config import CompareWorkflowModelPairMakerConfig
+from rapidata.api_client.models.comparison_operator import ComparisonOperator
 from rapidata.api_client.models.conditional_validation_selection import ConditionalValidationSelection
 from rapidata.api_client.models.coordinate import Coordinate
 from rapidata.api_client.models.count_classification_metadata_filter_config import CountClassificationMetadataFilterConfig
@@ -234,6 +235,7 @@ from rapidata.api_client.models.read_bridge_token_keys_result import ReadBridgeT
 from rapidata.api_client.models.register_temporary_customer_model import RegisterTemporaryCustomerModel
 from rapidata.api_client.models.register_temporary_customer_result import RegisterTemporaryCustomerResult
 from rapidata.api_client.models.report_model import ReportModel
+from rapidata.api_client.models.response_count_user_filter_model import ResponseCountUserFilterModel
 from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.scrub_payload import ScrubPayload
 from rapidata.api_client.models.scrub_range import ScrubRange
