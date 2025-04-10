@@ -5068,6 +5068,85 @@
         }
       }
     },
+    "/workflow/evaluation/{workflowId}/results": {
+      "get": {
+        "tags": [
+          "EvaluationWorkflow"
+        ],
+        "summary": "Get the results for an evaluation workflow.",
+        "parameters": [
+          {
+            "name": "workflowId",
+            "in": "path",
+            "description": "The ID of the workflow to get the results for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Page.Index",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Page.Size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "States",
+            "in": "query",
+            "description": "An optional list of states to filter the rapids by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/RapidState"
+              }
+            }
+          },
+          {
+            "name": "SortCriteria",
+            "in": "query",
+            "description": "A list of criteria to sort the results by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/SortCriterion"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetWorkflowResultsResultPagedResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetWorkflowResultsResultPagedResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetWorkflowResultsResultPagedResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/workflow/simple/{workflowId}/results": {
       "get": {
         "tags": [
@@ -5103,17 +5182,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetSimpleWorkflowResultsResultPagedResult"
+                  "$ref": "#/components/schemas/GetWorkflowResultsResultPagedResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetSimpleWorkflowResultsResultPagedResult"
+                  "$ref": "#/components/schemas/GetWorkflowResultsResultPagedResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetSimpleWorkflowResultsResultPagedResult"
+                  "$ref": "#/components/schemas/GetWorkflowResultsResultPagedResult"
                 }
               }
             }
@@ -12353,7 +12432,7 @@
           "id",
           "result",
           "userId",
-          "userScore"
+          "userScores"
         ],
         "type": "object",
         "properties": {
@@ -12408,7 +12487,15 @@
           },
           "userScore": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "deprecated": true
+          },
+          "userScores": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "format": "double"
+            }
           },
           "demographicInformation": {
             "type": "object",
@@ -12807,6 +12894,62 @@
         },
         "additionalProperties": false
       },
+      "EvaluationWorkflowModel1": {
+        "title": "EvaluationWorkflow",
+        "required": [
+          "_t",
+          "id",
+          "name",
+          "referee",
+          "state",
+          "validationSetId"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "EvaluationWorkflow"
+            ],
+            "type": "string",
+            "description": "Discriminator value for EvaluationWorkflow",
+            "default": "EvaluationWorkflow",
+            "example": "EvaluationWorkflow"
+          },
+          "id": {
+            "type": "string"
+          },
+          "validationSetId": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "referee": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NaiveRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/NeverEndingRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/ProbabilisticAttachCategoryRefereeConfig"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "name": {
+            "type": "string"
+          },
+          "ownerMail": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "GetCompareAbSummaryResult": {
         "required": [
           "winnerCounts"
@@ -12954,7 +13097,67 @@
         "additionalProperties": false,
         "description": "Model for getting the overview of a simple workflow result."
       },
-      "GetSimpleWorkflowResultsResult": {
+      "GetWorkflowByIdResult": {
+        "required": [
+          "workflow"
+        ],
+        "type": "object",
+        "properties": {
+          "workflow": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CompareWorkflowModel1"
+              },
+              {
+                "$ref": "#/components/schemas/EvaluationWorkflowModel1"
+              },
+              {
+                "$ref": "#/components/schemas/SimpleWorkflowModel1"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetWorkflowProgressResult": {
+        "required": [
+          "completed",
+          "completionPercentage",
+          "state",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "completionPercentage": {
+            "type": "number",
+            "format": "double"
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "completed": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "state": {
+            "enum": [
+              "Created",
+              "Started",
+              "Labeling",
+              "Paused",
+              "Done",
+              "Failed"
+            ],
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetWorkflowResultsResult": {
         "required": [
           "asset",
           "payload",
@@ -13042,7 +13245,7 @@
         },
         "additionalProperties": false
       },
-      "GetSimpleWorkflowResultsResultPagedResult": {
+      "GetWorkflowResultsResultPagedResult": {
         "required": [
           "items",
           "page",
@@ -13066,70 +13269,13 @@
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/GetSimpleWorkflowResultsResult"
+              "$ref": "#/components/schemas/GetWorkflowResultsResult"
             }
           },
           "totalPages": {
             "type": "integer",
             "format": "int32",
             "readOnly": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "GetWorkflowByIdResult": {
-        "required": [
-          "workflow"
-        ],
-        "type": "object",
-        "properties": {
-          "workflow": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/CompareWorkflowModel1"
-              },
-              {
-                "$ref": "#/components/schemas/SimpleWorkflowModel1"
-              }
-            ],
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          }
-        },
-        "additionalProperties": false
-      },
-      "GetWorkflowProgressResult": {
-        "required": [
-          "completed",
-          "completionPercentage",
-          "state",
-          "total"
-        ],
-        "type": "object",
-        "properties": {
-          "completionPercentage": {
-            "type": "number",
-            "format": "double"
-          },
-          "total": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "completed": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "state": {
-            "enum": [
-              "Created",
-              "Started",
-              "Labeling",
-              "Paused",
-              "Done",
-              "Failed"
-            ],
-            "type": "string"
           }
         },
         "additionalProperties": false
@@ -13161,6 +13307,9 @@
               "oneOf": [
                 {
                   "$ref": "#/components/schemas/CompareWorkflowModel1"
+                },
+                {
+                  "$ref": "#/components/schemas/EvaluationWorkflowModel1"
                 },
                 {
                   "$ref": "#/components/schemas/SimpleWorkflowModel1"
