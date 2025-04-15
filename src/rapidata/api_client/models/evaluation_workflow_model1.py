@@ -17,24 +17,31 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional, Union
-from rapidata.api_client.models.rapid_response_result import RapidResponseResult
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.compare_workflow_model1_referee import CompareWorkflowModel1Referee
 from typing import Optional, Set
 from typing_extensions import Self
 
-class RapidResponse(BaseModel):
+class EvaluationWorkflowModel1(BaseModel):
     """
-    RapidResponse
+    EvaluationWorkflowModel1
     """ # noqa: E501
+    t: StrictStr = Field(description="Discriminator value for EvaluationWorkflow", alias="_t")
     id: StrictStr
-    user_id: StrictStr = Field(alias="userId")
-    country: StrictStr
-    result: RapidResponseResult
-    user_score: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="userScore")
-    user_scores: Dict[str, Union[StrictFloat, StrictInt]] = Field(alias="userScores")
-    demographic_information: Dict[str, StrictStr] = Field(alias="demographicInformation")
-    __properties: ClassVar[List[str]] = ["id", "userId", "country", "result", "userScore", "userScores", "demographicInformation"]
+    validation_set_id: StrictStr = Field(alias="validationSetId")
+    state: StrictStr
+    referee: CompareWorkflowModel1Referee
+    name: StrictStr
+    owner_mail: Optional[StrictStr] = Field(default=None, alias="ownerMail")
+    __properties: ClassVar[List[str]] = ["_t", "id", "validationSetId", "state", "referee", "name", "ownerMail"]
+
+    @field_validator('t')
+    def t_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['EvaluationWorkflow']):
+            raise ValueError("must be one of enum values ('EvaluationWorkflow')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -54,7 +61,7 @@ class RapidResponse(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of RapidResponse from a JSON string"""
+        """Create an instance of EvaluationWorkflowModel1 from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -75,14 +82,19 @@ class RapidResponse(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of result
-        if self.result:
-            _dict['result'] = self.result.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of referee
+        if self.referee:
+            _dict['referee'] = self.referee.to_dict()
+        # set to None if owner_mail (nullable) is None
+        # and model_fields_set contains the field
+        if self.owner_mail is None and "owner_mail" in self.model_fields_set:
+            _dict['ownerMail'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of RapidResponse from a dict"""
+        """Create an instance of EvaluationWorkflowModel1 from a dict"""
         if obj is None:
             return None
 
@@ -90,13 +102,13 @@ class RapidResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'EvaluationWorkflow',
             "id": obj.get("id"),
-            "userId": obj.get("userId"),
-            "country": obj.get("country"),
-            "result": RapidResponseResult.from_dict(obj["result"]) if obj.get("result") is not None else None,
-            "userScore": obj.get("userScore"),
-            "userScores": obj.get("userScores"),
-            "demographicInformation": obj.get("demographicInformation")
+            "validationSetId": obj.get("validationSetId"),
+            "state": obj.get("state"),
+            "referee": CompareWorkflowModel1Referee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
+            "name": obj.get("name"),
+            "ownerMail": obj.get("ownerMail")
         })
         return _obj
 
