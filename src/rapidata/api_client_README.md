@@ -110,11 +110,13 @@ Class | Method | HTTP request | Description
 *DatasetApi* | [**dataset_import_post**](rapidata/api_client/docs/DatasetApi.md#dataset_import_post) | **POST** /dataset/import | Imports datapoints from a csv file.
 *DatasetApi* | [**dataset_updatename_post**](rapidata/api_client/docs/DatasetApi.md#dataset_updatename_post) | **POST** /dataset/updatename | Updates the name of a dataset.
 *DatasetApi* | [**dataset_uploadfilesfroms3_post**](rapidata/api_client/docs/DatasetApi.md#dataset_uploadfilesfroms3_post) | **POST** /dataset/uploadfilesfroms3 | Uploads files from an S3 bucket to a dataset.
+*EvaluationWorkflowApi* | [**workflow_evaluation_workflow_id_results_get**](rapidata/api_client/docs/EvaluationWorkflowApi.md#workflow_evaluation_workflow_id_results_get) | **GET** /workflow/evaluation/{workflowId}/results | Get the results for an evaluation workflow.
 *FeedbackApi* | [**feedback_feedback_post**](rapidata/api_client/docs/FeedbackApi.md#feedback_feedback_post) | **POST** /feedback/feedback | Submits feedback about our services.
 *FeedbackApi* | [**feedback_post**](rapidata/api_client/docs/FeedbackApi.md#feedback_post) | **POST** /feedback | Submits feedback about our services.
 *IdentityApi* | [**identity_bridge_token_get**](rapidata/api_client/docs/IdentityApi.md#identity_bridge_token_get) | **GET** /identity/bridge-token | Tries to read the bridge token keys for a given read key. The read key is used to retrieve the authentication result written by the write key.
 *IdentityApi* | [**identity_bridge_token_post**](rapidata/api_client/docs/IdentityApi.md#identity_bridge_token_post) | **POST** /identity/bridge-token | Creates a pair of read and write keys for a client. The write key is used to store the authentication result. The read key is used to retrieve the authentication result.
 *IdentityApi* | [**identity_createbridgetoken_post**](rapidata/api_client/docs/IdentityApi.md#identity_createbridgetoken_post) | **POST** /identity/createbridgetoken | Creates a pair of read and write keys for a client. The write key is used to store the authentication result. The read key is used to retrieve the authentication result.
+*IdentityApi* | [**identity_google_one_tap_post**](rapidata/api_client/docs/IdentityApi.md#identity_google_one_tap_post) | **POST** /identity/google-one-tap | Signs in a user using a token received from Google One Tap.
 *IdentityApi* | [**identity_readbridgetoken_get**](rapidata/api_client/docs/IdentityApi.md#identity_readbridgetoken_get) | **GET** /identity/readbridgetoken | Tries to read the bridge token keys for a given read key. The read key is used to retrieve the authentication result written by the write key.
 *IdentityApi* | [**identity_referrer_post**](rapidata/api_client/docs/IdentityApi.md#identity_referrer_post) | **POST** /identity/referrer | Sets the referrer for the current customer.
 *IdentityApi* | [**identity_registertemporary_post**](rapidata/api_client/docs/IdentityApi.md#identity_registertemporary_post) | **POST** /identity/registertemporary | Registers and logs in a temporary customer.
@@ -325,6 +327,7 @@ Class | Method | HTTP request | Description
  - [EmptyValidationTruth](rapidata/api_client/docs/EmptyValidationTruth.md)
  - [EvaluationWorkflowConfig](rapidata/api_client/docs/EvaluationWorkflowConfig.md)
  - [EvaluationWorkflowModel](rapidata/api_client/docs/EvaluationWorkflowModel.md)
+ - [EvaluationWorkflowModel1](rapidata/api_client/docs/EvaluationWorkflowModel1.md)
  - [FeatureFlag](rapidata/api_client/docs/FeatureFlag.md)
  - [FeatureFlagModel](rapidata/api_client/docs/FeatureFlagModel.md)
  - [FeedbackModel](rapidata/api_client/docs/FeedbackModel.md)
@@ -355,8 +358,6 @@ Class | Method | HTTP request | Description
  - [GetRapidResponsesResult](rapidata/api_client/docs/GetRapidResponsesResult.md)
  - [GetResponsesResult](rapidata/api_client/docs/GetResponsesResult.md)
  - [GetSimpleWorkflowResultsModel](rapidata/api_client/docs/GetSimpleWorkflowResultsModel.md)
- - [GetSimpleWorkflowResultsResult](rapidata/api_client/docs/GetSimpleWorkflowResultsResult.md)
- - [GetSimpleWorkflowResultsResultPagedResult](rapidata/api_client/docs/GetSimpleWorkflowResultsResultPagedResult.md)
  - [GetValidationRapidsResult](rapidata/api_client/docs/GetValidationRapidsResult.md)
  - [GetValidationRapidsResultAsset](rapidata/api_client/docs/GetValidationRapidsResultAsset.md)
  - [GetValidationRapidsResultPagedResult](rapidata/api_client/docs/GetValidationRapidsResultPagedResult.md)
@@ -366,6 +367,9 @@ Class | Method | HTTP request | Description
  - [GetWorkflowByIdResult](rapidata/api_client/docs/GetWorkflowByIdResult.md)
  - [GetWorkflowByIdResultWorkflow](rapidata/api_client/docs/GetWorkflowByIdResultWorkflow.md)
  - [GetWorkflowProgressResult](rapidata/api_client/docs/GetWorkflowProgressResult.md)
+ - [GetWorkflowResultsResult](rapidata/api_client/docs/GetWorkflowResultsResult.md)
+ - [GetWorkflowResultsResultPagedResult](rapidata/api_client/docs/GetWorkflowResultsResultPagedResult.md)
+ - [GoogleOneTapLoginModel](rapidata/api_client/docs/GoogleOneTapLoginModel.md)
  - [IWorkflowModelPagedResult](rapidata/api_client/docs/IWorkflowModelPagedResult.md)
  - [ImageDimensionMetadata](rapidata/api_client/docs/ImageDimensionMetadata.md)
  - [ImageDimensionMetadataModel](rapidata/api_client/docs/ImageDimensionMetadataModel.md)
@@ -465,6 +469,7 @@ Class | Method | HTTP request | Description
  - [SourceUrlMetadata](rapidata/api_client/docs/SourceUrlMetadata.md)
  - [SourceUrlMetadataModel](rapidata/api_client/docs/SourceUrlMetadataModel.md)
  - [StaticSelection](rapidata/api_client/docs/StaticSelection.md)
+ - [StickyState](rapidata/api_client/docs/StickyState.md)
  - [SubmitCocoModel](rapidata/api_client/docs/SubmitCocoModel.md)
  - [SubmitCocoResult](rapidata/api_client/docs/SubmitCocoResult.md)
  - [TextAssetModel](rapidata/api_client/docs/TextAssetModel.md)

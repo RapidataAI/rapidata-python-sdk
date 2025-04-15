@@ -17,24 +17,17 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional, Union
-from rapidata.api_client.models.rapid_response_result import RapidResponseResult
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class RapidResponse(BaseModel):
+class GoogleOneTapLoginModel(BaseModel):
     """
-    RapidResponse
+    The model for the Google One Tap login.
     """ # noqa: E501
-    id: StrictStr
-    user_id: StrictStr = Field(alias="userId")
-    country: StrictStr
-    result: RapidResponseResult
-    user_score: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="userScore")
-    user_scores: Dict[str, Union[StrictFloat, StrictInt]] = Field(alias="userScores")
-    demographic_information: Dict[str, StrictStr] = Field(alias="demographicInformation")
-    __properties: ClassVar[List[str]] = ["id", "userId", "country", "result", "userScore", "userScores", "demographicInformation"]
+    id_token: StrictStr = Field(description="The id token received from the Google One Tap login.", alias="idToken")
+    __properties: ClassVar[List[str]] = ["idToken"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -54,7 +47,7 @@ class RapidResponse(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of RapidResponse from a JSON string"""
+        """Create an instance of GoogleOneTapLoginModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -75,14 +68,11 @@ class RapidResponse(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of result
-        if self.result:
-            _dict['result'] = self.result.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of RapidResponse from a dict"""
+        """Create an instance of GoogleOneTapLoginModel from a dict"""
         if obj is None:
             return None
 
@@ -90,13 +80,7 @@ class RapidResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "id": obj.get("id"),
-            "userId": obj.get("userId"),
-            "country": obj.get("country"),
-            "result": RapidResponseResult.from_dict(obj["result"]) if obj.get("result") is not None else None,
-            "userScore": obj.get("userScore"),
-            "userScores": obj.get("userScores"),
-            "demographicInformation": obj.get("demographicInformation")
+            "idToken": obj.get("idToken")
         })
         return _obj
 

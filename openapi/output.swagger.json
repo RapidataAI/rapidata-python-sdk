@@ -2990,6 +2990,39 @@
         }
       }
     },
+    "/identity/google-one-tap": {
+      "post": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Signs in a user using a token received from Google One Tap.",
+        "requestBody": {
+          "description": "The body of the request containing the id token.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleOneTapLoginModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleOneTapLoginModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleOneTapLoginModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
     "/newsletter": {
       "post": {
         "tags": [
@@ -5068,6 +5101,85 @@
         }
       }
     },
+    "/workflow/evaluation/{workflowId}/results": {
+      "get": {
+        "tags": [
+          "EvaluationWorkflow"
+        ],
+        "summary": "Get the results for an evaluation workflow.",
+        "parameters": [
+          {
+            "name": "workflowId",
+            "in": "path",
+            "description": "The ID of the workflow to get the results for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Page.Index",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Page.Size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "States",
+            "in": "query",
+            "description": "An optional list of states to filter the rapids by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/RapidState"
+              }
+            }
+          },
+          {
+            "name": "SortCriteria",
+            "in": "query",
+            "description": "A list of criteria to sort the results by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/SortCriterion"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetWorkflowResultsResultPagedResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetWorkflowResultsResultPagedResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetWorkflowResultsResultPagedResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/workflow/simple/{workflowId}/results": {
       "get": {
         "tags": [
@@ -5103,17 +5215,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetSimpleWorkflowResultsResultPagedResult"
+                  "$ref": "#/components/schemas/GetWorkflowResultsResultPagedResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetSimpleWorkflowResultsResultPagedResult"
+                  "$ref": "#/components/schemas/GetWorkflowResultsResultPagedResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetSimpleWorkflowResultsResultPagedResult"
+                  "$ref": "#/components/schemas/GetWorkflowResultsResultPagedResult"
                 }
               }
             }
@@ -8310,7 +8422,18 @@
           },
           "isSticky": {
             "type": "boolean",
-            "description": "Indicates if the underlying campaign should be sticky."
+            "description": "Indicates if the underlying campaign should be sticky.",
+            "deprecated": true
+          },
+          "stickyState": {
+            "enum": [
+              "None",
+              "Temporary",
+              "Permanent"
+            ],
+            "type": "string",
+            "description": "Indicates if the underlying campaign should be sticky.",
+            "nullable": true
           },
           "userScoreDimensions": {
             "type": "array",
@@ -9726,6 +9849,14 @@
         },
         "additionalProperties": false
       },
+      "StickyState": {
+        "enum": [
+          "None",
+          "Temporary",
+          "Permanent"
+        ],
+        "type": "string"
+      },
       "TranscriptionRapidBlueprint": {
         "title": "TranscriptionBlueprint",
         "required": [
@@ -10114,6 +10245,20 @@
           }
         },
         "additionalProperties": false
+      },
+      "GoogleOneTapLoginModel": {
+        "required": [
+          "idToken"
+        ],
+        "type": "object",
+        "properties": {
+          "idToken": {
+            "type": "string",
+            "description": "The id token received from the Google One Tap login."
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for the Google One Tap login."
       },
       "NewsletterModel": {
         "required": [
@@ -10990,6 +11135,11 @@
           },
           "explanation": {
             "type": "string",
+            "nullable": true
+          },
+          "randomCorrectProbability": {
+            "type": "number",
+            "format": "double",
             "nullable": true
           }
         },
@@ -12353,7 +12503,7 @@
           "id",
           "result",
           "userId",
-          "userScore"
+          "userScores"
         ],
         "type": "object",
         "properties": {
@@ -12408,7 +12558,15 @@
           },
           "userScore": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "deprecated": true
+          },
+          "userScores": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "format": "double"
+            }
           },
           "demographicInformation": {
             "type": "object",
@@ -12709,6 +12867,12 @@
             "type": "string",
             "description": "",
             "nullable": true
+          },
+          "randomCorrectProbability": {
+            "type": "number",
+            "description": "",
+            "format": "double",
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -12803,6 +12967,62 @@
           "scalingFactor": {
             "type": "integer",
             "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EvaluationWorkflowModel1": {
+        "title": "EvaluationWorkflow",
+        "required": [
+          "_t",
+          "id",
+          "name",
+          "referee",
+          "state",
+          "validationSetId"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "EvaluationWorkflow"
+            ],
+            "type": "string",
+            "description": "Discriminator value for EvaluationWorkflow",
+            "default": "EvaluationWorkflow",
+            "example": "EvaluationWorkflow"
+          },
+          "id": {
+            "type": "string"
+          },
+          "validationSetId": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "referee": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NaiveRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/NeverEndingRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/ProbabilisticAttachCategoryRefereeConfig"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "name": {
+            "type": "string"
+          },
+          "ownerMail": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -12954,7 +13174,67 @@
         "additionalProperties": false,
         "description": "Model for getting the overview of a simple workflow result."
       },
-      "GetSimpleWorkflowResultsResult": {
+      "GetWorkflowByIdResult": {
+        "required": [
+          "workflow"
+        ],
+        "type": "object",
+        "properties": {
+          "workflow": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CompareWorkflowModel1"
+              },
+              {
+                "$ref": "#/components/schemas/EvaluationWorkflowModel1"
+              },
+              {
+                "$ref": "#/components/schemas/SimpleWorkflowModel1"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetWorkflowProgressResult": {
+        "required": [
+          "completed",
+          "completionPercentage",
+          "state",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "completionPercentage": {
+            "type": "number",
+            "format": "double"
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "completed": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "state": {
+            "enum": [
+              "Created",
+              "Started",
+              "Labeling",
+              "Paused",
+              "Done",
+              "Failed"
+            ],
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetWorkflowResultsResult": {
         "required": [
           "asset",
           "payload",
@@ -13042,7 +13322,7 @@
         },
         "additionalProperties": false
       },
-      "GetSimpleWorkflowResultsResultPagedResult": {
+      "GetWorkflowResultsResultPagedResult": {
         "required": [
           "items",
           "page",
@@ -13066,70 +13346,13 @@
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/GetSimpleWorkflowResultsResult"
+              "$ref": "#/components/schemas/GetWorkflowResultsResult"
             }
           },
           "totalPages": {
             "type": "integer",
             "format": "int32",
             "readOnly": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "GetWorkflowByIdResult": {
-        "required": [
-          "workflow"
-        ],
-        "type": "object",
-        "properties": {
-          "workflow": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/CompareWorkflowModel1"
-              },
-              {
-                "$ref": "#/components/schemas/SimpleWorkflowModel1"
-              }
-            ],
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          }
-        },
-        "additionalProperties": false
-      },
-      "GetWorkflowProgressResult": {
-        "required": [
-          "completed",
-          "completionPercentage",
-          "state",
-          "total"
-        ],
-        "type": "object",
-        "properties": {
-          "completionPercentage": {
-            "type": "number",
-            "format": "double"
-          },
-          "total": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "completed": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "state": {
-            "enum": [
-              "Created",
-              "Started",
-              "Labeling",
-              "Paused",
-              "Done",
-              "Failed"
-            ],
-            "type": "string"
           }
         },
         "additionalProperties": false
@@ -13161,6 +13384,9 @@
               "oneOf": [
                 {
                   "$ref": "#/components/schemas/CompareWorkflowModel1"
+                },
+                {
+                  "$ref": "#/components/schemas/EvaluationWorkflowModel1"
                 },
                 {
                   "$ref": "#/components/schemas/SimpleWorkflowModel1"
