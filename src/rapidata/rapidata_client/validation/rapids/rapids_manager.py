@@ -43,6 +43,9 @@ class RapidsManager:
         else:
             raise ValueError(f"Unsupported data type: {data_type}")
 
+        if not isinstance(truths, list):
+            raise ValueError("Truths must be a list of strings")
+        
         if not all(truth in answer_options for truth in truths):
             raise ValueError("Truths must be part of the answer options")
 
