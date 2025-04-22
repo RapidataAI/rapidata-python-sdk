@@ -8,9 +8,9 @@ from rapidata.api_client.api.pipeline_api import PipelineApi
 from rapidata.api_client.api.rapid_api import RapidApi
 from rapidata.api_client.api.validation_api import ValidationApi
 from rapidata.api_client.api.workflow_api import WorkflowApi
-from rapidata.api_client.api_client import ApiClient
 from rapidata.api_client.configuration import Configuration
 from rapidata.service.credential_manager import CredentialManager
+from rapidata.rapidata_client.api.rapidata_exception import RapidataApiClient
 
 
 class OpenAPIService:
@@ -36,7 +36,7 @@ class OpenAPIService:
         )
 
         client_configuration = Configuration(host=endpoint, ssl_ca_cert=cert_path)
-        self.api_client = ApiClient(
+        self.api_client = RapidataApiClient(
             configuration=client_configuration,
             header_name="X-Client",
             header_value=f"RapidataPythonSDK/{self._get_rapidata_package_version()}",
