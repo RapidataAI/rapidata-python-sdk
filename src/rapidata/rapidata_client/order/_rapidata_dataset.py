@@ -424,4 +424,7 @@ class RapidataDataset:
             failed_uploads
         )
 
+        if failed_uploads:
+            raise RuntimeError(f"Upload failed for {failed_uploads}")
+
         return successful_uploads, failed_uploads
