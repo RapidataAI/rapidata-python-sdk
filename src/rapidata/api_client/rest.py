@@ -18,7 +18,7 @@ from typing import Dict, Optional
 
 import httpx
 from authlib.integrations.httpx_client import OAuth2Client
-from httpx import Timeout
+from httpx import Timeout, ConnectError
 
 from rapidata.api_client.exceptions import ApiException, ApiValueError
 
@@ -67,7 +67,13 @@ class RESTClientObject:
             **client_args,
         )
 
-        self.session.fetch_token()
+        try:
+            self.session.fetch_token()
+        except ConnectError as e:
+            if self._is_certificate_validation_error(e):
+                exit(self._get_ssl_verify_error_message())
+            else:
+                raise
 
     def setup_oauth_with_token(
         self,
@@ -218,13 +224,17 @@ class RESTClientObject:
                     raise ApiException(status=0, reason=msg)
 
             else:
-                r = session.request(
-                    method, url, timeout=timeout, headers=headers
-                )
+                r = session.request(method, url, timeout=timeout, headers=headers)
 
         except httpx.HTTPError as e:
             msg = "\n".join([type(e).__name__, str(e)])
             raise ApiException(status=0, reason=msg)
+
+        except ConnectError as e:
+            if self._is_certificate_validation_error(e):
+                exit(self._get_ssl_verify_error_message())
+            else:
+                raise
 
         return RESTResponse(r)
 
@@ -251,3 +261,28 @@ class RESTClientObject:
             client_kwargs["transport"] = transport
 
         return client_kwargs
+
+    @staticmethod
+    def _is_certificate_validation_error(error: ConnectError) -> bool:
+        """
+        Check if the error is related to certificate validation.
+        """
+        return error.args[0].startswith("[SSL: CERTIFICATE_VERIFY_FAILED]")
+
+    @staticmethod
+    def _get_ssl_verify_error_message() -> str:
+        return """
+        We encountered an issue while trying to verify the SSL certificate.
+        This often happens on macOS when using the default Python installation provided by Apple,
+        which lacks the required certificates to perform secure HTTPS requests.
+        To resolve this, please perform the following steps:
+        1. Make sure you are using the latest version of the Rapidata Package: `pip install --upgrade rapidata`
+        2. If you are using the default Python installation from Apple, consider switching to a different Python distribution, such as Homebrew or pyenv.
+        3. If you prefer to continue using the default Python, you can run the following command in your terminal:
+           `/Applications/Python\\ 3.1*/Install\\ Certificates.command`
+        
+        For more details on this issue, please refer to the following link:
+        https://stackoverflow.com/questions/42098126/mac-osx-python-ssl-sslerror-ssl-certificate-verify-failed-certificate-verify
+        
+        If the issue persists, please reach out to us at 'info@rapidata.ai', we're happy to help you.
+        """
