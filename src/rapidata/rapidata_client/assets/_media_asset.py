@@ -129,11 +129,11 @@ class MediaAsset(BaseAsset):
                 tmp.flush()
                 tmp_path = tmp.name
                 
-                try:
-                    tag = TinyTag.get(tmp_path)
-                finally:
-                    # Clean up the temporary file
-                    os.unlink(tmp_path)
+            try:
+                tag = TinyTag.get(tmp_path)
+            finally:
+                # Clean up the temporary file
+                os.unlink(tmp_path)
             
             if tag.duration is None:
                 raise ValueError("Could not read duration from file")
