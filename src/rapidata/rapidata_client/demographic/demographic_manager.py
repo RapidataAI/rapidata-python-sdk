@@ -25,38 +25,6 @@ class DemographicManager:
                 title=instruction
             )
         )
-        session = self._get_session()
-        media.session = session
         
         self._openapi_service.rapid_api.rapid_demographic_post(model=model, file=[media.to_file()])
-
-    def _get_session(self, max_retries: int = 5, max_workers: int = 10) -> requests.Session:   
-        """Get a requests session with retry logic.
-
-
-        Args:
-            max_retries (int): The maximum number of retries.
-            max_workers (int): The maximum number of workers.
-
-        Returns:
-            requests.Session: A requests session with retry logic.
-        """
-        session = requests.Session()
-        retries = Retry(
-            total=max_retries,
-            backoff_factor=1,
-            status_forcelist=[500, 502, 503, 504],
-            allowed_methods=["GET"],
-            respect_retry_after_header=True
-        )
-
-        adapter = HTTPAdapter(
-            pool_connections=max_workers * 2,
-            pool_maxsize=max_workers * 4,
-            max_retries=retries
-        )
-        session.mount('http://', adapter)
-        session.mount('https://', adapter)
-
-        return session
         

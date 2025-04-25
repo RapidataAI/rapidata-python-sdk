@@ -7,3 +7,4 @@ from ._media_asset import MediaAsset
 from ._text_asset import TextAsset
 from ._multi_asset import MultiAsset
 from .data_type_enum import RapidataDataTypes
+from ._sessions import SessionManager

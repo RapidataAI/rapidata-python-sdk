@@ -4,7 +4,7 @@ Defines the MediaAsset class for handling media file paths within assets.
 Implements lazy loading for URL-based media to prevent unnecessary downloads.
 """
 
-from typing import Optional, cast, Sequence
+from typing import Optional, cast
 import os
 from io import BytesIO
 from rapidata.rapidata_client.assets._base_asset import BaseAsset
@@ -16,8 +16,7 @@ import tempfile
 from pydantic import StrictStr, StrictBytes
 import logging
 from functools import cached_property
-from requests.adapters import HTTPAdapter
-from urllib3.util.retry import Retry
+from rapidata.rapidata_client.assets._sessions import SessionManager
 
 class MediaAsset(BaseAsset):
     """MediaAsset Class with Lazy Loading
@@ -78,7 +77,7 @@ class MediaAsset(BaseAsset):
         
         self._url = None
         self._content = None
-        self.session: None | requests.Session  = None
+        self.session: requests.Session  = SessionManager.get_session()
         
         if re.match(r'^https?://', path):
             self._url = path
