@@ -89,7 +89,6 @@ class RapidataDataset:
             media_asset: MediaAsset or MultiAsset to upload
             meta: Optional metadata for the asset
             index: Sort index for the upload
-            session: Requests session for HTTP requests
             
         Returns:
             tuple[list[str], list[str]]: Lists of successful and failed identifiers
@@ -272,7 +271,6 @@ class RapidataDataset:
         Args:
             media_paths: List of assets to upload
             metadata: Optional sequence of metadata
-            session: Requests session for HTTP requests
             max_workers: Maximum number of concurrent workers
             chunk_size: Number of items to process in each batch
             stop_progress_tracking: Event to signal progress tracking to stop

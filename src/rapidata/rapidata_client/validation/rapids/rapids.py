@@ -30,14 +30,14 @@ class Rapid():
         self.randomCorrectProbability = randomCorrectProbability
         self.explanation = explanation 
 
-    def _add_to_validation_set(self, validationSetId: str, openapi_service: OpenAPIService, session: requests.Session) -> None:
+    def _add_to_validation_set(self, validationSetId: str, openapi_service: OpenAPIService) -> None:
         if isinstance(self.asset, TextAsset) or (isinstance(self.asset, MultiAsset) and isinstance(self.asset.assets[0], TextAsset)):
             openapi_service.validation_api.validation_add_validation_text_rapid_post(
                 add_validation_text_rapid_model=self.__to_text_model(validationSetId)
             )
 
         elif isinstance(self.asset, MediaAsset) or (isinstance(self.asset, MultiAsset) and isinstance(self.asset.assets[0], MediaAsset)):
-            model = self.__to_media_model(validationSetId, session=session)
+            model = self.__to_media_model(validationSetId)
             openapi_service.validation_api.validation_add_validation_rapid_post(
                 model=model[0], files=model[1]
             )
@@ -45,7 +45,7 @@ class Rapid():
         else:
             raise TypeError("The asset must be a MediaAsset, TextAsset, or MultiAsset")
 
-    def __to_media_model(self, validationSetId: str, session: requests.Session) -> tuple[AddValidationRapidModel, list[StrictStr | tuple[StrictStr, StrictBytes] | StrictBytes]]:
+    def __to_media_model(self, validationSetId: str) -> tuple[AddValidationRapidModel, list[StrictStr | tuple[StrictStr, StrictBytes] | StrictBytes]]:
         assets: list[MediaAsset] = [] 
         if isinstance(self.asset, MultiAsset):
             for asset in self.asset.assets:
@@ -59,9 +59,6 @@ class Rapid():
 
         if isinstance(self.asset, MediaAsset):
             assets = [self.asset]
-
-        for asset in assets:
-            asset.session = session
 
         return (AddValidationRapidModel(
             validationSetId=validationSetId,
