@@ -50,7 +50,7 @@ class RapidataOrder:
 
     def run(self, print_link: bool = True) -> "RapidataOrder":
         """Runs the order to start collecting responses."""
-        self.__openapi_service.order_api.order_submit_post(self.order_id)
+        self.__openapi_service.order_api.order_order_id_submit_post(self.order_id)
         if print_link:
             print(f"Order '{self.name}' is now viewable under: {self.order_details_page}")
         return self
