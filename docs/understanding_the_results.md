@@ -41,7 +41,9 @@ Here's an example of the results you might receive when running a COMPARE task (
               "userDetails": {
                   "country": "BY",
                   "language": "ru",
-                  "userScore": 0.4469,
+                  "userScores": {
+                      "global": 0.4469
+                  },
                   "age": "Unknown",
                   "gender": "Unknown",
                   "occupation": "Unknown"
@@ -52,7 +54,9 @@ Here's an example of the results you might receive when running a COMPARE task (
               "userDetails": {
                   "country": "LY",
                   "language": "ar",
-                  "userScore": 0.3923,
+                  "userScores": {
+                      "global": 0.3923
+                  },
                   "age": "0-17",
                   "gender": "Other",
                   "occupation": "Other Employment"
@@ -63,7 +67,9 @@ Here's an example of the results you might receive when running a COMPARE task (
               "userDetails": {
                   "country": "BY",
                   "language": "ru",
-                  "userScore": 0.3568,
+                  "userScores": {
+                      "global": 0.3568
+                  },
                   "age": "0-17",
                   "gender": "Other",
                   "occupation": "Healthcare"
@@ -107,7 +113,7 @@ Here's an example of the results you might receive when running a COMPARE task (
         }
         ```
 
-    - `summedUserScores`: The sum of the annotators' userScore values for each option. This metric accounts for the reliability of each annotator's response.
+    - `summedUserScores`: The sum of the annotators' global userScore values for each option. This metric accounts for the reliability of each annotator's response.
         ```json
         "summedUserScores": {
             "aurora-20-1-25_37_4.png": 0.0,
@@ -115,7 +121,7 @@ Here's an example of the results you might receive when running a COMPARE task (
         }
         ```
 
-    - `summedUserScoresRatios`: The proportion of the summed user scores for each option, providing a weighted ratio based on annotator reliability.
+    - `summedUserScoresRatios`: The proportion of the summed global userScores for each option, providing a weighted ratio based on annotator reliability.
         ```json
         "summedUserScoresRatios": {
             "aurora-20-1-25_37_4.png": 0.0,
@@ -128,7 +134,8 @@ Here's an example of the results you might receive when running a COMPARE task (
         - `userDetails`: Information about the annotator
             - `country`: Country code of the annotator
             - `language`: Language in which the annotator viewed the task
-            - `userScore`: A score representing the annotator's reliability
+            - `userScores`: A score representing the annotator's reliability across different dimensions
+                - `global`: The global userScore of the annotator, which is a measure of their overall reliability
             - `age`: Age group of the annotator
             - `gender`: The gender of the annotator
             - `occupation`: The occupation of the annotator
@@ -141,6 +148,8 @@ The `userScore` is a value between 0 and 1 (1 can never be reached, but can appe
 
 The `userScore` is derived from the annotator's performance on **Validation Tasks**—tasks with known correct answers. By evaluating how accurately an annotator completes these tasks, we assign a score that reflects their understanding and adherence to the task requirements. It is not simply the accuracy, as it also takes into account the difficulties of the tasks, but strongly related to it.
 
+For most tasks, the `global` userScore is the most relevant and can be used per default. If you need more specific information, you may contact us directly at <info@rapidata.ai>.
+
 To know more about the Validation Tasks have a look at the [Improve Order Quality](improve_order_quality.md) guide.
 
 ### Why is it Important?
@@ -151,7 +160,7 @@ To know more about the Validation Tasks have a look at the [Improve Order Qualit
 
 ## Utilizing the Results
 
-- **Clear Winners**: Use `winner` and `winner_index` to quickly identify which option was preferred. It is calculated based on the userScores.
+- **Clear Winners**: Use `winner` and `winner_index` to quickly identify which option was preferred. It is calculated based on the global userScores.
 - **Aggregated Insights**: Use `aggregatedResults` and `aggregatedResultsRatios` to understand the strength of preference between options
 - **Weighted Decisions**: Consider `summedUserScores` and `summedUserScoresRatios` to make decisions based on annotator reliability
 - **Detailed Analysis**: Explore `detailedResults` to see individual responses and gather insights about annotator demographics and performance
