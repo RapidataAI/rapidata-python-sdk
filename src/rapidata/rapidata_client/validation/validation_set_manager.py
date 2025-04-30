@@ -444,7 +444,7 @@ class ValidationSetManager:
         except Exception:
             raise ValueError(f"ValidationSet with ID {validation_set_id} not found.")
         
-        return RapidataValidationSet(validation_set_id, validation_set.name, self.__openapi_service)
+        return RapidataValidationSet(validation_set_id, str(validation_set.name), self.__openapi_service)
 
     def _submit(self, name: str, rapids: list[Rapid], dimensions: list[str] | None, print_confirmation: bool) -> RapidataValidationSet:
         validation_set_id = (

@@ -73,6 +73,7 @@ class CredentialManager:
 
     def _read_credentials(self) -> Dict[str, List[ClientCredential]]:
         """Read all stored credentials from the config file."""
+        logger.debug(f"Reading credentials from {self.config_path}")
         if not self.config_path.exists():
             return {}
 
@@ -124,9 +125,11 @@ class CredentialManager:
     def get_client_credentials(self) -> Optional[ClientCredential]:
         """Gets stored client credentials or create new ones via browser auth."""
         credentials = self._read_credentials()
+        logger.debug(f"Stored credentials: {credentials}")
         env_credentials = credentials.get(self.endpoint, [])
 
         if env_credentials:
+            logger.debug(f"Found credentials for {self.endpoint}: {env_credentials}")
             credential = self._select_credential(env_credentials)
             if credential:
                 credential.last_used = datetime.now(timezone.utc)

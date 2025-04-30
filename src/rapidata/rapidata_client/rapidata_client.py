@@ -8,7 +8,7 @@ from rapidata.rapidata_client.validation.validation_set_manager import (
 
 from rapidata.rapidata_client.demographic.demographic_manager import DemographicManager
 
-from rapidata.rapidata_client.logging.logger import logger
+from rapidata.rapidata_client.logging import logger
 
 class RapidataClient:
     """The Rapidata client is the main entry point for interacting with the Rapidata API. It allows you to create orders and validation sets."""
