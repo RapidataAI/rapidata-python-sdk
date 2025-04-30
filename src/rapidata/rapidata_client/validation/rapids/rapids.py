@@ -19,7 +19,8 @@ from rapidata.api_client.models.create_datapoint_from_files_model_metadata_inner
 
 from rapidata.service.openapi_service import OpenAPIService
 
-import requests
+from rapidata.rapidata_client.logging import logger
+
 
 class Rapid():
     def __init__(self, asset: MediaAsset | TextAsset | MultiAsset, metadata: Sequence[Metadata], payload: Any, truth: Any, randomCorrectProbability: float, explanation: str | None):
@@ -29,6 +30,7 @@ class Rapid():
         self.truth = truth
         self.randomCorrectProbability = randomCorrectProbability
         self.explanation = explanation 
+        logger.debug(f"Created Rapid with asset: {self.asset}, metadata: {self.metadata}, payload: {self.payload}, truth: {self.truth}, randomCorrectProbability: {self.randomCorrectProbability}, explanation: {self.explanation}")
 
     def _add_to_validation_set(self, validationSetId: str, openapi_service: OpenAPIService) -> None:
         if isinstance(self.asset, TextAsset) or (isinstance(self.asset, MultiAsset) and isinstance(self.asset.assets[0], TextAsset)):

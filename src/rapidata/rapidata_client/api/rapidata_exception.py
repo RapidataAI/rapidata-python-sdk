@@ -2,7 +2,7 @@ from typing import Optional, Any
 from rapidata.api_client.api_client import ApiClient, rest, ApiResponse, ApiResponseT
 from rapidata.api_client.exceptions import ApiException
 import json
-
+from rapidata.rapidata_client.logging import logger
 
 class RapidataError(Exception):
     """Custom error class for Rapidata API errors."""
@@ -97,9 +97,11 @@ class RapidataApiClient(ApiClient):
                     # If we can't parse the body as JSON, use the original message
                     pass
             
-            raise RapidataError(
+            error_formatted =  RapidataError(
                 status_code=status_code, 
                 message=message, 
                 original_exception=e,
                 details=details
-            ) from None
+            )
+            logger.error(f"Error: {error_formatted}")
+            raise error_formatted from None

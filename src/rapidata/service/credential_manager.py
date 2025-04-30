@@ -77,8 +77,11 @@ class CredentialManager:
         with open(self.config_path, "w") as f:
             json.dump(data, f, indent=2)
 
+        logger.debug(f"Credentials written to {self.config_path} with data: {data}")
+
         # Ensure file is only readable by the user
         os.chmod(self.config_path, 0o600)
+        logger.debug(f"Set permissions for {self.config_path} to read/write for user only.")
 
     def _store_credential(self, credential: ClientCredential) -> None:
         credentials = self._read_credentials()
@@ -110,11 +113,13 @@ class CredentialManager:
         if env_credentials:
             logger.debug(f"Found credentials for {self.endpoint}: {env_credentials}")
             credential = self._select_credential(env_credentials)
+            logger.debug(f"Selected credential: {credential}")
             if credential:
                 credential.last_used = datetime.now(timezone.utc)
                 self._write_credentials(credentials)
                 return credential
 
+        logger.debug(f"No credentials found for {self.endpoint}. Creating new ones.")
         return self._create_new_credentials()
 
     def reset_credentials(self) -> None:
@@ -129,6 +134,7 @@ class CredentialManager:
 
     def _get_bridge_tokens(self) -> Optional[BridgeToken]:
         """Get bridge tokens from the identity endpoint."""
+        logger.debug("Getting bridge tokens")
         try:
             bridge_endpoint = (
                 f"{self.endpoint}/Identity/CreateBridgeToken?clientId=rapidata-cli"

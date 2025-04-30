@@ -34,6 +34,7 @@ from rapidata.api_client.models.page_info import PageInfo
 from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.filter import Filter
 from rapidata.api_client.models.sort_criterion import SortCriterion
+from rapidata.rapidata_client.logging import logger
 
 from tqdm import tqdm
 
@@ -53,6 +54,7 @@ class RapidataOrderManager:
         self.settings = RapidataSettings
         self.selections = RapidataSelections
         self.__priority = 50
+        logger.debug("RapidataOrderManager initialized")
 
     def __get_selections(self, validation_set_id: str | None, labeling_amount=3) -> Sequence[RapidataSelection]:
         if validation_set_id:

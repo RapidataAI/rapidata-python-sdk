@@ -15,7 +15,7 @@ from urllib3._collections import HTTPHeaderDict # type: ignore[import]
 
 from rapidata.rapidata_client.validation.rapids.box import Box
 
-from rapidata.api_client.models.query_validation_set_model import QueryValidationSetModel
+from rapidata.rapidata_client.logging import logger
 from tqdm import tqdm
 
 
@@ -29,6 +29,7 @@ class ValidationSetManager:
     def __init__(self, openapi_service: OpenAPIService) -> None:
         self.__openapi_service = openapi_service
         self.rapid = RapidsManager()
+        logger.debug("ValidationSetManager initialized")
 
     def create_classification_set(self,
         name: str,
@@ -83,6 +84,7 @@ class ValidationSetManager:
         if(explanations and len(explanations) != len(datapoints)):
             raise ValueError("The numeber of reasons and datapoints must be equal, the index must align, but can be padded with None")
        
+        logger.debug("Creating classification rapids")
         rapids: list[Rapid] = []
         for i in range(len(datapoints)):
             rapids.append(
@@ -97,6 +99,7 @@ class ValidationSetManager:
                 )
             )
 
+        logger.debug("Submitting classification rapids")
         return self._submit(name=name, rapids=rapids, print_confirmation=print_confirmation, dimensions=dimensions)
 
     def create_compare_set(self,
@@ -150,7 +153,8 @@ class ValidationSetManager:
  
         if(explanation and len(explanation) != len(datapoints)):
             raise ValueError("The numeber of reasons and datapoints must be equal, the index must align, but can be padded with None")
-              
+        
+        logger.debug("Creating comparison rapids")
         rapids: list[Rapid] = []
         for i in range(len(datapoints)):
             rapids.append(
@@ -163,7 +167,8 @@ class ValidationSetManager:
                     explanation=explanation[i] if explanation != None else None
                 )
             )
- 
+        
+        logger.debug("Submitting comparison rapids")
         return self._submit(name=name, rapids=rapids, dimensions=dimensions, print_confirmation=print_confirmation)
   
     def create_select_words_set(self,
@@ -214,7 +219,8 @@ class ValidationSetManager:
  
         if(explanation and len(explanation) != len(datapoints)):
             raise ValueError("The numeber of reasons and datapoints must be equal, the index must align, but can be padded with None")
-              
+
+        logger.debug("Creating select words rapids")
         rapids: list[Rapid] = []
         for i in range(len(datapoints)):
             rapids.append(
@@ -229,6 +235,7 @@ class ValidationSetManager:
                 )
             )
 
+        logger.debug("Submitting select words rapids")
         return self._submit(name=name, rapids=rapids, dimensions=dimensions, print_confirmation=print_confirmation)
 
     def create_locate_set(self,
@@ -275,7 +282,8 @@ class ValidationSetManager:
  
         if(explanation and len(explanation) != len(datapoints)):
             raise ValueError("The numeber of reasons and datapoints must be equal, the index must align, but can be padded with None")
-              
+        
+        logger.debug("Creating locate rapids")
         rapids = []
         rapids: list[Rapid] = []
         for i in range(len(datapoints)):
@@ -290,6 +298,7 @@ class ValidationSetManager:
                 )
             )
         
+        logger.debug("Submitting locate rapids")
         return self._submit(name=name, rapids=rapids, dimensions=dimensions, print_confirmation=print_confirmation)
     
     def create_draw_set(self,
@@ -336,7 +345,8 @@ class ValidationSetManager:
  
         if(explanation and len(explanation) != len(datapoints)):
             raise ValueError("The numeber of reasons and datapoints must be equal, the index must align, but can be padded with None")
-              
+
+        logger.debug("Creating draw rapids")
         rapids: list[Rapid] = []
         for i in range(len(datapoints)):
             rapids.append(
@@ -350,6 +360,7 @@ class ValidationSetManager:
                 )
             )
 
+        logger.debug("Submitting draw rapids")
         return self._submit(name=name, rapids=rapids, dimensions=dimensions, print_confirmation=print_confirmation)
 
     def create_timestamp_set(self,
@@ -398,7 +409,7 @@ class ValidationSetManager:
         if(explanation and len(explanation) != len(datapoints)):
             raise ValueError("The numeber of reasons and datapoints must be equal, the index must align, but can be padded with None")
               
-
+        logger.debug("Creating timestamp rapids")
         rapids: list[Rapid] = []
         for i in range(len(datapoints)):
             rapids.append(
@@ -411,6 +422,7 @@ class ValidationSetManager:
                 )
             )
 
+        logger.debug("Submitting timestamp rapids")
         return self._submit(name=name, rapids=rapids, dimensions=dimensions, print_confirmation=print_confirmation)
     
     def create_mixed_set(self,
@@ -427,7 +439,7 @@ class ValidationSetManager:
             dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
             print_confirmation (bool, optional): Whether to print a confirmation message that validation set has been created. Defaults to True.
         """
-
+        
         return self._submit(name=name, rapids=rapids, dimensions=dimensions, print_confirmation=print_confirmation)
     
     def get_validation_set_by_id(self, validation_set_id: str) -> RapidataValidationSet:
@@ -447,14 +459,19 @@ class ValidationSetManager:
         return RapidataValidationSet(validation_set_id, str(validation_set.name), self.__openapi_service)
 
     def _submit(self, name: str, rapids: list[Rapid], dimensions: list[str] | None, print_confirmation: bool) -> RapidataValidationSet:
+        logger.debug("Creating validation set")
         validation_set_id = (
             self.__openapi_service.validation_api.validation_create_validation_set_post(
                 name=name
             )
         ).validation_set_id
 
+        logger.debug(f"Validation set created with ID: {validation_set_id}")
+
         if validation_set_id is None:
             raise ValueError("Failed to create validation set")
+
+        logger.debug("Creating validation set instance")
 
         validation_set = RapidataValidationSet(
             name=name,
@@ -462,6 +479,7 @@ class ValidationSetManager:
             openapi_service=self.__openapi_service
         )
 
+        logger.debug("Adding rapids to validation set")
         for rapid in tqdm(rapids, desc="Uploading validation tasks"):
             validation_set.add_rapid(rapid)
         

@@ -297,3 +297,9 @@ class MediaAsset(BaseAsset):
             return self.path
         else:
             return (self.name, self.content)
+        
+    def __str__(self) -> str:
+        return f"MediaAsset(path={self.path})"
+    
+    def __repr__(self) -> str:
+        return f"MediaAsset(path={self.path})"

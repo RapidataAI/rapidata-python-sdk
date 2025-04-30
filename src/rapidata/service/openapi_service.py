@@ -75,6 +75,7 @@ class OpenAPIService:
             token_endpoint=f"{auth_endpoint}/connect/token",
             scope=oauth_scope,
         )
+        logger.debug("Client credentials authentication setup complete")
 
     def reset_credentials(self):
         self.credential_manager.reset_credentials()
