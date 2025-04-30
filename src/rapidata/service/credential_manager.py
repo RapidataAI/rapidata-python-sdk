@@ -11,6 +11,7 @@ from typing import Dict, List, Optional, Tuple
 import requests
 from colorama import Fore
 from pydantic import BaseModel
+from rapidata.rapidata_client.logging import logger
 
 
 class ClientCredential(BaseModel):
@@ -140,6 +141,9 @@ class CredentialManager:
         if self.endpoint in credentials:
             del credentials[self.endpoint]
             self._write_credentials(credentials)
+            logger.info(
+                f"Credentials for {self.endpoint} have been reset."
+            )
 
     def _get_bridge_tokens(self) -> Optional[BridgeToken]:
         """Get bridge tokens from the identity endpoint."""

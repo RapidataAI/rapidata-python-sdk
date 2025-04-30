@@ -8,6 +8,7 @@ from rapidata.rapidata_client.validation.validation_set_manager import (
 
 from rapidata.rapidata_client.demographic.demographic_manager import DemographicManager
 
+from rapidata.rapidata_client.logging.logger import logger
 
 class RapidataClient:
     """The Rapidata client is the main entry point for interacting with the Rapidata API. It allows you to create orders and validation sets."""
@@ -38,6 +39,8 @@ class RapidataClient:
             order (RapidataOrderManager): The RapidataOrderManager instance.
             validation (ValidationSetManager): The ValidationSetManager instance.
         """
+        logger.debug("Initializing OpenAPIService")
+
         self._openapi_service = OpenAPIService(
             client_id=client_id,
             client_secret=client_secret,
@@ -48,11 +51,22 @@ class RapidataClient:
             leeway=leeway,
         )
 
+        logger.debug("OpenAPIService initialized")
+        logger.debug("Initializing RapidataOrderManager")
+
         self.order = RapidataOrderManager(openapi_service=self._openapi_service)
+
+        logger.debug("RapidataOrderManager initialized")
+        logger.debug("Initializing ValidationSetManager")
 
         self.validation = ValidationSetManager(openapi_service=self._openapi_service)
 
+        logger.debug("ValidationSetManager initialized")
+        logger.debug("Initializing DemographicManager")
+
         self._demographic = DemographicManager(openapi_service=self._openapi_service)
+        
+        logger.debug("DemographicManager initialized")
 
     def reset_credentials(self):
         """Reset the credentials saved in the configuration file for the current environment."""
