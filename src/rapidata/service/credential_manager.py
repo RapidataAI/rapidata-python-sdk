@@ -22,27 +22,6 @@ class ClientCredential(BaseModel):
     created_at: datetime
     last_used: datetime
 
-    @classmethod
-    def from_dict(cls, data: Dict):
-        return cls(
-            display_name=data["display_name"],
-            client_id=data["client_id"],
-            client_secret=data["client_secret"],
-            endpoint=data["endpoint"],
-            created_at=datetime.fromisoformat(data["created_at"]),
-            last_used=datetime.fromisoformat(data["last_used"]),
-        )
-
-    def to_dict(self) -> Dict:
-        return {
-            "display_name": self.display_name,
-            "client_id": self.client_id,
-            "client_secret": self.client_secret,
-            "endpoint": self.endpoint,
-            "created_at": self.created_at.isoformat(),
-            "last_used": self.last_used.isoformat(),
-        }
-
     def get_display_string(self):
         return f"{self.display_name} - Client ID: {self.client_id} (Created: {self.created_at.strftime('%Y-%m-%d %H:%M:%S')})"
 
@@ -81,7 +60,7 @@ class CredentialManager:
             with open(self.config_path, "r") as f:
                 data = json.load(f)
                 return {
-                    env: [ClientCredential.from_dict(cred) for cred in creds]
+                    env: [ClientCredential.model_validate(cred) for cred in creds]
                     for env, creds in data.items()
                 }
         except json.JSONDecodeError:
@@ -91,7 +70,7 @@ class CredentialManager:
         self, credentials: Dict[str, List[ClientCredential]]
     ) -> None:
         data = {
-            env: [cred.to_dict() for cred in creds]
+            env: [cred.model_dump(mode="json") for cred in creds]
             for env, creds in credentials.items()
         }
 
