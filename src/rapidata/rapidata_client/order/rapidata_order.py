@@ -17,6 +17,7 @@ from rapidata.api_client.models.preliminary_download_model import PreliminaryDow
 from rapidata.api_client.models.workflow_artifact_model import WorkflowArtifactModel
 from rapidata.rapidata_client.order.rapidata_results import RapidataResults
 from rapidata.service.openapi_service import OpenAPIService
+from rapidata.rapidata_client.logging import logger
 
 
 class RapidataOrder:
@@ -47,22 +48,26 @@ class RapidataOrder:
         self._max_retries = 10  
         self._retry_delay = 2
         self.order_details_page = f"https://app.{self.__openapi_service.environment}/order/detail/{self.order_id}"
+        logger.debug("RapidataOrder initialized")
 
     def run(self, print_link: bool = True) -> "RapidataOrder":
         """Runs the order to start collecting responses."""
         self.__openapi_service.order_api.order_order_id_submit_post(self.order_id)
         if print_link:
             print(f"Order '{self.name}' is now viewable under: {self.order_details_page}")
+        logger.debug(f"Order '{self}' has been started.")
         return self
 
     def pause(self) -> None:
         """Pauses the order."""
         self.__openapi_service.order_api.order_pause_post(self.order_id)
+        logger.debug(f"Order '{self}' has been paused.")
         print(f"Order '{self}' has been paused.")
 
     def unpause(self) -> None:
         """Unpauses/resumes the order."""
         self.__openapi_service.order_api.order_resume_post(self.order_id)
+        logger.debug(f"Order '{self}' has been unpaused.")
         print(f"Order '{self}' has been unpaused.")
 
     def get_status(self) -> str:
