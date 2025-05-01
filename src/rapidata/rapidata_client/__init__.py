@@ -47,7 +47,8 @@ from .filter import (
 
 from .logging import (
     configure_logger, 
-    logger
+    logger,
+    OutputManger
 )
 
 from .validation import Box

@@ -29,7 +29,7 @@ from rapidata.rapidata_client.assets import MediaAsset, TextAsset, MultiAsset, B
 
 from typing import Optional, cast, Sequence
 
-from rapidata.rapidata_client.logging import logger
+from rapidata.rapidata_client.logging import logger, managed_print
 
 
 class RapidataOrderBuilder:
@@ -75,7 +75,7 @@ class RapidataOrderBuilder:
             raise ValueError("You must provide a workflow to create an order.")
 
         if self.__referee is None:
-            print("No referee provided, using default NaiveReferee.")
+            managed_print("No referee provided, using default NaiveReferee.")
             self.__referee = NaiveReferee()
 
         return CreateOrderModel(
@@ -304,7 +304,7 @@ class RapidataOrderBuilder:
                 raise TypeError("Filters must be of type Filter.")
 
         if len(self.__user_filters) > 0:
-            print("Overwriting existing user filters.")
+            managed_print("Overwriting existing user filters.")
 
         self.__user_filters = filters
         return self

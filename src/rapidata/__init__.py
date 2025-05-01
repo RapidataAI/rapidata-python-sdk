@@ -32,4 +32,5 @@ from .rapidata_client import (
     PromptMetadata,
     logger,
     configure_logger,
+    OutputManger,
 )

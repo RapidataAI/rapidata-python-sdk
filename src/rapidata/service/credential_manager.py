@@ -11,7 +11,7 @@ from typing import Dict, List, Optional, Tuple
 import requests
 from colorama import Fore
 from pydantic import BaseModel
-from rapidata.rapidata_client.logging import logger
+from rapidata.rapidata_client.logging import logger, managed_print
 
 
 class ClientCredential(BaseModel):
@@ -141,13 +141,13 @@ class CredentialManager:
             )
             response = requests.post(bridge_endpoint, verify=self.cert_path)
             if not response.ok:
-                print(f"Failed to get bridge tokens: {response.status_code}")
+                logger.error(f"Failed to get bridge tokens: {response.status_code}")
                 return None
 
             data = response.json()
             return BridgeToken(read_key=data["readKey"], write_key=data["writeKey"])
         except requests.RequestException as e:
-            print(f"Failed to get bridge tokens: {e}")
+            logger.error(f"Failed to get bridge tokens: {e}")
             return None
 
     def _poll_read_key(self, read_key: str) -> Optional[str]:
@@ -169,14 +169,14 @@ class CredentialManager:
                     continue
                 else:
                     # Error occurred
-                    print(f"Error polling read key: {response.status_code}")
+                    logger.error(f"Error polling read key: {response.status_code}")
                     return None
 
             except requests.RequestException as e:
-                print(f"Error polling read key: {e}")
+                logger.error(f"Error polling read key: {e}")
                 return None
 
-        print("Polling timed out")
+        logger.error("Polling timed out")
         return None
 
     def _create_client(self, access_token: str) -> Optional[Tuple[str, str, str]]:
@@ -198,7 +198,7 @@ class CredentialManager:
             data = response.json()
             return data.get("clientId"), data.get("clientSecret"), display_name
         except requests.RequestException as e:
-            print(f"Failed to create client: {e}")
+            logger.error(f"Failed to create client: {e}")
             return None
 
     def _create_new_credentials(self) -> Optional[ClientCredential]:
@@ -211,7 +211,7 @@ class CredentialManager:
 
         if not could_open_browser:
             encoded_url = urllib.parse.quote(auth_url, safe="%/:=&?~#+!$,;'@()*[]")
-            print(
+            managed_print(
                 Fore.RED
                 + f'Please open the following URL in your browser to log in: "{encoded_url}"'
                 + Fore.RESET

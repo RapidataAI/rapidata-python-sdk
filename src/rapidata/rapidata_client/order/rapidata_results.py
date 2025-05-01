@@ -2,6 +2,7 @@ import pandas as pd
 from typing import Any
 from pandas.core.indexes.base import Index
 import json
+from rapidata.rapidata_client.logging import managed_print
 
 class RapidataResults(dict):
     """
@@ -32,7 +33,7 @@ class RapidataResults(dict):
             return pd.DataFrame()
         
         if self["info"].get("orderType") is None:
-            print("Warning: Results are old and Order type is not specified. Dataframe might be wrong.")
+            managed_print("Warning: Results are old and Order type is not specified. Dataframe might be wrong.")
         
         # Check for detailed results if split_details is True
         if split_details:

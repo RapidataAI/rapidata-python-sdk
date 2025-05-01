@@ -17,6 +17,7 @@ from pydantic import StrictStr, StrictBytes
 import logging
 from functools import cached_property
 from rapidata.rapidata_client.assets._sessions import SessionManager
+from rapidata.rapidata_client.logging import logger
 
 class MediaAsset(BaseAsset):
     """MediaAsset Class with Lazy Loading
@@ -168,7 +169,7 @@ class MediaAsset(BaseAsset):
     def __check_name_ending(self, name: str) -> str:
         """Check if the media path is valid."""
         if not name.endswith(('.jpg', '.jpeg', '.png', '.gif', '.mp3', '.mp4', '.webp')):
-            print("Warning: Supported file types: jpg, jpeg, png, gif, mp3, mp4. Image might not be displayed correctly.")
+            logger.warning("Warning: Supported file types: jpg, jpeg, png, gif, mp3, mp4. Image might not be displayed correctly.")
             name = name + '.jpg'
         return name
 

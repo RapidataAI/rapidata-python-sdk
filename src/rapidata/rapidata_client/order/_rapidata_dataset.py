@@ -349,13 +349,12 @@ class RapidataDataset:
             success_rate = (total_ready / total_uploads * 100) if total_uploads > 0 else 0
             
             logger.info(f"Upload complete: {total_ready} ready, {total_uploads-total_ready} failed ({success_rate:.1f}% success rate)")
-            print(f"Upload complete, {total_ready} ready, {total_uploads-total_ready} failed ({success_rate:.1f}% success rate)")
         except Exception as e:
             logger.error(f"Error getting final progress: {str(e)}")
             logger.info(f"Upload summary from local tracking: {len(successful_uploads)} succeeded, {len(failed_uploads)} failed")
 
         if failed_uploads:
-            print(f"Failed uploads: {failed_uploads}")
+            logger.error(f"Failed uploads: {failed_uploads}")
 
     def _add_media_from_paths(
         self,
