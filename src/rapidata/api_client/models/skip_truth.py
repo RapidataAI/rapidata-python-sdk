@@ -17,28 +17,23 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.filter import Filter
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class RootFilter(BaseModel):
+class SkipTruth(BaseModel):
     """
-    RootFilter
+    SkipTruth
     """ # noqa: E501
-    filters: Optional[List[Filter]] = None
-    logic: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["filters", "logic"]
+    t: StrictStr = Field(description="Discriminator value for SkipTruth", alias="_t")
+    __properties: ClassVar[List[str]] = ["_t"]
 
-    @field_validator('logic')
-    def logic_validate_enum(cls, value):
+    @field_validator('t')
+    def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in set(['And', 'Or', 'Not']):
-            raise ValueError("must be one of enum values ('And', 'Or', 'Not')")
+        if value not in set(['SkipTruth']):
+            raise ValueError("must be one of enum values ('SkipTruth')")
         return value
 
     model_config = ConfigDict(
@@ -59,7 +54,7 @@ class RootFilter(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of RootFilter from a JSON string"""
+        """Create an instance of SkipTruth from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -80,18 +75,11 @@ class RootFilter(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in filters (list)
-        _items = []
-        if self.filters:
-            for _item_filters in self.filters:
-                if _item_filters:
-                    _items.append(_item_filters.to_dict())
-            _dict['filters'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of RootFilter from a dict"""
+        """Create an instance of SkipTruth from a dict"""
         if obj is None:
             return None
 
@@ -99,8 +87,7 @@ class RootFilter(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "filters": [Filter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
-            "logic": obj.get("logic")
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'SkipTruth'
         })
         return _obj
 

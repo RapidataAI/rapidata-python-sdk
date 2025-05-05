@@ -18,25 +18,29 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.datapoint_asset import DatapointAsset
+from rapidata.api_client.models.get_validation_rapids_result_payload import GetValidationRapidsResultPayload
+from rapidata.api_client.models.rapid_response import RapidResponse
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CompareResult(BaseModel):
+class GetWorkflowResultsResult(BaseModel):
     """
-    CompareResult
+    GetWorkflowResultsResult
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for CompareResult", alias="_t")
-    winner_id: Optional[StrictStr] = Field(default=None, alias="winnerId")
-    winners: Optional[List[StrictStr]] = None
     rapid_id: StrictStr = Field(alias="rapidId")
-    __properties: ClassVar[List[str]] = ["_t", "winnerId", "winners", "rapidId"]
+    payload: GetValidationRapidsResultPayload
+    asset: DatapointAsset
+    responses: List[RapidResponse]
+    state: StrictStr
+    __properties: ClassVar[List[str]] = ["rapidId", "payload", "asset", "responses", "state"]
 
-    @field_validator('t')
-    def t_validate_enum(cls, value):
+    @field_validator('state')
+    def state_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['CompareResult']):
-            raise ValueError("must be one of enum values ('CompareResult')")
+        if value not in set(['Labeling', 'Paused', 'Incomplete', 'Done', 'None']):
+            raise ValueError("must be one of enum values ('Labeling', 'Paused', 'Incomplete', 'Done', 'None')")
         return value
 
     model_config = ConfigDict(
@@ -57,7 +61,7 @@ class CompareResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CompareResult from a JSON string"""
+        """Create an instance of GetWorkflowResultsResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,10 +73,8 @@ class CompareResult(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
-        * OpenAPI `readOnly` fields are excluded.
         """
         excluded_fields: Set[str] = set([
-            "winner_id",
         ])
 
         _dict = self.model_dump(
@@ -80,16 +82,24 @@ class CompareResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if winner_id (nullable) is None
-        # and model_fields_set contains the field
-        if self.winner_id is None and "winner_id" in self.model_fields_set:
-            _dict['winnerId'] = None
-
+        # override the default output from pydantic by calling `to_dict()` of payload
+        if self.payload:
+            _dict['payload'] = self.payload.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of asset
+        if self.asset:
+            _dict['asset'] = self.asset.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in responses (list)
+        _items = []
+        if self.responses:
+            for _item_responses in self.responses:
+                if _item_responses:
+                    _items.append(_item_responses.to_dict())
+            _dict['responses'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CompareResult from a dict"""
+        """Create an instance of GetWorkflowResultsResult from a dict"""
         if obj is None:
             return None
 
@@ -97,10 +107,11 @@ class CompareResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'CompareResult',
-            "winnerId": obj.get("winnerId"),
-            "winners": obj.get("winners"),
-            "rapidId": obj.get("rapidId")
+            "rapidId": obj.get("rapidId"),
+            "payload": GetValidationRapidsResultPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
+            "asset": DatapointAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
+            "responses": [RapidResponse.from_dict(_item) for _item in obj["responses"]] if obj.get("responses") is not None else None,
+            "state": obj.get("state")
         })
         return _obj
 

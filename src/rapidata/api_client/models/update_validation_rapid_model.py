@@ -17,8 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.update_validation_rapid_model_truth import UpdateValidationRapidModelTruth
 from typing import Optional, Set
 from typing_extensions import Self
@@ -30,7 +30,8 @@ class UpdateValidationRapidModel(BaseModel):
     truth: UpdateValidationRapidModelTruth
     explanation: Optional[StrictStr] = None
     prompt: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["truth", "explanation", "prompt"]
+    random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="randomCorrectProbability")
+    __properties: ClassVar[List[str]] = ["truth", "explanation", "prompt", "randomCorrectProbability"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -84,6 +85,11 @@ class UpdateValidationRapidModel(BaseModel):
         if self.prompt is None and "prompt" in self.model_fields_set:
             _dict['prompt'] = None
 
+        # set to None if random_correct_probability (nullable) is None
+        # and model_fields_set contains the field
+        if self.random_correct_probability is None and "random_correct_probability" in self.model_fields_set:
+            _dict['randomCorrectProbability'] = None
+
         return _dict
 
     @classmethod
@@ -98,7 +104,8 @@ class UpdateValidationRapidModel(BaseModel):
         _obj = cls.model_validate({
             "truth": UpdateValidationRapidModelTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
             "explanation": obj.get("explanation"),
-            "prompt": obj.get("prompt")
+            "prompt": obj.get("prompt"),
+            "randomCorrectProbability": obj.get("randomCorrectProbability")
         })
         return _obj
 

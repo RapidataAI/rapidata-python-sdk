@@ -35,17 +35,29 @@ class AddCampaignModel(BaseModel):
     user_filters: Optional[List[CreateOrderModelUserFiltersInner]] = Field(default=None, description="The user filters to apply to the campaign.", alias="userFilters")
     validation_set_id: Optional[StrictStr] = Field(default=None, description="A validation set that should be used.", alias="validationSetId")
     selections: Optional[List[AbTestSelectionAInner]] = Field(default=None, description="The selections that the campaign should have.")
+    retrieval_mode: Optional[StrictStr] = Field(default=None, description="The retrieval mode defines how rapids are retrieved from the active labeling pool.", alias="retrievalMode")
+    max_iterations: Optional[StrictInt] = Field(default=None, description="The maximum number of times a user is allowed to see the same rapid.", alias="maxIterations")
     feature_flags: List[FeatureFlag] = Field(description="The feature flags that should be applied to the campaign.", alias="featureFlags")
     priority: StrictInt = Field(description="The priority of the campaign.")
     is_sticky: Optional[StrictBool] = Field(default=None, description="Indicates if the campaign is sticky.", alias="isSticky")
     is_preview_enabled: Optional[StrictBool] = Field(default=None, description="A flag to indicate whether the campaign should be put into preview mode after creation. This way the campaign will not start automatically and the user will have to manually start it.", alias="isPreviewEnabled")
-    __properties: ClassVar[List[str]] = ["_t", "artifactId", "campaignName", "userFilters", "validationSetId", "selections", "featureFlags", "priority", "isSticky", "isPreviewEnabled"]
+    __properties: ClassVar[List[str]] = ["_t", "artifactId", "campaignName", "userFilters", "validationSetId", "selections", "retrievalMode", "maxIterations", "featureFlags", "priority", "isSticky", "isPreviewEnabled"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
         if value not in set(['AddCampaignModel']):
             raise ValueError("must be one of enum values ('AddCampaignModel')")
+        return value
+
+    @field_validator('retrieval_mode')
+    def retrieval_mode_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['Random', 'Shuffled', 'Sequential']):
+            raise ValueError("must be one of enum values ('Random', 'Shuffled', 'Sequential')")
         return value
 
     model_config = ConfigDict(
@@ -128,6 +140,16 @@ class AddCampaignModel(BaseModel):
         if self.selections is None and "selections" in self.model_fields_set:
             _dict['selections'] = None
 
+        # set to None if retrieval_mode (nullable) is None
+        # and model_fields_set contains the field
+        if self.retrieval_mode is None and "retrieval_mode" in self.model_fields_set:
+            _dict['retrievalMode'] = None
+
+        # set to None if max_iterations (nullable) is None
+        # and model_fields_set contains the field
+        if self.max_iterations is None and "max_iterations" in self.model_fields_set:
+            _dict['maxIterations'] = None
+
         # set to None if is_preview_enabled (nullable) is None
         # and model_fields_set contains the field
         if self.is_preview_enabled is None and "is_preview_enabled" in self.model_fields_set:
@@ -151,6 +173,8 @@ class AddCampaignModel(BaseModel):
             "userFilters": [CreateOrderModelUserFiltersInner.from_dict(_item) for _item in obj["userFilters"]] if obj.get("userFilters") is not None else None,
             "validationSetId": obj.get("validationSetId"),
             "selections": [AbTestSelectionAInner.from_dict(_item) for _item in obj["selections"]] if obj.get("selections") is not None else None,
+            "retrievalMode": obj.get("retrievalMode"),
+            "maxIterations": obj.get("maxIterations"),
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "priority": obj.get("priority"),
             "isSticky": obj.get("isSticky"),

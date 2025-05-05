@@ -2990,6 +2990,39 @@
         }
       }
     },
+    "/identity/google-one-tap": {
+      "post": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Signs in a user using a token received from Google One Tap.",
+        "requestBody": {
+          "description": "The body of the request containing the id token.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleOneTapLoginModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleOneTapLoginModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleOneTapLoginModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
     "/newsletter": {
       "post": {
         "tags": [
@@ -4411,59 +4444,6 @@
         }
       }
     },
-    "/rapid/queryvalidationrapids": {
-      "get": {
-        "tags": [
-          "Rapid"
-        ],
-        "summary": "Queries the validation rapids for a specific validation set.",
-        "parameters": [
-          {
-            "name": "validationSetId",
-            "in": "query",
-            "description": "The validation set to query.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "model",
-            "in": "query",
-            "description": "The query model.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryModel"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryValidationRapidsResultPagedResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryValidationRapidsResultPagedResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryValidationRapidsResultPagedResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/rapid/{rapidId}/responses": {
       "get": {
         "tags": [
@@ -4505,20 +4485,6 @@
         }
       }
     },
-    "/rapid/validatecurrentrapidbag": {
-      "get": {
-        "tags": [
-          "Rapid"
-        ],
-        "summary": "Validates that the rapids associated with the current user are active.",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/rapid/rapid-bag/is-valid": {
       "get": {
         "tags": [
@@ -4547,49 +4513,6 @@
             }
           }
         }
-      }
-    },
-    "/rapid/createdemographicrapid": {
-      "post": {
-        "tags": [
-          "Rapid"
-        ],
-        "summary": "Creates a new Demographic Rapid.",
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "model": {
-                    "$ref": "#/components/schemas/CreateDemographicRapidModel"
-                  },
-                  "file": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "format": "binary"
-                    }
-                  }
-                }
-              },
-              "encoding": {
-                "model": {
-                  "style": "form"
-                },
-                "file": {
-                  "style": "form"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "deprecated": true
       }
     },
     "/rapid/demographic": {
@@ -4651,40 +4574,6 @@
         }
       }
     },
-    "/rapid/adduserguess": {
-      "post": {
-        "tags": [
-          "Rapid"
-        ],
-        "summary": "Submits a user guess for a Rapid.",
-        "requestBody": {
-          "description": "The model containing the user guess.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RapidResultModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RapidResultModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/RapidResultModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/rapid/response": {
       "post": {
         "tags": [
@@ -4733,40 +4622,6 @@
             }
           }
         }
-      }
-    },
-    "/rapid/skipuserguess": {
-      "post": {
-        "tags": [
-          "Rapid"
-        ],
-        "summary": "Skips a Rapid for the user.",
-        "requestBody": {
-          "description": "The model containing the Rapid to skip.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RapidSkippedModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RapidSkippedModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/RapidSkippedModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "deprecated": true
       }
     },
     "/rapid/skip": {
@@ -4868,7 +4723,7 @@
         "tags": [
           "Rapid"
         ],
-        "summary": "Inspects a report's dump. can be used to restore zustand state or anything alike.",
+        "summary": "Inspects a report's dump. Can be used to restore zustand state or anything alike.",
         "parameters": [
           {
             "name": "reportId",
@@ -4905,49 +4760,6 @@
       }
     },
     "/rapid/validation/{rapidId}": {
-      "put": {
-        "tags": [
-          "Rapid"
-        ],
-        "summary": "Updates the validation information of a rapid.",
-        "parameters": [
-          {
-            "name": "rapidId",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateValidationRapidModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateValidationRapidModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateValidationRapidModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "deprecated": true
-      },
       "patch": {
         "tags": [
           "Rapid"
@@ -5068,6 +4880,85 @@
         }
       }
     },
+    "/workflow/evaluation/{workflowId}/results": {
+      "get": {
+        "tags": [
+          "EvaluationWorkflow"
+        ],
+        "summary": "Get the results for an evaluation workflow.",
+        "parameters": [
+          {
+            "name": "workflowId",
+            "in": "path",
+            "description": "The ID of the workflow to get the results for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Page.Index",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Page.Size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "States",
+            "in": "query",
+            "description": "An optional list of states to filter the rapids by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/RapidState"
+              }
+            }
+          },
+          {
+            "name": "SortCriteria",
+            "in": "query",
+            "description": "A list of criteria to sort the results by.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/SortCriterion"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetWorkflowResultsResultPagedResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetWorkflowResultsResultPagedResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetWorkflowResultsResultPagedResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/workflow/simple/{workflowId}/results": {
       "get": {
         "tags": [
@@ -5103,17 +4994,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetSimpleWorkflowResultsResultPagedResult"
+                  "$ref": "#/components/schemas/GetWorkflowResultsResultPagedResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetSimpleWorkflowResultsResultPagedResult"
+                  "$ref": "#/components/schemas/GetWorkflowResultsResultPagedResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetSimpleWorkflowResultsResultPagedResult"
+                  "$ref": "#/components/schemas/GetWorkflowResultsResultPagedResult"
                 }
               }
             }
@@ -8310,7 +8201,18 @@
           },
           "isSticky": {
             "type": "boolean",
-            "description": "Indicates if the underlying campaign should be sticky."
+            "description": "Indicates if the underlying campaign should be sticky.",
+            "deprecated": true
+          },
+          "stickyState": {
+            "enum": [
+              "None",
+              "Temporary",
+              "Permanent"
+            ],
+            "type": "string",
+            "description": "Indicates if the underlying campaign should be sticky.",
+            "nullable": true
           },
           "userScoreDimensions": {
             "type": "array",
@@ -8412,6 +8314,22 @@
               }
             },
             "description": "The selections are used to determine which tasks are shown to a user.",
+            "nullable": true
+          },
+          "retrievalMode": {
+            "enum": [
+              "Random",
+              "Shuffled",
+              "Sequential"
+            ],
+            "type": "string",
+            "description": "The retrieval mode defines how rapids are retrieved from the active labeling pool.",
+            "nullable": true
+          },
+          "maxIterations": {
+            "type": "integer",
+            "description": "The maximum number of times a user is allowed to see the same rapid.",
+            "format": "int32",
             "nullable": true
           }
         },
@@ -8787,7 +8705,8 @@
           "logic": {
             "enum": [
               "And",
-              "Or"
+              "Or",
+              "Not"
             ],
             "type": "string"
           },
@@ -8943,6 +8862,19 @@
           "amount": {
             "type": "integer",
             "format": "int32"
+          },
+          "retrievalMode": {
+            "enum": [
+              "Random",
+              "Shuffled",
+              "Sequential"
+            ],
+            "type": "string"
+          },
+          "maxIterations": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -9041,7 +8973,8 @@
       "LogicOperator": {
         "enum": [
           "And",
-          "Or"
+          "Or",
+          "Not"
         ],
         "type": "string"
       },
@@ -9488,6 +9421,14 @@
         },
         "additionalProperties": false
       },
+      "RetrievalMode": {
+        "enum": [
+          "Random",
+          "Shuffled",
+          "Sequential"
+        ],
+        "type": "string"
+      },
       "RootFilter": {
         "type": "object",
         "properties": {
@@ -9500,7 +9441,8 @@
           "logic": {
             "enum": [
               "And",
-              "Or"
+              "Or",
+              "Not"
             ],
             "type": "string"
           }
@@ -9725,6 +9667,14 @@
           }
         },
         "additionalProperties": false
+      },
+      "StickyState": {
+        "enum": [
+          "None",
+          "Temporary",
+          "Permanent"
+        ],
+        "type": "string"
       },
       "TranscriptionRapidBlueprint": {
         "title": "TranscriptionBlueprint",
@@ -10115,6 +10065,20 @@
         },
         "additionalProperties": false
       },
+      "GoogleOneTapLoginModel": {
+        "required": [
+          "idToken"
+        ],
+        "type": "object",
+        "properties": {
+          "idToken": {
+            "type": "string",
+            "description": "The id token received from the Google One Tap login."
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for the Google One Tap login."
+      },
       "NewsletterModel": {
         "required": [
           "email",
@@ -10365,6 +10329,9 @@
                 "$ref": "#/components/schemas/CompareTruth"
               },
               {
+                "$ref": "#/components/schemas/SkipTruth"
+              },
+              {
                 "$ref": "#/components/schemas/AttachCategoryTruth"
               },
               {
@@ -10504,6 +10471,9 @@
               },
               {
                 "$ref": "#/components/schemas/CompareTruth"
+              },
+              {
+                "$ref": "#/components/schemas/SkipTruth"
               },
               {
                 "$ref": "#/components/schemas/AttachCategoryTruth"
@@ -10889,6 +10859,9 @@
                 "$ref": "#/components/schemas/CompareTruth"
               },
               {
+                "$ref": "#/components/schemas/SkipTruth"
+              },
+              {
                 "$ref": "#/components/schemas/AttachCategoryTruth"
               },
               {
@@ -10990,6 +10963,11 @@
           },
           "explanation": {
             "type": "string",
+            "nullable": true
+          },
+          "randomCorrectProbability": {
+            "type": "number",
+            "format": "double",
             "nullable": true
           }
         },
@@ -11356,6 +11334,25 @@
         },
         "additionalProperties": false
       },
+      "SkipTruth": {
+        "title": "SkipTruth",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "SkipTruth"
+            ],
+            "type": "string",
+            "description": "Discriminator value for SkipTruth",
+            "default": "SkipTruth",
+            "example": "SkipTruth"
+          }
+        },
+        "additionalProperties": false
+      },
       "SubmitCocoModel": {
         "required": [
           "categories",
@@ -11647,6 +11644,9 @@
                 "$ref": "#/components/schemas/CompareTruth"
               },
               {
+                "$ref": "#/components/schemas/SkipTruth"
+              },
+              {
                 "$ref": "#/components/schemas/AttachCategoryTruth"
               },
               {
@@ -11757,6 +11757,7 @@
           "winnerId": {
             "type": "string",
             "nullable": true,
+            "readOnly": true,
             "deprecated": true
           },
           "winners": {
@@ -12126,211 +12127,6 @@
         },
         "additionalProperties": false
       },
-      "QueryValidationRapidsResult": {
-        "required": [
-          "correctValidationCount",
-          "id",
-          "invalidValidationCount",
-          "metadata",
-          "payload",
-          "type"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string"
-          },
-          "asset": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/FileAssetModel"
-              },
-              {
-                "$ref": "#/components/schemas/MultiAssetModel"
-              },
-              {
-                "$ref": "#/components/schemas/NullAssetModel"
-              },
-              {
-                "$ref": "#/components/schemas/TextAssetModel"
-              }
-            ],
-            "nullable": true,
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          },
-          "truth": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/TranscriptionTruth"
-              },
-              {
-                "$ref": "#/components/schemas/ScrubTruth"
-              },
-              {
-                "$ref": "#/components/schemas/PolygonTruth"
-              },
-              {
-                "$ref": "#/components/schemas/NamedEntityTruth"
-              },
-              {
-                "$ref": "#/components/schemas/LocateBoxTruth"
-              },
-              {
-                "$ref": "#/components/schemas/LineTruth"
-              },
-              {
-                "$ref": "#/components/schemas/EmptyValidationTruth"
-              },
-              {
-                "$ref": "#/components/schemas/CompareTruth"
-              },
-              {
-                "$ref": "#/components/schemas/AttachCategoryTruth"
-              },
-              {
-                "$ref": "#/components/schemas/BoundingBoxTruth"
-              }
-            ],
-            "nullable": true,
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          },
-          "payload": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/TranscriptionPayload"
-              },
-              {
-                "$ref": "#/components/schemas/ScrubPayload"
-              },
-              {
-                "$ref": "#/components/schemas/PolygonPayload"
-              },
-              {
-                "$ref": "#/components/schemas/NamedEntityPayload"
-              },
-              {
-                "$ref": "#/components/schemas/LocatePayload"
-              },
-              {
-                "$ref": "#/components/schemas/LinePayload"
-              },
-              {
-                "$ref": "#/components/schemas/FreeTextPayload"
-              },
-              {
-                "$ref": "#/components/schemas/ComparePayload"
-              },
-              {
-                "$ref": "#/components/schemas/ClassifyPayload"
-              },
-              {
-                "$ref": "#/components/schemas/BoundingBoxPayload"
-              }
-            ],
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          },
-          "metadata": {
-            "type": "object",
-            "additionalProperties": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/ClassificationMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/CountMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/DemographicMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/ImageDimensionMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/LocationMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/OriginalFilenameMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/SourceUrlMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/TextMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/TranscriptionMetadataModel"
-                },
-                {
-                  "$ref": "#/components/schemas/TranslatedPromptMetadataModel"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
-          },
-          "correctValidationCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "invalidValidationCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "explanation": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "QueryValidationRapidsResultPagedResult": {
-        "required": [
-          "items",
-          "page",
-          "pageSize",
-          "total"
-        ],
-        "type": "object",
-        "properties": {
-          "total": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/QueryValidationRapidsResult"
-            }
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false
-      },
       "RapidIssue": {
         "enum": [
           "Other",
@@ -12353,7 +12149,8 @@
           "id",
           "result",
           "userId",
-          "userScore"
+          "userScore",
+          "userScores"
         ],
         "type": "object",
         "properties": {
@@ -12409,6 +12206,13 @@
           "userScore": {
             "type": "number",
             "format": "double"
+          },
+          "userScores": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "format": "double"
+            }
           },
           "demographicInformation": {
             "type": "object",
@@ -12689,6 +12493,9 @@
                 "$ref": "#/components/schemas/CompareTruth"
               },
               {
+                "$ref": "#/components/schemas/SkipTruth"
+              },
+              {
                 "$ref": "#/components/schemas/AttachCategoryTruth"
               },
               {
@@ -12708,6 +12515,12 @@
           "prompt": {
             "type": "string",
             "description": "",
+            "nullable": true
+          },
+          "randomCorrectProbability": {
+            "type": "number",
+            "description": "",
+            "format": "double",
             "nullable": true
           }
         },
@@ -12803,6 +12616,62 @@
           "scalingFactor": {
             "type": "integer",
             "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EvaluationWorkflowModel1": {
+        "title": "EvaluationWorkflow",
+        "required": [
+          "_t",
+          "id",
+          "name",
+          "referee",
+          "state",
+          "validationSetId"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "EvaluationWorkflow"
+            ],
+            "type": "string",
+            "description": "Discriminator value for EvaluationWorkflow",
+            "default": "EvaluationWorkflow",
+            "example": "EvaluationWorkflow"
+          },
+          "id": {
+            "type": "string"
+          },
+          "validationSetId": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "referee": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NaiveRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/NeverEndingRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/ProbabilisticAttachCategoryRefereeConfig"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "name": {
+            "type": "string"
+          },
+          "ownerMail": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -12954,7 +12823,67 @@
         "additionalProperties": false,
         "description": "Model for getting the overview of a simple workflow result."
       },
-      "GetSimpleWorkflowResultsResult": {
+      "GetWorkflowByIdResult": {
+        "required": [
+          "workflow"
+        ],
+        "type": "object",
+        "properties": {
+          "workflow": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CompareWorkflowModel1"
+              },
+              {
+                "$ref": "#/components/schemas/EvaluationWorkflowModel1"
+              },
+              {
+                "$ref": "#/components/schemas/SimpleWorkflowModel1"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetWorkflowProgressResult": {
+        "required": [
+          "completed",
+          "completionPercentage",
+          "state",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "completionPercentage": {
+            "type": "number",
+            "format": "double"
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "completed": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "state": {
+            "enum": [
+              "Created",
+              "Started",
+              "Labeling",
+              "Paused",
+              "Done",
+              "Failed"
+            ],
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetWorkflowResultsResult": {
         "required": [
           "asset",
           "payload",
@@ -13042,7 +12971,7 @@
         },
         "additionalProperties": false
       },
-      "GetSimpleWorkflowResultsResultPagedResult": {
+      "GetWorkflowResultsResultPagedResult": {
         "required": [
           "items",
           "page",
@@ -13066,70 +12995,13 @@
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/GetSimpleWorkflowResultsResult"
+              "$ref": "#/components/schemas/GetWorkflowResultsResult"
             }
           },
           "totalPages": {
             "type": "integer",
             "format": "int32",
             "readOnly": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "GetWorkflowByIdResult": {
-        "required": [
-          "workflow"
-        ],
-        "type": "object",
-        "properties": {
-          "workflow": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/CompareWorkflowModel1"
-              },
-              {
-                "$ref": "#/components/schemas/SimpleWorkflowModel1"
-              }
-            ],
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          }
-        },
-        "additionalProperties": false
-      },
-      "GetWorkflowProgressResult": {
-        "required": [
-          "completed",
-          "completionPercentage",
-          "state",
-          "total"
-        ],
-        "type": "object",
-        "properties": {
-          "completionPercentage": {
-            "type": "number",
-            "format": "double"
-          },
-          "total": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "completed": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "state": {
-            "enum": [
-              "Created",
-              "Started",
-              "Labeling",
-              "Paused",
-              "Done",
-              "Failed"
-            ],
-            "type": "string"
           }
         },
         "additionalProperties": false
@@ -13161,6 +13033,9 @@
               "oneOf": [
                 {
                   "$ref": "#/components/schemas/CompareWorkflowModel1"
+                },
+                {
+                  "$ref": "#/components/schemas/EvaluationWorkflowModel1"
                 },
                 {
                   "$ref": "#/components/schemas/SimpleWorkflowModel1"
@@ -13532,6 +13407,22 @@
               }
             },
             "description": "The selections that the campaign should have.",
+            "nullable": true
+          },
+          "retrievalMode": {
+            "enum": [
+              "Random",
+              "Shuffled",
+              "Sequential"
+            ],
+            "type": "string",
+            "description": "The retrieval mode defines how rapids are retrieved from the active labeling pool.",
+            "nullable": true
+          },
+          "maxIterations": {
+            "type": "integer",
+            "description": "The maximum number of times a user is allowed to see the same rapid.",
+            "format": "int32",
             "nullable": true
           },
           "featureFlags": {

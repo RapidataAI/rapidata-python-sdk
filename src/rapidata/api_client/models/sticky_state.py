@@ -18,21 +18,21 @@ from enum import Enum
 from typing_extensions import Self
 
 
-class LogicOperator(str, Enum):
+class StickyState(str, Enum):
     """
-    LogicOperator
+    StickyState
     """
 
     """
     allowed enum values
     """
-    AND = 'And'
-    OR = 'Or'
-    NOT = 'Not'
+    NONE = 'None'
+    TEMPORARY = 'Temporary'
+    PERMANENT = 'Permanent'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of LogicOperator from a JSON string"""
+        """Create an instance of StickyState from a JSON string"""
         return cls(json.loads(json_str))
 
 

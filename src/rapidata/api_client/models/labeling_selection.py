@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,13 +28,25 @@ class LabelingSelection(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for LabelingSelection", alias="_t")
     amount: StrictInt
-    __properties: ClassVar[List[str]] = ["_t", "amount"]
+    retrieval_mode: Optional[StrictStr] = Field(default=None, alias="retrievalMode")
+    max_iterations: Optional[StrictInt] = Field(default=None, alias="maxIterations")
+    __properties: ClassVar[List[str]] = ["_t", "amount", "retrievalMode", "maxIterations"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
         if value not in set(['LabelingSelection']):
             raise ValueError("must be one of enum values ('LabelingSelection')")
+        return value
+
+    @field_validator('retrieval_mode')
+    def retrieval_mode_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['Random', 'Shuffled', 'Sequential']):
+            raise ValueError("must be one of enum values ('Random', 'Shuffled', 'Sequential')")
         return value
 
     model_config = ConfigDict(
@@ -76,6 +88,11 @@ class LabelingSelection(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if max_iterations (nullable) is None
+        # and model_fields_set contains the field
+        if self.max_iterations is None and "max_iterations" in self.model_fields_set:
+            _dict['maxIterations'] = None
+
         return _dict
 
     @classmethod
@@ -89,7 +106,9 @@ class LabelingSelection(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'LabelingSelection',
-            "amount": obj.get("amount")
+            "amount": obj.get("amount"),
+            "retrievalMode": obj.get("retrievalMode"),
+            "maxIterations": obj.get("maxIterations")
         })
         return _obj
 

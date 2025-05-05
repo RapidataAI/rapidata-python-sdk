@@ -17,29 +17,22 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictInt
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.filter import Filter
+from rapidata.api_client.models.get_workflow_results_result import GetWorkflowResultsResult
 from typing import Optional, Set
 from typing_extensions import Self
 
-class RootFilter(BaseModel):
+class GetWorkflowResultsResultPagedResult(BaseModel):
     """
-    RootFilter
+    GetWorkflowResultsResultPagedResult
     """ # noqa: E501
-    filters: Optional[List[Filter]] = None
-    logic: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["filters", "logic"]
-
-    @field_validator('logic')
-    def logic_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in set(['And', 'Or', 'Not']):
-            raise ValueError("must be one of enum values ('And', 'Or', 'Not')")
-        return value
+    total: StrictInt
+    page: StrictInt
+    page_size: StrictInt = Field(alias="pageSize")
+    items: List[GetWorkflowResultsResult]
+    total_pages: Optional[StrictInt] = Field(default=None, alias="totalPages")
+    __properties: ClassVar[List[str]] = ["total", "page", "pageSize", "items", "totalPages"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -59,7 +52,7 @@ class RootFilter(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of RootFilter from a JSON string"""
+        """Create an instance of GetWorkflowResultsResultPagedResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -71,8 +64,10 @@ class RootFilter(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * OpenAPI `readOnly` fields are excluded.
         """
         excluded_fields: Set[str] = set([
+            "total_pages",
         ])
 
         _dict = self.model_dump(
@@ -80,18 +75,18 @@ class RootFilter(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in filters (list)
+        # override the default output from pydantic by calling `to_dict()` of each item in items (list)
         _items = []
-        if self.filters:
-            for _item_filters in self.filters:
-                if _item_filters:
-                    _items.append(_item_filters.to_dict())
-            _dict['filters'] = _items
+        if self.items:
+            for _item_items in self.items:
+                if _item_items:
+                    _items.append(_item_items.to_dict())
+            _dict['items'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of RootFilter from a dict"""
+        """Create an instance of GetWorkflowResultsResultPagedResult from a dict"""
         if obj is None:
             return None
 
@@ -99,8 +94,11 @@ class RootFilter(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "filters": [Filter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
-            "logic": obj.get("logic")
+            "total": obj.get("total"),
+            "page": obj.get("page"),
+            "pageSize": obj.get("pageSize"),
+            "items": [GetWorkflowResultsResult.from_dict(_item) for _item in obj["items"]] if obj.get("items") is not None else None,
+            "totalPages": obj.get("totalPages")
         })
         return _obj
 

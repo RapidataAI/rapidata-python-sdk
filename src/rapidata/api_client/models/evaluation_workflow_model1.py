@@ -17,28 +17,30 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.filter import Filter
+from rapidata.api_client.models.compare_workflow_model1_referee import CompareWorkflowModel1Referee
 from typing import Optional, Set
 from typing_extensions import Self
 
-class RootFilter(BaseModel):
+class EvaluationWorkflowModel1(BaseModel):
     """
-    RootFilter
+    EvaluationWorkflowModel1
     """ # noqa: E501
-    filters: Optional[List[Filter]] = None
-    logic: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["filters", "logic"]
+    t: StrictStr = Field(description="Discriminator value for EvaluationWorkflow", alias="_t")
+    id: StrictStr
+    validation_set_id: StrictStr = Field(alias="validationSetId")
+    state: StrictStr
+    referee: CompareWorkflowModel1Referee
+    name: StrictStr
+    owner_mail: Optional[StrictStr] = Field(default=None, alias="ownerMail")
+    __properties: ClassVar[List[str]] = ["_t", "id", "validationSetId", "state", "referee", "name", "ownerMail"]
 
-    @field_validator('logic')
-    def logic_validate_enum(cls, value):
+    @field_validator('t')
+    def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in set(['And', 'Or', 'Not']):
-            raise ValueError("must be one of enum values ('And', 'Or', 'Not')")
+        if value not in set(['EvaluationWorkflow']):
+            raise ValueError("must be one of enum values ('EvaluationWorkflow')")
         return value
 
     model_config = ConfigDict(
@@ -59,7 +61,7 @@ class RootFilter(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of RootFilter from a JSON string"""
+        """Create an instance of EvaluationWorkflowModel1 from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -80,18 +82,19 @@ class RootFilter(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in filters (list)
-        _items = []
-        if self.filters:
-            for _item_filters in self.filters:
-                if _item_filters:
-                    _items.append(_item_filters.to_dict())
-            _dict['filters'] = _items
+        # override the default output from pydantic by calling `to_dict()` of referee
+        if self.referee:
+            _dict['referee'] = self.referee.to_dict()
+        # set to None if owner_mail (nullable) is None
+        # and model_fields_set contains the field
+        if self.owner_mail is None and "owner_mail" in self.model_fields_set:
+            _dict['ownerMail'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of RootFilter from a dict"""
+        """Create an instance of EvaluationWorkflowModel1 from a dict"""
         if obj is None:
             return None
 
@@ -99,8 +102,13 @@ class RootFilter(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "filters": [Filter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
-            "logic": obj.get("logic")
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'EvaluationWorkflow',
+            "id": obj.get("id"),
+            "validationSetId": obj.get("validationSetId"),
+            "state": obj.get("state"),
+            "referee": CompareWorkflowModel1Referee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
+            "name": obj.get("name"),
+            "ownerMail": obj.get("ownerMail")
         })
         return _obj
 

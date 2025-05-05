@@ -49,8 +49,8 @@ class Filter(BaseModel):
         if value is None:
             return value
 
-        if value not in set(['And', 'Or']):
-            raise ValueError("must be one of enum values ('And', 'Or')")
+        if value not in set(['And', 'Or', 'Not']):
+            raise ValueError("must be one of enum values ('And', 'Or', 'Not')")
         return value
 
     model_config = ConfigDict(

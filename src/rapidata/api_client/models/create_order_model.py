@@ -39,12 +39,15 @@ class CreateOrderModel(BaseModel):
     feature_flags: Optional[List[FeatureFlagModel]] = Field(default=None, description="The feature flags are used to enable or disable certain features.", alias="featureFlags")
     priority: Optional[StrictInt] = Field(default=None, description="The priority is used to prioritize over other orders.")
     is_sticky: Optional[StrictBool] = Field(default=None, description="Indicates if the underlying campaign should be sticky.", alias="isSticky")
+    sticky_state: Optional[StrictStr] = Field(default=None, description="Indicates if the underlying campaign should be sticky.", alias="stickyState")
     user_score_dimensions: Optional[List[StrictStr]] = Field(default=None, description="The user score dimensions are used to determine the score of the responses from the user.", alias="userScoreDimensions")
     demographic_keys: Optional[List[StrictStr]] = Field(default=None, description="The demographic keys are used to determine which demographics to store on the resposnes from the user.", alias="demographicKeys")
     user_filters: Optional[List[CreateOrderModelUserFiltersInner]] = Field(default=None, description="The user filters are used to restrict the order to only collect votes from a specific demographic.", alias="userFilters")
     validation_set_id: Optional[StrictStr] = Field(default=None, description="The validation set id can be changed to point to a specific validation set. if not provided a sane default will be used.", alias="validationSetId")
     selections: Optional[List[AbTestSelectionAInner]] = Field(default=None, description="The selections are used to determine which tasks are shown to a user.")
-    __properties: ClassVar[List[str]] = ["_t", "orderName", "workflow", "referee", "aggregator", "featureFlags", "priority", "isSticky", "userScoreDimensions", "demographicKeys", "userFilters", "validationSetId", "selections"]
+    retrieval_mode: Optional[StrictStr] = Field(default=None, description="The retrieval mode defines how rapids are retrieved from the active labeling pool.", alias="retrievalMode")
+    max_iterations: Optional[StrictInt] = Field(default=None, description="The maximum number of times a user is allowed to see the same rapid.", alias="maxIterations")
+    __properties: ClassVar[List[str]] = ["_t", "orderName", "workflow", "referee", "aggregator", "featureFlags", "priority", "isSticky", "stickyState", "userScoreDimensions", "demographicKeys", "userFilters", "validationSetId", "selections", "retrievalMode", "maxIterations"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -61,6 +64,26 @@ class CreateOrderModel(BaseModel):
 
         if value not in set(['NonCommittal', 'MajorityVote', 'SimpleMatchup', 'LocateCluster', 'Classification', 'Locate', 'BoundingBox', 'Line', 'Transcription', 'SinglePointLocate', 'FreeText', 'Scrub']):
             raise ValueError("must be one of enum values ('NonCommittal', 'MajorityVote', 'SimpleMatchup', 'LocateCluster', 'Classification', 'Locate', 'BoundingBox', 'Line', 'Transcription', 'SinglePointLocate', 'FreeText', 'Scrub')")
+        return value
+
+    @field_validator('sticky_state')
+    def sticky_state_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['None', 'Temporary', 'Permanent']):
+            raise ValueError("must be one of enum values ('None', 'Temporary', 'Permanent')")
+        return value
+
+    @field_validator('retrieval_mode')
+    def retrieval_mode_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['Random', 'Shuffled', 'Sequential']):
+            raise ValueError("must be one of enum values ('Random', 'Shuffled', 'Sequential')")
         return value
 
     model_config = ConfigDict(
@@ -144,6 +167,11 @@ class CreateOrderModel(BaseModel):
         if self.priority is None and "priority" in self.model_fields_set:
             _dict['priority'] = None
 
+        # set to None if sticky_state (nullable) is None
+        # and model_fields_set contains the field
+        if self.sticky_state is None and "sticky_state" in self.model_fields_set:
+            _dict['stickyState'] = None
+
         # set to None if user_score_dimensions (nullable) is None
         # and model_fields_set contains the field
         if self.user_score_dimensions is None and "user_score_dimensions" in self.model_fields_set:
@@ -169,6 +197,16 @@ class CreateOrderModel(BaseModel):
         if self.selections is None and "selections" in self.model_fields_set:
             _dict['selections'] = None
 
+        # set to None if retrieval_mode (nullable) is None
+        # and model_fields_set contains the field
+        if self.retrieval_mode is None and "retrieval_mode" in self.model_fields_set:
+            _dict['retrievalMode'] = None
+
+        # set to None if max_iterations (nullable) is None
+        # and model_fields_set contains the field
+        if self.max_iterations is None and "max_iterations" in self.model_fields_set:
+            _dict['maxIterations'] = None
+
         return _dict
 
     @classmethod
@@ -189,11 +227,14 @@ class CreateOrderModel(BaseModel):
             "featureFlags": [FeatureFlagModel.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "priority": obj.get("priority"),
             "isSticky": obj.get("isSticky"),
+            "stickyState": obj.get("stickyState"),
             "userScoreDimensions": obj.get("userScoreDimensions"),
             "demographicKeys": obj.get("demographicKeys"),
             "userFilters": [CreateOrderModelUserFiltersInner.from_dict(_item) for _item in obj["userFilters"]] if obj.get("userFilters") is not None else None,
             "validationSetId": obj.get("validationSetId"),
-            "selections": [AbTestSelectionAInner.from_dict(_item) for _item in obj["selections"]] if obj.get("selections") is not None else None
+            "selections": [AbTestSelectionAInner.from_dict(_item) for _item in obj["selections"]] if obj.get("selections") is not None else None,
+            "retrievalMode": obj.get("retrievalMode"),
+            "maxIterations": obj.get("maxIterations")
         })
         return _obj
 
