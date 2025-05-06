@@ -164,7 +164,7 @@ class RapidataOrderManager:
                 If provided, the classification datapoint will stop after the threshold is reached or at the number of responses, whatever happens first.
             filters (Sequence[RapidataFilter], optional): The list of filters for the classification. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the classification. Defaults to []. Decides how the tasks should be shown.
-            selections (Sequence[RapidataSelection], optional): The list of selections for the classification. Defaults to None. Decides in what order the tasks should be shown.
+            selections (Sequence[RapidataSelection], optional): The list of selections for the classification. Defaults to []. Decides in what order the tasks should be shown.
         """
         
         if data_type == RapidataDataTypes.MEDIA:
@@ -222,7 +222,7 @@ class RapidataOrderManager:
                 If provided, the comparison datapoint will stop after the threshold is reached or at the number of responses, whatever happens first.
             filters (Sequence[RapidataFilter], optional): The list of filters for the comparison. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the comparison. Defaults to []. Decides how the tasks should be shown.
-            selections (Sequence[RapidataSelection], optional): The list of selections for the comparison. Defaults to None. Decides in what order the tasks should be shown.
+            selections (Sequence[RapidataSelection], optional): The list of selections for the comparison. Defaults to []. Decides in what order the tasks should be shown.
         """
 
         if data_type == RapidataDataTypes.MEDIA:
