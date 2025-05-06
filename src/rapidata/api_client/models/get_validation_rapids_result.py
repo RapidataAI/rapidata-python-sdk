@@ -17,8 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.file_asset_model_metadata_value import FileAssetModelMetadataValue
 from rapidata.api_client.models.get_validation_rapids_result_asset import GetValidationRapidsResultAsset
 from rapidata.api_client.models.get_validation_rapids_result_payload import GetValidationRapidsResultPayload
@@ -39,7 +39,8 @@ class GetValidationRapidsResult(BaseModel):
     correct_validation_count: StrictInt = Field(alias="correctValidationCount")
     invalid_validation_count: StrictInt = Field(alias="invalidValidationCount")
     explanation: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["id", "type", "asset", "truth", "payload", "metadata", "correctValidationCount", "invalidValidationCount", "explanation"]
+    random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="randomCorrectProbability")
+    __properties: ClassVar[List[str]] = ["id", "type", "asset", "truth", "payload", "metadata", "correctValidationCount", "invalidValidationCount", "explanation", "randomCorrectProbability"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -111,6 +112,11 @@ class GetValidationRapidsResult(BaseModel):
         if self.explanation is None and "explanation" in self.model_fields_set:
             _dict['explanation'] = None
 
+        # set to None if random_correct_probability (nullable) is None
+        # and model_fields_set contains the field
+        if self.random_correct_probability is None and "random_correct_probability" in self.model_fields_set:
+            _dict['randomCorrectProbability'] = None
+
         return _dict
 
     @classmethod
@@ -136,7 +142,8 @@ class GetValidationRapidsResult(BaseModel):
             else None,
             "correctValidationCount": obj.get("correctValidationCount"),
             "invalidValidationCount": obj.get("invalidValidationCount"),
-            "explanation": obj.get("explanation")
+            "explanation": obj.get("explanation"),
+            "randomCorrectProbability": obj.get("randomCorrectProbability")
         })
         return _obj
 

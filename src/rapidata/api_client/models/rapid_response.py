@@ -32,8 +32,9 @@ class RapidResponse(BaseModel):
     country: StrictStr
     result: RapidResponseResult
     user_score: Union[StrictFloat, StrictInt] = Field(alias="userScore")
+    user_scores: Dict[str, Union[StrictFloat, StrictInt]] = Field(alias="userScores")
     demographic_information: Dict[str, StrictStr] = Field(alias="demographicInformation")
-    __properties: ClassVar[List[str]] = ["id", "userId", "country", "result", "userScore", "demographicInformation"]
+    __properties: ClassVar[List[str]] = ["id", "userId", "country", "result", "userScore", "userScores", "demographicInformation"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -94,6 +95,7 @@ class RapidResponse(BaseModel):
             "country": obj.get("country"),
             "result": RapidResponseResult.from_dict(obj["result"]) if obj.get("result") is not None else None,
             "userScore": obj.get("userScore"),
+            "userScores": obj.get("userScores"),
             "demographicInformation": obj.get("demographicInformation")
         })
         return _obj

@@ -18,21 +18,21 @@ from enum import Enum
 from typing_extensions import Self
 
 
-class LogicOperator(str, Enum):
+class RetrievalMode(str, Enum):
     """
-    LogicOperator
+    RetrievalMode
     """
 
     """
     allowed enum values
     """
-    AND = 'And'
-    OR = 'Or'
-    NOT = 'Not'
+    RANDOM = 'Random'
+    SHUFFLED = 'Shuffled'
+    SEQUENTIAL = 'Sequential'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of LogicOperator from a JSON string"""
+        """Create an instance of RetrievalMode from a JSON string"""
         return cls(json.loads(json_str))
 
 

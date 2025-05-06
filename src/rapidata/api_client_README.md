@@ -110,11 +110,13 @@ Class | Method | HTTP request | Description
 *DatasetApi* | [**dataset_import_post**](rapidata/api_client/docs/DatasetApi.md#dataset_import_post) | **POST** /dataset/import | Imports datapoints from a csv file.
 *DatasetApi* | [**dataset_updatename_post**](rapidata/api_client/docs/DatasetApi.md#dataset_updatename_post) | **POST** /dataset/updatename | Updates the name of a dataset.
 *DatasetApi* | [**dataset_uploadfilesfroms3_post**](rapidata/api_client/docs/DatasetApi.md#dataset_uploadfilesfroms3_post) | **POST** /dataset/uploadfilesfroms3 | Uploads files from an S3 bucket to a dataset.
+*EvaluationWorkflowApi* | [**workflow_evaluation_workflow_id_results_get**](rapidata/api_client/docs/EvaluationWorkflowApi.md#workflow_evaluation_workflow_id_results_get) | **GET** /workflow/evaluation/{workflowId}/results | Get the results for an evaluation workflow.
 *FeedbackApi* | [**feedback_feedback_post**](rapidata/api_client/docs/FeedbackApi.md#feedback_feedback_post) | **POST** /feedback/feedback | Submits feedback about our services.
 *FeedbackApi* | [**feedback_post**](rapidata/api_client/docs/FeedbackApi.md#feedback_post) | **POST** /feedback | Submits feedback about our services.
 *IdentityApi* | [**identity_bridge_token_get**](rapidata/api_client/docs/IdentityApi.md#identity_bridge_token_get) | **GET** /identity/bridge-token | Tries to read the bridge token keys for a given read key. The read key is used to retrieve the authentication result written by the write key.
 *IdentityApi* | [**identity_bridge_token_post**](rapidata/api_client/docs/IdentityApi.md#identity_bridge_token_post) | **POST** /identity/bridge-token | Creates a pair of read and write keys for a client. The write key is used to store the authentication result. The read key is used to retrieve the authentication result.
 *IdentityApi* | [**identity_createbridgetoken_post**](rapidata/api_client/docs/IdentityApi.md#identity_createbridgetoken_post) | **POST** /identity/createbridgetoken | Creates a pair of read and write keys for a client. The write key is used to store the authentication result. The read key is used to retrieve the authentication result.
+*IdentityApi* | [**identity_google_one_tap_post**](rapidata/api_client/docs/IdentityApi.md#identity_google_one_tap_post) | **POST** /identity/google-one-tap | Signs in a user using a token received from Google One Tap.
 *IdentityApi* | [**identity_readbridgetoken_get**](rapidata/api_client/docs/IdentityApi.md#identity_readbridgetoken_get) | **GET** /identity/readbridgetoken | Tries to read the bridge token keys for a given read key. The read key is used to retrieve the authentication result written by the write key.
 *IdentityApi* | [**identity_referrer_post**](rapidata/api_client/docs/IdentityApi.md#identity_referrer_post) | **POST** /identity/referrer | Sets the referrer for the current customer.
 *IdentityApi* | [**identity_registertemporary_post**](rapidata/api_client/docs/IdentityApi.md#identity_registertemporary_post) | **POST** /identity/registertemporary | Registers and logs in a temporary customer.
@@ -170,21 +172,15 @@ Class | Method | HTTP request | Description
 *PipelineApi* | [**pipeline_pipeline_id_get**](rapidata/api_client/docs/PipelineApi.md#pipeline_pipeline_id_get) | **GET** /pipeline/{pipelineId} | Gets a pipeline by its id.
 *PipelineApi* | [**pipeline_pipeline_id_preliminary_download_post**](rapidata/api_client/docs/PipelineApi.md#pipeline_pipeline_id_preliminary_download_post) | **POST** /pipeline/{pipelineId}/preliminary-download | Initiates a preliminary download of the pipeline.
 *PipelineApi* | [**pipeline_preliminary_download_preliminary_download_id_get**](rapidata/api_client/docs/PipelineApi.md#pipeline_preliminary_download_preliminary_download_id_get) | **GET** /pipeline/preliminary-download/{preliminaryDownloadId} | Gets the preliminary download.
-*RapidApi* | [**rapid_adduserguess_post**](rapidata/api_client/docs/RapidApi.md#rapid_adduserguess_post) | **POST** /rapid/adduserguess | Submits a user guess for a Rapid.
-*RapidApi* | [**rapid_createdemographicrapid_post**](rapidata/api_client/docs/RapidApi.md#rapid_createdemographicrapid_post) | **POST** /rapid/createdemographicrapid | Creates a new Demographic Rapid.
 *RapidApi* | [**rapid_demographic_post**](rapidata/api_client/docs/RapidApi.md#rapid_demographic_post) | **POST** /rapid/demographic | Creates a new Demographic Rapid.
-*RapidApi* | [**rapid_queryvalidationrapids_get**](rapidata/api_client/docs/RapidApi.md#rapid_queryvalidationrapids_get) | **GET** /rapid/queryvalidationrapids | Queries the validation rapids for a specific validation set.
 *RapidApi* | [**rapid_rapid_bag_is_valid_get**](rapidata/api_client/docs/RapidApi.md#rapid_rapid_bag_is_valid_get) | **GET** /rapid/rapid-bag/is-valid | Validates that the rapids associated with the current user are active.
 *RapidApi* | [**rapid_rapid_id_delete**](rapidata/api_client/docs/RapidApi.md#rapid_rapid_id_delete) | **DELETE** /rapid/{rapidId} | Deletes a rapid.
 *RapidApi* | [**rapid_rapid_id_report_post**](rapidata/api_client/docs/RapidApi.md#rapid_rapid_id_report_post) | **POST** /rapid/{rapidId}/report | Used to report an issue with a rapid.
 *RapidApi* | [**rapid_rapid_id_responses_get**](rapidata/api_client/docs/RapidApi.md#rapid_rapid_id_responses_get) | **GET** /rapid/{rapidId}/responses | Gets all responses for a given rapid.
-*RapidApi* | [**rapid_report_report_id_get**](rapidata/api_client/docs/RapidApi.md#rapid_report_report_id_get) | **GET** /rapid/report/{reportId} | Inspects a report&#39;s dump. can be used to restore zustand state or anything alike.
+*RapidApi* | [**rapid_report_report_id_get**](rapidata/api_client/docs/RapidApi.md#rapid_report_report_id_get) | **GET** /rapid/report/{reportId} | Inspects a report&#39;s dump. Can be used to restore zustand state or anything alike.
 *RapidApi* | [**rapid_response_post**](rapidata/api_client/docs/RapidApi.md#rapid_response_post) | **POST** /rapid/response | Submits a response for a Rapid.
 *RapidApi* | [**rapid_skip_post**](rapidata/api_client/docs/RapidApi.md#rapid_skip_post) | **POST** /rapid/skip | Skips a Rapid for the user.
-*RapidApi* | [**rapid_skipuserguess_post**](rapidata/api_client/docs/RapidApi.md#rapid_skipuserguess_post) | **POST** /rapid/skipuserguess | Skips a Rapid for the user.
-*RapidApi* | [**rapid_validatecurrentrapidbag_get**](rapidata/api_client/docs/RapidApi.md#rapid_validatecurrentrapidbag_get) | **GET** /rapid/validatecurrentrapidbag | Validates that the rapids associated with the current user are active.
 *RapidApi* | [**rapid_validation_rapid_id_patch**](rapidata/api_client/docs/RapidApi.md#rapid_validation_rapid_id_patch) | **PATCH** /rapid/validation/{rapidId} | Updates the validation information of a rapid.
-*RapidApi* | [**rapid_validation_rapid_id_put**](rapidata/api_client/docs/RapidApi.md#rapid_validation_rapid_id_put) | **PUT** /rapid/validation/{rapidId} | Updates the validation information of a rapid.
 *RapidataIdentityAPIApi* | [**root_get**](rapidata/api_client/docs/RapidataIdentityAPIApi.md#root_get) | **GET** / | 
 *SimpleWorkflowApi* | [**workflow_simple_workflow_id_results_get**](rapidata/api_client/docs/SimpleWorkflowApi.md#workflow_simple_workflow_id_results_get) | **GET** /workflow/simple/{workflowId}/results | Get the result overview for a simple workflow.
 *UserInfoApi* | [**connect_userinfo_get**](rapidata/api_client/docs/UserInfoApi.md#connect_userinfo_get) | **GET** /connect/userinfo | Retrieves information about the authenticated user.
@@ -325,6 +321,7 @@ Class | Method | HTTP request | Description
  - [EmptyValidationTruth](rapidata/api_client/docs/EmptyValidationTruth.md)
  - [EvaluationWorkflowConfig](rapidata/api_client/docs/EvaluationWorkflowConfig.md)
  - [EvaluationWorkflowModel](rapidata/api_client/docs/EvaluationWorkflowModel.md)
+ - [EvaluationWorkflowModel1](rapidata/api_client/docs/EvaluationWorkflowModel1.md)
  - [FeatureFlag](rapidata/api_client/docs/FeatureFlag.md)
  - [FeatureFlagModel](rapidata/api_client/docs/FeatureFlagModel.md)
  - [FeedbackModel](rapidata/api_client/docs/FeedbackModel.md)
@@ -355,8 +352,6 @@ Class | Method | HTTP request | Description
  - [GetRapidResponsesResult](rapidata/api_client/docs/GetRapidResponsesResult.md)
  - [GetResponsesResult](rapidata/api_client/docs/GetResponsesResult.md)
  - [GetSimpleWorkflowResultsModel](rapidata/api_client/docs/GetSimpleWorkflowResultsModel.md)
- - [GetSimpleWorkflowResultsResult](rapidata/api_client/docs/GetSimpleWorkflowResultsResult.md)
- - [GetSimpleWorkflowResultsResultPagedResult](rapidata/api_client/docs/GetSimpleWorkflowResultsResultPagedResult.md)
  - [GetValidationRapidsResult](rapidata/api_client/docs/GetValidationRapidsResult.md)
  - [GetValidationRapidsResultAsset](rapidata/api_client/docs/GetValidationRapidsResultAsset.md)
  - [GetValidationRapidsResultPagedResult](rapidata/api_client/docs/GetValidationRapidsResultPagedResult.md)
@@ -366,6 +361,9 @@ Class | Method | HTTP request | Description
  - [GetWorkflowByIdResult](rapidata/api_client/docs/GetWorkflowByIdResult.md)
  - [GetWorkflowByIdResultWorkflow](rapidata/api_client/docs/GetWorkflowByIdResultWorkflow.md)
  - [GetWorkflowProgressResult](rapidata/api_client/docs/GetWorkflowProgressResult.md)
+ - [GetWorkflowResultsResult](rapidata/api_client/docs/GetWorkflowResultsResult.md)
+ - [GetWorkflowResultsResultPagedResult](rapidata/api_client/docs/GetWorkflowResultsResultPagedResult.md)
+ - [GoogleOneTapLoginModel](rapidata/api_client/docs/GoogleOneTapLoginModel.md)
  - [IWorkflowModelPagedResult](rapidata/api_client/docs/IWorkflowModelPagedResult.md)
  - [ImageDimensionMetadata](rapidata/api_client/docs/ImageDimensionMetadata.md)
  - [ImageDimensionMetadataModel](rapidata/api_client/docs/ImageDimensionMetadataModel.md)
@@ -429,8 +427,6 @@ Class | Method | HTTP request | Description
  - [PublicOrderModel](rapidata/api_client/docs/PublicOrderModel.md)
  - [PublicTextMetadataInput](rapidata/api_client/docs/PublicTextMetadataInput.md)
  - [QueryModel](rapidata/api_client/docs/QueryModel.md)
- - [QueryValidationRapidsResult](rapidata/api_client/docs/QueryValidationRapidsResult.md)
- - [QueryValidationRapidsResultPagedResult](rapidata/api_client/docs/QueryValidationRapidsResultPagedResult.md)
  - [QueryWorkflowsModel](rapidata/api_client/docs/QueryWorkflowsModel.md)
  - [RapidIssue](rapidata/api_client/docs/RapidIssue.md)
  - [RapidResponse](rapidata/api_client/docs/RapidResponse.md)
@@ -444,6 +440,7 @@ Class | Method | HTTP request | Description
  - [RegisterTemporaryCustomerResult](rapidata/api_client/docs/RegisterTemporaryCustomerResult.md)
  - [ReportModel](rapidata/api_client/docs/ReportModel.md)
  - [ResponseCountUserFilterModel](rapidata/api_client/docs/ResponseCountUserFilterModel.md)
+ - [RetrievalMode](rapidata/api_client/docs/RetrievalMode.md)
  - [RootFilter](rapidata/api_client/docs/RootFilter.md)
  - [ScrubPayload](rapidata/api_client/docs/ScrubPayload.md)
  - [ScrubRange](rapidata/api_client/docs/ScrubRange.md)
@@ -460,11 +457,13 @@ Class | Method | HTTP request | Description
  - [SimpleWorkflowModel1](rapidata/api_client/docs/SimpleWorkflowModel1.md)
  - [SimpleWorkflowModelBlueprint](rapidata/api_client/docs/SimpleWorkflowModelBlueprint.md)
  - [SkipResult](rapidata/api_client/docs/SkipResult.md)
+ - [SkipTruth](rapidata/api_client/docs/SkipTruth.md)
  - [SortCriterion](rapidata/api_client/docs/SortCriterion.md)
  - [SortDirection](rapidata/api_client/docs/SortDirection.md)
  - [SourceUrlMetadata](rapidata/api_client/docs/SourceUrlMetadata.md)
  - [SourceUrlMetadataModel](rapidata/api_client/docs/SourceUrlMetadataModel.md)
  - [StaticSelection](rapidata/api_client/docs/StaticSelection.md)
+ - [StickyState](rapidata/api_client/docs/StickyState.md)
  - [SubmitCocoModel](rapidata/api_client/docs/SubmitCocoModel.md)
  - [SubmitCocoResult](rapidata/api_client/docs/SubmitCocoResult.md)
  - [TextAssetModel](rapidata/api_client/docs/TextAssetModel.md)
