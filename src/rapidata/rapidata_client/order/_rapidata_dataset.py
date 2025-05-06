@@ -17,7 +17,7 @@ from tqdm import tqdm
 
 from pydantic import StrictStr
 from typing import cast, Sequence, Generator
-from logging import Logger
+from rapidata.rapidata_client.logging import logger
 import time
 import threading
 
@@ -33,7 +33,6 @@ class RapidataDataset:
         self.dataset_id = dataset_id
         self.openapi_service = openapi_service
         self.local_file_service = LocalFileService()
-        self._logger = Logger(__name__)
 
     def _add_texts(
         self,
@@ -144,14 +143,14 @@ class RapidataDataset:
                 
             if upload_response.errors:
                 error_msg = f"Error uploading datapoint: {upload_response.errors}"
-                self._logger.error(error_msg)
+                logger.error(error_msg)
                 local_failed.extend(identifiers_to_track)
                 raise ValueError(error_msg)
 
             local_successful.extend(identifiers_to_track)
 
         except Exception as e:
-            self._logger.error(f"\nUpload failed for {identifiers_to_track}: {str(e)}") # \n to avoid same line as tqdm
+            logger.error(f"\nUpload failed for {identifiers_to_track}: {str(e)}") # \n to avoid same line as tqdm
             local_failed.extend(identifiers_to_track)
 
         return local_successful, local_failed
@@ -233,11 +232,11 @@ class RapidataDataset:
                                     # If we're not at 100% but it's been a while with no progress
                                     if stall_count > 5:
                                         # We've polled several times with no progress, assume we're done
-                                        self._logger.warning(f"\nProgress seems stalled at {total_completed}/{total_uploads}. Please try again.")
+                                        logger.warning(f"\nProgress seems stalled at {total_completed}/{total_uploads}. Please try again.")
                                         break
                                 
                         except Exception as e:
-                            self._logger.error(f"\nError checking progress: {str(e)}")
+                            logger.error(f"\nError checking progress: {str(e)}")
                             stall_count += 1
                             
                             if stall_count > 10:  # Too many consecutive errors
@@ -248,7 +247,7 @@ class RapidataDataset:
                         time.sleep(progress_poll_interval)
                 
             except Exception as e:
-                self._logger.error(f"Progress tracking thread error: {str(e)}")
+                logger.error(f"Progress tracking thread error: {str(e)}")
                 progress_error_event.set()
                 
         # Create and return the thread
@@ -308,7 +307,7 @@ class RapidataDataset:
                             successful_uploads.extend(chunk_successful)
                             failed_uploads.extend(chunk_failed)
                         except Exception as e:
-                            self._logger.error(f"Future execution failed: {str(e)}")
+                            logger.error(f"Future execution failed: {str(e)}")
         finally:
             # Signal to the progress tracking thread that all uploads have been submitted
             stop_progress_tracking.set()
@@ -349,14 +348,13 @@ class RapidataDataset:
             
             success_rate = (total_ready / total_uploads * 100) if total_uploads > 0 else 0
             
-            self._logger.info(f"Upload complete: {total_ready} ready, {total_uploads-total_ready} failed ({success_rate:.1f}% success rate)")
-            print(f"Upload complete, {total_ready} ready, {total_uploads-total_ready} failed ({success_rate:.1f}% success rate)")
+            logger.info(f"Upload complete: {total_ready} ready, {total_uploads-total_ready} failed ({success_rate:.1f}% success rate)")
         except Exception as e:
-            self._logger.error(f"Error getting final progress: {str(e)}")
-            self._logger.info(f"Upload summary from local tracking: {len(successful_uploads)} succeeded, {len(failed_uploads)} failed")
+            logger.error(f"Error getting final progress: {str(e)}")
+            logger.info(f"Upload summary from local tracking: {len(successful_uploads)} succeeded, {len(failed_uploads)} failed")
 
         if failed_uploads:
-            print(f"Failed uploads: {failed_uploads}")
+            logger.error(f"Failed uploads: {failed_uploads}")
 
     def _add_media_from_paths(
         self,

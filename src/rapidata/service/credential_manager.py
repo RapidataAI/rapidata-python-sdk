@@ -11,6 +11,7 @@ from typing import Dict, List, Optional, Tuple
 import requests
 from colorama import Fore
 from pydantic import BaseModel
+from rapidata.rapidata_client.logging import logger, managed_print
 
 
 class ClientCredential(BaseModel):
@@ -20,27 +21,6 @@ class ClientCredential(BaseModel):
     endpoint: str
     created_at: datetime
     last_used: datetime
-
-    @classmethod
-    def from_dict(cls, data: Dict):
-        return cls(
-            display_name=data["display_name"],
-            client_id=data["client_id"],
-            client_secret=data["client_secret"],
-            endpoint=data["endpoint"],
-            created_at=datetime.fromisoformat(data["created_at"]),
-            last_used=datetime.fromisoformat(data["last_used"]),
-        )
-
-    def to_dict(self) -> Dict:
-        return {
-            "display_name": self.display_name,
-            "client_id": self.client_id,
-            "client_secret": self.client_secret,
-            "endpoint": self.endpoint,
-            "created_at": self.created_at.isoformat(),
-            "last_used": self.last_used.isoformat(),
-        }
 
     def get_display_string(self):
         return f"{self.display_name} - Client ID: {self.client_id} (Created: {self.created_at.strftime('%Y-%m-%d %H:%M:%S')})"
@@ -72,6 +52,7 @@ class CredentialManager:
 
     def _read_credentials(self) -> Dict[str, List[ClientCredential]]:
         """Read all stored credentials from the config file."""
+        logger.debug(f"Reading credentials from {self.config_path}")
         if not self.config_path.exists():
             return {}
 
@@ -79,7 +60,7 @@ class CredentialManager:
             with open(self.config_path, "r") as f:
                 data = json.load(f)
                 return {
-                    env: [ClientCredential.from_dict(cred) for cred in creds]
+                    env: [ClientCredential.model_validate(cred) for cred in creds]
                     for env, creds in data.items()
                 }
         except json.JSONDecodeError:
@@ -89,15 +70,18 @@ class CredentialManager:
         self, credentials: Dict[str, List[ClientCredential]]
     ) -> None:
         data = {
-            env: [cred.to_dict() for cred in creds]
+            env: [cred.model_dump(mode="json") for cred in creds]
             for env, creds in credentials.items()
         }
 
         with open(self.config_path, "w") as f:
             json.dump(data, f, indent=2)
 
+        logger.debug(f"Credentials written to {self.config_path} with data: {data}")
+
         # Ensure file is only readable by the user
         os.chmod(self.config_path, 0o600)
+        logger.debug(f"Set permissions for {self.config_path} to read/write for user only.")
 
     def _store_credential(self, credential: ClientCredential) -> None:
         credentials = self._read_credentials()
@@ -123,15 +107,19 @@ class CredentialManager:
     def get_client_credentials(self) -> Optional[ClientCredential]:
         """Gets stored client credentials or create new ones via browser auth."""
         credentials = self._read_credentials()
+        logger.debug(f"Stored credentials: {credentials}")
         env_credentials = credentials.get(self.endpoint, [])
 
         if env_credentials:
+            logger.debug(f"Found credentials for {self.endpoint}: {env_credentials}")
             credential = self._select_credential(env_credentials)
+            logger.debug(f"Selected credential: {credential}")
             if credential:
                 credential.last_used = datetime.now(timezone.utc)
                 self._write_credentials(credentials)
                 return credential
 
+        logger.debug(f"No credentials found for {self.endpoint}. Creating new ones.")
         return self._create_new_credentials()
 
     def reset_credentials(self) -> None:
@@ -140,22 +128,26 @@ class CredentialManager:
         if self.endpoint in credentials:
             del credentials[self.endpoint]
             self._write_credentials(credentials)
+            logger.info(
+                f"Credentials for {self.endpoint} have been reset."
+            )
 
     def _get_bridge_tokens(self) -> Optional[BridgeToken]:
         """Get bridge tokens from the identity endpoint."""
+        logger.debug("Getting bridge tokens")
         try:
             bridge_endpoint = (
                 f"{self.endpoint}/Identity/CreateBridgeToken?clientId=rapidata-cli"
             )
             response = requests.post(bridge_endpoint, verify=self.cert_path)
             if not response.ok:
-                print(f"Failed to get bridge tokens: {response.status_code}")
+                logger.error(f"Failed to get bridge tokens: {response.status_code}")
                 return None
 
             data = response.json()
             return BridgeToken(read_key=data["readKey"], write_key=data["writeKey"])
         except requests.RequestException as e:
-            print(f"Failed to get bridge tokens: {e}")
+            logger.error(f"Failed to get bridge tokens: {e}")
             return None
 
     def _poll_read_key(self, read_key: str) -> Optional[str]:
@@ -177,14 +169,14 @@ class CredentialManager:
                     continue
                 else:
                     # Error occurred
-                    print(f"Error polling read key: {response.status_code}")
+                    logger.error(f"Error polling read key: {response.status_code}")
                     return None
 
             except requests.RequestException as e:
-                print(f"Error polling read key: {e}")
+                logger.error(f"Error polling read key: {e}")
                 return None
 
-        print("Polling timed out")
+        logger.error("Polling timed out")
         return None
 
     def _create_client(self, access_token: str) -> Optional[Tuple[str, str, str]]:
@@ -206,7 +198,7 @@ class CredentialManager:
             data = response.json()
             return data.get("clientId"), data.get("clientSecret"), display_name
         except requests.RequestException as e:
-            print(f"Failed to create client: {e}")
+            logger.error(f"Failed to create client: {e}")
             return None
 
     def _create_new_credentials(self) -> Optional[ClientCredential]:
@@ -219,7 +211,7 @@ class CredentialManager:
 
         if not could_open_browser:
             encoded_url = urllib.parse.quote(auth_url, safe="%/:=&?~#+!$,;'@()*[]")
-            print(
+            managed_print(
                 Fore.RED
                 + f'Please open the following URL in your browser to log in: "{encoded_url}"'
                 + Fore.RESET

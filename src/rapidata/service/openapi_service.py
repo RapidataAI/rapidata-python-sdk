@@ -11,6 +11,7 @@ from rapidata.api_client.api.workflow_api import WorkflowApi
 from rapidata.api_client.configuration import Configuration
 from rapidata.service.credential_manager import CredentialManager
 from rapidata.rapidata_client.api.rapidata_exception import RapidataApiClient
+from rapidata.rapidata_client.logging import logger
 
 
 class OpenAPIService:
@@ -31,18 +32,25 @@ class OpenAPIService:
         if environment == "rapidata.dev" and not cert_path:
             cert_path = _get_local_certificate()
 
+        logger.debug(f"Using cert_path: {cert_path} environment: {environment} token: {token} client_id: {client_id} client_secret: {client_secret}")
+        logger.debug("Initializing OpenAPIService")
         self.credential_manager = CredentialManager(
             endpoint=auth_endpoint, cert_path=cert_path
         )
+        logger.debug("CredentialManager initialized")
 
+        logger.debug("Initializing RapidataApiClient")
         client_configuration = Configuration(host=endpoint, ssl_ca_cert=cert_path)
+        logger.debug(f"Client configuration: {client_configuration}")
         self.api_client = RapidataApiClient(
             configuration=client_configuration,
             header_name="X-Client",
             header_value=f"RapidataPythonSDK/{self._get_rapidata_package_version()}",
         )
+        logger.debug("RapidataApiClient initialized")
 
         if token:
+            logger.debug("Using token for authentication")
             self.api_client.rest_client.setup_oauth_with_token(
                 token=token,
                 token_endpoint=f"{auth_endpoint}/connect/token",
@@ -50,9 +58,11 @@ class OpenAPIService:
                 client_secret=client_secret,
                 leeway=leeway,
             )
+            logger.debug("Token authentication setup complete")
             return
 
         if not client_id or not client_secret:
+            logger.debug("Client ID and secret not provided, fetching from credential manager")
             credentials = self.credential_manager.get_client_credentials()
             if not credentials:
                 raise ValueError("Failed to fetch client credentials")
@@ -65,6 +75,7 @@ class OpenAPIService:
             token_endpoint=f"{auth_endpoint}/connect/token",
             scope=oauth_scope,
         )
+        logger.debug("Client credentials authentication setup complete")
 
     def reset_credentials(self):
         self.credential_manager.reset_credentials()

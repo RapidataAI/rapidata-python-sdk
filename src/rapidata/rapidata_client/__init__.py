@@ -45,4 +45,10 @@ from .filter import (
     ResponseCountFilter,
 )
 
+from .logging import (
+    configure_logger, 
+    logger,
+    OutputManger
+)
+
 from .validation import Box

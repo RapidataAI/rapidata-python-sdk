@@ -17,6 +17,7 @@ from rapidata.api_client.models.preliminary_download_model import PreliminaryDow
 from rapidata.api_client.models.workflow_artifact_model import WorkflowArtifactModel
 from rapidata.rapidata_client.order.rapidata_results import RapidataResults
 from rapidata.service.openapi_service import OpenAPIService
+from rapidata.rapidata_client.logging import logger, managed_print
 
 
 class RapidataOrder:
@@ -47,23 +48,29 @@ class RapidataOrder:
         self._max_retries = 10  
         self._retry_delay = 2
         self.order_details_page = f"https://app.{self.__openapi_service.environment}/order/detail/{self.order_id}"
+        logger.debug("RapidataOrder initialized")
 
-    def run(self, print_link: bool = True) -> "RapidataOrder":
+    def run(self) -> "RapidataOrder":
         """Runs the order to start collecting responses."""
+        logger.info(f"Starting order '{self}'")
         self.__openapi_service.order_api.order_order_id_submit_post(self.order_id)
-        if print_link:
-            print(f"Order '{self.name}' is now viewable under: {self.order_details_page}")
+        logger.debug(f"Order '{self}' has been started.")
+        managed_print(f"Order '{self.name}' is now viewable under: {self.order_details_page}")
         return self
 
     def pause(self) -> None:
         """Pauses the order."""
+        logger.info(f"Pausing order '{self}'")
         self.__openapi_service.order_api.order_pause_post(self.order_id)
-        print(f"Order '{self}' has been paused.")
+        logger.debug(f"Order '{self}' has been paused.")
+        managed_print(f"Order '{self}' has been paused.")
 
     def unpause(self) -> None:
         """Unpauses/resumes the order."""
+        logger.info(f"Unpausing order '{self}'")
         self.__openapi_service.order_api.order_resume_post(self.order_id)
-        print(f"Order '{self}' has been unpaused.")
+        logger.debug(f"Order '{self}' has been unpaused.")
+        managed_print(f"Order '{self}' has been unpaused.")
 
     def get_status(self) -> str:
         """
@@ -95,12 +102,12 @@ class RapidataOrder:
             raise Exception("Order has not been started yet. Please start it first.")
         
         while self.get_status() == OrderState.SUBMITTED:
-            print(f"Order '{self.name}' is submitted and being reviewed. Standby...", end="\r")
+            managed_print(f"Order '{self}' is submitted and being reviewed. Standby...", end="\r")
             sleep(1)
 
         if self.get_status() == OrderState.MANUALREVIEW:
             raise Exception(
-                f"Order '{self.name}' is in manual review. It might take some time to start. "
+                f"Order '{self}' is in manual review. It might take some time to start. "
                 "To speed up the process, contact support (info@rapidata.ai).\n"
                 "Once started, run this method again to display the progress bar."
             )
@@ -145,12 +152,12 @@ class RapidataOrder:
                 Note that preliminary results are not final and may not contain all the datapoints & responses. Only the onese that are already available.
                 This will throw an exception if there are no responses available yet.
         """
-
+        logger.info(f"Getting results for order '{self}'...")
         if preliminary_results and self.get_status() not in [OrderState.COMPLETED]:
             return self.__get_preliminary_results()
         
         elif preliminary_results and self.get_status() in [OrderState.COMPLETED]:
-            print("Order is already completed. Returning final results.")
+            managed_print("Order is already completed. Returning final results.")
 
         while self.get_status() not in [OrderState.COMPLETED, OrderState.PAUSED, OrderState.MANUALREVIEW, OrderState.FAILED]:
             sleep(5)
@@ -167,10 +174,11 @@ class RapidataOrder:
         Raises:
             Exception: If the order is not in processing state.
         """
+        logger.info("Opening order details page in browser...")
         could_open_browser = webbrowser.open(self.order_details_page)
         if not could_open_browser:
             encoded_url = urllib.parse.quote(self.order_details_page, safe="%/:=&?~#+!$,;'@()*[]")
-            print(Fore.RED + f'Please open this URL in your browser: "{encoded_url}"' + Fore.RESET)
+            managed_print(Fore.RED + f'Please open this URL in your browser: "{encoded_url}"' + Fore.RESET)
         
     def preview(self) -> None:
         """
@@ -178,13 +186,14 @@ class RapidataOrder:
         
         Raises:
             Exception: If the order is not in processing state.
-        """        
+        """
+        logger.info("Opening order preview in browser...")
         campaign_id = self.__get_campaign_id()
         auth_url = f"https://app.{self.__openapi_service.environment}/order/detail/{self.order_id}/preview?campaignId={campaign_id}"
         could_open_browser = webbrowser.open(auth_url)
         if not could_open_browser:
             encoded_url = urllib.parse.quote(auth_url, safe="%/:=&?~#+!$,;'@()*[]")
-            print(Fore.RED + f'Please open this URL in your browser: "{encoded_url}"' + Fore.RESET)
+            managed_print(Fore.RED + f'Please open this URL in your browser: "{encoded_url}"' + Fore.RESET)
 
     def __get_pipeline_id(self) -> str:
         """Internal method to fetch and cache the pipeline ID."""
@@ -249,7 +258,7 @@ class RapidataOrder:
             raise Exception(f"Failed to get preliminary results: {str(e)}") from e
 
     def __str__(self) -> str:
-        return f"name: '{self.name}' order id: {self.order_id}"
+        return f"RapidataOrder(name='{self.name}', order_id='{self.order_id}')"
 
     def __repr__(self) -> str:
         return f"RapidataOrder(name='{self.name}', order_id='{self.order_id}')"

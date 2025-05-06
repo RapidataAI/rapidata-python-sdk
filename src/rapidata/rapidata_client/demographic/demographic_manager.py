@@ -2,13 +2,12 @@ from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.assets import MediaAsset
 from rapidata.api_client.models.create_demographic_rapid_model import CreateDemographicRapidModel
 from rapidata.api_client.models.classify_payload import ClassifyPayload
-import requests
-from requests.adapters import HTTPAdapter, Retry
-
+from rapidata.rapidata_client.logging import logger
 
 class DemographicManager:
     def __init__(self, openapi_service: OpenAPIService):
         self._openapi_service = openapi_service
+        logger.debug("DemographicManager initialized")
     
     def create_demographic_rapid(self, 
                                  instruction: str,

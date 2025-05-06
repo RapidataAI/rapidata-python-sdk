@@ -1,7 +1,6 @@
 from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 from rapidata.service.openapi_service import OpenAPIService
-from requests.adapters import HTTPAdapter, Retry
-import requests
+from rapidata.rapidata_client.logging import logger
 from rapidata.api_client.models.update_dimensions_model import UpdateDimensionsModel
 from rapidata.rapidata_client.assets._sessions import SessionManager
 
@@ -37,6 +36,7 @@ class RapidataValidationSet:
         Args:
             dimensions (list[str]): The new dimensions of the validation set.
         """
+        logger.debug(f"Updating dimensions for validation set {self.id} to {dimensions}")
         self.__openapi_service.validation_api.validation_validation_set_id_dimensions_patch(self.id, UpdateDimensionsModel(dimensions=dimensions))
         return self
 

@@ -30,4 +30,7 @@ from .rapidata_client import (
     RapidataDataTypes,
     Box,
     PromptMetadata,
+    logger,
+    configure_logger,
+    OutputManger,
 )

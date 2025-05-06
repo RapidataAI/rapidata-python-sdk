@@ -1,4 +1,5 @@
 from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
+from rapidata.rapidata_client.logging import managed_print
 
 class AlertOnFastResponse(RapidataSetting):
     """
@@ -12,7 +13,7 @@ class AlertOnFastResponse(RapidataSetting):
         if not isinstance(threshold, int):
             raise ValueError("The alert must be an integer.")
         if threshold < 10:
-            print(f"Warning: Are you sure you want to set the threshold so low ({threshold} milliseconds)?")
+            managed_print(f"Warning: Are you sure you want to set the threshold so low ({threshold} milliseconds)?")
         if threshold > 25000:
             raise ValueError("The alert must be less than 25000 milliseconds.")
         if threshold < 0:

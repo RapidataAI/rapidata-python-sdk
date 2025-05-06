@@ -29,6 +29,8 @@ from rapidata.rapidata_client.assets import MediaAsset, TextAsset, MultiAsset, B
 
 from typing import Optional, cast, Sequence
 
+from rapidata.rapidata_client.logging import logger, managed_print
+
 
 class RapidataOrderBuilder:
     """Builder object for creating Rapidata orders.
@@ -73,7 +75,7 @@ class RapidataOrderBuilder:
             raise ValueError("You must provide a workflow to create an order.")
 
         if self.__referee is None:
-            print("No referee provided, using default NaiveReferee.")
+            managed_print("No referee provided, using default NaiveReferee.")
             self.__referee = NaiveReferee()
 
         return CreateOrderModel(
@@ -113,6 +115,7 @@ class RapidataOrderBuilder:
             RapidataOrder: The created RapidataOrder instance.
         """
         order_model = self._to_model()
+        logger.debug(f"Creating order with model: {order_model}")
         if isinstance(
             self.__workflow, CompareWorkflow
         ):  # Temporary fix; will be handled by backend in the future
@@ -125,18 +128,26 @@ class RapidataOrderBuilder:
         )
 
         self.order_id = str(result.order_id)
+        logger.debug(f"Order created with ID: {self.order_id}")
 
         self.__dataset = (
             RapidataDataset(result.dataset_id, self.__openapi_service)
             if result.dataset_id
             else None
         )
+        if self.__dataset:
+            logger.debug(f"Dataset created with ID: {self.__dataset.dataset_id}")
+        else:
+            logger.warning("No dataset created for this order.")
 
         order = RapidataOrder(
             order_id=self.order_id,
             openapi_service=self.__openapi_service,
             name=self._name,
         )
+
+        logger.debug(f"Order created: {order}")
+        logger.debug("Adding media to the order.")
 
         if all(isinstance(item, MediaAsset) for item in self.__assets) and self.__dataset:
             assets = cast(list[MediaAsset], self.__assets)
@@ -183,6 +194,8 @@ class RapidataOrderBuilder:
                 "Media paths must all be of the same type: MediaAsset, TextAsset, or MultiAsset."
             )
         
+        logger.debug("Media added to the order.")
+        logger.debug("Setting order to preview")
         self.__openapi_service.order_api.order_order_id_preview_post(self.order_id)
 
         return order
@@ -291,7 +304,7 @@ class RapidataOrderBuilder:
                 raise TypeError("Filters must be of type Filter.")
 
         if len(self.__user_filters) > 0:
-            print("Overwriting existing user filters.")
+            managed_print("Overwriting existing user filters.")
 
         self.__user_filters = filters
         return self

@@ -34,6 +34,7 @@ from rapidata.api_client.models.page_info import PageInfo
 from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.filter import Filter
 from rapidata.api_client.models.sort_criterion import SortCriterion
+from rapidata.rapidata_client.logging import logger
 
 from tqdm import tqdm
 
@@ -53,6 +54,7 @@ class RapidataOrderManager:
         self.settings = RapidataSettings
         self.selections = RapidataSelections
         self.__priority = 50
+        logger.debug("RapidataOrderManager initialized")
 
     def __get_selections(self, validation_set_id: str | None, labeling_amount=3) -> Sequence[RapidataSelection]:
         if validation_set_id:
@@ -85,7 +87,7 @@ class RapidataOrderManager:
             raise ValueError("You can only use contexts or sentences, not both")
         
         if contexts and data_type == RapidataDataTypes.TEXT:
-            print("Warning: Contexts are not supported for text data type. Ignoring contexts.")
+            logger.warning("Warning: Contexts are not supported for text data type. Ignoring contexts.")
 
         if not confidence_threshold:
             referee = NaiveReferee(responses=responses_per_datapoint)
@@ -98,7 +100,7 @@ class RapidataOrderManager:
         order_builder = RapidataOrderBuilder(name=name, openapi_service=self._openapi_service)
 
         if selections and validation_set_id:
-            print("Warning: You provided both selections and validation_set_id. Ignoring validation_set_id.")
+            logger.warning("Warning: Both selections and validation_set_id provided. Ignoring validation_set_id.")
         
         if selections is None:
             selections = self.__get_selections(validation_set_id, labeling_amount=default_labeling_amount)

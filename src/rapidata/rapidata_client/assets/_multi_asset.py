@@ -58,3 +58,9 @@ class MultiAsset(BaseAsset):
             Iterator[BaseAsset]: An iterator over the assets.
         """
         return iter(self.assets)
+
+    def __str__(self) -> str:
+        return f"MultiAsset(assets={self.assets})"
+    
+    def __repr__(self) -> str:
+        return f"MultiAsset(assets={self.assets})"
