@@ -73,7 +73,7 @@ class RapidataOrderManager:
             filters: Sequence[RapidataFilter] = [],
             settings: Sequence[RapidataSetting] = [],
             sentences: list[str] | None = None,
-            selections: Sequence[RapidataSelection] | None = None,
+            selections: Sequence[RapidataSelection] = [],
             default_labeling_amount: int = 3
         ) -> RapidataOrder:
         
@@ -102,11 +102,14 @@ class RapidataOrderManager:
         if selections and validation_set_id:
             logger.warning("Warning: Both selections and validation_set_id provided. Ignoring validation_set_id.")
         
-        if selections is None:
+        if not selections:
             selections = self.__get_selections(validation_set_id, labeling_amount=default_labeling_amount)
 
         prompts_metadata = [PromptMetadata(prompt=prompt) for prompt in contexts] if contexts else None
         sentence_metadata = [SelectWordsMetadata(select_words=sentence) for sentence in sentences] if sentences else None
+
+        if prompts_metadata and sentence_metadata:
+            raise ValueError("You can only use contexts or sentences, not both")
 
         metadata = prompts_metadata or sentence_metadata or None
 
@@ -140,7 +143,7 @@ class RapidataOrderManager:
             confidence_threshold: float | None = None,
             filters: Sequence[RapidataFilter] = [],
             settings: Sequence[RapidataSetting] = [],
-            selections: Sequence[RapidataSelection] | None = None,
+            selections: Sequence[RapidataSelection] = [],
         ) -> RapidataOrder:
         """Create a classification order.
         
@@ -199,7 +202,7 @@ class RapidataOrderManager:
             confidence_threshold: float | None = None,
             filters: Sequence[RapidataFilter] = [],
             settings: Sequence[RapidataSetting] = [],
-            selections: Sequence[RapidataSelection] | None = None,
+            selections: Sequence[RapidataSelection] = [],
         ) -> RapidataOrder:
         """Create a compare order.
 
@@ -257,7 +260,7 @@ class RapidataOrderManager:
                              validation_set_id: Optional[str] = None,
                              filters: Sequence[RapidataFilter] = [],
                              settings: Sequence[RapidataSetting] = [],
-                             selections: Optional[Sequence[RapidataSelection]] = None
+                             selections: Sequence[RapidataSelection] = []
                              ) -> RapidataOrder:
         """
         Create a ranking order.
@@ -278,7 +281,7 @@ class RapidataOrderManager:
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
             filters (Sequence[RapidataFilter], optional): The list of filters for the order. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the order. Defaults to []. Decides how the tasks should be shown.
-            selections (Sequence[RapidataSelection], optional): The list of selections for the order. Defaults to None. Decides in what order the tasks should be shown.
+            selections (Sequence[RapidataSelection], optional): The list of selections for the order. Defaults to []. Decides in what order the tasks should be shown.
         """
 
         if data_type == RapidataDataTypes.MEDIA:
@@ -312,7 +315,7 @@ class RapidataOrderManager:
             responses_per_datapoint: int = 10,
             filters: Sequence[RapidataFilter] = [],
             settings: Sequence[RapidataSetting] = [],
-            selections: Sequence[RapidataSelection] | None = None,
+            selections: Sequence[RapidataSelection] = [],
         ) -> RapidataOrder:
         """Create a free text order.
 
@@ -325,7 +328,7 @@ class RapidataOrderManager:
             responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
             filters (Sequence[RapidataFilter], optional): The list of filters for the free text. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the free text. Defaults to []. Decides how the tasks should be shown.
-            selections (Sequence[RapidataSelection], optional): The list of selections for the free text. Defaults to None. Decides in what order the tasks should be shown.
+            selections (Sequence[RapidataSelection], optional): The list of selections for the free text. Defaults to []. Decides in what order the tasks should be shown.
         """
 
         if data_type == RapidataDataTypes.MEDIA:
@@ -358,7 +361,7 @@ class RapidataOrderManager:
             validation_set_id: str | None = None,
             filters: Sequence[RapidataFilter] = [],
             settings: Sequence[RapidataSetting] = [],
-            selections: Sequence[RapidataSelection] | None = None,
+            selections: Sequence[RapidataSelection] = [],
         ) -> RapidataOrder:
         """Create a select words order.
 
@@ -373,7 +376,7 @@ class RapidataOrderManager:
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
             filters (Sequence[RapidataFilter], optional): The list of filters for the select words. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the select words. Defaults to []. Decides how the tasks should be shown.
-            selections (Sequence[RapidataSelection], optional): The list of selections for the select words. Defaults to None. Decides in what order the tasks should be shown.
+            selections (Sequence[RapidataSelection], optional): The list of selections for the select words. Defaults to []. Decides in what order the tasks should be shown.
         """
 
         assets = [MediaAsset(path=path) for path in datapoints]
@@ -402,7 +405,7 @@ class RapidataOrderManager:
             validation_set_id: str | None = None,
             filters: Sequence[RapidataFilter] = [],
             settings: Sequence[RapidataSetting] = [],
-            selections: Sequence[RapidataSelection] | None = None,
+            selections: Sequence[RapidataSelection] = [],
         ) -> RapidataOrder:
         """Create a locate order.
 
@@ -418,7 +421,7 @@ class RapidataOrderManager:
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
             filters (Sequence[RapidataFilter], optional): The list of filters for the locate. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the locate. Defaults to []. Decides how the tasks should be shown.
-            selections (Sequence[RapidataSelection], optional): The list of selections for the locate. Defaults to None. Decides in what order the tasks should be shown.
+            selections (Sequence[RapidataSelection], optional): The list of selections for the locate. Defaults to []. Decides in what order the tasks should be shown.
         """
 
         assets = [MediaAsset(path=path) for path in datapoints]
@@ -444,7 +447,7 @@ class RapidataOrderManager:
             validation_set_id: str | None = None,
             filters: Sequence[RapidataFilter] = [],
             settings: Sequence[RapidataSetting] = [],
-            selections: Sequence[RapidataSelection] | None = None,
+            selections: Sequence[RapidataSelection] = [],
         ) -> RapidataOrder:
         """Create a draw order.
 
@@ -460,7 +463,7 @@ class RapidataOrderManager:
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
             filters (Sequence[RapidataFilter], optional): The list of filters for the draw lines. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the draw lines. Defaults to []. Decides how the tasks should be shown.
-            selections (Sequence[RapidataSelection], optional): The list of selections for the draw lines. Defaults to None. Decides in what order the tasks should be shown.
+            selections (Sequence[RapidataSelection], optional): The list of selections for the draw lines. Defaults to []. Decides in what order the tasks should be shown.
         """
 
         assets = [MediaAsset(path=path) for path in datapoints]
@@ -486,7 +489,7 @@ class RapidataOrderManager:
             validation_set_id: str | None = None,
             filters: Sequence[RapidataFilter] = [],
             settings: Sequence[RapidataSetting] = [],
-            selections: Sequence[RapidataSelection] | None = None,
+            selections: Sequence[RapidataSelection] = [],
         ) -> RapidataOrder:
         """Create a timestamp order.
 
@@ -499,9 +502,10 @@ class RapidataOrderManager:
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
             validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
+                If provided, one validation task will be shown infront of the datapoints that will be labeled.
             filters (Sequence[RapidataFilter], optional): The list of filters for the timestamp. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the timestamp. Defaults to []. Decides how the tasks should be shown.
-            selections (Sequence[RapidataSelection], optional): The list of selections for the timestamp. Defaults to None. Decides in what order the tasks should be shown.
+            selections (Sequence[RapidataSelection], optional): The list of selections for the timestamp. Defaults to []. Decides in what order the tasks should be shown.
         """
 
         assets = [MediaAsset(path=path) for path in datapoints]
