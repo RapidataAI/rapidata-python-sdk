@@ -89,9 +89,6 @@ class RapidataOrderManager:
         
         if sentences and contexts:
             raise ValueError("You can only use contexts or sentences, not both")
-        
-        if contexts and data_type == RapidataDataTypes.TEXT:
-            logger.warning("Warning: Contexts are not supported for text data type. Ignoring contexts.")
 
         if not confidence_threshold:
             referee = NaiveReferee(responses=responses_per_datapoint)

@@ -37,6 +37,7 @@ class RapidataDataset:
     def _add_texts(
         self,
         text_assets: list[TextAsset] | list[MultiAsset],
+        metadata_list: Sequence[Sequence[Metadata]] | None = None,
         max_workers: int = 10,
     ):
         for text_asset in text_assets:
@@ -45,17 +46,25 @@ class RapidataDataset:
                     isinstance(asset, TextAsset) for asset in text_asset.assets
                 ), "All assets in a MultiAsset must be of type TextAsset."
 
-        def upload_text_datapoint(text_asset: TextAsset | MultiAsset, index: int) -> None:
+        def upload_text_datapoint(text_asset: TextAsset | MultiAsset, metadata_per_datapoint: Sequence[Metadata] | None, index: int) -> None:
             if isinstance(text_asset, TextAsset):
                 texts = [text_asset.text]
             elif isinstance(text_asset, MultiAsset):
                 texts = [asset.text for asset in text_asset.assets if isinstance(asset, TextAsset)]
             else:
                 raise ValueError(f"Unsupported asset type: {type(text_asset)}")
+            
+            metadata = []
+            if metadata_per_datapoint:
+                for meta in metadata_per_datapoint:
+                    meta_model = meta.to_model() if meta else None
+                    if meta_model:
+                        metadata.append(CreateDatapointFromFilesModelMetadataInner(meta_model))
 
             model = CreateDatapointFromTextSourcesModel(
                 textSources=texts,
                 sortIndex=index,
+                metadata=metadata,
             )
 
             upload_response = self.openapi_service.dataset_api.dataset_dataset_id_datapoints_texts_post(dataset_id=self.dataset_id, create_datapoint_from_text_sources_model=model)
@@ -66,8 +75,8 @@ class RapidataDataset:
         total_uploads = len(text_assets)
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
             futures = [
-                executor.submit(upload_text_datapoint, text_asset, index=i)
-                for i, text_asset in enumerate(text_assets)
+                executor.submit(upload_text_datapoint, text_asset, metadata, index=i)
+                for i, (text_asset, metadata) in enumerate(zip_longest(text_assets, metadata_list or []))
             ]
 
             with tqdm(total=total_uploads, desc="Uploading text datapoints") as pbar:

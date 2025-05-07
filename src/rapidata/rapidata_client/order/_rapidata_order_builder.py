@@ -157,7 +157,7 @@ class RapidataOrderBuilder:
             all(isinstance(item, TextAsset) for item in self.__assets) and self.__dataset
         ):
             assets = cast(list[TextAsset], self.__assets)
-            self.__dataset._add_texts(assets)
+            self.__dataset._add_texts(assets, self.__multi_metadata)
 
         elif (
             all(isinstance(item, MultiAsset) for item in self.__assets) and self.__dataset
@@ -182,7 +182,7 @@ class RapidataOrderBuilder:
                 )
 
             elif issubclass(first_asset_type, TextAsset):
-                self.__dataset._add_texts(multi_assets)
+                self.__dataset._add_texts(multi_assets, self.__multi_metadata)
 
             else:
                 raise ValueError(
