@@ -53,7 +53,7 @@ class RapidataOrderBuilder:
         self.__dataset: Optional[RapidataDataset]
         self.__workflow: Workflow | None = None
         self.__referee: Referee | None = None
-        self.__metadata: Sequence[Metadata] | None = None
+        self.__multi_metadata: Sequence[Sequence[Metadata]] | None = None
         self.__validation_set_id: str | None = None
         self.__settings: Sequence[RapidataSetting] | None = None
         self.__user_filters: list[RapidataFilter] = []
@@ -151,7 +151,7 @@ class RapidataOrderBuilder:
 
         if all(isinstance(item, MediaAsset) for item in self.__assets) and self.__dataset:
             assets = cast(list[MediaAsset], self.__assets)
-            self.__dataset._add_media_from_paths(assets, self.__metadata, max_upload_workers)
+            self.__dataset._add_media_from_paths(assets, self.__multi_metadata, max_upload_workers)
 
         elif (
             all(isinstance(item, TextAsset) for item in self.__assets) and self.__dataset
@@ -178,7 +178,7 @@ class RapidataOrderBuilder:
             # Process based on the asset type
             if issubclass(first_asset_type, MediaAsset):
                 self.__dataset._add_media_from_paths(
-                    multi_assets, self.__metadata, max_upload_workers
+                    multi_assets, self.__multi_metadata, max_upload_workers
                 )
 
             elif issubclass(first_asset_type, TextAsset):
@@ -234,35 +234,44 @@ class RapidataOrderBuilder:
 
     def _media(
         self,
-        asset: Sequence[BaseAsset],
-        metadata: Sequence[Metadata] | None = None,
+        assets: Sequence[BaseAsset],
+        multi_metadata: Sequence[Sequence[Metadata]] | None = None,
     ) -> "RapidataOrderBuilder":
         """
         Set the media assets for the order.
 
         Args:
-            asset: (list[MediaAsset] | list[TextAsset] | list[MultiAsset]): The paths of the media assets to be set.
-            metadata: (list[Metadata] | None, optional): Metadata for the media assets. Defaults to None.
+            assets: (list[MediaAsset] | list[TextAsset] | list[MultiAsset]): The paths of the media assets to be set.
+            multi_metadata: (list[list[Metadata]] | None, optional): Metadatas for the media assets. Defaults to None.
 
         Returns:
             RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
         """
-        if not isinstance(asset, list):
+        if not isinstance(assets, list):
             raise TypeError("Media paths must be provided as a list of paths.")
 
-        for a in asset:
+        for a in assets:
             if not isinstance(a, (MediaAsset, TextAsset, MultiAsset)):
                 raise TypeError(
                     "Media paths must be of type MediaAsset, TextAsset, or MultiAsset."
                 )
 
-        if metadata:
-            for data in metadata:
-                if not isinstance(data, Metadata):
-                    raise TypeError("Metadata must be of type Metadata.")
+        if multi_metadata:
+            for data in multi_metadata:
+                if not isinstance(data, list):
+                    raise TypeError("Metadata must be provided as a list of Metadata objects.")
+                for d in data:
+                    if not isinstance(d, Metadata):
+                        raise TypeError("Metadata must be of type Metadata.")
 
-        self.__assets = asset
-        self.__metadata = metadata
+        if multi_metadata and not len(multi_metadata) == len(assets):
+            raise ValueError("The number of assets must match the number of metadatas.")
+        
+        if multi_metadata and not all(len(data) == len(multi_metadata[0]) for data in multi_metadata):
+            raise ValueError("All metadatas must have the same length.")
+
+        self.__assets = assets
+        self.__multi_metadata = multi_metadata
         return self
 
     def _settings(self, settings: Sequence[RapidataSetting]) -> "RapidataOrderBuilder":
