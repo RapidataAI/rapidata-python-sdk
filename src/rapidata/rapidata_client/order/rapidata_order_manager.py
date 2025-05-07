@@ -179,6 +179,8 @@ class RapidataOrderManager:
             settings (Sequence[RapidataSetting], optional): The list of settings for the classification. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the classification. Defaults to []. Decides in what order the tasks should be shown.
             private_notes (list[str], optional): The list of private notes for the classification. Defaults to None.
+                If provided has to be the same length as datapoints.\n 
+                This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
         
         if data_type == RapidataDataTypes.MEDIA:
@@ -240,8 +242,8 @@ class RapidataOrderManager:
             settings (Sequence[RapidataSetting], optional): The list of settings for the comparison. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the comparison. Defaults to []. Decides in what order the tasks should be shown.
             private_notes (list[str], optional): The list of private notes for the comparison. Defaults to None.\n
-                If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
-                Will be match up with the datapoints using the list index.
+                If provided has to be the same length as datapoints.\n 
+                This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
 
         if data_type == RapidataDataTypes.MEDIA:
@@ -280,8 +282,7 @@ class RapidataOrderManager:
                              validation_set_id: Optional[str] = None,
                              filters: Sequence[RapidataFilter] = [],
                              settings: Sequence[RapidataSetting] = [],
-                             selections: Sequence[RapidataSelection] = [],
-                             private_notes: list[str] | None = None,
+                             selections: Sequence[RapidataSelection] = []
                              ) -> RapidataOrder:
         """
         Create a ranking order.
@@ -303,9 +304,6 @@ class RapidataOrderManager:
             filters (Sequence[RapidataFilter], optional): The list of filters for the order. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the order. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the order. Defaults to []. Decides in what order the tasks should be shown.
-            private_notes (list[str], optional): The list of private notes for the order. Defaults to None.\n
-                If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
-                Will be match up with the datapoints using the list index.
         """
 
         if data_type == RapidataDataTypes.MEDIA:
@@ -329,7 +327,6 @@ class RapidataOrderManager:
             filters=filters,
             selections=selections,
             settings=settings,
-            private_notes=private_notes
         )
 
     def create_free_text_order(self,
@@ -355,6 +352,9 @@ class RapidataOrderManager:
             filters (Sequence[RapidataFilter], optional): The list of filters for the free text. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the free text. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the free text. Defaults to []. Decides in what order the tasks should be shown.
+            private_notes (list[str], optional): The list of private notes for the free text. Defaults to None.\n
+                If provided has to be the same length as datapoints.\n 
+                This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
 
         if data_type == RapidataDataTypes.MEDIA:
@@ -406,8 +406,8 @@ class RapidataOrderManager:
             settings (Sequence[RapidataSetting], optional): The list of settings for the select words. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the select words. Defaults to []. Decides in what order the tasks should be shown.
             private_notes (list[str], optional): The list of private notes for the select words. Defaults to None.\n
-                If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
-                Will be match up with the datapoints using the list index.
+                If provided has to be the same length as datapoints.\n 
+                This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
 
         assets = [MediaAsset(path=path) for path in datapoints]
@@ -456,8 +456,8 @@ class RapidataOrderManager:
             settings (Sequence[RapidataSetting], optional): The list of settings for the locate. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the locate. Defaults to []. Decides in what order the tasks should be shown.
             private_notes (list[str], optional): The list of private notes for the locate. Defaults to None.\n
-                If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
-                Will be match up with the datapoints using the list index.
+                If provided has to be the same length as datapoints.\n 
+                This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
 
         assets = [MediaAsset(path=path) for path in datapoints]
@@ -503,8 +503,8 @@ class RapidataOrderManager:
             settings (Sequence[RapidataSetting], optional): The list of settings for the draw lines. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the draw lines. Defaults to []. Decides in what order the tasks should be shown.
             private_notes (list[str], optional): The list of private notes for the draw lines. Defaults to None.\n
-                If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
-                Will be match up with the datapoints using the list index.
+                If provided has to be the same length as datapoints.\n 
+                This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
 
         assets = [MediaAsset(path=path) for path in datapoints]
@@ -550,8 +550,8 @@ class RapidataOrderManager:
             settings (Sequence[RapidataSetting], optional): The list of settings for the timestamp. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the timestamp. Defaults to []. Decides in what order the tasks should be shown.
             private_notes (list[str], optional): The list of private notes for the timestamp. Defaults to None.\n
-                If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
-                Will be match up with the datapoints using the list index.
+                If provided has to be the same length as datapoints.\n 
+                This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
 
         assets = [MediaAsset(path=path) for path in datapoints]
