@@ -37,6 +37,7 @@ class RapidataDataset:
     def _add_texts(
         self,
         text_assets: list[TextAsset] | list[MultiAsset],
+        metadata_list: Sequence[Sequence[Metadata]] | None = None,
         max_workers: int = 10,
     ):
         for text_asset in text_assets:
@@ -45,17 +46,25 @@ class RapidataDataset:
                     isinstance(asset, TextAsset) for asset in text_asset.assets
                 ), "All assets in a MultiAsset must be of type TextAsset."
 
-        def upload_text_datapoint(text_asset: TextAsset | MultiAsset, index: int) -> None:
+        def upload_text_datapoint(text_asset: TextAsset | MultiAsset, metadata_per_datapoint: Sequence[Metadata] | None, index: int) -> None:
             if isinstance(text_asset, TextAsset):
                 texts = [text_asset.text]
             elif isinstance(text_asset, MultiAsset):
                 texts = [asset.text for asset in text_asset.assets if isinstance(asset, TextAsset)]
             else:
                 raise ValueError(f"Unsupported asset type: {type(text_asset)}")
+            
+            metadata = []
+            if metadata_per_datapoint:
+                for meta in metadata_per_datapoint:
+                    meta_model = meta.to_model() if meta else None
+                    if meta_model:
+                        metadata.append(CreateDatapointFromFilesModelMetadataInner(meta_model))
 
             model = CreateDatapointFromTextSourcesModel(
                 textSources=texts,
                 sortIndex=index,
+                metadata=metadata,
             )
 
             upload_response = self.openapi_service.dataset_api.dataset_dataset_id_datapoints_texts_post(dataset_id=self.dataset_id, create_datapoint_from_text_sources_model=model)
@@ -66,8 +75,8 @@ class RapidataDataset:
         total_uploads = len(text_assets)
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
             futures = [
-                executor.submit(upload_text_datapoint, text_asset, index=i)
-                for i, text_asset in enumerate(text_assets)
+                executor.submit(upload_text_datapoint, text_asset, metadata, index=i)
+                for i, (text_asset, metadata) in enumerate(zip_longest(text_assets, metadata_list or []))
             ]
 
             with tqdm(total=total_uploads, desc="Uploading text datapoints") as pbar:
@@ -78,7 +87,7 @@ class RapidataDataset:
     def _process_single_upload(
         self,
         media_asset: MediaAsset | MultiAsset, 
-        meta: Metadata | None, 
+        meta_list: Sequence[Metadata] | None, 
         index: int,
     ) -> tuple[list[str], list[str]]:
         """
@@ -86,7 +95,7 @@ class RapidataDataset:
         
         Args:
             media_asset: MediaAsset or MultiAsset to upload
-            meta: Optional metadata for the asset
+            meta_list: Optional sequence of metadata for the asset
             index: Sort index for the upload
             
         Returns:
@@ -104,16 +113,20 @@ class RapidataDataset:
                 identifiers_to_track = [identifier] if identifier else []
             elif isinstance(media_asset, MultiAsset):
                 assets = cast(list[MediaAsset], media_asset.assets)
-                identifiers_to_track: list[str] = [
+                identifiers_to_track = [
                     (asset._url if asset._url else cast(str, asset.path)) 
                     for asset in assets
                 ]
             else:
                 raise ValueError(f"Unsupported asset type: {type(media_asset)}")
 
-            meta_model = meta.to_model() if meta else None
-
-            metadata = [CreateDatapointFromFilesModelMetadataInner(meta_model)] if meta_model else []
+            # Convert multiple metadata to models
+            metadata = []
+            if meta_list:
+                for meta in meta_list:
+                    meta_model = meta.to_model() if meta else None
+                    if meta_model:
+                        metadata.append(CreateDatapointFromFilesModelMetadataInner(meta_model))
 
             local_paths: bool = assets[0].is_local()
             files: list[StrictStr] = []
@@ -258,7 +271,7 @@ class RapidataDataset:
     def _process_uploads_in_chunks(
         self,
         media_paths: list[MediaAsset] | list[MultiAsset],
-        metadata: Sequence[Metadata] | None,
+        multi_metadata: Sequence[Sequence[Metadata]] | None,
         max_workers: int,
         chunk_size: int,
         stop_progress_tracking: threading.Event,
@@ -269,7 +282,7 @@ class RapidataDataset:
         
         Args:
             media_paths: List of assets to upload
-            metadata: Optional sequence of metadata
+            multi_metadata: Optional sequence of sequences of metadata
             max_workers: Maximum number of concurrent workers
             chunk_size: Number of items to process in each batch
             stop_progress_tracking: Event to signal progress tracking to stop
@@ -285,16 +298,16 @@ class RapidataDataset:
             with ThreadPoolExecutor(max_workers=max_workers) as executor:
                 # Process uploads in chunks to avoid overwhelming the system
                 for chunk_idx, chunk in enumerate(chunk_list(media_paths, chunk_size)):
-                    chunk_metadata = metadata[chunk_idx * chunk_size:(chunk_idx + 1) * chunk_size] if metadata else None
+                    chunk_multi_metadata = multi_metadata[chunk_idx * chunk_size:(chunk_idx + 1) * chunk_size] if multi_metadata else None
                     
                     futures = [
                         executor.submit(
                             self._process_single_upload, 
                             media_asset, 
-                            meta, 
+                            meta_list, 
                             index=(chunk_idx * chunk_size + i)
                         )
-                        for i, (media_asset, meta) in enumerate(zip_longest(chunk, chunk_metadata or []))
+                        for i, (media_asset, meta_list) in enumerate(zip_longest(chunk, chunk_multi_metadata or []))
                     ]
                     
                     # Wait for this chunk to complete before starting the next one
@@ -359,7 +372,7 @@ class RapidataDataset:
     def _add_media_from_paths(
         self,
         media_paths: list[MediaAsset] | list[MultiAsset],
-        metadata: Sequence[Metadata] | None = None,
+        multi_metadata: Sequence[Sequence[Metadata]] | None = None,
         max_workers: int = 5,
         chunk_size: int = 50,
         progress_poll_interval: float = 0.5,
@@ -369,7 +382,7 @@ class RapidataDataset:
         
         Args:
             media_paths: List of MediaAsset or MultiAsset objects to upload
-            metadata: Optional sequence of metadata matching media_paths length
+            multi_metadata: Optional sequence of sequences of metadata matching media_paths length
             max_workers: Maximum number of concurrent upload workers
             chunk_size: Number of items to process in each batch
             progress_poll_interval: Time in seconds between progress checks
@@ -378,10 +391,14 @@ class RapidataDataset:
             tuple[list[str], list[str]]: Lists of successful and failed URLs
             
         Raises:
-            ValueError: If metadata length doesn't match media_paths length
+            ValueError: If multi_metadata lengths don't match media_paths length
         """
-        if metadata is not None and len(metadata) != len(media_paths):
-            raise ValueError("metadata must be None or have the same length as media_paths")
+
+        if multi_metadata and not len(multi_metadata) == len(media_paths):
+            raise ValueError("The number of assets must match the number of metadatas.")
+        
+        if multi_metadata and not all(len(data) == len(multi_metadata[0]) for data in multi_metadata):
+            raise ValueError("All metadatas must have the same length.")
         
         # Setup tracking variables
         total_uploads = len(media_paths)
@@ -403,7 +420,7 @@ class RapidataDataset:
         try:
             successful_uploads, failed_uploads = self._process_uploads_in_chunks(
                 media_paths,
-                metadata,
+                multi_metadata,
                 max_workers,
                 chunk_size,
                 stop_progress_tracking,

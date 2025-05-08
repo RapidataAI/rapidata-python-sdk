@@ -5,7 +5,7 @@ from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.assets.data_type_enum import RapidataDataTypes
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 from rapidata.rapidata_client.order._rapidata_order_builder import RapidataOrderBuilder
-from rapidata.rapidata_client.metadata import PromptMetadata, SelectWordsMetadata
+from rapidata.rapidata_client.metadata import PromptMetadata, SelectWordsMetadata, PrivateTextMetadata, Metadata
 from rapidata.rapidata_client.referee._naive_referee import NaiveReferee
 from rapidata.rapidata_client.referee._early_stopping_referee import EarlyStoppingReferee
 from rapidata.rapidata_client.selection._base_selection import RapidataSelection
@@ -73,7 +73,8 @@ class RapidataOrderManager:
             filters: Sequence[RapidataFilter] = [],
             settings: Sequence[RapidataSetting] = [],
             sentences: list[str] | None = None,
-            selections: Sequence[RapidataSelection] | None = None,
+            selections: Sequence[RapidataSelection] = [],
+            private_notes: list[str] | None = None,
             default_labeling_amount: int = 3
         ) -> RapidataOrder:
         
@@ -82,12 +83,12 @@ class RapidataOrderManager:
         
         if sentences and len(sentences) != len(assets):
             raise ValueError("Number of sentences must match number of datapoints")
+
+        if private_notes and len(private_notes) != len(assets):
+            raise ValueError("Number of private notes must match number of datapoints")
         
         if sentences and contexts:
             raise ValueError("You can only use contexts or sentences, not both")
-        
-        if contexts and data_type == RapidataDataTypes.TEXT:
-            logger.warning("Warning: Contexts are not supported for text data type. Ignoring contexts.")
 
         if not confidence_threshold:
             referee = NaiveReferee(responses=responses_per_datapoint)
@@ -102,19 +103,30 @@ class RapidataOrderManager:
         if selections and validation_set_id:
             logger.warning("Warning: Both selections and validation_set_id provided. Ignoring validation_set_id.")
         
-        if selections is None:
+        if not selections:
             selections = self.__get_selections(validation_set_id, labeling_amount=default_labeling_amount)
 
         prompts_metadata = [PromptMetadata(prompt=prompt) for prompt in contexts] if contexts else None
         sentence_metadata = [SelectWordsMetadata(select_words=sentence) for sentence in sentences] if sentences else None
 
-        metadata = prompts_metadata or sentence_metadata or None
+        if prompts_metadata and sentence_metadata:
+            raise ValueError("You can only use contexts or sentences, not both")
+
+        metadata_list: Sequence[Metadata] = prompts_metadata or sentence_metadata or []
+        private_notes_metadata_list: Sequence[Metadata] = [PrivateTextMetadata(text=text) for text in private_notes] if private_notes else []
+
+        multi_metadata: Sequence[Sequence[Metadata]] = (
+            [[metadata, private_notes_metadata] for metadata, private_notes_metadata in zip(metadata_list, private_notes_metadata_list, strict=True)] if metadata_list and private_notes
+            else [[private_notes_metadata] for private_notes_metadata in private_notes_metadata_list] if private_notes
+            else [[metadata] for metadata in metadata_list] if metadata_list
+            else []
+        )
 
         order = (order_builder
                  ._workflow(workflow)
                  ._media(
-                     asset=assets,
-                     metadata=metadata
+                     assets=assets,
+                     multi_metadata=multi_metadata
                      )
                  ._referee(referee)
                  ._filters(filters)
@@ -140,7 +152,8 @@ class RapidataOrderManager:
             confidence_threshold: float | None = None,
             filters: Sequence[RapidataFilter] = [],
             settings: Sequence[RapidataSetting] = [],
-            selections: Sequence[RapidataSelection] | None = None,
+            selections: Sequence[RapidataSelection] = [],
+            private_notes: list[str] | None = None,
         ) -> RapidataOrder:
         """Create a classification order.
         
@@ -161,7 +174,10 @@ class RapidataOrderManager:
                 If provided, the classification datapoint will stop after the threshold is reached or at the number of responses, whatever happens first.
             filters (Sequence[RapidataFilter], optional): The list of filters for the classification. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the classification. Defaults to []. Decides how the tasks should be shown.
-            selections (Sequence[RapidataSelection], optional): The list of selections for the classification. Defaults to None. Decides in what order the tasks should be shown.
+            selections (Sequence[RapidataSelection], optional): The list of selections for the classification. Defaults to []. Decides in what order the tasks should be shown.
+            private_notes (list[str], optional): The list of private notes for the classification. Defaults to None.
+                If provided has to be the same length as datapoints.\n 
+                This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
         
         if data_type == RapidataDataTypes.MEDIA:
@@ -185,7 +201,8 @@ class RapidataOrderManager:
             confidence_threshold=confidence_threshold,
             filters=filters,
             selections=selections,
-            settings=settings
+            settings=settings,
+            private_notes=private_notes
         )
     
     def create_compare_order(self,
@@ -199,7 +216,8 @@ class RapidataOrderManager:
             confidence_threshold: float | None = None,
             filters: Sequence[RapidataFilter] = [],
             settings: Sequence[RapidataSetting] = [],
-            selections: Sequence[RapidataSelection] | None = None,
+            selections: Sequence[RapidataSelection] = [],
+            private_notes: list[str] | None = None,
         ) -> RapidataOrder:
         """Create a compare order.
 
@@ -219,7 +237,10 @@ class RapidataOrderManager:
                 If provided, the comparison datapoint will stop after the threshold is reached or at the number of responses, whatever happens first.
             filters (Sequence[RapidataFilter], optional): The list of filters for the comparison. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the comparison. Defaults to []. Decides how the tasks should be shown.
-            selections (Sequence[RapidataSelection], optional): The list of selections for the comparison. Defaults to None. Decides in what order the tasks should be shown.
+            selections (Sequence[RapidataSelection], optional): The list of selections for the comparison. Defaults to []. Decides in what order the tasks should be shown.
+            private_notes (list[str], optional): The list of private notes for the comparison. Defaults to None.\n
+                If provided has to be the same length as datapoints.\n 
+                This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
 
         if data_type == RapidataDataTypes.MEDIA:
@@ -242,7 +263,8 @@ class RapidataOrderManager:
             confidence_threshold=confidence_threshold,
             filters=filters,
             selections=selections,
-            settings=settings
+            settings=settings,
+            private_notes=private_notes
         )
 
     def create_ranking_order(self,
@@ -257,7 +279,7 @@ class RapidataOrderManager:
                              validation_set_id: Optional[str] = None,
                              filters: Sequence[RapidataFilter] = [],
                              settings: Sequence[RapidataSetting] = [],
-                             selections: Optional[Sequence[RapidataSelection]] = None
+                             selections: Sequence[RapidataSelection] = []
                              ) -> RapidataOrder:
         """
         Create a ranking order.
@@ -278,7 +300,7 @@ class RapidataOrderManager:
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
             filters (Sequence[RapidataFilter], optional): The list of filters for the order. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the order. Defaults to []. Decides how the tasks should be shown.
-            selections (Sequence[RapidataSelection], optional): The list of selections for the order. Defaults to None. Decides in what order the tasks should be shown.
+            selections (Sequence[RapidataSelection], optional): The list of selections for the order. Defaults to []. Decides in what order the tasks should be shown.
         """
 
         if data_type == RapidataDataTypes.MEDIA:
@@ -301,7 +323,7 @@ class RapidataOrderManager:
             validation_set_id=validation_set_id,
             filters=filters,
             selections=selections,
-            settings=settings
+            settings=settings,
         )
 
     def create_free_text_order(self,
@@ -312,7 +334,8 @@ class RapidataOrderManager:
             responses_per_datapoint: int = 10,
             filters: Sequence[RapidataFilter] = [],
             settings: Sequence[RapidataSetting] = [],
-            selections: Sequence[RapidataSelection] | None = None,
+            selections: Sequence[RapidataSelection] = [],
+            private_notes: list[str] | None = None,
         ) -> RapidataOrder:
         """Create a free text order.
 
@@ -325,7 +348,10 @@ class RapidataOrderManager:
             responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
             filters (Sequence[RapidataFilter], optional): The list of filters for the free text. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the free text. Defaults to []. Decides how the tasks should be shown.
-            selections (Sequence[RapidataSelection], optional): The list of selections for the free text. Defaults to None. Decides in what order the tasks should be shown.
+            selections (Sequence[RapidataSelection], optional): The list of selections for the free text. Defaults to []. Decides in what order the tasks should be shown.
+            private_notes (list[str], optional): The list of private notes for the free text. Defaults to None.\n
+                If provided has to be the same length as datapoints.\n 
+                This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
 
         if data_type == RapidataDataTypes.MEDIA:
@@ -346,7 +372,8 @@ class RapidataOrderManager:
             filters=filters,
             selections=selections,
             settings=settings,
-            default_labeling_amount=1
+            default_labeling_amount=1,
+            private_notes=private_notes
         )
     
     def create_select_words_order(self,
@@ -358,7 +385,8 @@ class RapidataOrderManager:
             validation_set_id: str | None = None,
             filters: Sequence[RapidataFilter] = [],
             settings: Sequence[RapidataSetting] = [],
-            selections: Sequence[RapidataSelection] | None = None,
+            selections: Sequence[RapidataSelection] = [],
+            private_notes: list[str] | None = None,
         ) -> RapidataOrder:
         """Create a select words order.
 
@@ -373,7 +401,10 @@ class RapidataOrderManager:
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
             filters (Sequence[RapidataFilter], optional): The list of filters for the select words. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the select words. Defaults to []. Decides how the tasks should be shown.
-            selections (Sequence[RapidataSelection], optional): The list of selections for the select words. Defaults to None. Decides in what order the tasks should be shown.
+            selections (Sequence[RapidataSelection], optional): The list of selections for the select words. Defaults to []. Decides in what order the tasks should be shown.
+            private_notes (list[str], optional): The list of private notes for the select words. Defaults to None.\n
+                If provided has to be the same length as datapoints.\n 
+                This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
 
         assets = [MediaAsset(path=path) for path in datapoints]
@@ -390,7 +421,8 @@ class RapidataOrderManager:
             selections=selections,
             settings=settings,
             sentences=sentences,
-            default_labeling_amount=2
+            default_labeling_amount=2,
+            private_notes=private_notes
         )
     
     def create_locate_order(self,
@@ -402,7 +434,8 @@ class RapidataOrderManager:
             validation_set_id: str | None = None,
             filters: Sequence[RapidataFilter] = [],
             settings: Sequence[RapidataSetting] = [],
-            selections: Sequence[RapidataSelection] | None = None,
+            selections: Sequence[RapidataSelection] = [],
+            private_notes: list[str] | None = None,
         ) -> RapidataOrder:
         """Create a locate order.
 
@@ -418,7 +451,10 @@ class RapidataOrderManager:
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
             filters (Sequence[RapidataFilter], optional): The list of filters for the locate. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the locate. Defaults to []. Decides how the tasks should be shown.
-            selections (Sequence[RapidataSelection], optional): The list of selections for the locate. Defaults to None. Decides in what order the tasks should be shown.
+            selections (Sequence[RapidataSelection], optional): The list of selections for the locate. Defaults to []. Decides in what order the tasks should be shown.
+            private_notes (list[str], optional): The list of private notes for the locate. Defaults to None.\n
+                If provided has to be the same length as datapoints.\n 
+                This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
 
         assets = [MediaAsset(path=path) for path in datapoints]
@@ -432,7 +468,8 @@ class RapidataOrderManager:
             validation_set_id=validation_set_id,
             filters=filters,
             selections=selections,
-            settings=settings
+            settings=settings,
+            private_notes=private_notes
         )
 
     def create_draw_order(self,
@@ -444,7 +481,8 @@ class RapidataOrderManager:
             validation_set_id: str | None = None,
             filters: Sequence[RapidataFilter] = [],
             settings: Sequence[RapidataSetting] = [],
-            selections: Sequence[RapidataSelection] | None = None,
+            selections: Sequence[RapidataSelection] = [],
+            private_notes: list[str] | None = None,
         ) -> RapidataOrder:
         """Create a draw order.
 
@@ -460,7 +498,10 @@ class RapidataOrderManager:
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
             filters (Sequence[RapidataFilter], optional): The list of filters for the draw lines. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the draw lines. Defaults to []. Decides how the tasks should be shown.
-            selections (Sequence[RapidataSelection], optional): The list of selections for the draw lines. Defaults to None. Decides in what order the tasks should be shown.
+            selections (Sequence[RapidataSelection], optional): The list of selections for the draw lines. Defaults to []. Decides in what order the tasks should be shown.
+            private_notes (list[str], optional): The list of private notes for the draw lines. Defaults to None.\n
+                If provided has to be the same length as datapoints.\n 
+                This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
 
         assets = [MediaAsset(path=path) for path in datapoints]
@@ -474,7 +515,8 @@ class RapidataOrderManager:
             validation_set_id=validation_set_id,
             filters=filters,
             selections=selections,
-            settings=settings
+            settings=settings,
+            private_notes=private_notes
         )
     
     def create_timestamp_order(self,
@@ -486,7 +528,8 @@ class RapidataOrderManager:
             validation_set_id: str | None = None,
             filters: Sequence[RapidataFilter] = [],
             settings: Sequence[RapidataSetting] = [],
-            selections: Sequence[RapidataSelection] | None = None,
+            selections: Sequence[RapidataSelection] = [],
+            private_notes: list[str] | None = None,
         ) -> RapidataOrder:
         """Create a timestamp order.
 
@@ -499,9 +542,13 @@ class RapidataOrderManager:
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
             validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
+                If provided, one validation task will be shown infront of the datapoints that will be labeled.
             filters (Sequence[RapidataFilter], optional): The list of filters for the timestamp. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the timestamp. Defaults to []. Decides how the tasks should be shown.
-            selections (Sequence[RapidataSelection], optional): The list of selections for the timestamp. Defaults to None. Decides in what order the tasks should be shown.
+            selections (Sequence[RapidataSelection], optional): The list of selections for the timestamp. Defaults to []. Decides in what order the tasks should be shown.
+            private_notes (list[str], optional): The list of private notes for the timestamp. Defaults to None.\n
+                If provided has to be the same length as datapoints.\n 
+                This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
 
         assets = [MediaAsset(path=path) for path in datapoints]
@@ -522,7 +569,8 @@ class RapidataOrderManager:
             filters=filters,
             selections=selections,
             settings=settings,
-            default_labeling_amount=2
+            default_labeling_amount=2,
+            private_notes=private_notes
         )
 
     def get_order_by_id(self, order_id: str) -> RapidataOrder:
