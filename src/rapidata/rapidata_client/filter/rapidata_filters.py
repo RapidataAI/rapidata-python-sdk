@@ -6,7 +6,8 @@ from rapidata.rapidata_client.filter import (
     LanguageFilter, 
     UserScoreFilter,
     NotFilter,
-    OrFilter)
+    OrFilter, 
+    NewUserFilter)
 
 class RapidataFilters:
     """RapidataFilters Classes
@@ -44,3 +45,4 @@ class RapidataFilters:
     language = LanguageFilter
     not_filter = NotFilter
     or_filter = OrFilter
+    new_user_filer = NewUserFilter
