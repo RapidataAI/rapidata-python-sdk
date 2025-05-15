@@ -34,13 +34,15 @@ class Rapid():
 
     def _add_to_validation_set(self, validationSetId: str, openapi_service: OpenAPIService) -> None:
         if isinstance(self.asset, TextAsset) or (isinstance(self.asset, MultiAsset) and isinstance(self.asset.assets[0], TextAsset)):
-            openapi_service.validation_api.validation_add_validation_text_rapid_post(
+            openapi_service.validation_api.validation_set_validation_set_id_rapid_texts_post(
+                validation_set_id=validationSetId,
                 add_validation_text_rapid_model=self.__to_text_model(validationSetId)
             )
 
         elif isinstance(self.asset, MediaAsset) or (isinstance(self.asset, MultiAsset) and isinstance(self.asset.assets[0], MediaAsset)):
             model = self.__to_media_model(validationSetId)
-            openapi_service.validation_api.validation_add_validation_rapid_post(
+            openapi_service.validation_api.validation_set_validation_set_id_rapid_files_post(
+                validation_set_id=validationSetId,
                 model=model[0], files=model[1]
             )
             
@@ -63,7 +65,7 @@ class Rapid():
             assets = [self.asset]
 
         return (AddValidationRapidModel(
-            validationSetId=validationSetId,
+            validationSetId=validationSetId, # will be removed in the future
             payload=AddValidationRapidModelPayload(self.payload),
             truth=AddValidationRapidModelTruth(self.truth),
             metadata=[
@@ -90,7 +92,7 @@ class Rapid():
             texts = [self.asset.text]
 
         return AddValidationTextRapidModel(
-          validationSetId=validationSetId,
+          validationSetId=validationSetId, # will be removed in the future
           payload=AddValidationRapidModelPayload(self.payload),
           truth=AddValidationRapidModelTruth(self.truth),
           metadata=[

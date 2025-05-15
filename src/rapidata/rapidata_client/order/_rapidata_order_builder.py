@@ -123,7 +123,7 @@ class RapidataOrderBuilder:
                 isinstance(item, MultiAsset) for item in self.__assets
             ), "The media paths must be of type MultiAsset for comparison tasks."
 
-        result = self.__openapi_service.order_api.order_create_post(
+        result = self.__openapi_service.order_api.order_post(
             create_order_model=order_model
         )
 
