@@ -6,7 +6,7 @@ from rapidata.api_client.api.dataset_api import DatasetApi
 from rapidata.api_client.api.order_api import OrderApi
 from rapidata.api_client.api.pipeline_api import PipelineApi
 from rapidata.api_client.api.rapid_api import RapidApi
-from rapidata.api_client.api.validation_api import ValidationApi
+from rapidata.api_client.api.validation_set_api import ValidationSetApi
 from rapidata.api_client.api.workflow_api import WorkflowApi
 from rapidata.api_client.configuration import Configuration
 from rapidata.service.credential_manager import CredentialManager
@@ -89,8 +89,8 @@ class OpenAPIService:
         return DatasetApi(self.api_client)
 
     @property
-    def validation_api(self) -> ValidationApi:
-        return ValidationApi(self.api_client)
+    def validation_api(self) -> ValidationSetApi:
+        return ValidationSetApi(self.api_client)
 
     @property
     def rapid_api(self) -> RapidApi:

@@ -604,7 +604,7 @@ class RapidataOrderManager:
             list[RapidataOrder]: A list of RapidataOrder instances.
         """
         try:
-            order_page_result = self._openapi_service.order_api.order_query_get(QueryModel(
+            order_page_result = self._openapi_service.order_api.orders_get(QueryModel(
                 page=PageInfo(index=1, size=amount),
                 filter=RootFilter(filters=[Filter(field="OrderName", operator="Contains", value=name)]),
                 sortCriteria=[SortCriterion(direction="Desc", propertyName="OrderDate")]

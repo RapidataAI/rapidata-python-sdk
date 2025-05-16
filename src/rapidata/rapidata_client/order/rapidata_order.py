@@ -61,7 +61,7 @@ class RapidataOrder:
     def pause(self) -> None:
         """Pauses the order."""
         logger.info(f"Pausing order '{self}'")
-        self.__openapi_service.order_api.order_pause_post(self.order_id)
+        self.__openapi_service.order_api.order_order_id_pause_post(self.order_id)
         logger.debug(f"Order '{self}' has been paused.")
         managed_print(f"Order '{self}' has been paused.")
 

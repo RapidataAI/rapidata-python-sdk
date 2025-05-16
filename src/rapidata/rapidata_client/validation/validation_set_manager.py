@@ -1,5 +1,6 @@
 from rapidata.api_client import QueryModel
 from rapidata.rapidata_client.validation.rapidata_validation_set import RapidataValidationSet
+from rapidata.api_client.models.create_validation_set_model import CreateValidationSetModel
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.assets.data_type_enum import RapidataDataTypes
 from rapidata.rapidata_client.validation.rapids.rapids_manager import RapidsManager
@@ -427,28 +428,14 @@ class ValidationSetManager:
         """
 
         return self._submit(name=name, rapids=rapids, dimensions=dimensions)
-    
-    def get_validation_set_by_id(self, validation_set_id: str) -> RapidataValidationSet:
-        """Get a validation set by ID.
-
-        Args:
-            validation_set_id (str): The ID of the validation set.
-
-        Returns:
-            RapidataValidationSet: The ValidationSet instance.
-        """
-        try:
-            validation_set = self.__openapi_service.validation_api.validation_get_by_id_get(id=validation_set_id)
-        except Exception:
-            raise ValueError(f"ValidationSet with ID {validation_set_id} not found.")
-        
-        return RapidataValidationSet(validation_set_id, str(validation_set.name), self.__openapi_service)
 
     def _submit(self, name: str, rapids: list[Rapid], dimensions: list[str] | None) -> RapidataValidationSet:
         logger.debug("Creating validation set")
         validation_set_id = (
-            self.__openapi_service.validation_api.validation_create_validation_set_post(
-                name=name
+            self.__openapi_service.validation_api.validation_set_post(
+                create_validation_set_model=CreateValidationSetModel(
+                    name=name
+                )
             )
         ).validation_set_id
 
@@ -478,6 +465,22 @@ class ValidationSetManager:
             validation_set.update_dimensions(dimensions)
         
         return validation_set
+    
+    def get_validation_set_by_id(self, validation_set_id: str) -> RapidataValidationSet:
+        """Get a validation set by ID.
+
+        Args:
+            validation_set_id (str): The ID of the validation set.
+
+        Returns:
+            RapidataValidationSet: The ValidationSet instance.
+        """
+        try:
+            validation_set = self.__openapi_service.validation_api.validation_set_validation_set_id_get(validation_set_id=validation_set_id)
+        except Exception:
+            raise ValueError(f"ValidationSet with ID {validation_set_id} not found.")
+        
+        return RapidataValidationSet(validation_set_id, str(validation_set.name), self.__openapi_service)
 
 
     def find_validation_sets(self, name: str = "", amount: int = 1) -> list[RapidataValidationSet]:
@@ -491,7 +494,7 @@ class ValidationSetManager:
             list[RapidataValidationSet]: The list of validation sets.
         """
         try:
-            validation_page_result = self.__openapi_service.validation_api.validation_query_validation_sets_get(QueryModel(
+            validation_page_result = self.__openapi_service.validation_api.validation_sets_get(QueryModel(
                 page=PageInfo(index=1, size=amount),
                 filter=RootFilter(filters=[Filter(field="Name", operator="Contains", value=name)]),
                 sortCriteria=[SortCriterion(direction="Desc", propertyName="CreatedAt")]
