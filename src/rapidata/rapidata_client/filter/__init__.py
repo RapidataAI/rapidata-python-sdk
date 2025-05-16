@@ -9,3 +9,4 @@ from .custom_filter import CustomFilter
 from .not_filter import NotFilter
 from .or_filter import OrFilter
 from .response_count_filter import ResponseCountFilter
+from .new_user_filter import NewUserFilter
