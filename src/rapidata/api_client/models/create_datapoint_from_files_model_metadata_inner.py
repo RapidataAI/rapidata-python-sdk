@@ -18,6 +18,7 @@ import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
 from rapidata.api_client.models.private_text_metadata_input import PrivateTextMetadataInput
+from rapidata.api_client.models.prompt_asset_metadata_input import PromptAssetMetadataInput
 from rapidata.api_client.models.prompt_metadata_input import PromptMetadataInput
 from rapidata.api_client.models.public_text_metadata_input import PublicTextMetadataInput
 from rapidata.api_client.models.transcription_metadata_input import TranscriptionMetadataInput
@@ -25,7 +26,7 @@ from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-CREATEDATAPOINTFROMFILESMODELMETADATAINNER_ONE_OF_SCHEMAS = ["PrivateTextMetadataInput", "PromptMetadataInput", "PublicTextMetadataInput", "TranscriptionMetadataInput"]
+CREATEDATAPOINTFROMFILESMODELMETADATAINNER_ONE_OF_SCHEMAS = ["PrivateTextMetadataInput", "PromptAssetMetadataInput", "PromptMetadataInput", "PublicTextMetadataInput", "TranscriptionMetadataInput"]
 
 class CreateDatapointFromFilesModelMetadataInner(BaseModel):
     """
@@ -33,14 +34,16 @@ class CreateDatapointFromFilesModelMetadataInner(BaseModel):
     """
     # data type: PrivateTextMetadataInput
     oneof_schema_1_validator: Optional[PrivateTextMetadataInput] = None
+    # data type: PromptAssetMetadataInput
+    oneof_schema_2_validator: Optional[PromptAssetMetadataInput] = None
     # data type: PromptMetadataInput
-    oneof_schema_2_validator: Optional[PromptMetadataInput] = None
+    oneof_schema_3_validator: Optional[PromptMetadataInput] = None
     # data type: PublicTextMetadataInput
-    oneof_schema_3_validator: Optional[PublicTextMetadataInput] = None
+    oneof_schema_4_validator: Optional[PublicTextMetadataInput] = None
     # data type: TranscriptionMetadataInput
-    oneof_schema_4_validator: Optional[TranscriptionMetadataInput] = None
-    actual_instance: Optional[Union[PrivateTextMetadataInput, PromptMetadataInput, PublicTextMetadataInput, TranscriptionMetadataInput]] = None
-    one_of_schemas: Set[str] = { "PrivateTextMetadataInput", "PromptMetadataInput", "PublicTextMetadataInput", "TranscriptionMetadataInput" }
+    oneof_schema_5_validator: Optional[TranscriptionMetadataInput] = None
+    actual_instance: Optional[Union[PrivateTextMetadataInput, PromptAssetMetadataInput, PromptMetadataInput, PublicTextMetadataInput, TranscriptionMetadataInput]] = None
+    one_of_schemas: Set[str] = { "PrivateTextMetadataInput", "PromptAssetMetadataInput", "PromptMetadataInput", "PublicTextMetadataInput", "TranscriptionMetadataInput" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -71,6 +74,11 @@ class CreateDatapointFromFilesModelMetadataInner(BaseModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `PrivateTextMetadataInput`")
         else:
             match += 1
+        # validate data type: PromptAssetMetadataInput
+        if not isinstance(v, PromptAssetMetadataInput):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `PromptAssetMetadataInput`")
+        else:
+            match += 1
         # validate data type: PromptMetadataInput
         if not isinstance(v, PromptMetadataInput):
             error_messages.append(f"Error! Input type `{type(v)}` is not `PromptMetadataInput`")
@@ -88,10 +96,10 @@ class CreateDatapointFromFilesModelMetadataInner(BaseModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in CreateDatapointFromFilesModelMetadataInner with oneOf schemas: PrivateTextMetadataInput, PromptMetadataInput, PublicTextMetadataInput, TranscriptionMetadataInput. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in CreateDatapointFromFilesModelMetadataInner with oneOf schemas: PrivateTextMetadataInput, PromptAssetMetadataInput, PromptMetadataInput, PublicTextMetadataInput, TranscriptionMetadataInput. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in CreateDatapointFromFilesModelMetadataInner with oneOf schemas: PrivateTextMetadataInput, PromptMetadataInput, PublicTextMetadataInput, TranscriptionMetadataInput. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in CreateDatapointFromFilesModelMetadataInner with oneOf schemas: PrivateTextMetadataInput, PromptAssetMetadataInput, PromptMetadataInput, PublicTextMetadataInput, TranscriptionMetadataInput. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -109,6 +117,12 @@ class CreateDatapointFromFilesModelMetadataInner(BaseModel):
         # deserialize data into PrivateTextMetadataInput
         try:
             instance.actual_instance = PrivateTextMetadataInput.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into PromptAssetMetadataInput
+        try:
+            instance.actual_instance = PromptAssetMetadataInput.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
@@ -133,10 +147,10 @@ class CreateDatapointFromFilesModelMetadataInner(BaseModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into CreateDatapointFromFilesModelMetadataInner with oneOf schemas: PrivateTextMetadataInput, PromptMetadataInput, PublicTextMetadataInput, TranscriptionMetadataInput. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into CreateDatapointFromFilesModelMetadataInner with oneOf schemas: PrivateTextMetadataInput, PromptAssetMetadataInput, PromptMetadataInput, PublicTextMetadataInput, TranscriptionMetadataInput. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into CreateDatapointFromFilesModelMetadataInner with oneOf schemas: PrivateTextMetadataInput, PromptMetadataInput, PublicTextMetadataInput, TranscriptionMetadataInput. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into CreateDatapointFromFilesModelMetadataInner with oneOf schemas: PrivateTextMetadataInput, PromptAssetMetadataInput, PromptMetadataInput, PublicTextMetadataInput, TranscriptionMetadataInput. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -150,7 +164,7 @@ class CreateDatapointFromFilesModelMetadataInner(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], PrivateTextMetadataInput, PromptMetadataInput, PublicTextMetadataInput, TranscriptionMetadataInput]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], PrivateTextMetadataInput, PromptAssetMetadataInput, PromptMetadataInput, PublicTextMetadataInput, TranscriptionMetadataInput]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

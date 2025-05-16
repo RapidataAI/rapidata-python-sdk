@@ -62,6 +62,10 @@ from rapidata.api_client.models.age_group import AgeGroup
 from rapidata.api_client.models.age_user_filter_model import AgeUserFilterModel
 from rapidata.api_client.models.aggregator_type import AggregatorType
 from rapidata.api_client.models.are_rapids_active_result import AreRapidsActiveResult
+from rapidata.api_client.models.asset_metadata import AssetMetadata
+from rapidata.api_client.models.asset_metadata_asset import AssetMetadataAsset
+from rapidata.api_client.models.asset_metadata_model import AssetMetadataModel
+from rapidata.api_client.models.asset_metadata_model_asset import AssetMetadataModelAsset
 from rapidata.api_client.models.attach_category_rapid_blueprint import AttachCategoryRapidBlueprint
 from rapidata.api_client.models.attach_category_result import AttachCategoryResult
 from rapidata.api_client.models.attach_category_truth import AttachCategoryTruth
@@ -136,7 +140,6 @@ from rapidata.api_client.models.create_unsupported_order_model import CreateUnsu
 from rapidata.api_client.models.create_validation_set_model import CreateValidationSetModel
 from rapidata.api_client.models.custom_user_filter_model import CustomUserFilterModel
 from rapidata.api_client.models.datapoint import Datapoint
-from rapidata.api_client.models.datapoint_asset import DatapointAsset
 from rapidata.api_client.models.datapoint_metadata_model import DatapointMetadataModel
 from rapidata.api_client.models.datapoint_model import DatapointModel
 from rapidata.api_client.models.datapoint_state import DatapointState
@@ -156,6 +159,7 @@ from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.feature_flag_model import FeatureFlagModel
 from rapidata.api_client.models.feedback_model import FeedbackModel
 from rapidata.api_client.models.file_artifact_model import FileArtifactModel
+from rapidata.api_client.models.file_asset import FileAsset
 from rapidata.api_client.models.file_asset_model import FileAssetModel
 from rapidata.api_client.models.file_asset_model_metadata_value import FileAssetModelMetadataValue
 from rapidata.api_client.models.filter import Filter
@@ -218,6 +222,7 @@ from rapidata.api_client.models.location_metadata_exists_filter_config import Lo
 from rapidata.api_client.models.location_metadata_model import LocationMetadataModel
 from rapidata.api_client.models.logic_operator import LogicOperator
 from rapidata.api_client.models.metadata_visibilities import MetadataVisibilities
+from rapidata.api_client.models.multi_asset import MultiAsset
 from rapidata.api_client.models.multi_asset_model import MultiAssetModel
 from rapidata.api_client.models.naive_referee_config import NaiveRefereeConfig
 from rapidata.api_client.models.naive_referee_model import NaiveRefereeModel
@@ -231,6 +236,7 @@ from rapidata.api_client.models.new_user_filter_model import NewUserFilterModel
 from rapidata.api_client.models.newsletter_model import NewsletterModel
 from rapidata.api_client.models.not_available_yet_result import NotAvailableYetResult
 from rapidata.api_client.models.not_user_filter_model import NotUserFilterModel
+from rapidata.api_client.models.null_asset import NullAsset
 from rapidata.api_client.models.null_asset_model import NullAssetModel
 from rapidata.api_client.models.online_pair_maker_config import OnlinePairMakerConfig
 from rapidata.api_client.models.online_pair_maker_config_model import OnlinePairMakerConfigModel
@@ -251,6 +257,7 @@ from rapidata.api_client.models.preliminary_download_model import PreliminaryDow
 from rapidata.api_client.models.preliminary_download_result import PreliminaryDownloadResult
 from rapidata.api_client.models.private_text_metadata_input import PrivateTextMetadataInput
 from rapidata.api_client.models.probabilistic_attach_category_referee_config import ProbabilisticAttachCategoryRefereeConfig
+from rapidata.api_client.models.prompt_asset_metadata_input import PromptAssetMetadataInput
 from rapidata.api_client.models.prompt_metadata import PromptMetadata
 from rapidata.api_client.models.prompt_metadata_input import PromptMetadataInput
 from rapidata.api_client.models.prompt_metadata_model import PromptMetadataModel
@@ -296,6 +303,7 @@ from rapidata.api_client.models.static_selection import StaticSelection
 from rapidata.api_client.models.sticky_state import StickyState
 from rapidata.api_client.models.submit_coco_model import SubmitCocoModel
 from rapidata.api_client.models.submit_coco_result import SubmitCocoResult
+from rapidata.api_client.models.text_asset import TextAsset
 from rapidata.api_client.models.text_asset_model import TextAssetModel
 from rapidata.api_client.models.text_metadata import TextMetadata
 from rapidata.api_client.models.text_metadata_model import TextMetadataModel
@@ -321,6 +329,7 @@ from rapidata.api_client.models.upload_coco_result import UploadCocoResult
 from rapidata.api_client.models.upload_files_from_s3_bucket_model import UploadFilesFromS3BucketModel
 from rapidata.api_client.models.upload_from_s3_result import UploadFromS3Result
 from rapidata.api_client.models.upload_text_sources_to_dataset_model import UploadTextSourcesToDatasetModel
+from rapidata.api_client.models.url_asset_input import UrlAssetInput
 from rapidata.api_client.models.user_score_user_filter_model import UserScoreUserFilterModel
 from rapidata.api_client.models.validation_chance import ValidationChance
 from rapidata.api_client.models.validation_import_post_request_blueprint import ValidationImportPostRequestBlueprint
