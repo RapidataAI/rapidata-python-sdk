@@ -236,10 +236,10 @@ class RapidataOrderManager:
             responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
             contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
-                Will be match up with the datapoints using the list index.
+                Will be matched up with the datapoints using the list index.
             media_contexts (list[str], optional): The list of media contexts i.e. links to the images / videos for the comparison. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
-                Will be match up with the datapoints using the list index.
+                Will be matched up with the datapoints using the list index.
             validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
             confidence_threshold (float, optional): The probability threshold for the comparison. Defaults to None.\n
