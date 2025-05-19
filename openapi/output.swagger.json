@@ -4405,7 +4405,7 @@
         "tags": [
           "ValidationSet"
         ],
-        "summary": "Exports all rapids of a validationset to a file.",
+        "summary": "Exports all rapids of a validation-set to a file.",
         "parameters": [
           {
             "name": "validationSetId",
@@ -6157,6 +6157,45 @@
   },
   "components": {
     "schemas": {
+      "AssetMetadataModel": {
+        "title": "AssetModel",
+        "required": [
+          "_t",
+          "asset"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "AssetModel"
+            ],
+            "type": "string",
+            "description": "Discriminator value for AssetModel",
+            "default": "AssetModel",
+            "example": "AssetModel"
+          },
+          "asset": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/FileAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/MultiAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/NullAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/TextAssetModel"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
       "BaseError": {
         "type": "object",
         "properties": {
@@ -6227,6 +6266,9 @@
                   "$ref": "#/components/schemas/PrivateTextMetadataInput"
                 },
                 {
+                  "$ref": "#/components/schemas/PromptAssetMetadataInput"
+                },
+                {
                   "$ref": "#/components/schemas/PromptMetadataInput"
                 },
                 {
@@ -6279,6 +6321,9 @@
                   "$ref": "#/components/schemas/PrivateTextMetadataInput"
                 },
                 {
+                  "$ref": "#/components/schemas/PromptAssetMetadataInput"
+                },
+                {
                   "$ref": "#/components/schemas/PromptMetadataInput"
                 },
                 {
@@ -6320,6 +6365,9 @@
               "oneOf": [
                 {
                   "$ref": "#/components/schemas/PrivateTextMetadataInput"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptAssetMetadataInput"
                 },
                 {
                   "$ref": "#/components/schemas/PromptMetadataInput"
@@ -6483,6 +6531,9 @@
                   "$ref": "#/components/schemas/PrivateTextMetadataInput"
                 },
                 {
+                  "$ref": "#/components/schemas/PromptAssetMetadataInput"
+                },
+                {
                   "$ref": "#/components/schemas/PromptMetadataInput"
                 },
                 {
@@ -6620,6 +6671,9 @@
             "type": "object",
             "additionalProperties": {
               "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AssetMetadataModel"
+                },
                 {
                   "$ref": "#/components/schemas/ClassificationMetadataModel"
                 },
@@ -6904,6 +6958,9 @@
             "additionalProperties": {
               "oneOf": [
                 {
+                  "$ref": "#/components/schemas/AssetMetadataModel"
+                },
+                {
                   "$ref": "#/components/schemas/ClassificationMetadataModel"
                 },
                 {
@@ -6970,6 +7027,9 @@
             "type": "object",
             "additionalProperties": {
               "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AssetMetadataModel"
+                },
                 {
                   "$ref": "#/components/schemas/ClassificationMetadataModel"
                 },
@@ -7058,6 +7118,32 @@
           },
           "text": {
             "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PromptAssetMetadataInput": {
+        "title": "PromptAssetMetadataInput",
+        "required": [
+          "_t",
+          "asset"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "PromptAssetMetadataInput"
+            ],
+            "type": "string",
+            "description": "Discriminator value for PromptAssetMetadataInput",
+            "default": "PromptAssetMetadataInput",
+            "example": "PromptAssetMetadataInput"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/UrlAssetInput"
           },
           "identifier": {
             "type": "string"
@@ -7187,6 +7273,9 @@
             "type": "object",
             "additionalProperties": {
               "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AssetMetadataModel"
+                },
                 {
                   "$ref": "#/components/schemas/ClassificationMetadataModel"
                 },
@@ -7453,6 +7542,9 @@
                   "$ref": "#/components/schemas/PrivateTextMetadataInput"
                 },
                 {
+                  "$ref": "#/components/schemas/PromptAssetMetadataInput"
+                },
+                {
                   "$ref": "#/components/schemas/PromptMetadataInput"
                 },
                 {
@@ -7473,6 +7565,34 @@
         },
         "additionalProperties": false,
         "description": "The model for uploading text sources to a dataset."
+      },
+      "UrlAssetInput": {
+        "title": "UrlAssetInput",
+        "required": [
+          "_t",
+          "url"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "UrlAssetInput"
+            ],
+            "type": "string",
+            "description": "Discriminator value for UrlAssetInput",
+            "default": "UrlAssetInput",
+            "example": "UrlAssetInput"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "identifier": {
+            "type": "string",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
       },
       "AbTestSelection": {
         "title": "AbTestSelection",
@@ -7912,6 +8032,9 @@
               "oneOf": [
                 {
                   "$ref": "#/components/schemas/PrivateTextMetadataInput"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptAssetMetadataInput"
                 },
                 {
                   "$ref": "#/components/schemas/PromptMetadataInput"
@@ -10287,6 +10410,9 @@
                   "$ref": "#/components/schemas/PrivateTextMetadataInput"
                 },
                 {
+                  "$ref": "#/components/schemas/PromptAssetMetadataInput"
+                },
+                {
                   "$ref": "#/components/schemas/PromptMetadataInput"
                 },
                 {
@@ -10429,6 +10555,9 @@
               "oneOf": [
                 {
                   "$ref": "#/components/schemas/PrivateTextMetadataInput"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptAssetMetadataInput"
                 },
                 {
                   "$ref": "#/components/schemas/PromptMetadataInput"
@@ -10914,6 +11043,9 @@
             "type": "object",
             "additionalProperties": {
               "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AssetMetadataModel"
+                },
                 {
                   "$ref": "#/components/schemas/ClassificationMetadataModel"
                 },
@@ -13450,6 +13582,49 @@
         "additionalProperties": false,
         "description": "The model for adding a campaign to an existing pipeline."
       },
+      "AssetMetadata": {
+        "title": "AssetMetadata",
+        "required": [
+          "_t",
+          "asset",
+          "visibilities"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "AssetMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for AssetMetadata",
+            "default": "AssetMetadata",
+            "example": "AssetMetadata"
+          },
+          "asset": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/FileAsset"
+              },
+              {
+                "$ref": "#/components/schemas/MultiAsset"
+              },
+              {
+                "$ref": "#/components/schemas/NullAsset"
+              },
+              {
+                "$ref": "#/components/schemas/TextAsset"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "visibilities": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "CampaignArtifactModel": {
         "title": "CampaignArtifactModel",
         "required": [
@@ -13566,6 +13741,9 @@
             "additionalProperties": {
               "oneOf": [
                 {
+                  "$ref": "#/components/schemas/AssetMetadata"
+                },
+                {
                   "$ref": "#/components/schemas/ClassificationMetadata"
                 },
                 {
@@ -13667,6 +13845,9 @@
             "type": "object",
             "additionalProperties": {
               "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AssetMetadata"
+                },
                 {
                   "$ref": "#/components/schemas/ClassificationMetadata"
                 },
@@ -13846,6 +14027,69 @@
         },
         "additionalProperties": false
       },
+      "FileAsset": {
+        "title": "FileAsset",
+        "required": [
+          "_t",
+          "fileName"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "FileAsset"
+            ],
+            "type": "string",
+            "description": "Discriminator value for FileAsset",
+            "default": "FileAsset",
+            "example": "FileAsset"
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AssetMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ClassificationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/CountMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageDimensionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/LocationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/SourceUrlMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TextMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadata"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          }
+        },
+        "additionalProperties": false
+      },
       "GetPipelineByIdResult": {
         "required": [
           "artifacts",
@@ -13959,6 +14203,147 @@
           "All"
         ],
         "type": "string"
+      },
+      "MultiAsset": {
+        "title": "MultiAsset",
+        "required": [
+          "_t",
+          "assets"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "MultiAsset"
+            ],
+            "type": "string",
+            "description": "Discriminator value for MultiAsset",
+            "default": "MultiAsset",
+            "example": "MultiAsset"
+          },
+          "assets": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/FileAsset"
+                },
+                {
+                  "$ref": "#/components/schemas/MultiAsset"
+                },
+                {
+                  "$ref": "#/components/schemas/NullAsset"
+                },
+                {
+                  "$ref": "#/components/schemas/TextAsset"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AssetMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ClassificationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/CountMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageDimensionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/LocationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/SourceUrlMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TextMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadata"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "NullAsset": {
+        "title": "NullAsset",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "NullAsset"
+            ],
+            "type": "string",
+            "description": "Discriminator value for NullAsset",
+            "default": "NullAsset",
+            "example": "NullAsset"
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AssetMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ClassificationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/CountMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageDimensionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/LocationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/SourceUrlMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TextMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadata"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          }
+        },
+        "additionalProperties": false
       },
       "OnlinePairMakerConfig": {
         "title": "OnlinePairMakerConfig",
@@ -14250,6 +14635,69 @@
           },
           "visibilities": {
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TextAsset": {
+        "title": "TextAsset",
+        "required": [
+          "_t",
+          "text"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "TextAsset"
+            ],
+            "type": "string",
+            "description": "Discriminator value for TextAsset",
+            "default": "TextAsset",
+            "example": "TextAsset"
+          },
+          "text": {
+            "type": "string"
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AssetMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ClassificationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/CountMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageDimensionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/LocationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/SourceUrlMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TextMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadata"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
           }
         },
         "additionalProperties": false

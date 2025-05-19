@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.datapoint_asset import DatapointAsset
+from rapidata.api_client.models.asset_metadata_model_asset import AssetMetadataModelAsset
 from rapidata.api_client.models.rapid_response import RapidResponse
 from typing import Optional, Set
 from typing_extensions import Self
@@ -29,7 +29,7 @@ class GetRapidResponsesResult(BaseModel):
     GetRapidResponsesResult
     """ # noqa: E501
     rapid_id: StrictStr = Field(alias="rapidId")
-    asset: DatapointAsset
+    asset: AssetMetadataModelAsset
     responses: List[RapidResponse]
     state: StrictStr
     __properties: ClassVar[List[str]] = ["rapidId", "asset", "responses", "state"]
@@ -103,7 +103,7 @@ class GetRapidResponsesResult(BaseModel):
 
         _obj = cls.model_validate({
             "rapidId": obj.get("rapidId"),
-            "asset": DatapointAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
+            "asset": AssetMetadataModelAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "responses": [RapidResponse.from_dict(_item) for _item in obj["responses"]] if obj.get("responses") is not None else None,
             "state": obj.get("state")
         })

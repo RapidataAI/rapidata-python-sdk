@@ -3051,7 +3051,7 @@ class ValidationSetApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> bytearray:
-        """Exports all rapids of a validationset to a file.
+        """Exports all rapids of a validation-set to a file.
 
 
         :param validation_set_id:  (required)
@@ -3117,7 +3117,7 @@ class ValidationSetApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[bytearray]:
-        """Exports all rapids of a validationset to a file.
+        """Exports all rapids of a validation-set to a file.
 
 
         :param validation_set_id:  (required)
@@ -3183,7 +3183,7 @@ class ValidationSetApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Exports all rapids of a validationset to a file.
+        """Exports all rapids of a validation-set to a file.
 
 
         :param validation_set_id:  (required)

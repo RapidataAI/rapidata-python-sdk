@@ -19,23 +19,24 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.url_asset_input import UrlAssetInput
 from typing import Optional, Set
 from typing_extensions import Self
 
-class FileAsset(BaseModel):
+class PromptAssetMetadataInput(BaseModel):
     """
-    FileAsset
+    PromptAssetMetadataInput
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for FileAsset", alias="_t")
-    file_name: StrictStr = Field(alias="fileName")
-    metadata: Optional[Dict[str, CompareWorkflowConfigMetadataValue]] = None
-    __properties: ClassVar[List[str]] = ["_t", "fileName", "metadata"]
+    t: StrictStr = Field(description="Discriminator value for PromptAssetMetadataInput", alias="_t")
+    asset: UrlAssetInput
+    identifier: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = ["_t", "asset", "identifier"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['FileAsset']):
-            raise ValueError("must be one of enum values ('FileAsset')")
+        if value not in set(['PromptAssetMetadataInput']):
+            raise ValueError("must be one of enum values ('PromptAssetMetadataInput')")
         return value
 
     model_config = ConfigDict(
@@ -56,7 +57,7 @@ class FileAsset(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of FileAsset from a JSON string"""
+        """Create an instance of PromptAssetMetadataInput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -77,18 +78,14 @@ class FileAsset(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each value in metadata (dict)
-        _field_dict = {}
-        if self.metadata:
-            for _key_metadata in self.metadata:
-                if self.metadata[_key_metadata]:
-                    _field_dict[_key_metadata] = self.metadata[_key_metadata].to_dict()
-            _dict['metadata'] = _field_dict
+        # override the default output from pydantic by calling `to_dict()` of asset
+        if self.asset:
+            _dict['asset'] = self.asset.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of FileAsset from a dict"""
+        """Create an instance of PromptAssetMetadataInput from a dict"""
         if obj is None:
             return None
 
@@ -96,18 +93,10 @@ class FileAsset(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'FileAsset',
-            "fileName": obj.get("fileName"),
-            "metadata": dict(
-                (_k, CompareWorkflowConfigMetadataValue.from_dict(_v))
-                for _k, _v in obj["metadata"].items()
-            )
-            if obj.get("metadata") is not None
-            else None
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'PromptAssetMetadataInput',
+            "asset": UrlAssetInput.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
+            "identifier": obj.get("identifier")
         })
         return _obj
 
-from rapidata.api_client.models.compare_workflow_config_metadata_value import CompareWorkflowConfigMetadataValue
-# TODO: Rewrite to not use raise_errors
-FileAsset.model_rebuild(raise_errors=False)
 

@@ -19,7 +19,6 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.file_asset_metadata_inner import FileAssetMetadataInner
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,7 +27,7 @@ class NullAsset(BaseModel):
     NullAsset
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for NullAsset", alias="_t")
-    metadata: Optional[List[FileAssetMetadataInner]] = None
+    metadata: Optional[Dict[str, CompareWorkflowConfigMetadataValue]] = None
     __properties: ClassVar[List[str]] = ["_t", "metadata"]
 
     @field_validator('t')
@@ -77,13 +76,13 @@ class NullAsset(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in metadata (list)
-        _items = []
+        # override the default output from pydantic by calling `to_dict()` of each value in metadata (dict)
+        _field_dict = {}
         if self.metadata:
-            for _item_metadata in self.metadata:
-                if _item_metadata:
-                    _items.append(_item_metadata.to_dict())
-            _dict['metadata'] = _items
+            for _key_metadata in self.metadata:
+                if self.metadata[_key_metadata]:
+                    _field_dict[_key_metadata] = self.metadata[_key_metadata].to_dict()
+            _dict['metadata'] = _field_dict
         return _dict
 
     @classmethod
@@ -97,8 +96,16 @@ class NullAsset(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'NullAsset',
-            "metadata": [FileAssetMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None
+            "metadata": dict(
+                (_k, CompareWorkflowConfigMetadataValue.from_dict(_v))
+                for _k, _v in obj["metadata"].items()
+            )
+            if obj.get("metadata") is not None
+            else None
         })
         return _obj
 
+from rapidata.api_client.models.compare_workflow_config_metadata_value import CompareWorkflowConfigMetadataValue
+# TODO: Rewrite to not use raise_errors
+NullAsset.model_rebuild(raise_errors=False)
 
