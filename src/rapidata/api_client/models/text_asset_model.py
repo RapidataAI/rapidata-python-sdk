@@ -19,7 +19,6 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.file_asset_model_metadata_value import FileAssetModelMetadataValue
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -110,4 +109,7 @@ class TextAssetModel(BaseModel):
         })
         return _obj
 
+from rapidata.api_client.models.file_asset_model_metadata_value import FileAssetModelMetadataValue
+# TODO: Rewrite to not use raise_errors
+TextAssetModel.model_rebuild(raise_errors=False)
 

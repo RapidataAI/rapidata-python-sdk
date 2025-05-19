@@ -30,32 +30,34 @@ from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-COMPAREWORKFLOWCONFIGMETADATAVALUE_ONE_OF_SCHEMAS = ["ClassificationMetadata", "CountMetadata", "ImageDimensionMetadata", "LocationMetadata", "OriginalFilenameMetadata", "PromptMetadata", "SourceUrlMetadata", "TextMetadata", "TranscriptionMetadata"]
+COMPAREWORKFLOWCONFIGMETADATAVALUE_ONE_OF_SCHEMAS = ["AssetMetadata", "ClassificationMetadata", "CountMetadata", "ImageDimensionMetadata", "LocationMetadata", "OriginalFilenameMetadata", "PromptMetadata", "SourceUrlMetadata", "TextMetadata", "TranscriptionMetadata"]
 
 class CompareWorkflowConfigMetadataValue(BaseModel):
     """
     CompareWorkflowConfigMetadataValue
     """
+    # data type: AssetMetadata
+    oneof_schema_1_validator: Optional[AssetMetadata] = None
     # data type: ClassificationMetadata
-    oneof_schema_1_validator: Optional[ClassificationMetadata] = None
+    oneof_schema_2_validator: Optional[ClassificationMetadata] = None
     # data type: CountMetadata
-    oneof_schema_2_validator: Optional[CountMetadata] = None
+    oneof_schema_3_validator: Optional[CountMetadata] = None
     # data type: ImageDimensionMetadata
-    oneof_schema_3_validator: Optional[ImageDimensionMetadata] = None
+    oneof_schema_4_validator: Optional[ImageDimensionMetadata] = None
     # data type: LocationMetadata
-    oneof_schema_4_validator: Optional[LocationMetadata] = None
+    oneof_schema_5_validator: Optional[LocationMetadata] = None
     # data type: OriginalFilenameMetadata
-    oneof_schema_5_validator: Optional[OriginalFilenameMetadata] = None
+    oneof_schema_6_validator: Optional[OriginalFilenameMetadata] = None
     # data type: PromptMetadata
-    oneof_schema_6_validator: Optional[PromptMetadata] = None
+    oneof_schema_7_validator: Optional[PromptMetadata] = None
     # data type: SourceUrlMetadata
-    oneof_schema_7_validator: Optional[SourceUrlMetadata] = None
+    oneof_schema_8_validator: Optional[SourceUrlMetadata] = None
     # data type: TextMetadata
-    oneof_schema_8_validator: Optional[TextMetadata] = None
+    oneof_schema_9_validator: Optional[TextMetadata] = None
     # data type: TranscriptionMetadata
-    oneof_schema_9_validator: Optional[TranscriptionMetadata] = None
-    actual_instance: Optional[Union[ClassificationMetadata, CountMetadata, ImageDimensionMetadata, LocationMetadata, OriginalFilenameMetadata, PromptMetadata, SourceUrlMetadata, TextMetadata, TranscriptionMetadata]] = None
-    one_of_schemas: Set[str] = { "ClassificationMetadata", "CountMetadata", "ImageDimensionMetadata", "LocationMetadata", "OriginalFilenameMetadata", "PromptMetadata", "SourceUrlMetadata", "TextMetadata", "TranscriptionMetadata" }
+    oneof_schema_10_validator: Optional[TranscriptionMetadata] = None
+    actual_instance: Optional[Union[AssetMetadata, ClassificationMetadata, CountMetadata, ImageDimensionMetadata, LocationMetadata, OriginalFilenameMetadata, PromptMetadata, SourceUrlMetadata, TextMetadata, TranscriptionMetadata]] = None
+    one_of_schemas: Set[str] = { "AssetMetadata", "ClassificationMetadata", "CountMetadata", "ImageDimensionMetadata", "LocationMetadata", "OriginalFilenameMetadata", "PromptMetadata", "SourceUrlMetadata", "TextMetadata", "TranscriptionMetadata" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -81,6 +83,11 @@ class CompareWorkflowConfigMetadataValue(BaseModel):
         instance = CompareWorkflowConfigMetadataValue.model_construct()
         error_messages = []
         match = 0
+        # validate data type: AssetMetadata
+        if not isinstance(v, AssetMetadata):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `AssetMetadata`")
+        else:
+            match += 1
         # validate data type: ClassificationMetadata
         if not isinstance(v, ClassificationMetadata):
             error_messages.append(f"Error! Input type `{type(v)}` is not `ClassificationMetadata`")
@@ -128,10 +135,10 @@ class CompareWorkflowConfigMetadataValue(BaseModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in CompareWorkflowConfigMetadataValue with oneOf schemas: ClassificationMetadata, CountMetadata, ImageDimensionMetadata, LocationMetadata, OriginalFilenameMetadata, PromptMetadata, SourceUrlMetadata, TextMetadata, TranscriptionMetadata. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in CompareWorkflowConfigMetadataValue with oneOf schemas: AssetMetadata, ClassificationMetadata, CountMetadata, ImageDimensionMetadata, LocationMetadata, OriginalFilenameMetadata, PromptMetadata, SourceUrlMetadata, TextMetadata, TranscriptionMetadata. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in CompareWorkflowConfigMetadataValue with oneOf schemas: ClassificationMetadata, CountMetadata, ImageDimensionMetadata, LocationMetadata, OriginalFilenameMetadata, PromptMetadata, SourceUrlMetadata, TextMetadata, TranscriptionMetadata. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in CompareWorkflowConfigMetadataValue with oneOf schemas: AssetMetadata, ClassificationMetadata, CountMetadata, ImageDimensionMetadata, LocationMetadata, OriginalFilenameMetadata, PromptMetadata, SourceUrlMetadata, TextMetadata, TranscriptionMetadata. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -146,6 +153,12 @@ class CompareWorkflowConfigMetadataValue(BaseModel):
         error_messages = []
         match = 0
 
+        # deserialize data into AssetMetadata
+        try:
+            instance.actual_instance = AssetMetadata.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
         # deserialize data into ClassificationMetadata
         try:
             instance.actual_instance = ClassificationMetadata.from_json(json_str)
@@ -203,10 +216,10 @@ class CompareWorkflowConfigMetadataValue(BaseModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into CompareWorkflowConfigMetadataValue with oneOf schemas: ClassificationMetadata, CountMetadata, ImageDimensionMetadata, LocationMetadata, OriginalFilenameMetadata, PromptMetadata, SourceUrlMetadata, TextMetadata, TranscriptionMetadata. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into CompareWorkflowConfigMetadataValue with oneOf schemas: AssetMetadata, ClassificationMetadata, CountMetadata, ImageDimensionMetadata, LocationMetadata, OriginalFilenameMetadata, PromptMetadata, SourceUrlMetadata, TextMetadata, TranscriptionMetadata. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into CompareWorkflowConfigMetadataValue with oneOf schemas: ClassificationMetadata, CountMetadata, ImageDimensionMetadata, LocationMetadata, OriginalFilenameMetadata, PromptMetadata, SourceUrlMetadata, TextMetadata, TranscriptionMetadata. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into CompareWorkflowConfigMetadataValue with oneOf schemas: AssetMetadata, ClassificationMetadata, CountMetadata, ImageDimensionMetadata, LocationMetadata, OriginalFilenameMetadata, PromptMetadata, SourceUrlMetadata, TextMetadata, TranscriptionMetadata. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -220,7 +233,7 @@ class CompareWorkflowConfigMetadataValue(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], ClassificationMetadata, CountMetadata, ImageDimensionMetadata, LocationMetadata, OriginalFilenameMetadata, PromptMetadata, SourceUrlMetadata, TextMetadata, TranscriptionMetadata]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], AssetMetadata, ClassificationMetadata, CountMetadata, ImageDimensionMetadata, LocationMetadata, OriginalFilenameMetadata, PromptMetadata, SourceUrlMetadata, TextMetadata, TranscriptionMetadata]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None
@@ -235,4 +248,7 @@ class CompareWorkflowConfigMetadataValue(BaseModel):
         """Returns the string representation of the actual instance"""
         return pprint.pformat(self.model_dump())
 
+from rapidata.api_client.models.asset_metadata import AssetMetadata
+# TODO: Rewrite to not use raise_errors
+CompareWorkflowConfigMetadataValue.model_rebuild(raise_errors=False)
 

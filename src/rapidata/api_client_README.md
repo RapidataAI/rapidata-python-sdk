@@ -195,7 +195,7 @@ Class | Method | HTTP request | Description
 *ValidationSetApi* | [**validation_set_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_post) | **POST** /validation-set | Creates a new empty validation set.
 *ValidationSetApi* | [**validation_set_validation_set_id_delete**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_delete) | **DELETE** /validation-set/{validationSetId} | Gets a validation set by the id.
 *ValidationSetApi* | [**validation_set_validation_set_id_dimensions_put**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_dimensions_put) | **PUT** /validation-set/{validationSetId}/dimensions | Updates the dimensions of all rapids within a validation set.
-*ValidationSetApi* | [**validation_set_validation_set_id_export_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_export_get) | **GET** /validation-set/{validationSetId}/export | Exports all rapids of a validationset to a file.
+*ValidationSetApi* | [**validation_set_validation_set_id_export_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_export_get) | **GET** /validation-set/{validationSetId}/export | Exports all rapids of a validation-set to a file.
 *ValidationSetApi* | [**validation_set_validation_set_id_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_get) | **GET** /validation-set/{validationSetId} | Gets a validation set by the id.
 *ValidationSetApi* | [**validation_set_validation_set_id_rapid_files_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_rapid_files_post) | **POST** /validation-set/{validationSetId}/rapid/files | Adds a new validation rapid to the specified validation set using files to create the assets.
 *ValidationSetApi* | [**validation_set_validation_set_id_rapid_texts_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_rapid_texts_post) | **POST** /validation-set/{validationSetId}/rapid/texts | Adds a new validation rapid to the specified validation set using text sources to create the assets.
@@ -232,6 +232,10 @@ Class | Method | HTTP request | Description
  - [AgeUserFilterModel](rapidata/api_client/docs/AgeUserFilterModel.md)
  - [AggregatorType](rapidata/api_client/docs/AggregatorType.md)
  - [AreRapidsActiveResult](rapidata/api_client/docs/AreRapidsActiveResult.md)
+ - [AssetMetadata](rapidata/api_client/docs/AssetMetadata.md)
+ - [AssetMetadataAsset](rapidata/api_client/docs/AssetMetadataAsset.md)
+ - [AssetMetadataModel](rapidata/api_client/docs/AssetMetadataModel.md)
+ - [AssetMetadataModelAsset](rapidata/api_client/docs/AssetMetadataModelAsset.md)
  - [AttachCategoryRapidBlueprint](rapidata/api_client/docs/AttachCategoryRapidBlueprint.md)
  - [AttachCategoryResult](rapidata/api_client/docs/AttachCategoryResult.md)
  - [AttachCategoryTruth](rapidata/api_client/docs/AttachCategoryTruth.md)
@@ -306,7 +310,6 @@ Class | Method | HTTP request | Description
  - [CreateValidationSetModel](rapidata/api_client/docs/CreateValidationSetModel.md)
  - [CustomUserFilterModel](rapidata/api_client/docs/CustomUserFilterModel.md)
  - [Datapoint](rapidata/api_client/docs/Datapoint.md)
- - [DatapointAsset](rapidata/api_client/docs/DatapointAsset.md)
  - [DatapointMetadataModel](rapidata/api_client/docs/DatapointMetadataModel.md)
  - [DatapointModel](rapidata/api_client/docs/DatapointModel.md)
  - [DatapointState](rapidata/api_client/docs/DatapointState.md)
@@ -326,6 +329,7 @@ Class | Method | HTTP request | Description
  - [FeatureFlagModel](rapidata/api_client/docs/FeatureFlagModel.md)
  - [FeedbackModel](rapidata/api_client/docs/FeedbackModel.md)
  - [FileArtifactModel](rapidata/api_client/docs/FileArtifactModel.md)
+ - [FileAsset](rapidata/api_client/docs/FileAsset.md)
  - [FileAssetModel](rapidata/api_client/docs/FileAssetModel.md)
  - [FileAssetModelMetadataValue](rapidata/api_client/docs/FileAssetModelMetadataValue.md)
  - [Filter](rapidata/api_client/docs/Filter.md)
@@ -388,6 +392,7 @@ Class | Method | HTTP request | Description
  - [LocationMetadataModel](rapidata/api_client/docs/LocationMetadataModel.md)
  - [LogicOperator](rapidata/api_client/docs/LogicOperator.md)
  - [MetadataVisibilities](rapidata/api_client/docs/MetadataVisibilities.md)
+ - [MultiAsset](rapidata/api_client/docs/MultiAsset.md)
  - [MultiAssetModel](rapidata/api_client/docs/MultiAssetModel.md)
  - [NaiveRefereeConfig](rapidata/api_client/docs/NaiveRefereeConfig.md)
  - [NaiveRefereeModel](rapidata/api_client/docs/NaiveRefereeModel.md)
@@ -401,6 +406,7 @@ Class | Method | HTTP request | Description
  - [NewsletterModel](rapidata/api_client/docs/NewsletterModel.md)
  - [NotAvailableYetResult](rapidata/api_client/docs/NotAvailableYetResult.md)
  - [NotUserFilterModel](rapidata/api_client/docs/NotUserFilterModel.md)
+ - [NullAsset](rapidata/api_client/docs/NullAsset.md)
  - [NullAssetModel](rapidata/api_client/docs/NullAssetModel.md)
  - [OnlinePairMakerConfig](rapidata/api_client/docs/OnlinePairMakerConfig.md)
  - [OnlinePairMakerConfigModel](rapidata/api_client/docs/OnlinePairMakerConfigModel.md)
@@ -421,6 +427,7 @@ Class | Method | HTTP request | Description
  - [PreliminaryDownloadResult](rapidata/api_client/docs/PreliminaryDownloadResult.md)
  - [PrivateTextMetadataInput](rapidata/api_client/docs/PrivateTextMetadataInput.md)
  - [ProbabilisticAttachCategoryRefereeConfig](rapidata/api_client/docs/ProbabilisticAttachCategoryRefereeConfig.md)
+ - [PromptAssetMetadataInput](rapidata/api_client/docs/PromptAssetMetadataInput.md)
  - [PromptMetadata](rapidata/api_client/docs/PromptMetadata.md)
  - [PromptMetadataInput](rapidata/api_client/docs/PromptMetadataInput.md)
  - [PromptMetadataModel](rapidata/api_client/docs/PromptMetadataModel.md)
@@ -466,6 +473,7 @@ Class | Method | HTTP request | Description
  - [StickyState](rapidata/api_client/docs/StickyState.md)
  - [SubmitCocoModel](rapidata/api_client/docs/SubmitCocoModel.md)
  - [SubmitCocoResult](rapidata/api_client/docs/SubmitCocoResult.md)
+ - [TextAsset](rapidata/api_client/docs/TextAsset.md)
  - [TextAssetModel](rapidata/api_client/docs/TextAssetModel.md)
  - [TextMetadata](rapidata/api_client/docs/TextMetadata.md)
  - [TextMetadataModel](rapidata/api_client/docs/TextMetadataModel.md)
@@ -491,6 +499,7 @@ Class | Method | HTTP request | Description
  - [UploadFilesFromS3BucketModel](rapidata/api_client/docs/UploadFilesFromS3BucketModel.md)
  - [UploadFromS3Result](rapidata/api_client/docs/UploadFromS3Result.md)
  - [UploadTextSourcesToDatasetModel](rapidata/api_client/docs/UploadTextSourcesToDatasetModel.md)
+ - [UrlAssetInput](rapidata/api_client/docs/UrlAssetInput.md)
  - [UserScoreUserFilterModel](rapidata/api_client/docs/UserScoreUserFilterModel.md)
  - [ValidationChance](rapidata/api_client/docs/ValidationChance.md)
  - [ValidationImportPostRequestBlueprint](rapidata/api_client/docs/ValidationImportPostRequestBlueprint.md)
