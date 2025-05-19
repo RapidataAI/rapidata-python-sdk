@@ -150,6 +150,7 @@ class RapidataOrderManager:
             data_type: str = RapidataDataTypes.MEDIA,
             responses_per_datapoint: int = 10,
             contexts: list[str] | None = None,
+            media_contexts: list[str] | None = None,
             validation_set_id: str | None = None,
             confidence_threshold: float | None = None,
             filters: Sequence[RapidataFilter] = [],
@@ -170,6 +171,8 @@ class RapidataOrderManager:
             contexts (list[str], optional): The list of contexts for the classification. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction and options. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
+            media_contexts (list[str], optional): The list of media contexts for the classification i.e links to the images / videos. Defaults to None.\n
+                If provided has to be the same length as datapoints and will be shown in addition to the instruction and options. (Therefore will be different for each datapoint)
             validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
             confidence_threshold (float, optional): The probability threshold for the classification. Defaults to None.\n
@@ -198,6 +201,7 @@ class RapidataOrderManager:
             assets=assets,
             responses_per_datapoint=responses_per_datapoint,
             contexts=contexts,
+            media_contexts=media_contexts,
             validation_set_id=validation_set_id,
             confidence_threshold=confidence_threshold,
             filters=filters,
