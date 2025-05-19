@@ -70,7 +70,7 @@ nav:
   - Improve Quality: improve_order_quality.md
   - Improve Efficency: confidence_stopping.md
   - Human Prompting Guide: human_prompting.md
-  - Examples:
+  - Task Examples:
       - Classification: examples/classify_order.md
       - Compare: examples/compare_order.md
       - Free Text: examples/free_text_order.md
@@ -108,3 +108,4 @@ theme:
 
   features:
     - content.code.copy
+    - navigation.expand
