@@ -82,6 +82,26 @@ Set up your environment and make your first API request in minutes.
         print(results)
         ```
     
+    === "Text"
+        ```python
+        from rapidata import RapidataClient, LanguageFilter
+
+        rapi = RapidataClient()
+
+        order = rapi.order.create_compare_order(
+            name="Example Text Comparison",
+            instruction="Which sentence is grammatically more correct?",
+            datapoints=[["The children were amazed by the magician’s tricks", 
+                        "The children were amusing by the magician’s tricks."]],
+            data_type="text",
+            filters=[LanguageFilter(["en"])]
+        ).run()
+
+        order.display_progress_bar()
+
+        results = order.get_results()
+        print(results)
+        ```
     [:octicons-arrow-right-24: Let's go](quickstart.md)
 
 </div>
