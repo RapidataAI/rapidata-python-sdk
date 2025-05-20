@@ -4,6 +4,8 @@ repo_url: https://github.com/RapidataAI/rapidata-python-sdk
 repo_name: rapidata-python-sdk
 extra_javascript:
   - js/tawk.js
+extra_css:
+  - stylesheets/extra.css
 
 plugins:
   - search
