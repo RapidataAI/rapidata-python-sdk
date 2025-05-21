@@ -13,12 +13,13 @@ class LabelingSelection(RapidataSelection):
     
     Args:
         amount (int): The amount of labeling rapids that will be shown per session.
-        retrieval_mode (RetrievalMode): The retrieval mode to use. Defaults to "Random".
-        max_iterations (int | None): The maximum number an annotator can see the same task. Defaults to None.
+        retrieval_mode (RetrievalMode): The retrieval mode to use. Defaults to "Shuffled".
+        max_iterations (int | None): The maximum number an annotator can answer the same task (datapoint). Defaults to None.
             This parameter is only taken into account when using "Shuffled" or "Sequential" retrieval modes.
+            If left at None, it defaults to 1.
     """
 
-    def __init__(self, amount: int, retrieval_mode: RetrievalMode = RetrievalMode.Random, max_iterations: int | None = None):
+    def __init__(self, amount: int, retrieval_mode: RetrievalMode = RetrievalMode.Shuffled, max_iterations: int | None = None):
         self.amount = amount
         self.retrieval_mode = retrieval_mode
         self.max_iterations = max_iterations
