@@ -14,5 +14,5 @@ class RetrievalMode(Enum):
     """
     Random = "Random"
     """
-    Will just randomly shuffle the datapoints. This is the default and will NOT take into account the "max_iterations" parameter.
+    Will just randomly feed the datapoints to the annotators. This will NOT take into account the "max_iterations" parameter.
     """
