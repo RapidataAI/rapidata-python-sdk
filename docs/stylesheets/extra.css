@@ -1,0 +1,9 @@
+/* Add padding between tab headers and content */
+.tabbed-set .tabbed-content {
+    padding-top: 0.5rem;
+}
+
+/* Ensure tab content has space from the tab labels */
+.tabbed-set>input:checked+label+.tabbed-content {
+    padding-top: 100.5rem;
+}

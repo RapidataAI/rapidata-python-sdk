@@ -4,6 +4,8 @@ repo_url: https://github.com/RapidataAI/rapidata-python-sdk
 repo_name: rapidata-python-sdk
 extra_javascript:
   - js/tawk.js
+extra_css:
+  - stylesheets/extra.css
 
 plugins:
   - search
@@ -52,6 +54,8 @@ markdown_extensions:
       pygments_lang_class: true
   - pymdownx.inlinehilite
   - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
@@ -68,7 +72,7 @@ nav:
   - Improve Quality: improve_order_quality.md
   - Improve Efficency: confidence_stopping.md
   - Human Prompting Guide: human_prompting.md
-  - Examples:
+  - Task Examples:
       - Classification: examples/classify_order.md
       - Compare: examples/compare_order.md
       - Free Text: examples/free_text_order.md
@@ -106,3 +110,4 @@ theme:
 
   features:
     - content.code.copy
+    - navigation.expand

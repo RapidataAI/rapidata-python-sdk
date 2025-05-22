@@ -8,7 +8,7 @@ class StaticSelection(RapidataSelection):
     Given a list of RapidIds, theses specific rapids will be shown in order for every session.
     
     Args:
-        selections (list[str]): List of rapid ids to show.
+        rapid_ids (list[str]): List of rapid ids to show.
     """
 
     def __init__(self, rapid_ids: list[str]):
