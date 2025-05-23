@@ -81,7 +81,7 @@ class ValidationSetManager:
             raise ValueError("The number of contexts and datapoints must be equal")
 
         if(explanations and len(explanations) != len(datapoints)):
-            raise ValueError("The numeber of reasons and datapoints must be equal, the index must align, but can be padded with None")
+            raise ValueError("The number of explanations and datapoints must be equal, the index must align, but can be padded with None")
        
         logger.debug("Creating classification rapids")
         rapids: list[Rapid] = []
@@ -149,7 +149,7 @@ class ValidationSetManager:
             raise ValueError("The number of contexts and datapoints must be equal")
  
         if(explanation and len(explanation) != len(datapoints)):
-            raise ValueError("The numeber of reasons and datapoints must be equal, the index must align, but can be padded with None")
+            raise ValueError("The number of explanations and datapoints must be equal, the index must align, but can be padded with None")
         
         logger.debug("Creating comparison rapids")
         rapids: list[Rapid] = []
@@ -213,7 +213,7 @@ class ValidationSetManager:
             raise ValueError("The number of datapoints, truths, and sentences must be equal")
  
         if(explanation and len(explanation) != len(datapoints)):
-            raise ValueError("The numeber of reasons and datapoints must be equal, the index must align, but can be padded with None")
+            raise ValueError("The number of explanations and datapoints must be equal, the index must align, but can be padded with None")
 
         logger.debug("Creating select words rapids")
         rapids: list[Rapid] = []
@@ -274,7 +274,7 @@ class ValidationSetManager:
             raise ValueError("The number of contexts and datapoints must be equal")
  
         if(explanation and len(explanation) != len(datapoints)):
-            raise ValueError("The numeber of reasons and datapoints must be equal, the index must align, but can be padded with None")
+            raise ValueError("The number of explanations and datapoints must be equal, the index must align, but can be padded with None")
         
         logger.debug("Creating locate rapids")
         rapids = []
@@ -335,7 +335,7 @@ class ValidationSetManager:
             raise ValueError("The number of contexts and datapoints must be equal")
  
         if(explanation and len(explanation) != len(datapoints)):
-            raise ValueError("The numeber of reasons and datapoints must be equal, the index must align, but can be padded with None")
+            raise ValueError("The number of explanations and datapoints must be equal, the index must align, but can be padded with None")
 
         logger.debug("Creating draw rapids")
         rapids: list[Rapid] = []
@@ -396,7 +396,7 @@ class ValidationSetManager:
             raise ValueError("The number of contexts and datapoints must be equal")
  
         if(explanation and len(explanation) != len(datapoints)):
-            raise ValueError("The numeber of reasons and datapoints must be equal, the index must align, but can be padded with None")
+            raise ValueError("The number of explanations and datapoints must be equal, the index must align, but can be padded with None")
               
         logger.debug("Creating timestamp rapids")
         rapids: list[Rapid] = []
@@ -475,10 +475,8 @@ class ValidationSetManager:
         Returns:
             RapidataValidationSet: The ValidationSet instance.
         """
-        try:
-            validation_set = self.__openapi_service.validation_api.validation_set_validation_set_id_get(validation_set_id=validation_set_id)
-        except Exception:
-            raise ValueError(f"ValidationSet with ID {validation_set_id} not found.")
+        
+        validation_set = self.__openapi_service.validation_api.validation_set_validation_set_id_get(validation_set_id=validation_set_id)
         
         return RapidataValidationSet(validation_set_id, str(validation_set.name), self.__openapi_service)
 
@@ -493,18 +491,12 @@ class ValidationSetManager:
         Returns:
             list[RapidataValidationSet]: The list of validation sets.
         """
-        try:
-            validation_page_result = self.__openapi_service.validation_api.validation_sets_get(QueryModel(
-                page=PageInfo(index=1, size=amount),
-                filter=RootFilter(filters=[Filter(field="Name", operator="Contains", value=name)]),
-                sortCriteria=[SortCriterion(direction="Desc", propertyName="CreatedAt")]
-                ))
 
-        except BadRequestException as e:
-            raise ValueError(f"Error occured during request. \nError: {e.body} \nTraceid: {e.headers.get('X-Trace-Id') if isinstance(e.headers, HTTPHeaderDict) else 'Unknown'}")
-
-        except Exception as e:
-            raise ValueError(f"Unknown error occured: {e}")
+        validation_page_result = self.__openapi_service.validation_api.validation_sets_get(QueryModel(
+            page=PageInfo(index=1, size=amount),
+            filter=RootFilter(filters=[Filter(field="Name", operator="Contains", value=name)]),
+            sortCriteria=[SortCriterion(direction="Desc", propertyName="CreatedAt")]
+            ))
 
         validation_sets = [self.get_validation_set_by_id(str(validation_set.id)) for validation_set in validation_page_result.items]
         return validation_sets

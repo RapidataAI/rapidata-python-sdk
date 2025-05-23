@@ -102,7 +102,6 @@ class RapidataOrderManager:
                 max_vote_count=responses_per_datapoint,
             )
 
-
         order_builder = RapidataOrderBuilder(name=name, openapi_service=self._openapi_service)
 
         if selections and validation_set_id:
@@ -159,7 +158,10 @@ class RapidataOrderManager:
             private_notes: list[str] | None = None,
         ) -> RapidataOrder:
         """Create a classification order.
-        
+
+        With this order you can have a datapoint (image, text, video, audio) be classified into one of the answer options.
+        Each response will be exactly one of the answer options.
+
         Args:
             name (str): The name of the order. (Will not be shown to the labeler)
             instruction (str): The instruction for how the data should be classified.
@@ -227,6 +229,8 @@ class RapidataOrderManager:
         ) -> RapidataOrder:
         """Create a compare order.
 
+        With this order you compare two datapoints (image, text, video, audio) and the annotators will choose one of the two based on the instruction.
+
         Args:
             name (str): The name of the order. (Will not be shown to the labeler)
             instruction (str): The instruction for the comparison. Will be shown along side each datapoint.
@@ -251,6 +255,12 @@ class RapidataOrderManager:
                 If provided has to be the same length as datapoints.\n 
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
+
+        if any(type(datapoint) != list for datapoint in datapoints):
+            raise ValueError("Each datapoint must be a list of 2 paths/texts")
+
+        if any(len(datapoint) != 2 for datapoint in datapoints):
+            raise ValueError("Each datapoint must contain exactly two options")
 
         if data_type == RapidataDataTypes.MEDIA:
             assets = [MultiAsset([MediaAsset(path=path) for path in datapoint]) for datapoint in datapoints]
@@ -292,6 +302,9 @@ class RapidataOrderManager:
                              ) -> RapidataOrder:
         """
         Create a ranking order.
+
+        With this order you can rank a list of datapoints (image, text, video, audio) based on the instruction.
+        The annotators will be shown two datapoints at a time. The ranking happens in terms of an elo system based on the matchup results.
 
         Args:
             name (str): The name of the order.
@@ -348,6 +361,9 @@ class RapidataOrderManager:
         ) -> RapidataOrder:
         """Create a free text order.
 
+        With this order you can have a datapoint (image, text, video, audio) be labeled with free text.
+        The annotators will be shown a datapoint and will be asked to answer a question with free text.
+
         Args:
             name (str): The name of the order.
             instruction (str): The instruction to answer with free text. Will be shown along side each datapoint.
@@ -398,6 +414,10 @@ class RapidataOrderManager:
         ) -> RapidataOrder:
         """Create a select words order.
 
+        With this order you can have a datapoint (image, text, video, audio) be labeled with a list of words.
+        The annotators will be shown a datapoint as well as a list of sentences split up by spaces.
+        They will then select specific words based on the instruction.
+
         Args:
             name (str): The name of the order.
             instruction (str): The instruction for how the words should be selected. Will be shown along side each datapoint.
@@ -447,6 +467,9 @@ class RapidataOrderManager:
             private_notes: list[str] | None = None,
         ) -> RapidataOrder:
         """Create a locate order.
+
+        With this order you can have people locate specific objects in a datapoint (image, text, video, audio).
+        The annotators will be shown a datapoint and will be asked to select locations based on the instruction.
 
         Args:
             name (str): The name of the order.
@@ -499,6 +522,9 @@ class RapidataOrderManager:
         ) -> RapidataOrder:
         """Create a draw order.
 
+        With this order you can have people draw lines on a datapoint (image, text, video, audio).
+        The annotators will be shown a datapoint and will be asked to draw lines based on the instruction.
+
         Args:
             name (str): The name of the order.
             instruction (str): The instruction for how the lines should be drawn. Will be shown along side each datapoint.
@@ -549,6 +575,12 @@ class RapidataOrderManager:
             private_notes: list[str] | None = None,
         ) -> RapidataOrder:
         """Create a timestamp order.
+
+        Warning: 
+            This order is currently not fully supported and may give unexpected results.
+
+        With this order you can have people mark specific timestamps in a datapoint (video, audio).
+        The annotators will be shown a datapoint and will be asked to select a timestamp based on the instruction.
 
         Args:
             name (str): The name of the order.
@@ -602,39 +634,29 @@ class RapidataOrderManager:
         Returns:
             RapidataOrder: The Order instance.
         """
-
-        try:
-            order = self._openapi_service.order_api.order_order_id_get(order_id)
-        except Exception:
-            raise ValueError(f"Order with ID {order_id} not found.")
+        
+        order = self._openapi_service.order_api.order_order_id_get(order_id)
 
         return RapidataOrder(
             order_id=order_id, 
             name=order.order_name,
             openapi_service=self._openapi_service)
 
-    def find_orders(self, name: str = "", amount: int = 1) -> list[RapidataOrder]:
+    def find_orders(self, name: str = "", amount: int = 10) -> list[RapidataOrder]:
         """Find your recent orders given criteria. If nothing is provided, it will return the most recent order.
 
         Args:
             name (str, optional): The name of the order - matching order will contain the name. Defaults to "" for any order.
-            amount (int, optional): The amount of orders to return. Defaults to 1.
+            amount (int, optional): The amount of orders to return. Defaults to 10.
 
         Returns:
             list[RapidataOrder]: A list of RapidataOrder instances.
         """
-        try:
-            order_page_result = self._openapi_service.order_api.orders_get(QueryModel(
-                page=PageInfo(index=1, size=amount),
-                filter=RootFilter(filters=[Filter(field="OrderName", operator="Contains", value=name)]),
-                sortCriteria=[SortCriterion(direction="Desc", propertyName="OrderDate")]
-                ))
-
-        except BadRequestException as e:
-            raise ValueError(f"Error occured during request. \nError: {e.body} \nTraceid: {e.headers.get('X-Trace-Id') if isinstance(e.headers, HTTPHeaderDict) else 'Unknown'}")
-
-        except Exception as e:
-            raise ValueError(f"Unknown error occured: {e}")
+        order_page_result = self._openapi_service.order_api.orders_get(QueryModel(
+            page=PageInfo(index=1, size=amount),
+            filter=RootFilter(filters=[Filter(field="OrderName", operator="Contains", value=name)]),
+            sortCriteria=[SortCriterion(direction="Desc", propertyName="OrderDate")]
+            ))
 
         orders = [self.get_order_by_id(order.id) for order in order_page_result.items]
         return orders
