@@ -69,9 +69,6 @@ class RapidataDataset:
 
             upload_response = self.openapi_service.dataset_api.dataset_dataset_id_datapoints_texts_post(dataset_id=self.dataset_id, create_datapoint_from_text_sources_model=model)
 
-            if upload_response.errors:
-                raise ValueError(f"Error uploading text datapoint: {upload_response.errors}")
-
         total_uploads = len(text_assets)
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
             futures = [
@@ -153,12 +150,6 @@ class RapidataDataset:
                         sortIndex=index
                     ),
                 )
-                
-            if upload_response.errors:
-                error_msg = f"Error uploading datapoint: {upload_response.errors}"
-                logger.error(error_msg)
-                local_failed.extend(identifiers_to_track)
-                raise ValueError(error_msg)
 
             local_successful.extend(identifiers_to_track)
 
