@@ -7741,6 +7741,25 @@
         ],
         "type": "string"
       },
+      "AggregatorTypeNullable": {
+        "enum": [
+          "NonCommittal",
+          "MajorityVote",
+          "SimpleMatchup",
+          "LocateCluster",
+          "Classification",
+          "Locate",
+          "BoundingBox",
+          "Line",
+          "Transcription",
+          "SinglePointLocate",
+          "FreeText",
+          "Scrub",
+          null
+        ],
+        "type": "string",
+        "nullable": true
+      },
       "AttachCategoryRapidBlueprint": {
         "title": "ClassifyBlueprint",
         "required": [
@@ -9552,6 +9571,16 @@
         ],
         "type": "string"
       },
+      "RetrievalModeNullable": {
+        "enum": [
+          "Random",
+          "Shuffled",
+          "Sequential",
+          null
+        ],
+        "type": "string",
+        "nullable": true
+      },
       "RootFilter": {
         "type": "object",
         "properties": {
@@ -9791,13 +9820,15 @@
         },
         "additionalProperties": false
       },
-      "StickyState": {
+      "StickyStateNullable": {
         "enum": [
           "None",
           "Temporary",
-          "Permanent"
+          "Permanent",
+          null
         ],
-        "type": "string"
+        "type": "string",
+        "nullable": true
       },
       "TranscriptionRapidBlueprint": {
         "title": "TranscriptionBlueprint",
@@ -12032,6 +12063,7 @@
               "Labeling",
               "Paused",
               "Incomplete",
+              "Flagged",
               "Done",
               "None"
             ],
@@ -12437,6 +12469,7 @@
           "Labeling",
           "Paused",
           "Incomplete",
+          "Flagged",
           "Done",
           "None"
         ],
@@ -13095,6 +13128,7 @@
               "Labeling",
               "Paused",
               "Incomplete",
+              "Flagged",
               "Done",
               "None"
             ],
