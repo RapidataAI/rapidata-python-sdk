@@ -39,8 +39,8 @@ class GetWorkflowResultsResult(BaseModel):
     @field_validator('state')
     def state_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['Labeling', 'Paused', 'Incomplete', 'Done', 'None']):
-            raise ValueError("must be one of enum values ('Labeling', 'Paused', 'Incomplete', 'Done', 'None')")
+        if value not in set(['Labeling', 'Paused', 'Incomplete', 'Flagged', 'Done', 'None']):
+            raise ValueError("must be one of enum values ('Labeling', 'Paused', 'Incomplete', 'Flagged', 'Done', 'None')")
         return value
 
     model_config = ConfigDict(

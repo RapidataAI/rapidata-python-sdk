@@ -18,24 +18,30 @@ from enum import Enum
 from typing_extensions import Self
 
 
-class RapidState(str, Enum):
+class AggregatorTypeNullable(str, Enum):
     """
-    RapidState
+    AggregatorTypeNullable
     """
 
     """
     allowed enum values
     """
-    LABELING = 'Labeling'
-    PAUSED = 'Paused'
-    INCOMPLETE = 'Incomplete'
-    FLAGGED = 'Flagged'
-    DONE = 'Done'
-    NONE = 'None'
+    NONCOMMITTAL = 'NonCommittal'
+    MAJORITYVOTE = 'MajorityVote'
+    SIMPLEMATCHUP = 'SimpleMatchup'
+    LOCATECLUSTER = 'LocateCluster'
+    CLASSIFICATION = 'Classification'
+    LOCATE = 'Locate'
+    BOUNDINGBOX = 'BoundingBox'
+    LINE = 'Line'
+    TRANSCRIPTION = 'Transcription'
+    SINGLEPOINTLOCATE = 'SinglePointLocate'
+    FREETEXT = 'FreeText'
+    SCRUB = 'Scrub'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of RapidState from a JSON string"""
+        """Create an instance of AggregatorTypeNullable from a JSON string"""
         return cls(json.loads(json_str))
 
 
