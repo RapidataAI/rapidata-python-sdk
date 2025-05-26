@@ -27,6 +27,20 @@ To learn about the basics of creating an order, please refer to the [quickstart 
 === "Advanced"
     In the advanced example we will first create a validation set to give the annotators a reference how they should rate the images.
 
+    To get a better understanding of validation sets, please refer to the [Improve Quality](/improve_order_quality/) guide.
+
     ```python
     --8<-- "examples/advanced_classify_order.py"
+    ```
+
+    To preview the order and see what the annotators see, you can run the following code:
+
+    ```python
+    order.preview()
+    ```
+
+    To open the order in the browser, you can run the following code:
+
+    ```python
+    order.view()
     ```
