@@ -1,5 +1,4 @@
 name: Release and Publish
-
 on:
   workflow_dispatch:
     inputs:
@@ -12,21 +11,17 @@ on:
         - patch
         - minor
         - major
-
 jobs:
   release-and-publish:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.x'
-
     - name: Install Poetry
       uses: snok/install-poetry@v1
-
     - name: Configure Git
       run: |
         git config user.name github-actions
@@ -41,9 +36,35 @@ jobs:
         echo "new_version=$new_version" >>$GITHUB_OUTPUT
         echo "old_version=$old_version" >>$GITHUB_OUTPUT
     
+    - name: Update version in Python code
+      run: |
+        python3 << 'EOF'
+        import re
+        import sys
+        
+        version = "${{ steps.update_version.outputs.new_version }}"
+        
+        # Update __init__.py
+        init_file = "rapidata/__init__.py"
+        try:
+            with open(init_file, 'r') as f:
+                content = f.read()
+            
+            # Replace __version__ = "..." with new version
+            content = re.sub(r'__version__\s*=\s*["\'][^"\']*["\']', f'__version__ = "{version}"', content)
+            
+            with open(init_file, 'w') as f:
+                f.write(content)
+            print(f"Updated {init_file} with version {version}")
+        except FileNotFoundError:
+            print(f"File {init_file} not found, creating it...")
+            with open(init_file, 'w') as f:
+                f.write(f'__version__ = "{version}"\n')
+        EOF
+    
     - name: Commit and push changes
       run: |
-        git add pyproject.toml
+        git add pyproject.toml rapidata/__init__.py
         git commit -m "Bump version from ${{ steps.update_version.outputs.old_version }} to ${{ steps.update_version.outputs.new_version }}"
         git push
     
@@ -61,7 +82,6 @@ jobs:
         poetry publish
     - name: List dist contents
       run: ls -l dist/
-
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v2
       with:
@@ -70,29 +90,3 @@ jobs:
         files: |
           dist/*.whl
           dist/*.tar.gz
-  deploy-docs:
-    runs-on: ubuntu-latest
-    # Only run on push to main or when a PR is merged
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-      - name: Install Poetry
-        run: |
-          curl -sSL https://install.python-poetry.org | python3 -
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
-      - name: Install dependencies
-        run: |
-          poetry install --with docs
-      - name: Build MkDocs site
-        run: |
-          poetry run mkdocs build
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        if: github.ref == 'refs/heads/main'
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./site
-          force_orphan: true
