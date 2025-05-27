@@ -83,4 +83,4 @@ class RapidataClient:
                     managed_print(f"""A new version of the Rapidata SDK is available: {latest_version}
 Your current version is: {__version__}""")
         except:
-            pass  # Fail silently
+            logger.debug("Failed to check for updates")
