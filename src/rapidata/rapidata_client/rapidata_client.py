@@ -82,5 +82,5 @@ class RapidataClient:
                 if version.parse(latest_version) > version.parse(__version__):
                     managed_print(f"""A new version of the Rapidata SDK is available: {latest_version}
 Your current version is: {__version__}""")
-        except:
-            logger.debug("Failed to check for updates")
+        except Exception as e:
+            logger.debug(f"Failed to check for updates: {e}")
