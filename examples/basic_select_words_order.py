@@ -23,8 +23,8 @@ if __name__ == "__main__":
         filters=[
             rapi.order.filters.language(["en"]),
         ],
+        validation_set_id="6761a86eef7af86285630ea8" # in this example, the validation set has already been created
     ).run()
     order.display_progress_bar()
     result = order.get_results()
     print(result)
-

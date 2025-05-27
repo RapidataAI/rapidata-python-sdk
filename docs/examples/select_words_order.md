@@ -1,19 +1,21 @@
-# Example Text to Speech Select Words Order
+# Example Select Words Order
 
-This example builds on what was introduced in the [Quickstart](/quickstart/) as well as the [Improve Quality](/improve_order_quality/) guide.
+To learn about the basics of creating an order, please refer to the [quickstart guide](../quickstart.md).
 
-## Order description
-
-Text-to-speech is becoming increasingly important in the world of AI. With the select words order, we can test how understandable the AI-generated speech is. We do that by asking the user to click on the words they hear in the audio. This can be done on a language basis, where we can target even uncommon languages and make sure the AI is pronouncing the words correctly.
-
-This order may not run and require manual approval. If you're order does not start, you can reach out to us at <info@rapidata.ai>.
+A big part of image generation is following the prompt accurately. Rapidata makes it easy to get feedback on what parts of the prompt the model is struggling with. In this example, we will create an order where annotators are asked to select the words that are not correctly depicted in the image.
 
 ```python
---8<-- "examples/select_words_order.py"
+--8<-- "examples/basic_select_words_order.py"
 ```
 
-The resulting rapids for the users look like this:
+To preview the order and see what the annotators see, you can run the following code:
 
-<figure markdown="span">
-![SelectWords Example](../media/order-types/select_words_tts_example.png){ width="50%" }
-</figure>
+```python
+order.preview()
+```
+
+To open the order in the browser, you can run the following code:
+
+```python
+order.view()
+```

@@ -76,9 +76,9 @@ nav:
       - Classification: examples/classify_order.md
       - Compare: examples/compare_order.md
       - Free Text: examples/free_text_order.md
-      - SelectWords:
-          - Faulty Words: examples/select_faulty_prompt_order.md
-          - Text to Speech: examples/select_words_order.md
+      - Select Words: examples/select_words_order.md
+      - Locate: examples/locate_order.md
+      - Draw: examples/draw_order.md
   - Filters: reference/rapidata/rapidata_client/filter/rapidata_filters/
   - Settings: reference/rapidata/rapidata_client/settings/rapidata_settings/
   - Selections: reference/rapidata/rapidata_client/selection/rapidata_selections/

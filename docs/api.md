@@ -25,8 +25,7 @@ classDiagram
     class RapidataFilters {
         +user_score
         +age
-        +campaign
-        +contry
+        +country
         +gender
         +language
     }
