@@ -5,8 +5,7 @@ import webbrowser
 from time import sleep
 from typing import cast
 from colorama import Fore
-
-# Third-party imports
+from datetime import datetime
 from tqdm import tqdm
 
 # Local/application imports
@@ -41,6 +40,7 @@ class RapidataOrder:
     ):
         self.order_id = order_id
         self.name = name
+        self.__created_at: datetime | None = None
         self.__openapi_service = openapi_service
         self.__workflow_id: str = ""
         self.__campaign_id: str = ""
@@ -50,6 +50,13 @@ class RapidataOrder:
         self.order_details_page = f"https://app.{self.__openapi_service.environment}/order/detail/{self.order_id}"
         logger.debug("RapidataOrder initialized")
 
+    @property
+    def created_at(self) -> datetime:
+        """Returns the creation date of the order."""
+        if not self.__created_at:
+            self.__created_at = self.__openapi_service.order_api.order_order_id_get(self.order_id).order_date
+        return self.__created_at
+    
     def run(self) -> "RapidataOrder":
         """Runs the order to start collecting responses."""
         logger.info(f"Starting order '{self}'")
