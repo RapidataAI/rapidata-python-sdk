@@ -64,7 +64,7 @@ jobs:
     
     - name: Commit and push changes
       run: |
-        git add pyproject.toml rapidata/__init__.py
+        git add pyproject.toml src/rapidata/__init__.py
         git commit -m "Bump version from ${{ steps.update_version.outputs.old_version }} to ${{ steps.update_version.outputs.new_version }}"
         git push
     
