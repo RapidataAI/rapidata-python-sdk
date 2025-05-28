@@ -72,6 +72,13 @@ class RapidataOrder:
         logger.debug(f"Order '{self}' has been unpaused.")
         managed_print(f"Order '{self}' has been unpaused.")
 
+    def delete(self) -> None:
+        """Deletes the order."""
+        logger.info(f"Deleting order '{self}'")
+        self.__openapi_service.order_api.order_order_id_delete(self.order_id)
+        logger.debug(f"Order '{self}' has been deleted.")
+        managed_print(f"Order '{self}' has been deleted.")
+
     def get_status(self) -> str:
         """
         Gets the status of the order.
