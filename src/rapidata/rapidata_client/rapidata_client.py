@@ -1,3 +1,7 @@
+import requests
+from packaging import version
+from rapidata import __version__
+
 from rapidata.service.openapi_service import OpenAPIService
 
 from rapidata.rapidata_client.order.rapidata_order_manager import RapidataOrderManager
@@ -8,7 +12,7 @@ from rapidata.rapidata_client.validation.validation_set_manager import (
 
 from rapidata.rapidata_client.demographic.demographic_manager import DemographicManager
 
-from rapidata.rapidata_client.logging import logger
+from rapidata.rapidata_client.logging import logger, managed_print
 
 class RapidataClient:
     """The Rapidata client is the main entry point for interacting with the Rapidata API. It allows you to create orders and validation sets."""
@@ -39,6 +43,9 @@ class RapidataClient:
             order (RapidataOrderManager): The RapidataOrderManager instance.
             validation (ValidationSetManager): The ValidationSetManager instance.
         """
+        logger.debug("Checking version")
+        self._check_version()
+
         logger.debug("Initializing OpenAPIService")
         self._openapi_service = OpenAPIService(
             client_id=client_id,
@@ -62,3 +69,18 @@ class RapidataClient:
     def reset_credentials(self):
         """Reset the credentials saved in the configuration file for the current environment."""
         self._openapi_service.reset_credentials()
+
+    def _check_version(self):
+        try:
+            response = requests.get(
+                "https://api.github.com/repos/RapidataAI/rapidata-python-sdk/releases/latest",
+                headers={"Accept": "application/vnd.github.v3+json"},
+                timeout=3
+            )
+            if response.status_code == 200:
+                latest_version = response.json()["tag_name"].lstrip("v")
+                if version.parse(latest_version) > version.parse(__version__):
+                    managed_print(f"""A new version of the Rapidata SDK is available: {latest_version}
+Your current version is: {__version__}""")
+        except Exception as e:
+            logger.debug(f"Failed to check for updates: {e}")

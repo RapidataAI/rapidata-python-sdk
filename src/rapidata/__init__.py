@@ -1,3 +1,5 @@
+__version__ = "0.0.1"
+
 from .rapidata_client import (
     RapidataClient,
     DemographicSelection,
