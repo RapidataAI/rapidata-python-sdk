@@ -20,7 +20,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.asset_metadata_model_asset import AssetMetadataModelAsset
+from rapidata.api_client.models.datapoint_asset import DatapointAsset
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -31,7 +31,7 @@ class Datapoint(BaseModel):
     id: StrictStr
     dataset_id: StrictStr = Field(alias="datasetId")
     sort_index: Optional[StrictInt] = Field(default=None, alias="sortIndex")
-    asset: AssetMetadataModelAsset
+    asset: DatapointAsset
     created_at: datetime = Field(alias="createdAt")
     __properties: ClassVar[List[str]] = ["id", "datasetId", "sortIndex", "asset", "createdAt"]
 
@@ -97,7 +97,7 @@ class Datapoint(BaseModel):
             "id": obj.get("id"),
             "datasetId": obj.get("datasetId"),
             "sortIndex": obj.get("sortIndex"),
-            "asset": AssetMetadataModelAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
+            "asset": DatapointAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "createdAt": obj.get("createdAt")
         })
         return _obj

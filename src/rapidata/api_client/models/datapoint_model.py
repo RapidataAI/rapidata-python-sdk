@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.asset_metadata_model_asset import AssetMetadataModelAsset
+from rapidata.api_client.models.datapoint_asset import DatapointAsset
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -29,7 +29,7 @@ class DatapointModel(BaseModel):
     """ # noqa: E501
     id: StrictStr
     dataset_id: StrictStr = Field(alias="datasetId")
-    asset: AssetMetadataModelAsset
+    asset: DatapointAsset
     __properties: ClassVar[List[str]] = ["id", "datasetId", "asset"]
 
     model_config = ConfigDict(
@@ -88,7 +88,7 @@ class DatapointModel(BaseModel):
         _obj = cls.model_validate({
             "id": obj.get("id"),
             "datasetId": obj.get("datasetId"),
-            "asset": AssetMetadataModelAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None
+            "asset": DatapointAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None
         })
         return _obj
 

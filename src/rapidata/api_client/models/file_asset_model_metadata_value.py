@@ -17,6 +17,7 @@ import json
 import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
+from rapidata.api_client.models.asset_metadata_model import AssetMetadataModel
 from rapidata.api_client.models.classification_metadata_model import ClassificationMetadataModel
 from rapidata.api_client.models.count_metadata_model import CountMetadataModel
 from rapidata.api_client.models.demographic_metadata_model import DemographicMetadataModel
@@ -276,7 +277,4 @@ class FileAssetModelMetadataValue(BaseModel):
         """Returns the string representation of the actual instance"""
         return pprint.pformat(self.model_dump())
 
-from rapidata.api_client.models.asset_metadata_model import AssetMetadataModel
-# TODO: Rewrite to not use raise_errors
-FileAssetModelMetadataValue.model_rebuild(raise_errors=False)
 

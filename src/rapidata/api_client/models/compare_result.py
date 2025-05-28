@@ -27,10 +27,9 @@ class CompareResult(BaseModel):
     CompareResult
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for CompareResult", alias="_t")
-    winner_id: Optional[StrictStr] = Field(default=None, alias="winnerId")
     winners: Optional[List[StrictStr]] = None
     rapid_id: StrictStr = Field(alias="rapidId")
-    __properties: ClassVar[List[str]] = ["_t", "winnerId", "winners", "rapidId"]
+    __properties: ClassVar[List[str]] = ["_t", "winners", "rapidId"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -69,10 +68,8 @@ class CompareResult(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
-        * OpenAPI `readOnly` fields are excluded.
         """
         excluded_fields: Set[str] = set([
-            "winner_id",
         ])
 
         _dict = self.model_dump(
@@ -80,11 +77,6 @@ class CompareResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if winner_id (nullable) is None
-        # and model_fields_set contains the field
-        if self.winner_id is None and "winner_id" in self.model_fields_set:
-            _dict['winnerId'] = None
-
         return _dict
 
     @classmethod
@@ -98,7 +90,6 @@ class CompareResult(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'CompareResult',
-            "winnerId": obj.get("winnerId"),
             "winners": obj.get("winners"),
             "rapidId": obj.get("rapidId")
         })
