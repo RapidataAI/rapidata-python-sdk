@@ -45,7 +45,7 @@ jobs:
         version = "${{ steps.update_version.outputs.new_version }}"
         
         # Update __init__.py
-        init_file = "rapidata/__init__.py"
+        init_file = "src/rapidata/__init__.py"
         try:
             with open(init_file, 'r') as f:
                 content = f.read()
