@@ -33,6 +33,17 @@ class RapidataFilters:
         ```
 
         This ensures the order is only shown to users in the US and Germany whose phones are set to English.
+
+    Info:        
+        The or and not filter support the | and ~ operators respectively.
+        The and is given by the elements in the list.
+
+        ```python
+        from rapidata import AgeFilter, LanguageFilter, CountryFilter
+        filters=[~AgeFilter([AgeGroup.UNDER_18]), CountryFilter(["US"]) | LanguageFilter(["en"])]
+        ```
+
+        This would return users who are not under 18 years old and are from the US or whose phones are set to English.
     """
     user_score = UserScoreFilter
     age = AgeFilter 
