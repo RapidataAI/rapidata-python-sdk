@@ -6175,20 +6175,7 @@
             "example": "AssetModel"
           },
           "asset": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/FileAssetModel"
-              },
-              {
-                "$ref": "#/components/schemas/MultiAssetModel"
-              },
-              {
-                "$ref": "#/components/schemas/NullAssetModel"
-              },
-              {
-                "$ref": "#/components/schemas/TextAssetModel"
-              }
-            ],
+            "type": "object",
             "discriminator": {
               "propertyName": "_t"
             }
@@ -7741,6 +7728,25 @@
         ],
         "type": "string"
       },
+      "AggregatorTypeNullable": {
+        "enum": [
+          "NonCommittal",
+          "MajorityVote",
+          "SimpleMatchup",
+          "LocateCluster",
+          "Classification",
+          "Locate",
+          "BoundingBox",
+          "Line",
+          "Transcription",
+          "SinglePointLocate",
+          "FreeText",
+          "Scrub",
+          null
+        ],
+        "type": "string",
+        "nullable": true
+      },
       "AttachCategoryRapidBlueprint": {
         "title": "ClassifyBlueprint",
         "required": [
@@ -8321,11 +8327,6 @@
             "description": "The priority is used to prioritize over other orders.",
             "format": "int32",
             "nullable": true
-          },
-          "isSticky": {
-            "type": "boolean",
-            "description": "Indicates if the underlying campaign should be sticky.",
-            "deprecated": true
           },
           "stickyState": {
             "enum": [
@@ -9552,6 +9553,16 @@
         ],
         "type": "string"
       },
+      "RetrievalModeNullable": {
+        "enum": [
+          "Random",
+          "Shuffled",
+          "Sequential",
+          null
+        ],
+        "type": "string",
+        "nullable": true
+      },
       "RootFilter": {
         "type": "object",
         "properties": {
@@ -9791,13 +9802,15 @@
         },
         "additionalProperties": false
       },
-      "StickyState": {
+      "StickyStateNullable": {
         "enum": [
           "None",
           "Temporary",
-          "Permanent"
+          "Permanent",
+          null
         ],
-        "type": "string"
+        "type": "string",
+        "nullable": true
       },
       "TranscriptionRapidBlueprint": {
         "title": "TranscriptionBlueprint",
@@ -10931,6 +10944,7 @@
           "invalidValidationCount",
           "metadata",
           "payload",
+          "state",
           "type"
         ],
         "type": "object",
@@ -11101,6 +11115,17 @@
             "type": "number",
             "format": "double",
             "nullable": true
+          },
+          "state": {
+            "enum": [
+              "Labeling",
+              "Paused",
+              "Incomplete",
+              "Flagged",
+              "Done",
+              "None"
+            ],
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -11398,6 +11423,17 @@
           }
         },
         "additionalProperties": false
+      },
+      "RapidState": {
+        "enum": [
+          "Labeling",
+          "Paused",
+          "Incomplete",
+          "Flagged",
+          "Done",
+          "None"
+        ],
+        "type": "string"
       },
       "ScrubPayload": {
         "title": "ScrubPayload",
@@ -11886,12 +11922,6 @@
             "default": "CompareResult",
             "example": "CompareResult"
           },
-          "winnerId": {
-            "type": "string",
-            "nullable": true,
-            "readOnly": true,
-            "deprecated": true
-          },
           "winners": {
             "type": "array",
             "items": {
@@ -12032,6 +12062,7 @@
               "Labeling",
               "Paused",
               "Incomplete",
+              "Flagged",
               "Done",
               "None"
             ],
@@ -12431,16 +12462,6 @@
         },
         "additionalProperties": false,
         "description": "The model for a Rapid skipped."
-      },
-      "RapidState": {
-        "enum": [
-          "Labeling",
-          "Paused",
-          "Incomplete",
-          "Done",
-          "None"
-        ],
-        "type": "string"
       },
       "ReportModel": {
         "required": [
@@ -13095,6 +13116,7 @@
               "Labeling",
               "Paused",
               "Incomplete",
+              "Flagged",
               "Done",
               "None"
             ],

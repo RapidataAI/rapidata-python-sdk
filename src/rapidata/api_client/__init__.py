@@ -61,11 +61,11 @@ from rapidata.api_client.models.add_validation_text_rapid_model import AddValida
 from rapidata.api_client.models.age_group import AgeGroup
 from rapidata.api_client.models.age_user_filter_model import AgeUserFilterModel
 from rapidata.api_client.models.aggregator_type import AggregatorType
+from rapidata.api_client.models.aggregator_type_nullable import AggregatorTypeNullable
 from rapidata.api_client.models.are_rapids_active_result import AreRapidsActiveResult
 from rapidata.api_client.models.asset_metadata import AssetMetadata
 from rapidata.api_client.models.asset_metadata_asset import AssetMetadataAsset
 from rapidata.api_client.models.asset_metadata_model import AssetMetadataModel
-from rapidata.api_client.models.asset_metadata_model_asset import AssetMetadataModelAsset
 from rapidata.api_client.models.attach_category_rapid_blueprint import AttachCategoryRapidBlueprint
 from rapidata.api_client.models.attach_category_result import AttachCategoryResult
 from rapidata.api_client.models.attach_category_truth import AttachCategoryTruth
@@ -140,6 +140,7 @@ from rapidata.api_client.models.create_unsupported_order_model import CreateUnsu
 from rapidata.api_client.models.create_validation_set_model import CreateValidationSetModel
 from rapidata.api_client.models.custom_user_filter_model import CustomUserFilterModel
 from rapidata.api_client.models.datapoint import Datapoint
+from rapidata.api_client.models.datapoint_asset import DatapointAsset
 from rapidata.api_client.models.datapoint_metadata_model import DatapointMetadataModel
 from rapidata.api_client.models.datapoint_model import DatapointModel
 from rapidata.api_client.models.datapoint_state import DatapointState
@@ -278,6 +279,7 @@ from rapidata.api_client.models.register_temporary_customer_result import Regist
 from rapidata.api_client.models.report_model import ReportModel
 from rapidata.api_client.models.response_count_user_filter_model import ResponseCountUserFilterModel
 from rapidata.api_client.models.retrieval_mode import RetrievalMode
+from rapidata.api_client.models.retrieval_mode_nullable import RetrievalModeNullable
 from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.scrub_payload import ScrubPayload
 from rapidata.api_client.models.scrub_range import ScrubRange
@@ -300,7 +302,7 @@ from rapidata.api_client.models.sort_direction import SortDirection
 from rapidata.api_client.models.source_url_metadata import SourceUrlMetadata
 from rapidata.api_client.models.source_url_metadata_model import SourceUrlMetadataModel
 from rapidata.api_client.models.static_selection import StaticSelection
-from rapidata.api_client.models.sticky_state import StickyState
+from rapidata.api_client.models.sticky_state_nullable import StickyStateNullable
 from rapidata.api_client.models.submit_coco_model import SubmitCocoModel
 from rapidata.api_client.models.submit_coco_result import SubmitCocoResult
 from rapidata.api_client.models.text_asset import TextAsset
