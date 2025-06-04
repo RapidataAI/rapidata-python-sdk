@@ -38,7 +38,7 @@ class RapidataOrder:
         order_id: str,
         openapi_service: OpenAPIService,
     ):
-        self.order_id = order_id
+        self.id = order_id
         self.name = name
         self.__created_at: datetime | None = None
         self.__openapi_service = openapi_service
@@ -50,6 +50,11 @@ class RapidataOrder:
         self.order_details_page = f"https://app.{self.__openapi_service.environment}/order/detail/{self.order_id}"
         logger.debug("RapidataOrder initialized")
 
+    @property
+    def order_id(self) -> str:
+        managed_print(f"order_id is deprecated. Use id instead.")
+        return self.id
+    
     @property
     def created_at(self) -> datetime:
         """Returns the creation date of the order."""
