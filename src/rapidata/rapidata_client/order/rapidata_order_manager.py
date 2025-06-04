@@ -28,9 +28,8 @@ from rapidata.rapidata_client.filter import RapidataFilter
 from rapidata.rapidata_client.filter.rapidata_filters import RapidataFilters
 from rapidata.rapidata_client.settings import RapidataSettings, RapidataSetting
 from rapidata.rapidata_client.selection.rapidata_selections import RapidataSelections
-from rapidata.rapidata_client.logging import logger
+from rapidata.rapidata_client.logging import logger, RapidataOutputManger
 
-from rapidata.api_client.exceptions import BadRequestException
 from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.page_info import PageInfo
 from rapidata.api_client.models.root_filter import RootFilter
@@ -604,7 +603,7 @@ class RapidataOrderManager:
 
         assets = [MediaAsset(path=path) for path in datapoints]
 
-        for asset in tqdm(assets, desc="Downloading assets and checking duration"):
+        for asset in tqdm(assets, desc="Downloading assets and checking duration", disable=RapidataOutputManger.silent_mode):
             if not asset.get_duration():
                 raise ValueError("The datapoints for this order must have a duration. (e.g. video or audio)")
 

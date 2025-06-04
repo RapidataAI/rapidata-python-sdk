@@ -11,12 +11,11 @@ from rapidata.api_client.models.page_info import PageInfo
 from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.filter import Filter
 from rapidata.api_client.models.sort_criterion import SortCriterion
-from rapidata.api_client.exceptions import BadRequestException
 from urllib3._collections import HTTPHeaderDict # type: ignore[import]
 
 from rapidata.rapidata_client.validation.rapids.box import Box
 
-from rapidata.rapidata_client.logging import logger, managed_print
+from rapidata.rapidata_client.logging import logger, managed_print, RapidataOutputManger
 from tqdm import tqdm
 
 
@@ -453,7 +452,7 @@ class ValidationSetManager:
         )
 
         logger.debug("Adding rapids to validation set")
-        for rapid in tqdm(rapids, desc="Uploading validation tasks"):
+        for rapid in tqdm(rapids, desc="Uploading validation tasks", disable=RapidataOutputManger.silent_mode):
             validation_set.add_rapid(rapid)
         
         managed_print()
