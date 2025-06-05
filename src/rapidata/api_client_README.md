@@ -105,6 +105,7 @@ Class | Method | HTTP request | Description
 *DatasetApi* | [**dataset_dataset_id_datapoints_failed_get**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_datapoints_failed_get) | **GET** /dataset/{datasetId}/datapoints/failed | Gets a list of all datapoints that failed to upload.
 *DatasetApi* | [**dataset_dataset_id_datapoints_files_post**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_datapoints_files_post) | **POST** /dataset/{datasetId}/datapoints/files | Creates a single datapoint by uploading files.
 *DatasetApi* | [**dataset_dataset_id_datapoints_get**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_datapoints_get) | **GET** /dataset/{datasetId}/datapoints | Gets all datapoints of a dataset.
+*DatasetApi* | [**dataset_dataset_id_datapoints_post**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_datapoints_post) | **POST** /dataset/{datasetId}/datapoints | Creates a new datapoint from multiple possible sources.
 *DatasetApi* | [**dataset_dataset_id_datapoints_s3_post**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_datapoints_s3_post) | **POST** /dataset/{datasetId}/datapoints/s3 | Uploads files from an S3 bucket to a dataset.
 *DatasetApi* | [**dataset_dataset_id_datapoints_texts_post**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_datapoints_texts_post) | **POST** /dataset/{datasetId}/datapoints/texts | Creates a single datapoint from text sources.
 *DatasetApi* | [**dataset_dataset_id_datapoints_urls_post**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_datapoints_urls_post) | **POST** /dataset/{datasetId}/datapoints/urls | Creates a single datapoint where the assets are fetched from the specified urls.
@@ -287,7 +288,6 @@ Class | Method | HTTP request | Description
  - [CreateComplexOrderModelPipeline](rapidata/api_client/docs/CreateComplexOrderModelPipeline.md)
  - [CreateComplexOrderResult](rapidata/api_client/docs/CreateComplexOrderResult.md)
  - [CreateDatapointFromFilesModel](rapidata/api_client/docs/CreateDatapointFromFilesModel.md)
- - [CreateDatapointFromFilesModelMetadataInner](rapidata/api_client/docs/CreateDatapointFromFilesModelMetadataInner.md)
  - [CreateDatapointFromTextSourcesModel](rapidata/api_client/docs/CreateDatapointFromTextSourcesModel.md)
  - [CreateDatapointFromUrlsModel](rapidata/api_client/docs/CreateDatapointFromUrlsModel.md)
  - [CreateDatapointResult](rapidata/api_client/docs/CreateDatapointResult.md)
@@ -314,6 +314,7 @@ Class | Method | HTTP request | Description
  - [DatapointModel](rapidata/api_client/docs/DatapointModel.md)
  - [DatapointState](rapidata/api_client/docs/DatapointState.md)
  - [DatasetArtifactModel](rapidata/api_client/docs/DatasetArtifactModel.md)
+ - [DatasetDatasetIdDatapointsPostRequestMetadataInner](rapidata/api_client/docs/DatasetDatasetIdDatapointsPostRequestMetadataInner.md)
  - [DatasetEvaluationStepModel](rapidata/api_client/docs/DatasetEvaluationStepModel.md)
  - [Demographic](rapidata/api_client/docs/Demographic.md)
  - [DemographicMetadataModel](rapidata/api_client/docs/DemographicMetadataModel.md)

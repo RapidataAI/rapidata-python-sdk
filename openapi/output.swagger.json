@@ -307,6 +307,115 @@
             }
           }
         }
+      },
+      "post": {
+        "tags": [
+          "Dataset"
+        ],
+        "summary": "Creates a new datapoint from multiple possible sources.",
+        "description": "Multiple files, texts, and urls can be provided.\nIf multiple files are provided, a multi-asset datapoint will be created,\nmeaning that all sources provided will be stored as sub-assets of the datapoint.\n            \nIf multiple datapoints are desired, one should not pass in multiple files, texts, or urls,\ninstead, one should call this endpoint multiple times with the desired file, text, or url per datapoint.\n            \nThe request must be a multipart form request, where each parameter is sent as a separate part.\nThe files, texts, and urls can be mixed and matched as needed, however, at least one of them must be provided,\nand one should make sure that mixing them makes sense for the dataset.",
+        "parameters": [
+          {
+            "name": "datasetId",
+            "in": "path",
+            "description": "The id of the dataset",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "description": "The files to upload from the local storage. Must be either images or videos."
+                  },
+                  "text": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "The texts to upload. The length limit is set at 256 characters per text."
+                  },
+                  "url": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Creates an asset from a url. The url needs to point to a publicly accessible resource.\nThe server will download the resource and store it as an asset in the background.\n<remarks>\n    Additionally, to the urls having to be publicly accessible, they need to support HTTP HEAD requests.\n</remarks>"
+                  },
+                  "metadata": {
+                    "type": "array",
+                    "items": {
+                      "oneOf": [
+                        {
+                          "$ref": "#/components/schemas/PrivateTextMetadataInput"
+                        },
+                        {
+                          "$ref": "#/components/schemas/PromptAssetMetadataInput"
+                        },
+                        {
+                          "$ref": "#/components/schemas/PromptMetadataInput"
+                        },
+                        {
+                          "$ref": "#/components/schemas/PublicTextMetadataInput"
+                        },
+                        {
+                          "$ref": "#/components/schemas/TranscriptionMetadataInput"
+                        }
+                      ],
+                      "discriminator": {
+                        "propertyName": "_t"
+                      }
+                    },
+                    "description": "Optional metadata to attach to the datapoint."
+                  },
+                  "sortIndex": {
+                    "type": "integer",
+                    "description": "The index will be used to keep the datapoints in order. Useful if upload is parallelized",
+                    "format": "int64"
+                  }
+                }
+              },
+              "encoding": {
+                "file": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateDatapointResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateDatapointResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateDatapointResult"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/dataset/{datasetId}/progress": {
