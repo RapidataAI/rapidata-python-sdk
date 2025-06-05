@@ -2028,10 +2028,10 @@ class DatasetApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
-            'file': 'multi',
-            'text': 'csv',
-            'url': 'csv',
-            'metadata': 'csv',
+            'file': 'csv',
+            'text': 'multi',
+            'url': 'multi',
+            'metadata': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
