@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.create_datapoint_from_files_model_metadata_inner import CreateDatapointFromFilesModelMetadataInner
+from rapidata.api_client.models.dataset_dataset_id_datapoints_post_request_metadata_inner import DatasetDatasetIdDatapointsPostRequestMetadataInner
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -30,7 +30,7 @@ class UploadTextSourcesToDatasetModel(BaseModel):
     dataset_id: StrictStr = Field(description="The id of the dataset to upload the text sources to.", alias="datasetId")
     text_sources: List[StrictStr] = Field(description="The text sources to upload.", alias="textSources")
     sort_index: Optional[StrictInt] = Field(default=None, description="The index will be used to keep the datapoints in order. Useful if upload is parallelized", alias="sortIndex")
-    metadata: Optional[List[CreateDatapointFromFilesModelMetadataInner]] = Field(default=None, description="Additional metadata to attach to the datapoint. Most commonly used to add a prompt to the datapoint using the Rapidata.Shared.Assets.Abstraction.Models.Metadata.Input.PromptMetadataInput.")
+    metadata: Optional[List[DatasetDatasetIdDatapointsPostRequestMetadataInner]] = Field(default=None, description="Additional metadata to attach to the datapoint. Most commonly used to add a prompt to the datapoint using the Rapidata.Shared.Assets.Abstraction.Models.Metadata.Input.PromptMetadataInput.")
     __properties: ClassVar[List[str]] = ["datasetId", "textSources", "sortIndex", "metadata"]
 
     model_config = ConfigDict(
@@ -104,7 +104,7 @@ class UploadTextSourcesToDatasetModel(BaseModel):
             "datasetId": obj.get("datasetId"),
             "textSources": obj.get("textSources"),
             "sortIndex": obj.get("sortIndex"),
-            "metadata": [CreateDatapointFromFilesModelMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None
+            "metadata": [DatasetDatasetIdDatapointsPostRequestMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None
         })
         return _obj
 
