@@ -4156,7 +4156,7 @@ class ValidationSetApi:
     def validation_set_validation_set_id_rapids_get(
         self,
         validation_set_id: Annotated[StrictStr, Field(description="The validation set to query.")],
-        model: Annotated[Optional[QueryModel], Field(description="The request formatted as a json in the query parameters.")] = None,
+        model: Annotated[Optional[QueryModel], Field(description="The request formatted as a JSON in the query parameters.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4175,7 +4175,7 @@ class ValidationSetApi:
 
         :param validation_set_id: The validation set to query. (required)
         :type validation_set_id: str
-        :param model: The request formatted as a json in the query parameters.
+        :param model: The request formatted as a JSON in the query parameters.
         :type model: QueryModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -4226,7 +4226,7 @@ class ValidationSetApi:
     def validation_set_validation_set_id_rapids_get_with_http_info(
         self,
         validation_set_id: Annotated[StrictStr, Field(description="The validation set to query.")],
-        model: Annotated[Optional[QueryModel], Field(description="The request formatted as a json in the query parameters.")] = None,
+        model: Annotated[Optional[QueryModel], Field(description="The request formatted as a JSON in the query parameters.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4245,7 +4245,7 @@ class ValidationSetApi:
 
         :param validation_set_id: The validation set to query. (required)
         :type validation_set_id: str
-        :param model: The request formatted as a json in the query parameters.
+        :param model: The request formatted as a JSON in the query parameters.
         :type model: QueryModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -4296,7 +4296,7 @@ class ValidationSetApi:
     def validation_set_validation_set_id_rapids_get_without_preload_content(
         self,
         validation_set_id: Annotated[StrictStr, Field(description="The validation set to query.")],
-        model: Annotated[Optional[QueryModel], Field(description="The request formatted as a json in the query parameters.")] = None,
+        model: Annotated[Optional[QueryModel], Field(description="The request formatted as a JSON in the query parameters.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4315,7 +4315,7 @@ class ValidationSetApi:
 
         :param validation_set_id: The validation set to query. (required)
         :type validation_set_id: str
-        :param model: The request formatted as a json in the query parameters.
+        :param model: The request formatted as a JSON in the query parameters.
         :type model: QueryModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request

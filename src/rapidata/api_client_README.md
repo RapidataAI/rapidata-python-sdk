@@ -82,13 +82,18 @@ Class | Method | HTTP request | Description
 *ClientApi* | [**client_client_id_delete**](rapidata/api_client/docs/ClientApi.md#client_client_id_delete) | **DELETE** /client/{clientId} | Deletes a customers&#39; client.
 *ClientApi* | [**client_post**](rapidata/api_client/docs/ClientApi.md#client_post) | **POST** /client | Creates a new client for the current customer.
 *ClientApi* | [**client_query_get**](rapidata/api_client/docs/ClientApi.md#client_query_get) | **GET** /client/query | Gets the clients for the current customer.
-*ClientApi* | [**client_setreferrer_post**](rapidata/api_client/docs/ClientApi.md#client_setreferrer_post) | **POST** /client/setreferrer | Sets the referrer for the current customer.
 *ClientApi* | [**clients_get**](rapidata/api_client/docs/ClientApi.md#clients_get) | **GET** /clients | Queries the clients for the current customer.
 *CocoApi* | [**coco_coco_set_id_submit_post**](rapidata/api_client/docs/CocoApi.md#coco_coco_set_id_submit_post) | **POST** /coco/{cocoSetId}/submit | Creates a new validation set based on a previously uploaded CoCo set.
 *CocoApi* | [**coco_post**](rapidata/api_client/docs/CocoApi.md#coco_post) | **POST** /coco | Uploads a CoCo set to the system.
 *CocoApi* | [**coco_submit_post**](rapidata/api_client/docs/CocoApi.md#coco_submit_post) | **POST** /coco/submit | Creates a new validation set based on a previously uploaded CoCo set.
 *CocoApi* | [**coco_upload_post**](rapidata/api_client/docs/CocoApi.md#coco_upload_post) | **POST** /coco/upload | Uploads a CoCo set to the system.
 *CompareWorkflowApi* | [**workflow_compare_workflow_id_results_get**](rapidata/api_client/docs/CompareWorkflowApi.md#workflow_compare_workflow_id_results_get) | **GET** /workflow/compare/{workflowId}/results | Get the result overview for a compare workflow.
+*CustomerRapidApi* | [**rapid_demographic_post**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_demographic_post) | **POST** /rapid/demographic | Creates a new Demographic Rapid.
+*CustomerRapidApi* | [**rapid_rapid_id_delete**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_rapid_id_delete) | **DELETE** /rapid/{rapidId} | Deletes a rapid.
+*CustomerRapidApi* | [**rapid_rapid_id_responses_get**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_rapid_id_responses_get) | **GET** /rapid/{rapidId}/responses | Gets all responses for a given rapid.
+*CustomerRapidApi* | [**rapid_rapid_id_unflag_post**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_rapid_id_unflag_post) | **POST** /rapid/{rapidId}/unflag | Unflags a flagged rapid. This will add the rapid back to the active labeling pool and prevent it from being flagged again.
+*CustomerRapidApi* | [**rapid_validation_rapid_id_patch**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_validation_rapid_id_patch) | **PATCH** /rapid/validation/{rapidId} | Updates the validation information of a Rapid.
+*CustomerRapidApi* | [**rapids_flagged_get**](rapidata/api_client/docs/CustomerRapidApi.md#rapids_flagged_get) | **GET** /rapids/flagged | Allows querying all rapids that have been flagged.
 *DatapointApi* | [**datapoint_datapoint_id_delete**](rapidata/api_client/docs/DatapointApi.md#datapoint_datapoint_id_delete) | **DELETE** /datapoint/{datapointId} | Deletes a datapoint by its id.
 *DatapointApi* | [**datapoint_datapoint_id_get**](rapidata/api_client/docs/DatapointApi.md#datapoint_datapoint_id_get) | **GET** /datapoint/{datapointId} | Gets a datapoint by its id.
 *DatapointApi* | [**datapoint_delete_delete**](rapidata/api_client/docs/DatapointApi.md#datapoint_delete_delete) | **DELETE** /datapoint/delete | Delete a datapoint.
@@ -121,7 +126,6 @@ Class | Method | HTTP request | Description
 *IdentityApi* | [**identity_referrer_post**](rapidata/api_client/docs/IdentityApi.md#identity_referrer_post) | **POST** /identity/referrer | Sets the referrer for the current customer.
 *IdentityApi* | [**identity_registertemporary_post**](rapidata/api_client/docs/IdentityApi.md#identity_registertemporary_post) | **POST** /identity/registertemporary | Registers and logs in a temporary customer.
 *IdentityApi* | [**identity_temporary_post**](rapidata/api_client/docs/IdentityApi.md#identity_temporary_post) | **POST** /identity/temporary | Registers and logs in a temporary customer.
-*NewsletterApi* | [**newsletter_post**](rapidata/api_client/docs/NewsletterApi.md#newsletter_post) | **POST** /newsletter | Signs a user up to the newsletter.
 *NewsletterApi* | [**newsletter_subscribe_post**](rapidata/api_client/docs/NewsletterApi.md#newsletter_subscribe_post) | **POST** /newsletter/subscribe | Signs a user up to the newsletter.
 *NewsletterApi* | [**newsletter_unsubscribe_post**](rapidata/api_client/docs/NewsletterApi.md#newsletter_unsubscribe_post) | **POST** /newsletter/unsubscribe | Unsubscribes a user from the newsletter.
 *OrderApi* | [**order_approve_post**](rapidata/api_client/docs/OrderApi.md#order_approve_post) | **POST** /order/approve | Approves an order that has been submitted for manual approval.
@@ -172,18 +176,14 @@ Class | Method | HTTP request | Description
 *PipelineApi* | [**pipeline_pipeline_id_get**](rapidata/api_client/docs/PipelineApi.md#pipeline_pipeline_id_get) | **GET** /pipeline/{pipelineId} | Gets a pipeline by its id.
 *PipelineApi* | [**pipeline_pipeline_id_preliminary_download_post**](rapidata/api_client/docs/PipelineApi.md#pipeline_pipeline_id_preliminary_download_post) | **POST** /pipeline/{pipelineId}/preliminary-download | Initiates a preliminary download of the pipeline.
 *PipelineApi* | [**pipeline_preliminary_download_preliminary_download_id_get**](rapidata/api_client/docs/PipelineApi.md#pipeline_preliminary_download_preliminary_download_id_get) | **GET** /pipeline/preliminary-download/{preliminaryDownloadId} | Gets the preliminary download.
-*RapidApi* | [**rapid_demographic_post**](rapidata/api_client/docs/RapidApi.md#rapid_demographic_post) | **POST** /rapid/demographic | Creates a new Demographic Rapid.
-*RapidApi* | [**rapid_rapid_bag_is_valid_get**](rapidata/api_client/docs/RapidApi.md#rapid_rapid_bag_is_valid_get) | **GET** /rapid/rapid-bag/is-valid | Validates that the rapids associated with the current user are active.
-*RapidApi* | [**rapid_rapid_id_delete**](rapidata/api_client/docs/RapidApi.md#rapid_rapid_id_delete) | **DELETE** /rapid/{rapidId} | Deletes a rapid.
-*RapidApi* | [**rapid_rapid_id_report_post**](rapidata/api_client/docs/RapidApi.md#rapid_rapid_id_report_post) | **POST** /rapid/{rapidId}/report | Used to report an issue with a rapid.
-*RapidApi* | [**rapid_rapid_id_responses_get**](rapidata/api_client/docs/RapidApi.md#rapid_rapid_id_responses_get) | **GET** /rapid/{rapidId}/responses | Gets all responses for a given rapid.
-*RapidApi* | [**rapid_report_report_id_get**](rapidata/api_client/docs/RapidApi.md#rapid_report_report_id_get) | **GET** /rapid/report/{reportId} | Inspects a report&#39;s dump. Can be used to restore zustand state or anything alike.
-*RapidApi* | [**rapid_response_post**](rapidata/api_client/docs/RapidApi.md#rapid_response_post) | **POST** /rapid/response | Submits a response for a Rapid.
-*RapidApi* | [**rapid_skip_post**](rapidata/api_client/docs/RapidApi.md#rapid_skip_post) | **POST** /rapid/skip | Skips a Rapid for the user.
-*RapidApi* | [**rapid_validation_rapid_id_patch**](rapidata/api_client/docs/RapidApi.md#rapid_validation_rapid_id_patch) | **PATCH** /rapid/validation/{rapidId} | Updates the validation information of a rapid.
 *RapidataIdentityAPIApi* | [**root_get**](rapidata/api_client/docs/RapidataIdentityAPIApi.md#root_get) | **GET** / | 
 *SimpleWorkflowApi* | [**workflow_simple_workflow_id_results_get**](rapidata/api_client/docs/SimpleWorkflowApi.md#workflow_simple_workflow_id_results_get) | **GET** /workflow/simple/{workflowId}/results | Get the result overview for a simple workflow.
 *UserInfoApi* | [**connect_userinfo_get**](rapidata/api_client/docs/UserInfoApi.md#connect_userinfo_get) | **GET** /connect/userinfo | Retrieves information about the authenticated user.
+*UserRapidApi* | [**rapid_rapid_bag_is_valid_get**](rapidata/api_client/docs/UserRapidApi.md#rapid_rapid_bag_is_valid_get) | **GET** /rapid/rapid-bag/is-valid | Validates that the rapids associated with the current user are active.
+*UserRapidApi* | [**rapid_rapid_id_report_post**](rapidata/api_client/docs/UserRapidApi.md#rapid_rapid_id_report_post) | **POST** /rapid/{rapidId}/report | Used to report an issue with a rapid.
+*UserRapidApi* | [**rapid_report_report_id_get**](rapidata/api_client/docs/UserRapidApi.md#rapid_report_report_id_get) | **GET** /rapid/report/{reportId} | Inspects a report&#39;s dump. Can be used to restore zustand state or anything alike.
+*UserRapidApi* | [**rapid_response_post**](rapidata/api_client/docs/UserRapidApi.md#rapid_response_post) | **POST** /rapid/response | Submits a response for a Rapid.
+*UserRapidApi* | [**rapid_skip_post**](rapidata/api_client/docs/UserRapidApi.md#rapid_skip_post) | **POST** /rapid/skip | Skips a Rapid for the user.
 *ValidationSetApi* | [**validation_addvalidationrapid_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_addvalidationrapid_post) | **POST** /validation/addvalidationrapid | Adds a new validation rapid to the specified validation set.
 *ValidationSetApi* | [**validation_addvalidationtextrapid_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_addvalidationtextrapid_post) | **POST** /validation/addvalidationtextrapid | Adds a new validation rapid to the specified validation set.
 *ValidationSetApi* | [**validation_createvalidationset_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_createvalidationset_post) | **POST** /validation/createvalidationset | Creates a new empty validation set.
@@ -235,7 +235,6 @@ Class | Method | HTTP request | Description
  - [AssetMetadata](rapidata/api_client/docs/AssetMetadata.md)
  - [AssetMetadataAsset](rapidata/api_client/docs/AssetMetadataAsset.md)
  - [AssetMetadataModel](rapidata/api_client/docs/AssetMetadataModel.md)
- - [AssetMetadataModelAsset](rapidata/api_client/docs/AssetMetadataModelAsset.md)
  - [AttachCategoryRapidBlueprint](rapidata/api_client/docs/AttachCategoryRapidBlueprint.md)
  - [AttachCategoryResult](rapidata/api_client/docs/AttachCategoryResult.md)
  - [AttachCategoryTruth](rapidata/api_client/docs/AttachCategoryTruth.md)
@@ -310,6 +309,7 @@ Class | Method | HTTP request | Description
  - [CreateValidationSetModel](rapidata/api_client/docs/CreateValidationSetModel.md)
  - [CustomUserFilterModel](rapidata/api_client/docs/CustomUserFilterModel.md)
  - [Datapoint](rapidata/api_client/docs/Datapoint.md)
+ - [DatapointAsset](rapidata/api_client/docs/DatapointAsset.md)
  - [DatapointMetadataModel](rapidata/api_client/docs/DatapointMetadataModel.md)
  - [DatapointModel](rapidata/api_client/docs/DatapointModel.md)
  - [DatapointState](rapidata/api_client/docs/DatapointState.md)
@@ -394,7 +394,9 @@ Class | Method | HTTP request | Description
  - [MetadataVisibilities](rapidata/api_client/docs/MetadataVisibilities.md)
  - [MultiAsset](rapidata/api_client/docs/MultiAsset.md)
  - [MultiAssetModel](rapidata/api_client/docs/MultiAssetModel.md)
+ - [MultiCompareTruth](rapidata/api_client/docs/MultiCompareTruth.md)
  - [NaiveRefereeConfig](rapidata/api_client/docs/NaiveRefereeConfig.md)
+ - [NaiveRefereeInfo](rapidata/api_client/docs/NaiveRefereeInfo.md)
  - [NaiveRefereeModel](rapidata/api_client/docs/NaiveRefereeModel.md)
  - [NamedClassification](rapidata/api_client/docs/NamedClassification.md)
  - [NamedEntityPayload](rapidata/api_client/docs/NamedEntityPayload.md)
@@ -402,6 +404,7 @@ Class | Method | HTTP request | Description
  - [NamedEntityResult](rapidata/api_client/docs/NamedEntityResult.md)
  - [NamedEntityTruth](rapidata/api_client/docs/NamedEntityTruth.md)
  - [NeverEndingRefereeConfig](rapidata/api_client/docs/NeverEndingRefereeConfig.md)
+ - [NeverEndingRefereeInfo](rapidata/api_client/docs/NeverEndingRefereeInfo.md)
  - [NewUserFilterModel](rapidata/api_client/docs/NewUserFilterModel.md)
  - [NewsletterModel](rapidata/api_client/docs/NewsletterModel.md)
  - [NotAvailableYetResult](rapidata/api_client/docs/NotAvailableYetResult.md)
@@ -427,6 +430,7 @@ Class | Method | HTTP request | Description
  - [PreliminaryDownloadResult](rapidata/api_client/docs/PreliminaryDownloadResult.md)
  - [PrivateTextMetadataInput](rapidata/api_client/docs/PrivateTextMetadataInput.md)
  - [ProbabilisticAttachCategoryRefereeConfig](rapidata/api_client/docs/ProbabilisticAttachCategoryRefereeConfig.md)
+ - [ProbabilisticAttachCategoryRefereeInfo](rapidata/api_client/docs/ProbabilisticAttachCategoryRefereeInfo.md)
  - [PromptAssetMetadataInput](rapidata/api_client/docs/PromptAssetMetadataInput.md)
  - [PromptMetadata](rapidata/api_client/docs/PromptMetadata.md)
  - [PromptMetadataInput](rapidata/api_client/docs/PromptMetadataInput.md)
@@ -436,6 +440,9 @@ Class | Method | HTTP request | Description
  - [QueryModel](rapidata/api_client/docs/QueryModel.md)
  - [QueryWorkflowsModel](rapidata/api_client/docs/QueryWorkflowsModel.md)
  - [RapidIssue](rapidata/api_client/docs/RapidIssue.md)
+ - [RapidModel](rapidata/api_client/docs/RapidModel.md)
+ - [RapidModelPagedResult](rapidata/api_client/docs/RapidModelPagedResult.md)
+ - [RapidModelReferee](rapidata/api_client/docs/RapidModelReferee.md)
  - [RapidResponse](rapidata/api_client/docs/RapidResponse.md)
  - [RapidResponseResult](rapidata/api_client/docs/RapidResponseResult.md)
  - [RapidResultModel](rapidata/api_client/docs/RapidResultModel.md)

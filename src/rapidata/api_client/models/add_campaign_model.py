@@ -150,6 +150,11 @@ class AddCampaignModel(BaseModel):
         if self.max_iterations is None and "max_iterations" in self.model_fields_set:
             _dict['maxIterations'] = None
 
+        # set to None if is_sticky (nullable) is None
+        # and model_fields_set contains the field
+        if self.is_sticky is None and "is_sticky" in self.model_fields_set:
+            _dict['isSticky'] = None
+
         # set to None if is_preview_enabled (nullable) is None
         # and model_fields_set contains the field
         if self.is_preview_enabled is None and "is_preview_enabled" in self.model_fields_set:

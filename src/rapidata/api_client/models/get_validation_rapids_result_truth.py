@@ -23,6 +23,7 @@ from rapidata.api_client.models.compare_truth import CompareTruth
 from rapidata.api_client.models.empty_validation_truth import EmptyValidationTruth
 from rapidata.api_client.models.line_truth import LineTruth
 from rapidata.api_client.models.locate_box_truth import LocateBoxTruth
+from rapidata.api_client.models.multi_compare_truth import MultiCompareTruth
 from rapidata.api_client.models.named_entity_truth import NamedEntityTruth
 from rapidata.api_client.models.polygon_truth import PolygonTruth
 from rapidata.api_client.models.scrub_truth import ScrubTruth
@@ -32,7 +33,7 @@ from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-GETVALIDATIONRAPIDSRESULTTRUTH_ONE_OF_SCHEMAS = ["AttachCategoryTruth", "BoundingBoxTruth", "CompareTruth", "EmptyValidationTruth", "LineTruth", "LocateBoxTruth", "NamedEntityTruth", "PolygonTruth", "ScrubTruth", "SkipTruth", "TranscriptionTruth"]
+GETVALIDATIONRAPIDSRESULTTRUTH_ONE_OF_SCHEMAS = ["AttachCategoryTruth", "BoundingBoxTruth", "CompareTruth", "EmptyValidationTruth", "LineTruth", "LocateBoxTruth", "MultiCompareTruth", "NamedEntityTruth", "PolygonTruth", "ScrubTruth", "SkipTruth", "TranscriptionTruth"]
 
 class GetValidationRapidsResultTruth(BaseModel):
     """
@@ -54,14 +55,16 @@ class GetValidationRapidsResultTruth(BaseModel):
     oneof_schema_7_validator: Optional[EmptyValidationTruth] = None
     # data type: CompareTruth
     oneof_schema_8_validator: Optional[CompareTruth] = None
+    # data type: MultiCompareTruth
+    oneof_schema_9_validator: Optional[MultiCompareTruth] = None
     # data type: SkipTruth
-    oneof_schema_9_validator: Optional[SkipTruth] = None
+    oneof_schema_10_validator: Optional[SkipTruth] = None
     # data type: AttachCategoryTruth
-    oneof_schema_10_validator: Optional[AttachCategoryTruth] = None
+    oneof_schema_11_validator: Optional[AttachCategoryTruth] = None
     # data type: BoundingBoxTruth
-    oneof_schema_11_validator: Optional[BoundingBoxTruth] = None
-    actual_instance: Optional[Union[AttachCategoryTruth, BoundingBoxTruth, CompareTruth, EmptyValidationTruth, LineTruth, LocateBoxTruth, NamedEntityTruth, PolygonTruth, ScrubTruth, SkipTruth, TranscriptionTruth]] = None
-    one_of_schemas: Set[str] = { "AttachCategoryTruth", "BoundingBoxTruth", "CompareTruth", "EmptyValidationTruth", "LineTruth", "LocateBoxTruth", "NamedEntityTruth", "PolygonTruth", "ScrubTruth", "SkipTruth", "TranscriptionTruth" }
+    oneof_schema_12_validator: Optional[BoundingBoxTruth] = None
+    actual_instance: Optional[Union[AttachCategoryTruth, BoundingBoxTruth, CompareTruth, EmptyValidationTruth, LineTruth, LocateBoxTruth, MultiCompareTruth, NamedEntityTruth, PolygonTruth, ScrubTruth, SkipTruth, TranscriptionTruth]] = None
+    one_of_schemas: Set[str] = { "AttachCategoryTruth", "BoundingBoxTruth", "CompareTruth", "EmptyValidationTruth", "LineTruth", "LocateBoxTruth", "MultiCompareTruth", "NamedEntityTruth", "PolygonTruth", "ScrubTruth", "SkipTruth", "TranscriptionTruth" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -130,6 +133,11 @@ class GetValidationRapidsResultTruth(BaseModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `CompareTruth`")
         else:
             match += 1
+        # validate data type: MultiCompareTruth
+        if not isinstance(v, MultiCompareTruth):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `MultiCompareTruth`")
+        else:
+            match += 1
         # validate data type: SkipTruth
         if not isinstance(v, SkipTruth):
             error_messages.append(f"Error! Input type `{type(v)}` is not `SkipTruth`")
@@ -147,10 +155,10 @@ class GetValidationRapidsResultTruth(BaseModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in GetValidationRapidsResultTruth with oneOf schemas: AttachCategoryTruth, BoundingBoxTruth, CompareTruth, EmptyValidationTruth, LineTruth, LocateBoxTruth, NamedEntityTruth, PolygonTruth, ScrubTruth, SkipTruth, TranscriptionTruth. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in GetValidationRapidsResultTruth with oneOf schemas: AttachCategoryTruth, BoundingBoxTruth, CompareTruth, EmptyValidationTruth, LineTruth, LocateBoxTruth, MultiCompareTruth, NamedEntityTruth, PolygonTruth, ScrubTruth, SkipTruth, TranscriptionTruth. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in GetValidationRapidsResultTruth with oneOf schemas: AttachCategoryTruth, BoundingBoxTruth, CompareTruth, EmptyValidationTruth, LineTruth, LocateBoxTruth, NamedEntityTruth, PolygonTruth, ScrubTruth, SkipTruth, TranscriptionTruth. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in GetValidationRapidsResultTruth with oneOf schemas: AttachCategoryTruth, BoundingBoxTruth, CompareTruth, EmptyValidationTruth, LineTruth, LocateBoxTruth, MultiCompareTruth, NamedEntityTruth, PolygonTruth, ScrubTruth, SkipTruth, TranscriptionTruth. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -216,6 +224,12 @@ class GetValidationRapidsResultTruth(BaseModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
+        # deserialize data into MultiCompareTruth
+        try:
+            instance.actual_instance = MultiCompareTruth.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
         # deserialize data into SkipTruth
         try:
             instance.actual_instance = SkipTruth.from_json(json_str)
@@ -237,10 +251,10 @@ class GetValidationRapidsResultTruth(BaseModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into GetValidationRapidsResultTruth with oneOf schemas: AttachCategoryTruth, BoundingBoxTruth, CompareTruth, EmptyValidationTruth, LineTruth, LocateBoxTruth, NamedEntityTruth, PolygonTruth, ScrubTruth, SkipTruth, TranscriptionTruth. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into GetValidationRapidsResultTruth with oneOf schemas: AttachCategoryTruth, BoundingBoxTruth, CompareTruth, EmptyValidationTruth, LineTruth, LocateBoxTruth, MultiCompareTruth, NamedEntityTruth, PolygonTruth, ScrubTruth, SkipTruth, TranscriptionTruth. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into GetValidationRapidsResultTruth with oneOf schemas: AttachCategoryTruth, BoundingBoxTruth, CompareTruth, EmptyValidationTruth, LineTruth, LocateBoxTruth, NamedEntityTruth, PolygonTruth, ScrubTruth, SkipTruth, TranscriptionTruth. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into GetValidationRapidsResultTruth with oneOf schemas: AttachCategoryTruth, BoundingBoxTruth, CompareTruth, EmptyValidationTruth, LineTruth, LocateBoxTruth, MultiCompareTruth, NamedEntityTruth, PolygonTruth, ScrubTruth, SkipTruth, TranscriptionTruth. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -254,7 +268,7 @@ class GetValidationRapidsResultTruth(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], AttachCategoryTruth, BoundingBoxTruth, CompareTruth, EmptyValidationTruth, LineTruth, LocateBoxTruth, NamedEntityTruth, PolygonTruth, ScrubTruth, SkipTruth, TranscriptionTruth]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], AttachCategoryTruth, BoundingBoxTruth, CompareTruth, EmptyValidationTruth, LineTruth, LocateBoxTruth, MultiCompareTruth, NamedEntityTruth, PolygonTruth, ScrubTruth, SkipTruth, TranscriptionTruth]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

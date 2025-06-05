@@ -28,9 +28,9 @@ class UpdateValidationRapidModel(BaseModel):
     The model for updating a validation rapid.
     """ # noqa: E501
     truth: UpdateValidationRapidModelTruth
-    explanation: Optional[StrictStr] = None
-    prompt: Optional[StrictStr] = None
-    random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="randomCorrectProbability")
+    explanation: Optional[StrictStr] = Field(default=None, description="The optional explanation that will be shown to the user when answering wrong.")
+    prompt: Optional[StrictStr] = Field(default=None, description="The optional prompt that will be shown to the user.")
+    random_correct_probability: Union[StrictFloat, StrictInt] = Field(description="The probability that if the user answers at random that he'll be correct.", alias="randomCorrectProbability")
     __properties: ClassVar[List[str]] = ["truth", "explanation", "prompt", "randomCorrectProbability"]
 
     model_config = ConfigDict(
@@ -84,11 +84,6 @@ class UpdateValidationRapidModel(BaseModel):
         # and model_fields_set contains the field
         if self.prompt is None and "prompt" in self.model_fields_set:
             _dict['prompt'] = None
-
-        # set to None if random_correct_probability (nullable) is None
-        # and model_fields_set contains the field
-        if self.random_correct_probability is None and "random_correct_probability" in self.model_fields_set:
-            _dict['randomCorrectProbability'] = None
 
         return _dict
 

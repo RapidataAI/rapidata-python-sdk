@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.ab_test_selection_a_inner import AbTestSelectionAInner
 from rapidata.api_client.models.create_order_model_referee import CreateOrderModelReferee
@@ -38,7 +38,6 @@ class CreateOrderModel(BaseModel):
     aggregator: Optional[StrictStr] = Field(default=None, description="The aggregator is used to determine how the data will be aggregated. The default behavior is enough for most cases")
     feature_flags: Optional[List[FeatureFlagModel]] = Field(default=None, description="The feature flags are used to enable or disable certain features.", alias="featureFlags")
     priority: Optional[StrictInt] = Field(default=None, description="The priority is used to prioritize over other orders.")
-    is_sticky: Optional[StrictBool] = Field(default=None, description="Indicates if the underlying campaign should be sticky.", alias="isSticky")
     sticky_state: Optional[StrictStr] = Field(default=None, description="Indicates if the underlying campaign should be sticky.", alias="stickyState")
     user_score_dimensions: Optional[List[StrictStr]] = Field(default=None, description="The user score dimensions are used to determine the score of the responses from the user.", alias="userScoreDimensions")
     demographic_keys: Optional[List[StrictStr]] = Field(default=None, description="The demographic keys are used to determine which demographics to store on the resposnes from the user.", alias="demographicKeys")
@@ -47,7 +46,7 @@ class CreateOrderModel(BaseModel):
     selections: Optional[List[AbTestSelectionAInner]] = Field(default=None, description="The selections are used to determine which tasks are shown to a user.")
     retrieval_mode: Optional[StrictStr] = Field(default=None, description="The retrieval mode defines how rapids are retrieved from the active labeling pool.", alias="retrievalMode")
     max_iterations: Optional[StrictInt] = Field(default=None, description="The maximum number of times a user is allowed to see the same rapid.", alias="maxIterations")
-    __properties: ClassVar[List[str]] = ["_t", "orderName", "workflow", "referee", "aggregator", "featureFlags", "priority", "isSticky", "stickyState", "userScoreDimensions", "demographicKeys", "userFilters", "validationSetId", "selections", "retrievalMode", "maxIterations"]
+    __properties: ClassVar[List[str]] = ["_t", "orderName", "workflow", "referee", "aggregator", "featureFlags", "priority", "stickyState", "userScoreDimensions", "demographicKeys", "userFilters", "validationSetId", "selections", "retrievalMode", "maxIterations"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -226,7 +225,6 @@ class CreateOrderModel(BaseModel):
             "aggregator": obj.get("aggregator"),
             "featureFlags": [FeatureFlagModel.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "priority": obj.get("priority"),
-            "isSticky": obj.get("isSticky"),
             "stickyState": obj.get("stickyState"),
             "userScoreDimensions": obj.get("userScoreDimensions"),
             "demographicKeys": obj.get("demographicKeys"),

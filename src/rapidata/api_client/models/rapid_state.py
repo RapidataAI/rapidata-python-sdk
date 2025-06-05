@@ -29,6 +29,7 @@ class RapidState(str, Enum):
     LABELING = 'Labeling'
     PAUSED = 'Paused'
     INCOMPLETE = 'Incomplete'
+    FLAGGED = 'Flagged'
     DONE = 'Done'
     NONE = 'None'
 
