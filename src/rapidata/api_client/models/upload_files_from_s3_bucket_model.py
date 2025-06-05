@@ -32,8 +32,8 @@ class UploadFilesFromS3BucketModel(BaseModel):
     source_prefix: StrictStr = Field(description="The prefix of the files to upload.", alias="sourcePrefix")
     access_key: Optional[StrictStr] = Field(default=None, description="The access key to use for the S3 bucket.", alias="accessKey")
     secret_key: Optional[StrictStr] = Field(default=None, description="The secret key to use for the S3 bucket.", alias="secretKey")
-    use_custom_aws_credentials: StrictBool = Field(description="Whether to use custom AWS credentials.", alias="useCustomAwsCredentials")
-    clear_dataset: StrictBool = Field(description="Whether to clear the dataset before uploading the files.", alias="clearDataset")
+    use_custom_aws_credentials: Optional[StrictBool] = Field(default=None, description="Whether to use custom AWS credentials.", alias="useCustomAwsCredentials")
+    clear_dataset: Optional[StrictBool] = Field(default=None, description="Whether to clear the dataset before uploading the files.", alias="clearDataset")
     __properties: ClassVar[List[str]] = ["datasetId", "bucketName", "region", "sourcePrefix", "accessKey", "secretKey", "useCustomAwsCredentials", "clearDataset"]
 
     model_config = ConfigDict(
@@ -89,6 +89,16 @@ class UploadFilesFromS3BucketModel(BaseModel):
         # and model_fields_set contains the field
         if self.secret_key is None and "secret_key" in self.model_fields_set:
             _dict['secretKey'] = None
+
+        # set to None if use_custom_aws_credentials (nullable) is None
+        # and model_fields_set contains the field
+        if self.use_custom_aws_credentials is None and "use_custom_aws_credentials" in self.model_fields_set:
+            _dict['useCustomAwsCredentials'] = None
+
+        # set to None if clear_dataset (nullable) is None
+        # and model_fields_set contains the field
+        if self.clear_dataset is None and "clear_dataset" in self.model_fields_set:
+            _dict['clearDataset'] = None
 
         return _dict
 

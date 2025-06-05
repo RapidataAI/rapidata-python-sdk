@@ -26,7 +26,7 @@ class UpdateAccessModel(BaseModel):
     """
     The model for updating the access of an order.
     """ # noqa: E501
-    is_public: StrictBool = Field(description="Whether the order is public", alias="isPublic")
+    is_public: StrictBool = Field(description="A flag indicating whether to update the order to be public or not.", alias="isPublic")
     __properties: ClassVar[List[str]] = ["isPublic"]
 
     model_config = ConfigDict(

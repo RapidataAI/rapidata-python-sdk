@@ -21,6 +21,7 @@ from rapidata.api_client.api.campaign_api import CampaignApi
 from rapidata.api_client.api.client_api import ClientApi
 from rapidata.api_client.api.coco_api import CocoApi
 from rapidata.api_client.api.compare_workflow_api import CompareWorkflowApi
+from rapidata.api_client.api.customer_rapid_api import CustomerRapidApi
 from rapidata.api_client.api.datapoint_api import DatapointApi
 from rapidata.api_client.api.dataset_api import DatasetApi
 from rapidata.api_client.api.evaluation_workflow_api import EvaluationWorkflowApi
@@ -29,10 +30,10 @@ from rapidata.api_client.api.identity_api import IdentityApi
 from rapidata.api_client.api.newsletter_api import NewsletterApi
 from rapidata.api_client.api.order_api import OrderApi
 from rapidata.api_client.api.pipeline_api import PipelineApi
-from rapidata.api_client.api.rapid_api import RapidApi
 from rapidata.api_client.api.rapidata_identity_api_api import RapidataIdentityAPIApi
 from rapidata.api_client.api.simple_workflow_api import SimpleWorkflowApi
 from rapidata.api_client.api.user_info_api import UserInfoApi
+from rapidata.api_client.api.user_rapid_api import UserRapidApi
 from rapidata.api_client.api.validation_set_api import ValidationSetApi
 from rapidata.api_client.api.workflow_api import WorkflowApi
 
@@ -65,7 +66,6 @@ from rapidata.api_client.models.are_rapids_active_result import AreRapidsActiveR
 from rapidata.api_client.models.asset_metadata import AssetMetadata
 from rapidata.api_client.models.asset_metadata_asset import AssetMetadataAsset
 from rapidata.api_client.models.asset_metadata_model import AssetMetadataModel
-from rapidata.api_client.models.asset_metadata_model_asset import AssetMetadataModelAsset
 from rapidata.api_client.models.attach_category_rapid_blueprint import AttachCategoryRapidBlueprint
 from rapidata.api_client.models.attach_category_result import AttachCategoryResult
 from rapidata.api_client.models.attach_category_truth import AttachCategoryTruth
@@ -140,6 +140,7 @@ from rapidata.api_client.models.create_unsupported_order_model import CreateUnsu
 from rapidata.api_client.models.create_validation_set_model import CreateValidationSetModel
 from rapidata.api_client.models.custom_user_filter_model import CustomUserFilterModel
 from rapidata.api_client.models.datapoint import Datapoint
+from rapidata.api_client.models.datapoint_asset import DatapointAsset
 from rapidata.api_client.models.datapoint_metadata_model import DatapointMetadataModel
 from rapidata.api_client.models.datapoint_model import DatapointModel
 from rapidata.api_client.models.datapoint_state import DatapointState
@@ -224,7 +225,9 @@ from rapidata.api_client.models.logic_operator import LogicOperator
 from rapidata.api_client.models.metadata_visibilities import MetadataVisibilities
 from rapidata.api_client.models.multi_asset import MultiAsset
 from rapidata.api_client.models.multi_asset_model import MultiAssetModel
+from rapidata.api_client.models.multi_compare_truth import MultiCompareTruth
 from rapidata.api_client.models.naive_referee_config import NaiveRefereeConfig
+from rapidata.api_client.models.naive_referee_info import NaiveRefereeInfo
 from rapidata.api_client.models.naive_referee_model import NaiveRefereeModel
 from rapidata.api_client.models.named_classification import NamedClassification
 from rapidata.api_client.models.named_entity_payload import NamedEntityPayload
@@ -232,6 +235,7 @@ from rapidata.api_client.models.named_entity_rapid_blueprint import NamedEntityR
 from rapidata.api_client.models.named_entity_result import NamedEntityResult
 from rapidata.api_client.models.named_entity_truth import NamedEntityTruth
 from rapidata.api_client.models.never_ending_referee_config import NeverEndingRefereeConfig
+from rapidata.api_client.models.never_ending_referee_info import NeverEndingRefereeInfo
 from rapidata.api_client.models.new_user_filter_model import NewUserFilterModel
 from rapidata.api_client.models.newsletter_model import NewsletterModel
 from rapidata.api_client.models.not_available_yet_result import NotAvailableYetResult
@@ -257,6 +261,7 @@ from rapidata.api_client.models.preliminary_download_model import PreliminaryDow
 from rapidata.api_client.models.preliminary_download_result import PreliminaryDownloadResult
 from rapidata.api_client.models.private_text_metadata_input import PrivateTextMetadataInput
 from rapidata.api_client.models.probabilistic_attach_category_referee_config import ProbabilisticAttachCategoryRefereeConfig
+from rapidata.api_client.models.probabilistic_attach_category_referee_info import ProbabilisticAttachCategoryRefereeInfo
 from rapidata.api_client.models.prompt_asset_metadata_input import PromptAssetMetadataInput
 from rapidata.api_client.models.prompt_metadata import PromptMetadata
 from rapidata.api_client.models.prompt_metadata_input import PromptMetadataInput
@@ -266,6 +271,9 @@ from rapidata.api_client.models.public_text_metadata_input import PublicTextMeta
 from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.query_workflows_model import QueryWorkflowsModel
 from rapidata.api_client.models.rapid_issue import RapidIssue
+from rapidata.api_client.models.rapid_model import RapidModel
+from rapidata.api_client.models.rapid_model_paged_result import RapidModelPagedResult
+from rapidata.api_client.models.rapid_model_referee import RapidModelReferee
 from rapidata.api_client.models.rapid_response import RapidResponse
 from rapidata.api_client.models.rapid_response_result import RapidResponseResult
 from rapidata.api_client.models.rapid_result_model import RapidResultModel

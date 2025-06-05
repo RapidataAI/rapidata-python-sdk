@@ -17,31 +17,35 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
+from datetime import datetime
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from rapidata.api_client.models.datapoint_asset import DatapointAsset
 from rapidata.api_client.models.file_asset_model_metadata_value import FileAssetModelMetadataValue
-from rapidata.api_client.models.get_validation_rapids_result_asset import GetValidationRapidsResultAsset
 from rapidata.api_client.models.get_validation_rapids_result_payload import GetValidationRapidsResultPayload
 from rapidata.api_client.models.get_validation_rapids_result_truth import GetValidationRapidsResultTruth
+from rapidata.api_client.models.rapid_model_referee import RapidModelReferee
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetValidationRapidsResult(BaseModel):
+class RapidModel(BaseModel):
     """
-    GetValidationRapidsResult
+    RapidModel
     """ # noqa: E501
     id: StrictStr
-    type: StrictStr
-    asset: Optional[GetValidationRapidsResultAsset] = None
-    truth: Optional[GetValidationRapidsResultTruth] = None
     payload: GetValidationRapidsResultPayload
+    referee: RapidModelReferee
+    asset: DatapointAsset
     metadata: Dict[str, FileAssetModelMetadataValue]
-    correct_validation_count: StrictInt = Field(alias="correctValidationCount")
-    invalid_validation_count: StrictInt = Field(alias="invalidValidationCount")
+    state: StrictStr
+    has_responses: StrictBool = Field(alias="hasResponses")
+    should_accept_incorrect: StrictBool = Field(alias="shouldAcceptIncorrect")
+    truth: Optional[GetValidationRapidsResultTruth] = None
     explanation: Optional[StrictStr] = None
     random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="randomCorrectProbability")
-    state: StrictStr
-    __properties: ClassVar[List[str]] = ["id", "type", "asset", "truth", "payload", "metadata", "correctValidationCount", "invalidValidationCount", "explanation", "randomCorrectProbability", "state"]
+    key: Optional[StrictStr] = None
+    completed_at: Optional[datetime] = Field(default=None, alias="completedAt")
+    __properties: ClassVar[List[str]] = ["id", "payload", "referee", "asset", "metadata", "state", "hasResponses", "shouldAcceptIncorrect", "truth", "explanation", "randomCorrectProbability", "key", "completedAt"]
 
     @field_validator('state')
     def state_validate_enum(cls, value):
@@ -68,7 +72,7 @@ class GetValidationRapidsResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetValidationRapidsResult from a JSON string"""
+        """Create an instance of RapidModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -89,15 +93,15 @@ class GetValidationRapidsResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of asset
-        if self.asset:
-            _dict['asset'] = self.asset.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of truth
-        if self.truth:
-            _dict['truth'] = self.truth.to_dict()
         # override the default output from pydantic by calling `to_dict()` of payload
         if self.payload:
             _dict['payload'] = self.payload.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of referee
+        if self.referee:
+            _dict['referee'] = self.referee.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of asset
+        if self.asset:
+            _dict['asset'] = self.asset.to_dict()
         # override the default output from pydantic by calling `to_dict()` of each value in metadata (dict)
         _field_dict = {}
         if self.metadata:
@@ -105,11 +109,9 @@ class GetValidationRapidsResult(BaseModel):
                 if self.metadata[_key_metadata]:
                     _field_dict[_key_metadata] = self.metadata[_key_metadata].to_dict()
             _dict['metadata'] = _field_dict
-        # set to None if asset (nullable) is None
-        # and model_fields_set contains the field
-        if self.asset is None and "asset" in self.model_fields_set:
-            _dict['asset'] = None
-
+        # override the default output from pydantic by calling `to_dict()` of truth
+        if self.truth:
+            _dict['truth'] = self.truth.to_dict()
         # set to None if truth (nullable) is None
         # and model_fields_set contains the field
         if self.truth is None and "truth" in self.model_fields_set:
@@ -125,11 +127,21 @@ class GetValidationRapidsResult(BaseModel):
         if self.random_correct_probability is None and "random_correct_probability" in self.model_fields_set:
             _dict['randomCorrectProbability'] = None
 
+        # set to None if key (nullable) is None
+        # and model_fields_set contains the field
+        if self.key is None and "key" in self.model_fields_set:
+            _dict['key'] = None
+
+        # set to None if completed_at (nullable) is None
+        # and model_fields_set contains the field
+        if self.completed_at is None and "completed_at" in self.model_fields_set:
+            _dict['completedAt'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetValidationRapidsResult from a dict"""
+        """Create an instance of RapidModel from a dict"""
         if obj is None:
             return None
 
@@ -138,21 +150,23 @@ class GetValidationRapidsResult(BaseModel):
 
         _obj = cls.model_validate({
             "id": obj.get("id"),
-            "type": obj.get("type"),
-            "asset": GetValidationRapidsResultAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
-            "truth": GetValidationRapidsResultTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
             "payload": GetValidationRapidsResultPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
+            "referee": RapidModelReferee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
+            "asset": DatapointAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "metadata": dict(
                 (_k, FileAssetModelMetadataValue.from_dict(_v))
                 for _k, _v in obj["metadata"].items()
             )
             if obj.get("metadata") is not None
             else None,
-            "correctValidationCount": obj.get("correctValidationCount"),
-            "invalidValidationCount": obj.get("invalidValidationCount"),
+            "state": obj.get("state"),
+            "hasResponses": obj.get("hasResponses"),
+            "shouldAcceptIncorrect": obj.get("shouldAcceptIncorrect"),
+            "truth": GetValidationRapidsResultTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
             "explanation": obj.get("explanation"),
             "randomCorrectProbability": obj.get("randomCorrectProbability"),
-            "state": obj.get("state")
+            "key": obj.get("key"),
+            "completedAt": obj.get("completedAt")
         })
         return _obj
 

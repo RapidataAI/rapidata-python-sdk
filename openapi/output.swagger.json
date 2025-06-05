@@ -2642,30 +2642,6 @@
         }
       }
     },
-    "/client/setreferrer": {
-      "post": {
-        "tags": [
-          "Client"
-        ],
-        "summary": "Sets the referrer for the current customer.",
-        "parameters": [
-          {
-            "name": "referrer",
-            "in": "query",
-            "description": "",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/identity/registertemporary": {
       "post": {
         "tags": [
@@ -3023,40 +2999,6 @@
         }
       }
     },
-    "/newsletter": {
-      "post": {
-        "tags": [
-          "Newsletter"
-        ],
-        "summary": "Signs a user up to the newsletter.",
-        "requestBody": {
-          "description": "The model containing the email of a user and recaptcha token.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewsletterModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewsletterModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewsletterModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/newsletter/subscribe": {
       "post": {
         "tags": [
@@ -3084,25 +3026,8 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/SubscribeToNewsletterResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SubscribeToNewsletterResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SubscribeToNewsletterResult"
-                }
-              }
-            }
+          "204": {
+            "description": "No Content"
           }
         }
       }
@@ -3134,25 +3059,8 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnsubscribeToNewsletterResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnsubscribeToNewsletterResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnsubscribeToNewsletterResult"
-                }
-              }
-            }
+          "204": {
+            "description": "No Content"
           }
         }
       }
@@ -3769,7 +3677,7 @@
           {
             "name": "model",
             "in": "query",
-            "description": "The request formatted as a json in the query parameters.",
+            "description": "The request formatted as a JSON in the query parameters.",
             "content": {
               "application/json": {
                 "schema": {
@@ -4444,10 +4352,54 @@
         }
       }
     },
+    "/rapids/flagged": {
+      "get": {
+        "tags": [
+          "CustomerRapid"
+        ],
+        "summary": "Allows querying all rapids that have been flagged.",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "query",
+            "description": "The request to use to filter, sort and page the results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RapidModelPagedResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RapidModelPagedResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RapidModelPagedResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/rapid/{rapidId}/responses": {
       "get": {
         "tags": [
-          "Rapid"
+          "CustomerRapid"
         ],
         "summary": "Gets all responses for a given rapid.",
         "parameters": [
@@ -4485,40 +4437,10 @@
         }
       }
     },
-    "/rapid/rapid-bag/is-valid": {
-      "get": {
-        "tags": [
-          "Rapid"
-        ],
-        "summary": "Validates that the rapids associated with the current user are active.",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/AreRapidsActiveResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AreRapidsActiveResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AreRapidsActiveResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/rapid/demographic": {
       "post": {
         "tags": [
-          "Rapid"
+          "CustomerRapid"
         ],
         "summary": "Creates a new Demographic Rapid.",
         "requestBody": {
@@ -4574,10 +4496,132 @@
         }
       }
     },
+    "/rapid/validation/{rapidId}": {
+      "patch": {
+        "tags": [
+          "CustomerRapid"
+        ],
+        "summary": "Updates the validation information of a Rapid.",
+        "parameters": [
+          {
+            "name": "rapidId",
+            "in": "path",
+            "description": "The id of the rapid to update",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The body request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateValidationRapidModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateValidationRapidModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateValidationRapidModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/rapid/{rapidId}/unflag": {
+      "post": {
+        "tags": [
+          "CustomerRapid"
+        ],
+        "summary": "Unflags a flagged rapid.\nThis will add the rapid back to the active labeling pool and prevent it from being flagged again.",
+        "parameters": [
+          {
+            "name": "rapidId",
+            "in": "path",
+            "description": "The id of the rapid to unflag",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/rapid/{rapidId}": {
+      "delete": {
+        "tags": [
+          "CustomerRapid"
+        ],
+        "summary": "Deletes a rapid.",
+        "parameters": [
+          {
+            "name": "rapidId",
+            "in": "path",
+            "description": "The rapid to be deleted",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/rapid/rapid-bag/is-valid": {
+      "get": {
+        "tags": [
+          "UserRapid"
+        ],
+        "summary": "Validates that the rapids associated with the current user are active.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AreRapidsActiveResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AreRapidsActiveResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AreRapidsActiveResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/rapid/response": {
       "post": {
         "tags": [
-          "Rapid"
+          "UserRapid"
         ],
         "summary": "Submits a response for a Rapid.",
         "requestBody": {
@@ -4627,7 +4671,7 @@
     "/rapid/skip": {
       "post": {
         "tags": [
-          "Rapid"
+          "UserRapid"
         ],
         "summary": "Skips a Rapid for the user.",
         "requestBody": {
@@ -4677,7 +4721,7 @@
     "/rapid/{rapidId}/report": {
       "post": {
         "tags": [
-          "Rapid"
+          "UserRapid"
         ],
         "summary": "Used to report an issue with a rapid.",
         "parameters": [
@@ -4721,7 +4765,7 @@
     "/rapid/report/{reportId}": {
       "get": {
         "tags": [
-          "Rapid"
+          "UserRapid"
         ],
         "summary": "Inspects a report's dump. Can be used to restore zustand state or anything alike.",
         "parameters": [
@@ -4755,74 +4799,6 @@
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/rapid/validation/{rapidId}": {
-      "patch": {
-        "tags": [
-          "Rapid"
-        ],
-        "summary": "Updates the validation information of a rapid.",
-        "parameters": [
-          {
-            "name": "rapidId",
-            "in": "path",
-            "description": "The id of the rapid to update",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The body request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateValidationRapidModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateValidationRapidModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateValidationRapidModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        }
-      }
-    },
-    "/rapid/{rapidId}": {
-      "delete": {
-        "tags": [
-          "Rapid"
-        ],
-        "summary": "Deletes a rapid.",
-        "parameters": [
-          {
-            "name": "rapidId",
-            "in": "path",
-            "description": "The rapid to be deleted",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
           }
         }
       }
@@ -6175,20 +6151,7 @@
             "example": "AssetModel"
           },
           "asset": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/FileAssetModel"
-              },
-              {
-                "$ref": "#/components/schemas/MultiAssetModel"
-              },
-              {
-                "$ref": "#/components/schemas/NullAssetModel"
-              },
-              {
-                "$ref": "#/components/schemas/TextAssetModel"
-              }
-            ],
+            "type": "object",
             "discriminator": {
               "propertyName": "_t"
             }
@@ -7454,10 +7417,8 @@
       "UploadFilesFromS3BucketModel": {
         "required": [
           "bucketName",
-          "clearDataset",
           "datasetId",
-          "sourcePrefix",
-          "useCustomAwsCredentials"
+          "sourcePrefix"
         ],
         "type": "object",
         "properties": {
@@ -7490,11 +7451,13 @@
           },
           "useCustomAwsCredentials": {
             "type": "boolean",
-            "description": "Whether to use custom AWS credentials."
+            "description": "Whether to use custom AWS credentials.",
+            "nullable": true
           },
           "clearDataset": {
             "type": "boolean",
-            "description": "Whether to clear the dataset before uploading the files."
+            "description": "Whether to clear the dataset before uploading the files.",
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -8321,11 +8284,6 @@
             "description": "The priority is used to prioritize over other orders.",
             "format": "int32",
             "nullable": true
-          },
-          "isSticky": {
-            "type": "boolean",
-            "description": "Indicates if the underlying campaign should be sticky.",
-            "deprecated": true
           },
           "stickyState": {
             "enum": [
@@ -9845,7 +9803,7 @@
         "properties": {
           "isPublic": {
             "type": "boolean",
-            "description": "Whether the order is public"
+            "description": "A flag indicating whether to update the order to be public or not."
           }
         },
         "additionalProperties": false,
@@ -10342,14 +10300,6 @@
         "additionalProperties": false,
         "description": "The access parameters of the newly registered temporary customer."
       },
-      "SubscribeToNewsletterResult": {
-        "type": "object",
-        "additionalProperties": false
-      },
-      "UnsubscribeToNewsletterResult": {
-        "type": "object",
-        "additionalProperties": false
-      },
       "AddValidationRapidModel": {
         "required": [
           "metadata",
@@ -10453,6 +10403,9 @@
               },
               {
                 "$ref": "#/components/schemas/CompareTruth"
+              },
+              {
+                "$ref": "#/components/schemas/MultiCompareTruth"
               },
               {
                 "$ref": "#/components/schemas/SkipTruth"
@@ -10600,6 +10553,9 @@
               },
               {
                 "$ref": "#/components/schemas/CompareTruth"
+              },
+              {
+                "$ref": "#/components/schemas/MultiCompareTruth"
               },
               {
                 "$ref": "#/components/schemas/SkipTruth"
@@ -10931,6 +10887,7 @@
           "invalidValidationCount",
           "metadata",
           "payload",
+          "state",
           "type"
         ],
         "type": "object",
@@ -10986,6 +10943,9 @@
               },
               {
                 "$ref": "#/components/schemas/CompareTruth"
+              },
+              {
+                "$ref": "#/components/schemas/MultiCompareTruth"
               },
               {
                 "$ref": "#/components/schemas/SkipTruth"
@@ -11101,6 +11061,17 @@
             "type": "number",
             "format": "double",
             "nullable": true
+          },
+          "state": {
+            "enum": [
+              "Labeling",
+              "Paused",
+              "Incomplete",
+              "Flagged",
+              "Done",
+              "None"
+            ],
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -11268,6 +11239,35 @@
         },
         "additionalProperties": false
       },
+      "MultiCompareTruth": {
+        "title": "MultiCompareTruth",
+        "required": [
+          "_t",
+          "correctCombinations"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "MultiCompareTruth"
+            ],
+            "type": "string",
+            "description": "Discriminator value for MultiCompareTruth",
+            "default": "MultiCompareTruth",
+            "example": "MultiCompareTruth"
+          },
+          "correctCombinations": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "additionalProperties": false
+      },
       "NamedClassification": {
         "title": "NamedClassification",
         "required": [
@@ -11398,6 +11398,17 @@
           }
         },
         "additionalProperties": false
+      },
+      "RapidState": {
+        "enum": [
+          "Labeling",
+          "Paused",
+          "Incomplete",
+          "Flagged",
+          "Done",
+          "None"
+        ],
+        "type": "string"
       },
       "ScrubPayload": {
         "title": "ScrubPayload",
@@ -11776,6 +11787,9 @@
                 "$ref": "#/components/schemas/CompareTruth"
               },
               {
+                "$ref": "#/components/schemas/MultiCompareTruth"
+              },
+              {
                 "$ref": "#/components/schemas/SkipTruth"
               },
               {
@@ -11885,12 +11899,6 @@
             "description": "Discriminator value for CompareResult",
             "default": "CompareResult",
             "example": "CompareResult"
-          },
-          "winnerId": {
-            "type": "string",
-            "nullable": true,
-            "readOnly": true,
-            "deprecated": true
           },
           "winners": {
             "type": "array",
@@ -12032,6 +12040,7 @@
               "Labeling",
               "Paused",
               "Incomplete",
+              "Flagged",
               "Done",
               "None"
             ],
@@ -12199,6 +12208,29 @@
         },
         "additionalProperties": false
       },
+      "NaiveRefereeInfo": {
+        "title": "NaiveRefereeInfo",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "NaiveRefereeInfo"
+            ],
+            "type": "string",
+            "description": "Discriminator value for NaiveRefereeInfo",
+            "default": "NaiveRefereeInfo",
+            "example": "NaiveRefereeInfo"
+          },
+          "guessAmountThreshold": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "NamedEntityResult": {
         "title": "NamedEntityResult",
         "required": [
@@ -12225,6 +12257,25 @@
           },
           "rapidId": {
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "NeverEndingRefereeInfo": {
+        "title": "NeverEndingRefereeInfo",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "NeverEndingRefereeInfo"
+            ],
+            "type": "string",
+            "description": "Discriminator value for NeverEndingRefereeInfo",
+            "default": "NeverEndingRefereeInfo",
+            "example": "NeverEndingRefereeInfo"
           }
         },
         "additionalProperties": false
@@ -12259,6 +12310,35 @@
         },
         "additionalProperties": false
       },
+      "ProbabilisticAttachCategoryRefereeInfo": {
+        "title": "ProbabilisticAttachCategoryRefereeInfo",
+        "required": [
+          "_t",
+          "maxVotes",
+          "threshold"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "ProbabilisticAttachCategoryRefereeInfo"
+            ],
+            "type": "string",
+            "description": "Discriminator value for ProbabilisticAttachCategoryRefereeInfo",
+            "default": "ProbabilisticAttachCategoryRefereeInfo",
+            "example": "ProbabilisticAttachCategoryRefereeInfo"
+          },
+          "threshold": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxVotes": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "RapidIssue": {
         "enum": [
           "Other",
@@ -12273,6 +12353,257 @@
           "MyAnswerIsCorrect"
         ],
         "type": "string"
+      },
+      "RapidModel": {
+        "required": [
+          "asset",
+          "hasResponses",
+          "id",
+          "metadata",
+          "payload",
+          "referee",
+          "shouldAcceptIncorrect",
+          "state"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "payload": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranscriptionPayload"
+              },
+              {
+                "$ref": "#/components/schemas/ScrubPayload"
+              },
+              {
+                "$ref": "#/components/schemas/PolygonPayload"
+              },
+              {
+                "$ref": "#/components/schemas/NamedEntityPayload"
+              },
+              {
+                "$ref": "#/components/schemas/LocatePayload"
+              },
+              {
+                "$ref": "#/components/schemas/LinePayload"
+              },
+              {
+                "$ref": "#/components/schemas/FreeTextPayload"
+              },
+              {
+                "$ref": "#/components/schemas/ComparePayload"
+              },
+              {
+                "$ref": "#/components/schemas/ClassifyPayload"
+              },
+              {
+                "$ref": "#/components/schemas/BoundingBoxPayload"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "referee": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ProbabilisticAttachCategoryRefereeInfo"
+              },
+              {
+                "$ref": "#/components/schemas/NeverEndingRefereeInfo"
+              },
+              {
+                "$ref": "#/components/schemas/NaiveRefereeInfo"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "asset": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/FileAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/MultiAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/NullAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/TextAssetModel"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AssetMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/ClassificationMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/CountMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/DemographicMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageDimensionMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/LocationMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/OriginalFilenameMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/SourceUrlMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/TextMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/TranslatedPromptMetadataModel"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          },
+          "state": {
+            "enum": [
+              "Labeling",
+              "Paused",
+              "Incomplete",
+              "Flagged",
+              "Done",
+              "None"
+            ],
+            "type": "string"
+          },
+          "hasResponses": {
+            "type": "boolean"
+          },
+          "shouldAcceptIncorrect": {
+            "type": "boolean"
+          },
+          "truth": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranscriptionTruth"
+              },
+              {
+                "$ref": "#/components/schemas/ScrubTruth"
+              },
+              {
+                "$ref": "#/components/schemas/PolygonTruth"
+              },
+              {
+                "$ref": "#/components/schemas/NamedEntityTruth"
+              },
+              {
+                "$ref": "#/components/schemas/LocateBoxTruth"
+              },
+              {
+                "$ref": "#/components/schemas/LineTruth"
+              },
+              {
+                "$ref": "#/components/schemas/EmptyValidationTruth"
+              },
+              {
+                "$ref": "#/components/schemas/CompareTruth"
+              },
+              {
+                "$ref": "#/components/schemas/MultiCompareTruth"
+              },
+              {
+                "$ref": "#/components/schemas/SkipTruth"
+              },
+              {
+                "$ref": "#/components/schemas/AttachCategoryTruth"
+              },
+              {
+                "$ref": "#/components/schemas/BoundingBoxTruth"
+              }
+            ],
+            "nullable": true,
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "explanation": {
+            "type": "string",
+            "nullable": true
+          },
+          "randomCorrectProbability": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "key": {
+            "type": "string",
+            "nullable": true
+          },
+          "completedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RapidModelPagedResult": {
+        "required": [
+          "items",
+          "page",
+          "pageSize",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RapidModel"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
       },
       "RapidResponse": {
         "required": [
@@ -12432,16 +12763,6 @@
         "additionalProperties": false,
         "description": "The model for a Rapid skipped."
       },
-      "RapidState": {
-        "enum": [
-          "Labeling",
-          "Paused",
-          "Incomplete",
-          "Done",
-          "None"
-        ],
-        "type": "string"
-      },
       "ReportModel": {
         "required": [
           "issue"
@@ -12594,6 +12915,7 @@
       },
       "UpdateValidationRapidModel": {
         "required": [
+          "randomCorrectProbability",
           "truth"
         ],
         "type": "object",
@@ -12625,6 +12947,9 @@
                 "$ref": "#/components/schemas/CompareTruth"
               },
               {
+                "$ref": "#/components/schemas/MultiCompareTruth"
+              },
+              {
                 "$ref": "#/components/schemas/SkipTruth"
               },
               {
@@ -12634,26 +12959,25 @@
                 "$ref": "#/components/schemas/BoundingBoxTruth"
               }
             ],
-            "description": "",
+            "description": "The truth for the validation rapid.",
             "discriminator": {
               "propertyName": "_t"
             }
           },
           "explanation": {
             "type": "string",
-            "description": "",
+            "description": "The optional explanation that will be shown to the user when answering wrong.",
             "nullable": true
           },
           "prompt": {
             "type": "string",
-            "description": "",
+            "description": "The optional prompt that will be shown to the user.",
             "nullable": true
           },
           "randomCorrectProbability": {
             "type": "number",
-            "description": "",
-            "format": "double",
-            "nullable": true
+            "description": "The probability that if the user answers at random that he'll be correct.",
+            "format": "double"
           }
         },
         "additionalProperties": false,
@@ -13095,6 +13419,7 @@
               "Labeling",
               "Paused",
               "Incomplete",
+              "Flagged",
               "Done",
               "None"
             ],
@@ -13571,7 +13896,8 @@
           },
           "isSticky": {
             "type": "boolean",
-            "description": "Indicates if the campaign is sticky."
+            "description": "Indicates if the campaign is sticky.",
+            "nullable": true
           },
           "isPreviewEnabled": {
             "type": "boolean",
