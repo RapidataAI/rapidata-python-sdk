@@ -16,7 +16,7 @@ from rapidata.api_client.models.preliminary_download_model import PreliminaryDow
 from rapidata.api_client.models.workflow_artifact_model import WorkflowArtifactModel
 from rapidata.rapidata_client.order.rapidata_results import RapidataResults
 from rapidata.service.openapi_service import OpenAPIService
-from rapidata.rapidata_client.logging import logger, managed_print, RapidataOutputManger
+from rapidata.rapidata_client.logging import logger, managed_print, RapidataOutputManager
 
 
 class RapidataOrder:
@@ -38,7 +38,7 @@ class RapidataOrder:
         order_id: str,
         openapi_service: OpenAPIService,
     ):
-        self.order_id = order_id
+        self.id = order_id
         self.name = name
         self.__created_at: datetime | None = None
         self.__openapi_service = openapi_service
@@ -50,6 +50,11 @@ class RapidataOrder:
         self.order_details_page = f"https://app.{self.__openapi_service.environment}/order/detail/{self.order_id}"
         logger.debug("RapidataOrder initialized")
 
+    @property
+    def order_id(self) -> str:
+        managed_print(f"order_id is deprecated. Use id instead.")
+        return self.id
+    
     @property
     def created_at(self) -> datetime:
         """Returns the creation date of the order."""
@@ -126,7 +131,7 @@ class RapidataOrder:
                 "Once started, run this method again to display the progress bar."
             )
         
-        with tqdm(total=100, desc="Processing order", unit="%", bar_format="{desc}: {percentage:3.0f}%|{bar}| completed [{elapsed}<{remaining}, {rate_fmt}]", disable=RapidataOutputManger.silent_mode) as pbar:
+        with tqdm(total=100, desc="Processing order", unit="%", bar_format="{desc}: {percentage:3.0f}%|{bar}| completed [{elapsed}<{remaining}, {rate_fmt}]", disable=RapidataOutputManager.silent_mode) as pbar:
             last_percentage = 0
             while True:
                 current_percentage = self._workflow_progress.completion_percentage

@@ -17,7 +17,7 @@ from tqdm import tqdm
 
 from pydantic import StrictStr
 from typing import cast, Sequence, Generator
-from rapidata.rapidata_client.logging import logger, RapidataOutputManger
+from rapidata.rapidata_client.logging import logger, RapidataOutputManager
 import time
 import threading
 
@@ -76,7 +76,7 @@ class RapidataDataset:
                 for i, (text_asset, metadata) in enumerate(zip_longest(text_assets, metadata_list or []))
             ]
 
-            with tqdm(total=total_uploads, desc="Uploading text datapoints", disable=RapidataOutputManger.silent_mode) as pbar:
+            with tqdm(total=total_uploads, desc="Uploading text datapoints", disable=RapidataOutputManager.silent_mode) as pbar:
                 for future in as_completed(futures):
                     future.result()  # This will raise any exceptions that occurred during execution
                     pbar.update(1)
@@ -183,7 +183,7 @@ class RapidataDataset:
         def progress_tracking_thread():
             try:
                 # Initialize progress bar with 0 completions
-                with tqdm(total=total_uploads, desc="Uploading datapoints", disable=RapidataOutputManger.silent_mode) as pbar:
+                with tqdm(total=total_uploads, desc="Uploading datapoints", disable=RapidataOutputManager.silent_mode) as pbar:
                     prev_ready = 0
                     prev_failed = 0
                     stall_count = 0
