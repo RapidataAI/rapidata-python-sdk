@@ -49,7 +49,7 @@ from .filter import (
 from .logging import (
     configure_logger, 
     logger,
-    RapidataOutputManger
+    RapidataOutputManager
 )
 
 from .validation import Box

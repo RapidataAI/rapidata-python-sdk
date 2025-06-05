@@ -1,4 +1,4 @@
-class RapidataOutputManger:
+class RapidataOutputManager:
     silent_mode = False
     
     @classmethod
@@ -10,7 +10,7 @@ class RapidataOutputManger:
         cls.silent_mode = False
 
 def managed_print(*args, **kwargs):
-    if not RapidataOutputManger.silent_mode:
+    if not RapidataOutputManager.silent_mode:
         print(*args, **kwargs)
 
 

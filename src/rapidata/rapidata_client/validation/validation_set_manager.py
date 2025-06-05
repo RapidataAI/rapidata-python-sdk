@@ -15,7 +15,7 @@ from urllib3._collections import HTTPHeaderDict # type: ignore[import]
 
 from rapidata.rapidata_client.validation.rapids.box import Box
 
-from rapidata.rapidata_client.logging import logger, managed_print, RapidataOutputManger
+from rapidata.rapidata_client.logging import logger, managed_print, RapidataOutputManager
 from tqdm import tqdm
 
 
@@ -452,7 +452,7 @@ class ValidationSetManager:
         )
 
         logger.debug("Adding rapids to validation set")
-        for rapid in tqdm(rapids, desc="Uploading validation tasks", disable=RapidataOutputManger.silent_mode):
+        for rapid in tqdm(rapids, desc="Uploading validation tasks", disable=RapidataOutputManager.silent_mode):
             validation_set.add_rapid(rapid)
         
         managed_print()

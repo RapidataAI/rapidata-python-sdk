@@ -16,7 +16,7 @@ from rapidata.api_client.models.preliminary_download_model import PreliminaryDow
 from rapidata.api_client.models.workflow_artifact_model import WorkflowArtifactModel
 from rapidata.rapidata_client.order.rapidata_results import RapidataResults
 from rapidata.service.openapi_service import OpenAPIService
-from rapidata.rapidata_client.logging import logger, managed_print, RapidataOutputManger
+from rapidata.rapidata_client.logging import logger, managed_print, RapidataOutputManager
 
 
 class RapidataOrder:
@@ -131,7 +131,7 @@ class RapidataOrder:
                 "Once started, run this method again to display the progress bar."
             )
         
-        with tqdm(total=100, desc="Processing order", unit="%", bar_format="{desc}: {percentage:3.0f}%|{bar}| completed [{elapsed}<{remaining}, {rate_fmt}]", disable=RapidataOutputManger.silent_mode) as pbar:
+        with tqdm(total=100, desc="Processing order", unit="%", bar_format="{desc}: {percentage:3.0f}%|{bar}| completed [{elapsed}<{remaining}, {rate_fmt}]", disable=RapidataOutputManager.silent_mode) as pbar:
             last_percentage = 0
             while True:
                 current_percentage = self._workflow_progress.completion_percentage
