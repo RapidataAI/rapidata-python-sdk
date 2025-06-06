@@ -387,8 +387,25 @@
                 }
               },
               "encoding": {
-                "file": {
-                  "style": "form"
+                "text": {
+                  "contentType": "text/plain",
+                  "style": "form",
+                  "explode": true
+                },
+                "url": {
+                  "contentType": "text/plain",
+                  "style": "form",
+                  "explode": true
+                },
+                "metadata": {
+                  "contentType": "application/json",
+                  "style": "form",
+                  "explode": true
+                },
+                "sortIndex": {
+                  "contentType": "int64",
+                  "style": "form",
+                  "explode": true
                 }
               }
             }
