@@ -81,7 +81,9 @@ class CredentialManager:
 
         # Ensure file is only readable by the user
         os.chmod(self.config_path, 0o600)
-        logger.debug(f"Set permissions for {self.config_path} to read/write for user only.")
+        logger.debug(
+            f"Set permissions for {self.config_path} to read/write for user only."
+        )
 
     def _store_credential(self, credential: ClientCredential) -> None:
         credentials = self._read_credentials()
@@ -128,16 +130,14 @@ class CredentialManager:
         if self.endpoint in credentials:
             del credentials[self.endpoint]
             self._write_credentials(credentials)
-            logger.info(
-                f"Credentials for {self.endpoint} have been reset."
-            )
+            logger.info(f"Credentials for {self.endpoint} have been reset.")
 
     def _get_bridge_tokens(self) -> Optional[BridgeToken]:
         """Get bridge tokens from the identity endpoint."""
         logger.debug("Getting bridge tokens")
         try:
             bridge_endpoint = (
-                f"{self.endpoint}/Identity/CreateBridgeToken?clientId=rapidata-cli"
+                f"{self.endpoint}/identity/bridge-token?clientId=rapidata-cli"
             )
             response = requests.post(bridge_endpoint, verify=self.cert_path)
             if not response.ok:
@@ -152,7 +152,7 @@ class CredentialManager:
 
     def _poll_read_key(self, read_key: str) -> Optional[str]:
         """Poll the read key endpoint until we get an access token."""
-        read_endpoint = f"{self.endpoint}/Identity/ReadBridgeToken"
+        read_endpoint = f"{self.endpoint}/identity/bridge-token"
         start_time = time.time()
 
         while time.time() - start_time < self.poll_timeout:
