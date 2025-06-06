@@ -34,11 +34,6 @@ class MultiAsset(BaseAsset):
         if not all(isinstance(asset, type(assets[0])) for asset in assets):
             raise ValueError("All assets must be of the same type.")
         
-        if isinstance(assets[0], MediaAsset):
-            local = [asset.is_local() for asset in cast(Sequence[MediaAsset], assets)]
-            if not all(loc == local[0] for loc in local):
-                raise ValueError("A datapoint with multiple assets can either have both assets be local paths or both be URLs. not a mix of both.")
-            
         self.assets = assets
         
     def __len__(self) -> int:

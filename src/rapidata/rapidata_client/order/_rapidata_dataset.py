@@ -1,13 +1,7 @@
 from itertools import zip_longest
 
-from rapidata.api_client.models.datapoint_metadata_model import DatapointMetadataModel
-from rapidata.api_client.models.create_datapoint_from_urls_model import (
-    CreateDatapointFromUrlsModel,
-)
-from rapidata.api_client.models.create_datapoint_from_files_model import CreateDatapointFromFilesModel
-from rapidata.api_client.models.create_datapoint_from_urls_model import CreateDatapointFromUrlsModel
 from rapidata.api_client.models.create_datapoint_from_text_sources_model import CreateDatapointFromTextSourcesModel
-from rapidata.api_client.models.create_datapoint_from_files_model_metadata_inner import CreateDatapointFromFilesModelMetadataInner
+from rapidata.api_client.models.dataset_dataset_id_datapoints_post_request_metadata_inner import DatasetDatasetIdDatapointsPostRequestMetadataInner
 from rapidata.rapidata_client.metadata._base_metadata import Metadata
 from rapidata.rapidata_client.assets import TextAsset, MediaAsset, MultiAsset
 from rapidata.service import LocalFileService
@@ -15,7 +9,6 @@ from rapidata.service.openapi_service import OpenAPIService
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
 
-from pydantic import StrictStr
 from typing import cast, Sequence, Generator
 from rapidata.rapidata_client.logging import logger, RapidataOutputManager
 import time
@@ -59,7 +52,7 @@ class RapidataDataset:
                 for meta in metadata_per_datapoint:
                     meta_model = meta.to_model() if meta else None
                     if meta_model:
-                        metadata.append(CreateDatapointFromFilesModelMetadataInner(meta_model))
+                        metadata.append(DatasetDatasetIdDatapointsPostRequestMetadataInner(meta_model))
 
             model = CreateDatapointFromTextSourcesModel(
                 textSources=texts,
@@ -117,39 +110,23 @@ class RapidataDataset:
             else:
                 raise ValueError(f"Unsupported asset type: {type(media_asset)}")
 
-            # Convert multiple metadata to models
-            metadata = []
+            metadata: list[DatasetDatasetIdDatapointsPostRequestMetadataInner] = []
             if meta_list:
                 for meta in meta_list:
                     meta_model = meta.to_model() if meta else None
                     if meta_model:
-                        metadata.append(CreateDatapointFromFilesModelMetadataInner(meta_model))
+                        metadata.append(DatasetDatasetIdDatapointsPostRequestMetadataInner(meta_model))
 
-            local_paths: bool = assets[0].is_local()
-            files: list[StrictStr] = []
-            for asset in assets:
-                if isinstance(asset, MediaAsset):
-                    files.append(asset.path)
+            local_paths = [asset.to_file() for asset in assets if asset.is_local()]
+            urls = [asset.path for asset in assets if not asset.is_local()]
 
-            if local_paths:
-                model = CreateDatapointFromFilesModel(
-                    metadata=metadata,
-                    sortIndex=index,
-                )
-                upload_response = self.openapi_service.dataset_api.dataset_dataset_id_datapoints_files_post(
-                    dataset_id=self.dataset_id,
-                    model=model,
-                    files=files # type: ignore
-                )
-            else:
-                upload_response = self.openapi_service.dataset_api.dataset_dataset_id_datapoints_urls_post(
-                    dataset_id=self.dataset_id,
-                    create_datapoint_from_urls_model=CreateDatapointFromUrlsModel(
-                        urls=files,
-                        metadata=metadata,
-                        sortIndex=index
-                    ),
-                )
+            self.openapi_service.dataset_api.dataset_dataset_id_datapoints_post(
+                dataset_id=self.dataset_id,
+                file=local_paths,
+                url=urls,
+                metadata=metadata,
+                sort_index=index,
+            )
 
             local_successful.extend(identifiers_to_track)
 
