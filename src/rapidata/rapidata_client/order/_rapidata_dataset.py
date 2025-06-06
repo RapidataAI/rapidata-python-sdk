@@ -110,8 +110,7 @@ class RapidataDataset:
             else:
                 raise ValueError(f"Unsupported asset type: {type(media_asset)}")
 
-            # Convert multiple metadata to models
-            metadata = []
+            metadata: list[DatasetDatasetIdDatapointsPostRequestMetadataInner] = []
             if meta_list:
                 for meta in meta_list:
                     meta_model = meta.to_model() if meta else None
@@ -128,26 +127,6 @@ class RapidataDataset:
                 metadata=metadata,
                 sort_index=index,
             )
-
-            # if local_paths:
-            #     model = CreateDatapointFromFilesModel(
-            #         metadata=metadata,
-            #         sortIndex=index,
-            #     )
-            #     upload_response = self.openapi_service.dataset_api.dataset_dataset_id_datapoints_files_post(
-            #         dataset_id=self.dataset_id,
-            #         model=model,
-            #         files=files # type: ignore
-            #     )
-            # else:
-            #     upload_response = self.openapi_service.dataset_api.dataset_dataset_id_datapoints_urls_post(
-            #         dataset_id=self.dataset_id,
-            #         create_datapoint_from_urls_model=CreateDatapointFromUrlsModel(
-            #             urls=files,
-            #             metadata=metadata,
-            #             sortIndex=index
-            #         ),
-            #     )
 
             local_successful.extend(identifiers_to_track)
 
