@@ -77,6 +77,9 @@ class RapidataOrderManager:
             private_notes: list[str] | None = None,
             default_labeling_amount: int = 3
         ) -> RapidataOrder:
+
+        if not assets:
+            raise ValueError("No datapoints provided")
         
         if contexts and len(contexts) != len(assets):
             raise ValueError("Number of contexts must match number of datapoints")
