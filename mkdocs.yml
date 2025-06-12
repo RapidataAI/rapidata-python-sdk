@@ -79,6 +79,7 @@ nav:
       - Select Words: examples/select_words_order.md
       - Locate: examples/locate_order.md
       - Draw: examples/draw_order.md
+      - Ranking: examples/ranking_order.md
   - Filters: reference/rapidata/rapidata_client/filter/rapidata_filters/
   - Settings: reference/rapidata/rapidata_client/settings/rapidata_settings/
   - Selections: reference/rapidata/rapidata_client/selection/rapidata_selections/
