@@ -1,5 +1,5 @@
 class RapidataOutputManager:
-    """A class to manage print outputs for the Rapidata module."""
+    """Manages print outputs and progress bars for the Rapidata module."""
     
     silent_mode: bool = False
 
