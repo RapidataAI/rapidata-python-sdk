@@ -5,7 +5,7 @@ from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.assets.data_type_enum import RapidataDataTypes
 from rapidata.rapidata_client.validation.rapids.rapids_manager import RapidsManager
 from rapidata.rapidata_client.validation.rapids.rapids import Rapid
-from rapidata.rapidata_client.metadata import PromptMetadata
+from rapidata.rapidata_client.metadata import PromptMetadata, MediaAssetMetadata
 
 from rapidata.api_client.models.page_info import PageInfo
 from rapidata.api_client.models.root_filter import RootFilter
@@ -39,6 +39,7 @@ class ValidationSetManager:
         truths: list[list[str]],
         data_type: str = RapidataDataTypes.MEDIA,
         contexts: list[str] | None = None,
+        media_contexts: list[str] | None = None,
         explanations: list[str | None] | None = None,
         dimensions: list[str] = [],
     ) -> RapidataValidationSet:
@@ -58,6 +59,9 @@ class ValidationSetManager:
             contexts (list[str], optional): The contexts for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction and answer options. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
+            media_contexts (list[str], optional): The list of media contexts i.e. links to the images / videos for the comparison. Defaults to None.\n
+                If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
+                Will be matched up with the datapoints using the list index.
             explanations (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
             dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
 
@@ -79,12 +83,21 @@ class ValidationSetManager:
         if contexts and len(contexts) != len(datapoints):
             raise ValueError("The number of contexts and datapoints must be equal")
 
+        if media_contexts and len(media_contexts) != len(datapoints):
+            raise ValueError("The number of media contexts and datapoints must be equal")
+
         if(explanations and len(explanations) != len(datapoints)):
             raise ValueError("The number of explanations and datapoints must be equal, the index must align, but can be padded with None")
+
        
         logger.debug("Creating classification rapids")
         rapids: list[Rapid] = []
         for i in range(len(datapoints)):
+            rapid_metadata = []
+            if contexts:
+                rapid_metadata.append(PromptMetadata(contexts[i]))
+            if media_contexts:
+                rapid_metadata.append(MediaAssetMetadata(media_contexts[i]))
             rapids.append(
                 self.rapid.classification_rapid(
                     instruction=instruction,
@@ -92,7 +105,7 @@ class ValidationSetManager:
                     datapoint=datapoints[i],
                     truths=truths[i],
                     data_type=data_type,
-                    metadata=[PromptMetadata(contexts[i])] if contexts else [],
+                    metadata=rapid_metadata,
                     explanation=explanations[i] if explanations != None else None
                 )
             )
@@ -107,6 +120,7 @@ class ValidationSetManager:
         truths: list[str],
         data_type: str = RapidataDataTypes.MEDIA,
         contexts: list[str] | None = None,
+        media_contexts: list[str] | None = None,
         explanation: list[str | None] | None = None,
         dimensions: list[str] = [],
     ) -> RapidataValidationSet:
@@ -126,6 +140,9 @@ class ValidationSetManager:
             contexts (list[str], optional): The contexts for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction and truth. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
+            media_contexts (list[str], optional): The list of media contexts i.e. links to the images / videos for the comparison. Defaults to None.\n
+                If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
+                Will be matched up with the datapoints using the list index.
             explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
             dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
 
@@ -146,6 +163,9 @@ class ValidationSetManager:
 
         if contexts and len(contexts) != len(datapoints):
             raise ValueError("The number of contexts and datapoints must be equal")
+
+        if media_contexts and len(media_contexts) != len(datapoints):
+            raise ValueError("The number of media contexts and datapoints must be equal")
  
         if(explanation and len(explanation) != len(datapoints)):
             raise ValueError("The number of explanations and datapoints must be equal, the index must align, but can be padded with None")
@@ -153,13 +173,18 @@ class ValidationSetManager:
         logger.debug("Creating comparison rapids")
         rapids: list[Rapid] = []
         for i in range(len(datapoints)):
+            rapid_metadata = []
+            if contexts:
+                rapid_metadata.append(PromptMetadata(contexts[i]))
+            if media_contexts:
+                rapid_metadata.append(MediaAssetMetadata(media_contexts[i]))
             rapids.append(
                 self.rapid.compare_rapid(
                     instruction=instruction,
                     truth=truths[i],
                     datapoint=datapoints[i],
                     data_type=data_type,
-                    metadata=[PromptMetadata(contexts[i])] if contexts else [],
+                    metadata=rapid_metadata,
                     explanation=explanation[i] if explanation != None else None
                 )
             )
@@ -238,6 +263,7 @@ class ValidationSetManager:
         truths: list[list[Box]],
         datapoints: list[str],
         contexts: list[str] | None = None,
+        media_contexts: list[str] | None = None,
         explanation: list[str | None] | None = None,
         dimensions: list[str] = [],
     ) -> RapidataValidationSet:
@@ -252,6 +278,9 @@ class ValidationSetManager:
                     truths: [[Box(0, 0, 100, 100)], [Box(50, 50, 150, 150)]] -> first datapoint the object is in the top left corner, second datapoint the object is in the center
             datapoints (list[str]): The datapoints that will be used for validation.
             contexts (list[str], optional): The contexts for each datapoint. Defaults to None.
+            media_contexts (list[str], optional): The list of media contexts i.e. links to the images / videos for the comparison. Defaults to None.\n
+                If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
+                Will be matched up with the datapoints using the list index.
             explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
             dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
 
@@ -272,6 +301,9 @@ class ValidationSetManager:
         if contexts and len(contexts) != len(datapoints):
             raise ValueError("The number of contexts and datapoints must be equal")
  
+        if media_contexts and len(media_contexts) != len(datapoints):
+            raise ValueError("The number of media contexts and datapoints must be equal")
+
         if(explanation and len(explanation) != len(datapoints)):
             raise ValueError("The number of explanations and datapoints must be equal, the index must align, but can be padded with None")
         
@@ -279,12 +311,17 @@ class ValidationSetManager:
         rapids = []
         rapids: list[Rapid] = []
         for i in range(len(datapoints)):
+            rapid_metadata = []
+            if contexts:
+                rapid_metadata.append(PromptMetadata(contexts[i]))
+            if media_contexts:
+                rapid_metadata.append(MediaAssetMetadata(media_contexts[i]))
             rapids.append(
                 self.rapid.locate_rapid(
                     instruction=instruction,
                     truths=truths[i],
                     datapoint=datapoints[i],
-                    metadata=[PromptMetadata(contexts[i])] if contexts else [],
+                    metadata=rapid_metadata,
                     explanation=explanation[i] if explanation != None else None
 
                 )
@@ -299,6 +336,7 @@ class ValidationSetManager:
         truths: list[list[Box]],
         datapoints: list[str],
         contexts: list[str] | None = None,
+        media_contexts: list[str] | None = None,
         explanation: list[str | None] | None = None,
         dimensions: list[str] = [],
     ) -> RapidataValidationSet:
@@ -313,6 +351,9 @@ class ValidationSetManager:
                     truths: [[Box(0, 0, 100, 100)], [Box(50, 50, 150, 150)]] -> first datapoint the object is in the top left corner, second datapoint the object is in the center
             datapoints (list[str]): The datapoints that will be used for validation.
             contexts (list[str], optional): The contexts for each datapoint. Defaults to None.
+            media_contexts (list[str], optional): The list of media contexts i.e. links to the images / videos for the comparison. Defaults to None.\n
+                If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
+                Will be matched up with the datapoints using the list index.
             explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
             dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
 
@@ -333,18 +374,26 @@ class ValidationSetManager:
         if contexts and len(contexts) != len(datapoints):
             raise ValueError("The number of contexts and datapoints must be equal")
  
+        if media_contexts and len(media_contexts) != len(datapoints):
+            raise ValueError("The number of media contexts and datapoints must be equal")
+
         if(explanation and len(explanation) != len(datapoints)):
             raise ValueError("The number of explanations and datapoints must be equal, the index must align, but can be padded with None")
 
         logger.debug("Creating draw rapids")
         rapids: list[Rapid] = []
         for i in range(len(datapoints)):
+            rapid_metadata = []
+            if contexts:
+                rapid_metadata.append(PromptMetadata(contexts[i]))
+            if media_contexts:
+                rapid_metadata.append(MediaAssetMetadata(media_contexts[i]))
             rapids.append(
                 self.rapid.draw_rapid(
                     instruction=instruction,
                     truths=truths[i],
                     datapoint=datapoints[i],
-                    metadata=[PromptMetadata(contexts[i])] if contexts else [],
+                    metadata=rapid_metadata,
                     explanation=explanation[i] if explanation != None else None
 
                 )
@@ -359,6 +408,7 @@ class ValidationSetManager:
         truths: list[list[tuple[int, int]]],
         datapoints: list[str],
         contexts: list[str] | None = None,
+        media_contexts: list[str] | None = None,
         explanation: list[str | None] | None = None,
         dimensions: list[str] = [],
     ) -> RapidataValidationSet:
@@ -374,6 +424,9 @@ class ValidationSetManager:
                     truths: [[(0, 10)], [(20, 30)]] -> first datapoint the correct interval is from 0 to 10, second datapoint the correct interval is from 20 to 30
             datapoints (list[str]): The datapoints that will be used for validation.
             contexts (list[str], optional): The contexts for each datapoint. Defaults to None.
+            media_contexts (list[str], optional): The list of media contexts i.e. links to the images / videos for the comparison. Defaults to None.\n
+                If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
+                Will be matched up with the datapoints using the list index.
             explanation (list[str | None], optional): The explanations for each datapoint. Will be given to the annotators in case the answer is wrong. Defaults to None.
             dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
 
@@ -394,18 +447,26 @@ class ValidationSetManager:
         if contexts and len(contexts) != len(datapoints):
             raise ValueError("The number of contexts and datapoints must be equal")
  
+        if media_contexts and len(media_contexts) != len(datapoints):
+            raise ValueError("The number of media contexts and datapoints must be equal")
+
         if(explanation and len(explanation) != len(datapoints)):
             raise ValueError("The number of explanations and datapoints must be equal, the index must align, but can be padded with None")
               
         logger.debug("Creating timestamp rapids")
         rapids: list[Rapid] = []
         for i in range(len(datapoints)):
+            rapid_metadata = []
+            if contexts:
+                rapid_metadata.append(PromptMetadata(contexts[i]))
+            if media_contexts:
+                rapid_metadata.append(MediaAssetMetadata(media_contexts[i]))
             rapids.append(
                 self.rapid.timestamp_rapid(
                     instruction=instruction,
                     truths=truths[i],
                     datapoint=datapoints[i],
-                    metadata=[PromptMetadata(contexts[i])] if contexts else [],
+                    metadata=rapid_metadata,
                     explanation=explanation[i] if explanation != None else None
                 )
             )
