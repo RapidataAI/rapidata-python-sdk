@@ -13,12 +13,12 @@ class RapidataSelections:
     All Tasks are called a "Session". A session can contain multiple tasks of different types.
 
     Attributes:
-        labeling (LabelingSelection): The LabelingSelection instance.
-        validation (ValidationSelection): The ValidationSelection instance.
-        conditional_validation (ConditionalValidationSelection): The ConditionalValidationSelection instance.
-        demographic (DemographicSelection): The DemographicSelection instance.
-        capped (CappedSelection): The CappedSelection instance.
-        shuffling (ShufflingSelection): The ShufflingSelection instance.
+        labeling (LabelingSelection): Decides how many actual datapoints you want to show per session.
+        validation (ValidationSelection): Decides how many validation rapids you want to show per session.
+        conditional_validation (ConditionalValidationSelection): Probabilistically decides how many validation rapids you want to show per session based on the user score.
+        demographic (DemographicSelection): Decides if and how many demographic questions you want to show per session.
+        capped (CappedSelection): Takes in different selections and caps the amount of rapids that can be shown.
+        shuffling (ShufflingSelection): Shuffles the selections provided in the list.
     
     Example:
         ```python

@@ -4,7 +4,6 @@ from rapidata.rapidata_client.settings import (
     FreeTextMinimumCharacters,
     NoShuffle,
     PlayVideoUntilTheEnd,
-    CustomSetting,
     )
 
 class RapidataSettings:
@@ -14,12 +13,11 @@ class RapidataSettings:
     Settings can be added to an order to determine the behaviour of the task.
     
     Attributes:
-        alert_on_fast_response (AlertOnFastResponse): The AlertOnFastResponse instance.
-        translation_behaviour (TranslationBehaviour): The TranslationBehaviour instance.
-        free_text_minimum_characters (FreeTextMinimumCharacters): The FreeTextMinimumCharacters instance.
-        no_shuffle (NoShuffle): The NoShuffle instance.
-        play_video_until_the_end (PlayVideoUntilTheEnd): The PlayVideoUntilTheEnd instance.
-        custom_setting (CustomSetting): The CustomSetting instance.
+        alert_on_fast_response (AlertOnFastResponse): Gives an alert as a pop up on the UI when the response time is less than the milliseconds.
+        translation_behaviour (TranslationBehaviour): Defines what's the behaviour of the translation in the UI.
+        free_text_minimum_characters (FreeTextMinimumCharacters): Only for free text tasks. Set the minimum number of characters a user has to type.
+        no_shuffle (NoShuffle): Only for classification and compare tasks. If true, the order of the categories / images will not be shuffled and presented in the same order as specified.
+        play_video_until_the_end (PlayVideoUntilTheEnd): Allows users to only answer once the video has finished playing.
 
     Example:
         ```python
@@ -35,5 +33,4 @@ class RapidataSettings:
     free_text_minimum_characters = FreeTextMinimumCharacters
     no_shuffle = NoShuffle
     play_video_until_the_end = PlayVideoUntilTheEnd
-    custom_setting = CustomSetting
 
