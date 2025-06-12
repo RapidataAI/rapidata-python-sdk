@@ -18,11 +18,11 @@ class RapidataFilters:
         This might significantly slow down the number of responses you receive.
     
     Attributes:
-        user_score (UserScoreFilter): Filters the order based on the user's score.
-        age (AgeFilter): Filters the order based on the user's age.
-        country (CountryFilter): Filters the order based on the user's country.
-        gender (GenderFilter): Filters the order based on the user's gender.
-        language (LanguageFilter): Filters the order based on the user's language.
+        user_score (UserScoreFilter): Filters for users with a specific user score.
+        age (AgeFilter): Filters for users with a specific age.
+        country (CountryFilter): Filters for users with a specific country.
+        gender (GenderFilter): Filters for users with a specific gender.
+        language (LanguageFilter): Filters for users with a specific language.
         not_filter (NotFilter): Inverts the filter.
         or_filter (OrFilter): Combines multiple filters with a logical OR operation.
 

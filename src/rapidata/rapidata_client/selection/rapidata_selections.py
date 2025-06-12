@@ -10,7 +10,8 @@ class RapidataSelections:
     """RapidataSelections Classes
 
     Selections are used to define what type of tasks and in what order they are shown to the user. 
-    All Tasks are called a "Session". A session can contain multiple tasks of different types.
+    All selections combined are called a "Session". A session can contain multiple tasks of different types of tasks.
+    As an example, a session might be 1 validation task, 2 labeling tasks.
 
     Attributes:
         labeling (LabelingSelection): Decides how many actual datapoints you want to show per session.
