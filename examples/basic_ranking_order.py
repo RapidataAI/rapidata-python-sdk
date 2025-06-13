@@ -22,7 +22,6 @@ if __name__ == "__main__":
         name="Example Ranking Order",
         instruction="Which rabbit looks cooler?",
         datapoints=DATAPOINTS,
-        responses_per_comparison=1, #Each match is concluded after 1 response
         total_comparison_budget=50, #Make 50 comparisons, each comparison containing 2 datapoints
         random_comparisons_ratio=0.5 #First half of the comparisons are random, the second half are close matchups
     ).run()
