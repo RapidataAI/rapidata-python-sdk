@@ -19,6 +19,7 @@ from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, f
 from typing import Any, List, Optional
 from rapidata.api_client.models.conditional_validation_selection import ConditionalValidationSelection
 from rapidata.api_client.models.demographic_selection import DemographicSelection
+from rapidata.api_client.models.effort_capped_selection import EffortCappedSelection
 from rapidata.api_client.models.labeling_selection import LabelingSelection
 from rapidata.api_client.models.static_selection import StaticSelection
 from rapidata.api_client.models.validation_selection import ValidationSelection
@@ -26,7 +27,7 @@ from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-ABTESTSELECTIONAINNER_ONE_OF_SCHEMAS = ["AbTestSelection", "CappedSelection", "ConditionalValidationSelection", "DemographicSelection", "LabelingSelection", "ShufflingSelection", "StaticSelection", "ValidationSelection"]
+ABTESTSELECTIONAINNER_ONE_OF_SCHEMAS = ["AbTestSelection", "CappedSelection", "ConditionalValidationSelection", "DemographicSelection", "EffortCappedSelection", "LabelingSelection", "ShufflingSelection", "StaticSelection", "ValidationSelection"]
 
 class AbTestSelectionAInner(BaseModel):
     """
@@ -40,16 +41,18 @@ class AbTestSelectionAInner(BaseModel):
     oneof_schema_3_validator: Optional[ConditionalValidationSelection] = None
     # data type: DemographicSelection
     oneof_schema_4_validator: Optional[DemographicSelection] = None
+    # data type: EffortCappedSelection
+    oneof_schema_5_validator: Optional[EffortCappedSelection] = None
     # data type: LabelingSelection
-    oneof_schema_5_validator: Optional[LabelingSelection] = None
+    oneof_schema_6_validator: Optional[LabelingSelection] = None
     # data type: ShufflingSelection
-    oneof_schema_6_validator: Optional[ShufflingSelection] = None
+    oneof_schema_7_validator: Optional[ShufflingSelection] = None
     # data type: StaticSelection
-    oneof_schema_7_validator: Optional[StaticSelection] = None
+    oneof_schema_8_validator: Optional[StaticSelection] = None
     # data type: ValidationSelection
-    oneof_schema_8_validator: Optional[ValidationSelection] = None
-    actual_instance: Optional[Union[AbTestSelection, CappedSelection, ConditionalValidationSelection, DemographicSelection, LabelingSelection, ShufflingSelection, StaticSelection, ValidationSelection]] = None
-    one_of_schemas: Set[str] = { "AbTestSelection", "CappedSelection", "ConditionalValidationSelection", "DemographicSelection", "LabelingSelection", "ShufflingSelection", "StaticSelection", "ValidationSelection" }
+    oneof_schema_9_validator: Optional[ValidationSelection] = None
+    actual_instance: Optional[Union[AbTestSelection, CappedSelection, ConditionalValidationSelection, DemographicSelection, EffortCappedSelection, LabelingSelection, ShufflingSelection, StaticSelection, ValidationSelection]] = None
+    one_of_schemas: Set[str] = { "AbTestSelection", "CappedSelection", "ConditionalValidationSelection", "DemographicSelection", "EffortCappedSelection", "LabelingSelection", "ShufflingSelection", "StaticSelection", "ValidationSelection" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -95,6 +98,11 @@ class AbTestSelectionAInner(BaseModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `DemographicSelection`")
         else:
             match += 1
+        # validate data type: EffortCappedSelection
+        if not isinstance(v, EffortCappedSelection):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `EffortCappedSelection`")
+        else:
+            match += 1
         # validate data type: LabelingSelection
         if not isinstance(v, LabelingSelection):
             error_messages.append(f"Error! Input type `{type(v)}` is not `LabelingSelection`")
@@ -117,10 +125,10 @@ class AbTestSelectionAInner(BaseModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in AbTestSelectionAInner with oneOf schemas: AbTestSelection, CappedSelection, ConditionalValidationSelection, DemographicSelection, LabelingSelection, ShufflingSelection, StaticSelection, ValidationSelection. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in AbTestSelectionAInner with oneOf schemas: AbTestSelection, CappedSelection, ConditionalValidationSelection, DemographicSelection, EffortCappedSelection, LabelingSelection, ShufflingSelection, StaticSelection, ValidationSelection. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in AbTestSelectionAInner with oneOf schemas: AbTestSelection, CappedSelection, ConditionalValidationSelection, DemographicSelection, LabelingSelection, ShufflingSelection, StaticSelection, ValidationSelection. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in AbTestSelectionAInner with oneOf schemas: AbTestSelection, CappedSelection, ConditionalValidationSelection, DemographicSelection, EffortCappedSelection, LabelingSelection, ShufflingSelection, StaticSelection, ValidationSelection. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -159,6 +167,12 @@ class AbTestSelectionAInner(BaseModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
+        # deserialize data into EffortCappedSelection
+        try:
+            instance.actual_instance = EffortCappedSelection.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
         # deserialize data into LabelingSelection
         try:
             instance.actual_instance = LabelingSelection.from_json(json_str)
@@ -186,10 +200,10 @@ class AbTestSelectionAInner(BaseModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into AbTestSelectionAInner with oneOf schemas: AbTestSelection, CappedSelection, ConditionalValidationSelection, DemographicSelection, LabelingSelection, ShufflingSelection, StaticSelection, ValidationSelection. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into AbTestSelectionAInner with oneOf schemas: AbTestSelection, CappedSelection, ConditionalValidationSelection, DemographicSelection, EffortCappedSelection, LabelingSelection, ShufflingSelection, StaticSelection, ValidationSelection. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into AbTestSelectionAInner with oneOf schemas: AbTestSelection, CappedSelection, ConditionalValidationSelection, DemographicSelection, LabelingSelection, ShufflingSelection, StaticSelection, ValidationSelection. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into AbTestSelectionAInner with oneOf schemas: AbTestSelection, CappedSelection, ConditionalValidationSelection, DemographicSelection, EffortCappedSelection, LabelingSelection, ShufflingSelection, StaticSelection, ValidationSelection. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -203,7 +217,7 @@ class AbTestSelectionAInner(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], AbTestSelection, CappedSelection, ConditionalValidationSelection, DemographicSelection, LabelingSelection, ShufflingSelection, StaticSelection, ValidationSelection]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], AbTestSelection, CappedSelection, ConditionalValidationSelection, DemographicSelection, EffortCappedSelection, LabelingSelection, ShufflingSelection, StaticSelection, ValidationSelection]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None
