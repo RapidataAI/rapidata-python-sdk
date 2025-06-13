@@ -1,4 +1,4 @@
-# Example Locate Order
+# Example Draw Order
 
 To learn about the basics of creating an order, please refer to the [quickstart guide](../quickstart.md).
 
