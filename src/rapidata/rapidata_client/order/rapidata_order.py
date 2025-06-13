@@ -207,6 +207,11 @@ class RapidataOrder:
             Exception: If the order is not in processing state.
         """
         logger.info("Opening order preview in browser...")
+        if self.get_status() == OrderState.CREATED:
+            logger.info("Order is still in state created. Setting it to preview.")
+            self.__openapi_service.order_api.order_order_id_preview_post(self.id)
+            logger.info("Order is now in preview state.")
+
         campaign_id = self.__get_campaign_id()
         auth_url = f"https://app.{self.__openapi_service.environment}/order/detail/{self.id}/preview?campaignId={campaign_id}"
         could_open_browser = webbrowser.open(auth_url)

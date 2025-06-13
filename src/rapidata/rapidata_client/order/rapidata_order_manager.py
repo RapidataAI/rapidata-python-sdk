@@ -293,7 +293,7 @@ class RapidataOrderManager:
                              instruction: str,
                              datapoints: list[str],
                              total_comparison_budget: int,
-                             responses_per_comparison: int = 5,
+                             responses_per_comparison: int = 1,
                              data_type: str = RapidataDataTypes.MEDIA,
                              random_comparisons_ratio: float = 0.5,
                              context: Optional[str] = None,
@@ -313,7 +313,7 @@ class RapidataOrderManager:
             instruction (str): The question asked from People when They see two datapoints.
             datapoints (list[str]): A list of datapoints that will participate in the ranking.
             total_comparison_budget (int): The total number of (pairwise-)comparisons that can be made.
-            responses_per_comparison (int, optional): The number of responses collected per comparison.
+            responses_per_comparison (int, optional): The number of responses collected per comparison. Defaults to 1.
             data_type (str, optional): The data type of the datapoints. Defaults to RapidataDataTypes.MEDIA. \n
                 Other option: RapidataDataTypes.TEXT ("text").
             random_comparisons_ratio (float, optional): The fraction of random comparisons in the ranking process.
