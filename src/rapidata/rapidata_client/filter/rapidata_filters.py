@@ -18,13 +18,13 @@ class RapidataFilters:
         This might significantly slow down the number of responses you receive.
     
     Attributes:
-        user_score (UserScoreFilter): The UserScoreFilter instance.
-        age (AgeFilter): The AgeFilter instance.
-        country (CountryFilter): The CountryFilter instance.
-        gender (GenderFilter): The GenderFilter instance.
-        language (LanguageFilter): The LanguageFilter instance.
-        not_filter (NotFilter): The NotFilter instance.
-        or_filter (OrFilter): The OrFilter instance.
+        user_score (UserScoreFilter): Filters for users with a specific user score.
+        age (AgeFilter): Filters for users with a specific age.
+        country (CountryFilter): Filters for users with a specific country.
+        gender (GenderFilter): Filters for users with a specific gender.
+        language (LanguageFilter): Filters for users with a specific language.
+        not_filter (NotFilter): Inverts the filter.
+        or_filter (OrFilter): Combines multiple filters with a logical OR operation.
 
     Example:
         ```python
