@@ -207,7 +207,7 @@ class RapidataOrder:
             Exception: If the order is not in processing state.
         """
         logger.info("Opening order preview in browser...")
-        if self.get_status() in [OrderState.CREATED]:
+        if self.get_status() == OrderState.CREATED:
             logger.info("Order is still in state created. Setting it to preview.")
             self.__openapi_service.order_api.order_order_id_preview_post(self.id)
             logger.info("Order is now in preview state.")
