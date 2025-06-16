@@ -25,12 +25,13 @@ from rapidata.api_client.models.create_datapoint_from_urls_model import CreateDa
 from rapidata.api_client.models.create_datapoint_result import CreateDatapointResult
 from rapidata.api_client.models.create_datapoints_from_s3_bucket_model import CreateDatapointsFromS3BucketModel
 from rapidata.api_client.models.datapoint_metadata_model import DatapointMetadataModel
+from rapidata.api_client.models.datapoint_model_paged_result import DatapointModelPagedResult
 from rapidata.api_client.models.dataset_dataset_id_datapoints_post_request_metadata_inner import DatasetDatasetIdDatapointsPostRequestMetadataInner
-from rapidata.api_client.models.get_datapoints_by_dataset_id_result import GetDatapointsByDatasetIdResult
 from rapidata.api_client.models.get_dataset_by_id_result import GetDatasetByIdResult
 from rapidata.api_client.models.get_dataset_progress_result import GetDatasetProgressResult
 from rapidata.api_client.models.get_failed_datapoints_result import GetFailedDatapointsResult
 from rapidata.api_client.models.import_from_file_result import ImportFromFileResult
+from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.update_dataset_name_model import UpdateDatasetNameModel
 from rapidata.api_client.models.upload_files_from_s3_bucket_model import UploadFilesFromS3BucketModel
 from rapidata.api_client.models.upload_from_s3_result import UploadFromS3Result
@@ -1497,6 +1498,7 @@ class DatasetApi:
     def dataset_dataset_id_datapoints_get(
         self,
         dataset_id: Annotated[StrictStr, Field(description="The id of the dataset to get the datapoints of.")],
+        request: Annotated[Optional[QueryModel], Field(description="The query model to filter, sort, and paginate the results.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1509,12 +1511,14 @@ class DatasetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetDatapointsByDatasetIdResult:
+    ) -> DatapointModelPagedResult:
         """Gets all datapoints of a dataset.
 
 
         :param dataset_id: The id of the dataset to get the datapoints of. (required)
         :type dataset_id: str
+        :param request: The query model to filter, sort, and paginate the results.
+        :type request: QueryModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1539,6 +1543,7 @@ class DatasetApi:
 
         _param = self._dataset_dataset_id_datapoints_get_serialize(
             dataset_id=dataset_id,
+            request=request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1546,7 +1551,7 @@ class DatasetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetDatapointsByDatasetIdResult",
+            '200': "DatapointModelPagedResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1563,6 +1568,7 @@ class DatasetApi:
     def dataset_dataset_id_datapoints_get_with_http_info(
         self,
         dataset_id: Annotated[StrictStr, Field(description="The id of the dataset to get the datapoints of.")],
+        request: Annotated[Optional[QueryModel], Field(description="The query model to filter, sort, and paginate the results.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1575,12 +1581,14 @@ class DatasetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetDatapointsByDatasetIdResult]:
+    ) -> ApiResponse[DatapointModelPagedResult]:
         """Gets all datapoints of a dataset.
 
 
         :param dataset_id: The id of the dataset to get the datapoints of. (required)
         :type dataset_id: str
+        :param request: The query model to filter, sort, and paginate the results.
+        :type request: QueryModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1605,6 +1613,7 @@ class DatasetApi:
 
         _param = self._dataset_dataset_id_datapoints_get_serialize(
             dataset_id=dataset_id,
+            request=request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1612,7 +1621,7 @@ class DatasetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetDatapointsByDatasetIdResult",
+            '200': "DatapointModelPagedResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1629,6 +1638,7 @@ class DatasetApi:
     def dataset_dataset_id_datapoints_get_without_preload_content(
         self,
         dataset_id: Annotated[StrictStr, Field(description="The id of the dataset to get the datapoints of.")],
+        request: Annotated[Optional[QueryModel], Field(description="The query model to filter, sort, and paginate the results.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1647,6 +1657,8 @@ class DatasetApi:
 
         :param dataset_id: The id of the dataset to get the datapoints of. (required)
         :type dataset_id: str
+        :param request: The query model to filter, sort, and paginate the results.
+        :type request: QueryModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1671,6 +1683,7 @@ class DatasetApi:
 
         _param = self._dataset_dataset_id_datapoints_get_serialize(
             dataset_id=dataset_id,
+            request=request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1678,7 +1691,7 @@ class DatasetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetDatapointsByDatasetIdResult",
+            '200': "DatapointModelPagedResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1690,6 +1703,7 @@ class DatasetApi:
     def _dataset_dataset_id_datapoints_get_serialize(
         self,
         dataset_id,
+        request,
         _request_auth,
         _content_type,
         _headers,
@@ -1714,6 +1728,10 @@ class DatasetApi:
         if dataset_id is not None:
             _path_params['datasetId'] = dataset_id
         # process the query parameters
+        if request is not None:
+            
+            _query_params.append(('request', request))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter

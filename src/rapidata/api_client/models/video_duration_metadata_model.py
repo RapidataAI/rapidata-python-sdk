@@ -19,28 +19,22 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.datapoint_asset import DatapointAsset
-from rapidata.api_client.models.rapid_response import RapidResponse
-from rapidata.api_client.models.validation_set_validation_set_id_rapid_post_payload_parameter import ValidationSetValidationSetIdRapidPostPayloadParameter
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetWorkflowResultsResult(BaseModel):
+class VideoDurationMetadataModel(BaseModel):
     """
-    GetWorkflowResultsResult
+    VideoDurationMetadataModel
     """ # noqa: E501
-    rapid_id: StrictStr = Field(alias="rapidId")
-    payload: ValidationSetValidationSetIdRapidPostPayloadParameter
-    asset: DatapointAsset
-    responses: List[RapidResponse]
-    state: StrictStr
-    __properties: ClassVar[List[str]] = ["rapidId", "payload", "asset", "responses", "state"]
+    t: StrictStr = Field(description="Discriminator value for VideoDurationMetadata", alias="_t")
+    duration: StrictStr
+    __properties: ClassVar[List[str]] = ["_t", "duration"]
 
-    @field_validator('state')
-    def state_validate_enum(cls, value):
+    @field_validator('t')
+    def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['Labeling', 'Paused', 'Incomplete', 'Flagged', 'Done', 'None']):
-            raise ValueError("must be one of enum values ('Labeling', 'Paused', 'Incomplete', 'Flagged', 'Done', 'None')")
+        if value not in set(['VideoDurationMetadata']):
+            raise ValueError("must be one of enum values ('VideoDurationMetadata')")
         return value
 
     model_config = ConfigDict(
@@ -61,7 +55,7 @@ class GetWorkflowResultsResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetWorkflowResultsResult from a JSON string"""
+        """Create an instance of VideoDurationMetadataModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -82,24 +76,11 @@ class GetWorkflowResultsResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of payload
-        if self.payload:
-            _dict['payload'] = self.payload.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of asset
-        if self.asset:
-            _dict['asset'] = self.asset.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in responses (list)
-        _items = []
-        if self.responses:
-            for _item_responses in self.responses:
-                if _item_responses:
-                    _items.append(_item_responses.to_dict())
-            _dict['responses'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetWorkflowResultsResult from a dict"""
+        """Create an instance of VideoDurationMetadataModel from a dict"""
         if obj is None:
             return None
 
@@ -107,11 +88,8 @@ class GetWorkflowResultsResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "rapidId": obj.get("rapidId"),
-            "payload": ValidationSetValidationSetIdRapidPostPayloadParameter.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
-            "asset": DatapointAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
-            "responses": [RapidResponse.from_dict(_item) for _item in obj["responses"]] if obj.get("responses") is not None else None,
-            "state": obj.get("state")
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'VideoDurationMetadata',
+            "duration": obj.get("duration")
         })
         return _obj
 

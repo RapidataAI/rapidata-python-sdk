@@ -121,47 +121,6 @@
         }
       }
     },
-    "/datapoint/getalldatapointsbydatasetid": {
-      "get": {
-        "tags": [
-          "Datapoint"
-        ],
-        "summary": "Get all datapoints of a dataset.",
-        "parameters": [
-          {
-            "name": "datasetId",
-            "in": "query",
-            "description": "The id of the dataset to get the datapoints of.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetDatapointsByDatasetIdResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetDatapointsByDatasetIdResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetDatapointsByDatasetIdResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/datapoint/delete": {
       "delete": {
         "tags": [
@@ -283,6 +242,18 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "request",
+            "in": "query",
+            "description": "The query model to filter, sort, and paginate the results.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
+              }
+            }
           }
         ],
         "responses": {
@@ -291,17 +262,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetDatapointsByDatasetIdResult"
+                  "$ref": "#/components/schemas/DatapointModelPagedResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetDatapointsByDatasetIdResult"
+                  "$ref": "#/components/schemas/DatapointModelPagedResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetDatapointsByDatasetIdResult"
+                  "$ref": "#/components/schemas/DatapointModelPagedResult"
                 }
               }
             }
@@ -3897,6 +3868,239 @@
         "deprecated": true
       }
     },
+    "/validation-set/{validationSetId}/rapid": {
+      "post": {
+        "tags": [
+          "ValidationSet"
+        ],
+        "summary": "Creates a new rapid for a validation set from multiple possible sources.",
+        "description": "Multiple files, texts, and urls can be provided.\nIf multiple files are provided, a multi-asset rapid will be created,\nmeaning that all sources provided will be stored as sub-assets of the rapid.\n            \nIf multiple rapids are desired, one should not pass in multiple files, texts, or urls,\ninstead, one should call this endpoint multiple times with the desired file, text, or url per rapid.\n            \nThe request must be a multipart form request, where each parameter is sent as a separate part.\nThe files, texts, and urls can be mixed and matched as needed, however, at least one of them must be provided,\nand one should make sure that mixing them makes sense for the dataset.",
+        "parameters": [
+          {
+            "name": "validationSetId",
+            "in": "path",
+            "description": "The id of the validation set.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ValidationSetId",
+            "in": "query",
+            "description": "The ID of the validation set to add the rapid to.",
+            "schema": {
+              "type": "string",
+              "deprecated": true
+            }
+          },
+          {
+            "name": "Payload",
+            "in": "query",
+            "description": "The payload to use for the rapid.",
+            "schema": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/TranscriptionPayload"
+                },
+                {
+                  "$ref": "#/components/schemas/ScrubPayload"
+                },
+                {
+                  "$ref": "#/components/schemas/PolygonPayload"
+                },
+                {
+                  "$ref": "#/components/schemas/NamedEntityPayload"
+                },
+                {
+                  "$ref": "#/components/schemas/LocatePayload"
+                },
+                {
+                  "$ref": "#/components/schemas/LinePayload"
+                },
+                {
+                  "$ref": "#/components/schemas/FreeTextPayload"
+                },
+                {
+                  "$ref": "#/components/schemas/ComparePayload"
+                },
+                {
+                  "$ref": "#/components/schemas/ClassifyPayload"
+                },
+                {
+                  "$ref": "#/components/schemas/BoundingBoxPayload"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          },
+          {
+            "name": "Metadata",
+            "in": "query",
+            "description": "Some metadata to attach to the rapid.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/PrivateTextMetadataInput"
+                  },
+                  {
+                    "$ref": "#/components/schemas/PromptAssetMetadataInput"
+                  },
+                  {
+                    "$ref": "#/components/schemas/PromptMetadataInput"
+                  },
+                  {
+                    "$ref": "#/components/schemas/PublicTextMetadataInput"
+                  },
+                  {
+                    "$ref": "#/components/schemas/TranscriptionMetadataInput"
+                  }
+                ],
+                "discriminator": {
+                  "propertyName": "_t"
+                }
+              }
+            }
+          },
+          {
+            "name": "Truth",
+            "in": "query",
+            "description": "The ground truth for the rapid.",
+            "schema": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/TranscriptionTruth"
+                },
+                {
+                  "$ref": "#/components/schemas/ScrubTruth"
+                },
+                {
+                  "$ref": "#/components/schemas/PolygonTruth"
+                },
+                {
+                  "$ref": "#/components/schemas/NamedEntityTruth"
+                },
+                {
+                  "$ref": "#/components/schemas/LocateBoxTruth"
+                },
+                {
+                  "$ref": "#/components/schemas/LineTruth"
+                },
+                {
+                  "$ref": "#/components/schemas/EmptyValidationTruth"
+                },
+                {
+                  "$ref": "#/components/schemas/CompareTruth"
+                },
+                {
+                  "$ref": "#/components/schemas/MultiCompareTruth"
+                },
+                {
+                  "$ref": "#/components/schemas/SkipTruth"
+                },
+                {
+                  "$ref": "#/components/schemas/AttachCategoryTruth"
+                },
+                {
+                  "$ref": "#/components/schemas/BoundingBoxTruth"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          },
+          {
+            "name": "RandomCorrectProbability",
+            "in": "query",
+            "description": "The probability for an answer to be correct when randomly guessing.",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "name": "Explanation",
+            "in": "query",
+            "description": "An explanation for the users if they answer the rapid incorrectly.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "description": "The files to upload from the local storage. Must be either images or videos."
+                  },
+                  "text": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "The texts to upload. The length limit is set at 256 characters per text."
+                  },
+                  "url": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Creates an asset from a url. The url needs to point to a publicly accessible resource.\nThe server will download the resource and store it as an asset in the background.\n<remarks>\n    Additionally, to the urls having to be publicly accessible, they need to support HTTP HEAD requests.\n</remarks>"
+                  }
+                }
+              },
+              "encoding": {
+                "text": {
+                  "contentType": "text/plain",
+                  "style": "form",
+                  "explode": true
+                },
+                "url": {
+                  "contentType": "text/plain",
+                  "style": "form",
+                  "explode": true
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddValidationRapidResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddValidationRapidResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddValidationRapidResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/validation-set/{validationSetId}/rapid/files": {
       "post": {
         "tags": [
@@ -6255,6 +6459,36 @@
           }
         }
       }
+    },
+    "/campaign/boost/status": {
+      "get": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "Gets the status of the boost.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BoostQueryResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BoostQueryResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BoostQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -6684,6 +6918,41 @@
         },
         "additionalProperties": false
       },
+      "DatapointModelPagedResult": {
+        "required": [
+          "items",
+          "page",
+          "pageSize",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DatapointModel"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
       "DatapointState": {
         "enum": [
           "Ready",
@@ -6788,6 +7057,9 @@
                   "$ref": "#/components/schemas/SourceUrlMetadataModel"
                 },
                 {
+                  "$ref": "#/components/schemas/StreamsMetadataModel"
+                },
+                {
                   "$ref": "#/components/schemas/TextMetadataModel"
                 },
                 {
@@ -6795,6 +7067,9 @@
                 },
                 {
                   "$ref": "#/components/schemas/TranslatedPromptMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/VideoDurationMetadataModel"
                 }
               ],
               "discriminator": {
@@ -6807,6 +7082,61 @@
           }
         },
         "additionalProperties": false
+      },
+      "Filter": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {
+            "nullable": true
+          },
+          "operator": {
+            "enum": [
+              "Eq",
+              "Neq",
+              "Gt",
+              "Gte",
+              "Lt",
+              "Lte",
+              "Contains",
+              "StartsWith",
+              "EndsWith"
+            ],
+            "type": "string"
+          },
+          "logic": {
+            "enum": [
+              "And",
+              "Or",
+              "Not"
+            ],
+            "type": "string"
+          },
+          "filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "FilterOperator": {
+        "enum": [
+          "Eq",
+          "Neq",
+          "Gt",
+          "Gte",
+          "Lt",
+          "Lte",
+          "Contains",
+          "StartsWith",
+          "EndsWith"
+        ],
+        "type": "string"
       },
       "GetDatapointByIdResult": {
         "required": [
@@ -6859,21 +7189,6 @@
           "createdAt": {
             "type": "string",
             "format": "date-time"
-          }
-        },
-        "additionalProperties": false
-      },
-      "GetDatapointsByDatasetIdResult": {
-        "required": [
-          "list"
-        ],
-        "type": "object",
-        "properties": {
-          "list": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DatapointModel"
-            }
           }
         },
         "additionalProperties": false
@@ -7001,6 +7316,14 @@
         },
         "additionalProperties": false
       },
+      "LogicOperator": {
+        "enum": [
+          "And",
+          "Or",
+          "Not"
+        ],
+        "type": "string"
+      },
       "MultiAssetModel": {
         "title": "MultiAsset",
         "required": [
@@ -7074,6 +7397,9 @@
                   "$ref": "#/components/schemas/SourceUrlMetadataModel"
                 },
                 {
+                  "$ref": "#/components/schemas/StreamsMetadataModel"
+                },
+                {
                   "$ref": "#/components/schemas/TextMetadataModel"
                 },
                 {
@@ -7081,6 +7407,9 @@
                 },
                 {
                   "$ref": "#/components/schemas/TranslatedPromptMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/VideoDurationMetadataModel"
                 }
               ],
               "discriminator": {
@@ -7144,6 +7473,9 @@
                   "$ref": "#/components/schemas/SourceUrlMetadataModel"
                 },
                 {
+                  "$ref": "#/components/schemas/StreamsMetadataModel"
+                },
+                {
                   "$ref": "#/components/schemas/TextMetadataModel"
                 },
                 {
@@ -7151,6 +7483,9 @@
                 },
                 {
                   "$ref": "#/components/schemas/TranslatedPromptMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/VideoDurationMetadataModel"
                 }
               ],
               "discriminator": {
@@ -7183,6 +7518,21 @@
           },
           "originalFilename": {
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PageInfo": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -7313,6 +7663,73 @@
         },
         "additionalProperties": false
       },
+      "QueryModel": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "$ref": "#/components/schemas/PageInfo"
+          },
+          "filter": {
+            "$ref": "#/components/schemas/RootFilter"
+          },
+          "sortCriteria": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SortCriterion"
+            },
+            "default": null,
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RootFilter": {
+        "type": "object",
+        "properties": {
+          "filters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Filter"
+            }
+          },
+          "logic": {
+            "enum": [
+              "And",
+              "Or",
+              "Not"
+            ],
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SortCriterion": {
+        "required": [
+          "direction",
+          "propertyName"
+        ],
+        "type": "object",
+        "properties": {
+          "propertyName": {
+            "type": "string"
+          },
+          "direction": {
+            "enum": [
+              "Asc",
+              "Desc"
+            ],
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SortDirection": {
+        "enum": [
+          "Asc",
+          "Desc"
+        ],
+        "type": "string"
+      },
       "SourceUrlMetadataModel": {
         "title": "SourceUrlMetadataModel",
         "required": [
@@ -7332,6 +7749,37 @@
           },
           "url": {
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "StreamsMetadataModel": {
+        "title": "StreamsMetadata",
+        "required": [
+          "_t",
+          "hasAudio",
+          "hasSubtitles",
+          "hasVideo"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "StreamsMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for StreamsMetadata",
+            "default": "StreamsMetadata",
+            "example": "StreamsMetadata"
+          },
+          "hasVideo": {
+            "type": "boolean"
+          },
+          "hasAudio": {
+            "type": "boolean"
+          },
+          "hasSubtitles": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -7390,6 +7838,9 @@
                   "$ref": "#/components/schemas/SourceUrlMetadataModel"
                 },
                 {
+                  "$ref": "#/components/schemas/StreamsMetadataModel"
+                },
+                {
                   "$ref": "#/components/schemas/TextMetadataModel"
                 },
                 {
@@ -7397,6 +7848,9 @@
                 },
                 {
                   "$ref": "#/components/schemas/TranslatedPromptMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/VideoDurationMetadataModel"
                 }
               ],
               "discriminator": {
@@ -7683,6 +8137,30 @@
         },
         "additionalProperties": false
       },
+      "VideoDurationMetadataModel": {
+        "title": "VideoDurationMetadata",
+        "required": [
+          "_t",
+          "duration"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "VideoDurationMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for VideoDurationMetadata",
+            "default": "VideoDurationMetadata",
+            "example": "VideoDurationMetadata"
+          },
+          "duration": {
+            "type": "string",
+            "format": "date-span"
+          }
+        },
+        "additionalProperties": false
+      },
       "AbTestSelection": {
         "title": "AbTestSelection",
         "required": [
@@ -7722,6 +8200,9 @@
                   "$ref": "#/components/schemas/DemographicSelection"
                 },
                 {
+                  "$ref": "#/components/schemas/EffortCappedSelection"
+                },
+                {
                   "$ref": "#/components/schemas/LabelingSelection"
                 },
                 {
@@ -7754,6 +8235,9 @@
                 },
                 {
                   "$ref": "#/components/schemas/DemographicSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/EffortCappedSelection"
                 },
                 {
                   "$ref": "#/components/schemas/LabelingSelection"
@@ -7942,6 +8426,9 @@
                 },
                 {
                   "$ref": "#/components/schemas/DemographicSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/EffortCappedSelection"
                 },
                 {
                   "$ref": "#/components/schemas/LabelingSelection"
@@ -8504,6 +8991,9 @@
                   "$ref": "#/components/schemas/DemographicSelection"
                 },
                 {
+                  "$ref": "#/components/schemas/EffortCappedSelection"
+                },
+                {
                   "$ref": "#/components/schemas/LabelingSelection"
                 },
                 {
@@ -8788,6 +9278,43 @@
         "additionalProperties": false,
         "description": "The Early Stopping Referee can currently only be used for classification tasks and will stop once a certain\nthreshold is reached or the maximum number of votes is collected."
       },
+      "EffortCappedSelection": {
+        "title": "EffortCappedSelection",
+        "required": [
+          "_t",
+          "effortBudget"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "EffortCappedSelection"
+            ],
+            "type": "string",
+            "description": "Discriminator value for EffortCappedSelection",
+            "default": "EffortCappedSelection",
+            "example": "EffortCappedSelection"
+          },
+          "effortBudget": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "retrievalMode": {
+            "enum": [
+              "Random",
+              "Shuffled",
+              "Sequential"
+            ],
+            "type": "string"
+          },
+          "maxIterations": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "EloConfigModel": {
         "type": "object",
         "properties": {
@@ -8884,61 +9411,6 @@
         },
         "additionalProperties": false,
         "description": "The model for submitting feedback."
-      },
-      "Filter": {
-        "type": "object",
-        "properties": {
-          "field": {
-            "type": "string",
-            "nullable": true
-          },
-          "value": {
-            "nullable": true
-          },
-          "operator": {
-            "enum": [
-              "Eq",
-              "Neq",
-              "Gt",
-              "Gte",
-              "Lt",
-              "Lte",
-              "Contains",
-              "StartsWith",
-              "EndsWith"
-            ],
-            "type": "string"
-          },
-          "logic": {
-            "enum": [
-              "And",
-              "Or",
-              "Not"
-            ],
-            "type": "string"
-          },
-          "filters": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Filter"
-            }
-          }
-        },
-        "additionalProperties": false
-      },
-      "FilterOperator": {
-        "enum": [
-          "Eq",
-          "Neq",
-          "Gt",
-          "Gte",
-          "Lt",
-          "Lte",
-          "Contains",
-          "StartsWith",
-          "EndsWith"
-        ],
-        "type": "string"
       },
       "FreeTextRapidBlueprint": {
         "title": "FreeTextBlueprint",
@@ -9176,14 +9648,6 @@
           }
         },
         "additionalProperties": false
-      },
-      "LogicOperator": {
-        "enum": [
-          "And",
-          "Or",
-          "Not"
-        ],
-        "type": "string"
       },
       "NaiveRefereeModel": {
         "title": "NaiveReferee",
@@ -9510,21 +9974,6 @@
         ],
         "type": "string"
       },
-      "PageInfo": {
-        "type": "object",
-        "properties": {
-          "index": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "PolygonRapidBlueprint": {
         "title": "PolygonBlueprint",
         "required": [
@@ -9564,26 +10013,6 @@
           },
           "isPublic": {
             "type": "boolean"
-          }
-        },
-        "additionalProperties": false
-      },
-      "QueryModel": {
-        "type": "object",
-        "properties": {
-          "page": {
-            "$ref": "#/components/schemas/PageInfo"
-          },
-          "filter": {
-            "$ref": "#/components/schemas/RootFilter"
-          },
-          "sortCriteria": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SortCriterion"
-            },
-            "default": null,
-            "nullable": true
           }
         },
         "additionalProperties": false
@@ -9635,26 +10064,6 @@
           "Sequential"
         ],
         "type": "string"
-      },
-      "RootFilter": {
-        "type": "object",
-        "properties": {
-          "filters": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Filter"
-            }
-          },
-          "logic": {
-            "enum": [
-              "And",
-              "Or",
-              "Not"
-            ],
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
       },
       "ScrubRapidBlueprint": {
         "title": "ScrubBlueprint",
@@ -9743,6 +10152,9 @@
                   "$ref": "#/components/schemas/DemographicSelection"
                 },
                 {
+                  "$ref": "#/components/schemas/EffortCappedSelection"
+                },
+                {
                   "$ref": "#/components/schemas/LabelingSelection"
                 },
                 {
@@ -9821,33 +10233,6 @@
         },
         "additionalProperties": false,
         "description": "If the SimpleWorkflow is chosen, each datapoint uploaded will correspond to a single task to be solved.\nThis is the most commonly chosen workflow."
-      },
-      "SortCriterion": {
-        "required": [
-          "direction",
-          "propertyName"
-        ],
-        "type": "object",
-        "properties": {
-          "propertyName": {
-            "type": "string"
-          },
-          "direction": {
-            "enum": [
-              "Asc",
-              "Desc"
-            ],
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "SortDirection": {
-        "enum": [
-          "Asc",
-          "Desc"
-        ],
-        "type": "string"
       },
       "StaticSelection": {
         "title": "StaticSelection",
@@ -11157,6 +11542,9 @@
                   "$ref": "#/components/schemas/SourceUrlMetadataModel"
                 },
                 {
+                  "$ref": "#/components/schemas/StreamsMetadataModel"
+                },
+                {
                   "$ref": "#/components/schemas/TextMetadataModel"
                 },
                 {
@@ -11164,6 +11552,9 @@
                 },
                 {
                   "$ref": "#/components/schemas/TranslatedPromptMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/VideoDurationMetadataModel"
                 }
               ],
               "discriminator": {
@@ -12600,6 +12991,9 @@
                   "$ref": "#/components/schemas/SourceUrlMetadataModel"
                 },
                 {
+                  "$ref": "#/components/schemas/StreamsMetadataModel"
+                },
+                {
                   "$ref": "#/components/schemas/TextMetadataModel"
                 },
                 {
@@ -12607,6 +13001,9 @@
                 },
                 {
                   "$ref": "#/components/schemas/TranslatedPromptMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/VideoDurationMetadataModel"
                 }
               ],
               "discriminator": {
@@ -13973,6 +14370,9 @@
                   "$ref": "#/components/schemas/DemographicSelection"
                 },
                 {
+                  "$ref": "#/components/schemas/EffortCappedSelection"
+                },
+                {
                   "$ref": "#/components/schemas/LabelingSelection"
                 },
                 {
@@ -14217,10 +14617,16 @@
                   "$ref": "#/components/schemas/SourceUrlMetadata"
                 },
                 {
+                  "$ref": "#/components/schemas/StreamsMetadata"
+                },
+                {
                   "$ref": "#/components/schemas/TextMetadata"
                 },
                 {
                   "$ref": "#/components/schemas/TranscriptionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/VideoDurationMetadata"
                 }
               ],
               "discriminator": {
@@ -14322,10 +14728,16 @@
                   "$ref": "#/components/schemas/SourceUrlMetadata"
                 },
                 {
+                  "$ref": "#/components/schemas/StreamsMetadata"
+                },
+                {
                   "$ref": "#/components/schemas/TextMetadata"
                 },
                 {
                   "$ref": "#/components/schemas/TranscriptionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/VideoDurationMetadata"
                 }
               ],
               "discriminator": {
@@ -14528,10 +14940,16 @@
                   "$ref": "#/components/schemas/SourceUrlMetadata"
                 },
                 {
+                  "$ref": "#/components/schemas/StreamsMetadata"
+                },
+                {
                   "$ref": "#/components/schemas/TextMetadata"
                 },
                 {
                   "$ref": "#/components/schemas/TranscriptionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/VideoDurationMetadata"
                 }
               ],
               "discriminator": {
@@ -14724,10 +15142,16 @@
                   "$ref": "#/components/schemas/SourceUrlMetadata"
                 },
                 {
+                  "$ref": "#/components/schemas/StreamsMetadata"
+                },
+                {
                   "$ref": "#/components/schemas/TextMetadata"
                 },
                 {
                   "$ref": "#/components/schemas/TranscriptionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/VideoDurationMetadata"
                 }
               ],
               "discriminator": {
@@ -14783,10 +15207,16 @@
                   "$ref": "#/components/schemas/SourceUrlMetadata"
                 },
                 {
+                  "$ref": "#/components/schemas/StreamsMetadata"
+                },
+                {
                   "$ref": "#/components/schemas/TextMetadata"
                 },
                 {
                   "$ref": "#/components/schemas/TranscriptionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/VideoDurationMetadata"
                 }
               ],
               "discriminator": {
@@ -15091,6 +15521,37 @@
         },
         "additionalProperties": false
       },
+      "StreamsMetadata": {
+        "title": "StreamsMetadata",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "StreamsMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for StreamsMetadata",
+            "default": "StreamsMetadata",
+            "example": "StreamsMetadata"
+          },
+          "hasAudio": {
+            "type": "boolean"
+          },
+          "hasVideo": {
+            "type": "boolean"
+          },
+          "hasSubtitles": {
+            "type": "boolean"
+          },
+          "visibilities": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "TextAsset": {
         "title": "TextAsset",
         "required": [
@@ -15140,10 +15601,16 @@
                   "$ref": "#/components/schemas/SourceUrlMetadata"
                 },
                 {
+                  "$ref": "#/components/schemas/StreamsMetadata"
+                },
+                {
                   "$ref": "#/components/schemas/TextMetadata"
                 },
                 {
                   "$ref": "#/components/schemas/TranscriptionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/VideoDurationMetadata"
                 }
               ],
               "discriminator": {
@@ -15228,6 +15695,33 @@
         "additionalProperties": false,
         "description": "The model containing the new configuration for a campaign."
       },
+      "VideoDurationMetadata": {
+        "title": "VideoDurationMetadata",
+        "required": [
+          "_t",
+          "duration"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "VideoDurationMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for VideoDurationMetadata",
+            "default": "VideoDurationMetadata",
+            "example": "VideoDurationMetadata"
+          },
+          "duration": {
+            "type": "string",
+            "format": "date-span"
+          },
+          "visibilities": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "WorkflowArtifactModel": {
         "title": "WorkflowArtifactModel",
         "required": [
@@ -15294,6 +15788,55 @@
           }
         },
         "additionalProperties": false
+      },
+      "BoostQueryResult": {
+        "required": [
+          "activeCampaigns",
+          "inactiveCampaigns",
+          "status",
+          "unknownCampaigns"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "Active",
+              "Inactive",
+              "Partial",
+              "Unknown"
+            ],
+            "type": "string"
+          },
+          "activeCampaigns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "inactiveCampaigns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "unknownCampaigns": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "BoostStatus": {
+        "enum": [
+          "Active",
+          "Inactive",
+          "Partial",
+          "Unknown"
+        ],
+        "type": "string"
       },
       "CampaignQueryResult": {
         "required": [

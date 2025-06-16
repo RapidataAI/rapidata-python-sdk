@@ -16,14 +16,15 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictBytes, StrictStr
-from typing import List, Optional, Tuple, Union
+from pydantic import Field, StrictBytes, StrictFloat, StrictInt, StrictStr
+from typing import Any, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 from rapidata.api_client.models.add_validation_rapid_model import AddValidationRapidModel
 from rapidata.api_client.models.add_validation_rapid_result import AddValidationRapidResult
 from rapidata.api_client.models.add_validation_text_rapid_model import AddValidationTextRapidModel
 from rapidata.api_client.models.create_empty_validation_set_result import CreateEmptyValidationSetResult
 from rapidata.api_client.models.create_validation_set_model import CreateValidationSetModel
+from rapidata.api_client.models.dataset_dataset_id_datapoints_post_request_metadata_inner import DatasetDatasetIdDatapointsPostRequestMetadataInner
 from rapidata.api_client.models.get_available_validation_sets_result import GetAvailableValidationSetsResult
 from rapidata.api_client.models.get_validation_rapids_result_paged_result import GetValidationRapidsResultPagedResult
 from rapidata.api_client.models.get_validation_set_by_id_result import GetValidationSetByIdResult
@@ -3846,6 +3847,434 @@ class ValidationSetApi:
         return self.api_client.param_serialize(
             method='POST',
             resource_path='/validation-set/{validationSetId}/rapid/files',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def validation_set_validation_set_id_rapid_post(
+        self,
+        validation_set_id: Annotated[StrictStr, Field(description="The id of the validation set.")],
+        validation_set_id2: Annotated[Optional[StrictStr], Field(description="The ID of the validation set to add the rapid to.")] = None,
+        payload: Annotated[Optional[Any], Field(description="The payload to use for the rapid.")] = None,
+        metadata: Annotated[Optional[List[DatasetDatasetIdDatapointsPostRequestMetadataInner]], Field(description="Some metadata to attach to the rapid.")] = None,
+        truth: Annotated[Optional[Any], Field(description="The ground truth for the rapid.")] = None,
+        random_correct_probability: Annotated[Optional[Union[StrictFloat, StrictInt]], Field(description="The probability for an answer to be correct when randomly guessing.")] = None,
+        explanation: Annotated[Optional[StrictStr], Field(description="An explanation for the users if they answer the rapid incorrectly.")] = None,
+        file: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The files to upload from the local storage. Must be either images or videos.")] = None,
+        text: Annotated[Optional[List[StrictStr]], Field(description="The texts to upload. The length limit is set at 256 characters per text.")] = None,
+        url: Annotated[Optional[List[StrictStr]], Field(description="Creates an asset from a url. The url needs to point to a publicly accessible resource. The server will download the resource and store it as an asset in the background. <remarks>     Additionally, to the urls having to be publicly accessible, they need to support HTTP HEAD requests. </remarks>")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> AddValidationRapidResult:
+        """Creates a new rapid for a validation set from multiple possible sources.
+
+        Multiple files, texts, and urls can be provided. If multiple files are provided, a multi-asset rapid will be created, meaning that all sources provided will be stored as sub-assets of the rapid.              If multiple rapids are desired, one should not pass in multiple files, texts, or urls, instead, one should call this endpoint multiple times with the desired file, text, or url per rapid.              The request must be a multipart form request, where each parameter is sent as a separate part. The files, texts, and urls can be mixed and matched as needed, however, at least one of them must be provided, and one should make sure that mixing them makes sense for the dataset.
+
+        :param validation_set_id: The id of the validation set. (required)
+        :type validation_set_id: str
+        :param validation_set_id2: The ID of the validation set to add the rapid to.
+        :type validation_set_id2: str
+        :param payload: The payload to use for the rapid.
+        :type payload: ValidationSetValidationSetIdRapidPostPayloadParameter
+        :param metadata: Some metadata to attach to the rapid.
+        :type metadata: List[DatasetDatasetIdDatapointsPostRequestMetadataInner]
+        :param truth: The ground truth for the rapid.
+        :type truth: ValidationSetValidationSetIdRapidPostTruthParameter
+        :param random_correct_probability: The probability for an answer to be correct when randomly guessing.
+        :type random_correct_probability: float
+        :param explanation: An explanation for the users if they answer the rapid incorrectly.
+        :type explanation: str
+        :param file: The files to upload from the local storage. Must be either images or videos.
+        :type file: List[bytearray]
+        :param text: The texts to upload. The length limit is set at 256 characters per text.
+        :type text: List[str]
+        :param url: Creates an asset from a url. The url needs to point to a publicly accessible resource. The server will download the resource and store it as an asset in the background. <remarks>     Additionally, to the urls having to be publicly accessible, they need to support HTTP HEAD requests. </remarks>
+        :type url: List[str]
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._validation_set_validation_set_id_rapid_post_serialize(
+            validation_set_id=validation_set_id,
+            validation_set_id2=validation_set_id2,
+            payload=payload,
+            metadata=metadata,
+            truth=truth,
+            random_correct_probability=random_correct_probability,
+            explanation=explanation,
+            file=file,
+            text=text,
+            url=url,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "AddValidationRapidResult",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def validation_set_validation_set_id_rapid_post_with_http_info(
+        self,
+        validation_set_id: Annotated[StrictStr, Field(description="The id of the validation set.")],
+        validation_set_id2: Annotated[Optional[StrictStr], Field(description="The ID of the validation set to add the rapid to.")] = None,
+        payload: Annotated[Optional[Any], Field(description="The payload to use for the rapid.")] = None,
+        metadata: Annotated[Optional[List[DatasetDatasetIdDatapointsPostRequestMetadataInner]], Field(description="Some metadata to attach to the rapid.")] = None,
+        truth: Annotated[Optional[Any], Field(description="The ground truth for the rapid.")] = None,
+        random_correct_probability: Annotated[Optional[Union[StrictFloat, StrictInt]], Field(description="The probability for an answer to be correct when randomly guessing.")] = None,
+        explanation: Annotated[Optional[StrictStr], Field(description="An explanation for the users if they answer the rapid incorrectly.")] = None,
+        file: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The files to upload from the local storage. Must be either images or videos.")] = None,
+        text: Annotated[Optional[List[StrictStr]], Field(description="The texts to upload. The length limit is set at 256 characters per text.")] = None,
+        url: Annotated[Optional[List[StrictStr]], Field(description="Creates an asset from a url. The url needs to point to a publicly accessible resource. The server will download the resource and store it as an asset in the background. <remarks>     Additionally, to the urls having to be publicly accessible, they need to support HTTP HEAD requests. </remarks>")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[AddValidationRapidResult]:
+        """Creates a new rapid for a validation set from multiple possible sources.
+
+        Multiple files, texts, and urls can be provided. If multiple files are provided, a multi-asset rapid will be created, meaning that all sources provided will be stored as sub-assets of the rapid.              If multiple rapids are desired, one should not pass in multiple files, texts, or urls, instead, one should call this endpoint multiple times with the desired file, text, or url per rapid.              The request must be a multipart form request, where each parameter is sent as a separate part. The files, texts, and urls can be mixed and matched as needed, however, at least one of them must be provided, and one should make sure that mixing them makes sense for the dataset.
+
+        :param validation_set_id: The id of the validation set. (required)
+        :type validation_set_id: str
+        :param validation_set_id2: The ID of the validation set to add the rapid to.
+        :type validation_set_id2: str
+        :param payload: The payload to use for the rapid.
+        :type payload: ValidationSetValidationSetIdRapidPostPayloadParameter
+        :param metadata: Some metadata to attach to the rapid.
+        :type metadata: List[DatasetDatasetIdDatapointsPostRequestMetadataInner]
+        :param truth: The ground truth for the rapid.
+        :type truth: ValidationSetValidationSetIdRapidPostTruthParameter
+        :param random_correct_probability: The probability for an answer to be correct when randomly guessing.
+        :type random_correct_probability: float
+        :param explanation: An explanation for the users if they answer the rapid incorrectly.
+        :type explanation: str
+        :param file: The files to upload from the local storage. Must be either images or videos.
+        :type file: List[bytearray]
+        :param text: The texts to upload. The length limit is set at 256 characters per text.
+        :type text: List[str]
+        :param url: Creates an asset from a url. The url needs to point to a publicly accessible resource. The server will download the resource and store it as an asset in the background. <remarks>     Additionally, to the urls having to be publicly accessible, they need to support HTTP HEAD requests. </remarks>
+        :type url: List[str]
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._validation_set_validation_set_id_rapid_post_serialize(
+            validation_set_id=validation_set_id,
+            validation_set_id2=validation_set_id2,
+            payload=payload,
+            metadata=metadata,
+            truth=truth,
+            random_correct_probability=random_correct_probability,
+            explanation=explanation,
+            file=file,
+            text=text,
+            url=url,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "AddValidationRapidResult",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def validation_set_validation_set_id_rapid_post_without_preload_content(
+        self,
+        validation_set_id: Annotated[StrictStr, Field(description="The id of the validation set.")],
+        validation_set_id2: Annotated[Optional[StrictStr], Field(description="The ID of the validation set to add the rapid to.")] = None,
+        payload: Annotated[Optional[Any], Field(description="The payload to use for the rapid.")] = None,
+        metadata: Annotated[Optional[List[DatasetDatasetIdDatapointsPostRequestMetadataInner]], Field(description="Some metadata to attach to the rapid.")] = None,
+        truth: Annotated[Optional[Any], Field(description="The ground truth for the rapid.")] = None,
+        random_correct_probability: Annotated[Optional[Union[StrictFloat, StrictInt]], Field(description="The probability for an answer to be correct when randomly guessing.")] = None,
+        explanation: Annotated[Optional[StrictStr], Field(description="An explanation for the users if they answer the rapid incorrectly.")] = None,
+        file: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The files to upload from the local storage. Must be either images or videos.")] = None,
+        text: Annotated[Optional[List[StrictStr]], Field(description="The texts to upload. The length limit is set at 256 characters per text.")] = None,
+        url: Annotated[Optional[List[StrictStr]], Field(description="Creates an asset from a url. The url needs to point to a publicly accessible resource. The server will download the resource and store it as an asset in the background. <remarks>     Additionally, to the urls having to be publicly accessible, they need to support HTTP HEAD requests. </remarks>")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Creates a new rapid for a validation set from multiple possible sources.
+
+        Multiple files, texts, and urls can be provided. If multiple files are provided, a multi-asset rapid will be created, meaning that all sources provided will be stored as sub-assets of the rapid.              If multiple rapids are desired, one should not pass in multiple files, texts, or urls, instead, one should call this endpoint multiple times with the desired file, text, or url per rapid.              The request must be a multipart form request, where each parameter is sent as a separate part. The files, texts, and urls can be mixed and matched as needed, however, at least one of them must be provided, and one should make sure that mixing them makes sense for the dataset.
+
+        :param validation_set_id: The id of the validation set. (required)
+        :type validation_set_id: str
+        :param validation_set_id2: The ID of the validation set to add the rapid to.
+        :type validation_set_id2: str
+        :param payload: The payload to use for the rapid.
+        :type payload: ValidationSetValidationSetIdRapidPostPayloadParameter
+        :param metadata: Some metadata to attach to the rapid.
+        :type metadata: List[DatasetDatasetIdDatapointsPostRequestMetadataInner]
+        :param truth: The ground truth for the rapid.
+        :type truth: ValidationSetValidationSetIdRapidPostTruthParameter
+        :param random_correct_probability: The probability for an answer to be correct when randomly guessing.
+        :type random_correct_probability: float
+        :param explanation: An explanation for the users if they answer the rapid incorrectly.
+        :type explanation: str
+        :param file: The files to upload from the local storage. Must be either images or videos.
+        :type file: List[bytearray]
+        :param text: The texts to upload. The length limit is set at 256 characters per text.
+        :type text: List[str]
+        :param url: Creates an asset from a url. The url needs to point to a publicly accessible resource. The server will download the resource and store it as an asset in the background. <remarks>     Additionally, to the urls having to be publicly accessible, they need to support HTTP HEAD requests. </remarks>
+        :type url: List[str]
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._validation_set_validation_set_id_rapid_post_serialize(
+            validation_set_id=validation_set_id,
+            validation_set_id2=validation_set_id2,
+            payload=payload,
+            metadata=metadata,
+            truth=truth,
+            random_correct_probability=random_correct_probability,
+            explanation=explanation,
+            file=file,
+            text=text,
+            url=url,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "AddValidationRapidResult",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _validation_set_validation_set_id_rapid_post_serialize(
+        self,
+        validation_set_id,
+        validation_set_id2,
+        payload,
+        metadata,
+        truth,
+        random_correct_probability,
+        explanation,
+        file,
+        text,
+        url,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+            'Metadata': 'multi',
+            'file': 'csv',
+            'text': 'multi',
+            'url': 'multi',
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if validation_set_id is not None:
+            _path_params['validationSetId'] = validation_set_id
+        # process the query parameters
+        if validation_set_id2 is not None:
+            
+            _query_params.append(('ValidationSetId', validation_set_id2))
+            
+        if payload is not None:
+            
+            _query_params.append(('Payload', payload))
+            
+        if metadata is not None:
+            
+            _query_params.append(('Metadata', metadata))
+            
+        if truth is not None:
+            
+            _query_params.append(('Truth', truth))
+            
+        if random_correct_probability is not None:
+            
+            _query_params.append(('RandomCorrectProbability', random_correct_probability))
+            
+        if explanation is not None:
+            
+            _query_params.append(('Explanation', explanation))
+            
+        # process the header parameters
+        # process the form parameters
+        if file is not None:
+            _files['file'] = file
+        if text is not None:
+            _form_params.append(('text', text))
+        if url is not None:
+            _form_params.append(('url', url))
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'text/plain', 
+                    'application/json', 
+                    'text/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'multipart/form-data'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'bearer', 
+            'oauth2'
+        ]
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/validation-set/{validationSetId}/rapid',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
