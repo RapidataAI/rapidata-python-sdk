@@ -22,9 +22,9 @@ from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, Stri
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.datapoint_asset import DatapointAsset
 from rapidata.api_client.models.file_asset_model_metadata_value import FileAssetModelMetadataValue
-from rapidata.api_client.models.get_validation_rapids_result_payload import GetValidationRapidsResultPayload
 from rapidata.api_client.models.get_validation_rapids_result_truth import GetValidationRapidsResultTruth
 from rapidata.api_client.models.rapid_model_referee import RapidModelReferee
+from rapidata.api_client.models.validation_set_validation_set_id_rapid_post_payload_parameter import ValidationSetValidationSetIdRapidPostPayloadParameter
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -33,7 +33,7 @@ class RapidModel(BaseModel):
     RapidModel
     """ # noqa: E501
     id: StrictStr
-    payload: GetValidationRapidsResultPayload
+    payload: ValidationSetValidationSetIdRapidPostPayloadParameter
     referee: RapidModelReferee
     asset: DatapointAsset
     metadata: Dict[str, FileAssetModelMetadataValue]
@@ -150,7 +150,7 @@ class RapidModel(BaseModel):
 
         _obj = cls.model_validate({
             "id": obj.get("id"),
-            "payload": GetValidationRapidsResultPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
+            "payload": ValidationSetValidationSetIdRapidPostPayloadParameter.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
             "referee": RapidModelReferee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
             "asset": DatapointAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "metadata": dict(

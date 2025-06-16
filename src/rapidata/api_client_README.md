@@ -56,13 +56,14 @@ configuration.api_key['bearer'] = os.environ["API_KEY"]
 with rapidata.api_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = rapidata.api_client.CampaignApi(api_client)
-    campaign_id = 'campaign_id_example' # str | id of the campaign that should be paused
 
     try:
-        # Pauses a campaign.
-        api_instance.campaign_campaign_id_pause_post(campaign_id)
+        # Gets the status of the boost.
+        api_response = api_instance.campaign_boost_status_get()
+        print("The response of CampaignApi->campaign_boost_status_get:\n")
+        pprint(api_response)
     except ApiException as e:
-        print("Exception when calling CampaignApi->campaign_campaign_id_pause_post: %s\n" % e)
+        print("Exception when calling CampaignApi->campaign_boost_status_get: %s\n" % e)
 
 ```
 
@@ -72,6 +73,7 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*CampaignApi* | [**campaign_boost_status_get**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_status_get) | **GET** /campaign/boost/status | Gets the status of the boost.
 *CampaignApi* | [**campaign_campaign_id_pause_post**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_pause_post) | **POST** /campaign/{campaignId}/pause | Pauses a campaign.
 *CampaignApi* | [**campaign_campaign_id_resume_post**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_resume_post) | **POST** /campaign/{campaignId}/resume | Resumes a campaign.
 *CampaignApi* | [**campaign_monitor_get**](rapidata/api_client/docs/CampaignApi.md#campaign_monitor_get) | **GET** /campaign/monitor | The monitor endpoint is used to monitor the health of the service
@@ -97,7 +99,6 @@ Class | Method | HTTP request | Description
 *DatapointApi* | [**datapoint_datapoint_id_delete**](rapidata/api_client/docs/DatapointApi.md#datapoint_datapoint_id_delete) | **DELETE** /datapoint/{datapointId} | Deletes a datapoint by its id.
 *DatapointApi* | [**datapoint_datapoint_id_get**](rapidata/api_client/docs/DatapointApi.md#datapoint_datapoint_id_get) | **GET** /datapoint/{datapointId} | Gets a datapoint by its id.
 *DatapointApi* | [**datapoint_delete_delete**](rapidata/api_client/docs/DatapointApi.md#datapoint_delete_delete) | **DELETE** /datapoint/delete | Delete a datapoint.
-*DatapointApi* | [**datapoint_getalldatapointsbydatasetid_get**](rapidata/api_client/docs/DatapointApi.md#datapoint_getalldatapointsbydatasetid_get) | **GET** /datapoint/getalldatapointsbydatasetid | Get all datapoints of a dataset.
 *DatapointApi* | [**datapoint_getbyid_get**](rapidata/api_client/docs/DatapointApi.md#datapoint_getbyid_get) | **GET** /datapoint/getbyid | Get a datapoint by its id.
 *DatasetApi* | [**dataset_createdatapoint_post**](rapidata/api_client/docs/DatasetApi.md#dataset_createdatapoint_post) | **POST** /dataset/createdatapoint | Creates a single datapoint.
 *DatasetApi* | [**dataset_creattextdatapoint_post**](rapidata/api_client/docs/DatasetApi.md#dataset_creattextdatapoint_post) | **POST** /dataset/creattextdatapoint | Creates new datapoints from text sources.
@@ -199,6 +200,7 @@ Class | Method | HTTP request | Description
 *ValidationSetApi* | [**validation_set_validation_set_id_export_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_export_get) | **GET** /validation-set/{validationSetId}/export | Exports all rapids of a validation-set to a file.
 *ValidationSetApi* | [**validation_set_validation_set_id_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_get) | **GET** /validation-set/{validationSetId} | Gets a validation set by the id.
 *ValidationSetApi* | [**validation_set_validation_set_id_rapid_files_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_rapid_files_post) | **POST** /validation-set/{validationSetId}/rapid/files | Adds a new validation rapid to the specified validation set using files to create the assets.
+*ValidationSetApi* | [**validation_set_validation_set_id_rapid_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_rapid_post) | **POST** /validation-set/{validationSetId}/rapid | Creates a new rapid for a validation set from multiple possible sources.
 *ValidationSetApi* | [**validation_set_validation_set_id_rapid_texts_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_rapid_texts_post) | **POST** /validation-set/{validationSetId}/rapid/texts | Adds a new validation rapid to the specified validation set using text sources to create the assets.
 *ValidationSetApi* | [**validation_set_validation_set_id_rapids_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_rapids_get) | **GET** /validation-set/{validationSetId}/rapids | Queries the validation rapids for a specific validation set.
 *ValidationSetApi* | [**validation_set_zip_compare_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_zip_compare_post) | **POST** /validation-set/zip/compare | Imports a compare validation set from a zip file.
@@ -240,6 +242,8 @@ Class | Method | HTTP request | Description
  - [AttachCategoryResult](rapidata/api_client/docs/AttachCategoryResult.md)
  - [AttachCategoryTruth](rapidata/api_client/docs/AttachCategoryTruth.md)
  - [BaseError](rapidata/api_client/docs/BaseError.md)
+ - [BoostQueryResult](rapidata/api_client/docs/BoostQueryResult.md)
+ - [BoostStatus](rapidata/api_client/docs/BoostStatus.md)
  - [BoundingBoxPayload](rapidata/api_client/docs/BoundingBoxPayload.md)
  - [BoundingBoxRapidBlueprint](rapidata/api_client/docs/BoundingBoxRapidBlueprint.md)
  - [BoundingBoxResult](rapidata/api_client/docs/BoundingBoxResult.md)
@@ -312,6 +316,7 @@ Class | Method | HTTP request | Description
  - [DatapointAsset](rapidata/api_client/docs/DatapointAsset.md)
  - [DatapointMetadataModel](rapidata/api_client/docs/DatapointMetadataModel.md)
  - [DatapointModel](rapidata/api_client/docs/DatapointModel.md)
+ - [DatapointModelPagedResult](rapidata/api_client/docs/DatapointModelPagedResult.md)
  - [DatapointState](rapidata/api_client/docs/DatapointState.md)
  - [DatasetArtifactModel](rapidata/api_client/docs/DatasetArtifactModel.md)
  - [DatasetDatasetIdDatapointsPostRequestMetadataInner](rapidata/api_client/docs/DatasetDatasetIdDatapointsPostRequestMetadataInner.md)
@@ -320,6 +325,7 @@ Class | Method | HTTP request | Description
  - [DemographicMetadataModel](rapidata/api_client/docs/DemographicMetadataModel.md)
  - [DemographicSelection](rapidata/api_client/docs/DemographicSelection.md)
  - [EarlyStoppingRefereeModel](rapidata/api_client/docs/EarlyStoppingRefereeModel.md)
+ - [EffortCappedSelection](rapidata/api_client/docs/EffortCappedSelection.md)
  - [EloConfig](rapidata/api_client/docs/EloConfig.md)
  - [EloConfigModel](rapidata/api_client/docs/EloConfigModel.md)
  - [EmptyValidationTruth](rapidata/api_client/docs/EmptyValidationTruth.md)
@@ -346,7 +352,6 @@ Class | Method | HTTP request | Description
  - [GetCompareWorkflowResultsResult](rapidata/api_client/docs/GetCompareWorkflowResultsResult.md)
  - [GetCompareWorkflowResultsResultPagedResult](rapidata/api_client/docs/GetCompareWorkflowResultsResultPagedResult.md)
  - [GetDatapointByIdResult](rapidata/api_client/docs/GetDatapointByIdResult.md)
- - [GetDatapointsByDatasetIdResult](rapidata/api_client/docs/GetDatapointsByDatasetIdResult.md)
  - [GetDatasetByIdResult](rapidata/api_client/docs/GetDatasetByIdResult.md)
  - [GetDatasetProgressResult](rapidata/api_client/docs/GetDatasetProgressResult.md)
  - [GetFailedDatapointsResult](rapidata/api_client/docs/GetFailedDatapointsResult.md)
@@ -360,7 +365,6 @@ Class | Method | HTTP request | Description
  - [GetValidationRapidsResult](rapidata/api_client/docs/GetValidationRapidsResult.md)
  - [GetValidationRapidsResultAsset](rapidata/api_client/docs/GetValidationRapidsResultAsset.md)
  - [GetValidationRapidsResultPagedResult](rapidata/api_client/docs/GetValidationRapidsResultPagedResult.md)
- - [GetValidationRapidsResultPayload](rapidata/api_client/docs/GetValidationRapidsResultPayload.md)
  - [GetValidationRapidsResultTruth](rapidata/api_client/docs/GetValidationRapidsResultTruth.md)
  - [GetValidationSetByIdResult](rapidata/api_client/docs/GetValidationSetByIdResult.md)
  - [GetWorkflowByIdResult](rapidata/api_client/docs/GetWorkflowByIdResult.md)
@@ -479,6 +483,8 @@ Class | Method | HTTP request | Description
  - [SourceUrlMetadataModel](rapidata/api_client/docs/SourceUrlMetadataModel.md)
  - [StaticSelection](rapidata/api_client/docs/StaticSelection.md)
  - [StickyState](rapidata/api_client/docs/StickyState.md)
+ - [StreamsMetadata](rapidata/api_client/docs/StreamsMetadata.md)
+ - [StreamsMetadataModel](rapidata/api_client/docs/StreamsMetadataModel.md)
  - [SubmitCocoModel](rapidata/api_client/docs/SubmitCocoModel.md)
  - [SubmitCocoResult](rapidata/api_client/docs/SubmitCocoResult.md)
  - [TextAsset](rapidata/api_client/docs/TextAsset.md)
@@ -515,6 +521,10 @@ Class | Method | HTTP request | Description
  - [ValidationSetModel](rapidata/api_client/docs/ValidationSetModel.md)
  - [ValidationSetModelPagedResult](rapidata/api_client/docs/ValidationSetModelPagedResult.md)
  - [ValidationSetOverviewModel](rapidata/api_client/docs/ValidationSetOverviewModel.md)
+ - [ValidationSetValidationSetIdRapidPostPayloadParameter](rapidata/api_client/docs/ValidationSetValidationSetIdRapidPostPayloadParameter.md)
+ - [ValidationSetValidationSetIdRapidPostTruthParameter](rapidata/api_client/docs/ValidationSetValidationSetIdRapidPostTruthParameter.md)
+ - [VideoDurationMetadata](rapidata/api_client/docs/VideoDurationMetadata.md)
+ - [VideoDurationMetadataModel](rapidata/api_client/docs/VideoDurationMetadataModel.md)
  - [WorkflowAggregationStepModel](rapidata/api_client/docs/WorkflowAggregationStepModel.md)
  - [WorkflowArtifactModel](rapidata/api_client/docs/WorkflowArtifactModel.md)
  - [WorkflowConfigArtifactModel](rapidata/api_client/docs/WorkflowConfigArtifactModel.md)
