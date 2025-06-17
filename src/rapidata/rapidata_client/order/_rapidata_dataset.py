@@ -10,7 +10,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
 
 from typing import cast, Sequence, Generator
-from rapidata.rapidata_client.logging import logger, RapidataOutputManager
+from rapidata.rapidata_client.logging import logger, managed_print, RapidataOutputManager
 import time
 import threading
 
@@ -142,7 +142,7 @@ class RapidataDataset:
                     # Exponential backoff: wait 1s, then 2s, then 4s
                     retry_delay = 2 ** attempt
                     time.sleep(retry_delay)
-                    print("\nRetrying...\n")
+                    managed_print(f"\nRetrying {attempt + 1} of {max_retries}...\n")
                     
         # If we get here, all retries failed
         logger.error(f"\nUpload failed for {identifiers_to_track} after {max_retries} attempts. Final error: {str(last_exception)}")
