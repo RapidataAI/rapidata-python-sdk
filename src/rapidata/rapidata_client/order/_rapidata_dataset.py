@@ -10,7 +10,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
 
 from typing import cast, Sequence, Generator
-from rapidata.rapidata_client.logging import logger, RapidataOutputManager
+from rapidata.rapidata_client.logging import logger, managed_print, RapidataOutputManager
 import time
 import threading
 
@@ -79,14 +79,16 @@ class RapidataDataset:
         media_asset: MediaAsset | MultiAsset, 
         meta_list: Sequence[Metadata] | None, 
         index: int,
+        max_retries: int = 3,
     ) -> tuple[list[str], list[str]]:
         """
-        Process single upload with error tracking.
+        Process single upload with retry logic and error tracking.
         
         Args:
             media_asset: MediaAsset or MultiAsset to upload
             meta_list: Optional sequence of metadata for the asset
             index: Sort index for the upload
+            max_retries: Maximum number of retry attempts (default: 3)
             
         Returns:
             tuple[list[str], list[str]]: Lists of successful and failed identifiers
@@ -95,44 +97,56 @@ class RapidataDataset:
         local_failed: list[str] = []
         identifiers_to_track: list[str] = []
         
-        try:
-            # Get identifier for this upload (URL or file path)
-            if isinstance(media_asset, MediaAsset):
-                assets = [media_asset]
-                identifier = media_asset._url if media_asset._url else media_asset.path
-                identifiers_to_track = [identifier] if identifier else []
-            elif isinstance(media_asset, MultiAsset):
-                assets = cast(list[MediaAsset], media_asset.assets)
-                identifiers_to_track = [
-                    (asset._url if asset._url else cast(str, asset.path)) 
-                    for asset in assets
-                ]
-            else:
-                raise ValueError(f"Unsupported asset type: {type(media_asset)}")
+        # Get identifier for this upload (URL or file path)
+        if isinstance(media_asset, MediaAsset):
+            assets = [media_asset]
+            identifier = media_asset._url if media_asset._url else media_asset.path
+            identifiers_to_track = [identifier] if identifier else []
+        elif isinstance(media_asset, MultiAsset):
+            assets = cast(list[MediaAsset], media_asset.assets)
+            identifiers_to_track = [
+                (asset._url if asset._url else cast(str, asset.path)) 
+                for asset in assets
+            ]
+        else:
+            raise ValueError(f"Unsupported asset type: {type(media_asset)}")
 
-            metadata: list[DatasetDatasetIdDatapointsPostRequestMetadataInner] = []
-            if meta_list:
-                for meta in meta_list:
-                    meta_model = meta.to_model() if meta else None
-                    if meta_model:
-                        metadata.append(DatasetDatasetIdDatapointsPostRequestMetadataInner(meta_model))
+        metadata: list[DatasetDatasetIdDatapointsPostRequestMetadataInner] = []
+        if meta_list:
+            for meta in meta_list:
+                meta_model = meta.to_model() if meta else None
+                if meta_model:
+                    metadata.append(DatasetDatasetIdDatapointsPostRequestMetadataInner(meta_model))
 
-            local_paths = [asset.to_file() for asset in assets if asset.is_local()]
-            urls = [asset.path for asset in assets if not asset.is_local()]
+        local_paths = [asset.to_file() for asset in assets if asset.is_local()]
+        urls = [asset.path for asset in assets if not asset.is_local()]
 
-            self.openapi_service.dataset_api.dataset_dataset_id_datapoints_post(
-                dataset_id=self.dataset_id,
-                file=local_paths,
-                url=urls,
-                metadata=metadata,
-                sort_index=index,
-            )
-
-            local_successful.extend(identifiers_to_track)
-
-        except Exception as e:
-            logger.error(f"\nUpload failed for {identifiers_to_track}: {str(e)}") # \n to avoid same line as tqdm
-            local_failed.extend(identifiers_to_track)
+        last_exception = None
+        for attempt in range(max_retries):
+            try:
+                self.openapi_service.dataset_api.dataset_dataset_id_datapoints_post(
+                    dataset_id=self.dataset_id,
+                    file=local_paths,
+                    url=urls,
+                    metadata=metadata,
+                    sort_index=index,
+                )
+                
+                # If we get here, the upload was successful
+                local_successful.extend(identifiers_to_track)
+                return local_successful, local_failed
+                
+            except Exception as e:
+                last_exception = e
+                if attempt < max_retries - 1:
+                    # Exponential backoff: wait 1s, then 2s, then 4s
+                    retry_delay = 2 ** attempt
+                    time.sleep(retry_delay)
+                    managed_print(f"\nRetrying {attempt + 1} of {max_retries}...\n")
+                    
+        # If we get here, all retries failed
+        logger.error(f"\nUpload failed for {identifiers_to_track} after {max_retries} attempts. Final error: {str(last_exception)}")
+        local_failed.extend(identifiers_to_track)
 
         return local_successful, local_failed
 
