@@ -3,7 +3,7 @@ from itertools import zip_longest
 from rapidata.api_client.models.create_datapoint_from_text_sources_model import CreateDatapointFromTextSourcesModel
 from rapidata.api_client.models.dataset_dataset_id_datapoints_post_request_metadata_inner import DatasetDatasetIdDatapointsPostRequestMetadataInner
 from rapidata.rapidata_client.metadata._base_metadata import Metadata
-from rapidata.rapidata_client.assets import TextAsset, MediaAsset, MultiAsset
+from rapidata.rapidata_client.assets import TextAsset, MediaAsset, MultiAsset, BaseAsset
 from rapidata.service import LocalFileService
 from rapidata.service.openapi_service import OpenAPIService
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -16,7 +16,6 @@ import threading
 
 
 def chunk_list(lst: list, chunk_size: int) -> Generator:
-    """Split list into chunks to prevent resource exhaustion"""
     for i in range(0, len(lst), chunk_size):
         yield lst[i:i + chunk_size]
 
@@ -26,6 +25,43 @@ class RapidataDataset:
         self.dataset_id = dataset_id
         self.openapi_service = openapi_service
         self.local_file_service = LocalFileService()
+
+    def _get_effective_asset_type(self, datapoints: Sequence[BaseAsset]) -> type:
+        if not datapoints:
+            raise ValueError("Cannot determine asset type from empty datapoints list.")
+            
+        first_item = datapoints[0]
+        
+        if isinstance(first_item, MultiAsset):
+            if not first_item.assets:
+                raise ValueError("MultiAsset cannot be empty.")
+            return type(first_item.assets[0])
+        
+        return type(first_item)
+
+    def _add_datapoints(
+        self,
+        datapoints: Sequence[BaseAsset],
+        metadata_list: Sequence[Sequence[Metadata]] | None = None,
+        max_workers: int = 10,
+    ):
+        effective_asset_type = self._get_effective_asset_type(datapoints)
+        
+        for item in datapoints:
+            if isinstance(item, MultiAsset):
+                if not all(isinstance(asset, effective_asset_type) for asset in item.assets):
+                    raise ValueError("All MultiAssets must contain the same type of assets.")
+            elif not isinstance(item, (MediaAsset, TextAsset, MultiAsset)):
+                raise ValueError("All datapoints must be MediaAsset, TextAsset, or MultiAsset.")
+        
+        if issubclass(effective_asset_type, MediaAsset):
+            media_datapoints = cast(list[MediaAsset] | list[MultiAsset], datapoints)
+            self._add_media_from_paths(media_datapoints, metadata_list, max_workers)
+        elif issubclass(effective_asset_type, TextAsset):
+            text_datapoints = cast(list[TextAsset] | list[MultiAsset], datapoints)
+            self._add_texts(text_datapoints, metadata_list)
+        else:
+            raise ValueError(f"Unsupported asset type: {effective_asset_type}")
 
     def _add_texts(
         self,
@@ -60,7 +96,7 @@ class RapidataDataset:
                 metadata=metadata,
             )
 
-            upload_response = self.openapi_service.dataset_api.dataset_dataset_id_datapoints_texts_post(dataset_id=self.dataset_id, create_datapoint_from_text_sources_model=model)
+            self.openapi_service.dataset_api.dataset_dataset_id_datapoints_texts_post(dataset_id=self.dataset_id, create_datapoint_from_text_sources_model=model)
 
         total_uploads = len(text_assets)
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
@@ -355,7 +391,7 @@ class RapidataDataset:
         self,
         media_paths: list[MediaAsset] | list[MultiAsset],
         multi_metadata: Sequence[Sequence[Metadata]] | None = None,
-        max_workers: int = 5,
+        max_workers: int = 10,
         chunk_size: int = 50,
         progress_poll_interval: float = 0.5,
     ) -> tuple[list[str], list[str]]:

@@ -149,50 +149,8 @@ class RapidataOrderBuilder:
         logger.debug(f"Order created: {order}")
         logger.debug("Adding media to the order.")
 
-        if all(isinstance(item, MediaAsset) for item in self.__assets) and self.__dataset:
-            assets = cast(list[MediaAsset], self.__assets)
-            self.__dataset._add_media_from_paths(assets, self.__multi_metadata, max_upload_workers)
-
-        elif (
-            all(isinstance(item, TextAsset) for item in self.__assets) and self.__dataset
-        ):
-            assets = cast(list[TextAsset], self.__assets)
-            self.__dataset._add_texts(assets, self.__multi_metadata)
-
-        elif (
-            all(isinstance(item, MultiAsset) for item in self.__assets) and self.__dataset
-        ):
-            multi_assets = cast(list[MultiAsset], self.__assets)
-
-            # Check if all MultiAssets contain the same type of assets
-            first_asset_type = type(multi_assets[0].assets[0])
-            if not all(
-                isinstance(asset, first_asset_type)
-                for multi_asset in multi_assets
-                for asset in multi_asset.assets
-            ):
-                raise ValueError(
-                    "All MultiAssets must contain the same type of assets (either all MediaAssets or all TextAssets)."
-                )
-
-            # Process based on the asset type
-            if issubclass(first_asset_type, MediaAsset):
-                self.__dataset._add_media_from_paths(
-                    multi_assets, self.__multi_metadata, max_upload_workers
-                )
-
-            elif issubclass(first_asset_type, TextAsset):
-                self.__dataset._add_texts(multi_assets, self.__multi_metadata)
-
-            else:
-                raise ValueError(
-                    "MultiAsset must contain MediaAssets or TextAssets objects."
-                )
-
-        elif self.__dataset:
-            raise ValueError(
-                "Media paths must all be of the same type: MediaAsset, TextAsset, or MultiAsset."
-            )
+        if self.__dataset:
+            self.__dataset._add_datapoints(self.__assets, self.__multi_metadata, max_upload_workers)
         
         logger.debug("Media added to the order.")
         logger.debug("Setting order to preview")
