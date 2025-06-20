@@ -70,7 +70,7 @@ nav:
   - quickstart.md
   - Understanding the Results: understanding_the_results.md
   - Improve Quality: improve_order_quality.md
-  - Improve Efficency: confidence_stopping.md
+  - Confidence Stopping: confidence_stopping.md
   - Human Prompting Guide: human_prompting.md
   - Task Examples:
       - Classification: examples/classify_order.md
