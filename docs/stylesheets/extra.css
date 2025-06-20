@@ -7,3 +7,16 @@
 .tabbed-set>input:checked+label+.tabbed-content {
     padding-top: 100.5rem;
 }
+
+.login-button {
+    background: linear-gradient(150.81deg, #00ECBB -29.74%, #0077FF 62.28%);
+    color: white;
+    box-shadow: 0 0 #0000, 0 0 #0000, 0 4px 4px 0 #0D111A40;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.625rem;
+    
+    @media screen and (min-width: 1024px) {
+        margin-left: 2rem;
+    }
+}
