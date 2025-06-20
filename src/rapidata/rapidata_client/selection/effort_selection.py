@@ -6,7 +6,7 @@ from rapidata.rapidata_client.selection.retrieval_modes import RetrievalMode
 class EffortEstimationSelection(RapidataSelection):
     
 
-    def __init__(self, effort_budget: int, retrieval_mode: RetrievalMode = RetrievalMode.Sequential, max_iterations: int | None = None):
+    def __init__(self, effort_budget: int, retrieval_mode: RetrievalMode = RetrievalMode.Shuffled, max_iterations: int | None = None):
         self.effort_budget = effort_budget
         self.retrieval_mode = retrieval_mode
         self.max_iterations = max_iterations
