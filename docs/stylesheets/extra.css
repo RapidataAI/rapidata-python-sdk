@@ -15,4 +15,8 @@
     padding: 0.5rem 1rem;
     border-radius: 2rem;
     font-size: 0.625rem;
+    
+    @media screen and (min-width: 1024px) {
+        margin-left: 2rem;
+    }
 }
