@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
   const nav = document.querySelector('.md-header__inner')
-  console.log('nav', nav)
   if (!nav) return;
   const btn = document.createElement('a');
   btn.href = 'https://app.rapidata.ai';
