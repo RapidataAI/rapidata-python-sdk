@@ -7,6 +7,7 @@ from .selection import (
     CappedSelection,
     ShufflingSelection,
     RetrievalMode,
+    EffortEstimationSelection,
 )
 from .metadata import (
     PrivateTextMetadata,

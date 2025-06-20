@@ -4,6 +4,7 @@ from .rapidata_client import (
     RapidataClient,
     DemographicSelection,
     LabelingSelection,
+    EffortEstimationSelection,
     RetrievalMode,
     ValidationSelection,
     ConditionalValidationSelection,
