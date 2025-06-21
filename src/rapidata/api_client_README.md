@@ -82,8 +82,9 @@ Class | Method | HTTP request | Description
 *CampaignApi* | [**campaign_resume_post**](rapidata/api_client/docs/CampaignApi.md#campaign_resume_post) | **POST** /campaign/resume | Resumes a campaign.
 *CampaignApi* | [**campaigns_get**](rapidata/api_client/docs/CampaignApi.md#campaigns_get) | **GET** /campaigns | Queries orders based on a filter, page, and sort criteria.
 *ClientApi* | [**client_client_id_delete**](rapidata/api_client/docs/ClientApi.md#client_client_id_delete) | **DELETE** /client/{clientId} | Deletes a customers&#39; client.
+*ClientApi* | [**client_client_id_get**](rapidata/api_client/docs/ClientApi.md#client_client_id_get) | **GET** /client/{clientId} | Gets a specific client by its ID.
 *ClientApi* | [**client_post**](rapidata/api_client/docs/ClientApi.md#client_post) | **POST** /client | Creates a new client for the current customer.
-*ClientApi* | [**client_query_get**](rapidata/api_client/docs/ClientApi.md#client_query_get) | **GET** /client/query | Gets the clients for the current customer.
+*ClientApi* | [**client_register_post**](rapidata/api_client/docs/ClientApi.md#client_register_post) | **POST** /client/register | Registers a new client dynamically.
 *ClientApi* | [**clients_get**](rapidata/api_client/docs/ClientApi.md#clients_get) | **GET** /clients | Queries the clients for the current customer.
 *CocoApi* | [**coco_coco_set_id_submit_post**](rapidata/api_client/docs/CocoApi.md#coco_coco_set_id_submit_post) | **POST** /coco/{cocoSetId}/submit | Creates a new validation set based on a previously uploaded CoCo set.
 *CocoApi* | [**coco_post**](rapidata/api_client/docs/CocoApi.md#coco_post) | **POST** /coco | Uploads a CoCo set to the system.
@@ -259,6 +260,7 @@ Class | Method | HTTP request | Description
  - [ClassificationMetadataFilterConfig](rapidata/api_client/docs/ClassificationMetadataFilterConfig.md)
  - [ClassificationMetadataModel](rapidata/api_client/docs/ClassificationMetadataModel.md)
  - [ClassifyPayload](rapidata/api_client/docs/ClassifyPayload.md)
+ - [ClientModel](rapidata/api_client/docs/ClientModel.md)
  - [ClientsQueryResult](rapidata/api_client/docs/ClientsQueryResult.md)
  - [ClientsQueryResultPagedResult](rapidata/api_client/docs/ClientsQueryResultPagedResult.md)
  - [CloneDatasetModel](rapidata/api_client/docs/CloneDatasetModel.md)
@@ -287,10 +289,10 @@ Class | Method | HTTP request | Description
  - [CountryUserFilterModel](rapidata/api_client/docs/CountryUserFilterModel.md)
  - [CreateBridgeTokenResult](rapidata/api_client/docs/CreateBridgeTokenResult.md)
  - [CreateClientModel](rapidata/api_client/docs/CreateClientModel.md)
- - [CreateClientResult](rapidata/api_client/docs/CreateClientResult.md)
  - [CreateComplexOrderModel](rapidata/api_client/docs/CreateComplexOrderModel.md)
  - [CreateComplexOrderModelPipeline](rapidata/api_client/docs/CreateComplexOrderModelPipeline.md)
  - [CreateComplexOrderResult](rapidata/api_client/docs/CreateComplexOrderResult.md)
+ - [CreateCustomerClientResult](rapidata/api_client/docs/CreateCustomerClientResult.md)
  - [CreateDatapointFromFilesModel](rapidata/api_client/docs/CreateDatapointFromFilesModel.md)
  - [CreateDatapointFromTextSourcesModel](rapidata/api_client/docs/CreateDatapointFromTextSourcesModel.md)
  - [CreateDatapointFromUrlsModel](rapidata/api_client/docs/CreateDatapointFromUrlsModel.md)
@@ -324,6 +326,7 @@ Class | Method | HTTP request | Description
  - [Demographic](rapidata/api_client/docs/Demographic.md)
  - [DemographicMetadataModel](rapidata/api_client/docs/DemographicMetadataModel.md)
  - [DemographicSelection](rapidata/api_client/docs/DemographicSelection.md)
+ - [DynamicClientRegistrationRequest](rapidata/api_client/docs/DynamicClientRegistrationRequest.md)
  - [EarlyStoppingRefereeModel](rapidata/api_client/docs/EarlyStoppingRefereeModel.md)
  - [EffortCappedSelection](rapidata/api_client/docs/EffortCappedSelection.md)
  - [EloConfig](rapidata/api_client/docs/EloConfig.md)
@@ -379,6 +382,8 @@ Class | Method | HTTP request | Description
  - [ImportFromFileResult](rapidata/api_client/docs/ImportFromFileResult.md)
  - [ImportValidationSetFromFileResult](rapidata/api_client/docs/ImportValidationSetFromFileResult.md)
  - [InspectReportResult](rapidata/api_client/docs/InspectReportResult.md)
+ - [JsonWebKey](rapidata/api_client/docs/JsonWebKey.md)
+ - [JsonWebKeySet](rapidata/api_client/docs/JsonWebKeySet.md)
  - [LabelingSelection](rapidata/api_client/docs/LabelingSelection.md)
  - [LanguageUserFilterModel](rapidata/api_client/docs/LanguageUserFilterModel.md)
  - [Line](rapidata/api_client/docs/Line.md)
