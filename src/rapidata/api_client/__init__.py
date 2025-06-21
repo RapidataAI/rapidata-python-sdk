@@ -87,6 +87,7 @@ from rapidata.api_client.models.classification_metadata import ClassificationMet
 from rapidata.api_client.models.classification_metadata_filter_config import ClassificationMetadataFilterConfig
 from rapidata.api_client.models.classification_metadata_model import ClassificationMetadataModel
 from rapidata.api_client.models.classify_payload import ClassifyPayload
+from rapidata.api_client.models.client_model import ClientModel
 from rapidata.api_client.models.clients_query_result import ClientsQueryResult
 from rapidata.api_client.models.clients_query_result_paged_result import ClientsQueryResultPagedResult
 from rapidata.api_client.models.clone_dataset_model import CloneDatasetModel
@@ -115,10 +116,10 @@ from rapidata.api_client.models.count_metadata_model import CountMetadataModel
 from rapidata.api_client.models.country_user_filter_model import CountryUserFilterModel
 from rapidata.api_client.models.create_bridge_token_result import CreateBridgeTokenResult
 from rapidata.api_client.models.create_client_model import CreateClientModel
-from rapidata.api_client.models.create_client_result import CreateClientResult
 from rapidata.api_client.models.create_complex_order_model import CreateComplexOrderModel
 from rapidata.api_client.models.create_complex_order_model_pipeline import CreateComplexOrderModelPipeline
 from rapidata.api_client.models.create_complex_order_result import CreateComplexOrderResult
+from rapidata.api_client.models.create_customer_client_result import CreateCustomerClientResult
 from rapidata.api_client.models.create_datapoint_from_files_model import CreateDatapointFromFilesModel
 from rapidata.api_client.models.create_datapoint_from_text_sources_model import CreateDatapointFromTextSourcesModel
 from rapidata.api_client.models.create_datapoint_from_urls_model import CreateDatapointFromUrlsModel
@@ -152,6 +153,7 @@ from rapidata.api_client.models.dataset_evaluation_step_model import DatasetEval
 from rapidata.api_client.models.demographic import Demographic
 from rapidata.api_client.models.demographic_metadata_model import DemographicMetadataModel
 from rapidata.api_client.models.demographic_selection import DemographicSelection
+from rapidata.api_client.models.dynamic_client_registration_request import DynamicClientRegistrationRequest
 from rapidata.api_client.models.early_stopping_referee_model import EarlyStoppingRefereeModel
 from rapidata.api_client.models.effort_capped_selection import EffortCappedSelection
 from rapidata.api_client.models.elo_config import EloConfig
@@ -207,6 +209,8 @@ from rapidata.api_client.models.image_dimension_metadata_model import ImageDimen
 from rapidata.api_client.models.import_from_file_result import ImportFromFileResult
 from rapidata.api_client.models.import_validation_set_from_file_result import ImportValidationSetFromFileResult
 from rapidata.api_client.models.inspect_report_result import InspectReportResult
+from rapidata.api_client.models.json_web_key import JsonWebKey
+from rapidata.api_client.models.json_web_key_set import JsonWebKeySet
 from rapidata.api_client.models.labeling_selection import LabelingSelection
 from rapidata.api_client.models.language_user_filter_model import LanguageUserFilterModel
 from rapidata.api_client.models.line import Line

@@ -2576,51 +2576,6 @@
         "deprecated": true
       }
     },
-    "/client/query": {
-      "get": {
-        "tags": [
-          "Client"
-        ],
-        "summary": "Gets the clients for the current customer.",
-        "description": "A client allows a customer to authenticate with the APIs without using their own credentials.\nThis is useful for creating service accounts or other automated processes,\nas when using the Rapidata Python SDK.",
-        "parameters": [
-          {
-            "name": "request",
-            "in": "query",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryModel"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ClientsQueryResultPagedResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ClientsQueryResultPagedResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ClientsQueryResultPagedResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/clients": {
       "get": {
         "tags": [
@@ -2665,6 +2620,69 @@
         }
       }
     },
+    "/client/{clientId}": {
+      "get": {
+        "tags": [
+          "Client"
+        ],
+        "summary": "Gets a specific client by its ID.",
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "path",
+            "description": "The ID of the client to retrieve.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Client"
+        ],
+        "summary": "Deletes a customers' client.",
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "path",
+            "description": "The id of the client to delete.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
     "/client": {
       "post": {
         "tags": [
@@ -2697,17 +2715,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/CreateClientResult"
+                  "$ref": "#/components/schemas/CreateCustomerClientResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CreateClientResult"
+                  "$ref": "#/components/schemas/CreateCustomerClientResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CreateClientResult"
+                  "$ref": "#/components/schemas/CreateCustomerClientResult"
                 }
               }
             }
@@ -2715,26 +2733,52 @@
         }
       }
     },
-    "/client/{clientId}": {
-      "delete": {
+    "/client/register": {
+      "post": {
         "tags": [
           "Client"
         ],
-        "summary": "Deletes a customers' client.",
-        "parameters": [
-          {
-            "name": "clientId",
-            "in": "path",
-            "description": "The id of the client to delete.",
-            "required": true,
-            "schema": {
-              "type": "string"
+        "summary": "Registers a new client dynamically.",
+        "description": "The implementation of this method follows the OpenID Connect Dynamic Client Registration.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DynamicClientRegistrationRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DynamicClientRegistrationRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DynamicClientRegistrationRequest"
+              }
             }
           }
-        ],
+        },
         "responses": {
-          "204": {
-            "description": "No Content"
+          "201": {
+            "description": "Created",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientModel"
+                }
+              }
+            }
           }
         }
       }
@@ -10551,6 +10595,120 @@
         "additionalProperties": false,
         "description": "Model for the workflow split step"
       },
+      "ClientModel": {
+        "required": [
+          "client_id",
+          "client_id_issued_at",
+          "client_name",
+          "client_secret",
+          "client_secret_expires_at",
+          "client_uri",
+          "grant_types",
+          "jwks",
+          "jwks_uri",
+          "logo_uri",
+          "policy_uri",
+          "redirect_uris",
+          "response_types",
+          "tos_uri"
+        ],
+        "type": "object",
+        "properties": {
+          "client_id": {
+            "type": "string",
+            "description": "The unique identifier for the client."
+          },
+          "client_secret": {
+            "type": "string",
+            "description": "The client secret for the client, which is used to authenticate the client",
+            "nullable": true
+          },
+          "client_id_issued_at": {
+            "type": "integer",
+            "description": "The date and time when the client identifier was issued.",
+            "format": "int64",
+            "nullable": true
+          },
+          "client_secret_expires_at": {
+            "type": "integer",
+            "description": "If the client has a secret, this is the date and time when the client secret expires.\nIf the client secret does not expire, this will be 0.",
+            "format": "int64",
+            "nullable": true
+          },
+          "redirect_uris": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of redirection URI strings for use in redirect-based flows\nsuch as the authorization code and implicit flows.",
+            "nullable": true
+          },
+          "grant_types": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of OAuth 2.0 grant type strings that the client can use at the token endpoint.",
+            "nullable": true
+          },
+          "response_types": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of the OAuth 2.0 response type strings that the client can use at the authorization endpoint.",
+            "nullable": true
+          },
+          "client_name": {
+            "type": "string",
+            "description": "Human-readable string name of the client to be presented to the end-user during authorization.",
+            "nullable": true
+          },
+          "client_uri": {
+            "type": "string",
+            "description": "URL string of a web page providing information about the client.",
+            "nullable": true
+          },
+          "logo_uri": {
+            "type": "string",
+            "description": "URL string that references a logo for the client.",
+            "nullable": true
+          },
+          "scope": {
+            "type": "string",
+            "description": "String containing a space-separated list of scope values\nthat the client can use when requesting access tokens.",
+            "nullable": true
+          },
+          "contacts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of strings representing ways to contact people responsible for this client,\ntypically email addresses.",
+            "nullable": true
+          },
+          "tos_uri": {
+            "type": "string",
+            "description": "URL string that points to a human-readable terms of service document for the client that describes\na contractual relationship between the end-user and the client that the end-user\naccepts when authorizing the client.",
+            "nullable": true
+          },
+          "policy_uri": {
+            "type": "string",
+            "description": "URL string that points to a human-readable privacy policy document\nthat describes how the deployment organization collects,\nuses, retains, and discloses personal data.",
+            "nullable": true
+          },
+          "jwks_uri": {
+            "type": "string",
+            "description": "URL string referencing the client's JSON Web Key document, which contains the client's public keys.",
+            "nullable": true
+          },
+          "jwks": {
+            "$ref": "#/components/schemas/JsonWebKeySet"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The response containing the id and secret of a dynamically registered client.\nAdditionally, it contains all registered metadata for the client."
+      },
       "ClientsQueryResult": {
         "type": "object",
         "properties": {
@@ -10641,7 +10799,7 @@
         "additionalProperties": false,
         "description": "The model for creating a new client."
       },
-      "CreateClientResult": {
+      "CreateCustomerClientResult": {
         "required": [
           "clientId",
           "clientSecret"
@@ -10657,6 +10815,88 @@
         },
         "additionalProperties": false
       },
+      "DynamicClientRegistrationRequest": {
+        "type": "object",
+        "properties": {
+          "redirect_uris": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of redirection URI strings for use in redirect-based flows\nsuch as the authorization code and implicit flows.",
+            "nullable": true
+          },
+          "grant_types": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of OAuth 2.0 grant type strings that the client can use at the token endpoint.",
+            "nullable": true
+          },
+          "response_types": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of the OAuth 2.0 response type strings that the client can use at the authorization endpoint.",
+            "nullable": true
+          },
+          "client_id": {
+            "type": "string",
+            "description": "Unique identifier for the client.",
+            "nullable": true
+          },
+          "client_name": {
+            "type": "string",
+            "description": "Human-readable string name of the client to be presented to the end-user during authorization.",
+            "nullable": true
+          },
+          "client_uri": {
+            "type": "string",
+            "description": "URL string of a web page providing information about the client.",
+            "nullable": true
+          },
+          "logo_uri": {
+            "type": "string",
+            "description": "URL string that references a logo for the client.",
+            "nullable": true
+          },
+          "scope": {
+            "type": "string",
+            "description": "String containing a space-separated list of scope values\nthat the client can use when requesting access tokens.",
+            "nullable": true
+          },
+          "contacts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of strings representing ways to contact people responsible for this client,\ntypically email addresses.",
+            "nullable": true
+          },
+          "tos_uri": {
+            "type": "string",
+            "description": "URL string that points to a human-readable terms of service document for the client that describes\na contractual relationship between the end-user and the client that the end-user\naccepts when authorizing the client.",
+            "nullable": true
+          },
+          "policy_uri": {
+            "type": "string",
+            "description": "URL string that points to a human-readable privacy policy document\nthat describes how the deployment organization collects,\nuses, retains, and discloses personal data.",
+            "nullable": true
+          },
+          "jwks_uri": {
+            "type": "string",
+            "description": "URL string referencing the client's JSON Web Key document, which contains the client's public keys.",
+            "nullable": true
+          },
+          "jwks": {
+            "$ref": "#/components/schemas/JsonWebKeySet"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The request body for dynamic client registration."
+      },
       "GoogleOneTapLoginModel": {
         "required": [
           "idToken"
@@ -10670,6 +10910,126 @@
         },
         "additionalProperties": false,
         "description": "The model for the Google One Tap login."
+      },
+      "JsonWebKey": {
+        "type": "object",
+        "properties": {
+          "alg": {
+            "type": "string",
+            "nullable": true
+          },
+          "crv": {
+            "type": "string",
+            "nullable": true
+          },
+          "d": {
+            "type": "string",
+            "nullable": true
+          },
+          "dp": {
+            "type": "string",
+            "nullable": true
+          },
+          "dq": {
+            "type": "string",
+            "nullable": true
+          },
+          "e": {
+            "type": "string",
+            "nullable": true
+          },
+          "k": {
+            "type": "string",
+            "nullable": true
+          },
+          "key_ops": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true,
+            "readOnly": true
+          },
+          "kid": {
+            "type": "string",
+            "nullable": true
+          },
+          "kty": {
+            "type": "string",
+            "nullable": true
+          },
+          "n": {
+            "type": "string",
+            "nullable": true
+          },
+          "oth": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true,
+            "readOnly": true
+          },
+          "p": {
+            "type": "string",
+            "nullable": true
+          },
+          "q": {
+            "type": "string",
+            "nullable": true
+          },
+          "qi": {
+            "type": "string",
+            "nullable": true
+          },
+          "use": {
+            "type": "string",
+            "nullable": true
+          },
+          "x": {
+            "type": "string",
+            "nullable": true
+          },
+          "x5c": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true,
+            "readOnly": true
+          },
+          "x5t": {
+            "type": "string",
+            "nullable": true
+          },
+          "x5t#S256": {
+            "type": "string",
+            "nullable": true
+          },
+          "x5u": {
+            "type": "string",
+            "nullable": true
+          },
+          "y": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": {}
+      },
+      "JsonWebKeySet": {
+        "type": "object",
+        "properties": {
+          "keys": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JsonWebKey"
+            },
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": {}
       },
       "NewsletterModel": {
         "required": [

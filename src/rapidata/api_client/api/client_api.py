@@ -19,9 +19,11 @@ from typing_extensions import Annotated
 from pydantic import Field, StrictStr
 from typing import Optional
 from typing_extensions import Annotated
+from rapidata.api_client.models.client_model import ClientModel
 from rapidata.api_client.models.clients_query_result_paged_result import ClientsQueryResultPagedResult
 from rapidata.api_client.models.create_client_model import CreateClientModel
-from rapidata.api_client.models.create_client_result import CreateClientResult
+from rapidata.api_client.models.create_customer_client_result import CreateCustomerClientResult
+from rapidata.api_client.models.dynamic_client_registration_request import DynamicClientRegistrationRequest
 from rapidata.api_client.models.query_model import QueryModel
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
@@ -295,6 +297,267 @@ class ClientApi:
 
 
     @validate_call
+    def client_client_id_get(
+        self,
+        client_id: Annotated[StrictStr, Field(description="The ID of the client to retrieve.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ClientModel:
+        """Gets a specific client by its ID.
+
+
+        :param client_id: The ID of the client to retrieve. (required)
+        :type client_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._client_client_id_get_serialize(
+            client_id=client_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "ClientModel",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def client_client_id_get_with_http_info(
+        self,
+        client_id: Annotated[StrictStr, Field(description="The ID of the client to retrieve.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[ClientModel]:
+        """Gets a specific client by its ID.
+
+
+        :param client_id: The ID of the client to retrieve. (required)
+        :type client_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._client_client_id_get_serialize(
+            client_id=client_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "ClientModel",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def client_client_id_get_without_preload_content(
+        self,
+        client_id: Annotated[StrictStr, Field(description="The ID of the client to retrieve.")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Gets a specific client by its ID.
+
+
+        :param client_id: The ID of the client to retrieve. (required)
+        :type client_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._client_client_id_get_serialize(
+            client_id=client_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "ClientModel",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _client_client_id_get_serialize(
+        self,
+        client_id,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if client_id is not None:
+            _path_params['clientId'] = client_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'text/plain', 
+                    'application/json', 
+                    'text/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'bearer', 
+            'oauth2'
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/client/{clientId}',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
     def client_post(
         self,
         create_client_model: Annotated[Optional[CreateClientModel], Field(description="The model for creating a new client.")] = None,
@@ -310,7 +573,7 @@ class ClientApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> CreateClientResult:
+    ) -> CreateCustomerClientResult:
         """Creates a new client for the current customer.
 
 
@@ -347,7 +610,7 @@ class ClientApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateClientResult",
+            '200': "CreateCustomerClientResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -376,7 +639,7 @@ class ClientApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[CreateClientResult]:
+    ) -> ApiResponse[CreateCustomerClientResult]:
         """Creates a new client for the current customer.
 
 
@@ -413,7 +676,7 @@ class ClientApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateClientResult",
+            '200': "CreateCustomerClientResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -479,7 +742,7 @@ class ClientApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateClientResult",
+            '200': "CreateCustomerClientResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -571,9 +834,9 @@ class ClientApi:
 
 
     @validate_call
-    def client_query_get(
+    def client_register_post(
         self,
-        request: Optional[QueryModel] = None,
+        dynamic_client_registration_request: Optional[DynamicClientRegistrationRequest] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -586,13 +849,13 @@ class ClientApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ClientsQueryResultPagedResult:
-        """(Deprecated) Gets the clients for the current customer.
+    ) -> ClientModel:
+        """Registers a new client dynamically.
 
-        A client allows a customer to authenticate with the APIs without using their own credentials. This is useful for creating service accounts or other automated processes, as when using the Rapidata Python SDK.
+        The implementation of this method follows the OpenID Connect Dynamic Client Registration.
 
-        :param request:
-        :type request: QueryModel
+        :param dynamic_client_registration_request:
+        :type dynamic_client_registration_request: DynamicClientRegistrationRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -614,10 +877,9 @@ class ClientApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
-        warnings.warn("GET /client/query is deprecated.", DeprecationWarning)
 
-        _param = self._client_query_get_serialize(
-            request=request,
+        _param = self._client_register_post_serialize(
+            dynamic_client_registration_request=dynamic_client_registration_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -625,7 +887,7 @@ class ClientApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ClientsQueryResultPagedResult",
+            '201': "ClientModel",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -639,9 +901,9 @@ class ClientApi:
 
 
     @validate_call
-    def client_query_get_with_http_info(
+    def client_register_post_with_http_info(
         self,
-        request: Optional[QueryModel] = None,
+        dynamic_client_registration_request: Optional[DynamicClientRegistrationRequest] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -654,13 +916,13 @@ class ClientApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[ClientsQueryResultPagedResult]:
-        """(Deprecated) Gets the clients for the current customer.
+    ) -> ApiResponse[ClientModel]:
+        """Registers a new client dynamically.
 
-        A client allows a customer to authenticate with the APIs without using their own credentials. This is useful for creating service accounts or other automated processes, as when using the Rapidata Python SDK.
+        The implementation of this method follows the OpenID Connect Dynamic Client Registration.
 
-        :param request:
-        :type request: QueryModel
+        :param dynamic_client_registration_request:
+        :type dynamic_client_registration_request: DynamicClientRegistrationRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -682,10 +944,9 @@ class ClientApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
-        warnings.warn("GET /client/query is deprecated.", DeprecationWarning)
 
-        _param = self._client_query_get_serialize(
-            request=request,
+        _param = self._client_register_post_serialize(
+            dynamic_client_registration_request=dynamic_client_registration_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -693,7 +954,7 @@ class ClientApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ClientsQueryResultPagedResult",
+            '201': "ClientModel",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -707,9 +968,9 @@ class ClientApi:
 
 
     @validate_call
-    def client_query_get_without_preload_content(
+    def client_register_post_without_preload_content(
         self,
-        request: Optional[QueryModel] = None,
+        dynamic_client_registration_request: Optional[DynamicClientRegistrationRequest] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -723,12 +984,12 @@ class ClientApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """(Deprecated) Gets the clients for the current customer.
+        """Registers a new client dynamically.
 
-        A client allows a customer to authenticate with the APIs without using their own credentials. This is useful for creating service accounts or other automated processes, as when using the Rapidata Python SDK.
+        The implementation of this method follows the OpenID Connect Dynamic Client Registration.
 
-        :param request:
-        :type request: QueryModel
+        :param dynamic_client_registration_request:
+        :type dynamic_client_registration_request: DynamicClientRegistrationRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -750,10 +1011,9 @@ class ClientApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
-        warnings.warn("GET /client/query is deprecated.", DeprecationWarning)
 
-        _param = self._client_query_get_serialize(
-            request=request,
+        _param = self._client_register_post_serialize(
+            dynamic_client_registration_request=dynamic_client_registration_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -761,7 +1021,7 @@ class ClientApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ClientsQueryResultPagedResult",
+            '201': "ClientModel",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -770,9 +1030,9 @@ class ClientApi:
         return response_data.response
 
 
-    def _client_query_get_serialize(
+    def _client_register_post_serialize(
         self,
-        request,
+        dynamic_client_registration_request,
         _request_auth,
         _content_type,
         _headers,
@@ -795,13 +1055,11 @@ class ClientApi:
 
         # process the path parameters
         # process the query parameters
-        if request is not None:
-            
-            _query_params.append(('request', request))
-            
         # process the header parameters
         # process the form parameters
         # process the body parameter
+        if dynamic_client_registration_request is not None:
+            _body_params = dynamic_client_registration_request
 
 
         # set the HTTP header `Accept`
@@ -814,6 +1072,21 @@ class ClientApi:
                 ]
             )
 
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json', 
+                        'text/json', 
+                        'application/*+json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
 
         # authentication setting
         _auth_settings: List[str] = [
@@ -822,8 +1095,8 @@ class ClientApi:
         ]
 
         return self.api_client.param_serialize(
-            method='GET',
-            resource_path='/client/query',
+            method='POST',
+            resource_path='/client/register',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
