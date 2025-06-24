@@ -22,6 +22,7 @@ from typing_extensions import Annotated
 from rapidata.api_client.models.create_leaderboard_model import CreateLeaderboardModel
 from rapidata.api_client.models.create_leaderboard_participant_model import CreateLeaderboardParticipantModel
 from rapidata.api_client.models.create_leaderboard_participant_result import CreateLeaderboardParticipantResult
+from rapidata.api_client.models.create_leaderboard_result import CreateLeaderboardResult
 from rapidata.api_client.models.get_leaderboard_by_id_result import GetLeaderboardByIdResult
 from rapidata.api_client.models.get_participant_by_id_result import GetParticipantByIdResult
 from rapidata.api_client.models.leaderboard_query_result_paged_result import LeaderboardQueryResultPagedResult
@@ -326,7 +327,7 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ParticipantByLeaderboardPagedResult:
-        """Creates a participant in a leaderboard.
+        """queries all the participants of a leaderboard by its Id.
 
 
         :param leaderboard_id:  (required)
@@ -396,7 +397,7 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[ParticipantByLeaderboardPagedResult]:
-        """Creates a participant in a leaderboard.
+        """queries all the participants of a leaderboard by its Id.
 
 
         :param leaderboard_id:  (required)
@@ -466,7 +467,7 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Creates a participant in a leaderboard.
+        """queries all the participants of a leaderboard by its Id.
 
 
         :param leaderboard_id:  (required)
@@ -1440,7 +1441,7 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """returns the paged prompts of a leaderboard by its Id.
+        """adds a new prompt to a leaderboard.
 
 
         :param leaderboard_id: The leaderboard id. (required)
@@ -1510,7 +1511,7 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """returns the paged prompts of a leaderboard by its Id.
+        """adds a new prompt to a leaderboard.
 
 
         :param leaderboard_id: The leaderboard id. (required)
@@ -1580,7 +1581,7 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """returns the paged prompts of a leaderboard by its Id.
+        """adds a new prompt to a leaderboard.
 
 
         :param leaderboard_id: The leaderboard id. (required)
@@ -1982,7 +1983,7 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> None:
+    ) -> CreateLeaderboardResult:
         """Creates a new leaderboard with the specified name and criteria.
 
 
@@ -2019,7 +2020,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
+            '200': "CreateLeaderboardResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2048,7 +2049,7 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
+    ) -> ApiResponse[CreateLeaderboardResult]:
         """Creates a new leaderboard with the specified name and criteria.
 
 
@@ -2085,7 +2086,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
+            '200': "CreateLeaderboardResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2151,7 +2152,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
+            '200': "CreateLeaderboardResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2192,6 +2193,15 @@ class LeaderboardApi:
             _body_params = create_leaderboard_model
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'text/plain', 
+                    'application/json', 
+                    'text/json'
+                ]
+            )
 
         # set the HTTP header `Content-Type`
         if _content_type:
