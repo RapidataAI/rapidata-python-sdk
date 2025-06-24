@@ -6645,8 +6645,25 @@
           }
         },
         "responses": {
-          "204": {
-            "description": "No Content"
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateLeaderboardResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateLeaderboardResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateLeaderboardResult"
+                }
+              }
+            }
           }
         }
       }
@@ -6707,7 +6724,7 @@
         "tags": [
           "Leaderboard"
         ],
-        "summary": "returns the paged prompts of a leaderboard by its Id.",
+        "summary": "adds a new prompt to a leaderboard.",
         "parameters": [
           {
             "name": "leaderboardId",
@@ -6756,7 +6773,7 @@
         "tags": [
           "Leaderboard"
         ],
-        "summary": "Creates a participant in a leaderboard.",
+        "summary": "queries all the participants of a leaderboard by its Id.",
         "parameters": [
           {
             "name": "leaderboardId",
@@ -16738,6 +16755,18 @@
             "type": "string"
           },
           "datasetId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateLeaderboardResult": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
             "type": "string"
           }
         },
