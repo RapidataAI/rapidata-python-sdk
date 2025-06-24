@@ -6,6 +6,7 @@ from rapidata.api_client.api.dataset_api import DatasetApi
 from rapidata.api_client.api.order_api import OrderApi
 from rapidata.api_client.api.pipeline_api import PipelineApi
 from rapidata.api_client.api.rapid_api import RapidApi
+from rapidata.api_client.api.leaderboard_api import LeaderboardApi
 from rapidata.api_client.api.validation_set_api import ValidationSetApi
 from rapidata.api_client.api.workflow_api import WorkflowApi
 from rapidata.api_client.configuration import Configuration
@@ -107,6 +108,10 @@ class OpenAPIService:
     @property
     def workflow_api(self) -> WorkflowApi:
         return WorkflowApi(self.api_client)
+    
+    @property
+    def leaderboard_api(self) -> LeaderboardApi:
+        return LeaderboardApi(self.api_client)
 
     def _get_rapidata_package_version(self):
         """
