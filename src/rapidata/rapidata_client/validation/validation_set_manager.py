@@ -73,6 +73,8 @@ class ValidationSetManager:
             ```
             This would mean: first datapoint correct answer is "yes", second datapoint is "no" or "maybe"
         """
+        if not datapoints:
+            raise ValueError("Datapoints cannot be empty")
         
         if len(datapoints) != len(truths):
             raise ValueError("The number of datapoints and truths must be equal")
@@ -154,6 +156,8 @@ class ValidationSetManager:
             ```
             This would mean: first comparison image1.jpg has a cat, second comparison image4.jpg has a cat
         """
+        if not datapoints:
+            raise ValueError("Datapoints cannot be empty")
         
         if len(datapoints) != len(truths):
             raise ValueError("The number of datapoints and truths must be equal")
@@ -229,6 +233,8 @@ class ValidationSetManager:
             ```
             This would mean: first datapoint the correct words are "this" and "example", second datapoint is "with"
             """
+        if not datapoints:
+            raise ValueError("Datapoints cannot be empty")
         
         if not all([isinstance(truth, (list, tuple)) for truth in truths]):
             raise ValueError("Truths must be a list of lists or tuples")
@@ -291,6 +297,8 @@ class ValidationSetManager:
             ```
             This would mean: first datapoint the object is in the top left corner, second datapoint the object is in the center
         """
+        if not datapoints:
+            raise ValueError("Datapoints cannot be empty")
         
         if len(datapoints) != len(truths):
             raise ValueError("The number of datapoints and truths must be equal")
@@ -364,6 +372,8 @@ class ValidationSetManager:
             ```
             This would mean: first datapoint the object is in the top left corner, second datapoint the object is in the center
         """
+        if not datapoints:
+            raise ValueError("Datapoints cannot be empty")
         
         if len(datapoints) != len(truths):
             raise ValueError("The number of datapoints and truths must be equal")
@@ -437,6 +447,8 @@ class ValidationSetManager:
             ```
             This would mean: first datapoint the correct interval is from 0 to 10, second datapoint the correct interval is from 20 to 30
         """
+        if not datapoints:
+            raise ValueError("Datapoints cannot be empty")
         
         if len(datapoints) != len(truths):
             raise ValueError("The number of datapoints and truths must be equal")
@@ -486,6 +498,8 @@ class ValidationSetManager:
             rapids (list[Rapid]): The list of rapids to add to the validation set.
             dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
         """
+        if not rapids:
+            raise ValueError("Rapids cannot be empty")
 
         return self._submit(name=name, rapids=rapids, dimensions=dimensions)
 
