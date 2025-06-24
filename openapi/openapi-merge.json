@@ -23,6 +23,9 @@
     },
     {
       "inputFile": "./spec/campaign.json"
+    },
+    {
+      "inputFile": "./spec/leaderboard.json"
     }
   ],
   "output": "./output.swagger.json"
