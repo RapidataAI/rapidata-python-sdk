@@ -82,8 +82,9 @@ Class | Method | HTTP request | Description
 *CampaignApi* | [**campaign_resume_post**](rapidata/api_client/docs/CampaignApi.md#campaign_resume_post) | **POST** /campaign/resume | Resumes a campaign.
 *CampaignApi* | [**campaigns_get**](rapidata/api_client/docs/CampaignApi.md#campaigns_get) | **GET** /campaigns | Queries orders based on a filter, page, and sort criteria.
 *ClientApi* | [**client_client_id_delete**](rapidata/api_client/docs/ClientApi.md#client_client_id_delete) | **DELETE** /client/{clientId} | Deletes a customers&#39; client.
+*ClientApi* | [**client_client_id_get**](rapidata/api_client/docs/ClientApi.md#client_client_id_get) | **GET** /client/{clientId} | Gets a specific client by its ID.
 *ClientApi* | [**client_post**](rapidata/api_client/docs/ClientApi.md#client_post) | **POST** /client | Creates a new client for the current customer.
-*ClientApi* | [**client_query_get**](rapidata/api_client/docs/ClientApi.md#client_query_get) | **GET** /client/query | Gets the clients for the current customer.
+*ClientApi* | [**client_register_post**](rapidata/api_client/docs/ClientApi.md#client_register_post) | **POST** /client/register | Registers a new client dynamically.
 *ClientApi* | [**clients_get**](rapidata/api_client/docs/ClientApi.md#clients_get) | **GET** /clients | Queries the clients for the current customer.
 *CocoApi* | [**coco_coco_set_id_submit_post**](rapidata/api_client/docs/CocoApi.md#coco_coco_set_id_submit_post) | **POST** /coco/{cocoSetId}/submit | Creates a new validation set based on a previously uploaded CoCo set.
 *CocoApi* | [**coco_post**](rapidata/api_client/docs/CocoApi.md#coco_post) | **POST** /coco | Uploads a CoCo set to the system.
@@ -128,6 +129,15 @@ Class | Method | HTTP request | Description
 *IdentityApi* | [**identity_referrer_post**](rapidata/api_client/docs/IdentityApi.md#identity_referrer_post) | **POST** /identity/referrer | Sets the referrer for the current customer.
 *IdentityApi* | [**identity_registertemporary_post**](rapidata/api_client/docs/IdentityApi.md#identity_registertemporary_post) | **POST** /identity/registertemporary | Registers and logs in a temporary customer.
 *IdentityApi* | [**identity_temporary_post**](rapidata/api_client/docs/IdentityApi.md#identity_temporary_post) | **POST** /identity/temporary | Registers and logs in a temporary customer.
+*LeaderboardApi* | [**leaderboard_leaderboard_id_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_get) | **GET** /leaderboard/{leaderboardId} | Gets a leaderboard by its ID.
+*LeaderboardApi* | [**leaderboard_leaderboard_id_participants_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_participants_get) | **GET** /leaderboard/{leaderboardId}/participants | Creates a participant in a leaderboard.
+*LeaderboardApi* | [**leaderboard_leaderboard_id_participants_participant_id_submit_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_participants_participant_id_submit_post) | **POST** /leaderboard/{leaderboardId}/participants/{participantId}/submit | Submits a participant to a leaderboard.
+*LeaderboardApi* | [**leaderboard_leaderboard_id_participants_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_participants_post) | **POST** /leaderboard/{leaderboardId}/participants | Creates a participant in a leaderboard.
+*LeaderboardApi* | [**leaderboard_leaderboard_id_prompts_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_prompts_get) | **GET** /leaderboard/{leaderboardId}/prompts | returns the paged prompts of a leaderboard by its Id.
+*LeaderboardApi* | [**leaderboard_leaderboard_id_prompts_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_prompts_post) | **POST** /leaderboard/{leaderboardId}/prompts | returns the paged prompts of a leaderboard by its Id.
+*LeaderboardApi* | [**leaderboard_participant_participant_id_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_participant_participant_id_get) | **GET** /leaderboard/participant/{participantId} | Gets a participant by its ID.
+*LeaderboardApi* | [**leaderboard_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_post) | **POST** /leaderboard | Creates a new leaderboard with the specified name and criteria.
+*LeaderboardApi* | [**leaderboards_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboards_get) | **GET** /leaderboards | Queries all leaderboards of the user.
 *NewsletterApi* | [**newsletter_subscribe_post**](rapidata/api_client/docs/NewsletterApi.md#newsletter_subscribe_post) | **POST** /newsletter/subscribe | Signs a user up to the newsletter.
 *NewsletterApi* | [**newsletter_unsubscribe_post**](rapidata/api_client/docs/NewsletterApi.md#newsletter_unsubscribe_post) | **POST** /newsletter/unsubscribe | Unsubscribes a user from the newsletter.
 *OrderApi* | [**order_approve_post**](rapidata/api_client/docs/OrderApi.md#order_approve_post) | **POST** /order/approve | Approves an order that has been submitted for manual approval.
@@ -259,6 +269,7 @@ Class | Method | HTTP request | Description
  - [ClassificationMetadataFilterConfig](rapidata/api_client/docs/ClassificationMetadataFilterConfig.md)
  - [ClassificationMetadataModel](rapidata/api_client/docs/ClassificationMetadataModel.md)
  - [ClassifyPayload](rapidata/api_client/docs/ClassifyPayload.md)
+ - [ClientModel](rapidata/api_client/docs/ClientModel.md)
  - [ClientsQueryResult](rapidata/api_client/docs/ClientsQueryResult.md)
  - [ClientsQueryResultPagedResult](rapidata/api_client/docs/ClientsQueryResultPagedResult.md)
  - [CloneDatasetModel](rapidata/api_client/docs/CloneDatasetModel.md)
@@ -287,10 +298,10 @@ Class | Method | HTTP request | Description
  - [CountryUserFilterModel](rapidata/api_client/docs/CountryUserFilterModel.md)
  - [CreateBridgeTokenResult](rapidata/api_client/docs/CreateBridgeTokenResult.md)
  - [CreateClientModel](rapidata/api_client/docs/CreateClientModel.md)
- - [CreateClientResult](rapidata/api_client/docs/CreateClientResult.md)
  - [CreateComplexOrderModel](rapidata/api_client/docs/CreateComplexOrderModel.md)
  - [CreateComplexOrderModelPipeline](rapidata/api_client/docs/CreateComplexOrderModelPipeline.md)
  - [CreateComplexOrderResult](rapidata/api_client/docs/CreateComplexOrderResult.md)
+ - [CreateCustomerClientResult](rapidata/api_client/docs/CreateCustomerClientResult.md)
  - [CreateDatapointFromFilesModel](rapidata/api_client/docs/CreateDatapointFromFilesModel.md)
  - [CreateDatapointFromTextSourcesModel](rapidata/api_client/docs/CreateDatapointFromTextSourcesModel.md)
  - [CreateDatapointFromUrlsModel](rapidata/api_client/docs/CreateDatapointFromUrlsModel.md)
@@ -300,6 +311,9 @@ Class | Method | HTTP request | Description
  - [CreateDatasetArtifactModelDataset](rapidata/api_client/docs/CreateDatasetArtifactModelDataset.md)
  - [CreateDemographicRapidModel](rapidata/api_client/docs/CreateDemographicRapidModel.md)
  - [CreateEmptyValidationSetResult](rapidata/api_client/docs/CreateEmptyValidationSetResult.md)
+ - [CreateLeaderboardModel](rapidata/api_client/docs/CreateLeaderboardModel.md)
+ - [CreateLeaderboardParticipantModel](rapidata/api_client/docs/CreateLeaderboardParticipantModel.md)
+ - [CreateLeaderboardParticipantResult](rapidata/api_client/docs/CreateLeaderboardParticipantResult.md)
  - [CreateOrderModel](rapidata/api_client/docs/CreateOrderModel.md)
  - [CreateOrderModelReferee](rapidata/api_client/docs/CreateOrderModelReferee.md)
  - [CreateOrderModelUserFiltersInner](rapidata/api_client/docs/CreateOrderModelUserFiltersInner.md)
@@ -324,6 +338,7 @@ Class | Method | HTTP request | Description
  - [Demographic](rapidata/api_client/docs/Demographic.md)
  - [DemographicMetadataModel](rapidata/api_client/docs/DemographicMetadataModel.md)
  - [DemographicSelection](rapidata/api_client/docs/DemographicSelection.md)
+ - [DynamicClientRegistrationRequest](rapidata/api_client/docs/DynamicClientRegistrationRequest.md)
  - [EarlyStoppingRefereeModel](rapidata/api_client/docs/EarlyStoppingRefereeModel.md)
  - [EffortCappedSelection](rapidata/api_client/docs/EffortCappedSelection.md)
  - [EloConfig](rapidata/api_client/docs/EloConfig.md)
@@ -355,7 +370,9 @@ Class | Method | HTTP request | Description
  - [GetDatasetByIdResult](rapidata/api_client/docs/GetDatasetByIdResult.md)
  - [GetDatasetProgressResult](rapidata/api_client/docs/GetDatasetProgressResult.md)
  - [GetFailedDatapointsResult](rapidata/api_client/docs/GetFailedDatapointsResult.md)
+ - [GetLeaderboardByIdResult](rapidata/api_client/docs/GetLeaderboardByIdResult.md)
  - [GetOrderByIdResult](rapidata/api_client/docs/GetOrderByIdResult.md)
+ - [GetParticipantByIdResult](rapidata/api_client/docs/GetParticipantByIdResult.md)
  - [GetPipelineByIdResult](rapidata/api_client/docs/GetPipelineByIdResult.md)
  - [GetPipelineByIdResultArtifactsValue](rapidata/api_client/docs/GetPipelineByIdResultArtifactsValue.md)
  - [GetPublicOrdersResult](rapidata/api_client/docs/GetPublicOrdersResult.md)
@@ -379,8 +396,12 @@ Class | Method | HTTP request | Description
  - [ImportFromFileResult](rapidata/api_client/docs/ImportFromFileResult.md)
  - [ImportValidationSetFromFileResult](rapidata/api_client/docs/ImportValidationSetFromFileResult.md)
  - [InspectReportResult](rapidata/api_client/docs/InspectReportResult.md)
+ - [JsonWebKey](rapidata/api_client/docs/JsonWebKey.md)
+ - [JsonWebKeySet](rapidata/api_client/docs/JsonWebKeySet.md)
  - [LabelingSelection](rapidata/api_client/docs/LabelingSelection.md)
  - [LanguageUserFilterModel](rapidata/api_client/docs/LanguageUserFilterModel.md)
+ - [LeaderboardQueryResult](rapidata/api_client/docs/LeaderboardQueryResult.md)
+ - [LeaderboardQueryResultPagedResult](rapidata/api_client/docs/LeaderboardQueryResultPagedResult.md)
  - [Line](rapidata/api_client/docs/Line.md)
  - [LinePayload](rapidata/api_client/docs/LinePayload.md)
  - [LinePoint](rapidata/api_client/docs/LinePoint.md)
@@ -426,6 +447,9 @@ Class | Method | HTTP request | Description
  - [OriginalFilenameMetadata](rapidata/api_client/docs/OriginalFilenameMetadata.md)
  - [OriginalFilenameMetadataModel](rapidata/api_client/docs/OriginalFilenameMetadataModel.md)
  - [PageInfo](rapidata/api_client/docs/PageInfo.md)
+ - [ParticipantByLeaderboard](rapidata/api_client/docs/ParticipantByLeaderboard.md)
+ - [ParticipantByLeaderboardPagedResult](rapidata/api_client/docs/ParticipantByLeaderboardPagedResult.md)
+ - [ParticipantStatus](rapidata/api_client/docs/ParticipantStatus.md)
  - [PipelineIdWorkflowArtifactIdPutRequest](rapidata/api_client/docs/PipelineIdWorkflowArtifactIdPutRequest.md)
  - [PolygonPayload](rapidata/api_client/docs/PolygonPayload.md)
  - [PolygonRapidBlueprint](rapidata/api_client/docs/PolygonRapidBlueprint.md)
@@ -437,6 +461,8 @@ Class | Method | HTTP request | Description
  - [ProbabilisticAttachCategoryRefereeConfig](rapidata/api_client/docs/ProbabilisticAttachCategoryRefereeConfig.md)
  - [ProbabilisticAttachCategoryRefereeInfo](rapidata/api_client/docs/ProbabilisticAttachCategoryRefereeInfo.md)
  - [PromptAssetMetadataInput](rapidata/api_client/docs/PromptAssetMetadataInput.md)
+ - [PromptByLeaderboardResult](rapidata/api_client/docs/PromptByLeaderboardResult.md)
+ - [PromptByLeaderboardResultPagedResult](rapidata/api_client/docs/PromptByLeaderboardResultPagedResult.md)
  - [PromptMetadata](rapidata/api_client/docs/PromptMetadata.md)
  - [PromptMetadataInput](rapidata/api_client/docs/PromptMetadataInput.md)
  - [PromptMetadataModel](rapidata/api_client/docs/PromptMetadataModel.md)
