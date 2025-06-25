@@ -169,7 +169,6 @@ class RapidataOrder:
         Args:
             preliminary_results: If True, returns the preliminary results of the order. Defaults to False. 
                 Note that preliminary results are not final and may not contain all the datapoints & responses. Only the onese that are already available.
-                This will throw an exception if there are no responses available yet.
         """
         logger.info(f"Getting results for order '{self}'...")
         if preliminary_results and self.get_status() not in [OrderState.COMPLETED]:
