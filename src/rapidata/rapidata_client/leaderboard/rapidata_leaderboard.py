@@ -83,7 +83,7 @@ class RapidataLeaderboard:
             assets.append(MediaAsset(media_path))
             prompts_metadata.append([PromptMetadata(prompt)])
 
-        participant_result =self._openapi_service.leaderboard_api.leaderboard_leaderboard_id_participants_post(
+        participant_result = self._openapi_service.leaderboard_api.leaderboard_leaderboard_id_participants_post(
             leaderboard_id=self.leaderboard_id,
             create_leaderboard_participant_model=CreateLeaderboardParticipantModel(
                 name=name,
