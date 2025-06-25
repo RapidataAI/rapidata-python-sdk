@@ -70,6 +70,9 @@ class RapidataLeaderboard:
         self._prompts = prompts
 
     def evaluate_model(self, name: str, media: list[str], prompts: list[str]) -> None:
+        if not media:
+            raise ValueError("Media must be a non-empty list of strings")
+        
         if len(media) != len(prompts):
             raise ValueError("Media and prompts must have the same length")
         
