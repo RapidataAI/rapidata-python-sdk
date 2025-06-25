@@ -23,6 +23,7 @@ from .settings import (
     NoShuffle,
     PlayVideoUntilTheEnd,
     CustomSetting,
+    AllowNeitherBoth,
     )
 from .country_codes import CountryCodes
 from .assets import (

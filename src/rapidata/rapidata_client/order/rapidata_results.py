@@ -180,31 +180,39 @@ class RapidataResults(dict):
 
         rows = []
         for result in self["results"]:
-            # Get the image names from the first metric we find
+            # Get all asset names from the first metric we find
+            assets = []
             for key in result:
-                if isinstance(result[key], dict) and len(result[key]) == 2:
+                if isinstance(result[key], dict) and len(result[key]) >= 2:
                     assets = list(result[key].keys())
                     break
             else:
                 continue
 
-            asset_a, asset_b = assets[0], assets[1]
+            assets = [asset for asset in assets if asset not in ["Both", "Neither"]]
             
             # Initialize row with non-comparative fields
             row = {
                 key: value for key, value in result.items() 
                 if not isinstance(value, dict)
             }
-
-            row["assetA"] = asset_a
-            row["assetB"] = asset_b
+            row["assetA"] = assets[0]
+            row["assetB"] = assets[1]
 
             # Handle comparative metrics
             for key, values in result.items():
-                if isinstance(values, dict) and len(values) == 2:
-                    row[f'A_{key}'] = values[asset_a]
-                    row[f'B_{key}'] = values[asset_b]
+                if isinstance(values, dict) and len(values) >= 2:
+                    # Add main asset columns
+                    for i, asset in enumerate(assets[:2]):  # Limit to first 2 main assets
+                        column_prefix = "A_" if i == 0 else "B_"
+                        row[f'{column_prefix}{key}'] = values.get(asset, 0)
                     
+                    # Add special option columns if they exist
+                    if "Both" in values:
+                        row[f'Both_{key}'] = values.get("Both", 0)
+                    if "Neither" in values:
+                        row[f'Neither_{key}'] = values.get("Neither", 0)
+                        
             rows.append(row)
             
         return pd.DataFrame(rows)
