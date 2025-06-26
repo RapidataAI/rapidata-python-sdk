@@ -49,7 +49,7 @@ class RapidataOrderManager:
         selections (RapidataSelections): The RapidataSelections instance."""
 
     def __init__(self, openapi_service: OpenAPIService):
-        self._openapi_service = openapi_service
+        self.__openapi_service = openapi_service
         self.filters = RapidataFilters
         self.settings = RapidataSettings
         self.selections = RapidataSelections
@@ -104,7 +104,7 @@ class RapidataOrderManager:
                 max_vote_count=responses_per_datapoint,
             )
 
-        order_builder = RapidataOrderBuilder(name=name, openapi_service=self._openapi_service)
+        order_builder = RapidataOrderBuilder(name=name, openapi_service=self.__openapi_service)
 
         if selections and validation_set_id:
             logger.warning("Warning: Both selections and validation_set_id provided. Ignoring validation_set_id.")
@@ -637,12 +637,12 @@ class RapidataOrderManager:
             RapidataOrder: The Order instance.
         """
         
-        order = self._openapi_service.order_api.order_order_id_get(order_id)
+        order = self.__openapi_service.order_api.order_order_id_get(order_id)
 
         return RapidataOrder(
             order_id=order_id, 
             name=order.order_name,
-            openapi_service=self._openapi_service)
+            openapi_service=self.__openapi_service)
 
     def find_orders(self, name: str = "", amount: int = 10) -> list[RapidataOrder]:
         """Find your recent orders given criteria. If nothing is provided, it will return the most recent order.
@@ -654,7 +654,7 @@ class RapidataOrderManager:
         Returns:
             list[RapidataOrder]: A list of RapidataOrder instances.
         """
-        order_page_result = self._openapi_service.order_api.orders_get(QueryModel(
+        order_page_result = self.__openapi_service.order_api.orders_get(QueryModel(
             page=PageInfo(index=1, size=amount),
             filter=RootFilter(filters=[Filter(field="OrderName", operator="Contains", value=name)]),
             sortCriteria=[SortCriterion(direction="Desc", propertyName="OrderDate")]

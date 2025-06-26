@@ -10,26 +10,38 @@ from rapidata.service.openapi_service import OpenAPIService
 
 
 class RapidataLeaderboard:
-    def __init__(self, name: str, instruction: str, show_prompt: bool, leaderboard_id: str | None, openapi_service: OpenAPIService):
-        self._openapi_service = openapi_service
-        self._name = name
-        self._instruction = instruction
-        self._show_prompt = show_prompt
+    """
+    An instance of a Rapidata leaderboard.
+
+    Used to interact with a specific leaderboard in the Rapidata system, such as retrieving prompts and evaluating models.
+
+    Args:
+        name: The name that will be used to identify the leaderboard on the overview.
+        instruction: The instruction that will determine what how the models will be evaluated.
+        show_prompt: Whether to show the prompt to the users.
+        id: The ID of the leaderboard.
+        openapi_service: The OpenAPIService instance for API interaction.
+    """
+    def __init__(self, name: str, instruction: str, show_prompt: bool, id: str, openapi_service: OpenAPIService):
+        self.__openapi_service = openapi_service
+        self.name = name
+        self.instruction = instruction
+        self.show_prompt = show_prompt
         self._prompts: list[str] = []
-        if leaderboard_id is None:
-            self.leaderboard_id = self.__create_new_leaderboard()
-        else:
-            self.leaderboard_id = leaderboard_id
+        self.id = id
 
     @property
     def prompts(self) -> list[str]:
+        """
+        Returns the prompts that are registered for the leaderboard.
+        """
         if not self._prompts:
             current_page = 1
             total_pages = None
             
             while True:
-                prompts_result = self._openapi_service.leaderboard_api.leaderboard_leaderboard_id_prompts_get(
-                    leaderboard_id=self.leaderboard_id,
+                prompts_result = self.__openapi_service.leaderboard_api.leaderboard_leaderboard_id_prompts_get(
+                    leaderboard_id=self.id,
                     request=QueryModel(
                         page=PageInfo(
                             index=current_page,
@@ -51,25 +63,28 @@ class RapidataLeaderboard:
                 current_page += 1
                 
         return self._prompts
-    def __create_new_leaderboard(self) -> str:
-        leaderboard_id = self._openapi_service.leaderboard_api.leaderboard_post(
-            CreateLeaderboardModel(
-                name=self._name,
-                instruction=self._instruction,
-                showPrompt=self._show_prompt
-            )
-        ).id
-        return leaderboard_id
     
     def _register_prompts(self, prompts: list[str]):
+        """
+        Registers the prompts for the leaderboard.
+        """
         for prompt in prompts:
-            self._openapi_service.leaderboard_api.leaderboard_leaderboard_id_prompts_post(
-                leaderboard_id=self.leaderboard_id,
+            self.__openapi_service.leaderboard_api.leaderboard_leaderboard_id_prompts_post(
+                leaderboard_id=self.id,
                 body=prompt
             )
         self._prompts = prompts
 
     def evaluate_model(self, name: str, media: list[str], prompts: list[str]) -> None:
+        """
+        Evaluates a model on the leaderboard.
+
+        Args:
+            name: The name of the model.
+            media: The media that will be used to evaluate the model.
+            prompts: The prompts that correspond to the media. The order of the prompts must match the order of the media.
+                The prompts that are used must be registered for the leaderboard. To see the registered prompts, use the prompts property.
+        """
         if not media:
             raise ValueError("Media must be a non-empty list of strings")
         
@@ -86,23 +101,23 @@ class RapidataLeaderboard:
             assets.append(MediaAsset(media_path))
             prompts_metadata.append([PromptMetadata(prompt)])
 
-        participant_result = self._openapi_service.leaderboard_api.leaderboard_leaderboard_id_participants_post(
-            leaderboard_id=self.leaderboard_id,
+        participant_result = self.__openapi_service.leaderboard_api.leaderboard_leaderboard_id_participants_post(
+            leaderboard_id=self.id,
             create_leaderboard_participant_model=CreateLeaderboardParticipantModel(
                 name=name,
             )
         )
-        dataset = RapidataDataset(participant_result.dataset_id, self._openapi_service)
+        dataset = RapidataDataset(participant_result.dataset_id, self.__openapi_service)
 
         dataset._add_datapoints(assets, prompts_metadata)
 
-        self._openapi_service.leaderboard_api.leaderboard_leaderboard_id_participants_participant_id_submit_post(
-            leaderboard_id=self.leaderboard_id,
+        self.__openapi_service.leaderboard_api.leaderboard_leaderboard_id_participants_participant_id_submit_post(
+            leaderboard_id=self.id,
             participant_id=participant_result.participant_id
         )
 
     def __str__(self) -> str:
-        return f"RapidataLeaderboard(name={self._name}, instruction={self._instruction}, show_prompt={self._show_prompt}, leaderboard_id={self.leaderboard_id})"
+        return f"RapidataLeaderboard(name={self.name}, instruction={self.instruction}, show_prompt={self.show_prompt}, leaderboard_id={self.id})"
     
     def __repr__(self) -> str:
         return self.__str__()
