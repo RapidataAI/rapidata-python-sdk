@@ -1,4 +1,3 @@
-from rapidata.api_client.models.create_leaderboard_model import CreateLeaderboardModel
 from rapidata.api_client.models.create_leaderboard_participant_model import CreateLeaderboardParticipantModel
 from rapidata.api_client.models.page_info import PageInfo
 from rapidata.api_client.models.query_model import QueryModel
