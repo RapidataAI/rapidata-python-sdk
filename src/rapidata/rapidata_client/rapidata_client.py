@@ -5,6 +5,7 @@ from rapidata import __version__
 from rapidata.service.openapi_service import OpenAPIService
 
 from rapidata.rapidata_client.order.rapidata_order_manager import RapidataOrderManager
+from rapidata.rapidata_client.leaderboard.rapidata_leaderboard_manager import RapidataLeaderboardManager
 
 from rapidata.rapidata_client.validation.validation_set_manager import (
     ValidationSetManager,
@@ -65,6 +66,9 @@ class RapidataClient:
 
         logger.debug("Initializing DemographicManager")
         self._demographic = DemographicManager(openapi_service=self._openapi_service)
+
+        logger.debug("Initializing RapidataLeaderboardManager")
+        self.mri = RapidataLeaderboardManager(openapi_service=self._openapi_service)
         
     def reset_credentials(self):
         """Reset the credentials saved in the configuration file for the current environment."""
