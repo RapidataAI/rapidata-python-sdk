@@ -29,6 +29,18 @@ class RapidataLeaderboardManager:
             prompts: The prompts for the leaderboard. Will be registered for the leaderboard and able to be retrieved again later.
             show_prompt: Whether to show the prompt to the users when they are evaluating the models.
         """
+        if not isinstance(name, str):
+            raise ValueError("Name must be a string.")
+        
+        if not isinstance(instruction, str):
+            raise ValueError("Instruction must be a string.")
+        
+        if not isinstance(show_prompt, bool):
+            raise ValueError("Show prompt must be a boolean.")
+        
+        if not isinstance(prompts, list) or not all(isinstance(prompt, str) for prompt in prompts):
+            raise ValueError("Prompts must be a list of strings.")
+
         leaderboard_id = self.__register_new_leaderboard(name, instruction, show_prompt)
         leaderboard = RapidataLeaderboard(name, instruction, show_prompt, leaderboard_id, self.__openapi_service)
         leaderboard._register_prompts(prompts)
