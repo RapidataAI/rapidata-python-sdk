@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,10 +27,11 @@ class LeaderboardQueryResult(BaseModel):
     LeaderboardQueryResult
     """ # noqa: E501
     id: StrictStr
+    order_id: Optional[StrictStr] = Field(default=None, alias="orderId")
     name: StrictStr
     instruction: StrictStr
     show_prompt: StrictBool = Field(alias="showPrompt")
-    __properties: ClassVar[List[str]] = ["id", "name", "instruction", "showPrompt"]
+    __properties: ClassVar[List[str]] = ["id", "orderId", "name", "instruction", "showPrompt"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -71,6 +72,11 @@ class LeaderboardQueryResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if order_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.order_id is None and "order_id" in self.model_fields_set:
+            _dict['orderId'] = None
+
         return _dict
 
     @classmethod
@@ -84,6 +90,7 @@ class LeaderboardQueryResult(BaseModel):
 
         _obj = cls.model_validate({
             "id": obj.get("id"),
+            "orderId": obj.get("orderId"),
             "name": obj.get("name"),
             "instruction": obj.get("instruction"),
             "showPrompt": obj.get("showPrompt")

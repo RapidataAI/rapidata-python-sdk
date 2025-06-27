@@ -29,7 +29,8 @@ class CreateOrderResult(BaseModel):
     dataset_id: Optional[StrictStr] = Field(default=None, alias="datasetId")
     order_id: StrictStr = Field(alias="orderId")
     campaign_id: Optional[StrictStr] = Field(default=None, alias="campaignId")
-    __properties: ClassVar[List[str]] = ["datasetId", "orderId", "campaignId"]
+    pipeline_id: StrictStr = Field(alias="pipelineId")
+    __properties: ClassVar[List[str]] = ["datasetId", "orderId", "campaignId", "pipelineId"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -94,7 +95,8 @@ class CreateOrderResult(BaseModel):
         _obj = cls.model_validate({
             "datasetId": obj.get("datasetId"),
             "orderId": obj.get("orderId"),
-            "campaignId": obj.get("campaignId")
+            "campaignId": obj.get("campaignId"),
+            "pipelineId": obj.get("pipelineId")
         })
         return _obj
 

@@ -6948,8 +6948,25 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "No Content"
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitParticipantResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitParticipantResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitParticipantResult"
+                }
+              }
+            }
           }
         }
       }
@@ -7506,6 +7523,9 @@
                   "$ref": "#/components/schemas/DemographicMetadataModel"
                 },
                 {
+                  "$ref": "#/components/schemas/FileTypeMetadataModel"
+                },
+                {
                   "$ref": "#/components/schemas/ImageDimensionMetadataModel"
                 },
                 {
@@ -7542,6 +7562,42 @@
             }
           },
           "identifier": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FileType": {
+        "enum": [
+          "Image",
+          "Video",
+          "Audio"
+        ],
+        "type": "string"
+      },
+      "FileTypeMetadataModel": {
+        "title": "FileTypeMetadata",
+        "required": [
+          "_t",
+          "fileType"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "FileTypeMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for FileTypeMetadata",
+            "default": "FileTypeMetadata",
+            "example": "FileTypeMetadata"
+          },
+          "fileType": {
+            "enum": [
+              "Image",
+              "Video",
+              "Audio"
+            ],
             "type": "string"
           }
         },
@@ -7846,6 +7902,9 @@
                   "$ref": "#/components/schemas/DemographicMetadataModel"
                 },
                 {
+                  "$ref": "#/components/schemas/FileTypeMetadataModel"
+                },
+                {
                   "$ref": "#/components/schemas/ImageDimensionMetadataModel"
                 },
                 {
@@ -7920,6 +7979,9 @@
                 },
                 {
                   "$ref": "#/components/schemas/DemographicMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/FileTypeMetadataModel"
                 },
                 {
                   "$ref": "#/components/schemas/ImageDimensionMetadataModel"
@@ -8285,6 +8347,9 @@
                 },
                 {
                   "$ref": "#/components/schemas/DemographicMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/FileTypeMetadataModel"
                 },
                 {
                   "$ref": "#/components/schemas/ImageDimensionMetadataModel"
@@ -9220,7 +9285,8 @@
       },
       "CreateComplexOrderResult": {
         "required": [
-          "orderId"
+          "orderId",
+          "pipelineId"
         ],
         "type": "object",
         "properties": {
@@ -9234,6 +9300,9 @@
           "campaignId": {
             "type": "string",
             "nullable": true
+          },
+          "pipelineId": {
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -9499,7 +9568,8 @@
       },
       "CreateOrderResult": {
         "required": [
-          "orderId"
+          "orderId",
+          "pipelineId"
         ],
         "type": "object",
         "properties": {
@@ -9513,6 +9583,9 @@
           "campaignId": {
             "type": "string",
             "nullable": true
+          },
+          "pipelineId": {
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -12307,6 +12380,9 @@
                   "$ref": "#/components/schemas/DemographicMetadataModel"
                 },
                 {
+                  "$ref": "#/components/schemas/FileTypeMetadataModel"
+                },
+                {
                   "$ref": "#/components/schemas/ImageDimensionMetadataModel"
                 },
                 {
@@ -13756,6 +13832,9 @@
                   "$ref": "#/components/schemas/DemographicMetadataModel"
                 },
                 {
+                  "$ref": "#/components/schemas/FileTypeMetadataModel"
+                },
+                {
                   "$ref": "#/components/schemas/ImageDimensionMetadataModel"
                 },
                 {
@@ -14622,11 +14701,11 @@
           },
           "total": {
             "type": "integer",
-            "format": "int32"
+            "format": "int64"
           },
           "completed": {
             "type": "integer",
-            "format": "int32"
+            "format": "int64"
           },
           "state": {
             "enum": [
@@ -15382,6 +15461,9 @@
                   "$ref": "#/components/schemas/CountMetadata"
                 },
                 {
+                  "$ref": "#/components/schemas/FileTypeMetadata"
+                },
+                {
                   "$ref": "#/components/schemas/ImageDimensionMetadata"
                 },
                 {
@@ -15491,6 +15573,9 @@
                 },
                 {
                   "$ref": "#/components/schemas/CountMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/FileTypeMetadata"
                 },
                 {
                   "$ref": "#/components/schemas/ImageDimensionMetadata"
@@ -15705,6 +15790,9 @@
                   "$ref": "#/components/schemas/CountMetadata"
                 },
                 {
+                  "$ref": "#/components/schemas/FileTypeMetadata"
+                },
+                {
                   "$ref": "#/components/schemas/ImageDimensionMetadata"
                 },
                 {
@@ -15736,6 +15824,37 @@
                 "propertyName": "_t"
               }
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "FileTypeMetadata": {
+        "title": "FileTypeMetadata",
+        "required": [
+          "_t",
+          "fileType"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "FileTypeMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for FileTypeMetadata",
+            "default": "FileTypeMetadata",
+            "example": "FileTypeMetadata"
+          },
+          "fileType": {
+            "enum": [
+              "Image",
+              "Video",
+              "Audio"
+            ],
+            "type": "string"
+          },
+          "visibilities": {
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -15907,6 +16026,9 @@
                   "$ref": "#/components/schemas/CountMetadata"
                 },
                 {
+                  "$ref": "#/components/schemas/FileTypeMetadata"
+                },
+                {
                   "$ref": "#/components/schemas/ImageDimensionMetadata"
                 },
                 {
@@ -15970,6 +16092,9 @@
                 },
                 {
                   "$ref": "#/components/schemas/CountMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/FileTypeMetadata"
                 },
                 {
                   "$ref": "#/components/schemas/ImageDimensionMetadata"
@@ -16115,8 +16240,7 @@
         "required": [
           "_t",
           "blueprint",
-          "referee",
-          "targetCountryCodes"
+          "referee"
         ],
         "type": "object",
         "properties": {
@@ -16180,12 +16304,6 @@
             ],
             "discriminator": {
               "propertyName": "_t"
-            }
-          },
-          "targetCountryCodes": {
-            "type": "array",
-            "items": {
-              "type": "string"
             }
           }
         },
@@ -16364,6 +16482,9 @@
                 },
                 {
                   "$ref": "#/components/schemas/CountMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/FileTypeMetadata"
                 },
                 {
                   "$ref": "#/components/schemas/ImageDimensionMetadata"
@@ -16725,6 +16846,16 @@
           "showPrompt": {
             "type": "boolean",
             "description": "Indicates if the prompt is shown on the rapids."
+          },
+          "responseBudget": {
+            "type": "integer",
+            "description": "Total amount of responses that get collected per run",
+            "format": "int32"
+          },
+          "minResponses": {
+            "type": "integer",
+            "description": "The minimum amount of responses that need to be collected per comparison.",
+            "format": "int32"
           }
         },
         "additionalProperties": false,
@@ -16774,12 +16905,20 @@
       },
       "GetLeaderboardByIdResult": {
         "required": [
+          "id",
           "instruction",
           "name",
           "showPrompt"
         ],
         "type": "object",
         "properties": {
+          "id": {
+            "type": "string"
+          },
+          "orderId": {
+            "type": "string",
+            "nullable": true
+          },
           "name": {
             "type": "string"
           },
@@ -16795,13 +16934,16 @@
       "GetParticipantByIdResult": {
         "required": [
           "datasetId",
+          "id",
           "leaderboardId",
           "name",
-          "score",
           "status"
         ],
         "type": "object",
         "properties": {
+          "id": {
+            "type": "string"
+          },
           "name": {
             "type": "string"
           },
@@ -16816,13 +16958,15 @@
               "Created",
               "Queued",
               "Running",
-              "Completed"
+              "Completed",
+              "Failed"
             ],
             "type": "string"
           },
           "score": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -16838,6 +16982,10 @@
         "properties": {
           "id": {
             "type": "string"
+          },
+          "orderId": {
+            "type": "string",
+            "nullable": true
           },
           "name": {
             "type": "string"
@@ -16890,8 +17038,8 @@
         "required": [
           "datasetId",
           "id",
+          "leaderboardId",
           "name",
-          "score",
           "status"
         ],
         "type": "object",
@@ -16902,21 +17050,26 @@
           "name": {
             "type": "string"
           },
-          "score": {
-            "type": "number",
-            "format": "double"
+          "leaderboardId": {
+            "type": "string"
+          },
+          "datasetId": {
+            "type": "string"
           },
           "status": {
             "enum": [
               "Created",
               "Queued",
               "Running",
-              "Completed"
+              "Completed",
+              "Failed"
             ],
             "type": "string"
           },
-          "datasetId": {
-            "type": "string"
+          "score": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -16961,7 +17114,8 @@
           "Created",
           "Queued",
           "Running",
-          "Completed"
+          "Completed",
+          "Failed"
         ],
         "type": "string"
       },
@@ -17013,6 +17167,24 @@
             "type": "integer",
             "format": "int32",
             "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SubmitParticipantResult": {
+        "required": [
+          "invalidDatapoints",
+          "validDatapoints"
+        ],
+        "type": "object",
+        "properties": {
+          "validDatapoints": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "invalidDatapoints": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false

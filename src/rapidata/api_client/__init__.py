@@ -174,6 +174,9 @@ from rapidata.api_client.models.file_artifact_model import FileArtifactModel
 from rapidata.api_client.models.file_asset import FileAsset
 from rapidata.api_client.models.file_asset_model import FileAssetModel
 from rapidata.api_client.models.file_asset_model_metadata_value import FileAssetModelMetadataValue
+from rapidata.api_client.models.file_type import FileType
+from rapidata.api_client.models.file_type_metadata import FileTypeMetadata
+from rapidata.api_client.models.file_type_metadata_model import FileTypeMetadataModel
 from rapidata.api_client.models.filter import Filter
 from rapidata.api_client.models.filter_operator import FilterOperator
 from rapidata.api_client.models.free_text_payload import FreeTextPayload
@@ -333,6 +336,7 @@ from rapidata.api_client.models.streams_metadata import StreamsMetadata
 from rapidata.api_client.models.streams_metadata_model import StreamsMetadataModel
 from rapidata.api_client.models.submit_coco_model import SubmitCocoModel
 from rapidata.api_client.models.submit_coco_result import SubmitCocoResult
+from rapidata.api_client.models.submit_participant_result import SubmitParticipantResult
 from rapidata.api_client.models.text_asset import TextAsset
 from rapidata.api_client.models.text_asset_model import TextAssetModel
 from rapidata.api_client.models.text_metadata import TextMetadata
