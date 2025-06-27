@@ -1,5 +1,4 @@
 from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
-from rapidata.rapidata_client.logging import managed_print, logger
 
 class AllowNeitherBoth(RapidataSetting):
     """
