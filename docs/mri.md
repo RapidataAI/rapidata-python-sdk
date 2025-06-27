@@ -19,7 +19,7 @@ MRI is used to create competitive leaderboard evaluation systems that:
 You start by creating a leaderboard with specific settings:
 
 - **Name**: Identifies your leaderboard in the overview
-- **Instruction**: Determines how models will be evaluated
+- **Instruction**: The criteria upon which labelers choose the better model
 - **Prompts**: A set of registered prompts that will be used by all models for media generation
 - **Show Prompt**: Whether to display the prompt to evaluators. Including this option adds complexity and cost, so it is advised to only include it in settings where the prompt is necessary for the labelers to follow the instruction (e.g., prompt alignment).
 
