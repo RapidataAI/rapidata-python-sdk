@@ -31,8 +31,7 @@ class SimpleWorkflowConfig(BaseModel):
     t: StrictStr = Field(description="Discriminator value for SimpleWorkflowConfig", alias="_t")
     referee: CompareWorkflowModel1Referee
     blueprint: ValidationImportPostRequestBlueprint
-    target_country_codes: List[StrictStr] = Field(alias="targetCountryCodes")
-    __properties: ClassVar[List[str]] = ["_t", "referee", "blueprint", "targetCountryCodes"]
+    __properties: ClassVar[List[str]] = ["_t", "referee", "blueprint"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -100,8 +99,7 @@ class SimpleWorkflowConfig(BaseModel):
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'SimpleWorkflowConfig',
             "referee": CompareWorkflowModel1Referee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
-            "blueprint": ValidationImportPostRequestBlueprint.from_dict(obj["blueprint"]) if obj.get("blueprint") is not None else None,
-            "targetCountryCodes": obj.get("targetCountryCodes")
+            "blueprint": ValidationImportPostRequestBlueprint.from_dict(obj["blueprint"]) if obj.get("blueprint") is not None else None
         })
         return _obj
 

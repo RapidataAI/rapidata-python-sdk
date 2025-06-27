@@ -17,21 +17,18 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictInt
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateLeaderboardModel(BaseModel):
+class SubmitParticipantResult(BaseModel):
     """
-    The CreateLeaderboardModel class represents the model for creating a leaderboard.
+    SubmitParticipantResult
     """ # noqa: E501
-    name: StrictStr = Field(description="The name of the leaderboard.")
-    instruction: StrictStr = Field(description="The instruction datapoints will be matched up against.")
-    show_prompt: StrictBool = Field(description="Indicates if the prompt is shown on the rapids.", alias="showPrompt")
-    response_budget: Optional[StrictInt] = Field(default=None, description="Total amount of responses that get collected per run", alias="responseBudget")
-    min_responses: Optional[StrictInt] = Field(default=None, description="The minimum amount of responses that need to be collected per comparison.", alias="minResponses")
-    __properties: ClassVar[List[str]] = ["name", "instruction", "showPrompt", "responseBudget", "minResponses"]
+    valid_datapoints: StrictInt = Field(alias="validDatapoints")
+    invalid_datapoints: StrictInt = Field(alias="invalidDatapoints")
+    __properties: ClassVar[List[str]] = ["validDatapoints", "invalidDatapoints"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -51,7 +48,7 @@ class CreateLeaderboardModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateLeaderboardModel from a JSON string"""
+        """Create an instance of SubmitParticipantResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -76,7 +73,7 @@ class CreateLeaderboardModel(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateLeaderboardModel from a dict"""
+        """Create an instance of SubmitParticipantResult from a dict"""
         if obj is None:
             return None
 
@@ -84,11 +81,8 @@ class CreateLeaderboardModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "instruction": obj.get("instruction"),
-            "showPrompt": obj.get("showPrompt"),
-            "responseBudget": obj.get("responseBudget"),
-            "minResponses": obj.get("minResponses")
+            "validDatapoints": obj.get("validDatapoints"),
+            "invalidDatapoints": obj.get("invalidDatapoints")
         })
         return _obj
 

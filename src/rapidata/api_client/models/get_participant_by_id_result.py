@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Union
+from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -26,18 +26,19 @@ class GetParticipantByIdResult(BaseModel):
     """
     GetParticipantByIdResult
     """ # noqa: E501
+    id: StrictStr
     name: StrictStr
     leaderboard_id: StrictStr = Field(alias="leaderboardId")
     dataset_id: StrictStr = Field(alias="datasetId")
     status: StrictStr
-    score: Union[StrictFloat, StrictInt]
-    __properties: ClassVar[List[str]] = ["name", "leaderboardId", "datasetId", "status", "score"]
+    score: Optional[Union[StrictFloat, StrictInt]] = None
+    __properties: ClassVar[List[str]] = ["id", "name", "leaderboardId", "datasetId", "status", "score"]
 
     @field_validator('status')
     def status_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['Created', 'Queued', 'Running', 'Completed']):
-            raise ValueError("must be one of enum values ('Created', 'Queued', 'Running', 'Completed')")
+        if value not in set(['Created', 'Queued', 'Running', 'Completed', 'Failed']):
+            raise ValueError("must be one of enum values ('Created', 'Queued', 'Running', 'Completed', 'Failed')")
         return value
 
     model_config = ConfigDict(
@@ -79,6 +80,11 @@ class GetParticipantByIdResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if score (nullable) is None
+        # and model_fields_set contains the field
+        if self.score is None and "score" in self.model_fields_set:
+            _dict['score'] = None
+
         return _dict
 
     @classmethod
@@ -91,6 +97,7 @@ class GetParticipantByIdResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "id": obj.get("id"),
             "name": obj.get("name"),
             "leaderboardId": obj.get("leaderboardId"),
             "datasetId": obj.get("datasetId"),
