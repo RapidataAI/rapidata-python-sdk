@@ -68,7 +68,7 @@ class RapidataClient:
         self._demographic = DemographicManager(openapi_service=self._openapi_service)
 
         logger.debug("Initializing RapidataLeaderboardManager")
-        self.leaderboard = RapidataLeaderboardManager(openapi_service=self._openapi_service)
+        self.mri = RapidataLeaderboardManager(openapi_service=self._openapi_service)
         
     def reset_credentials(self):
         """Reset the credentials saved in the configuration file for the current environment."""

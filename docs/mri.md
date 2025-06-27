@@ -2,16 +2,16 @@
 
 ## Overview
 
-Model Ranking Insights (MRI) provide a powerful way to compare and rank different AI models based on their performance on specific tasks. They allow you to create standardized evaluation environments where multiple models can be tested against the same prompts and ranked based on user feedback.
+Model Ranking Insights (MRI) provides a powerful way to compare and rank different AI models based on their performance on specific tasks. They allow you to create standardized evaluation environments where multiple models can be tested against the same prompts and ranked based on human feedback.
 
 ## What are Model Ranking Insights?
 
-A MRI is a competitive leaderboard evaluation system that:
+MRI is used to create competitive leaderboard evaluation systems that:
 
 - **Creates standardized testing environments** with specific instructions and prompts
 - **Enables model comparison** by having different models generate content for the same prompts
 - **Provides ranking systems** based on human feedback
-- **Offers great insights** through the Rapidata web interface at [app.rapidata.ai/leaderboards](https://app.rapidata.ai/leaderboards)
+- **Offers great insights** through the Rapidata web interface at [app.rapidata.ai/mri/leaderboards](https://app.rapidata.ai/mri/leaderboards)
 
 ## How MRI Work
 
@@ -42,7 +42,7 @@ MRI creates fair comparisons by:
 ### 4. Results and Visibility
 Your leaderboard results are:
 
-- **Directly viewable** on the Rapidata dashboard at [app.rapidata.ai/leaderboards](https://app.rapidata.ai/leaderboards)
+- **Directly viewable** on the Rapidata dashboard at [app.rapidata.ai/mri/leaderboards](https://app.rapidata.ai/mri/leaderboards)
 - **Continuously updated** as new models are added and evaluated
 - **Provides deeper insights** into model performances over time
 
@@ -60,7 +60,7 @@ from rapidata import RapidataClient
 client = RapidataClient() 
 
 # Create a new leaderboard
-leaderboard = client.leaderboard.create_new_leaderboard(
+leaderboard = client.mri.create_new_leaderboard(
     name="AI Art Competition",
     instruction="Which image do you prefer?",
     prompts=[
@@ -78,10 +78,10 @@ You can retrieve leaderboards by ID or search for them:
 
 ```python
 # Get a specific leaderboard by ID
-leaderboard = client.leaderboard.get_leaderboard_by_id("leaderboard_id_here")
+leaderboard = client.mri.get_leaderboard_by_id("leaderboard_id_here")
 
 # Find leaderboards by name
-recent_leaderboards = client.leaderboard.find_leaderboards(
+recent_leaderboards = client.mri.find_leaderboards(
     name="AI Art",
     amount=5
 )

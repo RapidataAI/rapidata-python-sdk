@@ -84,7 +84,7 @@ nav:
   - Filters: reference/rapidata/rapidata_client/filter/rapidata_filters/
   - Settings: reference/rapidata/rapidata_client/settings/rapidata_settings/
   - Selections: reference/rapidata/rapidata_client/selection/rapidata_selections/
-  - Leaderboards: leaderboards.md
+  - Model Ranking Insights: mri.md
   - Logging: logging.md
   - API Documentation: api.md
 
