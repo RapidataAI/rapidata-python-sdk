@@ -13,7 +13,7 @@ MRI is used to create competitive leaderboard evaluation systems that:
 - **Provides ranking systems** based on human feedback
 - **Offers great insights** through the Rapidata web interface at [app.rapidata.ai/mri/leaderboards](https://app.rapidata.ai/mri/leaderboards)
 
-## How MRI Work
+## How to use MRI
 
 ### 1. Leaderboard Creation
 You start by creating a leaderboard with specific settings:
