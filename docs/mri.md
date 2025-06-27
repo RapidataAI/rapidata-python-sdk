@@ -4,15 +4,6 @@
 
 Model Ranking Insights (MRI) provides a powerful way to compare and rank different AI models based on their performance on specific tasks. They allow you to create standardized evaluation environments where multiple models can be tested against the same prompts and ranked based on human feedback.
 
-## What are Model Ranking Insights?
-
-MRI is used to create competitive leaderboard evaluation systems that:
-
-- **Creates standardized testing environments** with specific instructions and prompts
-- **Enables model comparison** by having different models generate content for the same prompts
-- **Provides ranking systems** based on human feedback
-- **Offers great insights** through the Rapidata web interface at [app.rapidata.ai/mri/leaderboards](https://app.rapidata.ai/mri/leaderboards)
-
 ## How to use MRI
 
 ### 1. Leaderboard Creation
