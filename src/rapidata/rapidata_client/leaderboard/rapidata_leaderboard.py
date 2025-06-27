@@ -80,7 +80,7 @@ class RapidataLeaderboard:
 
         Args:
             name: The name of the model.
-            media: The media that will be used to evaluate the model.
+            media: The generated images/videos that will be used to evaluate the model.
             prompts: The prompts that correspond to the media. The order of the prompts must match the order of the media.
                 The prompts that are used must be registered for the leaderboard. To see the registered prompts, use the prompts property.
         """
