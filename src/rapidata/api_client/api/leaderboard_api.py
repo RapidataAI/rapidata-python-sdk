@@ -29,6 +29,7 @@ from rapidata.api_client.models.leaderboard_query_result_paged_result import Lea
 from rapidata.api_client.models.participant_by_leaderboard_paged_result import ParticipantByLeaderboardPagedResult
 from rapidata.api_client.models.prompt_by_leaderboard_result_paged_result import PromptByLeaderboardResultPagedResult
 from rapidata.api_client.models.query_model import QueryModel
+from rapidata.api_client.models.submit_participant_result import SubmitParticipantResult
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -604,7 +605,7 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> None:
+    ) -> SubmitParticipantResult:
         """Submits a participant to a leaderboard.
 
 
@@ -644,7 +645,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
+            '200': "SubmitParticipantResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -674,7 +675,7 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
+    ) -> ApiResponse[SubmitParticipantResult]:
         """Submits a participant to a leaderboard.
 
 
@@ -714,7 +715,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
+            '200': "SubmitParticipantResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -784,7 +785,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
+            '200': "SubmitParticipantResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -828,6 +829,15 @@ class LeaderboardApi:
         # process the body parameter
 
 
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'text/plain', 
+                    'application/json', 
+                    'text/json'
+                ]
+            )
 
 
         # authentication setting
