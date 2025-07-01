@@ -29,14 +29,13 @@ class AddValidationTextRapidModel(BaseModel):
     """
     The model for adding a validation rapid.
     """ # noqa: E501
-    validation_set_id: StrictStr = Field(description="The ID of the validation set to add the rapid to.", alias="validationSetId")
     payload: AddValidationRapidModelPayload
     metadata: List[DatasetDatasetIdDatapointsPostRequestMetadataInner] = Field(description="Some metadata to attach to the rapid.")
     truth: AddValidationRapidModelTruth
     texts: List[StrictStr] = Field(description="The texts to use for the rapid.")
     random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The probability for an answer to be correct when randomly guessing.", alias="randomCorrectProbability")
     explanation: Optional[StrictStr] = Field(default=None, description="An explanation for the users if they answer the rapid incorrectly.")
-    __properties: ClassVar[List[str]] = ["validationSetId", "payload", "metadata", "truth", "texts", "randomCorrectProbability", "explanation"]
+    __properties: ClassVar[List[str]] = ["payload", "metadata", "truth", "texts", "randomCorrectProbability", "explanation"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -112,7 +111,6 @@ class AddValidationTextRapidModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "validationSetId": obj.get("validationSetId"),
             "payload": AddValidationRapidModelPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
             "metadata": [DatasetDatasetIdDatapointsPostRequestMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
             "truth": AddValidationRapidModelTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
