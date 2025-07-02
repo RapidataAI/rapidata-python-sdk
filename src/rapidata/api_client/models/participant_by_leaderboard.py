@@ -32,7 +32,9 @@ class ParticipantByLeaderboard(BaseModel):
     dataset_id: StrictStr = Field(alias="datasetId")
     status: StrictStr
     score: Optional[Union[StrictFloat, StrictInt]] = None
-    __properties: ClassVar[List[str]] = ["id", "name", "leaderboardId", "datasetId", "status", "score"]
+    wins: StrictInt
+    total_matches: StrictInt = Field(alias="totalMatches")
+    __properties: ClassVar[List[str]] = ["id", "name", "leaderboardId", "datasetId", "status", "score", "wins", "totalMatches"]
 
     @field_validator('status')
     def status_validate_enum(cls, value):
@@ -102,7 +104,9 @@ class ParticipantByLeaderboard(BaseModel):
             "leaderboardId": obj.get("leaderboardId"),
             "datasetId": obj.get("datasetId"),
             "status": obj.get("status"),
-            "score": obj.get("score")
+            "score": obj.get("score"),
+            "wins": obj.get("wins"),
+            "totalMatches": obj.get("totalMatches")
         })
         return _obj
 

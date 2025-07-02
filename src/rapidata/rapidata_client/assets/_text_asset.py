@@ -23,7 +23,7 @@ class TextAsset(BaseAsset):
             text (str): The textual content of the asset.
         """
         if not isinstance(text, str):
-            raise ValueError("Text must be a string")
+            raise ValueError(f"Text must be a string, got {type(text)}")
         
         self.text = text
 

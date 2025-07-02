@@ -74,7 +74,7 @@ class MediaAsset(BaseAsset):
             ValueError: If path is not a string.
         """
         if not isinstance(path, str):
-            raise ValueError("Media must be a string, either a local file path or a URL")
+            raise ValueError(f"Media must be a string, either a local file path or a URL, got {type(path)}")
         
         self._url = None
         self._content = None

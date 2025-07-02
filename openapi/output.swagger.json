@@ -4286,6 +4286,45 @@
             }
           }
         }
+      },
+      "delete": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "Deletes a leaderboard by its ID.",
+        "parameters": [
+          {
+            "name": "leaderboardId",
+            "in": "path",
+            "description": "The id of the leaderboard that gets deleted",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetLeaderboardByIdResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetLeaderboardByIdResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetLeaderboardByIdResult"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/leaderboard": {
@@ -4343,7 +4382,7 @@
         "tags": [
           "Leaderboard"
         ],
-        "summary": "returns the paged prompts of a leaderboard by its Id.",
+        "summary": "returns the paged prompts of a leaderboard by its ID.",
         "parameters": [
           {
             "name": "leaderboardId",
@@ -4443,7 +4482,7 @@
         "tags": [
           "Leaderboard"
         ],
-        "summary": "queries all the participants of a leaderboard by its Id.",
+        "summary": "queries all the participants of a leaderboard by its ID.",
         "parameters": [
           {
             "name": "leaderboardId",
@@ -14395,7 +14434,9 @@
           "id",
           "leaderboardId",
           "name",
-          "status"
+          "status",
+          "totalMatches",
+          "wins"
         ],
         "type": "object",
         "properties": {
@@ -14425,6 +14466,14 @@
             "type": "number",
             "format": "double",
             "nullable": true
+          },
+          "wins": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalMatches": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -14498,7 +14547,9 @@
           "id",
           "leaderboardId",
           "name",
-          "status"
+          "status",
+          "totalMatches",
+          "wins"
         ],
         "type": "object",
         "properties": {
@@ -14528,6 +14579,14 @@
             "type": "number",
             "format": "double",
             "nullable": true
+          },
+          "wins": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalMatches": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
