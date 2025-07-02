@@ -37,7 +37,7 @@ class RapidataValidationSet:
             dimensions (list[str]): The new dimensions of the validation set.
         """
         logger.debug(f"Updating dimensions for validation set {self.id} to {dimensions}")
-        self.__openapi_service.validation_api.validation_validation_set_id_dimensions_patch(self.id, UpdateDimensionsModel(dimensions=dimensions))
+        self.__openapi_service.validation_api.validation_set_validation_set_id_dimensions_put(self.id, UpdateDimensionsModel(dimensions=dimensions))
         return self
 
     def __str__(self):

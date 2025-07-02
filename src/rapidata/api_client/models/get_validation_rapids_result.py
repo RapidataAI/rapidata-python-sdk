@@ -21,8 +21,8 @@ from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, Stric
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.file_asset_model_metadata_value import FileAssetModelMetadataValue
 from rapidata.api_client.models.get_validation_rapids_result_asset import GetValidationRapidsResultAsset
+from rapidata.api_client.models.get_validation_rapids_result_payload import GetValidationRapidsResultPayload
 from rapidata.api_client.models.get_validation_rapids_result_truth import GetValidationRapidsResultTruth
-from rapidata.api_client.models.validation_set_validation_set_id_rapid_post_payload_parameter import ValidationSetValidationSetIdRapidPostPayloadParameter
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -34,7 +34,7 @@ class GetValidationRapidsResult(BaseModel):
     type: StrictStr
     asset: Optional[GetValidationRapidsResultAsset] = None
     truth: Optional[GetValidationRapidsResultTruth] = None
-    payload: ValidationSetValidationSetIdRapidPostPayloadParameter
+    payload: GetValidationRapidsResultPayload
     metadata: Dict[str, FileAssetModelMetadataValue]
     correct_validation_count: StrictInt = Field(alias="correctValidationCount")
     invalid_validation_count: StrictInt = Field(alias="invalidValidationCount")
@@ -141,7 +141,7 @@ class GetValidationRapidsResult(BaseModel):
             "type": obj.get("type"),
             "asset": GetValidationRapidsResultAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "truth": GetValidationRapidsResultTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
-            "payload": ValidationSetValidationSetIdRapidPostPayloadParameter.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
+            "payload": GetValidationRapidsResultPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
             "metadata": dict(
                 (_k, FileAssetModelMetadataValue.from_dict(_v))
                 for _k, _v in obj["metadata"].items()

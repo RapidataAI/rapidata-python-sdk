@@ -17,47 +17,6 @@
     }
   ],
   "paths": {
-    "/datapoint/getbyid": {
-      "get": {
-        "tags": [
-          "Datapoint"
-        ],
-        "summary": "Get a datapoint by its id.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "description": "The id of the datapoint to get.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetDatapointByIdResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetDatapointByIdResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetDatapointByIdResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/datapoint/{datapointId}": {
       "get": {
         "tags": [
@@ -119,71 +78,6 @@
             "description": "No Content"
           }
         }
-      }
-    },
-    "/datapoint/delete": {
-      "delete": {
-        "tags": [
-          "Datapoint"
-        ],
-        "summary": "Delete a datapoint.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "description": "The id of the datapoint to delete.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "deprecated": true
-      }
-    },
-    "/dataset/getbyid": {
-      "get": {
-        "tags": [
-          "Dataset"
-        ],
-        "summary": "Gets a dataset by its id.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "description": "The id of the dataset to get.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetDatasetByIdResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetDatasetByIdResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetDatasetByIdResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
       }
     },
     "/dataset/{datasetId}": {
@@ -489,67 +383,6 @@
         }
       }
     },
-    "/dataset/createdatapoint": {
-      "post": {
-        "tags": [
-          "Dataset"
-        ],
-        "summary": "Creates a single datapoint.",
-        "description": "If multiple files are uploaded, a multi asset datapoint will be created.",
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "files": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "format": "binary"
-                    }
-                  },
-                  "model": {
-                    "$ref": "#/components/schemas/DatapointMetadataModel"
-                  }
-                }
-              },
-              "encoding": {
-                "files": {
-                  "style": "form"
-                },
-                "model": {
-                  "style": "form"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateDatapointResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateDatapointResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateDatapointResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/dataset/{datasetId}/datapoints/files": {
       "post": {
         "tags": [
@@ -619,58 +452,6 @@
             }
           }
         }
-      }
-    },
-    "/dataset/creattextdatapoint": {
-      "post": {
-        "tags": [
-          "Dataset"
-        ],
-        "summary": "Creates new datapoints from text sources.",
-        "description": "If multiple text sources are uploaded, a new datapoint will be created for each text source.",
-        "requestBody": {
-          "description": "The body of the request.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UploadTextSourcesToDatasetModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UploadTextSourcesToDatasetModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UploadTextSourcesToDatasetModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateDatapointResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateDatapointResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateDatapointResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
       }
     },
     "/dataset/{datasetId}/datapoints/texts": {
@@ -797,58 +578,6 @@
         }
       }
     },
-    "/dataset/uploadfilesfroms3": {
-      "post": {
-        "tags": [
-          "Dataset"
-        ],
-        "summary": "Uploads files from an S3 bucket to a dataset.",
-        "description": "A new datapoint will be created for each file in the bucket.",
-        "requestBody": {
-          "description": "The body of the request.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UploadFilesFromS3BucketModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UploadFilesFromS3BucketModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UploadFilesFromS3BucketModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/UploadFromS3Result"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UploadFromS3Result"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UploadFromS3Result"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/dataset/{datasetId}/datapoints/s3": {
       "post": {
         "tags": [
@@ -909,68 +638,6 @@
             }
           }
         }
-      }
-    },
-    "/dataset/import": {
-      "post": {
-        "tags": [
-          "Dataset"
-        ],
-        "summary": "Imports datapoints from a csv file.",
-        "parameters": [
-          {
-            "name": "datasetId",
-            "in": "query",
-            "description": "The id of the dataset to import the datapoints to.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "file": {
-                    "type": "string",
-                    "description": "The csv file to import.",
-                    "format": "binary"
-                  }
-                }
-              },
-              "encoding": {
-                "file": {
-                  "style": "form"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ImportFromFileResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ImportFromFileResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ImportFromFileResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
       }
     },
     "/dataset/{datasetId}/datapoints/csv": {
@@ -1035,38 +702,6 @@
         }
       }
     },
-    "/dataset/updatename": {
-      "post": {
-        "tags": [
-          "Dataset"
-        ],
-        "summary": "Updates the name of a dataset.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "description": "The id of the dataset to update.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "name",
-            "in": "query",
-            "description": "The new name of the dataset.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/dataset/{datasetId}/name": {
       "patch": {
         "tags": [
@@ -1111,40 +746,6 @@
         }
       }
     },
-    "/feedback/feedback": {
-      "post": {
-        "tags": [
-          "Feedback"
-        ],
-        "summary": "Submits feedback about our services.",
-        "requestBody": {
-          "description": "The body content of the request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FeedbackModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FeedbackModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/FeedbackModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/feedback": {
       "post": {
         "tags": [
@@ -1176,51 +777,6 @@
             "description": "No Content"
           }
         }
-      }
-    },
-    "/order/query": {
-      "get": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Queries orders based on a filter, page, and sort criteria.",
-        "parameters": [
-          {
-            "name": "request",
-            "in": "query",
-            "description": "The parameters for filtering, paging, and sorting",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryModel"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderModelPagedResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderModelPagedResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OrderModelPagedResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
       }
     },
     "/orders": {
@@ -1267,37 +823,6 @@
         }
       }
     },
-    "/order/getpublic": {
-      "get": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Retrieves orders that are public and can be cloned by any user.",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetPublicOrdersResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetPublicOrdersResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetPublicOrdersResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/orders/public": {
       "get": {
         "tags": [
@@ -1326,47 +851,6 @@
             }
           }
         }
-      }
-    },
-    "/order/getbyid": {
-      "get": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Retrieves an order by its id.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "description": "The id of the order",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetOrderByIdResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetOrderByIdResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetOrderByIdResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
       }
     },
     "/order/{orderId}": {
@@ -1432,47 +916,6 @@
         }
       }
     },
-    "/order/result": {
-      "get": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Aggregates the results of an order.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "description": "The id of the order",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/order/{orderId}/results": {
       "get": {
         "tags": [
@@ -1512,42 +955,6 @@
             }
           }
         }
-      }
-    },
-    "/order/getorderresults": {
-      "get": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Aggregates the results of an order.",
-        "description": "Returns the aggregated result as a file with a given name.\nThe annotated type of the response represents the content type of the file.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "description": "The id of the order",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {}
-              },
-              "application/json": {
-                "schema": {}
-              },
-              "text/json": {
-                "schema": {}
-              }
-            }
-          }
-        },
-        "deprecated": true
       }
     },
     "/order/{orderId}/download-results": {
@@ -1593,57 +1000,6 @@
             }
           }
         }
-      }
-    },
-    "/order/create": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Used to create a new order.",
-        "requestBody": {
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateOrderModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateOrderModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateOrderModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateOrderResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateOrderResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateOrderResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
       }
     },
     "/order": {
@@ -1696,57 +1052,6 @@
         }
       }
     },
-    "/order/createcomplexorder": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Creates a new order with a custom pipeline.",
-        "requestBody": {
-          "description": "The body content of the request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateComplexOrderModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateComplexOrderModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateComplexOrderModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateComplexOrderResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateComplexOrderResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateComplexOrderResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/order/complex": {
       "post": {
         "tags": [
@@ -1797,40 +1102,6 @@
         }
       }
     },
-    "/order/createunsupportedorder": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Notifies the admins that a user wants to create an order with an unsupported label type or data type.",
-        "requestBody": {
-          "description": "The body content of the request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateUnsupportedOrderModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateUnsupportedOrderModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateUnsupportedOrderModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/order/unsupported": {
       "post": {
         "tags": [
@@ -1862,58 +1133,6 @@
             "description": "No Content"
           }
         }
-      }
-    },
-    "/order/cloneorder": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Clones an existing order.",
-        "description": "In order to clone an order, the existing order must be marked as public.",
-        "requestBody": {
-          "description": "The body content of the request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CloneOrderModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CloneOrderModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CloneOrderModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CloneOrderResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CloneOrderResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CloneOrderResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
       }
     },
     "/order/{orderId}/clone": {
@@ -1978,48 +1197,6 @@
         }
       }
     },
-    "/order/unlock": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Unlocks a newly cloned order.",
-        "description": "When an order is cloned only the necessary information is copied.\nIn order to make changes to the order, it must be unlocked first.\nUnlocking the order will clone the entire dataset and its datapoints.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "query",
-            "description": "The id of the order to unlock",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnlockOrderResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnlockOrderResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnlockOrderResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/order/{orderId}/unlock": {
       "post": {
         "tags": [
@@ -2062,50 +1239,6 @@
         }
       }
     },
-    "/order/updateaccess": {
-      "put": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Updates whether an order is public or not.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "query",
-            "description": "The id of the order to update",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The body content of the request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateAccessModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateAccessModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateAccessModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/order/{orderId}/demo": {
       "patch": {
         "tags": [
@@ -2137,30 +1270,6 @@
             "description": "OK"
           }
         }
-      }
-    },
-    "/order/share": {
-      "put": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Updates whether an order is public or not.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "query",
-            "description": "The id of the order to update",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "deprecated": true
       }
     },
     "/order/{orderId}/share": {
@@ -2196,31 +1305,6 @@
         }
       }
     },
-    "/order/submit": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Submits an order for approval.",
-        "description": "Once an order is created its order id and dataset id is returned.\nThe dataset id can be used to fill the dataset with data points.\nOnce submitted, the order will be locked and no further changes can be made.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "query",
-            "description": "The id of the order to submit",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/order/{orderId}/submit": {
       "post": {
         "tags": [
@@ -2246,31 +1330,6 @@
         }
       }
     },
-    "/order/approve": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Approves an order that has been submitted for manual approval.",
-        "description": "An order is submitted for manual approval when the automatic approval process could not automatically\ndetermine if the order is safe to process.\nOnce an order is approved, the pipeline will start processing the order.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "query",
-            "description": "The id of the order to approve",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/order/{orderId}/approve": {
       "post": {
         "tags": [
@@ -2294,50 +1353,6 @@
             "description": "No Content"
           }
         }
-      }
-    },
-    "/order/updateordername": {
-      "put": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Updates the name of an order.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "query",
-            "description": "The id of the order to update",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The body content of the request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateOrderNameModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateOrderNameModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateOrderNameModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "deprecated": true
       }
     },
     "/order/{orderId}/name": {
@@ -2384,30 +1399,6 @@
         }
       }
     },
-    "/order/retryfailed": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Retries a failed order.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "query",
-            "description": "The id of the order to retry",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/order/{orderId}/retry": {
       "post": {
         "tags": [
@@ -2432,30 +1423,6 @@
         }
       }
     },
-    "/order/pause": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Pauses an order that is processing. Meaning all campaigns in the order will be paused.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "query",
-            "description": "",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/order/{orderId}/pause": {
       "post": {
         "tags": [
@@ -2478,30 +1445,6 @@
             "description": "No Content"
           }
         }
-      }
-    },
-    "/order/resume": {
-      "post": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Resumes a paused order. Meaning all campaigns in the order will be resumed.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "query",
-            "description": "",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "deprecated": true
       }
     },
     "/order/{orderId}/preview": {
@@ -2550,30 +1493,6 @@
             "description": "No Content"
           }
         }
-      }
-    },
-    "/order/delete": {
-      "delete": {
-        "tags": [
-          "Order"
-        ],
-        "summary": "Deletes an order.",
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "query",
-            "description": "The id of the order to delete",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "deprecated": true
       }
     },
     "/clients": {
@@ -2783,57 +1702,6 @@
         }
       }
     },
-    "/identity/registertemporary": {
-      "post": {
-        "tags": [
-          "Identity"
-        ],
-        "summary": "Registers and logs in a temporary customer.",
-        "requestBody": {
-          "description": "The model to register the temporary customer with.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterTemporaryCustomerModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterTemporaryCustomerModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterTemporaryCustomerModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/RegisterTemporaryCustomerResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RegisterTemporaryCustomerResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RegisterTemporaryCustomerResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/identity/temporary": {
       "post": {
         "tags": [
@@ -2882,47 +1750,6 @@
             }
           }
         }
-      }
-    },
-    "/identity/createbridgetoken": {
-      "post": {
-        "tags": [
-          "Identity"
-        ],
-        "summary": "Creates a pair of read and write keys for a client.\nThe write key is used to store the authentication result.\nThe read key is used to retrieve the authentication result.",
-        "parameters": [
-          {
-            "name": "clientId",
-            "in": "query",
-            "description": "The client ID to create the keys for.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateBridgeTokenResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateBridgeTokenResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateBridgeTokenResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
       }
     },
     "/identity/bridge-token": {
@@ -3021,67 +1848,6 @@
             }
           }
         }
-      }
-    },
-    "/identity/readbridgetoken": {
-      "get": {
-        "tags": [
-          "Identity"
-        ],
-        "summary": "Tries to read the bridge token keys for a given read key.\nThe read key is used to retrieve the authentication result written by the write key.",
-        "parameters": [
-          {
-            "name": "readKey",
-            "in": "query",
-            "description": "The read key to read the bridge token keys for.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReadBridgeTokenKeysResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReadBridgeTokenKeysResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReadBridgeTokenKeysResult"
-                }
-              }
-            }
-          },
-          "202": {
-            "description": "Accepted",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotAvailableYetResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotAvailableYetResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotAvailableYetResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
       }
     },
     "/identity/referrer": {
@@ -3231,62 +1997,6 @@
         }
       }
     },
-    "/coco/upload": {
-      "post": {
-        "tags": [
-          "Coco"
-        ],
-        "summary": "Uploads a CoCo set to the system.",
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "Name": {
-                    "type": "string"
-                  },
-                  "Title": {
-                    "type": "string"
-                  }
-                }
-              },
-              "encoding": {
-                "Name": {
-                  "style": "form"
-                },
-                "Title": {
-                  "style": "form"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/UploadCocoResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UploadCocoResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UploadCocoResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/coco": {
       "post": {
         "tags": [
@@ -3340,57 +2050,6 @@
             }
           }
         }
-      }
-    },
-    "/coco/submit": {
-      "post": {
-        "tags": [
-          "Coco"
-        ],
-        "summary": "Creates a new validation set based on a previously uploaded CoCo set.",
-        "requestBody": {
-          "description": "The model containing the information needed to create the validation set.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SubmitCocoModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SubmitCocoModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/SubmitCocoModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/SubmitCocoResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SubmitCocoResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SubmitCocoResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
       }
     },
     "/coco/{cocoSetId}/submit": {
@@ -3452,51 +2111,6 @@
             }
           }
         }
-      }
-    },
-    "/validation/queryvalidationsets": {
-      "get": {
-        "tags": [
-          "ValidationSet"
-        ],
-        "summary": "Queries validation sets based on the provided filter, paging and sorting criteria.",
-        "parameters": [
-          {
-            "name": "model",
-            "in": "query",
-            "description": "The model containing the query parameters.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryModel"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationSetModelPagedResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationSetModelPagedResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationSetModelPagedResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
       }
     },
     "/validation-sets": {
@@ -3606,37 +2220,6 @@
         }
       }
     },
-    "/validation/getavailablevalidationsets": {
-      "get": {
-        "tags": [
-          "ValidationSet"
-        ],
-        "summary": "Gets the available validation sets for the current user.",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetAvailableValidationSetsResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetAvailableValidationSetsResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetAvailableValidationSetsResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/validation-sets/available": {
       "get": {
         "tags": [
@@ -3665,88 +2248,6 @@
             }
           }
         }
-      }
-    },
-    "/validation/getbyid": {
-      "get": {
-        "tags": [
-          "ValidationSet"
-        ],
-        "summary": "Gets a validation set by the id.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "description": "The id of the validation set to get.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetValidationSetByIdResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetValidationSetByIdResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetValidationSetByIdResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
-    "/validation/createvalidationset": {
-      "post": {
-        "tags": [
-          "ValidationSet"
-        ],
-        "summary": "Creates a new empty validation set.",
-        "parameters": [
-          {
-            "name": "name",
-            "in": "query",
-            "description": "The name to give the new validation set.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateEmptyValidationSetResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateEmptyValidationSetResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateEmptyValidationSetResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
       }
     },
     "/validation-set": {
@@ -3852,299 +2353,6 @@
         }
       }
     },
-    "/validation/addvalidationrapid": {
-      "post": {
-        "tags": [
-          "ValidationSet"
-        ],
-        "summary": "Adds a new validation rapid to the specified validation set.",
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "model": {
-                    "$ref": "#/components/schemas/AddValidationRapidModel"
-                  },
-                  "files": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "format": "binary"
-                    }
-                  }
-                }
-              },
-              "encoding": {
-                "model": {
-                  "style": "form"
-                },
-                "files": {
-                  "style": "form"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddValidationRapidResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddValidationRapidResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddValidationRapidResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
-    "/validation-set/{validationSetId}/rapid": {
-      "post": {
-        "tags": [
-          "ValidationSet"
-        ],
-        "summary": "Creates a new rapid for a validation set from multiple possible sources.",
-        "description": "Multiple files, texts, and urls can be provided.\nIf multiple files are provided, a multi-asset rapid will be created,\nmeaning that all sources provided will be stored as sub-assets of the rapid.\n            \nIf multiple rapids are desired, one should not pass in multiple files, texts, or urls,\ninstead, one should call this endpoint multiple times with the desired file, text, or url per rapid.\n            \nThe request must be a multipart form request, where each parameter is sent as a separate part.\nThe files, texts, and urls can be mixed and matched as needed, however, at least one of them must be provided,\nand one should make sure that mixing them makes sense for the dataset.",
-        "parameters": [
-          {
-            "name": "validationSetId",
-            "in": "path",
-            "description": "The id of the validation set.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "ValidationSetId",
-            "in": "query",
-            "description": "The ID of the validation set to add the rapid to.",
-            "schema": {
-              "type": "string",
-              "deprecated": true
-            }
-          },
-          {
-            "name": "Payload",
-            "in": "query",
-            "description": "The payload to use for the rapid.",
-            "schema": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/TranscriptionPayload"
-                },
-                {
-                  "$ref": "#/components/schemas/ScrubPayload"
-                },
-                {
-                  "$ref": "#/components/schemas/PolygonPayload"
-                },
-                {
-                  "$ref": "#/components/schemas/NamedEntityPayload"
-                },
-                {
-                  "$ref": "#/components/schemas/LocatePayload"
-                },
-                {
-                  "$ref": "#/components/schemas/LinePayload"
-                },
-                {
-                  "$ref": "#/components/schemas/FreeTextPayload"
-                },
-                {
-                  "$ref": "#/components/schemas/ComparePayload"
-                },
-                {
-                  "$ref": "#/components/schemas/ClassifyPayload"
-                },
-                {
-                  "$ref": "#/components/schemas/BoundingBoxPayload"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
-          },
-          {
-            "name": "Metadata",
-            "in": "query",
-            "description": "Some metadata to attach to the rapid.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/PrivateTextMetadataInput"
-                  },
-                  {
-                    "$ref": "#/components/schemas/PromptAssetMetadataInput"
-                  },
-                  {
-                    "$ref": "#/components/schemas/PromptMetadataInput"
-                  },
-                  {
-                    "$ref": "#/components/schemas/PublicTextMetadataInput"
-                  },
-                  {
-                    "$ref": "#/components/schemas/TranscriptionMetadataInput"
-                  }
-                ],
-                "discriminator": {
-                  "propertyName": "_t"
-                }
-              }
-            }
-          },
-          {
-            "name": "Truth",
-            "in": "query",
-            "description": "The ground truth for the rapid.",
-            "schema": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/TranscriptionTruth"
-                },
-                {
-                  "$ref": "#/components/schemas/ScrubTruth"
-                },
-                {
-                  "$ref": "#/components/schemas/PolygonTruth"
-                },
-                {
-                  "$ref": "#/components/schemas/NamedEntityTruth"
-                },
-                {
-                  "$ref": "#/components/schemas/LocateBoxTruth"
-                },
-                {
-                  "$ref": "#/components/schemas/LineTruth"
-                },
-                {
-                  "$ref": "#/components/schemas/EmptyValidationTruth"
-                },
-                {
-                  "$ref": "#/components/schemas/CompareTruth"
-                },
-                {
-                  "$ref": "#/components/schemas/MultiCompareTruth"
-                },
-                {
-                  "$ref": "#/components/schemas/SkipTruth"
-                },
-                {
-                  "$ref": "#/components/schemas/AttachCategoryTruth"
-                },
-                {
-                  "$ref": "#/components/schemas/BoundingBoxTruth"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
-          },
-          {
-            "name": "RandomCorrectProbability",
-            "in": "query",
-            "description": "The probability for an answer to be correct when randomly guessing.",
-            "schema": {
-              "type": "number",
-              "format": "double"
-            }
-          },
-          {
-            "name": "Explanation",
-            "in": "query",
-            "description": "An explanation for the users if they answer the rapid incorrectly.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "file": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "format": "binary"
-                    },
-                    "description": "The files to upload from the local storage. Must be either images or videos."
-                  },
-                  "text": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "description": "The texts to upload. The length limit is set at 256 characters per text."
-                  },
-                  "url": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "description": "Creates an asset from a url. The url needs to point to a publicly accessible resource.\nThe server will download the resource and store it as an asset in the background.\n<remarks>\n    Additionally, to the urls having to be publicly accessible, they need to support HTTP HEAD requests.\n</remarks>"
-                  }
-                }
-              },
-              "encoding": {
-                "text": {
-                  "contentType": "text/plain",
-                  "style": "form",
-                  "explode": true
-                },
-                "url": {
-                  "contentType": "text/plain",
-                  "style": "form",
-                  "explode": true
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddValidationRapidResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddValidationRapidResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddValidationRapidResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/validation-set/{validationSetId}/rapid/files": {
       "post": {
         "tags": [
@@ -4215,57 +2423,6 @@
         }
       }
     },
-    "/validation/addvalidationtextrapid": {
-      "post": {
-        "tags": [
-          "ValidationSet"
-        ],
-        "summary": "Adds a new validation rapid to the specified validation set.",
-        "requestBody": {
-          "description": "The model containing the information needed to add the validation rapid.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddValidationTextRapidModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddValidationTextRapidModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddValidationTextRapidModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddValidationRapidResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddValidationRapidResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddValidationRapidResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/validation-set/{validationSetId}/rapid/texts": {
       "post": {
         "tags": [
@@ -4325,90 +2482,6 @@
             }
           }
         }
-      }
-    },
-    "/validation/import": {
-      "post": {
-        "tags": [
-          "ValidationSet"
-        ],
-        "summary": "Imports a validation set from a zip file.",
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "Blueprint": {
-                    "oneOf": [
-                      {
-                        "$ref": "#/components/schemas/TranscriptionRapidBlueprint"
-                      },
-                      {
-                        "$ref": "#/components/schemas/ScrubRapidBlueprint"
-                      },
-                      {
-                        "$ref": "#/components/schemas/PolygonRapidBlueprint"
-                      },
-                      {
-                        "$ref": "#/components/schemas/NamedEntityRapidBlueprint"
-                      },
-                      {
-                        "$ref": "#/components/schemas/LocateRapidBlueprint"
-                      },
-                      {
-                        "$ref": "#/components/schemas/LineRapidBlueprint"
-                      },
-                      {
-                        "$ref": "#/components/schemas/FreeTextRapidBlueprint"
-                      },
-                      {
-                        "$ref": "#/components/schemas/CompareRapidBlueprint"
-                      },
-                      {
-                        "$ref": "#/components/schemas/AttachCategoryRapidBlueprint"
-                      },
-                      {
-                        "$ref": "#/components/schemas/BoundingBoxRapidBlueprint"
-                      }
-                    ],
-                    "discriminator": {
-                      "propertyName": "_t"
-                    }
-                  }
-                }
-              },
-              "encoding": {
-                "Blueprint": {
-                  "style": "form"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ImportValidationSetFromFileResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ImportValidationSetFromFileResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ImportValidationSetFromFileResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
       }
     },
     "/validation-set/zip": {
@@ -4494,56 +2567,6 @@
         }
       }
     },
-    "/validation/importcompare": {
-      "post": {
-        "tags": [
-          "ValidationSet"
-        ],
-        "summary": "Imports a compare validation set from a zip file.",
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "Criteria": {
-                    "type": "string"
-                  }
-                }
-              },
-              "encoding": {
-                "Criteria": {
-                  "style": "form"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ImportValidationSetFromFileResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ImportValidationSetFromFileResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ImportValidationSetFromFileResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/validation-set/zip/compare": {
       "post": {
         "tags": [
@@ -4591,51 +2614,6 @@
             }
           }
         }
-      }
-    },
-    "/validation/{validationSetId}/dimensions": {
-      "patch": {
-        "tags": [
-          "ValidationSet"
-        ],
-        "summary": "Updates the dimensions of all rapids within a validation set.",
-        "parameters": [
-          {
-            "name": "validationSetId",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The model containing the dimensions",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateDimensionsModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateDimensionsModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateDimensionsModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "deprecated": true
       }
     },
     "/validation-set/{validationSetId}/dimensions": {
@@ -5362,51 +3340,6 @@
         }
       }
     },
-    "/workflow/query": {
-      "get": {
-        "tags": [
-          "Workflow"
-        ],
-        "summary": "Queries workflows based on the provided filter, page, and sort criteria.",
-        "parameters": [
-          {
-            "name": "request",
-            "in": "query",
-            "description": "The model containing the filter, page, and sort criteria.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryWorkflowsModel"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/IWorkflowModelPagedResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IWorkflowModelPagedResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IWorkflowModelPagedResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/workflows": {
       "get": {
         "tags": [
@@ -5451,47 +3384,6 @@
         }
       }
     },
-    "/workflow/getbyid": {
-      "get": {
-        "tags": [
-          "Workflow"
-        ],
-        "summary": "Get a workflow by its ID.",
-        "parameters": [
-          {
-            "name": "workflowId",
-            "in": "query",
-            "description": "The ID of the workflow to get.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetWorkflowByIdResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetWorkflowByIdResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetWorkflowByIdResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/workflow/{workflowId}": {
       "get": {
         "tags": [
@@ -5531,47 +3423,6 @@
             }
           }
         }
-      }
-    },
-    "/workflow/getprogress": {
-      "get": {
-        "tags": [
-          "Workflow"
-        ],
-        "summary": "Get the progress of a workflow.",
-        "parameters": [
-          {
-            "name": "workflowId",
-            "in": "query",
-            "description": "The ID of the workflow to get the progress for.",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetWorkflowProgressResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetWorkflowProgressResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetWorkflowProgressResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
       }
     },
     "/workflow/{workflowId}/progress": {
@@ -5944,94 +3795,6 @@
         }
       }
     },
-    "/pipeline/{id}/workflow/{artifactId}": {
-      "put": {
-        "tags": [
-          "Pipeline"
-        ],
-        "summary": "Updates the workflow configuration for a pipeline.",
-        "description": "This method needs to be called before the pipeline is started.\nOtherwise, the changes will not take effect unless the pipeline is restarted.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "The id of the pipeline to update.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "artifactId",
-            "in": "path",
-            "description": "The id of the workflow config artifact to update.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The new workflow configuration.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/CompareWorkflowConfigModel"
-                  },
-                  {
-                    "$ref": "#/components/schemas/SimpleWorkflowConfigModel"
-                  }
-                ],
-                "description": "The base configuration for a workflow.",
-                "discriminator": {
-                  "propertyName": "_t"
-                }
-              }
-            },
-            "text/json": {
-              "schema": {
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/CompareWorkflowConfigModel"
-                  },
-                  {
-                    "$ref": "#/components/schemas/SimpleWorkflowConfigModel"
-                  }
-                ],
-                "description": "The base configuration for a workflow.",
-                "discriminator": {
-                  "propertyName": "_t"
-                }
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/CompareWorkflowConfigModel"
-                  },
-                  {
-                    "$ref": "#/components/schemas/SimpleWorkflowConfigModel"
-                  }
-                ],
-                "description": "The base configuration for a workflow.",
-                "discriminator": {
-                  "propertyName": "_t"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/pipeline/{id}/workflow-config": {
       "put": {
         "tags": [
@@ -6319,51 +4082,6 @@
         }
       }
     },
-    "/campaign/query": {
-      "get": {
-        "tags": [
-          "Campaign"
-        ],
-        "summary": "Queries orders based on a filter, page, and sort criteria.",
-        "parameters": [
-          {
-            "name": "request",
-            "in": "query",
-            "description": "The parameters for filtering, paging, and sorting",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryModel"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CampaignQueryResultPagedResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CampaignQueryResultPagedResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CampaignQueryResultPagedResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/campaigns": {
       "get": {
         "tags": [
@@ -6408,30 +4126,6 @@
         }
       }
     },
-    "/campaign/pause": {
-      "post": {
-        "tags": [
-          "Campaign"
-        ],
-        "summary": "Pauses a campaign.",
-        "parameters": [
-          {
-            "name": "campaignId",
-            "in": "query",
-            "description": "id of the campaign that should be paused",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/campaign/{campaignId}/pause": {
       "post": {
         "tags": [
@@ -6454,30 +4148,6 @@
             "description": "No Content"
           }
         }
-      }
-    },
-    "/campaign/resume": {
-      "post": {
-        "tags": [
-          "Campaign"
-        ],
-        "summary": "Resumes a campaign.",
-        "parameters": [
-          {
-            "name": "campaignId",
-            "in": "query",
-            "description": "id of the campaign that should be paused",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        },
-        "deprecated": true
       }
     },
     "/campaign/{campaignId}/resume": {
@@ -6616,6 +4286,45 @@
             }
           }
         }
+      },
+      "delete": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "Deletes a leaderboard by its ID.",
+        "parameters": [
+          {
+            "name": "leaderboardId",
+            "in": "path",
+            "description": "The id of the leaderboard that gets deleted",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetLeaderboardByIdResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetLeaderboardByIdResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetLeaderboardByIdResult"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/leaderboard": {
@@ -6673,7 +4382,7 @@
         "tags": [
           "Leaderboard"
         ],
-        "summary": "returns the paged prompts of a leaderboard by its Id.",
+        "summary": "returns the paged prompts of a leaderboard by its ID.",
         "parameters": [
           {
             "name": "leaderboardId",
@@ -6773,7 +4482,7 @@
         "tags": [
           "Leaderboard"
         ],
-        "summary": "queries all the participants of a leaderboard by its Id.",
+        "summary": "queries all the participants of a leaderboard by its ID.",
         "parameters": [
           {
             "name": "leaderboardId",
@@ -7315,53 +5024,6 @@
           }
         },
         "additionalProperties": false
-      },
-      "DatapointMetadataModel": {
-        "required": [
-          "datasetId",
-          "metadata"
-        ],
-        "type": "object",
-        "properties": {
-          "datasetId": {
-            "type": "string",
-            "description": "The id of the dataset to create the datapoint in."
-          },
-          "metadata": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/PrivateTextMetadataInput"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptAssetMetadataInput"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptMetadataInput"
-                },
-                {
-                  "$ref": "#/components/schemas/PublicTextMetadataInput"
-                },
-                {
-                  "$ref": "#/components/schemas/TranscriptionMetadataInput"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            },
-            "description": "The metadata of the datapoint."
-          },
-          "sortIndex": {
-            "type": "integer",
-            "description": "The index will be used to keep the datapoints in order. Useful if upload is parallelized",
-            "format": "int64",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false,
-        "description": "The model for creating a datapoint."
       },
       "DatapointModel": {
         "required": [
@@ -8523,55 +6185,6 @@
         "additionalProperties": false,
         "description": "The body request for updating the name of a dataset."
       },
-      "UploadFilesFromS3BucketModel": {
-        "required": [
-          "bucketName",
-          "datasetId",
-          "sourcePrefix"
-        ],
-        "type": "object",
-        "properties": {
-          "datasetId": {
-            "type": "string",
-            "description": "The id of the dataset to upload the files to."
-          },
-          "bucketName": {
-            "type": "string",
-            "description": "The name of the S3 bucket to upload the files from."
-          },
-          "region": {
-            "type": "string",
-            "description": "The region of the S3 bucket.",
-            "nullable": true
-          },
-          "sourcePrefix": {
-            "type": "string",
-            "description": "The prefix of the files to upload."
-          },
-          "accessKey": {
-            "type": "string",
-            "description": "The access key to use for the S3 bucket.",
-            "nullable": true
-          },
-          "secretKey": {
-            "type": "string",
-            "description": "The secret key to use for the S3 bucket.",
-            "nullable": true
-          },
-          "useCustomAwsCredentials": {
-            "type": "boolean",
-            "description": "Whether to use custom AWS credentials.",
-            "nullable": true
-          },
-          "clearDataset": {
-            "type": "boolean",
-            "description": "Whether to clear the dataset before uploading the files.",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false,
-        "description": "The model for uploading files from an S3 bucket to a dataset."
-      },
       "UploadFromS3Result": {
         "type": "object",
         "properties": {
@@ -8581,62 +6194,6 @@
           }
         },
         "additionalProperties": false
-      },
-      "UploadTextSourcesToDatasetModel": {
-        "required": [
-          "datasetId",
-          "textSources"
-        ],
-        "type": "object",
-        "properties": {
-          "datasetId": {
-            "type": "string",
-            "description": "The id of the dataset to upload the text sources to."
-          },
-          "textSources": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "The text sources to upload."
-          },
-          "sortIndex": {
-            "type": "integer",
-            "description": "The index will be used to keep the datapoints in order. Useful if upload is parallelized",
-            "format": "int64",
-            "nullable": true
-          },
-          "metadata": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/PrivateTextMetadataInput"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptAssetMetadataInput"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptMetadataInput"
-                },
-                {
-                  "$ref": "#/components/schemas/PublicTextMetadataInput"
-                },
-                {
-                  "$ref": "#/components/schemas/TranscriptionMetadataInput"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            },
-            "description": "Additional metadata to attach to the datapoint.\nMost commonly used to add a prompt to the datapoint using the Rapidata.Shared.Assets.Abstraction.Models.Metadata.Input.PromptMetadataInput.",
-            "default": null,
-            "nullable": true
-          }
-        },
-        "additionalProperties": false,
-        "description": "The model for uploading text sources to a dataset."
       },
       "UrlAssetInput": {
         "title": "UrlAssetInput",
@@ -9039,19 +6596,13 @@
       },
       "CloneOrderModel": {
         "required": [
-          "orderName",
-          "orderToCloneId"
+          "orderName"
         ],
         "type": "object",
         "properties": {
           "orderName": {
             "type": "string",
             "description": "The name of the new order"
-          },
-          "orderToCloneId": {
-            "type": "string",
-            "description": "The id of the order to clone",
-            "deprecated": true
           }
         },
         "additionalProperties": false,
@@ -10843,20 +8394,6 @@
         },
         "additionalProperties": false
       },
-      "UpdateAccessModel": {
-        "required": [
-          "isPublic"
-        ],
-        "type": "object",
-        "properties": {
-          "isPublic": {
-            "type": "boolean",
-            "description": "A flag indicating whether to update the order to be public or not."
-          }
-        },
-        "additionalProperties": false,
-        "description": "The model for updating the access of an order."
-      },
       "UpdateOrderNameModel": {
         "required": [
           "name"
@@ -11668,16 +9205,10 @@
         "required": [
           "metadata",
           "payload",
-          "truth",
-          "validationSetId"
+          "truth"
         ],
         "type": "object",
         "properties": {
-          "validationSetId": {
-            "type": "string",
-            "description": "The ID of the validation set to add the rapid to.",
-            "deprecated": true
-          },
           "payload": {
             "oneOf": [
               {
@@ -11818,16 +9349,10 @@
           "metadata",
           "payload",
           "texts",
-          "truth",
-          "validationSetId"
+          "truth"
         ],
         "type": "object",
         "properties": {
-          "validationSetId": {
-            "type": "string",
-            "description": "The ID of the validation set to add the rapid to.",
-            "deprecated": true
-          },
           "payload": {
             "oneOf": [
               {
@@ -12872,7 +10397,6 @@
       "SubmitCocoModel": {
         "required": [
           "categories",
-          "cocoSetId",
           "name"
         ],
         "type": "object",
@@ -12880,11 +10404,6 @@
           "name": {
             "type": "string",
             "description": "The name of the validation set."
-          },
-          "cocoSetId": {
-            "type": "string",
-            "description": "The ID of the CoCo set to use for validation.",
-            "deprecated": true
           },
           "categories": {
             "type": "array",
@@ -14995,28 +12514,6 @@
         },
         "additionalProperties": false
       },
-      "QueryWorkflowsModel": {
-        "type": "object",
-        "properties": {
-          "page": {
-            "$ref": "#/components/schemas/PageInfo"
-          },
-          "filter": {
-            "$ref": "#/components/schemas/RootFilter"
-          },
-          "sortCriteria": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SortCriterion"
-            },
-            "description": "The sort criteria.",
-            "default": null,
-            "nullable": true
-          }
-        },
-        "additionalProperties": false,
-        "description": "The model for the query request."
-      },
       "SimpleWorkflowModel1": {
         "title": "SimpleWorkflowModel",
         "required": [
@@ -16937,7 +14434,9 @@
           "id",
           "leaderboardId",
           "name",
-          "status"
+          "status",
+          "totalMatches",
+          "wins"
         ],
         "type": "object",
         "properties": {
@@ -16967,6 +14466,14 @@
             "type": "number",
             "format": "double",
             "nullable": true
+          },
+          "wins": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalMatches": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -17040,7 +14547,9 @@
           "id",
           "leaderboardId",
           "name",
-          "status"
+          "status",
+          "totalMatches",
+          "wins"
         ],
         "type": "object",
         "properties": {
@@ -17070,6 +14579,14 @@
             "type": "number",
             "format": "double",
             "nullable": true
+          },
+          "wins": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalMatches": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
