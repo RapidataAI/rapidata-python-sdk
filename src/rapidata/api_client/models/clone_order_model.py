@@ -27,8 +27,7 @@ class CloneOrderModel(BaseModel):
     The model for cloning an existing order.
     """ # noqa: E501
     order_name: StrictStr = Field(description="The name of the new order", alias="orderName")
-    order_to_clone_id: StrictStr = Field(description="The id of the order to clone", alias="orderToCloneId")
-    __properties: ClassVar[List[str]] = ["orderName", "orderToCloneId"]
+    __properties: ClassVar[List[str]] = ["orderName"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -81,8 +80,7 @@ class CloneOrderModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "orderName": obj.get("orderName"),
-            "orderToCloneId": obj.get("orderToCloneId")
+            "orderName": obj.get("orderName")
         })
         return _obj
 

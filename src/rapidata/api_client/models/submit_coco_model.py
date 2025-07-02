@@ -27,9 +27,8 @@ class SubmitCocoModel(BaseModel):
     The model for submitting a CoCo set.
     """ # noqa: E501
     name: StrictStr = Field(description="The name of the validation set.")
-    coco_set_id: StrictStr = Field(description="The ID of the CoCo set to use for validation.", alias="cocoSetId")
     categories: List[StrictStr] = Field(description="A subset of the categories from the CoCo set to use in the rapids.")
-    __properties: ClassVar[List[str]] = ["name", "cocoSetId", "categories"]
+    __properties: ClassVar[List[str]] = ["name", "categories"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -83,7 +82,6 @@ class SubmitCocoModel(BaseModel):
 
         _obj = cls.model_validate({
             "name": obj.get("name"),
-            "cocoSetId": obj.get("cocoSetId"),
             "categories": obj.get("categories")
         })
         return _obj
