@@ -80,7 +80,7 @@ class RapidataOrder:
     def unpause(self) -> None:
         """Unpauses/resumes the order."""
         logger.info(f"Unpausing order '{self}'")
-        self.__openapi_service.order_api.order_resume_post(self.id)
+        self.__openapi_service.order_api.order_order_id_resume_post(self.id)
         logger.debug(f"Order '{self}' has been unpaused.")
         managed_print(f"Order '{self}' has been unpaused.")
 

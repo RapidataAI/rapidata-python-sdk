@@ -35,11 +35,11 @@ class Rapid():
         if isinstance(self.asset, TextAsset) or (isinstance(self.asset, MultiAsset) and isinstance(self.asset.assets[0], TextAsset)):
             openapi_service.validation_api.validation_set_validation_set_id_rapid_texts_post(
                 validation_set_id=validationSetId,
-                add_validation_text_rapid_model=self.__to_text_model(validationSetId)
+                add_validation_text_rapid_model=self.__to_text_model()
             )
 
         elif isinstance(self.asset, MediaAsset) or (isinstance(self.asset, MultiAsset) and isinstance(self.asset.assets[0], MediaAsset)):
-            model = self.__to_media_model(validationSetId)
+            model = self.__to_media_model()
             openapi_service.validation_api.validation_set_validation_set_id_rapid_files_post(
                 validation_set_id=validationSetId,
                 model=model[0], files=model[1]
@@ -48,7 +48,7 @@ class Rapid():
         else:
             raise TypeError("The asset must be a MediaAsset, TextAsset, or MultiAsset")
 
-    def __to_media_model(self, validationSetId: str) -> tuple[AddValidationRapidModel, list[StrictStr | tuple[StrictStr, StrictBytes] | StrictBytes]]:
+    def __to_media_model(self) -> tuple[AddValidationRapidModel, list[StrictStr | tuple[StrictStr, StrictBytes] | StrictBytes]]:
         assets: list[MediaAsset] = [] 
         if isinstance(self.asset, MultiAsset):
             for asset in self.asset.assets:
@@ -64,7 +64,6 @@ class Rapid():
             assets = [self.asset]
 
         return (AddValidationRapidModel(
-            validationSetId=validationSetId, # will be removed in the future
             payload=AddValidationRapidModelPayload(self.payload),
             truth=AddValidationRapidModelTruth(self.truth),
             metadata=[
@@ -75,7 +74,7 @@ class Rapid():
             explanation=self.explanation
         ), [asset.to_file() for asset in assets])
 
-    def __to_text_model(self, validationSetId: str) -> AddValidationTextRapidModel:
+    def __to_text_model(self) -> AddValidationTextRapidModel:
         texts: list[str] = []
         if isinstance(self.asset, MultiAsset):
             for asset in self.asset.assets:
@@ -91,7 +90,6 @@ class Rapid():
             texts = [self.asset.text]
 
         return AddValidationTextRapidModel(
-          validationSetId=validationSetId, # will be removed in the future
           payload=AddValidationRapidModelPayload(self.payload),
           truth=AddValidationRapidModelTruth(self.truth),
           metadata=[
