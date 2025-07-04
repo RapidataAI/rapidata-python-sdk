@@ -26,12 +26,14 @@ class CreateLeaderboardModel(BaseModel):
     """
     The CreateLeaderboardModel class represents the model for creating a leaderboard.
     """ # noqa: E501
+    benchmark_id: Optional[StrictStr] = Field(default=None, description="If a leaderboard should be added to a preexisting benchmark, the benchmark Id can be provided.", alias="benchmarkId")
+    benchmark_name: Optional[StrictStr] = Field(default=None, description="If no BenchmarkId is provided a new benchmark will be created. if no name is supplied the benchmark will be called the same as the leaderboard.", alias="benchmarkName")
     name: StrictStr = Field(description="The name of the leaderboard.")
     instruction: StrictStr = Field(description="The instruction datapoints will be matched up against.")
     show_prompt: StrictBool = Field(description="Indicates if the prompt is shown on the rapids.", alias="showPrompt")
     response_budget: Optional[StrictInt] = Field(default=None, description="Total amount of responses that get collected per run", alias="responseBudget")
     min_responses: Optional[StrictInt] = Field(default=None, description="The minimum amount of responses that need to be collected per comparison.", alias="minResponses")
-    __properties: ClassVar[List[str]] = ["name", "instruction", "showPrompt", "responseBudget", "minResponses"]
+    __properties: ClassVar[List[str]] = ["benchmarkId", "benchmarkName", "name", "instruction", "showPrompt", "responseBudget", "minResponses"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -72,6 +74,16 @@ class CreateLeaderboardModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if benchmark_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.benchmark_id is None and "benchmark_id" in self.model_fields_set:
+            _dict['benchmarkId'] = None
+
+        # set to None if benchmark_name (nullable) is None
+        # and model_fields_set contains the field
+        if self.benchmark_name is None and "benchmark_name" in self.model_fields_set:
+            _dict['benchmarkName'] = None
+
         return _dict
 
     @classmethod
@@ -84,6 +96,8 @@ class CreateLeaderboardModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "benchmarkId": obj.get("benchmarkId"),
+            "benchmarkName": obj.get("benchmarkName"),
             "name": obj.get("name"),
             "instruction": obj.get("instruction"),
             "showPrompt": obj.get("showPrompt"),

@@ -114,12 +114,12 @@ Class | Method | HTTP request | Description
 *IdentityApi* | [**identity_temporary_post**](rapidata/api_client/docs/IdentityApi.md#identity_temporary_post) | **POST** /identity/temporary | Registers and logs in a temporary customer.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_delete**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_delete) | **DELETE** /leaderboard/{leaderboardId} | Deletes a leaderboard by its ID.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_get) | **GET** /leaderboard/{leaderboardId} | Gets a leaderboard by its ID.
+*LeaderboardApi* | [**leaderboard_leaderboard_id_participant_participant_id_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_participant_participant_id_get) | **GET** /leaderboard/{leaderboardId}/participant/{participantId} | Gets a participant by its ID.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_participants_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_participants_get) | **GET** /leaderboard/{leaderboardId}/participants | queries all the participants of a leaderboard by its ID.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_participants_participant_id_submit_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_participants_participant_id_submit_post) | **POST** /leaderboard/{leaderboardId}/participants/{participantId}/submit | Submits a participant to a leaderboard.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_participants_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_participants_post) | **POST** /leaderboard/{leaderboardId}/participants | Creates a participant in a leaderboard.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_prompts_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_prompts_get) | **GET** /leaderboard/{leaderboardId}/prompts | returns the paged prompts of a leaderboard by its ID.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_prompts_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_prompts_post) | **POST** /leaderboard/{leaderboardId}/prompts | adds a new prompt to a leaderboard.
-*LeaderboardApi* | [**leaderboard_participant_participant_id_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_participant_participant_id_get) | **GET** /leaderboard/participant/{participantId} | Gets a participant by its ID.
 *LeaderboardApi* | [**leaderboard_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_post) | **POST** /leaderboard | Creates a new leaderboard with the specified name and criteria.
 *LeaderboardApi* | [**leaderboards_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboards_get) | **GET** /leaderboards | Queries all leaderboards of the user.
 *NewsletterApi* | [**newsletter_subscribe_post**](rapidata/api_client/docs/NewsletterApi.md#newsletter_subscribe_post) | **POST** /newsletter/subscribe | Signs a user up to the newsletter.
@@ -402,9 +402,6 @@ Class | Method | HTTP request | Description
  - [OriginalFilenameMetadata](rapidata/api_client/docs/OriginalFilenameMetadata.md)
  - [OriginalFilenameMetadataModel](rapidata/api_client/docs/OriginalFilenameMetadataModel.md)
  - [PageInfo](rapidata/api_client/docs/PageInfo.md)
- - [ParticipantByLeaderboard](rapidata/api_client/docs/ParticipantByLeaderboard.md)
- - [ParticipantByLeaderboardPagedResult](rapidata/api_client/docs/ParticipantByLeaderboardPagedResult.md)
- - [ParticipantStatus](rapidata/api_client/docs/ParticipantStatus.md)
  - [PipelineIdWorkflowConfigPutRequest](rapidata/api_client/docs/PipelineIdWorkflowConfigPutRequest.md)
  - [PolygonPayload](rapidata/api_client/docs/PolygonPayload.md)
  - [PolygonRapidBlueprint](rapidata/api_client/docs/PolygonRapidBlueprint.md)
@@ -461,6 +458,9 @@ Class | Method | HTTP request | Description
  - [SortDirection](rapidata/api_client/docs/SortDirection.md)
  - [SourceUrlMetadata](rapidata/api_client/docs/SourceUrlMetadata.md)
  - [SourceUrlMetadataModel](rapidata/api_client/docs/SourceUrlMetadataModel.md)
+ - [StandingByLeaderboard](rapidata/api_client/docs/StandingByLeaderboard.md)
+ - [StandingByLeaderboardPagedResult](rapidata/api_client/docs/StandingByLeaderboardPagedResult.md)
+ - [StandingStatus](rapidata/api_client/docs/StandingStatus.md)
  - [StaticSelection](rapidata/api_client/docs/StaticSelection.md)
  - [StickyState](rapidata/api_client/docs/StickyState.md)
  - [StreamsMetadata](rapidata/api_client/docs/StreamsMetadata.md)

@@ -17,31 +17,22 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from pydantic import BaseModel, ConfigDict, Field, StrictInt
+from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.standing_by_leaderboard import StandingByLeaderboard
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetParticipantByIdResult(BaseModel):
+class StandingByLeaderboardPagedResult(BaseModel):
     """
-    GetParticipantByIdResult
+    StandingByLeaderboardPagedResult
     """ # noqa: E501
-    id: StrictStr
-    name: StrictStr
-    leaderboard_id: StrictStr = Field(alias="leaderboardId")
-    dataset_id: StrictStr = Field(alias="datasetId")
-    status: StrictStr
-    score: Optional[Union[StrictFloat, StrictInt]] = None
-    wins: StrictInt
-    total_matches: StrictInt = Field(alias="totalMatches")
-    __properties: ClassVar[List[str]] = ["id", "name", "leaderboardId", "datasetId", "status", "score", "wins", "totalMatches"]
-
-    @field_validator('status')
-    def status_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['Created', 'Running', 'Completed', 'Failed']):
-            raise ValueError("must be one of enum values ('Created', 'Running', 'Completed', 'Failed')")
-        return value
+    total: StrictInt
+    page: StrictInt
+    page_size: StrictInt = Field(alias="pageSize")
+    items: List[StandingByLeaderboard]
+    total_pages: Optional[StrictInt] = Field(default=None, alias="totalPages")
+    __properties: ClassVar[List[str]] = ["total", "page", "pageSize", "items", "totalPages"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -61,7 +52,7 @@ class GetParticipantByIdResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetParticipantByIdResult from a JSON string"""
+        """Create an instance of StandingByLeaderboardPagedResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,8 +64,10 @@ class GetParticipantByIdResult(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * OpenAPI `readOnly` fields are excluded.
         """
         excluded_fields: Set[str] = set([
+            "total_pages",
         ])
 
         _dict = self.model_dump(
@@ -82,16 +75,18 @@ class GetParticipantByIdResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if score (nullable) is None
-        # and model_fields_set contains the field
-        if self.score is None and "score" in self.model_fields_set:
-            _dict['score'] = None
-
+        # override the default output from pydantic by calling `to_dict()` of each item in items (list)
+        _items = []
+        if self.items:
+            for _item_items in self.items:
+                if _item_items:
+                    _items.append(_item_items.to_dict())
+            _dict['items'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetParticipantByIdResult from a dict"""
+        """Create an instance of StandingByLeaderboardPagedResult from a dict"""
         if obj is None:
             return None
 
@@ -99,14 +94,11 @@ class GetParticipantByIdResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "id": obj.get("id"),
-            "name": obj.get("name"),
-            "leaderboardId": obj.get("leaderboardId"),
-            "datasetId": obj.get("datasetId"),
-            "status": obj.get("status"),
-            "score": obj.get("score"),
-            "wins": obj.get("wins"),
-            "totalMatches": obj.get("totalMatches")
+            "total": obj.get("total"),
+            "page": obj.get("page"),
+            "pageSize": obj.get("pageSize"),
+            "items": [StandingByLeaderboard.from_dict(_item) for _item in obj["items"]] if obj.get("items") is not None else None,
+            "totalPages": obj.get("totalPages")
         })
         return _obj
 
