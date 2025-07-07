@@ -4512,17 +4512,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ParticipantByLeaderboardPagedResult"
+                  "$ref": "#/components/schemas/StandingByLeaderboardPagedResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ParticipantByLeaderboardPagedResult"
+                  "$ref": "#/components/schemas/StandingByLeaderboardPagedResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ParticipantByLeaderboardPagedResult"
+                  "$ref": "#/components/schemas/StandingByLeaderboardPagedResult"
                 }
               }
             }
@@ -4589,13 +4589,22 @@
         }
       }
     },
-    "/leaderboard/participant/{participantId}": {
+    "/leaderboard/{leaderboardId}/participant/{participantId}": {
       "get": {
         "tags": [
           "Leaderboard"
         ],
         "summary": "Gets a participant by its ID.",
         "parameters": [
+          {
+            "name": "leaderboardId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "participantId",
             "in": "path",
@@ -4656,6 +4665,67 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitParticipantResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitParticipantResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitParticipantResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/leaderboard/{leaderboardId}/boost": {
+      "post": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "Boosts a subset of participants within a leaderboard.",
+        "parameters": [
+          {
+            "name": "leaderboardId",
+            "in": "path",
+            "description": "the leaderboard that should be boosted",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BoostLeaderboardModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BoostLeaderboardModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/BoostLeaderboardModel"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -14324,6 +14394,29 @@
         ],
         "type": "string"
       },
+      "BoostLeaderboardModel": {
+        "required": [
+          "participants",
+          "totalResponses"
+        ],
+        "type": "object",
+        "properties": {
+          "participants": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The participants of the given leaderboard that should be boosted."
+          },
+          "totalResponses": {
+            "type": "integer",
+            "description": "The amount of responses in total that should be added, shared across all participants.",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for boosting a leaderboard."
+      },
       "CreateLeaderboardModel": {
         "required": [
           "instruction",
@@ -14332,6 +14425,16 @@
         ],
         "type": "object",
         "properties": {
+          "benchmarkId": {
+            "type": "string",
+            "description": "If a leaderboard should be added to a preexisting benchmark, the benchmark Id can be provided.",
+            "nullable": true
+          },
+          "benchmarkName": {
+            "type": "string",
+            "description": "If no BenchmarkId is provided a new benchmark will be created. if no name is supplied the benchmark\nwill be called the same as the leaderboard.",
+            "nullable": true
+          },
           "name": {
             "type": "string",
             "description": "The name of the leaderboard."
@@ -14390,11 +14493,15 @@
       },
       "CreateLeaderboardResult": {
         "required": [
+          "benchmarkId",
           "id"
         ],
         "type": "object",
         "properties": {
           "id": {
+            "type": "string"
+          },
+          "benchmarkId": {
             "type": "string"
           }
         },
@@ -14455,10 +14562,8 @@
           "status": {
             "enum": [
               "Created",
-              "Queued",
-              "Running",
-              "Completed",
-              "Failed"
+              "Active",
+              "Idle"
             ],
             "type": "string"
           },
@@ -14541,101 +14646,6 @@
         },
         "additionalProperties": false
       },
-      "ParticipantByLeaderboard": {
-        "required": [
-          "datasetId",
-          "id",
-          "leaderboardId",
-          "name",
-          "status",
-          "totalMatches",
-          "wins"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "leaderboardId": {
-            "type": "string"
-          },
-          "datasetId": {
-            "type": "string"
-          },
-          "status": {
-            "enum": [
-              "Created",
-              "Queued",
-              "Running",
-              "Completed",
-              "Failed"
-            ],
-            "type": "string"
-          },
-          "score": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "wins": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalMatches": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "ParticipantByLeaderboardPagedResult": {
-        "required": [
-          "items",
-          "page",
-          "pageSize",
-          "total"
-        ],
-        "type": "object",
-        "properties": {
-          "total": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ParticipantByLeaderboard"
-            }
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "ParticipantStatus": {
-        "enum": [
-          "Created",
-          "Queued",
-          "Running",
-          "Completed",
-          "Failed"
-        ],
-        "type": "string"
-      },
       "PromptByLeaderboardResult": {
         "required": [
           "createdAt",
@@ -14687,6 +14697,97 @@
           }
         },
         "additionalProperties": false
+      },
+      "StandingByLeaderboard": {
+        "required": [
+          "datasetId",
+          "id",
+          "leaderboardId",
+          "name",
+          "status",
+          "totalMatches",
+          "wins"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "leaderboardId": {
+            "type": "string"
+          },
+          "datasetId": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "Created",
+              "Active",
+              "Idle"
+            ],
+            "type": "string"
+          },
+          "score": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "wins": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalMatches": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "StandingByLeaderboardPagedResult": {
+        "required": [
+          "items",
+          "page",
+          "pageSize",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StandingByLeaderboard"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "StandingStatus": {
+        "enum": [
+          "Created",
+          "Active",
+          "Idle"
+        ],
+        "type": "string"
       },
       "SubmitParticipantResult": {
         "required": [
