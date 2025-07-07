@@ -17,18 +17,18 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateLeaderboardResult(BaseModel):
+class BoostLeaderboardModel(BaseModel):
     """
-    CreateLeaderboardResult
+    The model for boosting a leaderboard.
     """ # noqa: E501
-    id: StrictStr
-    benchmark_id: StrictStr = Field(alias="benchmarkId")
-    __properties: ClassVar[List[str]] = ["id", "benchmarkId"]
+    participants: List[StrictStr] = Field(description="The participants of the given leaderboard that should be boosted.")
+    total_responses: StrictInt = Field(description="The amount of responses in total that should be added, shared across all participants.", alias="totalResponses")
+    __properties: ClassVar[List[str]] = ["participants", "totalResponses"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +48,7 @@ class CreateLeaderboardResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateLeaderboardResult from a JSON string"""
+        """Create an instance of BoostLeaderboardModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,7 +73,7 @@ class CreateLeaderboardResult(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateLeaderboardResult from a dict"""
+        """Create an instance of BoostLeaderboardModel from a dict"""
         if obj is None:
             return None
 
@@ -81,8 +81,8 @@ class CreateLeaderboardResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "id": obj.get("id"),
-            "benchmarkId": obj.get("benchmarkId")
+            "participants": obj.get("participants"),
+            "totalResponses": obj.get("totalResponses")
         })
         return _obj
 

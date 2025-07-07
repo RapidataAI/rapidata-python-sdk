@@ -39,8 +39,8 @@ class GetParticipantByIdResult(BaseModel):
     @field_validator('status')
     def status_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['Created', 'Queued', 'Running', 'Completed', 'Failed']):
-            raise ValueError("must be one of enum values ('Created', 'Queued', 'Running', 'Completed', 'Failed')")
+        if value not in set(['Created', 'Active', 'Idle']):
+            raise ValueError("must be one of enum values ('Created', 'Active', 'Idle')")
         return value
 
     model_config = ConfigDict(

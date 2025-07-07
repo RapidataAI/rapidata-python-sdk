@@ -35,6 +35,7 @@ from rapidata.api_client.models.attach_category_rapid_blueprint import AttachCat
 from rapidata.api_client.models.attach_category_result import AttachCategoryResult
 from rapidata.api_client.models.attach_category_truth import AttachCategoryTruth
 from rapidata.api_client.models.base_error import BaseError
+from rapidata.api_client.models.boost_leaderboard_model import BoostLeaderboardModel
 from rapidata.api_client.models.boost_query_result import BoostQueryResult
 from rapidata.api_client.models.boost_status import BoostStatus
 from rapidata.api_client.models.bounding_box_payload import BoundingBoxPayload
@@ -234,9 +235,6 @@ from rapidata.api_client.models.order_state import OrderState
 from rapidata.api_client.models.original_filename_metadata import OriginalFilenameMetadata
 from rapidata.api_client.models.original_filename_metadata_model import OriginalFilenameMetadataModel
 from rapidata.api_client.models.page_info import PageInfo
-from rapidata.api_client.models.participant_by_leaderboard import ParticipantByLeaderboard
-from rapidata.api_client.models.participant_by_leaderboard_paged_result import ParticipantByLeaderboardPagedResult
-from rapidata.api_client.models.participant_status import ParticipantStatus
 from rapidata.api_client.models.pipeline_id_workflow_config_put_request import PipelineIdWorkflowConfigPutRequest
 from rapidata.api_client.models.polygon_payload import PolygonPayload
 from rapidata.api_client.models.polygon_rapid_blueprint import PolygonRapidBlueprint
@@ -293,6 +291,9 @@ from rapidata.api_client.models.sort_criterion import SortCriterion
 from rapidata.api_client.models.sort_direction import SortDirection
 from rapidata.api_client.models.source_url_metadata import SourceUrlMetadata
 from rapidata.api_client.models.source_url_metadata_model import SourceUrlMetadataModel
+from rapidata.api_client.models.standing_by_leaderboard import StandingByLeaderboard
+from rapidata.api_client.models.standing_by_leaderboard_paged_result import StandingByLeaderboardPagedResult
+from rapidata.api_client.models.standing_status import StandingStatus
 from rapidata.api_client.models.static_selection import StaticSelection
 from rapidata.api_client.models.sticky_state import StickyState
 from rapidata.api_client.models.streams_metadata import StreamsMetadata
