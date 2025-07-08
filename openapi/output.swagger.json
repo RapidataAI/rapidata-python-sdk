@@ -4323,6 +4323,55 @@
         }
       }
     },
+    "/benchmark": {
+      "post": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Creates a benchmark",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBenchmarkModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBenchmarkModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBenchmarkModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BenchmarkQueryResultPagedResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BenchmarkQueryResultPagedResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BenchmarkQueryResultPagedResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/benchmark/{benchmarkId}": {
       "get": {
         "tags": [
@@ -4436,7 +4485,9 @@
             }
           }
         }
-      },
+      }
+    },
+    "/benchmark/{benchmarkId}/prompt": {
       "post": {
         "tags": [
           "Benchmark"
@@ -14986,6 +15037,20 @@
         },
         "additionalProperties": false,
         "description": "The model for boosting a leaderboard."
+      },
+      "CreateBenchmarkModel": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the benchmark"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for creating a benchmark."
       },
       "CreateBenchmarkParticipantResult": {
         "required": [
