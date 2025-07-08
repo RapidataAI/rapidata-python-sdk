@@ -20,9 +20,9 @@ from pydantic import Field, StrictStr
 from typing import Optional
 from typing_extensions import Annotated
 from rapidata.api_client.models.boost_leaderboard_model import BoostLeaderboardModel
+from rapidata.api_client.models.create_benchmark_participant_result import CreateBenchmarkParticipantResult
 from rapidata.api_client.models.create_leaderboard_model import CreateLeaderboardModel
 from rapidata.api_client.models.create_leaderboard_participant_model import CreateLeaderboardParticipantModel
-from rapidata.api_client.models.create_leaderboard_participant_result import CreateLeaderboardParticipantResult
 from rapidata.api_client.models.create_leaderboard_result import CreateLeaderboardResult
 from rapidata.api_client.models.get_leaderboard_by_id_result import GetLeaderboardByIdResult
 from rapidata.api_client.models.get_participant_by_id_result import GetParticipantByIdResult
@@ -357,7 +357,7 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetLeaderboardByIdResult:
+    ) -> None:
         """Deletes a leaderboard by its ID.
 
 
@@ -394,7 +394,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '204': "GetLeaderboardByIdResult",
+            '204': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -423,7 +423,7 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetLeaderboardByIdResult]:
+    ) -> ApiResponse[None]:
         """Deletes a leaderboard by its ID.
 
 
@@ -460,7 +460,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '204': "GetLeaderboardByIdResult",
+            '204': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -526,7 +526,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '204': "GetLeaderboardByIdResult",
+            '204': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -567,15 +567,6 @@ class LeaderboardApi:
         # process the body parameter
 
 
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
-                ]
-            )
 
 
         # authentication setting
@@ -1157,7 +1148,7 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> StandingByLeaderboardPagedResult:
-        """queries all the participants of a leaderboard by its ID.
+        """queries all the participants connected to leaderboard by its ID.
 
 
         :param leaderboard_id:  (required)
@@ -1227,7 +1218,7 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[StandingByLeaderboardPagedResult]:
-        """queries all the participants of a leaderboard by its ID.
+        """queries all the participants connected to leaderboard by its ID.
 
 
         :param leaderboard_id:  (required)
@@ -1297,7 +1288,7 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """queries all the participants of a leaderboard by its ID.
+        """queries all the participants connected to leaderboard by its ID.
 
 
         :param leaderboard_id:  (required)
@@ -1435,7 +1426,7 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> SubmitParticipantResult:
-        """Submits a participant to a leaderboard.
+        """(Deprecated) Submits a participant to a leaderboard.
 
 
         :param leaderboard_id:  (required)
@@ -1463,6 +1454,7 @@ class LeaderboardApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("POST /leaderboard/{leaderboardId}/participants/{participantId}/submit is deprecated.", DeprecationWarning)
 
         _param = self._leaderboard_leaderboard_id_participants_participant_id_submit_post_serialize(
             leaderboard_id=leaderboard_id,
@@ -1505,7 +1497,7 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[SubmitParticipantResult]:
-        """Submits a participant to a leaderboard.
+        """(Deprecated) Submits a participant to a leaderboard.
 
 
         :param leaderboard_id:  (required)
@@ -1533,6 +1525,7 @@ class LeaderboardApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("POST /leaderboard/{leaderboardId}/participants/{participantId}/submit is deprecated.", DeprecationWarning)
 
         _param = self._leaderboard_leaderboard_id_participants_participant_id_submit_post_serialize(
             leaderboard_id=leaderboard_id,
@@ -1575,7 +1568,7 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Submits a participant to a leaderboard.
+        """(Deprecated) Submits a participant to a leaderboard.
 
 
         :param leaderboard_id:  (required)
@@ -1603,6 +1596,7 @@ class LeaderboardApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("POST /leaderboard/{leaderboardId}/participants/{participantId}/submit is deprecated.", DeprecationWarning)
 
         _param = self._leaderboard_leaderboard_id_participants_participant_id_submit_post_serialize(
             leaderboard_id=leaderboard_id,
@@ -1710,8 +1704,8 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> CreateLeaderboardParticipantResult:
-        """Creates a participant in a leaderboard.
+    ) -> CreateBenchmarkParticipantResult:
+        """(Deprecated) Creates a participant in a leaderboard.
 
 
         :param leaderboard_id:  (required)
@@ -1739,6 +1733,7 @@ class LeaderboardApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("POST /leaderboard/{leaderboardId}/participants is deprecated.", DeprecationWarning)
 
         _param = self._leaderboard_leaderboard_id_participants_post_serialize(
             leaderboard_id=leaderboard_id,
@@ -1750,7 +1745,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateLeaderboardParticipantResult",
+            '200': "CreateBenchmarkParticipantResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1780,8 +1775,8 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[CreateLeaderboardParticipantResult]:
-        """Creates a participant in a leaderboard.
+    ) -> ApiResponse[CreateBenchmarkParticipantResult]:
+        """(Deprecated) Creates a participant in a leaderboard.
 
 
         :param leaderboard_id:  (required)
@@ -1809,6 +1804,7 @@ class LeaderboardApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("POST /leaderboard/{leaderboardId}/participants is deprecated.", DeprecationWarning)
 
         _param = self._leaderboard_leaderboard_id_participants_post_serialize(
             leaderboard_id=leaderboard_id,
@@ -1820,7 +1816,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateLeaderboardParticipantResult",
+            '200': "CreateBenchmarkParticipantResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1851,7 +1847,7 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Creates a participant in a leaderboard.
+        """(Deprecated) Creates a participant in a leaderboard.
 
 
         :param leaderboard_id:  (required)
@@ -1879,6 +1875,7 @@ class LeaderboardApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("POST /leaderboard/{leaderboardId}/participants is deprecated.", DeprecationWarning)
 
         _param = self._leaderboard_leaderboard_id_participants_post_serialize(
             leaderboard_id=leaderboard_id,
@@ -1890,7 +1887,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "CreateLeaderboardParticipantResult",
+            '200': "CreateBenchmarkParticipantResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2002,7 +1999,7 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> PromptByBenchmarkResultPagedResult:
-        """returns the paged prompts of a leaderboard by its ID.
+        """(Deprecated) returns the paged prompts of a leaderboard by its ID.
 
 
         :param leaderboard_id:  (required)
@@ -2030,6 +2027,7 @@ class LeaderboardApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("GET /leaderboard/{leaderboardId}/prompts is deprecated.", DeprecationWarning)
 
         _param = self._leaderboard_leaderboard_id_prompts_get_serialize(
             leaderboard_id=leaderboard_id,
@@ -2072,7 +2070,7 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[PromptByBenchmarkResultPagedResult]:
-        """returns the paged prompts of a leaderboard by its ID.
+        """(Deprecated) returns the paged prompts of a leaderboard by its ID.
 
 
         :param leaderboard_id:  (required)
@@ -2100,6 +2098,7 @@ class LeaderboardApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("GET /leaderboard/{leaderboardId}/prompts is deprecated.", DeprecationWarning)
 
         _param = self._leaderboard_leaderboard_id_prompts_get_serialize(
             leaderboard_id=leaderboard_id,
@@ -2142,7 +2141,7 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """returns the paged prompts of a leaderboard by its ID.
+        """(Deprecated) returns the paged prompts of a leaderboard by its ID.
 
 
         :param leaderboard_id:  (required)
@@ -2170,6 +2169,7 @@ class LeaderboardApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("GET /leaderboard/{leaderboardId}/prompts is deprecated.", DeprecationWarning)
 
         _param = self._leaderboard_leaderboard_id_prompts_get_serialize(
             leaderboard_id=leaderboard_id,
@@ -2280,7 +2280,7 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """adds a new prompt to a leaderboard.
+        """(Deprecated) adds a new prompt to a leaderboard.
 
 
         :param leaderboard_id: The leaderboard id. (required)
@@ -2308,6 +2308,7 @@ class LeaderboardApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("POST /leaderboard/{leaderboardId}/prompts is deprecated.", DeprecationWarning)
 
         _param = self._leaderboard_leaderboard_id_prompts_post_serialize(
             leaderboard_id=leaderboard_id,
@@ -2350,7 +2351,7 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """adds a new prompt to a leaderboard.
+        """(Deprecated) adds a new prompt to a leaderboard.
 
 
         :param leaderboard_id: The leaderboard id. (required)
@@ -2378,6 +2379,7 @@ class LeaderboardApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("POST /leaderboard/{leaderboardId}/prompts is deprecated.", DeprecationWarning)
 
         _param = self._leaderboard_leaderboard_id_prompts_post_serialize(
             leaderboard_id=leaderboard_id,
@@ -2420,7 +2422,7 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """adds a new prompt to a leaderboard.
+        """(Deprecated) adds a new prompt to a leaderboard.
 
 
         :param leaderboard_id: The leaderboard id. (required)
@@ -2448,6 +2450,7 @@ class LeaderboardApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
+        warnings.warn("POST /leaderboard/{leaderboardId}/prompts is deprecated.", DeprecationWarning)
 
         _param = self._leaderboard_leaderboard_id_prompts_post_serialize(
             leaderboard_id=leaderboard_id,

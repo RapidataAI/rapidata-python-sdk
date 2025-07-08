@@ -22,12 +22,13 @@ from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateDatapointResult(BaseModel):
+class CreateBenchmarkParticipantResult(BaseModel):
     """
-    CreateDatapointResult
+    CreateBenchmarkParticipantResult
     """ # noqa: E501
-    datapoint_id: StrictStr = Field(alias="datapointId")
-    __properties: ClassVar[List[str]] = ["datapointId"]
+    participant_id: StrictStr = Field(alias="participantId")
+    dataset_id: StrictStr = Field(alias="datasetId")
+    __properties: ClassVar[List[str]] = ["participantId", "datasetId"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -47,7 +48,7 @@ class CreateDatapointResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateDatapointResult from a JSON string"""
+        """Create an instance of CreateBenchmarkParticipantResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -72,7 +73,7 @@ class CreateDatapointResult(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateDatapointResult from a dict"""
+        """Create an instance of CreateBenchmarkParticipantResult from a dict"""
         if obj is None:
             return None
 
@@ -80,7 +81,8 @@ class CreateDatapointResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "datapointId": obj.get("datapointId")
+            "participantId": obj.get("participantId"),
+            "datasetId": obj.get("datasetId")
         })
         return _obj
 
