@@ -27,7 +27,7 @@ from rapidata.api_client.models.create_leaderboard_result import CreateLeaderboa
 from rapidata.api_client.models.get_leaderboard_by_id_result import GetLeaderboardByIdResult
 from rapidata.api_client.models.get_participant_by_id_result import GetParticipantByIdResult
 from rapidata.api_client.models.leaderboard_query_result_paged_result import LeaderboardQueryResultPagedResult
-from rapidata.api_client.models.prompt_by_leaderboard_result_paged_result import PromptByLeaderboardResultPagedResult
+from rapidata.api_client.models.prompt_by_benchmark_result_paged_result import PromptByBenchmarkResultPagedResult
 from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.standing_by_leaderboard_paged_result import StandingByLeaderboardPagedResult
 from rapidata.api_client.models.submit_participant_result import SubmitParticipantResult
@@ -2001,7 +2001,7 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PromptByLeaderboardResultPagedResult:
+    ) -> PromptByBenchmarkResultPagedResult:
         """returns the paged prompts of a leaderboard by its ID.
 
 
@@ -2041,7 +2041,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PromptByLeaderboardResultPagedResult",
+            '200': "PromptByBenchmarkResultPagedResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2071,7 +2071,7 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PromptByLeaderboardResultPagedResult]:
+    ) -> ApiResponse[PromptByBenchmarkResultPagedResult]:
         """returns the paged prompts of a leaderboard by its ID.
 
 
@@ -2111,7 +2111,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PromptByLeaderboardResultPagedResult",
+            '200': "PromptByBenchmarkResultPagedResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2181,7 +2181,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PromptByLeaderboardResultPagedResult",
+            '200': "PromptByBenchmarkResultPagedResult",
         }
         response_data = self.api_client.call_api(
             *_param,

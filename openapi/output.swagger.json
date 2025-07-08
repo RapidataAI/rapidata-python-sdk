@@ -4412,17 +4412,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/PromptByLeaderboardResultPagedResult"
+                  "$ref": "#/components/schemas/PromptByBenchmarkResultPagedResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PromptByLeaderboardResultPagedResult"
+                  "$ref": "#/components/schemas/PromptByBenchmarkResultPagedResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PromptByLeaderboardResultPagedResult"
+                  "$ref": "#/components/schemas/PromptByBenchmarkResultPagedResult"
                 }
               }
             }
@@ -14646,7 +14646,7 @@
         },
         "additionalProperties": false
       },
-      "PromptByLeaderboardResult": {
+      "PromptByBenchmarkResult": {
         "required": [
           "createdAt",
           "prompt"
@@ -14663,7 +14663,7 @@
         },
         "additionalProperties": false
       },
-      "PromptByLeaderboardResultPagedResult": {
+      "PromptByBenchmarkResultPagedResult": {
         "required": [
           "items",
           "page",
@@ -14687,7 +14687,7 @@
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/PromptByLeaderboardResult"
+              "$ref": "#/components/schemas/PromptByBenchmarkResult"
             }
           },
           "totalPages": {
