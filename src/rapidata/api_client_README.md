@@ -260,6 +260,7 @@ Class | Method | HTTP request | Description
  - [CountryUserFilterModel](rapidata/api_client/docs/CountryUserFilterModel.md)
  - [CreateBenchmarkModel](rapidata/api_client/docs/CreateBenchmarkModel.md)
  - [CreateBenchmarkParticipantResult](rapidata/api_client/docs/CreateBenchmarkParticipantResult.md)
+ - [CreateBenchmarkResult](rapidata/api_client/docs/CreateBenchmarkResult.md)
  - [CreateBridgeTokenResult](rapidata/api_client/docs/CreateBridgeTokenResult.md)
  - [CreateClientModel](rapidata/api_client/docs/CreateClientModel.md)
  - [CreateComplexOrderModel](rapidata/api_client/docs/CreateComplexOrderModel.md)
