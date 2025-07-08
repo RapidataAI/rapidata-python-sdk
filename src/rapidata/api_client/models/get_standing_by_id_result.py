@@ -17,20 +17,31 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetParticipantByIdResult(BaseModel):
+class GetStandingByIdResult(BaseModel):
     """
-    GetParticipantByIdResult
+    GetStandingByIdResult
     """ # noqa: E501
     id: StrictStr
     name: StrictStr
     benchmark_id: StrictStr = Field(alias="benchmarkId")
     dataset_id: StrictStr = Field(alias="datasetId")
-    __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "datasetId"]
+    status: StrictStr
+    score: Optional[Union[StrictFloat, StrictInt]] = None
+    wins: StrictInt
+    total_matches: StrictInt = Field(alias="totalMatches")
+    __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "datasetId", "status", "score", "wins", "totalMatches"]
+
+    @field_validator('status')
+    def status_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['Created', 'Active', 'Idle']):
+            raise ValueError("must be one of enum values ('Created', 'Active', 'Idle')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -50,7 +61,7 @@ class GetParticipantByIdResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetParticipantByIdResult from a JSON string"""
+        """Create an instance of GetStandingByIdResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -71,11 +82,16 @@ class GetParticipantByIdResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if score (nullable) is None
+        # and model_fields_set contains the field
+        if self.score is None and "score" in self.model_fields_set:
+            _dict['score'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetParticipantByIdResult from a dict"""
+        """Create an instance of GetStandingByIdResult from a dict"""
         if obj is None:
             return None
 
@@ -86,7 +102,11 @@ class GetParticipantByIdResult(BaseModel):
             "id": obj.get("id"),
             "name": obj.get("name"),
             "benchmarkId": obj.get("benchmarkId"),
-            "datasetId": obj.get("datasetId")
+            "datasetId": obj.get("datasetId"),
+            "status": obj.get("status"),
+            "score": obj.get("score"),
+            "wins": obj.get("wins"),
+            "totalMatches": obj.get("totalMatches")
         })
         return _obj
 

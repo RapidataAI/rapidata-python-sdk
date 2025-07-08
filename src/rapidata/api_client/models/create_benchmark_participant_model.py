@@ -22,15 +22,12 @@ from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetParticipantByIdResult(BaseModel):
+class CreateBenchmarkParticipantModel(BaseModel):
     """
-    GetParticipantByIdResult
+    The model to create a participant in a leaderboard
     """ # noqa: E501
-    id: StrictStr
-    name: StrictStr
-    benchmark_id: StrictStr = Field(alias="benchmarkId")
-    dataset_id: StrictStr = Field(alias="datasetId")
-    __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "datasetId"]
+    name: StrictStr = Field(description="The name of the participant.")
+    __properties: ClassVar[List[str]] = ["name"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -50,7 +47,7 @@ class GetParticipantByIdResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetParticipantByIdResult from a JSON string"""
+        """Create an instance of CreateBenchmarkParticipantModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -75,7 +72,7 @@ class GetParticipantByIdResult(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetParticipantByIdResult from a dict"""
+        """Create an instance of CreateBenchmarkParticipantModel from a dict"""
         if obj is None:
             return None
 
@@ -83,10 +80,7 @@ class GetParticipantByIdResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "id": obj.get("id"),
-            "name": obj.get("name"),
-            "benchmarkId": obj.get("benchmarkId"),
-            "datasetId": obj.get("datasetId")
+            "name": obj.get("name")
         })
         return _obj
 
