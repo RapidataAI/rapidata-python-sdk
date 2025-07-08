@@ -22,6 +22,7 @@ from typing_extensions import Annotated
 from rapidata.api_client.models.benchmark_query_result_paged_result import BenchmarkQueryResultPagedResult
 from rapidata.api_client.models.create_benchmark_model import CreateBenchmarkModel
 from rapidata.api_client.models.create_benchmark_participant_result import CreateBenchmarkParticipantResult
+from rapidata.api_client.models.create_benchmark_result import CreateBenchmarkResult
 from rapidata.api_client.models.create_leaderboard_participant_model import CreateLeaderboardParticipantModel
 from rapidata.api_client.models.get_benchmark_by_id_query_result_paged_result import GetBenchmarkByIdQueryResultPagedResult
 from rapidata.api_client.models.prompt_by_benchmark_result_paged_result import PromptByBenchmarkResultPagedResult
@@ -1703,7 +1704,7 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> BenchmarkQueryResultPagedResult:
+    ) -> CreateBenchmarkResult:
         """Creates a benchmark
 
 
@@ -1740,7 +1741,7 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "BenchmarkQueryResultPagedResult",
+            '200': "CreateBenchmarkResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1769,7 +1770,7 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[BenchmarkQueryResultPagedResult]:
+    ) -> ApiResponse[CreateBenchmarkResult]:
         """Creates a benchmark
 
 
@@ -1806,7 +1807,7 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "BenchmarkQueryResultPagedResult",
+            '200': "CreateBenchmarkResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1872,7 +1873,7 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "BenchmarkQueryResultPagedResult",
+            '200': "CreateBenchmarkResult",
         }
         response_data = self.api_client.call_api(
             *_param,
