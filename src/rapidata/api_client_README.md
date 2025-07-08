@@ -55,15 +55,14 @@ configuration.api_key['bearer'] = os.environ["API_KEY"]
 # Enter a context with an instance of the API client
 with rapidata.api_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rapidata.api_client.CampaignApi(api_client)
+    api_instance = rapidata.api_client.BenchmarkApi(api_client)
+    benchmark_id = 'benchmark_id_example' # str | 
 
     try:
-        # Gets the status of the boost.
-        api_response = api_instance.campaign_boost_status_get()
-        print("The response of CampaignApi->campaign_boost_status_get:\n")
-        pprint(api_response)
+        # Deletes a single benchmark.
+        api_instance.benchmark_benchmark_id_delete(benchmark_id)
     except ApiException as e:
-        print("Exception when calling CampaignApi->campaign_boost_status_get: %s\n" % e)
+        print("Exception when calling BenchmarkApi->benchmark_benchmark_id_delete: %s\n" % e)
 
 ```
 
@@ -73,6 +72,13 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*BenchmarkApi* | [**benchmark_benchmark_id_delete**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_delete) | **DELETE** /benchmark/{benchmarkId} | Deletes a single benchmark.
+*BenchmarkApi* | [**benchmark_benchmark_id_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_get) | **GET** /benchmark/{benchmarkId} | Returns a single benchmark by its ID.
+*BenchmarkApi* | [**benchmark_benchmark_id_participants_participant_id_submit_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_participants_participant_id_submit_post) | **POST** /benchmark/{benchmarkId}/participants/{participantId}/submit | Submits a participant to a benchmark.
+*BenchmarkApi* | [**benchmark_benchmark_id_participants_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_participants_post) | **POST** /benchmark/{benchmarkId}/participants | Creates a participant in a benchmark.
+*BenchmarkApi* | [**benchmark_benchmark_id_prompts_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_prompts_get) | **GET** /benchmark/{benchmarkId}/prompts | Returns the paged prompts of a benchmark by its ID.
+*BenchmarkApi* | [**benchmark_benchmark_id_prompts_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_prompts_post) | **POST** /benchmark/{benchmarkId}/prompts | Adds a new prompt to a benchmark.
+*BenchmarkApi* | [**benchmarks_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmarks_get) | **GET** /benchmarks | Queries all benchmarks of the user.
 *CampaignApi* | [**campaign_boost_status_get**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_status_get) | **GET** /campaign/boost/status | Gets the status of the boost.
 *CampaignApi* | [**campaign_campaign_id_pause_post**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_pause_post) | **POST** /campaign/{campaignId}/pause | Pauses a campaign.
 *CampaignApi* | [**campaign_campaign_id_resume_post**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_resume_post) | **POST** /campaign/{campaignId}/resume | Resumes a campaign.
@@ -86,6 +92,7 @@ Class | Method | HTTP request | Description
 *CocoApi* | [**coco_coco_set_id_submit_post**](rapidata/api_client/docs/CocoApi.md#coco_coco_set_id_submit_post) | **POST** /coco/{cocoSetId}/submit | Creates a new validation set based on a previously uploaded CoCo set.
 *CocoApi* | [**coco_post**](rapidata/api_client/docs/CocoApi.md#coco_post) | **POST** /coco | Uploads a CoCo set to the system.
 *CompareWorkflowApi* | [**workflow_compare_workflow_id_results_get**](rapidata/api_client/docs/CompareWorkflowApi.md#workflow_compare_workflow_id_results_get) | **GET** /workflow/compare/{workflowId}/results | Get the result overview for a compare workflow.
+*CustomerRapidApi* | [**rapid_correlation_id_validation_potential_get**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_correlation_id_validation_potential_get) | **GET** /rapid/{correlationId}/validation-potential | Queries rapids that are potentially eligible for validation set creation.
 *CustomerRapidApi* | [**rapid_demographic_post**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_demographic_post) | **POST** /rapid/demographic | Creates a new Demographic Rapid.
 *CustomerRapidApi* | [**rapid_rapid_id_delete**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_rapid_id_delete) | **DELETE** /rapid/{rapidId} | Deletes a rapid.
 *CustomerRapidApi* | [**rapid_rapid_id_responses_get**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_rapid_id_responses_get) | **GET** /rapid/{rapidId}/responses | Gets all responses for a given rapid.
@@ -116,7 +123,7 @@ Class | Method | HTTP request | Description
 *LeaderboardApi* | [**leaderboard_leaderboard_id_delete**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_delete) | **DELETE** /leaderboard/{leaderboardId} | Deletes a leaderboard by its ID.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_get) | **GET** /leaderboard/{leaderboardId} | Gets a leaderboard by its ID.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_participant_participant_id_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_participant_participant_id_get) | **GET** /leaderboard/{leaderboardId}/participant/{participantId} | Gets a participant by its ID.
-*LeaderboardApi* | [**leaderboard_leaderboard_id_participants_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_participants_get) | **GET** /leaderboard/{leaderboardId}/participants | queries all the participants of a leaderboard by its ID.
+*LeaderboardApi* | [**leaderboard_leaderboard_id_participants_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_participants_get) | **GET** /leaderboard/{leaderboardId}/participants | queries all the participants connected to leaderboard by its ID.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_participants_participant_id_submit_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_participants_participant_id_submit_post) | **POST** /leaderboard/{leaderboardId}/participants/{participantId}/submit | Submits a participant to a leaderboard.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_participants_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_participants_post) | **POST** /leaderboard/{leaderboardId}/participants | Creates a participant in a leaderboard.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_prompts_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_prompts_get) | **GET** /leaderboard/{leaderboardId}/prompts | returns the paged prompts of a leaderboard by its ID.
@@ -203,7 +210,8 @@ Class | Method | HTTP request | Description
  - [AttachCategoryRapidBlueprint](rapidata/api_client/docs/AttachCategoryRapidBlueprint.md)
  - [AttachCategoryResult](rapidata/api_client/docs/AttachCategoryResult.md)
  - [AttachCategoryTruth](rapidata/api_client/docs/AttachCategoryTruth.md)
- - [BaseError](rapidata/api_client/docs/BaseError.md)
+ - [BenchmarkQueryResult](rapidata/api_client/docs/BenchmarkQueryResult.md)
+ - [BenchmarkQueryResultPagedResult](rapidata/api_client/docs/BenchmarkQueryResultPagedResult.md)
  - [BoostLeaderboardModel](rapidata/api_client/docs/BoostLeaderboardModel.md)
  - [BoostQueryResult](rapidata/api_client/docs/BoostQueryResult.md)
  - [BoostStatus](rapidata/api_client/docs/BoostStatus.md)
@@ -249,6 +257,7 @@ Class | Method | HTTP request | Description
  - [CountMetadata](rapidata/api_client/docs/CountMetadata.md)
  - [CountMetadataModel](rapidata/api_client/docs/CountMetadataModel.md)
  - [CountryUserFilterModel](rapidata/api_client/docs/CountryUserFilterModel.md)
+ - [CreateBenchmarkParticipantResult](rapidata/api_client/docs/CreateBenchmarkParticipantResult.md)
  - [CreateBridgeTokenResult](rapidata/api_client/docs/CreateBridgeTokenResult.md)
  - [CreateClientModel](rapidata/api_client/docs/CreateClientModel.md)
  - [CreateComplexOrderModel](rapidata/api_client/docs/CreateComplexOrderModel.md)
@@ -266,7 +275,6 @@ Class | Method | HTTP request | Description
  - [CreateEmptyValidationSetResult](rapidata/api_client/docs/CreateEmptyValidationSetResult.md)
  - [CreateLeaderboardModel](rapidata/api_client/docs/CreateLeaderboardModel.md)
  - [CreateLeaderboardParticipantModel](rapidata/api_client/docs/CreateLeaderboardParticipantModel.md)
- - [CreateLeaderboardParticipantResult](rapidata/api_client/docs/CreateLeaderboardParticipantResult.md)
  - [CreateLeaderboardResult](rapidata/api_client/docs/CreateLeaderboardResult.md)
  - [CreateOrderModel](rapidata/api_client/docs/CreateOrderModel.md)
  - [CreateOrderModelReferee](rapidata/api_client/docs/CreateOrderModelReferee.md)
@@ -318,6 +326,8 @@ Class | Method | HTTP request | Description
  - [Gender](rapidata/api_client/docs/Gender.md)
  - [GenderUserFilterModel](rapidata/api_client/docs/GenderUserFilterModel.md)
  - [GetAvailableValidationSetsResult](rapidata/api_client/docs/GetAvailableValidationSetsResult.md)
+ - [GetBenchmarkByIdQueryResult](rapidata/api_client/docs/GetBenchmarkByIdQueryResult.md)
+ - [GetBenchmarkByIdQueryResultPagedResult](rapidata/api_client/docs/GetBenchmarkByIdQueryResultPagedResult.md)
  - [GetCompareAbSummaryResult](rapidata/api_client/docs/GetCompareAbSummaryResult.md)
  - [GetCompareWorkflowResultsModel](rapidata/api_client/docs/GetCompareWorkflowResultsModel.md)
  - [GetCompareWorkflowResultsResult](rapidata/api_client/docs/GetCompareWorkflowResultsResult.md)
@@ -409,6 +419,9 @@ Class | Method | HTTP request | Description
  - [PolygonRapidBlueprint](rapidata/api_client/docs/PolygonRapidBlueprint.md)
  - [PolygonResult](rapidata/api_client/docs/PolygonResult.md)
  - [PolygonTruth](rapidata/api_client/docs/PolygonTruth.md)
+ - [PotentialValidationRapid](rapidata/api_client/docs/PotentialValidationRapid.md)
+ - [PotentialValidationRapidPagedResult](rapidata/api_client/docs/PotentialValidationRapidPagedResult.md)
+ - [PotentialValidationRapidTruth](rapidata/api_client/docs/PotentialValidationRapidTruth.md)
  - [PreliminaryDownloadModel](rapidata/api_client/docs/PreliminaryDownloadModel.md)
  - [PreliminaryDownloadResult](rapidata/api_client/docs/PreliminaryDownloadResult.md)
  - [PrivateTextMetadataInput](rapidata/api_client/docs/PrivateTextMetadataInput.md)
@@ -423,6 +436,7 @@ Class | Method | HTTP request | Description
  - [PublicOrderModel](rapidata/api_client/docs/PublicOrderModel.md)
  - [PublicTextMetadataInput](rapidata/api_client/docs/PublicTextMetadataInput.md)
  - [QueryModel](rapidata/api_client/docs/QueryModel.md)
+ - [QueryValidationModel](rapidata/api_client/docs/QueryValidationModel.md)
  - [RapidIssue](rapidata/api_client/docs/RapidIssue.md)
  - [RapidModel](rapidata/api_client/docs/RapidModel.md)
  - [RapidModelPagedResult](rapidata/api_client/docs/RapidModelPagedResult.md)

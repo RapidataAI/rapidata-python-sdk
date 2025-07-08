@@ -17,17 +17,23 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Union
+from rapidata.api_client.models.get_validation_rapids_result_payload import GetValidationRapidsResultPayload
+from rapidata.api_client.models.potential_validation_rapid_truth import PotentialValidationRapidTruth
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateDatapointResult(BaseModel):
+class PotentialValidationRapid(BaseModel):
     """
-    CreateDatapointResult
+    PotentialValidationRapid
     """ # noqa: E501
-    datapoint_id: StrictStr = Field(alias="datapointId")
-    __properties: ClassVar[List[str]] = ["datapointId"]
+    rapid_id: StrictStr = Field(alias="rapidId")
+    payload: GetValidationRapidsResultPayload
+    response_count: StrictInt = Field(alias="responseCount")
+    confidence: Union[StrictFloat, StrictInt]
+    truth: PotentialValidationRapidTruth
+    __properties: ClassVar[List[str]] = ["rapidId", "payload", "responseCount", "confidence", "truth"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -47,7 +53,7 @@ class CreateDatapointResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateDatapointResult from a JSON string"""
+        """Create an instance of PotentialValidationRapid from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -68,11 +74,17 @@ class CreateDatapointResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of payload
+        if self.payload:
+            _dict['payload'] = self.payload.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of truth
+        if self.truth:
+            _dict['truth'] = self.truth.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateDatapointResult from a dict"""
+        """Create an instance of PotentialValidationRapid from a dict"""
         if obj is None:
             return None
 
@@ -80,7 +92,11 @@ class CreateDatapointResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "datapointId": obj.get("datapointId")
+            "rapidId": obj.get("rapidId"),
+            "payload": GetValidationRapidsResultPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
+            "responseCount": obj.get("responseCount"),
+            "confidence": obj.get("confidence"),
+            "truth": PotentialValidationRapidTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None
         })
         return _obj
 

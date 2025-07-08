@@ -17,17 +17,21 @@ import pprint
 import re  # noqa: F401
 import json
 
+from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateDatapointResult(BaseModel):
+class BenchmarkQueryResult(BaseModel):
     """
-    CreateDatapointResult
+    BenchmarkQueryResult
     """ # noqa: E501
-    datapoint_id: StrictStr = Field(alias="datapointId")
-    __properties: ClassVar[List[str]] = ["datapointId"]
+    id: StrictStr
+    name: StrictStr
+    created_at: datetime = Field(alias="createdAt")
+    owner_mail: StrictStr = Field(alias="ownerMail")
+    __properties: ClassVar[List[str]] = ["id", "name", "createdAt", "ownerMail"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -47,7 +51,7 @@ class CreateDatapointResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateDatapointResult from a JSON string"""
+        """Create an instance of BenchmarkQueryResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -72,7 +76,7 @@ class CreateDatapointResult(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateDatapointResult from a dict"""
+        """Create an instance of BenchmarkQueryResult from a dict"""
         if obj is None:
             return None
 
@@ -80,7 +84,10 @@ class CreateDatapointResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "datapointId": obj.get("datapointId")
+            "id": obj.get("id"),
+            "name": obj.get("name"),
+            "createdAt": obj.get("createdAt"),
+            "ownerMail": obj.get("ownerMail")
         })
         return _obj
 

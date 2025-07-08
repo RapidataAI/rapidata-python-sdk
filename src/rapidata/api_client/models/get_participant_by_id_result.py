@@ -28,13 +28,14 @@ class GetParticipantByIdResult(BaseModel):
     """ # noqa: E501
     id: StrictStr
     name: StrictStr
-    leaderboard_id: StrictStr = Field(alias="leaderboardId")
+    leaderboard_id: Optional[StrictStr] = Field(default=None, alias="leaderboardId")
+    benchmark_id: StrictStr = Field(alias="benchmarkId")
     dataset_id: StrictStr = Field(alias="datasetId")
     status: StrictStr
     score: Optional[Union[StrictFloat, StrictInt]] = None
     wins: StrictInt
     total_matches: StrictInt = Field(alias="totalMatches")
-    __properties: ClassVar[List[str]] = ["id", "name", "leaderboardId", "datasetId", "status", "score", "wins", "totalMatches"]
+    __properties: ClassVar[List[str]] = ["id", "name", "leaderboardId", "benchmarkId", "datasetId", "status", "score", "wins", "totalMatches"]
 
     @field_validator('status')
     def status_validate_enum(cls, value):
@@ -82,6 +83,11 @@ class GetParticipantByIdResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if leaderboard_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.leaderboard_id is None and "leaderboard_id" in self.model_fields_set:
+            _dict['leaderboardId'] = None
+
         # set to None if score (nullable) is None
         # and model_fields_set contains the field
         if self.score is None and "score" in self.model_fields_set:
@@ -102,6 +108,7 @@ class GetParticipantByIdResult(BaseModel):
             "id": obj.get("id"),
             "name": obj.get("name"),
             "leaderboardId": obj.get("leaderboardId"),
+            "benchmarkId": obj.get("benchmarkId"),
             "datasetId": obj.get("datasetId"),
             "status": obj.get("status"),
             "score": obj.get("score"),

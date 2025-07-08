@@ -1,6 +1,7 @@
 # flake8: noqa
 
 # import apis into api package
+from rapidata.api_client.api.benchmark_api import BenchmarkApi
 from rapidata.api_client.api.campaign_api import CampaignApi
 from rapidata.api_client.api.client_api import ClientApi
 from rapidata.api_client.api.coco_api import CocoApi
