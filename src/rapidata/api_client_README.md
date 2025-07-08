@@ -76,8 +76,9 @@ Class | Method | HTTP request | Description
 *BenchmarkApi* | [**benchmark_benchmark_id_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_get) | **GET** /benchmark/{benchmarkId} | Returns a single benchmark by its ID.
 *BenchmarkApi* | [**benchmark_benchmark_id_participants_participant_id_submit_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_participants_participant_id_submit_post) | **POST** /benchmark/{benchmarkId}/participants/{participantId}/submit | Submits a participant to a benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_participants_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_participants_post) | **POST** /benchmark/{benchmarkId}/participants | Creates a participant in a benchmark.
+*BenchmarkApi* | [**benchmark_benchmark_id_prompt_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_prompt_post) | **POST** /benchmark/{benchmarkId}/prompt | Adds a new prompt to a benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_prompts_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_prompts_get) | **GET** /benchmark/{benchmarkId}/prompts | Returns the paged prompts of a benchmark by its ID.
-*BenchmarkApi* | [**benchmark_benchmark_id_prompts_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_prompts_post) | **POST** /benchmark/{benchmarkId}/prompts | Adds a new prompt to a benchmark.
+*BenchmarkApi* | [**benchmark_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_post) | **POST** /benchmark | Creates a benchmark
 *BenchmarkApi* | [**benchmarks_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmarks_get) | **GET** /benchmarks | Queries all benchmarks of the user.
 *CampaignApi* | [**campaign_boost_status_get**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_status_get) | **GET** /campaign/boost/status | Gets the status of the boost.
 *CampaignApi* | [**campaign_campaign_id_pause_post**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_pause_post) | **POST** /campaign/{campaignId}/pause | Pauses a campaign.
@@ -257,6 +258,7 @@ Class | Method | HTTP request | Description
  - [CountMetadata](rapidata/api_client/docs/CountMetadata.md)
  - [CountMetadataModel](rapidata/api_client/docs/CountMetadataModel.md)
  - [CountryUserFilterModel](rapidata/api_client/docs/CountryUserFilterModel.md)
+ - [CreateBenchmarkModel](rapidata/api_client/docs/CreateBenchmarkModel.md)
  - [CreateBenchmarkParticipantResult](rapidata/api_client/docs/CreateBenchmarkParticipantResult.md)
  - [CreateBridgeTokenResult](rapidata/api_client/docs/CreateBridgeTokenResult.md)
  - [CreateClientModel](rapidata/api_client/docs/CreateClientModel.md)

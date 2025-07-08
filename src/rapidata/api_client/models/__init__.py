@@ -81,6 +81,7 @@ from rapidata.api_client.models.count_classification_metadata_filter_config impo
 from rapidata.api_client.models.count_metadata import CountMetadata
 from rapidata.api_client.models.count_metadata_model import CountMetadataModel
 from rapidata.api_client.models.country_user_filter_model import CountryUserFilterModel
+from rapidata.api_client.models.create_benchmark_model import CreateBenchmarkModel
 from rapidata.api_client.models.create_benchmark_participant_result import CreateBenchmarkParticipantResult
 from rapidata.api_client.models.create_bridge_token_result import CreateBridgeTokenResult
 from rapidata.api_client.models.create_client_model import CreateClientModel
