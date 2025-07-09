@@ -1,6 +1,7 @@
 from rapidata.api_client.models.prompt_asset_metadata_input import PromptAssetMetadataInput
 from rapidata.api_client.models.url_asset_input import UrlAssetInput
 from rapidata.rapidata_client.metadata._base_metadata import Metadata
+from rapidata.api_client.models.prompt_asset_metadata_input_asset import PromptAssetMetadataInputAsset
 
 
 class MediaAssetMetadata(Metadata):
@@ -11,5 +12,11 @@ class MediaAssetMetadata(Metadata):
 
     def to_model(self):
         return PromptAssetMetadataInput(
-            _t="PromptAssetMetadataInput", asset=UrlAssetInput(_t="UrlAssetInput", url=self._url)
+            _t="PromptAssetMetadataInput", 
+            asset=PromptAssetMetadataInputAsset(
+                actual_instance=UrlAssetInput(
+                    _t="UrlAssetInput", 
+                    url=self._url
+                )
+            )
         )
