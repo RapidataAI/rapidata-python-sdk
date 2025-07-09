@@ -3,7 +3,7 @@ from rapidata.api_client.models.filter import Filter
 from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.page_info import PageInfo
 from rapidata.api_client.models.create_leaderboard_model import CreateLeaderboardModel
-from rapidata.api_client.models.create_leaderboard_participant_model import CreateLeaderboardParticipantModel
+from rapidata.api_client.models.create_benchmark_participant_model import CreateBenchmarkParticipantModel
 
 from rapidata.rapidata_client.logging import logger
 from rapidata.service.openapi_service import OpenAPIService
@@ -167,7 +167,7 @@ class RapidataBenchmark:
 
         participant_result = self.__openapi_service.benchmark_api.benchmark_benchmark_id_participants_post(
             benchmark_id=self.id,
-            create_leaderboard_participant_model=CreateLeaderboardParticipantModel(
+            create_benchmark_participant_model=CreateBenchmarkParticipantModel(
                 name=name,
             )
         )
@@ -190,3 +190,9 @@ class RapidataBenchmark:
             benchmark_id=self.id,
             participant_id=participant_result.participant_id
         )
+
+    def __str__(self) -> str:
+        return f"RapidataBenchmark(name={self.name}, id={self.id})"
+    
+    def __repr__(self) -> str:
+        return self.__str__()
