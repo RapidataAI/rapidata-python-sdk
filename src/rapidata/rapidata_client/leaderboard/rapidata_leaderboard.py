@@ -1,4 +1,4 @@
-from rapidata.api_client.models.create_leaderboard_participant_model import CreateLeaderboardParticipantModel
+from rapidata.api_client.models.create_benchmark_participant_model import CreateBenchmarkParticipantModel
 from rapidata.api_client.models.page_info import PageInfo
 from rapidata.api_client.models.query_model import QueryModel
 
@@ -102,7 +102,7 @@ class RapidataLeaderboard:
 
         participant_result = self.__openapi_service.leaderboard_api.leaderboard_leaderboard_id_participants_post(
             leaderboard_id=self.id,
-            create_leaderboard_participant_model=CreateLeaderboardParticipantModel(
+            create_benchmark_participant_model=CreateBenchmarkParticipantModel(
                 name=name,
             )
         )
