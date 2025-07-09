@@ -136,7 +136,7 @@ class RapidataOrderBuilder:
             else None
         )
         if self.__dataset:
-            logger.debug(f"Dataset created with ID: {self.__dataset.dataset_id}")
+            logger.debug(f"Dataset created with ID: {self.__dataset.id}")
         else:
             logger.warning("No dataset created for this order.")
 
