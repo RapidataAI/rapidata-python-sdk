@@ -4434,6 +4434,156 @@
         }
       }
     },
+    "/benchmark/{benchmarkId}/participants": {
+      "get": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Query all participants within a benchmark",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParticipantByBenchmarkPagedResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParticipantByBenchmarkPagedResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParticipantByBenchmarkPagedResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Creates a participant in a benchmark.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBenchmarkParticipantModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBenchmarkParticipantModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBenchmarkParticipantModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBenchmarkParticipantResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBenchmarkParticipantResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBenchmarkParticipantResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/benchmark/{benchmarkId}/participant/{participantId}": {
+      "get": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Gets a participant by it's Id.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "participantId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetParticipantByIdResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetParticipantByIdResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetParticipantByIdResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/benchmark/{benchmarkId}/prompts": {
       "get": {
         "tags": [
@@ -4532,67 +4682,6 @@
         "responses": {
           "204": {
             "description": "No Content"
-          }
-        }
-      }
-    },
-    "/benchmark/{benchmarkId}/participants": {
-      "post": {
-        "tags": [
-          "Benchmark"
-        ],
-        "summary": "Creates a participant in a benchmark.",
-        "parameters": [
-          {
-            "name": "benchmarkId",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateLeaderboardParticipantModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateLeaderboardParticipantModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateLeaderboardParticipantModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateBenchmarkParticipantResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateBenchmarkParticipantResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateBenchmarkParticipantResult"
-                }
-              }
-            }
           }
         }
       }
@@ -4955,7 +5044,8 @@
               }
             }
           }
-        }
+        },
+        "deprecated": true
       },
       "post": {
         "tags": [
@@ -4978,17 +5068,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateLeaderboardParticipantModel"
+                "$ref": "#/components/schemas/CreateBenchmarkParticipantModel"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateLeaderboardParticipantModel"
+                "$ref": "#/components/schemas/CreateBenchmarkParticipantModel"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateLeaderboardParticipantModel"
+                "$ref": "#/components/schemas/CreateBenchmarkParticipantModel"
               }
             }
           }
@@ -5016,6 +5106,59 @@
           }
         },
         "deprecated": true
+      }
+    },
+    "/leaderboard/{leaderboardId}/standings": {
+      "get": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "queries all the participants connected to leaderboard by its ID.",
+        "parameters": [
+          {
+            "name": "leaderboardId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "request",
+            "in": "query",
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandingByLeaderboardPagedResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandingByLeaderboardPagedResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandingByLeaderboardPagedResult"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/leaderboard/{leaderboardId}/participant/{participantId}": {
@@ -5050,17 +5193,68 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetParticipantByIdResult"
+                  "$ref": "#/components/schemas/GetStandingByIdResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetParticipantByIdResult"
+                  "$ref": "#/components/schemas/GetStandingByIdResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetParticipantByIdResult"
+                  "$ref": "#/components/schemas/GetStandingByIdResult"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": true
+      }
+    },
+    "/benchmark/standing/{leaderboardId}/{participantId}": {
+      "get": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "Gets a standing by leaderboardId and participantId.",
+        "parameters": [
+          {
+            "name": "leaderboardId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "participantId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetStandingByIdResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetStandingByIdResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetStandingByIdResult"
                 }
               }
             }
@@ -15052,6 +15246,20 @@
         "additionalProperties": false,
         "description": "The model for creating a benchmark."
       },
+      "CreateBenchmarkParticipantModel": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the participant."
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model to create a participant in a leaderboard"
+      },
       "CreateBenchmarkParticipantResult": {
         "required": [
           "datasetId",
@@ -15123,20 +15331,6 @@
         },
         "additionalProperties": false,
         "description": "The CreateLeaderboardModel class represents the model for creating a leaderboard."
-      },
-      "CreateLeaderboardParticipantModel": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "The name of the participant."
-          }
-        },
-        "additionalProperties": false,
-        "description": "The model to create a participant in a leaderboard"
       },
       "CreateLeaderboardResult": {
         "required": [
@@ -15247,6 +15441,30 @@
           "benchmarkId",
           "datasetId",
           "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "benchmarkId": {
+            "type": "string"
+          },
+          "datasetId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetStandingByIdResult": {
+        "required": [
+          "benchmarkId",
+          "datasetId",
+          "id",
           "name",
           "status",
           "totalMatches",
@@ -15259,10 +15477,6 @@
           },
           "name": {
             "type": "string"
-          },
-          "leaderboardId": {
-            "type": "string",
-            "nullable": true
           },
           "benchmarkId": {
             "type": "string"
@@ -15356,6 +15570,80 @@
           }
         },
         "additionalProperties": false
+      },
+      "ParticipantByBenchmark": {
+        "required": [
+          "benchmarkId",
+          "datasetId",
+          "id",
+          "name",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "benchmarkId": {
+            "type": "string"
+          },
+          "datasetId": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "Created",
+              "Submitted"
+            ],
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ParticipantByBenchmarkPagedResult": {
+        "required": [
+          "items",
+          "page",
+          "pageSize",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ParticipantByBenchmark"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ParticipantStatus": {
+        "enum": [
+          "Created",
+          "Submitted"
+        ],
+        "type": "string"
       },
       "PromptByBenchmarkResult": {
         "required": [

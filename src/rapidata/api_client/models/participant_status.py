@@ -27,10 +27,7 @@ class ParticipantStatus(str, Enum):
     allowed enum values
     """
     CREATED = 'Created'
-    QUEUED = 'Queued'
-    RUNNING = 'Running'
-    COMPLETED = 'Completed'
-    FAILED = 'Failed'
+    SUBMITTED = 'Submitted'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
