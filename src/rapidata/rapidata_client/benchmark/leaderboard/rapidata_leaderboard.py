@@ -1,5 +1,9 @@
 import pandas as pd
 
+from rapidata.api_client.models.query_model import QueryModel
+from rapidata.api_client.models.page_info import PageInfo
+from rapidata.api_client.models.sort_criterion import SortCriterion
+
 from rapidata.service.openapi_service import OpenAPIService
 
 
@@ -27,15 +31,18 @@ class RapidataLeaderboard:
         """
         Returns the standings of the leaderboard.
         """
-        participants = self.__openapi_service.leaderboard_api.leaderboard_leaderboard_id_participants_get(
-            leaderboard_id=self.id
+        participants = self.__openapi_service.leaderboard_api.leaderboard_leaderboard_id_standings_get(
+            leaderboard_id=self.id,
+            request=QueryModel(
+                page=PageInfo(index=1, size=1000),
+                sortCriteria=[SortCriterion(direction="Desc", propertyName="Score")]
+            )
         )
 
         standings = []
         for participant in participants.items:
             standings.append({
                 "name": participant.name,
-                "status": participant.status,
                 "score": participant.score,
                 "wins": participant.wins,
                 "total_matches": participant.total_matches
