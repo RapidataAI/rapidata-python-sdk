@@ -1195,6 +1195,7 @@ class DatasetApi:
     def dataset_dataset_id_datapoints_post(
         self,
         dataset_id: Annotated[StrictStr, Field(description="The id of the dataset")],
+        prompt_asset: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The prompt asset is a file that can be added to the prompt metadata of the asset.")] = None,
         file: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The files to upload from the local storage. Must be either images or videos.")] = None,
         text: Annotated[Optional[List[StrictStr]], Field(description="The texts to upload. The length limit is set at 256 characters per text.")] = None,
         url: Annotated[Optional[List[StrictStr]], Field(description="Creates an asset from a url. The url needs to point to a publicly accessible resource. The server will download the resource and store it as an asset in the background. <remarks>     Additionally, to the urls having to be publicly accessible, they need to support HTTP HEAD requests. </remarks>")] = None,
@@ -1219,6 +1220,8 @@ class DatasetApi:
 
         :param dataset_id: The id of the dataset (required)
         :type dataset_id: str
+        :param prompt_asset: The prompt asset is a file that can be added to the prompt metadata of the asset.
+        :type prompt_asset: List[bytearray]
         :param file: The files to upload from the local storage. Must be either images or videos.
         :type file: List[bytearray]
         :param text: The texts to upload. The length limit is set at 256 characters per text.
@@ -1253,6 +1256,7 @@ class DatasetApi:
 
         _param = self._dataset_dataset_id_datapoints_post_serialize(
             dataset_id=dataset_id,
+            prompt_asset=prompt_asset,
             file=file,
             text=text,
             url=url,
@@ -1282,6 +1286,7 @@ class DatasetApi:
     def dataset_dataset_id_datapoints_post_with_http_info(
         self,
         dataset_id: Annotated[StrictStr, Field(description="The id of the dataset")],
+        prompt_asset: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The prompt asset is a file that can be added to the prompt metadata of the asset.")] = None,
         file: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The files to upload from the local storage. Must be either images or videos.")] = None,
         text: Annotated[Optional[List[StrictStr]], Field(description="The texts to upload. The length limit is set at 256 characters per text.")] = None,
         url: Annotated[Optional[List[StrictStr]], Field(description="Creates an asset from a url. The url needs to point to a publicly accessible resource. The server will download the resource and store it as an asset in the background. <remarks>     Additionally, to the urls having to be publicly accessible, they need to support HTTP HEAD requests. </remarks>")] = None,
@@ -1306,6 +1311,8 @@ class DatasetApi:
 
         :param dataset_id: The id of the dataset (required)
         :type dataset_id: str
+        :param prompt_asset: The prompt asset is a file that can be added to the prompt metadata of the asset.
+        :type prompt_asset: List[bytearray]
         :param file: The files to upload from the local storage. Must be either images or videos.
         :type file: List[bytearray]
         :param text: The texts to upload. The length limit is set at 256 characters per text.
@@ -1340,6 +1347,7 @@ class DatasetApi:
 
         _param = self._dataset_dataset_id_datapoints_post_serialize(
             dataset_id=dataset_id,
+            prompt_asset=prompt_asset,
             file=file,
             text=text,
             url=url,
@@ -1369,6 +1377,7 @@ class DatasetApi:
     def dataset_dataset_id_datapoints_post_without_preload_content(
         self,
         dataset_id: Annotated[StrictStr, Field(description="The id of the dataset")],
+        prompt_asset: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The prompt asset is a file that can be added to the prompt metadata of the asset.")] = None,
         file: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The files to upload from the local storage. Must be either images or videos.")] = None,
         text: Annotated[Optional[List[StrictStr]], Field(description="The texts to upload. The length limit is set at 256 characters per text.")] = None,
         url: Annotated[Optional[List[StrictStr]], Field(description="Creates an asset from a url. The url needs to point to a publicly accessible resource. The server will download the resource and store it as an asset in the background. <remarks>     Additionally, to the urls having to be publicly accessible, they need to support HTTP HEAD requests. </remarks>")] = None,
@@ -1393,6 +1402,8 @@ class DatasetApi:
 
         :param dataset_id: The id of the dataset (required)
         :type dataset_id: str
+        :param prompt_asset: The prompt asset is a file that can be added to the prompt metadata of the asset.
+        :type prompt_asset: List[bytearray]
         :param file: The files to upload from the local storage. Must be either images or videos.
         :type file: List[bytearray]
         :param text: The texts to upload. The length limit is set at 256 characters per text.
@@ -1427,6 +1438,7 @@ class DatasetApi:
 
         _param = self._dataset_dataset_id_datapoints_post_serialize(
             dataset_id=dataset_id,
+            prompt_asset=prompt_asset,
             file=file,
             text=text,
             url=url,
@@ -1451,6 +1463,7 @@ class DatasetApi:
     def _dataset_dataset_id_datapoints_post_serialize(
         self,
         dataset_id,
+        prompt_asset,
         file,
         text,
         url,
@@ -1465,6 +1478,7 @@ class DatasetApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
+            'promptAsset': 'csv',
             'file': 'csv',
             'text': 'multi',
             'url': 'multi',
@@ -1486,6 +1500,8 @@ class DatasetApi:
         # process the query parameters
         # process the header parameters
         # process the form parameters
+        if prompt_asset is not None:
+            _files['promptAsset'] = prompt_asset
         if file is not None:
             _files['file'] = file
         if text is not None:

@@ -139,6 +139,11 @@ from rapidata.api_client.models.feature_flag_model import FeatureFlagModel
 from rapidata.api_client.models.feedback_model import FeedbackModel
 from rapidata.api_client.models.file_artifact_model import FileArtifactModel
 from rapidata.api_client.models.file_asset import FileAsset
+from rapidata.api_client.models.file_asset_input import FileAssetInput
+from rapidata.api_client.models.file_asset_input1 import FileAssetInput1
+from rapidata.api_client.models.file_asset_input1_file import FileAssetInput1File
+from rapidata.api_client.models.file_asset_input2 import FileAssetInput2
+from rapidata.api_client.models.file_asset_input_file import FileAssetInputFile
 from rapidata.api_client.models.file_asset_model import FileAssetModel
 from rapidata.api_client.models.file_asset_model_metadata_value import FileAssetModelMetadataValue
 from rapidata.api_client.models.file_type import FileType
@@ -146,6 +151,7 @@ from rapidata.api_client.models.file_type_metadata import FileTypeMetadata
 from rapidata.api_client.models.file_type_metadata_model import FileTypeMetadataModel
 from rapidata.api_client.models.filter import Filter
 from rapidata.api_client.models.filter_operator import FilterOperator
+from rapidata.api_client.models.form_file_wrapper import FormFileWrapper
 from rapidata.api_client.models.free_text_payload import FreeTextPayload
 from rapidata.api_client.models.free_text_rapid_blueprint import FreeTextRapidBlueprint
 from rapidata.api_client.models.free_text_result import FreeTextResult
@@ -201,6 +207,7 @@ from rapidata.api_client.models.line_point import LinePoint
 from rapidata.api_client.models.line_rapid_blueprint import LineRapidBlueprint
 from rapidata.api_client.models.line_result import LineResult
 from rapidata.api_client.models.line_truth import LineTruth
+from rapidata.api_client.models.local_file_wrapper import LocalFileWrapper
 from rapidata.api_client.models.locate_box_truth import LocateBoxTruth
 from rapidata.api_client.models.locate_coordinate import LocateCoordinate
 from rapidata.api_client.models.locate_payload import LocatePayload
@@ -212,6 +219,11 @@ from rapidata.api_client.models.location_metadata_model import LocationMetadataM
 from rapidata.api_client.models.logic_operator import LogicOperator
 from rapidata.api_client.models.metadata_visibilities import MetadataVisibilities
 from rapidata.api_client.models.multi_asset import MultiAsset
+from rapidata.api_client.models.multi_asset_input import MultiAssetInput
+from rapidata.api_client.models.multi_asset_input1 import MultiAssetInput1
+from rapidata.api_client.models.multi_asset_input1_assets_inner import MultiAssetInput1AssetsInner
+from rapidata.api_client.models.multi_asset_input2 import MultiAssetInput2
+from rapidata.api_client.models.multi_asset_input_assets_inner import MultiAssetInputAssetsInner
 from rapidata.api_client.models.multi_asset_model import MultiAssetModel
 from rapidata.api_client.models.multi_compare_truth import MultiCompareTruth
 from rapidata.api_client.models.naive_referee_config import NaiveRefereeConfig
@@ -257,11 +269,13 @@ from rapidata.api_client.models.private_text_metadata_input import PrivateTextMe
 from rapidata.api_client.models.probabilistic_attach_category_referee_config import ProbabilisticAttachCategoryRefereeConfig
 from rapidata.api_client.models.probabilistic_attach_category_referee_info import ProbabilisticAttachCategoryRefereeInfo
 from rapidata.api_client.models.prompt_asset_metadata_input import PromptAssetMetadataInput
+from rapidata.api_client.models.prompt_asset_metadata_input_asset import PromptAssetMetadataInputAsset
 from rapidata.api_client.models.prompt_by_benchmark_result import PromptByBenchmarkResult
 from rapidata.api_client.models.prompt_by_benchmark_result_paged_result import PromptByBenchmarkResultPagedResult
 from rapidata.api_client.models.prompt_metadata import PromptMetadata
 from rapidata.api_client.models.prompt_metadata_input import PromptMetadataInput
 from rapidata.api_client.models.prompt_metadata_model import PromptMetadataModel
+from rapidata.api_client.models.proxy_file_wrapper import ProxyFileWrapper
 from rapidata.api_client.models.public_order_model import PublicOrderModel
 from rapidata.api_client.models.public_text_metadata_input import PublicTextMetadataInput
 from rapidata.api_client.models.query_model import QueryModel
@@ -308,12 +322,15 @@ from rapidata.api_client.models.standing_by_leaderboard_paged_result import Stan
 from rapidata.api_client.models.standing_status import StandingStatus
 from rapidata.api_client.models.static_selection import StaticSelection
 from rapidata.api_client.models.sticky_state import StickyState
+from rapidata.api_client.models.stream_file_wrapper import StreamFileWrapper
 from rapidata.api_client.models.streams_metadata import StreamsMetadata
 from rapidata.api_client.models.streams_metadata_model import StreamsMetadataModel
 from rapidata.api_client.models.submit_coco_model import SubmitCocoModel
 from rapidata.api_client.models.submit_coco_result import SubmitCocoResult
 from rapidata.api_client.models.submit_participant_result import SubmitParticipantResult
+from rapidata.api_client.models.submit_prompt_model import SubmitPromptModel
 from rapidata.api_client.models.text_asset import TextAsset
+from rapidata.api_client.models.text_asset_input import TextAssetInput
 from rapidata.api_client.models.text_asset_model import TextAssetModel
 from rapidata.api_client.models.text_metadata import TextMetadata
 from rapidata.api_client.models.text_metadata_model import TextMetadataModel
@@ -354,3 +371,4 @@ from rapidata.api_client.models.workflow_labeling_step_model import WorkflowLabe
 from rapidata.api_client.models.workflow_split_model import WorkflowSplitModel
 from rapidata.api_client.models.workflow_split_model_filter_configs_inner import WorkflowSplitModelFilterConfigsInner
 from rapidata.api_client.models.workflow_state import WorkflowState
+from rapidata.api_client.models.zip_entry_file_wrapper import ZipEntryFileWrapper

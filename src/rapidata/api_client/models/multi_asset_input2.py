@@ -22,20 +22,20 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class TranscriptionMetadataInput(BaseModel):
+class MultiAssetInput2(BaseModel):
     """
-    TranscriptionMetadataInput
+    MultiAssetInput2
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for TranscriptionMetadataInput", alias="_t")
-    transcription: StrictStr
+    t: StrictStr = Field(description="Discriminator value for MultiAssetInput", alias="_t")
+    assets: List[PromptAssetMetadataInputAsset]
     identifier: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["_t", "transcription", "identifier"]
+    __properties: ClassVar[List[str]] = ["_t", "assets", "identifier"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['TranscriptionMetadataInput']):
-            raise ValueError("must be one of enum values ('TranscriptionMetadataInput')")
+        if value not in set(['MultiAssetInput']):
+            raise ValueError("must be one of enum values ('MultiAssetInput')")
         return value
 
     model_config = ConfigDict(
@@ -56,7 +56,7 @@ class TranscriptionMetadataInput(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of TranscriptionMetadataInput from a JSON string"""
+        """Create an instance of MultiAssetInput2 from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -68,8 +68,10 @@ class TranscriptionMetadataInput(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * OpenAPI `readOnly` fields are excluded.
         """
         excluded_fields: Set[str] = set([
+            "identifier",
         ])
 
         _dict = self.model_dump(
@@ -77,11 +79,18 @@ class TranscriptionMetadataInput(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in assets (list)
+        _items = []
+        if self.assets:
+            for _item_assets in self.assets:
+                if _item_assets:
+                    _items.append(_item_assets.to_dict())
+            _dict['assets'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of TranscriptionMetadataInput from a dict"""
+        """Create an instance of MultiAssetInput2 from a dict"""
         if obj is None:
             return None
 
@@ -89,10 +98,13 @@ class TranscriptionMetadataInput(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'TranscriptionMetadataInput',
-            "transcription": obj.get("transcription"),
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'MultiAssetInput',
+            "assets": [PromptAssetMetadataInputAsset.from_dict(_item) for _item in obj["assets"]] if obj.get("assets") is not None else None,
             "identifier": obj.get("identifier")
         })
         return _obj
 
+from rapidata.api_client.models.prompt_asset_metadata_input_asset import PromptAssetMetadataInputAsset
+# TODO: Rewrite to not use raise_errors
+MultiAssetInput2.model_rebuild(raise_errors=False)
 

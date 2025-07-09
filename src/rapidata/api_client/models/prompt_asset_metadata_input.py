@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.url_asset_input import UrlAssetInput
+from rapidata.api_client.models.prompt_asset_metadata_input_asset import PromptAssetMetadataInputAsset
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,7 +28,7 @@ class PromptAssetMetadataInput(BaseModel):
     PromptAssetMetadataInput
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for PromptAssetMetadataInput", alias="_t")
-    asset: UrlAssetInput
+    asset: PromptAssetMetadataInputAsset
     identifier: Optional[StrictStr] = None
     __properties: ClassVar[List[str]] = ["_t", "asset", "identifier"]
 
@@ -94,7 +94,7 @@ class PromptAssetMetadataInput(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'PromptAssetMetadataInput',
-            "asset": UrlAssetInput.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
+            "asset": PromptAssetMetadataInputAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "identifier": obj.get("identifier")
         })
         return _obj
