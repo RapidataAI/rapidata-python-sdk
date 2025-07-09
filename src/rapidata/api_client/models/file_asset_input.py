@@ -19,23 +19,24 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.file_asset_input_file import FileAssetInputFile
 from typing import Optional, Set
 from typing_extensions import Self
 
-class TranscriptionMetadataInput(BaseModel):
+class FileAssetInput(BaseModel):
     """
-    TranscriptionMetadataInput
+    FileAssetInput
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for TranscriptionMetadataInput", alias="_t")
-    transcription: StrictStr
+    t: StrictStr = Field(description="Discriminator value for FileAssetInput", alias="_t")
+    file: FileAssetInputFile
     identifier: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["_t", "transcription", "identifier"]
+    __properties: ClassVar[List[str]] = ["_t", "file", "identifier"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['TranscriptionMetadataInput']):
-            raise ValueError("must be one of enum values ('TranscriptionMetadataInput')")
+        if value not in set(['FileAssetInput']):
+            raise ValueError("must be one of enum values ('FileAssetInput')")
         return value
 
     model_config = ConfigDict(
@@ -56,7 +57,7 @@ class TranscriptionMetadataInput(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of TranscriptionMetadataInput from a JSON string"""
+        """Create an instance of FileAssetInput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -68,8 +69,10 @@ class TranscriptionMetadataInput(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * OpenAPI `readOnly` fields are excluded.
         """
         excluded_fields: Set[str] = set([
+            "identifier",
         ])
 
         _dict = self.model_dump(
@@ -77,11 +80,14 @@ class TranscriptionMetadataInput(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of file
+        if self.file:
+            _dict['file'] = self.file.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of TranscriptionMetadataInput from a dict"""
+        """Create an instance of FileAssetInput from a dict"""
         if obj is None:
             return None
 
@@ -89,8 +95,8 @@ class TranscriptionMetadataInput(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'TranscriptionMetadataInput',
-            "transcription": obj.get("transcription"),
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'FileAssetInput',
+            "file": FileAssetInputFile.from_dict(obj["file"]) if obj.get("file") is not None else None,
             "identifier": obj.get("identifier")
         })
         return _obj

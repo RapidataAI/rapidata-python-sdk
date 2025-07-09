@@ -17,25 +17,27 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class TranscriptionMetadataInput(BaseModel):
+class LocalFileWrapper(BaseModel):
     """
-    TranscriptionMetadataInput
+    LocalFileWrapper
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for TranscriptionMetadataInput", alias="_t")
-    transcription: StrictStr
-    identifier: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["_t", "transcription", "identifier"]
+    t: StrictStr = Field(description="Discriminator value for LocalFileWrapper", alias="_t")
+    name: Optional[StrictStr] = None
+    content_length: Optional[StrictInt] = Field(default=None, alias="contentLength")
+    content_type: Optional[StrictStr] = Field(default=None, alias="contentType")
+    is_in_memory: Optional[StrictBool] = Field(default=None, alias="isInMemory")
+    __properties: ClassVar[List[str]] = ["_t", "name", "contentLength", "contentType", "isInMemory"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['TranscriptionMetadataInput']):
-            raise ValueError("must be one of enum values ('TranscriptionMetadataInput')")
+        if value not in set(['LocalFileWrapper']):
+            raise ValueError("must be one of enum values ('LocalFileWrapper')")
         return value
 
     model_config = ConfigDict(
@@ -56,7 +58,7 @@ class TranscriptionMetadataInput(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of TranscriptionMetadataInput from a JSON string"""
+        """Create an instance of LocalFileWrapper from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -68,8 +70,16 @@ class TranscriptionMetadataInput(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
         """
         excluded_fields: Set[str] = set([
+            "name",
+            "content_length",
+            "content_type",
+            "is_in_memory",
         ])
 
         _dict = self.model_dump(
@@ -77,11 +87,21 @@ class TranscriptionMetadataInput(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if content_length (nullable) is None
+        # and model_fields_set contains the field
+        if self.content_length is None and "content_length" in self.model_fields_set:
+            _dict['contentLength'] = None
+
+        # set to None if content_type (nullable) is None
+        # and model_fields_set contains the field
+        if self.content_type is None and "content_type" in self.model_fields_set:
+            _dict['contentType'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of TranscriptionMetadataInput from a dict"""
+        """Create an instance of LocalFileWrapper from a dict"""
         if obj is None:
             return None
 
@@ -89,9 +109,11 @@ class TranscriptionMetadataInput(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'TranscriptionMetadataInput',
-            "transcription": obj.get("transcription"),
-            "identifier": obj.get("identifier")
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'LocalFileWrapper',
+            "name": obj.get("name"),
+            "contentLength": obj.get("contentLength"),
+            "contentType": obj.get("contentType"),
+            "isInMemory": obj.get("isInMemory")
         })
         return _obj
 

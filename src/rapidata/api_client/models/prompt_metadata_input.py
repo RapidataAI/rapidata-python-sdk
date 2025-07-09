@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,7 +28,8 @@ class PromptMetadataInput(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for PromptMetadataInput", alias="_t")
     prompt: StrictStr
-    __properties: ClassVar[List[str]] = ["_t", "prompt"]
+    identifier: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = ["_t", "prompt", "identifier"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -89,7 +90,8 @@ class PromptMetadataInput(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'PromptMetadataInput',
-            "prompt": obj.get("prompt")
+            "prompt": obj.get("prompt"),
+            "identifier": obj.get("identifier")
         })
         return _obj
 

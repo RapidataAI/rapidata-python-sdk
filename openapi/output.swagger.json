@@ -196,6 +196,14 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "promptAsset": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "description": "The prompt asset is a file that can be added to the prompt metadata of the asset."
+                  },
                   "file": {
                     "type": "array",
                     "items": {
@@ -4655,26 +4663,21 @@
           }
         ],
         "requestBody": {
-          "description": "The prompt",
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
-                "type": "string"
+                "$ref": "#/components/schemas/SubmitPromptModel"
               }
             },
             "text/json": {
               "schema": {
-                "type": "string"
+                "$ref": "#/components/schemas/SubmitPromptModel"
               }
             },
             "application/*+json": {
               "schema": {
-                "type": "string"
-              }
-            },
-            "text/plain": {
-              "schema": {
-                "type": "string"
+                "$ref": "#/components/schemas/SubmitPromptModel"
               }
             }
           }
@@ -5373,6 +5376,30 @@
           }
         }
       }
+    },
+    "/leaderboard/{leaderboardId}/refresh": {
+      "post": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "This will force an update to all standings of a leaderboard. this could happen if the recorded matches and scores are out of sync",
+        "parameters": [
+          {
+            "name": "leaderboardId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -5819,6 +5846,52 @@
         },
         "additionalProperties": false
       },
+      "FileAssetInput": {
+        "title": "FileAssetInput",
+        "required": [
+          "_t",
+          "file"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "FileAssetInput"
+            ],
+            "type": "string",
+            "description": "Discriminator value for FileAssetInput",
+            "default": "FileAssetInput",
+            "example": "FileAssetInput"
+          },
+          "file": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/FormFileWrapper"
+              },
+              {
+                "$ref": "#/components/schemas/ProxyFileWrapper"
+              },
+              {
+                "$ref": "#/components/schemas/StreamFileWrapper"
+              },
+              {
+                "$ref": "#/components/schemas/ZipEntryFileWrapper"
+              },
+              {
+                "$ref": "#/components/schemas/LocalFileWrapper"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "identifier": {
+            "type": "string",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
       "FileAssetModel": {
         "title": "FileAsset",
         "required": [
@@ -5993,6 +6066,44 @@
         ],
         "type": "string"
       },
+      "FormFileWrapper": {
+        "title": "FormFileWrapper",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "FormFileWrapper"
+            ],
+            "type": "string",
+            "description": "Discriminator value for FormFileWrapper",
+            "default": "FormFileWrapper",
+            "example": "FormFileWrapper"
+          },
+          "name": {
+            "type": "string",
+            "readOnly": true
+          },
+          "contentLength": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true,
+            "readOnly": true
+          },
+          "contentType": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "isInMemory": {
+            "type": "boolean",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
       "GetDatapointByIdResult": {
         "required": [
           "asset",
@@ -6142,6 +6253,44 @@
         },
         "additionalProperties": false
       },
+      "LocalFileWrapper": {
+        "title": "LocalFileWrapper",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "LocalFileWrapper"
+            ],
+            "type": "string",
+            "description": "Discriminator value for LocalFileWrapper",
+            "default": "LocalFileWrapper",
+            "example": "LocalFileWrapper"
+          },
+          "name": {
+            "type": "string",
+            "readOnly": true
+          },
+          "contentLength": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true,
+            "readOnly": true
+          },
+          "contentType": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "isInMemory": {
+            "type": "boolean",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
       "LocationMetadataModel": {
         "title": "LocationMetadata",
         "required": [
@@ -6178,6 +6327,52 @@
           "Not"
         ],
         "type": "string"
+      },
+      "MultiAssetInput": {
+        "title": "MultiAssetInput",
+        "required": [
+          "_t",
+          "assets"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "MultiAssetInput"
+            ],
+            "type": "string",
+            "description": "Discriminator value for MultiAssetInput",
+            "default": "MultiAssetInput",
+            "example": "MultiAssetInput"
+          },
+          "assets": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/FileAssetInput"
+                },
+                {
+                  "$ref": "#/components/schemas/MultiAssetInput"
+                },
+                {
+                  "$ref": "#/components/schemas/TextAssetInput"
+                },
+                {
+                  "$ref": "#/components/schemas/UrlAssetInput"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          },
+          "identifier": {
+            "type": "string",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
       },
       "MultiAssetModel": {
         "title": "MultiAsset",
@@ -6443,7 +6638,23 @@
             "example": "PromptAssetMetadataInput"
           },
           "asset": {
-            "$ref": "#/components/schemas/UrlAssetInput"
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/FileAssetInput2"
+              },
+              {
+                "$ref": "#/components/schemas/MultiAssetInput2"
+              },
+              {
+                "$ref": "#/components/schemas/TextAssetInput"
+              },
+              {
+                "$ref": "#/components/schemas/UrlAssetInput"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
           },
           "identifier": {
             "type": "string"
@@ -6470,6 +6681,9 @@
           },
           "prompt": {
             "type": "string"
+          },
+          "identifier": {
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -6493,6 +6707,41 @@
           },
           "prompt": {
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProxyFileWrapper": {
+        "title": "ProxyFileWrapper",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "ProxyFileWrapper"
+            ],
+            "type": "string",
+            "description": "Discriminator value for ProxyFileWrapper",
+            "default": "ProxyFileWrapper",
+            "example": "ProxyFileWrapper"
+          },
+          "name": {
+            "type": "string"
+          },
+          "contentLength": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "contentType": {
+            "type": "string",
+            "nullable": true
+          },
+          "isInMemory": {
+            "type": "boolean",
+            "readOnly": true
           }
         },
         "additionalProperties": false
@@ -6614,6 +6863,47 @@
         },
         "additionalProperties": false
       },
+      "StreamFileWrapper": {
+        "title": "StreamFileWrapper",
+        "required": [
+          "_t",
+          "name",
+          "stream"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "StreamFileWrapper"
+            ],
+            "type": "string",
+            "description": "Discriminator value for StreamFileWrapper",
+            "default": "StreamFileWrapper",
+            "example": "StreamFileWrapper"
+          },
+          "stream": {
+            "type": "string",
+            "format": "binary"
+          },
+          "name": {
+            "type": "string"
+          },
+          "contentLength": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "contentType": {
+            "type": "string",
+            "nullable": true
+          },
+          "isInMemory": {
+            "type": "boolean",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
       "StreamsMetadataModel": {
         "title": "StreamsMetadata",
         "required": [
@@ -6641,6 +6931,33 @@
           },
           "hasSubtitles": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TextAssetInput": {
+        "title": "TextAssetInput",
+        "required": [
+          "_t",
+          "text"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "TextAssetInput"
+            ],
+            "type": "string",
+            "description": "Discriminator value for TextAssetInput",
+            "default": "TextAssetInput",
+            "example": "TextAssetInput"
+          },
+          "text": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string",
+            "readOnly": true
           }
         },
         "additionalProperties": false
@@ -6769,6 +7086,9 @@
             "example": "TranscriptionMetadataInput"
           },
           "transcription": {
+            "type": "string"
+          },
+          "identifier": {
             "type": "string"
           }
         },
@@ -6916,6 +7236,44 @@
           "duration": {
             "type": "string",
             "format": "date-span"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ZipEntryFileWrapper": {
+        "title": "ZipEntryFileWrapper",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "ZipEntryFileWrapper"
+            ],
+            "type": "string",
+            "description": "Discriminator value for ZipEntryFileWrapper",
+            "default": "ZipEntryFileWrapper",
+            "example": "ZipEntryFileWrapper"
+          },
+          "name": {
+            "type": "string",
+            "readOnly": true
+          },
+          "contentLength": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true,
+            "readOnly": true
+          },
+          "contentType": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "isInMemory": {
+            "type": "boolean",
+            "readOnly": true
           }
         },
         "additionalProperties": false
@@ -8173,6 +8531,49 @@
         "additionalProperties": false,
         "description": "The model for submitting feedback."
       },
+      "FileAssetInput1": {
+        "title": "FileAssetInput",
+        "required": [
+          "_t",
+          "file"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "FileAssetInput"
+            ],
+            "type": "string",
+            "description": "Discriminator value for FileAssetInput",
+            "default": "FileAssetInput",
+            "example": "FileAssetInput"
+          },
+          "file": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/FormFileWrapper"
+              },
+              {
+                "$ref": "#/components/schemas/ProxyFileWrapper"
+              },
+              {
+                "$ref": "#/components/schemas/StreamFileWrapper"
+              },
+              {
+                "$ref": "#/components/schemas/ZipEntryFileWrapper"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "identifier": {
+            "type": "string",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
       "FreeTextRapidBlueprint": {
         "title": "FreeTextBlueprint",
         "required": [
@@ -8406,6 +8807,52 @@
             "description": "Discriminator value for LocationMetadataExistsFilterConfig",
             "default": "LocationMetadataExistsFilterConfig",
             "example": "LocationMetadataExistsFilterConfig"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MultiAssetInput1": {
+        "title": "MultiAssetInput",
+        "required": [
+          "_t",
+          "assets"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "MultiAssetInput"
+            ],
+            "type": "string",
+            "description": "Discriminator value for MultiAssetInput",
+            "default": "MultiAssetInput",
+            "example": "MultiAssetInput"
+          },
+          "assets": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/FileAssetInput1"
+                },
+                {
+                  "$ref": "#/components/schemas/MultiAssetInput1"
+                },
+                {
+                  "$ref": "#/components/schemas/TextAssetInput"
+                },
+                {
+                  "$ref": "#/components/schemas/UrlAssetInput"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          },
+          "identifier": {
+            "type": "string",
+            "readOnly": true
           }
         },
         "additionalProperties": false
@@ -10404,6 +10851,49 @@
         },
         "additionalProperties": false
       },
+      "FileAssetInput2": {
+        "title": "FileAssetInput",
+        "required": [
+          "_t",
+          "file"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "FileAssetInput"
+            ],
+            "type": "string",
+            "description": "Discriminator value for FileAssetInput",
+            "default": "FileAssetInput",
+            "example": "FileAssetInput"
+          },
+          "file": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/FormFileWrapper"
+              },
+              {
+                "$ref": "#/components/schemas/ProxyFileWrapper"
+              },
+              {
+                "$ref": "#/components/schemas/StreamFileWrapper"
+              },
+              {
+                "$ref": "#/components/schemas/ZipEntryFileWrapper"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "identifier": {
+            "type": "string",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
       "FreeTextPayload": {
         "title": "FreeTextPayload",
         "required": [
@@ -10806,6 +11296,52 @@
           },
           "target": {
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MultiAssetInput2": {
+        "title": "MultiAssetInput",
+        "required": [
+          "_t",
+          "assets"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "MultiAssetInput"
+            ],
+            "type": "string",
+            "description": "Discriminator value for MultiAssetInput",
+            "default": "MultiAssetInput",
+            "example": "MultiAssetInput"
+          },
+          "assets": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/FileAssetInput2"
+                },
+                {
+                  "$ref": "#/components/schemas/MultiAssetInput2"
+                },
+                {
+                  "$ref": "#/components/schemas/TextAssetInput"
+                },
+                {
+                  "$ref": "#/components/schemas/UrlAssetInput"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          },
+          "identifier": {
+            "type": "string",
+            "readOnly": true
           }
         },
         "additionalProperties": false
@@ -15327,6 +15863,10 @@
             "type": "integer",
             "description": "The minimum amount of responses that need to be collected per comparison.",
             "format": "int32"
+          },
+          "isInversed": {
+            "type": "boolean",
+            "description": "If the results should be inversed, meaning people should select the worse model."
           }
         },
         "additionalProperties": false,
@@ -15770,6 +16310,25 @@
           }
         },
         "additionalProperties": false
+      },
+      "SubmitPromptModel": {
+        "required": [
+          "identifier",
+          "prompt"
+        ],
+        "type": "object",
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "description": "The prompt"
+          },
+          "identifier": {
+            "type": "string",
+            "description": "An identifier associated to the prompt"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model user for submitting a prompt to a benchmark."
       }
     },
     "securitySchemes": {

@@ -30,6 +30,7 @@ from rapidata.api_client.models.participant_by_benchmark_paged_result import Par
 from rapidata.api_client.models.prompt_by_benchmark_result_paged_result import PromptByBenchmarkResultPagedResult
 from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.submit_participant_result import SubmitParticipantResult
+from rapidata.api_client.models.submit_prompt_model import SubmitPromptModel
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -1670,7 +1671,7 @@ class BenchmarkApi:
     def benchmark_benchmark_id_prompt_post(
         self,
         benchmark_id: Annotated[StrictStr, Field(description="The benchmark id.")],
-        body: Annotated[Optional[StrictStr], Field(description="The prompt")] = None,
+        submit_prompt_model: Optional[SubmitPromptModel] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1689,8 +1690,8 @@ class BenchmarkApi:
 
         :param benchmark_id: The benchmark id. (required)
         :type benchmark_id: str
-        :param body: The prompt
-        :type body: str
+        :param submit_prompt_model: 
+        :type submit_prompt_model: SubmitPromptModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1715,7 +1716,7 @@ class BenchmarkApi:
 
         _param = self._benchmark_benchmark_id_prompt_post_serialize(
             benchmark_id=benchmark_id,
-            body=body,
+            submit_prompt_model=submit_prompt_model,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1740,7 +1741,7 @@ class BenchmarkApi:
     def benchmark_benchmark_id_prompt_post_with_http_info(
         self,
         benchmark_id: Annotated[StrictStr, Field(description="The benchmark id.")],
-        body: Annotated[Optional[StrictStr], Field(description="The prompt")] = None,
+        submit_prompt_model: Optional[SubmitPromptModel] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1759,8 +1760,8 @@ class BenchmarkApi:
 
         :param benchmark_id: The benchmark id. (required)
         :type benchmark_id: str
-        :param body: The prompt
-        :type body: str
+        :param submit_prompt_model: 
+        :type submit_prompt_model: SubmitPromptModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1785,7 +1786,7 @@ class BenchmarkApi:
 
         _param = self._benchmark_benchmark_id_prompt_post_serialize(
             benchmark_id=benchmark_id,
-            body=body,
+            submit_prompt_model=submit_prompt_model,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1810,7 +1811,7 @@ class BenchmarkApi:
     def benchmark_benchmark_id_prompt_post_without_preload_content(
         self,
         benchmark_id: Annotated[StrictStr, Field(description="The benchmark id.")],
-        body: Annotated[Optional[StrictStr], Field(description="The prompt")] = None,
+        submit_prompt_model: Optional[SubmitPromptModel] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1829,8 +1830,8 @@ class BenchmarkApi:
 
         :param benchmark_id: The benchmark id. (required)
         :type benchmark_id: str
-        :param body: The prompt
-        :type body: str
+        :param submit_prompt_model: 
+        :type submit_prompt_model: SubmitPromptModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1855,7 +1856,7 @@ class BenchmarkApi:
 
         _param = self._benchmark_benchmark_id_prompt_post_serialize(
             benchmark_id=benchmark_id,
-            body=body,
+            submit_prompt_model=submit_prompt_model,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1875,7 +1876,7 @@ class BenchmarkApi:
     def _benchmark_benchmark_id_prompt_post_serialize(
         self,
         benchmark_id,
-        body,
+        submit_prompt_model,
         _request_auth,
         _content_type,
         _headers,
@@ -1903,8 +1904,8 @@ class BenchmarkApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if body is not None:
-            _body_params = body
+        if submit_prompt_model is not None:
+            _body_params = submit_prompt_model
 
 
 
@@ -1917,8 +1918,7 @@ class BenchmarkApi:
                     [
                         'application/json', 
                         'text/json', 
-                        'application/*+json', 
-                        'text/plain'
+                        'application/*+json'
                     ]
                 )
             )

@@ -132,6 +132,7 @@ Class | Method | HTTP request | Description
 *LeaderboardApi* | [**leaderboard_leaderboard_id_participants_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_participants_post) | **POST** /leaderboard/{leaderboardId}/participants | Creates a participant in a leaderboard.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_prompts_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_prompts_get) | **GET** /leaderboard/{leaderboardId}/prompts | returns the paged prompts of a leaderboard by its ID.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_prompts_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_prompts_post) | **POST** /leaderboard/{leaderboardId}/prompts | adds a new prompt to a leaderboard.
+*LeaderboardApi* | [**leaderboard_leaderboard_id_refresh_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_refresh_post) | **POST** /leaderboard/{leaderboardId}/refresh | This will force an update to all standings of a leaderboard. this could happen if the recorded matches and scores are out of sync
 *LeaderboardApi* | [**leaderboard_leaderboard_id_standings_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_standings_get) | **GET** /leaderboard/{leaderboardId}/standings | queries all the participants connected to leaderboard by its ID.
 *LeaderboardApi* | [**leaderboard_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_post) | **POST** /leaderboard | Creates a new leaderboard with the specified name and criteria.
 *LeaderboardApi* | [**leaderboards_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboards_get) | **GET** /leaderboards | Queries all leaderboards of the user.
@@ -320,6 +321,11 @@ Class | Method | HTTP request | Description
  - [FeedbackModel](rapidata/api_client/docs/FeedbackModel.md)
  - [FileArtifactModel](rapidata/api_client/docs/FileArtifactModel.md)
  - [FileAsset](rapidata/api_client/docs/FileAsset.md)
+ - [FileAssetInput](rapidata/api_client/docs/FileAssetInput.md)
+ - [FileAssetInput1](rapidata/api_client/docs/FileAssetInput1.md)
+ - [FileAssetInput1File](rapidata/api_client/docs/FileAssetInput1File.md)
+ - [FileAssetInput2](rapidata/api_client/docs/FileAssetInput2.md)
+ - [FileAssetInputFile](rapidata/api_client/docs/FileAssetInputFile.md)
  - [FileAssetModel](rapidata/api_client/docs/FileAssetModel.md)
  - [FileAssetModelMetadataValue](rapidata/api_client/docs/FileAssetModelMetadataValue.md)
  - [FileType](rapidata/api_client/docs/FileType.md)
@@ -327,6 +333,7 @@ Class | Method | HTTP request | Description
  - [FileTypeMetadataModel](rapidata/api_client/docs/FileTypeMetadataModel.md)
  - [Filter](rapidata/api_client/docs/Filter.md)
  - [FilterOperator](rapidata/api_client/docs/FilterOperator.md)
+ - [FormFileWrapper](rapidata/api_client/docs/FormFileWrapper.md)
  - [FreeTextPayload](rapidata/api_client/docs/FreeTextPayload.md)
  - [FreeTextRapidBlueprint](rapidata/api_client/docs/FreeTextRapidBlueprint.md)
  - [FreeTextResult](rapidata/api_client/docs/FreeTextResult.md)
@@ -382,6 +389,7 @@ Class | Method | HTTP request | Description
  - [LineRapidBlueprint](rapidata/api_client/docs/LineRapidBlueprint.md)
  - [LineResult](rapidata/api_client/docs/LineResult.md)
  - [LineTruth](rapidata/api_client/docs/LineTruth.md)
+ - [LocalFileWrapper](rapidata/api_client/docs/LocalFileWrapper.md)
  - [LocateBoxTruth](rapidata/api_client/docs/LocateBoxTruth.md)
  - [LocateCoordinate](rapidata/api_client/docs/LocateCoordinate.md)
  - [LocatePayload](rapidata/api_client/docs/LocatePayload.md)
@@ -393,6 +401,11 @@ Class | Method | HTTP request | Description
  - [LogicOperator](rapidata/api_client/docs/LogicOperator.md)
  - [MetadataVisibilities](rapidata/api_client/docs/MetadataVisibilities.md)
  - [MultiAsset](rapidata/api_client/docs/MultiAsset.md)
+ - [MultiAssetInput](rapidata/api_client/docs/MultiAssetInput.md)
+ - [MultiAssetInput1](rapidata/api_client/docs/MultiAssetInput1.md)
+ - [MultiAssetInput1AssetsInner](rapidata/api_client/docs/MultiAssetInput1AssetsInner.md)
+ - [MultiAssetInput2](rapidata/api_client/docs/MultiAssetInput2.md)
+ - [MultiAssetInputAssetsInner](rapidata/api_client/docs/MultiAssetInputAssetsInner.md)
  - [MultiAssetModel](rapidata/api_client/docs/MultiAssetModel.md)
  - [MultiCompareTruth](rapidata/api_client/docs/MultiCompareTruth.md)
  - [NaiveRefereeConfig](rapidata/api_client/docs/NaiveRefereeConfig.md)
@@ -438,11 +451,13 @@ Class | Method | HTTP request | Description
  - [ProbabilisticAttachCategoryRefereeConfig](rapidata/api_client/docs/ProbabilisticAttachCategoryRefereeConfig.md)
  - [ProbabilisticAttachCategoryRefereeInfo](rapidata/api_client/docs/ProbabilisticAttachCategoryRefereeInfo.md)
  - [PromptAssetMetadataInput](rapidata/api_client/docs/PromptAssetMetadataInput.md)
+ - [PromptAssetMetadataInputAsset](rapidata/api_client/docs/PromptAssetMetadataInputAsset.md)
  - [PromptByBenchmarkResult](rapidata/api_client/docs/PromptByBenchmarkResult.md)
  - [PromptByBenchmarkResultPagedResult](rapidata/api_client/docs/PromptByBenchmarkResultPagedResult.md)
  - [PromptMetadata](rapidata/api_client/docs/PromptMetadata.md)
  - [PromptMetadataInput](rapidata/api_client/docs/PromptMetadataInput.md)
  - [PromptMetadataModel](rapidata/api_client/docs/PromptMetadataModel.md)
+ - [ProxyFileWrapper](rapidata/api_client/docs/ProxyFileWrapper.md)
  - [PublicOrderModel](rapidata/api_client/docs/PublicOrderModel.md)
  - [PublicTextMetadataInput](rapidata/api_client/docs/PublicTextMetadataInput.md)
  - [QueryModel](rapidata/api_client/docs/QueryModel.md)
@@ -489,12 +504,15 @@ Class | Method | HTTP request | Description
  - [StandingStatus](rapidata/api_client/docs/StandingStatus.md)
  - [StaticSelection](rapidata/api_client/docs/StaticSelection.md)
  - [StickyState](rapidata/api_client/docs/StickyState.md)
+ - [StreamFileWrapper](rapidata/api_client/docs/StreamFileWrapper.md)
  - [StreamsMetadata](rapidata/api_client/docs/StreamsMetadata.md)
  - [StreamsMetadataModel](rapidata/api_client/docs/StreamsMetadataModel.md)
  - [SubmitCocoModel](rapidata/api_client/docs/SubmitCocoModel.md)
  - [SubmitCocoResult](rapidata/api_client/docs/SubmitCocoResult.md)
  - [SubmitParticipantResult](rapidata/api_client/docs/SubmitParticipantResult.md)
+ - [SubmitPromptModel](rapidata/api_client/docs/SubmitPromptModel.md)
  - [TextAsset](rapidata/api_client/docs/TextAsset.md)
+ - [TextAssetInput](rapidata/api_client/docs/TextAssetInput.md)
  - [TextAssetModel](rapidata/api_client/docs/TextAssetModel.md)
  - [TextMetadata](rapidata/api_client/docs/TextMetadata.md)
  - [TextMetadataModel](rapidata/api_client/docs/TextMetadataModel.md)
@@ -535,6 +553,7 @@ Class | Method | HTTP request | Description
  - [WorkflowSplitModel](rapidata/api_client/docs/WorkflowSplitModel.md)
  - [WorkflowSplitModelFilterConfigsInner](rapidata/api_client/docs/WorkflowSplitModelFilterConfigsInner.md)
  - [WorkflowState](rapidata/api_client/docs/WorkflowState.md)
+ - [ZipEntryFileWrapper](rapidata/api_client/docs/ZipEntryFileWrapper.md)
 
 
 <a id="documentation-for-authorization"></a>
