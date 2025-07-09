@@ -333,7 +333,7 @@ Class | Method | HTTP request | Description
  - [Gender](rapidata/api_client/docs/Gender.md)
  - [GenderUserFilterModel](rapidata/api_client/docs/GenderUserFilterModel.md)
  - [GetAvailableValidationSetsResult](rapidata/api_client/docs/GetAvailableValidationSetsResult.md)
- - [GetBenchmarkByIdQuery](rapidata/api_client/docs/GetBenchmarkByIdQuery.md)
+ - [GetBenchmarkByIdResult](rapidata/api_client/docs/GetBenchmarkByIdResult.md)
  - [GetCompareAbSummaryResult](rapidata/api_client/docs/GetCompareAbSummaryResult.md)
  - [GetCompareWorkflowResultsModel](rapidata/api_client/docs/GetCompareWorkflowResultsModel.md)
  - [GetCompareWorkflowResultsResult](rapidata/api_client/docs/GetCompareWorkflowResultsResult.md)

@@ -24,7 +24,7 @@ from rapidata.api_client.models.create_benchmark_model import CreateBenchmarkMod
 from rapidata.api_client.models.create_benchmark_participant_model import CreateBenchmarkParticipantModel
 from rapidata.api_client.models.create_benchmark_participant_result import CreateBenchmarkParticipantResult
 from rapidata.api_client.models.create_benchmark_result import CreateBenchmarkResult
-from rapidata.api_client.models.get_benchmark_by_id_query import GetBenchmarkByIdQuery
+from rapidata.api_client.models.get_benchmark_by_id_result import GetBenchmarkByIdResult
 from rapidata.api_client.models.get_participant_by_id_result import GetParticipantByIdResult
 from rapidata.api_client.models.participant_by_benchmark_paged_result import ParticipantByBenchmarkPagedResult
 from rapidata.api_client.models.prompt_by_benchmark_result_paged_result import PromptByBenchmarkResultPagedResult
@@ -317,7 +317,7 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetBenchmarkByIdQuery:
+    ) -> GetBenchmarkByIdResult:
         """Returns a single benchmark by its ID.
 
 
@@ -354,7 +354,7 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetBenchmarkByIdQuery",
+            '200': "GetBenchmarkByIdResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -383,7 +383,7 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetBenchmarkByIdQuery]:
+    ) -> ApiResponse[GetBenchmarkByIdResult]:
         """Returns a single benchmark by its ID.
 
 
@@ -420,7 +420,7 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetBenchmarkByIdQuery",
+            '200': "GetBenchmarkByIdResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -486,7 +486,7 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetBenchmarkByIdQuery",
+            '200': "GetBenchmarkByIdResult",
         }
         response_data = self.api_client.call_api(
             *_param,
