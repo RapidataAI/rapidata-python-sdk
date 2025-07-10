@@ -1,7 +1,7 @@
 from typing import Any
 from rapidata.rapidata_client.filter._base_filter import RapidataFilter
 from rapidata.api_client.models.not_user_filter_model import NotUserFilterModel
-from rapidata.api_client.models.create_order_model_user_filters_inner import CreateOrderModelUserFiltersInner
+from rapidata.api_client.models.and_user_filter_model_filters_inner import AndUserFilterModelFiltersInner
 
 
 class NotFilter(RapidataFilter):
@@ -27,4 +27,4 @@ class NotFilter(RapidataFilter):
         self.filter = filter
 
     def _to_model(self):
-        return NotUserFilterModel(_t="NotFilter", filter=CreateOrderModelUserFiltersInner(self.filter._to_model()))
+        return NotUserFilterModel(_t="NotFilter", filter=AndUserFilterModelFiltersInner(self.filter._to_model()))

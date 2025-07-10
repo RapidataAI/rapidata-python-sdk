@@ -1,7 +1,7 @@
 from typing import Any
 from rapidata.rapidata_client.filter._base_filter import RapidataFilter
 from rapidata.api_client.models.or_user_filter_model import OrUserFilterModel
-from rapidata.api_client.models.create_order_model_user_filters_inner import CreateOrderModelUserFiltersInner
+from rapidata.api_client.models.and_user_filter_model_filters_inner import AndUserFilterModelFiltersInner
 
 
 class OrFilter(RapidataFilter):
@@ -27,4 +27,4 @@ class OrFilter(RapidataFilter):
         self.filters = filters
 
     def _to_model(self):
-        return OrUserFilterModel(_t="OrFilter", filters=[CreateOrderModelUserFiltersInner(filter._to_model()) for filter in self.filters])
+        return OrUserFilterModel(_t="OrFilter", filters=[AndUserFilterModelFiltersInner(filter._to_model()) for filter in self.filters])

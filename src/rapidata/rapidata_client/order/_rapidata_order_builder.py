@@ -5,8 +5,8 @@ from rapidata.api_client.models.create_order_model import CreateOrderModel
 from rapidata.api_client.models.create_order_model_referee import (
     CreateOrderModelReferee,
 )
-from rapidata.api_client.models.create_order_model_user_filters_inner import (
-    CreateOrderModelUserFiltersInner,
+from rapidata.api_client.models.and_user_filter_model_filters_inner import (
+    AndUserFilterModelFiltersInner,
 )
 from rapidata.api_client.models.create_order_model_workflow import (
     CreateOrderModelWorkflow,
@@ -83,7 +83,7 @@ class RapidataOrderBuilder:
             orderName=self._name,
             workflow=CreateOrderModelWorkflow(self.__workflow._to_model()),
             userFilters=[
-                CreateOrderModelUserFiltersInner(user_filter._to_model())
+                AndUserFilterModelFiltersInner(user_filter._to_model())
                 for user_filter in self.__user_filters
             ],
             referee=CreateOrderModelReferee(self.__referee._to_model()),
