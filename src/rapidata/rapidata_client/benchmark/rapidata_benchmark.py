@@ -33,7 +33,7 @@ class RapidataBenchmark:
         self.__leaderboards: list[RapidataLeaderboard] = []
         self.__identifiers: list[str] = []
 
-    def __instatiate_prompts(self) -> None:
+    def __instantiate_prompts(self) -> None:
         current_page = 1
         total_pages = None
         
@@ -67,14 +67,14 @@ class RapidataBenchmark:
         Returns the prompts that are registered for the leaderboard.
         """
         if not self.__prompts:
-            self.__instatiate_prompts()
+            self.__instantiate_prompts()
         
         return self.__prompts
     
     @property
     def identifiers(self) -> list[str]:
         if not self.__identifiers:
-            self.__instatiate_prompts()
+            self.__instantiate_prompts()
         
         return self.__identifiers
     
