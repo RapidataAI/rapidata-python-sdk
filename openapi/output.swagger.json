@@ -7431,6 +7431,72 @@
         ],
         "type": "string"
       },
+      "AndUserFilterModel": {
+        "title": "AndFilter",
+        "required": [
+          "_t",
+          "filters"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "AndFilter"
+            ],
+            "type": "string",
+            "description": "Discriminator value for AndFilter",
+            "default": "AndFilter",
+            "example": "AndFilter"
+          },
+          "filters": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AgeUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/AndUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/CampaignUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/CountryUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/CustomUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/GenderUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/LanguageUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/NewUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/NotUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/OrUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/ResponseCountUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/UserScoreUserFilterModel"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          }
+        },
+        "additionalProperties": false
+      },
       "AttachCategoryRapidBlueprint": {
         "title": "ClassifyBlueprint",
         "required": [
@@ -8045,6 +8111,9 @@
               "oneOf": [
                 {
                   "$ref": "#/components/schemas/AgeUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/AndUserFilterModel"
                 },
                 {
                   "$ref": "#/components/schemas/CampaignUserFilterModel"
@@ -8955,6 +9024,9 @@
                 "$ref": "#/components/schemas/AgeUserFilterModel"
               },
               {
+                "$ref": "#/components/schemas/AndUserFilterModel"
+              },
+              {
                 "$ref": "#/components/schemas/CampaignUserFilterModel"
               },
               {
@@ -9045,6 +9117,9 @@
               "oneOf": [
                 {
                   "$ref": "#/components/schemas/AgeUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/AndUserFilterModel"
                 },
                 {
                   "$ref": "#/components/schemas/CampaignUserFilterModel"
@@ -14028,6 +14103,9 @@
                   "$ref": "#/components/schemas/AgeUserFilterModel"
                 },
                 {
+                  "$ref": "#/components/schemas/AndUserFilterModel"
+                },
+                {
                   "$ref": "#/components/schemas/CampaignUserFilterModel"
                 },
                 {
@@ -16153,11 +16231,15 @@
       "PromptByBenchmarkResult": {
         "required": [
           "createdAt",
+          "identifier",
           "prompt"
         ],
         "type": "object",
         "properties": {
           "prompt": {
+            "type": "string"
+          },
+          "identifier": {
             "type": "string"
           },
           "createdAt": {

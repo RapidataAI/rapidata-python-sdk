@@ -22,19 +22,19 @@ from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class OrUserFilterModel(BaseModel):
+class AndUserFilterModel(BaseModel):
     """
-    OrUserFilterModel
+    AndUserFilterModel
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for OrFilter", alias="_t")
+    t: StrictStr = Field(description="Discriminator value for AndFilter", alias="_t")
     filters: List[AndUserFilterModelFiltersInner]
     __properties: ClassVar[List[str]] = ["_t", "filters"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['OrFilter']):
-            raise ValueError("must be one of enum values ('OrFilter')")
+        if value not in set(['AndFilter']):
+            raise ValueError("must be one of enum values ('AndFilter')")
         return value
 
     model_config = ConfigDict(
@@ -55,7 +55,7 @@ class OrUserFilterModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of OrUserFilterModel from a JSON string"""
+        """Create an instance of AndUserFilterModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -87,7 +87,7 @@ class OrUserFilterModel(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of OrUserFilterModel from a dict"""
+        """Create an instance of AndUserFilterModel from a dict"""
         if obj is None:
             return None
 
@@ -95,12 +95,12 @@ class OrUserFilterModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'OrFilter',
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'AndFilter',
             "filters": [AndUserFilterModelFiltersInner.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None
         })
         return _obj
 
 from rapidata.api_client.models.and_user_filter_model_filters_inner import AndUserFilterModelFiltersInner
 # TODO: Rewrite to not use raise_errors
-OrUserFilterModel.model_rebuild(raise_errors=False)
+AndUserFilterModel.model_rebuild(raise_errors=False)
 

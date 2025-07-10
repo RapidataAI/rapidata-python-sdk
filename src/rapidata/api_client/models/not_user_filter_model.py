@@ -27,7 +27,7 @@ class NotUserFilterModel(BaseModel):
     NotUserFilterModel
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for NotFilter", alias="_t")
-    filter: CreateOrderModelUserFiltersInner
+    filter: AndUserFilterModelFiltersInner
     __properties: ClassVar[List[str]] = ["_t", "filter"]
 
     @field_validator('t')
@@ -92,11 +92,11 @@ class NotUserFilterModel(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'NotFilter',
-            "filter": CreateOrderModelUserFiltersInner.from_dict(obj["filter"]) if obj.get("filter") is not None else None
+            "filter": AndUserFilterModelFiltersInner.from_dict(obj["filter"]) if obj.get("filter") is not None else None
         })
         return _obj
 
-from rapidata.api_client.models.create_order_model_user_filters_inner import CreateOrderModelUserFiltersInner
+from rapidata.api_client.models.and_user_filter_model_filters_inner import AndUserFilterModelFiltersInner
 # TODO: Rewrite to not use raise_errors
 NotUserFilterModel.model_rebuild(raise_errors=False)
 
