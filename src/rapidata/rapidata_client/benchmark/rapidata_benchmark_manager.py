@@ -22,7 +22,8 @@ class RapidataBenchmarkManager:
         self.__openapi_service = openapi_service
 
     def create_new_benchmark(self, 
-                             name: str, 
+                             name: str,
+                             identifiers: list[str],
                              prompts: list[str],
                              ) -> RapidataBenchmark:
         """
@@ -37,6 +38,12 @@ class RapidataBenchmarkManager:
         
         if not isinstance(prompts, list) or not all(isinstance(prompt, str) for prompt in prompts):
             raise ValueError("Prompts must be a list of strings.")
+        
+        if not isinstance(identifiers, list) or not all(isinstance(identifier, str) for identifier in identifiers):
+            raise ValueError("Identifiers must be a list of strings.")
+        
+        if len(identifiers) != len(prompts):
+            raise ValueError("Identifiers and prompts must have the same length.")
 
         benchmark_result = self.__openapi_service.benchmark_api.benchmark_post(
             create_benchmark_model=CreateBenchmarkModel(
@@ -45,8 +52,8 @@ class RapidataBenchmarkManager:
         )
 
         benchmark = RapidataBenchmark(name, benchmark_result.id, self.__openapi_service)
-        for prompt in prompts:
-            benchmark.add_prompt(prompt)
+        for identifier, prompt in zip(identifiers, prompts):
+            benchmark.add_prompt(identifier, prompt)
 
         return benchmark
     

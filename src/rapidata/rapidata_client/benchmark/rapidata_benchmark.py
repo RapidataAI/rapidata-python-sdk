@@ -4,12 +4,13 @@ from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.page_info import PageInfo
 from rapidata.api_client.models.create_leaderboard_model import CreateLeaderboardModel
 from rapidata.api_client.models.create_benchmark_participant_model import CreateBenchmarkParticipantModel
+from rapidata.api_client.models.submit_prompt_model import SubmitPromptModel
 
 from rapidata.rapidata_client.logging import logger
 from rapidata.service.openapi_service import OpenAPIService
 
 from rapidata.rapidata_client.benchmark.leaderboard.rapidata_leaderboard import RapidataLeaderboard
-from rapidata.rapidata_client.metadata import PromptMetadata
+from rapidata.rapidata_client.metadata import PromptIdentifierMetadata
 from rapidata.rapidata_client.assets import MediaAsset
 from rapidata.rapidata_client.order._rapidata_dataset import RapidataDataset
 
@@ -28,8 +29,37 @@ class RapidataBenchmark:
         self.name = name
         self.id = id
         self.__openapi_service = openapi_service
-        self.__prompts = []
-        self.__leaderboards = []
+        self.__prompts: list[str] = []
+        self.__leaderboards: list[RapidataLeaderboard] = []
+        self.__identifiers: list[str] = []
+
+    def __instatiate_prompts(self) -> None:
+        current_page = 1
+        total_pages = None
+        
+        while True:
+            prompts_result = self.__openapi_service.benchmark_api.benchmark_benchmark_id_prompts_get(
+                benchmark_id=self.id,
+                request=QueryModel(
+                    page=PageInfo(
+                        index=current_page,
+                        size=100
+                    )
+                )
+            )
+            
+            if prompts_result.total_pages is None:
+                raise ValueError("An error occurred while fetching prompts: total_pages is None")
+            
+            total_pages = prompts_result.total_pages
+            
+            self.__prompts.extend([prompt.prompt for prompt in prompts_result.items])
+            self.__identifiers.extend([prompt.identifier for prompt in prompts_result.items])
+            
+            if current_page >= total_pages:
+                break
+                
+            current_page += 1
 
     @property
     def prompts(self) -> list[str]:
@@ -37,33 +67,16 @@ class RapidataBenchmark:
         Returns the prompts that are registered for the leaderboard.
         """
         if not self.__prompts:
-            current_page = 1
-            total_pages = None
-            
-            while True:
-                prompts_result = self.__openapi_service.benchmark_api.benchmark_benchmark_id_prompts_get(
-                    benchmark_id=self.id,
-                    request=QueryModel(
-                        page=PageInfo(
-                            index=current_page,
-                            size=100
-                        )
-                    )
-                )
-                
-                if prompts_result.total_pages is None:
-                    raise ValueError("An error occurred while fetching prompts: total_pages is None")
-                
-                total_pages = prompts_result.total_pages
-                
-                self.__prompts.extend([prompt.prompt for prompt in prompts_result.items])
-                
-                if current_page >= total_pages:
-                    break
-                    
-                current_page += 1
-                
+            self.__instatiate_prompts()
+        
         return self.__prompts
+    
+    @property
+    def identifiers(self) -> list[str]:
+        if not self.__identifiers:
+            self.__instatiate_prompts()
+        
+        return self.__identifiers
     
     @property
     def leaderboards(self) -> list[RapidataLeaderboard]:
@@ -110,10 +123,13 @@ class RapidataBenchmark:
                 
         return self.__leaderboards
     
-    def add_prompt(self, prompt: str):
+    def add_prompt(self, identifier: str, prompt: str):
         self.__openapi_service.benchmark_api.benchmark_benchmark_id_prompt_post(
             benchmark_id=self.id,
-            body=prompt
+            submit_prompt_model=SubmitPromptModel(
+                identifier=identifier,
+                prompt=prompt,
+            )
         )
 
     def create_leaderboard(self, name: str, instruction: str, show_prompt: bool) -> RapidataLeaderboard:
@@ -139,7 +155,7 @@ class RapidataBenchmark:
             self.__openapi_service
         )
     
-    def evaluate_model(self, name: str, media: list[str], prompts: list[str]) -> None:
+    def evaluate_model(self, name: str, media: list[str], identifiers: list[str]) -> None:
         """
         Evaluates a model on the benchmark across all leaderboards.
 
@@ -152,18 +168,19 @@ class RapidataBenchmark:
         if not media:
             raise ValueError("Media must be a non-empty list of strings")
         
-        if len(media) != len(prompts):
-            raise ValueError("Media and prompts must have the same length")
+        if len(media) != len(identifiers):
+            raise ValueError("Media and identifiers must have the same length")
         
-        if not all(prompt in self.prompts for prompt in prompts):
-            raise ValueError("All prompts must be in the registered prompts list. To see the registered prompts, use the prompts property.")
+        if not all(identifier in self.identifiers for identifier in identifiers):
+            raise ValueError("All identifiers must be in the registered identifiers list. To see the registered identifiers, use the identifiers property.\
+\nTo see the prompts that are associated with the identifiers, use the prompts property.")
         
         # happens before the creation of the participant to ensure all media paths are valid
         assets = []
-        prompts_metadata: list[list[PromptMetadata]] = []
-        for media_path, prompt in zip(media, prompts):
+        prompts_metadata: list[list[PromptIdentifierMetadata]] = []
+        for media_path, identifier in zip(media, identifiers):
             assets.append(MediaAsset(media_path))
-            prompts_metadata.append([PromptMetadata(prompt=prompt)])
+            prompts_metadata.append([PromptIdentifierMetadata(identifier=identifier)])
 
         participant_result = self.__openapi_service.benchmark_api.benchmark_benchmark_id_participants_post(
             benchmark_id=self.id,

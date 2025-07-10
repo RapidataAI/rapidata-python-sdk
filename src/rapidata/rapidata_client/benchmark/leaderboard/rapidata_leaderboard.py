@@ -43,9 +43,9 @@ class RapidataLeaderboard:
         for participant in participants.items:
             standings.append({
                 "name": participant.name,
-                "score": participant.score,
                 "wins": participant.wins,
-                "total_matches": participant.total_matches
+                "total_matches": participant.total_matches,
+                "score": round(participant.score, 2) if participant.score is not None else None,
             })
 
         return pd.DataFrame(standings)
