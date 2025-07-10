@@ -22,8 +22,8 @@ class RapidataBenchmark:
 
     Args:
         name: The name that will be used to identify the benchmark on the overview.
-        prompts: The prompts that will be registered for the benchmark.
-        leaderboards: The leaderboards that will be registered for the benchmark.
+        id: The id of the benchmark.
+        openapi_service: The OpenAPI service to use to interact with the Rapidata API.
     """
     def __init__(self, name: str, id: str, openapi_service: OpenAPIService):
         self.name = name
@@ -162,8 +162,8 @@ class RapidataBenchmark:
         Args:
             name: The name of the model.
             media: The generated images/videos that will be used to evaluate the model.
-            prompts: The prompts that correspond to the media. The order of the prompts must match the order of the media.
-                The prompts that are used must be registered for the leaderboard. To see the registered prompts, use the prompts property.
+            identifiers: The identifiers that correspond to the media. The order of the identifiers must match the order of the media.
+                The identifiers that are used must be registered for the benchmark. To see the registered identifiers, use the identifiers property.
         """
         if not media:
             raise ValueError("Media must be a non-empty list of strings")
