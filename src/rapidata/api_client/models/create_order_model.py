@@ -20,8 +20,8 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.ab_test_selection_a_inner import AbTestSelectionAInner
+from rapidata.api_client.models.and_user_filter_model_filters_inner import AndUserFilterModelFiltersInner
 from rapidata.api_client.models.create_order_model_referee import CreateOrderModelReferee
-from rapidata.api_client.models.create_order_model_user_filters_inner import CreateOrderModelUserFiltersInner
 from rapidata.api_client.models.create_order_model_workflow import CreateOrderModelWorkflow
 from rapidata.api_client.models.feature_flag_model import FeatureFlagModel
 from typing import Optional, Set
@@ -41,7 +41,7 @@ class CreateOrderModel(BaseModel):
     sticky_state: Optional[StrictStr] = Field(default=None, description="Indicates if the underlying campaign should be sticky.", alias="stickyState")
     user_score_dimensions: Optional[List[StrictStr]] = Field(default=None, description="The user score dimensions are used to determine the score of the responses from the user.", alias="userScoreDimensions")
     demographic_keys: Optional[List[StrictStr]] = Field(default=None, description="The demographic keys are used to determine which demographics to store on the resposnes from the user.", alias="demographicKeys")
-    user_filters: Optional[List[CreateOrderModelUserFiltersInner]] = Field(default=None, description="The user filters are used to restrict the order to only collect votes from a specific demographic.", alias="userFilters")
+    user_filters: Optional[List[AndUserFilterModelFiltersInner]] = Field(default=None, description="The user filters are used to restrict the order to only collect votes from a specific demographic.", alias="userFilters")
     validation_set_id: Optional[StrictStr] = Field(default=None, description="The validation set id can be changed to point to a specific validation set. if not provided a sane default will be used.", alias="validationSetId")
     selections: Optional[List[AbTestSelectionAInner]] = Field(default=None, description="The selections are used to determine which tasks are shown to a user.")
     retrieval_mode: Optional[StrictStr] = Field(default=None, description="The retrieval mode defines how rapids are retrieved from the active labeling pool.", alias="retrievalMode")
@@ -228,7 +228,7 @@ class CreateOrderModel(BaseModel):
             "stickyState": obj.get("stickyState"),
             "userScoreDimensions": obj.get("userScoreDimensions"),
             "demographicKeys": obj.get("demographicKeys"),
-            "userFilters": [CreateOrderModelUserFiltersInner.from_dict(_item) for _item in obj["userFilters"]] if obj.get("userFilters") is not None else None,
+            "userFilters": [AndUserFilterModelFiltersInner.from_dict(_item) for _item in obj["userFilters"]] if obj.get("userFilters") is not None else None,
             "validationSetId": obj.get("validationSetId"),
             "selections": [AbTestSelectionAInner.from_dict(_item) for _item in obj["selections"]] if obj.get("selections") is not None else None,
             "retrievalMode": obj.get("retrievalMode"),

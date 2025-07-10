@@ -20,7 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.ab_test_selection_a_inner import AbTestSelectionAInner
-from rapidata.api_client.models.create_order_model_user_filters_inner import CreateOrderModelUserFiltersInner
+from rapidata.api_client.models.and_user_filter_model_filters_inner import AndUserFilterModelFiltersInner
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from typing import Optional, Set
 from typing_extensions import Self
@@ -32,7 +32,7 @@ class AddCampaignModel(BaseModel):
     t: StrictStr = Field(description="Discriminator value for AddCampaignModel", alias="_t")
     artifact_id: Optional[StrictStr] = Field(default=None, description="The id of the campaign artifact. If not provided a random value will be used.", alias="artifactId")
     campaign_name: StrictStr = Field(description="The name of the campaign.", alias="campaignName")
-    user_filters: Optional[List[CreateOrderModelUserFiltersInner]] = Field(default=None, description="The user filters to apply to the campaign.", alias="userFilters")
+    user_filters: Optional[List[AndUserFilterModelFiltersInner]] = Field(default=None, description="The user filters to apply to the campaign.", alias="userFilters")
     validation_set_id: Optional[StrictStr] = Field(default=None, description="A validation set that should be used.", alias="validationSetId")
     selections: Optional[List[AbTestSelectionAInner]] = Field(default=None, description="The selections that the campaign should have.")
     retrieval_mode: Optional[StrictStr] = Field(default=None, description="The retrieval mode defines how rapids are retrieved from the active labeling pool.", alias="retrievalMode")
@@ -175,7 +175,7 @@ class AddCampaignModel(BaseModel):
             "_t": obj.get("_t") if obj.get("_t") is not None else 'AddCampaignModel',
             "artifactId": obj.get("artifactId"),
             "campaignName": obj.get("campaignName"),
-            "userFilters": [CreateOrderModelUserFiltersInner.from_dict(_item) for _item in obj["userFilters"]] if obj.get("userFilters") is not None else None,
+            "userFilters": [AndUserFilterModelFiltersInner.from_dict(_item) for _item in obj["userFilters"]] if obj.get("userFilters") is not None else None,
             "validationSetId": obj.get("validationSetId"),
             "selections": [AbTestSelectionAInner.from_dict(_item) for _item in obj["selections"]] if obj.get("selections") is not None else None,
             "retrievalMode": obj.get("retrievalMode"),

@@ -64,6 +64,8 @@ from rapidata.api_client.models.add_validation_text_rapid_model import AddValida
 from rapidata.api_client.models.age_group import AgeGroup
 from rapidata.api_client.models.age_user_filter_model import AgeUserFilterModel
 from rapidata.api_client.models.aggregator_type import AggregatorType
+from rapidata.api_client.models.and_user_filter_model import AndUserFilterModel
+from rapidata.api_client.models.and_user_filter_model_filters_inner import AndUserFilterModelFiltersInner
 from rapidata.api_client.models.are_rapids_active_result import AreRapidsActiveResult
 from rapidata.api_client.models.asset_metadata import AssetMetadata
 from rapidata.api_client.models.asset_metadata_asset import AssetMetadataAsset
@@ -141,7 +143,6 @@ from rapidata.api_client.models.create_leaderboard_model import CreateLeaderboar
 from rapidata.api_client.models.create_leaderboard_result import CreateLeaderboardResult
 from rapidata.api_client.models.create_order_model import CreateOrderModel
 from rapidata.api_client.models.create_order_model_referee import CreateOrderModelReferee
-from rapidata.api_client.models.create_order_model_user_filters_inner import CreateOrderModelUserFiltersInner
 from rapidata.api_client.models.create_order_model_workflow import CreateOrderModelWorkflow
 from rapidata.api_client.models.create_order_result import CreateOrderResult
 from rapidata.api_client.models.create_rapid_result import CreateRapidResult

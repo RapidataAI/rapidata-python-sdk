@@ -28,8 +28,9 @@ class PromptByBenchmarkResult(BaseModel):
     PromptByBenchmarkResult
     """ # noqa: E501
     prompt: StrictStr
+    identifier: StrictStr
     created_at: datetime = Field(alias="createdAt")
-    __properties: ClassVar[List[str]] = ["prompt", "createdAt"]
+    __properties: ClassVar[List[str]] = ["prompt", "identifier", "createdAt"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -83,6 +84,7 @@ class PromptByBenchmarkResult(BaseModel):
 
         _obj = cls.model_validate({
             "prompt": obj.get("prompt"),
+            "identifier": obj.get("identifier"),
             "createdAt": obj.get("createdAt")
         })
         return _obj
