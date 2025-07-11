@@ -15932,6 +15932,10 @@
             "type": "boolean",
             "description": "Indicates if the prompt is shown on the rapids."
           },
+          "showPromptAsset": {
+            "type": "boolean",
+            "description": "Whether the prompt asset should be shown on the rapids."
+          },
           "responseBudget": {
             "type": "integer",
             "description": "Total amount of responses that get collected per run",
@@ -15962,6 +15966,49 @@
           },
           "benchmarkId": {
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FileAssetInput3": {
+        "title": "FileAssetInput",
+        "required": [
+          "_t",
+          "file"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "FileAssetInput"
+            ],
+            "type": "string",
+            "description": "Discriminator value for FileAssetInput",
+            "default": "FileAssetInput",
+            "example": "FileAssetInput"
+          },
+          "file": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/FormFileWrapper"
+              },
+              {
+                "$ref": "#/components/schemas/ProxyFileWrapper"
+              },
+              {
+                "$ref": "#/components/schemas/StreamFileWrapper"
+              },
+              {
+                "$ref": "#/components/schemas/ZipEntryFileWrapper"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "identifier": {
+            "type": "string",
+            "readOnly": true
           }
         },
         "additionalProperties": false
@@ -16149,6 +16196,52 @@
           "totalPages": {
             "type": "integer",
             "format": "int32",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MultiAssetInput3": {
+        "title": "MultiAssetInput",
+        "required": [
+          "_t",
+          "assets"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "MultiAssetInput"
+            ],
+            "type": "string",
+            "description": "Discriminator value for MultiAssetInput",
+            "default": "MultiAssetInput",
+            "example": "MultiAssetInput"
+          },
+          "assets": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/FileAssetInput3"
+                },
+                {
+                  "$ref": "#/components/schemas/MultiAssetInput3"
+                },
+                {
+                  "$ref": "#/components/schemas/TextAssetInput"
+                },
+                {
+                  "$ref": "#/components/schemas/UrlAssetInput"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          },
+          "identifier": {
+            "type": "string",
             "readOnly": true
           }
         },
@@ -16395,18 +16488,41 @@
       },
       "SubmitPromptModel": {
         "required": [
-          "identifier",
-          "prompt"
+          "identifier"
         ],
         "type": "object",
         "properties": {
-          "prompt": {
-            "type": "string",
-            "description": "The prompt"
-          },
           "identifier": {
             "type": "string",
             "description": "An identifier associated to the prompt"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "The prompt",
+            "default": null,
+            "nullable": true
+          },
+          "promptAsset": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/FileAssetInput3"
+              },
+              {
+                "$ref": "#/components/schemas/MultiAssetInput3"
+              },
+              {
+                "$ref": "#/components/schemas/TextAssetInput"
+              },
+              {
+                "$ref": "#/components/schemas/UrlAssetInput"
+              }
+            ],
+            "description": "",
+            "default": null,
+            "nullable": true,
+            "discriminator": {
+              "propertyName": "_t"
+            }
           }
         },
         "additionalProperties": false,

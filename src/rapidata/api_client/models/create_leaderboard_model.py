@@ -31,10 +31,11 @@ class CreateLeaderboardModel(BaseModel):
     name: StrictStr = Field(description="The name of the leaderboard.")
     instruction: StrictStr = Field(description="The instruction datapoints will be matched up against.")
     show_prompt: StrictBool = Field(description="Indicates if the prompt is shown on the rapids.", alias="showPrompt")
+    show_prompt_asset: Optional[StrictBool] = Field(default=None, description="Whether the prompt asset should be shown on the rapids.", alias="showPromptAsset")
     response_budget: Optional[StrictInt] = Field(default=None, description="Total amount of responses that get collected per run", alias="responseBudget")
     min_responses: Optional[StrictInt] = Field(default=None, description="The minimum amount of responses that need to be collected per comparison.", alias="minResponses")
     is_inversed: Optional[StrictBool] = Field(default=None, description="If the results should be inversed, meaning people should select the worse model.", alias="isInversed")
-    __properties: ClassVar[List[str]] = ["benchmarkId", "benchmarkName", "name", "instruction", "showPrompt", "responseBudget", "minResponses", "isInversed"]
+    __properties: ClassVar[List[str]] = ["benchmarkId", "benchmarkName", "name", "instruction", "showPrompt", "showPromptAsset", "responseBudget", "minResponses", "isInversed"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -102,6 +103,7 @@ class CreateLeaderboardModel(BaseModel):
             "name": obj.get("name"),
             "instruction": obj.get("instruction"),
             "showPrompt": obj.get("showPrompt"),
+            "showPromptAsset": obj.get("showPromptAsset"),
             "responseBudget": obj.get("responseBudget"),
             "minResponses": obj.get("minResponses"),
             "isInversed": obj.get("isInversed")

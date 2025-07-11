@@ -17,20 +17,27 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.submit_prompt_model_prompt_asset import SubmitPromptModelPromptAsset
+from rapidata.api_client.models.file_asset_input1_file import FileAssetInput1File
 from typing import Optional, Set
 from typing_extensions import Self
 
-class SubmitPromptModel(BaseModel):
+class FileAssetInput3(BaseModel):
     """
-    The model user for submitting a prompt to a benchmark.
+    FileAssetInput3
     """ # noqa: E501
-    identifier: StrictStr = Field(description="An identifier associated to the prompt")
-    prompt: Optional[StrictStr] = Field(default=None, description="The prompt")
-    prompt_asset: Optional[SubmitPromptModelPromptAsset] = Field(default=None, alias="promptAsset")
-    __properties: ClassVar[List[str]] = ["identifier", "prompt", "promptAsset"]
+    t: StrictStr = Field(description="Discriminator value for FileAssetInput", alias="_t")
+    file: FileAssetInput1File
+    identifier: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = ["_t", "file", "identifier"]
+
+    @field_validator('t')
+    def t_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['FileAssetInput']):
+            raise ValueError("must be one of enum values ('FileAssetInput')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -50,7 +57,7 @@ class SubmitPromptModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of SubmitPromptModel from a JSON string"""
+        """Create an instance of FileAssetInput3 from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -62,8 +69,10 @@ class SubmitPromptModel(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * OpenAPI `readOnly` fields are excluded.
         """
         excluded_fields: Set[str] = set([
+            "identifier",
         ])
 
         _dict = self.model_dump(
@@ -71,24 +80,14 @@ class SubmitPromptModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of prompt_asset
-        if self.prompt_asset:
-            _dict['promptAsset'] = self.prompt_asset.to_dict()
-        # set to None if prompt (nullable) is None
-        # and model_fields_set contains the field
-        if self.prompt is None and "prompt" in self.model_fields_set:
-            _dict['prompt'] = None
-
-        # set to None if prompt_asset (nullable) is None
-        # and model_fields_set contains the field
-        if self.prompt_asset is None and "prompt_asset" in self.model_fields_set:
-            _dict['promptAsset'] = None
-
+        # override the default output from pydantic by calling `to_dict()` of file
+        if self.file:
+            _dict['file'] = self.file.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of SubmitPromptModel from a dict"""
+        """Create an instance of FileAssetInput3 from a dict"""
         if obj is None:
             return None
 
@@ -96,9 +95,9 @@ class SubmitPromptModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "identifier": obj.get("identifier"),
-            "prompt": obj.get("prompt"),
-            "promptAsset": SubmitPromptModelPromptAsset.from_dict(obj["promptAsset"]) if obj.get("promptAsset") is not None else None
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'FileAssetInput',
+            "file": FileAssetInput1File.from_dict(obj["file"]) if obj.get("file") is not None else None,
+            "identifier": obj.get("identifier")
         })
         return _obj
 
