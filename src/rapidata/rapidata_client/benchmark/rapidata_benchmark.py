@@ -124,6 +124,18 @@ class RapidataBenchmark:
         return self.__leaderboards
     
     def add_prompt(self, identifier: str, prompt: str):
+        """
+        Adds a prompt to the benchmark.
+        """
+        if not isinstance(identifier, str) or not isinstance(prompt, str):
+            raise ValueError("Identifier and prompt must be strings.")
+        
+        if identifier in self.identifiers:
+            raise ValueError("Identifier already exists in the benchmark.")
+        
+        self.__identifiers.append(identifier)
+        self.__prompts.append(prompt)
+
         self.__openapi_service.benchmark_api.benchmark_benchmark_id_prompt_post(
             benchmark_id=self.id,
             submit_prompt_model=SubmitPromptModel(

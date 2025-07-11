@@ -44,6 +44,9 @@ class RapidataBenchmarkManager:
         
         if len(identifiers) != len(prompts):
             raise ValueError("Identifiers and prompts must have the same length.")
+        
+        if len(set(identifiers)) != len(identifiers):
+            raise ValueError("Identifiers must be unique.")
 
         benchmark_result = self.__openapi_service.benchmark_api.benchmark_post(
             create_benchmark_model=CreateBenchmarkModel(
