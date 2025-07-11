@@ -165,8 +165,12 @@ class RapidataBenchmark:
             show_prompt: Whether to show the prompt to the users.
             inverse_ranking: Whether to inverse the ranking of the leaderboard. (if the question is inversed, e.g. "Which video is worse?")
             min_responses: The minimum amount of responses that get collected per comparison. if None, it will be defaulted.
-            response_budget: The total amount of responses that get collected per new model evaluation. if None, it will be defaulted.
+            response_budget: The total amount of responses that get collected per new model evaluation. if None, it will be defaulted. Values below 2000 are not recommended.
         """
+
+        if response_budget is not None and response_budget < 2000:
+            logger.warning("Response budget is below 2000. This is not recommended.")
+
         leaderboard_result = self.__openapi_service.leaderboard_api.leaderboard_post(
             create_leaderboard_model=CreateLeaderboardModel(
                 benchmarkId=self.id,
