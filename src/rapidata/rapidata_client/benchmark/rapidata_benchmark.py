@@ -112,6 +112,9 @@ class RapidataBenchmark:
                         leaderboard.name, 
                         leaderboard.instruction, 
                         leaderboard.show_prompt, 
+                        leaderboard.is_inversed,
+                        leaderboard.min_responses,
+                        leaderboard.response_budget,
                         leaderboard.id, 
                         self.__openapi_service
                         ) for leaderboard in leaderboards_result.items])
@@ -144,16 +147,35 @@ class RapidataBenchmark:
             )
         )
 
-    def create_leaderboard(self, name: str, instruction: str, show_prompt: bool) -> RapidataLeaderboard:
+    def create_leaderboard(
+        self, 
+        name: str, 
+        instruction: str, 
+        show_prompt: bool, 
+        inverse_ranking: bool = False,
+        min_responses: int | None = None,
+        response_budget: int | None = None
+    ) -> RapidataLeaderboard:
         """
         Creates a new leaderboard for the benchmark.
+
+        Args:
+            name: The name of the leaderboard. (not shown to the users)
+            instruction: The instruction decides how the models will be evaluated.
+            show_prompt: Whether to show the prompt to the users.
+            inverse_ranking: Whether to inverse the ranking of the leaderboard. (if the question is inversed, e.g. "Which video is worse?")
+            min_responses: The minimum amount of responses that get collected per comparison. if None, it will be defaulted.
+            response_budget: The total amount of responses that get collected per new model evaluation. if None, it will be defaulted.
         """
         leaderboard_result = self.__openapi_service.leaderboard_api.leaderboard_post(
             create_leaderboard_model=CreateLeaderboardModel(
                 benchmarkId=self.id,
                 name=name,
                 instruction=instruction,
-                showPrompt=show_prompt
+                showPrompt=show_prompt,
+                isInversed=inverse_ranking,
+                minResponses=min_responses,
+                responseBudget=response_budget
             )
         )
 
@@ -163,6 +185,9 @@ class RapidataBenchmark:
             name,
             instruction,
             show_prompt,
+            inverse_ranking,
+            leaderboard_result.min_responses,
+            leaderboard_result.response_budget,
             leaderboard_result.id,
             self.__openapi_service
         )

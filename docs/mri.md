@@ -42,7 +42,7 @@ MRI creates fair comparisons by:
 ### 5. Results and Visibility
 Your leaderboard results are:
 
-- **Directly viewable** on the Rapidata dashboard at [app.rapidata.ai/mri/leaderboards](https://app.rapidata.ai/mri/leaderboards)
+- **Directly viewable** on the Rapidata dashboard at [app.rapidata.ai/mri/benchmarks](https://app.rapidata.ai/mri/benchmarks)
 - **Continuously updated** as new models are added and evaluated
 - **Provides deeper insights** into model performances over time
 

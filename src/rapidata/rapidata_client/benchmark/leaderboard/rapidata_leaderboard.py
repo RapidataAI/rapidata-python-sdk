@@ -20,12 +20,65 @@ class RapidataLeaderboard:
         id: The ID of the leaderboard.
         openapi_service: The OpenAPIService instance for API interaction.
     """
-    def __init__(self, name: str, instruction: str, show_prompt: bool, id: str, openapi_service: OpenAPIService):
+    def __init__(self, 
+                 name: str, 
+                 instruction: str, 
+                 show_prompt: bool, 
+                 inverse_ranking: bool, 
+                 min_responses: int,
+                 response_budget: int,
+                 id: str, 
+                 openapi_service: OpenAPIService):
         self.__openapi_service = openapi_service
-        self.name = name
-        self.instruction = instruction
-        self.show_prompt = show_prompt
+        self.__name = name
+        self.__instruction = instruction
+        self.__show_prompt = show_prompt
+        self.__inverse_ranking = inverse_ranking
+        self.__min_responses = min_responses
+        self.__response_budget = response_budget
         self.id = id
+
+    @property
+    def response_budget(self) -> int:
+        """
+        Returns the response budget of the leaderboard.
+        """
+        return self.__response_budget
+    
+    @property
+    def min_responses(self) -> int:
+        """
+        Returns the minimum number of responses required to be considered for the leaderboard.
+        """
+        return self.__min_responses
+    
+    @property
+    def inverse_ranking(self) -> bool:
+        """
+        Returns whether the ranking is inverse.
+        """
+        return self.__inverse_ranking
+    
+    @property
+    def show_prompt(self) -> bool:
+        """
+        Returns whether the prompt is shown to the users.
+        """
+        return self.__show_prompt
+    
+    @property
+    def instruction(self) -> str:
+        """
+        Returns the instruction of the leaderboard.
+        """
+        return self.__instruction
+    
+    @property
+    def name(self) -> str:
+        """
+        Returns the name of the leaderboard.
+        """
+        return self.__name
 
     def get_standings(self) -> pd.DataFrame:
         """
