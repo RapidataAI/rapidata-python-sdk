@@ -123,6 +123,16 @@ benchmark.evaluate_model(
 )
 ```
 
+### Retrieving Results
+
+```python
+# Get the leaderboard
+leaderboard = benchmark.leaderboards[0]
+
+# Get the standings
+standings = leaderboard.get_standings() # Returns a pandas dataframe
+```
+
 ## Related Classes
 - [RapidataBenchmarkManager](/reference/rapidata/rapidata_client/benchmark/rapidata_benchmark_manager/)
 - [RapidataBenchmark](/reference/rapidata/rapidata_client/benchmark/rapidata_benchmark/)
