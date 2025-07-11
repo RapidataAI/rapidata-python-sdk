@@ -3,6 +3,7 @@ from importlib.metadata import version, PackageNotFoundError
 
 from rapidata.api_client.api.campaign_api import CampaignApi
 from rapidata.api_client.api.dataset_api import DatasetApi
+from rapidata.api_client.api.benchmark_api import BenchmarkApi
 from rapidata.api_client.api.order_api import OrderApi
 from rapidata.api_client.api.pipeline_api import PipelineApi
 from rapidata.api_client.api.rapid_api import RapidApi
@@ -112,6 +113,10 @@ class OpenAPIService:
     @property
     def leaderboard_api(self) -> LeaderboardApi:
         return LeaderboardApi(self.api_client)
+    
+    @property
+    def benchmark_api(self) -> BenchmarkApi:
+        return BenchmarkApi(self.api_client)
 
     def _get_rapidata_package_version(self):
         """

@@ -22,7 +22,7 @@ def chunk_list(lst: list, chunk_size: int) -> Generator:
 class RapidataDataset:
 
     def __init__(self, dataset_id: str, openapi_service: OpenAPIService):
-        self.dataset_id = dataset_id
+        self.id = dataset_id
         self.openapi_service = openapi_service
         self.local_file_service = LocalFileService()
 
@@ -96,7 +96,7 @@ class RapidataDataset:
                 metadata=metadata,
             )
 
-            self.openapi_service.dataset_api.dataset_dataset_id_datapoints_texts_post(dataset_id=self.dataset_id, create_datapoint_from_text_sources_model=model)
+            self.openapi_service.dataset_api.dataset_dataset_id_datapoints_texts_post(dataset_id=self.id, create_datapoint_from_text_sources_model=model)
 
         total_uploads = len(text_assets)
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
@@ -161,7 +161,7 @@ class RapidataDataset:
         for attempt in range(max_retries):
             try:
                 self.openapi_service.dataset_api.dataset_dataset_id_datapoints_post(
-                    dataset_id=self.dataset_id,
+                    dataset_id=self.id,
                     file=local_paths,
                     url=urls,
                     metadata=metadata,
@@ -222,7 +222,7 @@ class RapidataDataset:
                     
                     while not stop_event.is_set() or not all_uploads_complete.is_set():
                         try:
-                            current_progress = self.openapi_service.dataset_api.dataset_dataset_id_progress_get(self.dataset_id)
+                            current_progress = self.openapi_service.dataset_api.dataset_dataset_id_progress_get(self.id)
                             
                             # Calculate items completed since our initialization
                             completed_ready = current_progress.ready
@@ -365,7 +365,7 @@ class RapidataDataset:
         """
         try:            
             # Get final progress
-            final_progress = self.openapi_service.dataset_api.dataset_dataset_id_progress_get(self.dataset_id)
+            final_progress = self.openapi_service.dataset_api.dataset_dataset_id_progress_get(self.id)
             total_ready = final_progress.ready
             total_failed = final_progress.failed
             
@@ -373,7 +373,7 @@ class RapidataDataset:
             if total_ready + total_failed < total_uploads:
                 # Try one more time after a longer wait
                 time.sleep(5 * progress_poll_interval)
-                final_progress = self.openapi_service.dataset_api.dataset_dataset_id_progress_get(self.dataset_id)
+                final_progress = self.openapi_service.dataset_api.dataset_dataset_id_progress_get(self.id)
                 total_ready = final_progress.ready
                 total_failed = final_progress.failed
             
