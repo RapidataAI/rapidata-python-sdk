@@ -4590,6 +4590,35 @@
             }
           }
         }
+      },
+      "delete": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Deletes a participant on a benchmark.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "participantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
       }
     },
     "/benchmark/{benchmarkId}/prompts": {
@@ -15957,7 +15986,12 @@
       "CreateLeaderboardResult": {
         "required": [
           "benchmarkId",
-          "id"
+          "id",
+          "isInversed",
+          "minResponses",
+          "responseBudget",
+          "showPrompt",
+          "showPromptAsset"
         ],
         "type": "object",
         "properties": {
@@ -15966,6 +16000,23 @@
           },
           "benchmarkId": {
             "type": "string"
+          },
+          "showPrompt": {
+            "type": "boolean"
+          },
+          "showPromptAsset": {
+            "type": "boolean"
+          },
+          "responseBudget": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minResponses": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isInversed": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -16042,8 +16093,12 @@
         "required": [
           "id",
           "instruction",
+          "isInversed",
+          "minResponses",
           "name",
-          "showPrompt"
+          "responseBudget",
+          "showPrompt",
+          "showPromptAsset"
         ],
         "type": "object",
         "properties": {
@@ -16062,6 +16117,20 @@
           },
           "showPrompt": {
             "type": "boolean"
+          },
+          "showPromptAsset": {
+            "type": "boolean"
+          },
+          "isInversed": {
+            "type": "boolean"
+          },
+          "responseBudget": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minResponses": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -16142,8 +16211,12 @@
         "required": [
           "id",
           "instruction",
+          "isInversed",
+          "minResponses",
           "name",
-          "showPrompt"
+          "responseBudget",
+          "showPrompt",
+          "showPromptAsset"
         ],
         "type": "object",
         "properties": {
@@ -16162,6 +16235,20 @@
           },
           "showPrompt": {
             "type": "boolean"
+          },
+          "showPromptAsset": {
+            "type": "boolean"
+          },
+          "isInversed": {
+            "type": "boolean"
+          },
+          "responseBudget": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minResponses": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false

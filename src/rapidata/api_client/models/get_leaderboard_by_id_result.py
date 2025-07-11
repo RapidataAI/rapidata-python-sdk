@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
@@ -31,7 +31,11 @@ class GetLeaderboardByIdResult(BaseModel):
     name: StrictStr
     instruction: StrictStr
     show_prompt: StrictBool = Field(alias="showPrompt")
-    __properties: ClassVar[List[str]] = ["id", "orderId", "name", "instruction", "showPrompt"]
+    show_prompt_asset: StrictBool = Field(alias="showPromptAsset")
+    is_inversed: StrictBool = Field(alias="isInversed")
+    response_budget: StrictInt = Field(alias="responseBudget")
+    min_responses: StrictInt = Field(alias="minResponses")
+    __properties: ClassVar[List[str]] = ["id", "orderId", "name", "instruction", "showPrompt", "showPromptAsset", "isInversed", "responseBudget", "minResponses"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -93,7 +97,11 @@ class GetLeaderboardByIdResult(BaseModel):
             "orderId": obj.get("orderId"),
             "name": obj.get("name"),
             "instruction": obj.get("instruction"),
-            "showPrompt": obj.get("showPrompt")
+            "showPrompt": obj.get("showPrompt"),
+            "showPromptAsset": obj.get("showPromptAsset"),
+            "isInversed": obj.get("isInversed"),
+            "responseBudget": obj.get("responseBudget"),
+            "minResponses": obj.get("minResponses")
         })
         return _obj
 
