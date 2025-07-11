@@ -181,6 +181,7 @@ from rapidata.api_client.models.file_asset_input import FileAssetInput
 from rapidata.api_client.models.file_asset_input1 import FileAssetInput1
 from rapidata.api_client.models.file_asset_input1_file import FileAssetInput1File
 from rapidata.api_client.models.file_asset_input2 import FileAssetInput2
+from rapidata.api_client.models.file_asset_input3 import FileAssetInput3
 from rapidata.api_client.models.file_asset_input_file import FileAssetInputFile
 from rapidata.api_client.models.file_asset_model import FileAssetModel
 from rapidata.api_client.models.file_asset_model_metadata_value import FileAssetModelMetadataValue
@@ -261,6 +262,8 @@ from rapidata.api_client.models.multi_asset_input import MultiAssetInput
 from rapidata.api_client.models.multi_asset_input1 import MultiAssetInput1
 from rapidata.api_client.models.multi_asset_input1_assets_inner import MultiAssetInput1AssetsInner
 from rapidata.api_client.models.multi_asset_input2 import MultiAssetInput2
+from rapidata.api_client.models.multi_asset_input3 import MultiAssetInput3
+from rapidata.api_client.models.multi_asset_input3_assets_inner import MultiAssetInput3AssetsInner
 from rapidata.api_client.models.multi_asset_input_assets_inner import MultiAssetInputAssetsInner
 from rapidata.api_client.models.multi_asset_model import MultiAssetModel
 from rapidata.api_client.models.multi_compare_truth import MultiCompareTruth
@@ -367,6 +370,7 @@ from rapidata.api_client.models.submit_coco_model import SubmitCocoModel
 from rapidata.api_client.models.submit_coco_result import SubmitCocoResult
 from rapidata.api_client.models.submit_participant_result import SubmitParticipantResult
 from rapidata.api_client.models.submit_prompt_model import SubmitPromptModel
+from rapidata.api_client.models.submit_prompt_model_prompt_asset import SubmitPromptModelPromptAsset
 from rapidata.api_client.models.text_asset import TextAsset
 from rapidata.api_client.models.text_asset_input import TextAssetInput
 from rapidata.api_client.models.text_asset_model import TextAssetModel
