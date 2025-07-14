@@ -1,3 +1,4 @@
+import re
 from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.filter import Filter
 from rapidata.api_client.models.query_model import QueryModel
@@ -5,6 +6,8 @@ from rapidata.api_client.models.page_info import PageInfo
 from rapidata.api_client.models.create_leaderboard_model import CreateLeaderboardModel
 from rapidata.api_client.models.create_benchmark_participant_model import CreateBenchmarkParticipantModel
 from rapidata.api_client.models.submit_prompt_model import SubmitPromptModel
+from rapidata.api_client.models.submit_prompt_model_prompt_asset import SubmitPromptModelPromptAsset
+from rapidata.api_client.models.url_asset_input import UrlAssetInput
 
 from rapidata.rapidata_client.logging import logger
 from rapidata.service.openapi_service import OpenAPIService
@@ -30,6 +33,7 @@ class RapidataBenchmark:
         self.id = id
         self.__openapi_service = openapi_service
         self.__prompts: list[str] = []
+        self.__prompt_assets: list[str] = []
         self.__leaderboards: list[RapidataLeaderboard] = []
         self.__identifiers: list[str] = []
 
@@ -62,6 +66,13 @@ class RapidataBenchmark:
             current_page += 1
 
     @property
+    def identifiers(self) -> list[str]:
+        if not self.__identifiers:
+            self.__instantiate_prompts()
+        
+        return self.__identifiers
+    
+    @property
     def prompts(self) -> list[str]:
         """
         Returns the prompts that are registered for the leaderboard.
@@ -72,11 +83,14 @@ class RapidataBenchmark:
         return self.__prompts
     
     @property
-    def identifiers(self) -> list[str]:
-        if not self.__identifiers:
+    def prompt_assets(self) -> list[str]:
+        """
+        Returns the prompt assets that are registered for the benchmark.
+        """
+        if not self.__prompt_assets:
             self.__instantiate_prompts()
         
-        return self.__identifiers
+        return self.__prompt_assets
     
     @property
     def leaderboards(self) -> list[RapidataLeaderboard]:
@@ -126,32 +140,60 @@ class RapidataBenchmark:
                 
         return self.__leaderboards
     
-    def add_prompt(self, identifier: str, prompt: str):
+    def add_prompt(self, identifier: str, prompt: str | None = None, asset: str | None = None):
         """
         Adds a prompt to the benchmark.
+
+        Args:
+            identifier: The identifier of the prompt/asset that will be used to match up the media.
+            prompt: The prompt that will be used to evaluate the model.
+            asset: The asset that will be used to evaluate the model. Provided as a link to the asset.
         """
-        if not isinstance(identifier, str) or not isinstance(prompt, str):
-            raise ValueError("Identifier and prompt must be strings.")
+        if not isinstance(identifier, str):
+            raise ValueError("Identifier must be a string.")
+        
+        if prompt is None and asset is None:
+            raise ValueError("Prompt or asset must be provided.")
+        
+        if prompt is not None and not isinstance(prompt, str):
+            raise ValueError("Prompt must be a string.")
+        
+        if asset is not None and not isinstance(asset, str):
+            raise ValueError("Asset must be a string. That is the link to the asset.")
         
         if identifier in self.identifiers:
             raise ValueError("Identifier already exists in the benchmark.")
         
+        if asset is not None and not re.match(r'^https?://', asset):
+            raise ValueError("Asset must be a link to the asset.")
+        
         self.__identifiers.append(identifier)
-        self.__prompts.append(prompt)
+
+        if prompt is not None:
+            self.__prompts.append(prompt)
+        if asset is not None:
+            self.__prompt_assets.append(asset)
 
         self.__openapi_service.benchmark_api.benchmark_benchmark_id_prompt_post(
             benchmark_id=self.id,
             submit_prompt_model=SubmitPromptModel(
                 identifier=identifier,
                 prompt=prompt,
+                promptAsset=SubmitPromptModelPromptAsset(
+                    UrlAssetInput(
+                        _t="UrlAssetInput",
+                        url=asset
+                    )
+                ) if asset is not None else None
             )
-        )
+        )        
 
     def create_leaderboard(
         self, 
         name: str, 
         instruction: str, 
-        show_prompt: bool, 
+        show_prompt: bool,
+        show_prompt_asset: bool,
         inverse_ranking: bool = False,
         min_responses: int | None = None,
         response_budget: int | None = None
@@ -163,6 +205,7 @@ class RapidataBenchmark:
             name: The name of the leaderboard. (not shown to the users)
             instruction: The instruction decides how the models will be evaluated.
             show_prompt: Whether to show the prompt to the users.
+            show_prompt_asset: Whether to show the prompt asset to the users.
             inverse_ranking: Whether to inverse the ranking of the leaderboard. (if the question is inversed, e.g. "Which video is worse?")
             min_responses: The minimum amount of responses that get collected per comparison. if None, it will be defaulted.
             response_budget: The total amount of responses that get collected per new model evaluation. if None, it will be defaulted. Values below 2000 are not recommended.
@@ -177,6 +220,7 @@ class RapidataBenchmark:
                 name=name,
                 instruction=instruction,
                 showPrompt=show_prompt,
+                showPromptAsset=show_prompt_asset,
                 isInversed=inverse_ranking,
                 minResponses=min_responses,
                 responseBudget=response_budget
