@@ -53,13 +53,8 @@ class RapidataOrderManager:
         self.filters = RapidataFilters
         self.settings = RapidataSettings
         self.selections = RapidataSelections
-        self.__priority = 50
+        self.__priority: int | None = None
         logger.debug("RapidataOrderManager initialized")
-
-    def __get_selections(self, validation_set_id: str | None, labeling_amount=3) -> Sequence[RapidataSelection]:
-        if validation_set_id:
-            return [ValidationSelection(validation_set_id=validation_set_id), LabelingSelection(amount=labeling_amount-1)]
-        return [LabelingSelection(amount=labeling_amount)]
     
     def _create_general_order(self,
             name: str,
@@ -75,7 +70,6 @@ class RapidataOrderManager:
             sentences: list[str] | None = None,
             selections: Sequence[RapidataSelection] = [],
             private_notes: list[str] | None = None,
-            default_labeling_amount: int = 3
         ) -> RapidataOrder:
 
         if not assets:
@@ -108,9 +102,6 @@ class RapidataOrderManager:
 
         if selections and validation_set_id:
             logger.warning("Warning: Both selections and validation_set_id provided. Ignoring validation_set_id.")
-        
-        if not selections:
-            selections = self.__get_selections(validation_set_id, labeling_amount=default_labeling_amount)
 
         prompts_metadata = [PromptMetadata(prompt=prompt) for prompt in contexts] if contexts else None
         sentence_metadata = [SelectWordsMetadata(select_words=sentence) for sentence in sentences] if sentences else None
@@ -135,6 +126,7 @@ class RapidataOrderManager:
                  ._filters(filters)
                  ._selections(selections) 
                  ._settings(settings)
+                 ._validation_set_id(validation_set_id if not selections else None)
                  ._priority(self.__priority)
                  ._create()
                  )
@@ -398,7 +390,6 @@ class RapidataOrderManager:
             filters=filters,
             selections=selections,
             settings=settings,
-            default_labeling_amount=1,
             private_notes=private_notes
         )
     
@@ -451,7 +442,6 @@ class RapidataOrderManager:
             selections=selections,
             settings=settings,
             sentences=sentences,
-            default_labeling_amount=2,
             private_notes=private_notes
         )
     
@@ -623,7 +613,6 @@ class RapidataOrderManager:
             filters=filters,
             selections=selections,
             settings=settings,
-            default_labeling_amount=2,
             private_notes=private_notes
         )
 
