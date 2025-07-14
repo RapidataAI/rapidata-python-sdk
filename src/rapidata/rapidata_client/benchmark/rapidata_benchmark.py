@@ -186,7 +186,7 @@ class RapidataBenchmark:
                     )
                 ) if asset is not None else None
             )
-        )        
+        )
 
     def create_leaderboard(
         self, 
