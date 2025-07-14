@@ -58,7 +58,7 @@ class RapidataOrderBuilder:
         self.__settings: Sequence[RapidataSetting] | None = None
         self.__user_filters: list[RapidataFilter] = []
         self.__selections: list[RapidataSelection] = []
-        self.__priority: int = 50
+        self.__priority: int | None = None
         self.__assets: Sequence[BaseAsset] = []
 
     def _to_model(self) -> CreateOrderModel:
@@ -93,10 +93,14 @@ class RapidataOrderBuilder:
                 if self.__settings is not None
                 else None
             ),
-            selections=[
-                AbTestSelectionAInner(selection._to_model())
-                for selection in self.__selections
-            ],
+            selections=(
+                [
+                    AbTestSelectionAInner(selection._to_model())
+                    for selection in self.__selections
+                ]
+                if self.__selections
+                else None
+            ),
             priority=self.__priority,
         )
 
@@ -276,7 +280,7 @@ class RapidataOrderBuilder:
         self.__user_filters = filters
         return self
 
-    def _validation_set_id(self, validation_set_id: str) -> "RapidataOrderBuilder":
+    def _validation_set_id(self, validation_set_id: str | None = None) -> "RapidataOrderBuilder":
         """
         Set the validation set ID for the order.
 
@@ -286,7 +290,7 @@ class RapidataOrderBuilder:
         Returns:
             RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
         """
-        if not isinstance(validation_set_id, str):
+        if validation_set_id is not None and not isinstance(validation_set_id, str):
             raise TypeError("Validation set ID must be of type str.")
 
         self.__validation_set_id = validation_set_id
@@ -329,7 +333,7 @@ class RapidataOrderBuilder:
         self.__selections = selections  # type: ignore
         return self
 
-    def _priority(self, priority: int) -> "RapidataOrderBuilder":
+    def _priority(self, priority: int | None = None) -> "RapidataOrderBuilder":
         """
         Set the priority for the order.
 
@@ -339,7 +343,7 @@ class RapidataOrderBuilder:
         Returns:
             RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
         """
-        if not isinstance(priority, int):
+        if priority is not None and not isinstance(priority, int):
             raise TypeError("Priority must be of type int.")
 
         self.__priority = priority
