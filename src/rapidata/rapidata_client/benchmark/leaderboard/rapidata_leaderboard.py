@@ -24,6 +24,7 @@ class RapidataLeaderboard:
                  name: str, 
                  instruction: str, 
                  show_prompt: bool, 
+                 show_prompt_asset: bool,
                  inverse_ranking: bool, 
                  min_responses: int,
                  response_budget: int,
@@ -33,6 +34,7 @@ class RapidataLeaderboard:
         self.__name = name
         self.__instruction = instruction
         self.__show_prompt = show_prompt
+        self.__show_prompt_asset = show_prompt_asset
         self.__inverse_ranking = inverse_ranking
         self.__min_responses = min_responses
         self.__response_budget = response_budget
@@ -51,6 +53,13 @@ class RapidataLeaderboard:
         Returns the minimum number of responses required to be considered for the leaderboard.
         """
         return self.__min_responses
+    
+    @property
+    def show_prompt_asset(self) -> bool:
+        """
+        Returns whether the prompt asset is shown to the users.
+        """
+        return self.__show_prompt_asset
     
     @property
     def inverse_ranking(self) -> bool:
