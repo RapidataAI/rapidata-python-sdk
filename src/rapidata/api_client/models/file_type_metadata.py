@@ -41,8 +41,8 @@ class FileTypeMetadata(BaseModel):
     @field_validator('file_type')
     def file_type_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['Image', 'Video', 'Audio']):
-            raise ValueError("must be one of enum values ('Image', 'Video', 'Audio')")
+        if value not in set(['Unknown', 'Image', 'Video', 'Audio']):
+            raise ValueError("must be one of enum values ('Unknown', 'Image', 'Video', 'Audio')")
         return value
 
     model_config = ConfigDict(

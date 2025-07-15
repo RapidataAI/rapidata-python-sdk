@@ -19,7 +19,8 @@ import json
 
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.get_validation_rapids_result_asset import GetValidationRapidsResultAsset
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,10 +28,11 @@ class PromptByBenchmarkResult(BaseModel):
     """
     PromptByBenchmarkResult
     """ # noqa: E501
-    prompt: StrictStr
+    prompt: Optional[StrictStr] = None
+    prompt_asset: Optional[GetValidationRapidsResultAsset] = Field(default=None, alias="promptAsset")
     identifier: StrictStr
     created_at: datetime = Field(alias="createdAt")
-    __properties: ClassVar[List[str]] = ["prompt", "identifier", "createdAt"]
+    __properties: ClassVar[List[str]] = ["prompt", "promptAsset", "identifier", "createdAt"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -71,6 +73,19 @@ class PromptByBenchmarkResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of prompt_asset
+        if self.prompt_asset:
+            _dict['promptAsset'] = self.prompt_asset.to_dict()
+        # set to None if prompt (nullable) is None
+        # and model_fields_set contains the field
+        if self.prompt is None and "prompt" in self.model_fields_set:
+            _dict['prompt'] = None
+
+        # set to None if prompt_asset (nullable) is None
+        # and model_fields_set contains the field
+        if self.prompt_asset is None and "prompt_asset" in self.model_fields_set:
+            _dict['promptAsset'] = None
+
         return _dict
 
     @classmethod
@@ -84,6 +99,7 @@ class PromptByBenchmarkResult(BaseModel):
 
         _obj = cls.model_validate({
             "prompt": obj.get("prompt"),
+            "promptAsset": GetValidationRapidsResultAsset.from_dict(obj["promptAsset"]) if obj.get("promptAsset") is not None else None,
             "identifier": obj.get("identifier"),
             "createdAt": obj.get("createdAt")
         })
