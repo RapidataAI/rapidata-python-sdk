@@ -201,8 +201,8 @@ class RapidataBenchmark:
         self, 
         name: str, 
         instruction: str, 
-        show_prompt: bool,
-        show_prompt_asset: bool,
+        show_prompt: bool = False,
+        show_prompt_asset: bool = False,
         inverse_ranking: bool = False,
         min_responses: int | None = None,
         response_budget: int | None = None
@@ -213,8 +213,8 @@ class RapidataBenchmark:
         Args:
             name: The name of the leaderboard. (not shown to the users)
             instruction: The instruction decides how the models will be evaluated.
-            show_prompt: Whether to show the prompt to the users.
-            show_prompt_asset: Whether to show the prompt asset to the users.
+            show_prompt: Whether to show the prompt to the users. (default: False)
+            show_prompt_asset: Whether to show the prompt asset to the users. (only works if the prompt asset is a URL) (default: False)
             inverse_ranking: Whether to inverse the ranking of the leaderboard. (if the question is inversed, e.g. "Which video is worse?")
             min_responses: The minimum amount of responses that get collected per comparison. if None, it will be defaulted.
             response_budget: The total amount of responses that get collected per new model evaluation. if None, it will be defaulted. Values below 2000 are not recommended.
