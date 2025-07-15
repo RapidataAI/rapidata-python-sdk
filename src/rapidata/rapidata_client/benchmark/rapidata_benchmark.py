@@ -8,6 +8,8 @@ from rapidata.api_client.models.create_benchmark_participant_model import Create
 from rapidata.api_client.models.submit_prompt_model import SubmitPromptModel
 from rapidata.api_client.models.submit_prompt_model_prompt_asset import SubmitPromptModelPromptAsset
 from rapidata.api_client.models.url_asset_input import UrlAssetInput
+from rapidata.api_client.models.file_asset_model import FileAssetModel
+from rapidata.api_client.models.source_url_metadata_model import SourceUrlMetadataModel
 
 from rapidata.rapidata_client.logging import logger
 from rapidata.service.openapi_service import OpenAPIService
@@ -32,8 +34,8 @@ class RapidataBenchmark:
         self.name = name
         self.id = id
         self.__openapi_service = openapi_service
-        self.__prompts: list[str] = []
-        self.__prompt_assets: list[str] = []
+        self.__prompts: list[str | None] = []
+        self.__prompt_assets: list[str | None] = []
         self.__leaderboards: list[RapidataLeaderboard] = []
         self.__identifiers: list[str] = []
 
@@ -57,8 +59,16 @@ class RapidataBenchmark:
             
             total_pages = prompts_result.total_pages
             
-            self.__prompts.extend([prompt.prompt for prompt in prompts_result.items])
-            self.__identifiers.extend([prompt.identifier for prompt in prompts_result.items])
+            for prompt in prompts_result.items:
+                self.__prompts.append(prompt.prompt)
+                self.__identifiers.append(prompt.identifier)
+                if prompt.prompt_asset is None:
+                    self.__prompt_assets.append(None)
+                else:
+                    assert isinstance(prompt.prompt_asset.actual_instance, FileAssetModel)
+                    source_url = prompt.prompt_asset.actual_instance.metadata["sourceUrl"].actual_instance
+                    assert isinstance(source_url, SourceUrlMetadataModel)
+                    self.__prompt_assets.append(source_url.url)
             
             if current_page >= total_pages:
                 break
@@ -73,7 +83,7 @@ class RapidataBenchmark:
         return self.__identifiers
     
     @property
-    def prompts(self) -> list[str]:
+    def prompts(self) -> list[str | None]:
         """
         Returns the prompts that are registered for the leaderboard.
         """
@@ -83,7 +93,7 @@ class RapidataBenchmark:
         return self.__prompts
     
     @property
-    def prompt_assets(self) -> list[str]:
+    def prompt_assets(self) -> list[str | None]:
         """
         Returns the prompt assets that are registered for the benchmark.
         """
@@ -169,10 +179,8 @@ class RapidataBenchmark:
         
         self.__identifiers.append(identifier)
 
-        if prompt is not None:
-            self.__prompts.append(prompt)
-        if asset is not None:
-            self.__prompt_assets.append(asset)
+        self.__prompts.append(prompt)
+        self.__prompt_assets.append(asset)
 
         self.__openapi_service.benchmark_api.benchmark_benchmark_id_prompt_post(
             benchmark_id=self.id,
