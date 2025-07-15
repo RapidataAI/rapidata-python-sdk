@@ -18,22 +18,22 @@ from enum import Enum
 from typing_extensions import Self
 
 
-class FileType(str, Enum):
+class RunStatus(str, Enum):
     """
-    FileType
+    RunStatus
     """
 
     """
     allowed enum values
     """
-    UNKNOWN = 'Unknown'
-    IMAGE = 'Image'
-    VIDEO = 'Video'
-    AUDIO = 'Audio'
+    QUEUED = 'Queued'
+    RUNNING = 'Running'
+    COMPLETED = 'Completed'
+    FAILED = 'Failed'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of FileType from a JSON string"""
+        """Create an instance of RunStatus from a JSON string"""
         return cls(json.loads(json_str))
 
 

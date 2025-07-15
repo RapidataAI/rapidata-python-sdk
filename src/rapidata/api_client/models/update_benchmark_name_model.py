@@ -17,32 +17,17 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class FileTypeMetadataModel(BaseModel):
+class UpdateBenchmarkNameModel(BaseModel):
     """
-    FileTypeMetadataModel
+    The model used to update the name of a benchmark.
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for FileTypeMetadata", alias="_t")
-    file_type: StrictStr = Field(alias="fileType")
-    __properties: ClassVar[List[str]] = ["_t", "fileType"]
-
-    @field_validator('t')
-    def t_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['FileTypeMetadata']):
-            raise ValueError("must be one of enum values ('FileTypeMetadata')")
-        return value
-
-    @field_validator('file_type')
-    def file_type_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['Unknown', 'Image', 'Video', 'Audio']):
-            raise ValueError("must be one of enum values ('Unknown', 'Image', 'Video', 'Audio')")
-        return value
+    name: StrictStr = Field(description="The new name of the benchmark.")
+    __properties: ClassVar[List[str]] = ["name"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -62,7 +47,7 @@ class FileTypeMetadataModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of FileTypeMetadataModel from a JSON string"""
+        """Create an instance of UpdateBenchmarkNameModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -87,7 +72,7 @@ class FileTypeMetadataModel(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of FileTypeMetadataModel from a dict"""
+        """Create an instance of UpdateBenchmarkNameModel from a dict"""
         if obj is None:
             return None
 
@@ -95,8 +80,7 @@ class FileTypeMetadataModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'FileTypeMetadata',
-            "fileType": obj.get("fileType")
+            "name": obj.get("name")
         })
         return _obj
 

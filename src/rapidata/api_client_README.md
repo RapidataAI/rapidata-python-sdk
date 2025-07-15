@@ -74,6 +74,7 @@ Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *BenchmarkApi* | [**benchmark_benchmark_id_delete**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_delete) | **DELETE** /benchmark/{benchmarkId} | Deletes a single benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_get) | **GET** /benchmark/{benchmarkId} | Returns a single benchmark by its ID.
+*BenchmarkApi* | [**benchmark_benchmark_id_name_put**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_name_put) | **PUT** /benchmark/{benchmarkId}/name | Updates the name of a benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_participant_participant_id_delete**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_participant_participant_id_delete) | **DELETE** /benchmark/{benchmarkId}/participant/{participantId} | Deletes a participant on a benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_participant_participant_id_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_participant_participant_id_get) | **GET** /benchmark/{benchmarkId}/participant/{participantId} | Gets a participant by it&#39;s Id.
 *BenchmarkApi* | [**benchmark_benchmark_id_participants_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_participants_get) | **GET** /benchmark/{benchmarkId}/participants | Query all participants within a benchmark
@@ -127,6 +128,7 @@ Class | Method | HTTP request | Description
 *LeaderboardApi* | [**leaderboard_leaderboard_id_boost_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_boost_post) | **POST** /leaderboard/{leaderboardId}/boost | Boosts a subset of participants within a leaderboard.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_delete**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_delete) | **DELETE** /leaderboard/{leaderboardId} | Deletes a leaderboard by its ID.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_get) | **GET** /leaderboard/{leaderboardId} | Gets a leaderboard by its ID.
+*LeaderboardApi* | [**leaderboard_leaderboard_id_name_put**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_name_put) | **PUT** /leaderboard/{leaderboardId}/name | Updates the name of a leaderboard.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_participant_participant_id_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_participant_participant_id_get) | **GET** /leaderboard/{leaderboardId}/participant/{participantId} | Gets a participant by its ID.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_participants_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_participants_get) | **GET** /leaderboard/{leaderboardId}/participants | queries all the participants connected to leaderboard by its ID.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_participants_participant_id_submit_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_participants_participant_id_submit_post) | **POST** /leaderboard/{leaderboardId}/participants/{participantId}/submit | Submits a participant to a leaderboard.
@@ -134,6 +136,7 @@ Class | Method | HTTP request | Description
 *LeaderboardApi* | [**leaderboard_leaderboard_id_prompts_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_prompts_get) | **GET** /leaderboard/{leaderboardId}/prompts | returns the paged prompts of a leaderboard by its ID.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_prompts_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_prompts_post) | **POST** /leaderboard/{leaderboardId}/prompts | adds a new prompt to a leaderboard.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_refresh_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_refresh_post) | **POST** /leaderboard/{leaderboardId}/refresh | This will force an update to all standings of a leaderboard. this could happen if the recorded matches and scores are out of sync
+*LeaderboardApi* | [**leaderboard_leaderboard_id_runs_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_runs_get) | **GET** /leaderboard/{leaderboardId}/runs | Gets the runs related to a leaderboard
 *LeaderboardApi* | [**leaderboard_leaderboard_id_standings_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_standings_get) | **GET** /leaderboard/{leaderboardId}/standings | queries all the participants connected to leaderboard by its ID.
 *LeaderboardApi* | [**leaderboard_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_post) | **POST** /leaderboard | Creates a new leaderboard with the specified name and criteria.
 *LeaderboardApi* | [**leaderboards_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboards_get) | **GET** /leaderboards | Queries all leaderboards of the user.
@@ -484,6 +487,9 @@ Class | Method | HTTP request | Description
  - [ResponseCountUserFilterModel](rapidata/api_client/docs/ResponseCountUserFilterModel.md)
  - [RetrievalMode](rapidata/api_client/docs/RetrievalMode.md)
  - [RootFilter](rapidata/api_client/docs/RootFilter.md)
+ - [RunStatus](rapidata/api_client/docs/RunStatus.md)
+ - [RunsByLeaderboardResult](rapidata/api_client/docs/RunsByLeaderboardResult.md)
+ - [RunsByLeaderboardResultPagedResult](rapidata/api_client/docs/RunsByLeaderboardResultPagedResult.md)
  - [ScrubPayload](rapidata/api_client/docs/ScrubPayload.md)
  - [ScrubRange](rapidata/api_client/docs/ScrubRange.md)
  - [ScrubRapidBlueprint](rapidata/api_client/docs/ScrubRapidBlueprint.md)
@@ -533,9 +539,11 @@ Class | Method | HTTP request | Description
  - [TranslatedPromptMetadataModel](rapidata/api_client/docs/TranslatedPromptMetadataModel.md)
  - [TranslatedString](rapidata/api_client/docs/TranslatedString.md)
  - [UnlockOrderResult](rapidata/api_client/docs/UnlockOrderResult.md)
+ - [UpdateBenchmarkNameModel](rapidata/api_client/docs/UpdateBenchmarkNameModel.md)
  - [UpdateCampaignModel](rapidata/api_client/docs/UpdateCampaignModel.md)
  - [UpdateDatasetNameModel](rapidata/api_client/docs/UpdateDatasetNameModel.md)
  - [UpdateDimensionsModel](rapidata/api_client/docs/UpdateDimensionsModel.md)
+ - [UpdateLeaderboardNameModel](rapidata/api_client/docs/UpdateLeaderboardNameModel.md)
  - [UpdateOrderNameModel](rapidata/api_client/docs/UpdateOrderNameModel.md)
  - [UpdateValidationRapidModel](rapidata/api_client/docs/UpdateValidationRapidModel.md)
  - [UpdateValidationRapidModelTruth](rapidata/api_client/docs/UpdateValidationRapidModelTruth.md)

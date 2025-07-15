@@ -4621,6 +4621,50 @@
         }
       }
     },
+    "/benchmark/{benchmarkId}/name": {
+      "put": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Updates the name of a benchmark.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBenchmarkNameModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBenchmarkNameModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBenchmarkNameModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
     "/benchmark/{benchmarkId}/prompts": {
       "get": {
         "tags": [
@@ -4867,6 +4911,50 @@
             }
           }
         ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/leaderboard/{leaderboardId}/name": {
+      "put": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "Updates the name of a leaderboard.",
+        "parameters": [
+          {
+            "name": "leaderboardId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLeaderboardNameModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLeaderboardNameModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLeaderboardNameModel"
+              }
+            }
+          }
+        },
         "responses": {
           "204": {
             "description": "No Content"
@@ -5186,6 +5274,59 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/StandingByLeaderboardPagedResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/leaderboard/{leaderboardId}/runs": {
+      "get": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "Gets the runs related to a leaderboard",
+        "parameters": [
+          {
+            "name": "leaderboardId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "request",
+            "in": "query",
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunsByLeaderboardResultPagedResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunsByLeaderboardResultPagedResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunsByLeaderboardResultPagedResult"
                 }
               }
             }
@@ -6006,6 +6147,7 @@
       },
       "FileType": {
         "enum": [
+          "Unknown",
           "Image",
           "Video",
           "Audio"
@@ -6031,6 +6173,7 @@
           },
           "fileType": {
             "enum": [
+              "Unknown",
               "Image",
               "Video",
               "Audio"
@@ -14812,6 +14955,7 @@
           },
           "fileType": {
             "enum": [
+              "Unknown",
               "Image",
               "Video",
               "Audio"
@@ -16411,13 +16555,33 @@
       "PromptByBenchmarkResult": {
         "required": [
           "createdAt",
-          "identifier",
-          "prompt"
+          "identifier"
         ],
         "type": "object",
         "properties": {
           "prompt": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
+          },
+          "promptAsset": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/FileAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/MultiAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/NullAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/TextAssetModel"
+              }
+            ],
+            "nullable": true,
+            "discriminator": {
+              "propertyName": "_t"
+            }
           },
           "identifier": {
             "type": "string"
@@ -16454,6 +16618,89 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/PromptByBenchmarkResult"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RunStatus": {
+        "enum": [
+          "Queued",
+          "Running",
+          "Completed",
+          "Failed"
+        ],
+        "type": "string"
+      },
+      "RunsByLeaderboardResult": {
+        "required": [
+          "createdAt",
+          "id",
+          "name",
+          "ownerMail",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "Queued",
+              "Running",
+              "Completed",
+              "Failed"
+            ],
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ownerMail": {
+            "type": "string"
+          },
+          "orderId": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RunsByLeaderboardResultPagedResult": {
+        "required": [
+          "items",
+          "page",
+          "pageSize",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RunsByLeaderboardResult"
             }
           },
           "totalPages": {
@@ -16614,6 +16861,34 @@
         },
         "additionalProperties": false,
         "description": "The model user for submitting a prompt to a benchmark."
+      },
+      "UpdateBenchmarkNameModel": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The new name of the benchmark."
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model used to update the name of a benchmark."
+      },
+      "UpdateLeaderboardNameModel": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The new name of the leaderboard."
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model used to update the name of a leaderboard."
       }
     },
     "securitySchemes": {
