@@ -10,6 +10,8 @@ from rapidata.api_client.models.submit_prompt_model_prompt_asset import SubmitPr
 from rapidata.api_client.models.url_asset_input import UrlAssetInput
 from rapidata.api_client.models.file_asset_model import FileAssetModel
 from rapidata.api_client.models.source_url_metadata_model import SourceUrlMetadataModel
+from rapidata.api_client.models.create_sample_model import CreateSampleModel
+
 
 from rapidata.rapidata_client.logging import logger
 from rapidata.service.openapi_service import OpenAPIService
@@ -284,22 +286,27 @@ class RapidataBenchmark:
             )
         )
 
-        dataset = RapidataDataset(participant_result.dataset_id, self.__openapi_service)
-        
-        try:
-            dataset._add_datapoints(assets, prompts_metadata)
-        except Exception as e:
-            logger.warning(f"An error occurred while adding datapoints to the dataset: {e}")
-            upload_progress = self.__openapi_service.dataset_api.dataset_dataset_id_progress_get(
-                dataset_id=dataset.id
-            )
-            if upload_progress.ready == 0:
-                raise RuntimeError("None of the media was uploaded successfully. Please check the media paths and try again.")
-            
-            logger.warning(f"{upload_progress.failed} datapoints failed to upload. \n{upload_progress.ready} datapoints were uploaded successfully. \nEvaluation will continue with the uploaded datapoints.")
+        logger.info(f"Participant created: {participant_result.participant_id}")
 
-        self.__openapi_service.benchmark_api.benchmark_benchmark_id_participants_participant_id_submit_post(
-            benchmark_id=self.id,
+        for media_path, identifier in zip(media, identifiers):
+            asset = MediaAsset(media_path)
+            if asset.is_local():
+                files = [asset.to_file()]
+                urls = []
+            else:
+                files = []
+                urls = [asset.path]
+
+            self.__openapi_service.participant_api.participant_participant_id_sample_post(
+                participant_id=participant_result.participant_id,
+                model=CreateSampleModel(
+                    identifier=identifier
+                ),
+                files=files,
+                urls=urls
+            )
+
+        self.__openapi_service.participant_api.participants_participant_id_submit_post(
             participant_id=participant_result.participant_id
         )
 
