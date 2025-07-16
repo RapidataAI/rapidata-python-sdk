@@ -4,6 +4,11 @@
 
 Model Ranking Insights (MRI) provides a powerful way to compare and rank different AI models based on their performance on specific tasks. They allow you to create standardized evaluation environments where multiple models can be tested against each other and ranked based on human feedback.
 
+<div class="image-switch">
+  <img src="/media/mri_light.svg" class="light" alt="MRI Process Flow">
+  <img src="/media/mri_dark.svg" class="dark" alt="MRI Process Flow">
+</div>
+
 ## How to use MRI
 
 ### 1. Benchmark Creation

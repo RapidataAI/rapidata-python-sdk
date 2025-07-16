@@ -15,8 +15,29 @@
     padding: 0.5rem 1rem;
     border-radius: 2rem;
     font-size: 0.625rem;
-    
+
     @media screen and (min-width: 1024px) {
         margin-left: 2rem;
     }
+}
+
+.image-switch {
+    display: block;
+}
+
+.image-switch img {
+    max-width: 100%;
+    height: auto;
+}
+
+.image-switch img.dark {
+    display: none;
+}
+
+[data-md-color-scheme="slate"] .image-switch img.light {
+    display: none;
+}
+
+[data-md-color-scheme="slate"] .image-switch img.dark {
+    display: block;
 }
