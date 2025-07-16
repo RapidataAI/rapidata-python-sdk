@@ -29,7 +29,7 @@ class Rapid():
     def _add_to_validation_set(self, validationSetId: str, openapi_service: OpenAPIService) -> None:
         model = self.__to_model()
         assets = self.__convert_to_assets()
-        if assets[0] is TextAsset:
+        if isinstance(assets[0], TextAsset):
             assert all(isinstance(asset, TextAsset) for asset in assets)
             texts = cast(list[TextAsset], assets)
             openapi_service.validation_api.validation_set_validation_set_id_rapid_post(
@@ -38,7 +38,7 @@ class Rapid():
                 texts=[asset.text for asset in texts]
             )
 
-        elif assets[0] is MediaAsset:
+        elif isinstance(assets[0], MediaAsset):
             assert all(isinstance(asset, MediaAsset) for asset in assets)
             files = cast(list[MediaAsset], assets)
             openapi_service.validation_api.validation_set_validation_set_id_rapid_post(
