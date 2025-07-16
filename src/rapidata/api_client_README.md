@@ -76,7 +76,6 @@ Class | Method | HTTP request | Description
 *BenchmarkApi* | [**benchmark_benchmark_id_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_get) | **GET** /benchmark/{benchmarkId} | Returns a single benchmark by its ID.
 *BenchmarkApi* | [**benchmark_benchmark_id_name_put**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_name_put) | **PUT** /benchmark/{benchmarkId}/name | Updates the name of a benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_participant_participant_id_delete**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_participant_participant_id_delete) | **DELETE** /benchmark/{benchmarkId}/participant/{participantId} | Deletes a participant on a benchmark.
-*BenchmarkApi* | [**benchmark_benchmark_id_participant_participant_id_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_participant_participant_id_get) | **GET** /benchmark/{benchmarkId}/participant/{participantId} | Gets a participant by it&#39;s Id.
 *BenchmarkApi* | [**benchmark_benchmark_id_participants_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_participants_get) | **GET** /benchmark/{benchmarkId}/participants | Query all participants within a benchmark
 *BenchmarkApi* | [**benchmark_benchmark_id_participants_participant_id_disable_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_participants_participant_id_disable_post) | **POST** /benchmark/{benchmarkId}/participants/{participantId}/disable | This endpoint disables a participant in a benchmark. this means that the participant will no longer actively be matched up against other participants and not collect further results. It will still be visible in the leaderboard.
 *BenchmarkApi* | [**benchmark_benchmark_id_participants_participant_id_submit_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_participants_participant_id_submit_post) | **POST** /benchmark/{benchmarkId}/participants/{participantId}/submit | Submits a participant to a benchmark.
@@ -163,6 +162,11 @@ Class | Method | HTTP request | Description
 *OrderApi* | [**order_unsupported_post**](rapidata/api_client/docs/OrderApi.md#order_unsupported_post) | **POST** /order/unsupported | Notifies the admins that a user wants to create an order with an unsupported label type or data type.
 *OrderApi* | [**orders_get**](rapidata/api_client/docs/OrderApi.md#orders_get) | **GET** /orders | Queries orders based on a filter, page, and sort criteria.
 *OrderApi* | [**orders_public_get**](rapidata/api_client/docs/OrderApi.md#orders_public_get) | **GET** /orders/public | Retrieves orders that are public and can be cloned by any user.
+*ParticipantApi* | [**participant_participant_id_delete**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_delete) | **DELETE** /participant/{participantId} | Deletes a participant on a benchmark.
+*ParticipantApi* | [**participant_participant_id_get**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_get) | **GET** /participant/{participantId} | Gets a participant by it&#39;s Id.
+*ParticipantApi* | [**participant_participant_id_sample_post**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_sample_post) | **POST** /participant/{participantId}/sample | Adds a sample to a participant.
+*ParticipantApi* | [**participant_sample_sample_id_delete**](rapidata/api_client/docs/ParticipantApi.md#participant_sample_sample_id_delete) | **DELETE** /participant-sample/{sampleId} | Deletes a sample.
+*ParticipantApi* | [**participants_participant_id_submit_post**](rapidata/api_client/docs/ParticipantApi.md#participants_participant_id_submit_post) | **POST** /participants/{participantId}/submit | Submits a participant to a benchmark.
 *PipelineApi* | [**pipeline_id_workflow_config_artifact_id_put**](rapidata/api_client/docs/PipelineApi.md#pipeline_id_workflow_config_artifact_id_put) | **PUT** /pipeline/{id}/workflow-config/{artifactId} | Updates the workflow configuration for a pipeline.
 *PipelineApi* | [**pipeline_id_workflow_config_put**](rapidata/api_client/docs/PipelineApi.md#pipeline_id_workflow_config_put) | **PUT** /pipeline/{id}/workflow-config | Updates the workflow configuration for a pipeline.
 *PipelineApi* | [**pipeline_pipeline_id_campaign_artifact_id_put**](rapidata/api_client/docs/PipelineApi.md#pipeline_pipeline_id_campaign_artifact_id_put) | **PUT** /pipeline/{pipelineId}/campaign/{artifactId} | Updates a specific campaign for a pipeline.
@@ -297,6 +301,7 @@ Class | Method | HTTP request | Description
  - [CreateOrderModelWorkflow](rapidata/api_client/docs/CreateOrderModelWorkflow.md)
  - [CreateOrderResult](rapidata/api_client/docs/CreateOrderResult.md)
  - [CreateRapidResult](rapidata/api_client/docs/CreateRapidResult.md)
+ - [CreateSampleModel](rapidata/api_client/docs/CreateSampleModel.md)
  - [CreateSimplePipelineModel](rapidata/api_client/docs/CreateSimplePipelineModel.md)
  - [CreateSimplePipelineModelArtifactsInner](rapidata/api_client/docs/CreateSimplePipelineModelArtifactsInner.md)
  - [CreateSimplePipelineModelPipelineStepsInner](rapidata/api_client/docs/CreateSimplePipelineModelPipelineStepsInner.md)
