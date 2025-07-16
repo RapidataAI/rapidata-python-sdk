@@ -527,7 +527,10 @@ class ValidationSetManager:
 
         logger.debug("Adding rapids to validation set")
         for rapid in tqdm(rapids, desc="Uploading validation tasks", disable=RapidataOutputManager.silent_mode):
-            validation_set.add_rapid(rapid)
+            try: 
+                validation_set.add_rapid(rapid)
+            except Exception as e:
+                logger.error(f"Error adding datapoint {rapid.asset}: {e}")
         
         managed_print()
         managed_print(f"Validation set '{name}' created with ID {validation_set_id}\n",
