@@ -15,6 +15,7 @@ from rapidata.api_client.api.identity_api import IdentityApi
 from rapidata.api_client.api.leaderboard_api import LeaderboardApi
 from rapidata.api_client.api.newsletter_api import NewsletterApi
 from rapidata.api_client.api.order_api import OrderApi
+from rapidata.api_client.api.participant_api import ParticipantApi
 from rapidata.api_client.api.pipeline_api import PipelineApi
 from rapidata.api_client.api.rapidata_identity_api_api import RapidataIdentityAPIApi
 from rapidata.api_client.api.simple_workflow_api import SimpleWorkflowApi

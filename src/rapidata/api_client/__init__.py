@@ -31,6 +31,7 @@ from rapidata.api_client.api.identity_api import IdentityApi
 from rapidata.api_client.api.leaderboard_api import LeaderboardApi
 from rapidata.api_client.api.newsletter_api import NewsletterApi
 from rapidata.api_client.api.order_api import OrderApi
+from rapidata.api_client.api.participant_api import ParticipantApi
 from rapidata.api_client.api.pipeline_api import PipelineApi
 from rapidata.api_client.api.rapidata_identity_api_api import RapidataIdentityAPIApi
 from rapidata.api_client.api.simple_workflow_api import SimpleWorkflowApi
@@ -146,6 +147,7 @@ from rapidata.api_client.models.create_order_model_referee import CreateOrderMod
 from rapidata.api_client.models.create_order_model_workflow import CreateOrderModelWorkflow
 from rapidata.api_client.models.create_order_result import CreateOrderResult
 from rapidata.api_client.models.create_rapid_result import CreateRapidResult
+from rapidata.api_client.models.create_sample_model import CreateSampleModel
 from rapidata.api_client.models.create_simple_pipeline_model import CreateSimplePipelineModel
 from rapidata.api_client.models.create_simple_pipeline_model_artifacts_inner import CreateSimplePipelineModelArtifactsInner
 from rapidata.api_client.models.create_simple_pipeline_model_pipeline_steps_inner import CreateSimplePipelineModelPipelineStepsInner

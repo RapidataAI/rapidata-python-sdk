@@ -4647,54 +4647,6 @@
       }
     },
     "/benchmark/{benchmarkId}/participant/{participantId}": {
-      "get": {
-        "tags": [
-          "Benchmark"
-        ],
-        "summary": "Gets a participant by it's Id.",
-        "parameters": [
-          {
-            "name": "benchmarkId",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "participantId",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetParticipantByIdResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetParticipantByIdResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetParticipantByIdResult"
-                }
-              }
-            }
-          }
-        }
-      },
       "delete": {
         "tags": [
           "Benchmark"
@@ -4702,7 +4654,7 @@
         "summary": "Deletes a participant on a benchmark.",
         "parameters": [
           {
-            "name": "benchmarkId",
+            "name": "participantId",
             "in": "path",
             "required": true,
             "schema": {
@@ -4710,7 +4662,7 @@
             }
           },
           {
-            "name": "participantId",
+            "name": "benchmarkId",
             "in": "path",
             "required": true,
             "schema": {
@@ -4722,7 +4674,8 @@
           "204": {
             "description": "No Content"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/benchmark/{benchmarkId}/name": {
@@ -4913,7 +4866,8 @@
               }
             }
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/benchmark/{benchmarkId}/participants/{participantId}/disable": {
@@ -5704,6 +5658,227 @@
         "responses": {
           "204": {
             "description": "No Content"
+          }
+        }
+      }
+    },
+    "/participant/{participantId}/sample": {
+      "post": {
+        "tags": [
+          "Participant"
+        ],
+        "summary": "Adds a sample to a participant.",
+        "parameters": [
+          {
+            "name": "participantId",
+            "in": "path",
+            "description": "The id of the participant to add the sample to",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "model": {
+                    "$ref": "#/components/schemas/CreateSampleModel"
+                  },
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  },
+                  "texts": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "If files aren't applicable texts can be used instead"
+                  },
+                  "urls": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "description": "Exposed assets can be added via urls."
+                  }
+                }
+              },
+              "encoding": {
+                "files": {
+                  "contentType": "text/plain",
+                  "style": "form",
+                  "explode": true
+                },
+                "texts": {
+                  "contentType": "text/plain",
+                  "style": "form",
+                  "explode": true
+                },
+                "urls": {
+                  "contentType": "text/plain",
+                  "style": "form",
+                  "explode": true
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/participant/{participantId}": {
+      "delete": {
+        "tags": [
+          "Participant"
+        ],
+        "summary": "Deletes a participant on a benchmark.",
+        "parameters": [
+          {
+            "name": "participantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Participant"
+        ],
+        "summary": "Gets a participant by it's Id.",
+        "parameters": [
+          {
+            "name": "participantId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetParticipantByIdResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetParticipantByIdResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetParticipantByIdResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/participants/{participantId}/submit": {
+      "post": {
+        "tags": [
+          "Participant"
+        ],
+        "summary": "Submits a participant to a benchmark.",
+        "parameters": [
+          {
+            "name": "participantId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitParticipantResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitParticipantResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitParticipantResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/participant-sample/{sampleId}": {
+      "delete": {
+        "tags": [
+          "Participant"
+        ],
+        "summary": "Deletes a sample.",
+        "parameters": [
+          {
+            "name": "sampleId",
+            "in": "path",
+            "description": "the id of the sample to be deleted.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetParticipantByIdResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetParticipantByIdResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetParticipantByIdResult"
+                }
+              }
+            }
           }
         }
       }
@@ -16301,6 +16476,20 @@
           }
         },
         "additionalProperties": false
+      },
+      "CreateSampleModel": {
+        "required": [
+          "identifier"
+        ],
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string",
+            "description": "The identifier used to correlate samples of different participants."
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model used to create a sample to a participant."
       },
       "FileAssetInput3": {
         "title": "FileAssetInput",
