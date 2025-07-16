@@ -11,7 +11,6 @@ from rapidata.api_client.models.page_info import PageInfo
 from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.filter import Filter
 from rapidata.api_client.models.sort_criterion import SortCriterion
-from urllib3._collections import HTTPHeaderDict # type: ignore[import]
 
 from rapidata.rapidata_client.validation.rapids.box import Box
 
@@ -527,9 +526,17 @@ class ValidationSetManager:
         )
 
         logger.debug("Adding rapids to validation set")
+        failed_rapids = []
         for rapid in tqdm(rapids, desc="Uploading validation tasks", disable=RapidataOutputManager.silent_mode):
-            validation_set.add_rapid(rapid)
-        
+            try: 
+                validation_set.add_rapid(rapid)
+            except Exception:
+                failed_rapids.append(rapid.asset)
+
+        if failed_rapids:
+            logger.error(f"Failed to add {len(failed_rapids)} datapoints to validation set: {failed_rapids}")
+            raise RuntimeError(f"Failed to add {len(failed_rapids)} datapoints to validation set: {failed_rapids}")
+
         managed_print()
         managed_print(f"Validation set '{name}' created with ID {validation_set_id}\n",
                 f"Now viewable under: https://app.{self.__openapi_service.environment}/validation-set/detail/{validation_set_id}",
