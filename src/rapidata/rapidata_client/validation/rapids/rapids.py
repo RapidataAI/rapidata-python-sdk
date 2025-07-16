@@ -39,16 +39,16 @@ class Rapid():
             )
 
         elif isinstance(self.asset, MediaAsset) or (isinstance(self.asset, MultiAsset) and isinstance(self.asset.assets[0], MediaAsset)):
-            model = self.__to_media_model()
-            openapi_service.validation_api.validation_set_validation_set_id_rapid_files_post(
+            model, files, urls = self.__to_media_model()
+            openapi_service.validation_api.validation_set_validation_set_id_rapid_post(
                 validation_set_id=validationSetId,
-                model=model[0], files=model[1]
+                model=model, files=files, urls=urls
             )
             
         else:
             raise TypeError("The asset must be a MediaAsset, TextAsset, or MultiAsset")
 
-    def __to_media_model(self) -> tuple[AddValidationRapidModel, list[StrictStr | tuple[StrictStr, StrictBytes] | StrictBytes]]:
+    def __to_media_model(self) -> tuple[AddValidationRapidModel, list[StrictStr | tuple[StrictStr, StrictBytes] | StrictBytes], list[StrictStr]]:
         assets: list[MediaAsset] = [] 
         if isinstance(self.asset, MultiAsset):
             for asset in self.asset.assets:
@@ -63,6 +63,9 @@ class Rapid():
         if isinstance(self.asset, MediaAsset):
             assets = [self.asset]
 
+        urls = [asset.path for asset in assets if not asset.is_local()]
+        local_paths = [asset.to_file() for asset in assets if asset.is_local()]
+
         return (AddValidationRapidModel(
             payload=AddValidationRapidModelPayload(self.payload),
             truth=AddValidationRapidModelTruth(self.truth),
@@ -72,7 +75,7 @@ class Rapid():
             ],
             randomCorrectProbability=self.randomCorrectProbability,
             explanation=self.explanation
-        ), [asset.to_file() for asset in assets])
+        ), local_paths, urls)
 
     def __to_text_model(self) -> AddValidationTextRapidModel:
         texts: list[str] = []
