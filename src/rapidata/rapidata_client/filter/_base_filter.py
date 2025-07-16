@@ -30,7 +30,10 @@ class RapidataFilter:
             return OrFilter([self, other])
 
     def __and__(self, other):
-        """Enable the & operator to create AndFilter combinations."""        
+        """Enable the & operator to create AndFilter combinations."""
+        if not isinstance(other, RapidataFilter):
+            return NotImplemented
+        
         from rapidata.rapidata_client.filter.and_filter import AndFilter
         
         # If self is already an AndFilter, extend its filters list
