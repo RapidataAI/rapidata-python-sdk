@@ -5,7 +5,8 @@ from rapidata.rapidata_client.filter import (
     LanguageFilter, 
     UserScoreFilter,
     NotFilter,
-    OrFilter)
+    OrFilter,
+    AndFilter)
 
 class RapidataFilters:
     """RapidataFilters Classes
@@ -25,6 +26,7 @@ class RapidataFilters:
         language (LanguageFilter): Filters for users with a specific language.
         not_filter (NotFilter): Inverts the filter.
         or_filter (OrFilter): Combines multiple filters with a logical OR operation.
+        and_filter (AndFilter): Combines multiple filters with a logical AND operation.
 
     Example:
         ```python
@@ -52,3 +54,4 @@ class RapidataFilters:
     language = LanguageFilter
     not_filter = NotFilter
     or_filter = OrFilter
+    and_filter = AndFilter
