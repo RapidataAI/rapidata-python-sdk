@@ -1,9 +1,7 @@
-from typing import Sequence, Optional
-from urllib3._collections import HTTPHeaderDict # type: ignore[import]
+from typing import Sequence, Optional, Literal
 from itertools import zip_longest
 
 from rapidata.service.openapi_service import OpenAPIService
-from rapidata.rapidata_client.assets.data_type_enum import RapidataDataTypes
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 from rapidata.rapidata_client.order._rapidata_order_builder import RapidataOrderBuilder
 from rapidata.rapidata_client.metadata import PromptMetadata, SelectWordsMetadata, PrivateTextMetadata, MediaAssetMetadata, Metadata
@@ -21,8 +19,6 @@ from rapidata.rapidata_client.workflow import (
     TimestampWorkflow,
     RankingWorkflow
 )
-from rapidata.rapidata_client.selection.validation_selection import ValidationSelection
-from rapidata.rapidata_client.selection.labeling_selection import LabelingSelection
 from rapidata.rapidata_client.assets import MediaAsset, TextAsset, MultiAsset
 from rapidata.rapidata_client.filter import RapidataFilter
 from rapidata.rapidata_client.filter.rapidata_filters import RapidataFilters
@@ -140,7 +136,7 @@ class RapidataOrderManager:
             instruction: str,
             answer_options: list[str],
             datapoints: list[str],
-            data_type: str = RapidataDataTypes.MEDIA,
+            data_type: Literal["media", "text"] = "media",
             responses_per_datapoint: int = 10,
             contexts: list[str] | None = None,
             media_contexts: list[str] | None = None,
@@ -161,8 +157,8 @@ class RapidataOrderManager:
             instruction (str): The instruction for how the data should be classified.
             answer_options (list[str]): The list of options for the classification.
             datapoints (list[str]): The list of datapoints for the classification - each datapoint will be labeled.
-            data_type (str, optional): The data type of the datapoints. Defaults to RapidataDataTypes.MEDIA. \n
-                Other option: RapidataDataTypes.TEXT ("text").
+            data_type (str, optional): The data type of the datapoints. Defaults to "media" (any form of image, video or audio). \n
+                Other option: "text".
             responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
             contexts (list[str], optional): The list of contexts for the classification. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction and options. (Therefore will be different for each datapoint)
@@ -181,12 +177,12 @@ class RapidataOrderManager:
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
         
-        if data_type == RapidataDataTypes.MEDIA:
+        if data_type == "media":
             assets = [MediaAsset(path=path) for path in datapoints]
-        elif data_type == RapidataDataTypes.TEXT:
+        elif data_type == "text":
             assets = [TextAsset(text=text) for text in datapoints]
         else:
-            raise ValueError(f"Unsupported data type: {data_type}, must be one of {RapidataDataTypes._possible_values()}")
+            raise ValueError(f"Unsupported data type: {data_type}, must be one of 'media' or 'text'")
         
         return self._create_general_order(
             name=name,
@@ -210,7 +206,7 @@ class RapidataOrderManager:
             name: str,
             instruction: str,
             datapoints: list[list[str]],
-            data_type: str = RapidataDataTypes.MEDIA,
+            data_type: Literal["media", "text"] = "media",
             responses_per_datapoint: int = 10,
             contexts: list[str] | None = None,
             media_contexts: list[str] | None = None,
@@ -229,8 +225,8 @@ class RapidataOrderManager:
             name (str): The name of the order. (Will not be shown to the labeler)
             instruction (str): The instruction for the comparison. Will be shown along side each datapoint.
             datapoints (list[list[str]]): Outher list is the datapoints, inner list is the options for the comparison - each datapoint will be labeled.
-            data_type (str, optional): The data type of the datapoints. Defaults to RapidataDataTypes.MEDIA. \n
-                Other option: RapidataDataTypes.TEXT ("text").
+            data_type (str, optional): The data type of the datapoints. Defaults to "media" (any form of image, video or audio). \n
+                Other option: "text".
             responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
             contexts (list[str], optional): The list of contexts for the comparison. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
@@ -256,12 +252,12 @@ class RapidataOrderManager:
         if any(len(datapoint) != 2 for datapoint in datapoints):
             raise ValueError("Each datapoint must contain exactly two options")
 
-        if data_type == RapidataDataTypes.MEDIA:
+        if data_type == "media":
             assets = [MultiAsset([MediaAsset(path=path) for path in datapoint]) for datapoint in datapoints]
-        elif data_type == RapidataDataTypes.TEXT:
+        elif data_type == "text":
             assets = [MultiAsset([TextAsset(text=text) for text in datapoint]) for datapoint in datapoints]
         else:
-            raise ValueError(f"Unsupported data type: {data_type}, must be one of {RapidataDataTypes._possible_values()}")
+            raise ValueError(f"Unsupported data type: {data_type}, must be one of 'media' or 'text'")
         
         return self._create_general_order(
             name=name,
@@ -286,7 +282,7 @@ class RapidataOrderManager:
                              datapoints: list[str],
                              total_comparison_budget: int,
                              responses_per_comparison: int = 1,
-                             data_type: str = RapidataDataTypes.MEDIA,
+                             data_type: Literal["media", "text"] = "media",
                              random_comparisons_ratio: float = 0.5,
                              context: Optional[str] = None,
                              validation_set_id: Optional[str] = None,
@@ -306,8 +302,8 @@ class RapidataOrderManager:
             datapoints (list[str]): A list of datapoints that will participate in the ranking.
             total_comparison_budget (int): The total number of (pairwise-)comparisons that can be made.
             responses_per_comparison (int, optional): The number of responses collected per comparison. Defaults to 1.
-            data_type (str, optional): The data type of the datapoints. Defaults to RapidataDataTypes.MEDIA. \n
-                Other option: RapidataDataTypes.TEXT ("text").
+            data_type (str, optional): The data type of the datapoints. Defaults to "media" (any form of image, video or audio). \n
+                Other option: "text".
             random_comparisons_ratio (float, optional): The fraction of random comparisons in the ranking process.
                 The rest will focus on pairing similarly ranked datapoints. Defaults to 0.5 and can be left untouched.
             context (str, optional): The context for all the comparison. Defaults to None.\n
@@ -319,12 +315,12 @@ class RapidataOrderManager:
             selections (Sequence[RapidataSelection], optional): The list of selections for the order. Defaults to []. Decides in what order the tasks should be shown.
         """
 
-        if data_type == RapidataDataTypes.MEDIA:
+        if data_type == "media":
             assets = [MediaAsset(path=path) for path in datapoints]
-        elif data_type == RapidataDataTypes.TEXT:
+        elif data_type == "text":
             assets = [TextAsset(text=text) for text in datapoints]
         else:
-            raise ValueError(f"Unsupported data type: {data_type}, must be one of {RapidataDataTypes._possible_values()}")
+            raise ValueError(f"Unsupported data type: {data_type}, must be one of 'media' or 'text'")
 
         return self._create_general_order(
             name=name,
@@ -346,7 +342,7 @@ class RapidataOrderManager:
             name: str,
             instruction: str,
             datapoints: list[str],
-            data_type: str = RapidataDataTypes.MEDIA,
+            data_type: Literal["media", "text"] = "media",
             responses_per_datapoint: int = 10,
             filters: Sequence[RapidataFilter] = [],
             settings: Sequence[RapidataSetting] = [],
@@ -362,8 +358,8 @@ class RapidataOrderManager:
             name (str): The name of the order.
             instruction (str): The instruction to answer with free text. Will be shown along side each datapoint.
             datapoints (list[str]): The list of datapoints for the free text - each datapoint will be labeled.
-            data_type (str, optional): The data type of the datapoints. Defaults to RapidataDataTypes.MEDIA. \n
-                Other option: RapidataDataTypes.TEXT ("text").
+            data_type (str, optional): The data type of the datapoints. Defaults to "media" (any form of image, video or audio). \n
+                Other option: "text".
             responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
             filters (Sequence[RapidataFilter], optional): The list of filters for the free text. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the free text. Defaults to []. Decides how the tasks should be shown.
@@ -373,12 +369,12 @@ class RapidataOrderManager:
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
 
-        if data_type == RapidataDataTypes.MEDIA:
+        if data_type == "media":
             assets = [MediaAsset(path=path) for path in datapoints]
-        elif data_type == RapidataDataTypes.TEXT:
+        elif data_type == "text":
             assets = [TextAsset(text=text) for text in datapoints]
         else:
-            raise ValueError(f"Unsupported data type: {data_type}, must be one of {RapidataDataTypes._possible_values()}")
+            raise ValueError(f"Unsupported data type: {data_type}, must be one of 'media' or 'text'")
 
         return self._create_general_order(
             name=name,
