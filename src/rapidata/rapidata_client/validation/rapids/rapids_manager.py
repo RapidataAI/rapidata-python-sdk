@@ -40,7 +40,7 @@ class RapidsManager:
         elif data_type == "text":
             asset = TextAsset(datapoint)
         else:
-            raise ValueError(f"Unsupported data type: {data_type}")
+            raise ValueError(f"Unsupported data type: {data_type}, must be one of 'media' or 'text'")
 
         if not isinstance(truths, list):
             raise ValueError("Truths must be a list of strings")
