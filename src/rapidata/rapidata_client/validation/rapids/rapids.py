@@ -52,14 +52,16 @@ class Rapid():
             raise TypeError("The asset must be a MediaAsset, TextAsset, or MultiAsset")
         
     
-    def __convert_to_assets(self) -> list[MediaAsset] | list[TextAsset]:
-        assets: list[MediaAsset] | list[TextAsset] = [] 
+    def __convert_to_assets(self) -> list[MediaAsset | TextAsset]:
+        assets: list[MediaAsset | TextAsset] = [] 
         if isinstance(self.asset, MultiAsset):
             for asset in self.asset.assets:
                 if isinstance(asset, MediaAsset):
                     assets.append(asset)
+                elif isinstance(asset, TextAsset):
+                    assets.append(asset)
                 else:
-                    raise TypeError("The asset is a multiasset, but not all assets are MediaAssets")
+                    raise TypeError("The asset is a multiasset, but not all assets are MediaAssets or TextAssets")
 
         if isinstance(self.asset, TextAsset):
             assets = [self.asset]
