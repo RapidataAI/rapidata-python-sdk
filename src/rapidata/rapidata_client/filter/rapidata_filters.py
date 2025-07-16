@@ -5,7 +5,8 @@ from rapidata.rapidata_client.filter import (
     LanguageFilter, 
     UserScoreFilter,
     NotFilter,
-    OrFilter)
+    OrFilter,
+    AndFilter)
 
 class RapidataFilters:
     """RapidataFilters Classes
@@ -25,6 +26,7 @@ class RapidataFilters:
         language (LanguageFilter): Filters for users with a specific language.
         not_filter (NotFilter): Inverts the filter.
         or_filter (OrFilter): Combines multiple filters with a logical OR operation.
+        and_filter (AndFilter): Combines multiple filters with a logical AND operation.
 
     Example:
         ```python
@@ -40,10 +42,10 @@ class RapidataFilters:
 
         ```python
         from rapidata import AgeFilter, LanguageFilter, CountryFilter
-        filters=[~AgeFilter([AgeGroup.UNDER_18]), CountryFilter(["US"]) | LanguageFilter(["en"])]
+        filters=[~AgeFilter([AgeGroup.UNDER_18]), CountryFilter(["US"]) | (CountryFilter(["CA"]) & LanguageFilter(["en"]))]
         ```
 
-        This would return users who are not under 18 years old and are from the US or whose phones are set to English.
+        This would return users who are not under 18 years old and are from the US or who are from Canada and whose phones are set to English.
     """
     user_score = UserScoreFilter
     age = AgeFilter 
@@ -52,3 +54,4 @@ class RapidataFilters:
     language = LanguageFilter
     not_filter = NotFilter
     or_filter = OrFilter
+    and_filter = AndFilter
