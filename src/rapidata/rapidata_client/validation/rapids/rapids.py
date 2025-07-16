@@ -1,13 +1,8 @@
-from pydantic import StrictBytes, StrictStr
 from rapidata.rapidata_client.assets import MediaAsset, TextAsset, MultiAsset
 from rapidata.rapidata_client.metadata import Metadata
-from typing import Sequence
-from typing import Any
+from typing import Sequence, Any, cast
 from rapidata.api_client.models.add_validation_rapid_model import (
     AddValidationRapidModel,
-)
-from rapidata.api_client.models.add_validation_text_rapid_model import (
-    AddValidationTextRapidModel,
 )
 from rapidata.api_client.models.add_validation_rapid_model_payload import (
     AddValidationRapidModelPayload,
@@ -32,24 +27,33 @@ class Rapid():
         logger.debug(f"Created Rapid with asset: {self.asset}, metadata: {self.metadata}, payload: {self.payload}, truth: {self.truth}, randomCorrectProbability: {self.randomCorrectProbability}, explanation: {self.explanation}")
 
     def _add_to_validation_set(self, validationSetId: str, openapi_service: OpenAPIService) -> None:
-        if isinstance(self.asset, TextAsset) or (isinstance(self.asset, MultiAsset) and isinstance(self.asset.assets[0], TextAsset)):
-            openapi_service.validation_api.validation_set_validation_set_id_rapid_texts_post(
-                validation_set_id=validationSetId,
-                add_validation_text_rapid_model=self.__to_text_model()
-            )
-
-        elif isinstance(self.asset, MediaAsset) or (isinstance(self.asset, MultiAsset) and isinstance(self.asset.assets[0], MediaAsset)):
-            model, files, urls = self.__to_media_model()
+        model = self.__to_model()
+        assets = self.__convert_to_assets()
+        if assets[0] is TextAsset:
+            assert all(isinstance(asset, TextAsset) for asset in assets)
+            texts = cast(list[TextAsset], assets)
             openapi_service.validation_api.validation_set_validation_set_id_rapid_post(
                 validation_set_id=validationSetId,
-                model=model, files=files, urls=urls
+                model=model,
+                texts=[asset.text for asset in texts]
+            )
+
+        elif assets[0] is MediaAsset:
+            assert all(isinstance(asset, MediaAsset) for asset in assets)
+            files = cast(list[MediaAsset], assets)
+            openapi_service.validation_api.validation_set_validation_set_id_rapid_post(
+                validation_set_id=validationSetId,
+                model=model,
+                files=[asset.to_file() for asset in files],
+                urls=[asset.path for asset in files if not asset.is_local()]
             )
             
         else:
             raise TypeError("The asset must be a MediaAsset, TextAsset, or MultiAsset")
-
-    def __to_media_model(self) -> tuple[AddValidationRapidModel, list[StrictStr | tuple[StrictStr, StrictBytes] | StrictBytes], list[StrictStr]]:
-        assets: list[MediaAsset] = [] 
+        
+    
+    def __convert_to_assets(self) -> list[MediaAsset] | list[TextAsset]:
+        assets: list[MediaAsset] | list[TextAsset] = [] 
         if isinstance(self.asset, MultiAsset):
             for asset in self.asset.assets:
                 if isinstance(asset, MediaAsset):
@@ -58,15 +62,15 @@ class Rapid():
                     raise TypeError("The asset is a multiasset, but not all assets are MediaAssets")
 
         if isinstance(self.asset, TextAsset):
-            raise TypeError("The asset must contain Media")
+            assets = [self.asset]
 
         if isinstance(self.asset, MediaAsset):
             assets = [self.asset]
 
-        urls = [asset.path for asset in assets if not asset.is_local()]
-        local_paths = [asset.to_file() for asset in assets if asset.is_local()]
+        return assets
 
-        return (AddValidationRapidModel(
+    def __to_model(self) -> AddValidationRapidModel:
+        return AddValidationRapidModel(
             payload=AddValidationRapidModelPayload(self.payload),
             truth=AddValidationRapidModelTruth(self.truth),
             metadata=[
@@ -75,31 +79,4 @@ class Rapid():
             ],
             randomCorrectProbability=self.randomCorrectProbability,
             explanation=self.explanation
-        ), local_paths, urls)
-
-    def __to_text_model(self) -> AddValidationTextRapidModel:
-        texts: list[str] = []
-        if isinstance(self.asset, MultiAsset):
-            for asset in self.asset.assets:
-                if isinstance(asset, TextAsset):
-                    texts.append(asset.text)
-                else:
-                    raise TypeError("The asset is a multiasset, but not all assets are TextAssets")
-
-        if isinstance(self.asset, MediaAsset):
-            raise TypeError("The asset must contain Text")
-
-        if isinstance(self.asset, TextAsset):
-            texts = [self.asset.text]
-
-        return AddValidationTextRapidModel(
-          payload=AddValidationRapidModelPayload(self.payload),
-          truth=AddValidationRapidModelTruth(self.truth),
-          metadata=[
-              DatasetDatasetIdDatapointsPostRequestMetadataInner(meta.to_model())
-              for meta in self.metadata
-          ],
-          randomCorrectProbability=self.randomCorrectProbability,
-          texts=texts,
-          explanation=self.explanation
-      )
+        )
