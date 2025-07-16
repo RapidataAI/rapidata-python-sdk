@@ -44,7 +44,7 @@ class Rapid():
             openapi_service.validation_api.validation_set_validation_set_id_rapid_post(
                 validation_set_id=validationSetId,
                 model=model,
-                files=[asset.to_file() for asset in files],
+                files=[asset.to_file() for asset in files if asset.is_local()],
                 urls=[asset.path for asset in files if not asset.is_local()]
             )
             
