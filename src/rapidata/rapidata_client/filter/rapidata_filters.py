@@ -37,8 +37,8 @@ class RapidataFilters:
         This ensures the order is only shown to users in the US and Germany whose phones are set to English.
 
     Info:        
-        The or and not filter support the | and ~ operators respectively.
-        The and is given by the elements in the list.
+        The OR, AND and NOT filter support the |, & and ~ operators respectively.
+        The AND is additionally given by the elements in the list.
 
         ```python
         from rapidata import AgeFilter, LanguageFilter, CountryFilter
