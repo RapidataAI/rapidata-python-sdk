@@ -526,12 +526,17 @@ class ValidationSetManager:
         )
 
         logger.debug("Adding rapids to validation set")
+        failed_rapids = []
         for rapid in tqdm(rapids, desc="Uploading validation tasks", disable=RapidataOutputManager.silent_mode):
             try: 
                 validation_set.add_rapid(rapid)
-            except Exception as e:
-                logger.error(f"Error adding datapoint {rapid.asset}: {e}")
-        
+            except Exception:
+                failed_rapids.append(rapid.asset)
+
+        if failed_rapids:
+            logger.error(f"Failed to add {len(failed_rapids)} datapoints to validation set: {failed_rapids}")
+            raise Exception(f"Failed to add {len(failed_rapids)} datapoints to validation set: {failed_rapids}")
+
         managed_print()
         managed_print(f"Validation set '{name}' created with ID {validation_set_id}\n",
                 f"Now viewable under: https://app.{self.__openapi_service.environment}/validation-set/detail/{validation_set_id}",
