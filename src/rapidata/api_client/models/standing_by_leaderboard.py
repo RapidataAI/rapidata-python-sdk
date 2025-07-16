@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing import Optional, Set
 from typing_extensions import Self
@@ -34,7 +34,8 @@ class StandingByLeaderboard(BaseModel):
     score: Optional[Union[StrictFloat, StrictInt]] = None
     wins: StrictInt
     total_matches: StrictInt = Field(alias="totalMatches")
-    __properties: ClassVar[List[str]] = ["id", "name", "leaderboardId", "datasetId", "status", "score", "wins", "totalMatches"]
+    is_disabled: StrictBool = Field(alias="isDisabled")
+    __properties: ClassVar[List[str]] = ["id", "name", "leaderboardId", "datasetId", "status", "score", "wins", "totalMatches", "isDisabled"]
 
     @field_validator('status')
     def status_validate_enum(cls, value):
@@ -106,7 +107,8 @@ class StandingByLeaderboard(BaseModel):
             "status": obj.get("status"),
             "score": obj.get("score"),
             "wins": obj.get("wins"),
-            "totalMatches": obj.get("totalMatches")
+            "totalMatches": obj.get("totalMatches"),
+            "isDisabled": obj.get("isDisabled")
         })
         return _obj
 

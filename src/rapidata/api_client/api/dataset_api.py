@@ -1195,8 +1195,8 @@ class DatasetApi:
     def dataset_dataset_id_datapoints_post(
         self,
         dataset_id: Annotated[StrictStr, Field(description="The id of the dataset")],
-        prompt_asset: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The prompt asset is a file that can be added to the prompt metadata of the asset.")] = None,
-        file: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The files to upload from the local storage. Must be either images or videos.")] = None,
+        prompt_asset: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        file: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
         text: Annotated[Optional[List[StrictStr]], Field(description="The texts to upload. The length limit is set at 256 characters per text.")] = None,
         url: Annotated[Optional[List[StrictStr]], Field(description="Creates an asset from a url. The url needs to point to a publicly accessible resource. The server will download the resource and store it as an asset in the background. <remarks>     Additionally, to the urls having to be publicly accessible, they need to support HTTP HEAD requests. </remarks>")] = None,
         metadata: Annotated[Optional[List[DatasetDatasetIdDatapointsPostRequestMetadataInner]], Field(description="Optional metadata to attach to the datapoint.")] = None,
@@ -1220,9 +1220,9 @@ class DatasetApi:
 
         :param dataset_id: The id of the dataset (required)
         :type dataset_id: str
-        :param prompt_asset: The prompt asset is a file that can be added to the prompt metadata of the asset.
+        :param prompt_asset:
         :type prompt_asset: List[bytearray]
-        :param file: The files to upload from the local storage. Must be either images or videos.
+        :param file:
         :type file: List[bytearray]
         :param text: The texts to upload. The length limit is set at 256 characters per text.
         :type text: List[str]
@@ -1286,8 +1286,8 @@ class DatasetApi:
     def dataset_dataset_id_datapoints_post_with_http_info(
         self,
         dataset_id: Annotated[StrictStr, Field(description="The id of the dataset")],
-        prompt_asset: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The prompt asset is a file that can be added to the prompt metadata of the asset.")] = None,
-        file: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The files to upload from the local storage. Must be either images or videos.")] = None,
+        prompt_asset: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        file: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
         text: Annotated[Optional[List[StrictStr]], Field(description="The texts to upload. The length limit is set at 256 characters per text.")] = None,
         url: Annotated[Optional[List[StrictStr]], Field(description="Creates an asset from a url. The url needs to point to a publicly accessible resource. The server will download the resource and store it as an asset in the background. <remarks>     Additionally, to the urls having to be publicly accessible, they need to support HTTP HEAD requests. </remarks>")] = None,
         metadata: Annotated[Optional[List[DatasetDatasetIdDatapointsPostRequestMetadataInner]], Field(description="Optional metadata to attach to the datapoint.")] = None,
@@ -1311,9 +1311,9 @@ class DatasetApi:
 
         :param dataset_id: The id of the dataset (required)
         :type dataset_id: str
-        :param prompt_asset: The prompt asset is a file that can be added to the prompt metadata of the asset.
+        :param prompt_asset:
         :type prompt_asset: List[bytearray]
-        :param file: The files to upload from the local storage. Must be either images or videos.
+        :param file:
         :type file: List[bytearray]
         :param text: The texts to upload. The length limit is set at 256 characters per text.
         :type text: List[str]
@@ -1377,8 +1377,8 @@ class DatasetApi:
     def dataset_dataset_id_datapoints_post_without_preload_content(
         self,
         dataset_id: Annotated[StrictStr, Field(description="The id of the dataset")],
-        prompt_asset: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The prompt asset is a file that can be added to the prompt metadata of the asset.")] = None,
-        file: Annotated[Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]], Field(description="The files to upload from the local storage. Must be either images or videos.")] = None,
+        prompt_asset: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        file: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
         text: Annotated[Optional[List[StrictStr]], Field(description="The texts to upload. The length limit is set at 256 characters per text.")] = None,
         url: Annotated[Optional[List[StrictStr]], Field(description="Creates an asset from a url. The url needs to point to a publicly accessible resource. The server will download the resource and store it as an asset in the background. <remarks>     Additionally, to the urls having to be publicly accessible, they need to support HTTP HEAD requests. </remarks>")] = None,
         metadata: Annotated[Optional[List[DatasetDatasetIdDatapointsPostRequestMetadataInner]], Field(description="Optional metadata to attach to the datapoint.")] = None,
@@ -1402,9 +1402,9 @@ class DatasetApi:
 
         :param dataset_id: The id of the dataset (required)
         :type dataset_id: str
-        :param prompt_asset: The prompt asset is a file that can be added to the prompt metadata of the asset.
+        :param prompt_asset:
         :type prompt_asset: List[bytearray]
-        :param file: The files to upload from the local storage. Must be either images or videos.
+        :param file:
         :type file: List[bytearray]
         :param text: The texts to upload. The length limit is set at 256 characters per text.
         :type text: List[str]
@@ -1478,8 +1478,8 @@ class DatasetApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
-            'promptAsset': 'csv',
-            'file': 'csv',
+            'promptAsset': 'multi',
+            'file': 'multi',
             'text': 'multi',
             'url': 'multi',
             'metadata': 'multi',
