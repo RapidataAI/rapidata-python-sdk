@@ -42,10 +42,10 @@ class RapidataFilters:
 
         ```python
         from rapidata import AgeFilter, LanguageFilter, CountryFilter
-        filters=[~AgeFilter([AgeGroup.UNDER_18]), CountryFilter(["US"]) | LanguageFilter(["en"])]
+        filters=[~AgeFilter([AgeGroup.UNDER_18]), CountryFilter(["US"]) | (CountryFilter(["CA"]) & LanguageFilter(["en"]))]
         ```
 
-        This would return users who are not under 18 years old and are from the US or whose phones are set to English.
+        This would return users who are not under 18 years old and are from the US or who are from Canada and whose phones are set to English.
     """
     user_score = UserScoreFilter
     age = AgeFilter 
