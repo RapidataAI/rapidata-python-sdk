@@ -28,6 +28,7 @@ class ParticipantStatus(str, Enum):
     """
     CREATED = 'Created'
     SUBMITTED = 'Submitted'
+    DISABLED = 'Disabled'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

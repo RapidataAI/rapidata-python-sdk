@@ -201,16 +201,14 @@
                     "items": {
                       "type": "string",
                       "format": "binary"
-                    },
-                    "description": "The prompt asset is a file that can be added to the prompt metadata of the asset."
+                    }
                   },
                   "file": {
                     "type": "array",
                     "items": {
                       "type": "string",
                       "format": "binary"
-                    },
-                    "description": "The files to upload from the local storage. Must be either images or videos."
+                    }
                   },
                   "text": {
                     "type": "array",
@@ -260,6 +258,16 @@
                 }
               },
               "encoding": {
+                "promptAsset": {
+                  "contentType": "text/plain",
+                  "style": "form",
+                  "explode": true
+                },
+                "file": {
+                  "contentType": "text/plain",
+                  "style": "form",
+                  "explode": true
+                },
                 "text": {
                   "contentType": "text/plain",
                   "style": "form",
@@ -2361,6 +2369,100 @@
         }
       }
     },
+    "/validation-set/{validationSetId}/rapid": {
+      "post": {
+        "tags": [
+          "ValidationSet"
+        ],
+        "summary": "Adds a new validation rapid to the specified validation set using files to create the assets.",
+        "parameters": [
+          {
+            "name": "validationSetId",
+            "in": "path",
+            "description": "The ID of the validation set to add the rapid to.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "model": {
+                    "$ref": "#/components/schemas/AddValidationRapidModel"
+                  },
+                  "files": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  },
+                  "texts": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "The texts to use for the rapid."
+                  },
+                  "urls": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "description": "The urls to use for the rapid"
+                  }
+                }
+              },
+              "encoding": {
+                "files": {
+                  "contentType": "text/plain",
+                  "style": "form",
+                  "explode": true
+                },
+                "texts": {
+                  "contentType": "text/plain",
+                  "style": "form",
+                  "explode": true
+                },
+                "urls": {
+                  "contentType": "text/plain",
+                  "style": "form",
+                  "explode": true
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddValidationRapidResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddValidationRapidResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddValidationRapidResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/validation-set/{validationSetId}/rapid/files": {
       "post": {
         "tags": [
@@ -2428,7 +2530,8 @@
               }
             }
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/validation-set/{validationSetId}/rapid/texts": {
@@ -2489,7 +2592,8 @@
               }
             }
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/validation-set/zip": {
@@ -4808,6 +4912,39 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/benchmark/{benchmarkId}/participants/{participantId}/disable": {
+      "post": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "This endpoint disables a participant in a benchmark. this means that the participant will no longer actively be matched up against other participants and not collect further results. It will still be visible in the leaderboard.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The benchmark the participant belongs to",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "participantId",
+            "in": "path",
+            "description": "The id of the participant to be disabled",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -16308,6 +16445,7 @@
           "benchmarkId",
           "datasetId",
           "id",
+          "isDisabled",
           "name",
           "status",
           "totalMatches",
@@ -16334,6 +16472,9 @@
               "Idle"
             ],
             "type": "string"
+          },
+          "isDisabled": {
+            "type": "boolean"
           },
           "score": {
             "type": "number",
@@ -16503,7 +16644,8 @@
           "status": {
             "enum": [
               "Created",
-              "Submitted"
+              "Submitted",
+              "Disabled"
             ],
             "type": "string"
           }
@@ -16548,7 +16690,8 @@
       "ParticipantStatus": {
         "enum": [
           "Created",
-          "Submitted"
+          "Submitted",
+          "Disabled"
         ],
         "type": "string"
       },
@@ -16715,6 +16858,7 @@
         "required": [
           "datasetId",
           "id",
+          "isDisabled",
           "leaderboardId",
           "name",
           "status",
@@ -16755,6 +16899,9 @@
           "totalMatches": {
             "type": "integer",
             "format": "int32"
+          },
+          "isDisabled": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false

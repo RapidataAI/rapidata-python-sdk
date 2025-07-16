@@ -36,8 +36,8 @@ class ParticipantByBenchmark(BaseModel):
     @field_validator('status')
     def status_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['Created', 'Submitted']):
-            raise ValueError("must be one of enum values ('Created', 'Submitted')")
+        if value not in set(['Created', 'Submitted', 'Disabled']):
+            raise ValueError("must be one of enum values ('Created', 'Submitted', 'Disabled')")
         return value
 
     model_config = ConfigDict(
