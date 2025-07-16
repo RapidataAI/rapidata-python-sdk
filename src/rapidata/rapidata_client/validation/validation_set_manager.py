@@ -1,8 +1,8 @@
+from typing import Literal
 from rapidata.api_client import QueryModel
 from rapidata.rapidata_client.validation.rapidata_validation_set import RapidataValidationSet
 from rapidata.api_client.models.create_validation_set_model import CreateValidationSetModel
 from rapidata.service.openapi_service import OpenAPIService
-from rapidata.rapidata_client.assets.data_type_enum import RapidataDataTypes
 from rapidata.rapidata_client.validation.rapids.rapids_manager import RapidsManager
 from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 from rapidata.rapidata_client.metadata import PromptMetadata, MediaAssetMetadata
@@ -36,7 +36,7 @@ class ValidationSetManager:
         answer_options: list[str],
         datapoints: list[str],
         truths: list[list[str]],
-        data_type: str = RapidataDataTypes.MEDIA,
+        data_type: Literal["media", "text"] = "media",
         contexts: list[str] | None = None,
         media_contexts: list[str] | None = None,
         explanations: list[str | None] | None = None,
@@ -54,7 +54,7 @@ class ValidationSetManager:
                     options: ["yes", "no", "maybe"]
                     datapoints: ["datapoint1", "datapoint2"]
                     truths: [["yes"], ["no", "maybe"]] -> first datapoint correct answer is "yes", second datapoint is "no" or "maybe"
-            data_type (str, optional): The type of data. Defaults to RapidataDataTypes.MEDIA. Other option: RapidataDataTypes.TEXT ("text").
+            data_type (str, optional): The type of data. Defaults to "media" (any form of image, video or audio). Other option: "text".
             contexts (list[str], optional): The contexts for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction and answer options. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.
@@ -119,7 +119,7 @@ class ValidationSetManager:
         instruction: str,
         datapoints: list[list[str]],
         truths: list[str],
-        data_type: str = RapidataDataTypes.MEDIA,
+        data_type: Literal["media", "text"] = "media",
         contexts: list[str] | None = None,
         media_contexts: list[str] | None = None,
         explanation: list[str | None] | None = None,
@@ -137,7 +137,7 @@ class ValidationSetManager:
                     truths: ["image1.jpg", "image4.jpg"] -> first comparison image1.jpg has a cat, second comparison image4.jpg has a cat
             datapoints (list[list[str]]): The compare datapoints to create the validation set with. 
                 Outer list is for each comparison, inner list the two images/texts that will be compared.
-            data_type (str, optional): The type of data. Defaults to RapidataDataTypes.MEDIA. Other option: RapidataDataTypes.TEXT ("text").
+            data_type (str, optional): The type of data. Defaults to "media" (any form of image, video or audio). Other option: "text".
             contexts (list[str], optional): The contexts for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction and truth. (Therefore will be different for each datapoint)
                 Will be match up with the datapoints using the list index.

@@ -1,11 +1,10 @@
 import os
 from rapidata.api_client import AttachCategoryTruth, BoundingBoxTruth, BoxShape, ClassifyPayload, ComparePayload, CompareTruth, LinePayload, LocateBoxTruth, LocatePayload, ScrubPayload, ScrubRange, ScrubTruth, TranscriptionPayload, TranscriptionTruth, TranscriptionWord
-from rapidata.rapidata_client.assets.data_type_enum import RapidataDataTypes
 from rapidata.rapidata_client.assets import MediaAsset, TextAsset, MultiAsset
 from rapidata.rapidata_client.metadata import Metadata
 from rapidata.rapidata_client.validation.rapids.box import Box
 
-from typing import Sequence
+from typing import Sequence, Literal
 
 from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 
@@ -21,7 +20,7 @@ class RapidsManager:
             answer_options: list[str],
             datapoint: str,
             truths: list[str],
-            data_type: str = RapidataDataTypes.MEDIA,
+            data_type: Literal["media", "text"] = "media",
             metadata: Sequence[Metadata] = [],
             explanation: str | None = None,
     ) -> Rapid:
@@ -32,13 +31,13 @@ class RapidsManager:
             answer_options (list[str]): The options that the labeler can choose from to answer the question.
             datapoint (str): The datapoint that the labeler will be labeling.
             truths (list[str]): The correct answers to the question.
-            data_type (str, optional): The type of the datapoint. Defaults to RapidataDataTypes.MEDIA.
+            data_type (str, optional): The type of the datapoint. Defaults to "media" (any form of image, video or audio).
             metadata (Sequence[Metadata], optional): The metadata that is attached to the rapid. Defaults to [].
         """
         
-        if data_type == RapidataDataTypes.MEDIA:
+        if data_type == "media":
             asset = MediaAsset(datapoint)
-        elif data_type == RapidataDataTypes.TEXT:
+        elif data_type == "text":
             asset = TextAsset(datapoint)
         else:
             raise ValueError(f"Unsupported data type: {data_type}")
@@ -69,7 +68,7 @@ class RapidsManager:
             instruction: str,
             truth: str,
             datapoint: list[str],
-            data_type: str = RapidataDataTypes.MEDIA,
+            data_type: Literal["media", "text"] = "media",
             metadata: Sequence[Metadata] = [],
             explanation: str | None = None,
     ) -> Rapid:
@@ -79,13 +78,13 @@ class RapidsManager:
             instruction (str): The instruction that the labeler will be comparing the assets on.
             truth (str): The correct answer to the comparison. (has to be one of the assets)
             datapoint (list[str]): The two assets that the labeler will be comparing.
-            data_type (str, optional): The type of the datapoint. Defaults to RapidataDataTypes.MEDIA.
+            data_type (str, optional): The type of the datapoint. Defaults to "media" (any form of image, video or audio).
             metadata (Sequence[Metadata], optional): The metadata that is attached to the rapid. Defaults to [].
         """
 
-        if data_type == RapidataDataTypes.MEDIA:
+        if data_type == "media":
             assets = [MediaAsset(image) for image in datapoint]
-        elif data_type == RapidataDataTypes.TEXT:
+        elif data_type == "text":
             assets = [TextAsset(text) for text in datapoint]
         else:
             raise ValueError(f"Unsupported data type: {data_type}")
