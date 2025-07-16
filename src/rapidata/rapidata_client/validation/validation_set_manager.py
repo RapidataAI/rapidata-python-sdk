@@ -535,7 +535,7 @@ class ValidationSetManager:
 
         if failed_rapids:
             logger.error(f"Failed to add {len(failed_rapids)} datapoints to validation set: {failed_rapids}")
-            raise Exception(f"Failed to add {len(failed_rapids)} datapoints to validation set: {failed_rapids}")
+            raise RuntimeError(f"Failed to add {len(failed_rapids)} datapoints to validation set: {failed_rapids}")
 
         managed_print()
         managed_print(f"Validation set '{name}' created with ID {validation_set_id}\n",
