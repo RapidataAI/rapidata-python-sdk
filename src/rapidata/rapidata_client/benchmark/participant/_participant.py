@@ -18,7 +18,6 @@ class BenchmarkParticipant:
         self,
         asset: MediaAsset,
         identifier: str,
-        max_retries: int = 3,
     ) -> tuple[MediaAsset | None, MediaAsset | None]:
         """
         Process single sample upload with retry logic and error tracking.
@@ -26,7 +25,6 @@ class BenchmarkParticipant:
         Args:
             asset: MediaAsset to upload
             identifier: Identifier for the sample
-            max_retries: Maximum number of retry attempts (default: 3)
             
         Returns:
             tuple[MediaAsset | None, MediaAsset | None]: (successful_asset, failed_asset)
@@ -54,7 +52,7 @@ class BenchmarkParticipant:
         except Exception as e:
             last_exception = e
 
-        logger.error(f"Upload failed for {identifier} after {max_retries} attempts. Final error: {str(last_exception)}")
+        logger.error(f"Upload failed for {identifier}. Error: {str(last_exception)}")
         return None, asset
 
     def upload_media(
