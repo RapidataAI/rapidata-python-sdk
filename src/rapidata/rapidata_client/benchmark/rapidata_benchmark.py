@@ -1,4 +1,9 @@
 import re
+import time
+import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from itertools import zip_longest
+from tqdm import tqdm
 from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.filter import Filter
 from rapidata.api_client.models.query_model import QueryModel
@@ -13,7 +18,8 @@ from rapidata.api_client.models.source_url_metadata_model import SourceUrlMetada
 from rapidata.api_client.models.create_sample_model import CreateSampleModel
 
 
-from rapidata.rapidata_client.logging import logger
+from rapidata.rapidata_client.logging import logger, managed_print
+from rapidata.rapidata_client.logging.output_manager import RapidataOutputManager
 from rapidata.service.openapi_service import OpenAPIService
 
 from rapidata.rapidata_client.benchmark.leaderboard.rapidata_leaderboard import RapidataLeaderboard
@@ -252,6 +258,100 @@ class RapidataBenchmark:
             self.__openapi_service
         )
     
+    def _process_single_sample_upload(
+        self,
+        asset: MediaAsset,
+        identifier: str,
+        participant_id: str,
+        max_retries: int = 3,
+    ) -> tuple[MediaAsset | None, MediaAsset | None]:
+        """
+        Process single sample upload with retry logic and error tracking.
+        
+        Args:
+            asset: MediaAsset to upload
+            identifier: Identifier for the sample
+            participant_id: ID of the participant
+            max_retries: Maximum number of retry attempts (default: 3)
+            
+        Returns:
+            tuple[MediaAsset | None, MediaAsset | None]: (successful_asset, failed_asset)
+        """
+        if asset.is_local():
+            files = [asset.to_file()]
+            urls = []
+        else:
+            files = []
+            urls = [asset.path]
+
+        last_exception = None
+        try:
+            self.__openapi_service.participant_api.participant_participant_id_sample_post(
+                participant_id=participant_id,
+                model=CreateSampleModel(
+                    identifier=identifier
+                ),
+                files=files,
+                urls=urls
+            )
+            
+            return asset, None
+            
+        except Exception as e:
+            last_exception = e
+
+        logger.error(f"Upload failed for {identifier} after {max_retries} attempts. Final error: {str(last_exception)}")
+        return None, asset
+
+    def _upload_samples_concurrent(
+        self,
+        assets: list[MediaAsset],
+        identifiers: list[str],
+        participant_id: str,
+        max_workers: int = 10,
+    ) -> tuple[list[MediaAsset], list[MediaAsset]]:
+        """
+        Upload samples concurrently with proper error handling and progress tracking.
+        
+        Args:
+            assets: List of MediaAsset objects to upload
+            identifiers: List of identifiers matching the assets
+            participant_id: ID of the participant
+            max_workers: Maximum number of concurrent upload workers
+            
+        Returns:
+            tuple[list[str], list[str]]: Lists of successful and failed identifiers
+        """
+        successful_uploads: list[MediaAsset] = []
+        failed_uploads: list[MediaAsset] = []
+        total_uploads = len(assets)
+        
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            futures = [
+                executor.submit(
+                    self._process_single_sample_upload,
+                    asset,
+                    identifier,
+                    participant_id
+                )
+                for asset, identifier in zip(assets, identifiers)
+            ]
+            
+            with tqdm(total=total_uploads, desc="Uploading media", disable=RapidataOutputManager.silent_mode) as pbar:
+                for future in as_completed(futures):
+                    try:
+                        successful_id, failed_id = future.result()
+                        if successful_id:
+                            successful_uploads.append(successful_id)
+                        if failed_id:
+                            failed_uploads.append(failed_id)
+                    except Exception as e:
+                        logger.error(f"Future execution failed: {str(e)}")
+                        
+                    pbar.update(1)
+        
+        return successful_uploads, failed_uploads
+
     def evaluate_model(self, name: str, media: list[str], identifiers: list[str]) -> None:
         """
         Evaluates a model on the benchmark across all leaderboards.
@@ -273,11 +373,9 @@ class RapidataBenchmark:
 \nTo see the prompts that are associated with the identifiers, use the prompts property.")
         
         # happens before the creation of the participant to ensure all media paths are valid
-        assets = []
-        prompts_metadata: list[list[PromptIdentifierMetadata]] = []
-        for media_path, identifier in zip(media, identifiers):
+        assets: list[MediaAsset] = []
+        for media_path in media:
             assets.append(MediaAsset(media_path))
-            prompts_metadata.append([PromptIdentifierMetadata(identifier=identifier)])
 
         participant_result = self.__openapi_service.benchmark_api.benchmark_benchmark_id_participants_post(
             benchmark_id=self.id,
@@ -288,23 +386,20 @@ class RapidataBenchmark:
 
         logger.info(f"Participant created: {participant_result.participant_id}")
 
-        for media_path, identifier in zip(media, identifiers):
-            asset = MediaAsset(media_path)
-            if asset.is_local():
-                files = [asset.to_file()]
-                urls = []
-            else:
-                files = []
-                urls = [asset.path]
+        successful_uploads, failed_uploads = self._upload_samples_concurrent(
+            assets,
+            identifiers,
+            participant_result.participant_id,
+            max_workers=10
+        )
 
-            self.__openapi_service.participant_api.participant_participant_id_sample_post(
-                participant_id=participant_result.participant_id,
-                model=CreateSampleModel(
-                    identifier=identifier
-                ),
-                files=files,
-                urls=urls
-            )
+        total_uploads = len(assets)
+        success_rate = (len(successful_uploads) / total_uploads * 100) if total_uploads > 0 else 0
+        logger.info(f"Upload complete: {len(successful_uploads)} successful, {len(failed_uploads)} failed ({success_rate:.1f}% success rate)")
+
+        if failed_uploads:
+            logger.error(f"Failed uploads for media: {[asset.path for asset in failed_uploads]}")
+            logger.warning("Some uploads failed. The model evaluation may be incomplete.")
 
         self.__openapi_service.participant_api.participants_participant_id_submit_post(
             participant_id=participant_result.participant_id
