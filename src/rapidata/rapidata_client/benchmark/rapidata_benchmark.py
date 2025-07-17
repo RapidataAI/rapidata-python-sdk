@@ -1,9 +1,4 @@
 import re
-import time
-import threading
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from itertools import zip_longest
-from tqdm import tqdm
 from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.filter import Filter
 from rapidata.api_client.models.query_model import QueryModel
@@ -15,17 +10,14 @@ from rapidata.api_client.models.submit_prompt_model_prompt_asset import SubmitPr
 from rapidata.api_client.models.url_asset_input import UrlAssetInput
 from rapidata.api_client.models.file_asset_model import FileAssetModel
 from rapidata.api_client.models.source_url_metadata_model import SourceUrlMetadataModel
-from rapidata.api_client.models.create_sample_model import CreateSampleModel
 
 
-from rapidata.rapidata_client.logging import logger, managed_print
-from rapidata.rapidata_client.logging.output_manager import RapidataOutputManager
+from rapidata.rapidata_client.benchmark.participant._participant import BenchmarkParticipant
+from rapidata.rapidata_client.logging import logger
 from rapidata.service.openapi_service import OpenAPIService
 
 from rapidata.rapidata_client.benchmark.leaderboard.rapidata_leaderboard import RapidataLeaderboard
-from rapidata.rapidata_client.metadata import PromptIdentifierMetadata
 from rapidata.rapidata_client.assets import MediaAsset
-from rapidata.rapidata_client.order._rapidata_dataset import RapidataDataset
 
 class RapidataBenchmark:
     """
@@ -257,100 +249,6 @@ class RapidataBenchmark:
             leaderboard_result.id,
             self.__openapi_service
         )
-    
-    def _process_single_sample_upload(
-        self,
-        asset: MediaAsset,
-        identifier: str,
-        participant_id: str,
-        max_retries: int = 3,
-    ) -> tuple[MediaAsset | None, MediaAsset | None]:
-        """
-        Process single sample upload with retry logic and error tracking.
-        
-        Args:
-            asset: MediaAsset to upload
-            identifier: Identifier for the sample
-            participant_id: ID of the participant
-            max_retries: Maximum number of retry attempts (default: 3)
-            
-        Returns:
-            tuple[MediaAsset | None, MediaAsset | None]: (successful_asset, failed_asset)
-        """
-        if asset.is_local():
-            files = [asset.to_file()]
-            urls = []
-        else:
-            files = []
-            urls = [asset.path]
-
-        last_exception = None
-        try:
-            self.__openapi_service.participant_api.participant_participant_id_sample_post(
-                participant_id=participant_id,
-                model=CreateSampleModel(
-                    identifier=identifier
-                ),
-                files=files,
-                urls=urls
-            )
-            
-            return asset, None
-            
-        except Exception as e:
-            last_exception = e
-
-        logger.error(f"Upload failed for {identifier} after {max_retries} attempts. Final error: {str(last_exception)}")
-        return None, asset
-
-    def _upload_samples_concurrent(
-        self,
-        assets: list[MediaAsset],
-        identifiers: list[str],
-        participant_id: str,
-        max_workers: int = 10,
-    ) -> tuple[list[MediaAsset], list[MediaAsset]]:
-        """
-        Upload samples concurrently with proper error handling and progress tracking.
-        
-        Args:
-            assets: List of MediaAsset objects to upload
-            identifiers: List of identifiers matching the assets
-            participant_id: ID of the participant
-            max_workers: Maximum number of concurrent upload workers
-            
-        Returns:
-            tuple[list[str], list[str]]: Lists of successful and failed identifiers
-        """
-        successful_uploads: list[MediaAsset] = []
-        failed_uploads: list[MediaAsset] = []
-        total_uploads = len(assets)
-        
-        with ThreadPoolExecutor(max_workers=max_workers) as executor:
-            futures = [
-                executor.submit(
-                    self._process_single_sample_upload,
-                    asset,
-                    identifier,
-                    participant_id
-                )
-                for asset, identifier in zip(assets, identifiers)
-            ]
-            
-            with tqdm(total=total_uploads, desc="Uploading media", disable=RapidataOutputManager.silent_mode) as pbar:
-                for future in as_completed(futures):
-                    try:
-                        successful_id, failed_id = future.result()
-                        if successful_id:
-                            successful_uploads.append(successful_id)
-                        if failed_id:
-                            failed_uploads.append(failed_id)
-                    except Exception as e:
-                        logger.error(f"Future execution failed: {str(e)}")
-                        
-                    pbar.update(1)
-        
-        return successful_uploads, failed_uploads
 
     def evaluate_model(self, name: str, media: list[str], identifiers: list[str]) -> None:
         """
@@ -386,11 +284,11 @@ class RapidataBenchmark:
 
         logger.info(f"Participant created: {participant_result.participant_id}")
 
-        successful_uploads, failed_uploads = self._upload_samples_concurrent(
+        participant = BenchmarkParticipant(name, participant_result.participant_id, self.__openapi_service)
+
+        successful_uploads, failed_uploads = participant.upload_media(
             assets,
             identifiers,
-            participant_result.participant_id,
-            max_workers=10
         )
 
         total_uploads = len(assets)
