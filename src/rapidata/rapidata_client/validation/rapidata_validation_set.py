@@ -2,7 +2,7 @@ from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.logging import logger
 from rapidata.api_client.models.update_dimensions_model import UpdateDimensionsModel
-from rapidata.rapidata_client.assets._sessions import SessionManager
+from rapidata.rapidata_client.datapoints.assets._sessions import SessionManager
 
 class RapidataValidationSet:
     """A class for interacting with a Rapidata validation set.

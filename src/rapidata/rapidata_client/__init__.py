@@ -9,7 +9,7 @@ from .selection import (
     RetrievalMode,
     EffortEstimationSelection,
 )
-from .metadata import (
+from .datapoints.metadata import (
     PrivateTextMetadata,
     PublicTextMetadata,
     PromptMetadata,
@@ -27,7 +27,7 @@ from .settings import (
     AllowNeitherBoth,
     )
 from .country_codes import CountryCodes
-from .assets import (
+from .datapoints.assets import (
     MediaAsset, 
     TextAsset, 
     MultiAsset, 

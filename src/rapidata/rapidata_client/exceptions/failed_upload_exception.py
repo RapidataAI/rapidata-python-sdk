@@ -1,3 +1,4 @@
+from rapidata.rapidata_client.datapoints.datapoint import Datapoint
 from rapidata.rapidata_client.order._rapidata_dataset import RapidataDataset
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 
@@ -8,7 +9,7 @@ class FailedUploadException(Exception):
         self, 
         dataset: RapidataDataset,
         order: RapidataOrder,
-        failed_uploads: list[str | list[str]]
+        failed_uploads: list[Datapoint]
     ):
         self.dataset = dataset
         self.order = order

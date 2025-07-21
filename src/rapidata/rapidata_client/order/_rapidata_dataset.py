@@ -2,8 +2,9 @@ from itertools import zip_longest
 
 from rapidata.api_client.models.create_datapoint_from_text_sources_model import CreateDatapointFromTextSourcesModel
 from rapidata.api_client.models.dataset_dataset_id_datapoints_post_request_metadata_inner import DatasetDatasetIdDatapointsPostRequestMetadataInner
-from rapidata.rapidata_client.metadata._base_metadata import Metadata
-from rapidata.rapidata_client.assets import TextAsset, MediaAsset, MultiAsset, BaseAsset
+from rapidata.rapidata_client.datapoints.datapoint import Datapoint
+from rapidata.rapidata_client.datapoints.metadata import Metadata
+from rapidata.rapidata_client.datapoints.assets import TextAsset, MediaAsset, MultiAsset, BaseAsset
 from rapidata.service import LocalFileService
 from rapidata.service.openapi_service import OpenAPIService
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -25,55 +26,30 @@ class RapidataDataset:
         self.openapi_service = openapi_service
         self.local_file_service = LocalFileService()
 
-    def _get_effective_asset_type(self, datapoints: Sequence[BaseAsset]) -> type:
-        if not datapoints:
-            raise ValueError("Cannot determine asset type from empty datapoints list.")
-            
-        first_item = datapoints[0]
-        
-        if isinstance(first_item, MultiAsset):
-            if not first_item.assets:
-                raise ValueError("MultiAsset cannot be empty.")
-            return type(first_item.assets[0])
-        
-        return type(first_item)
-
     def add_datapoints(
         self,
-        datapoints: Sequence[BaseAsset],
-        metadata_list: Sequence[Sequence[Metadata]] | None = None,
-    ) -> tuple[list[str | list[str]], list[str | list[str]]]:
-        effective_asset_type = self._get_effective_asset_type(datapoints)
-        
-        for item in datapoints:
-            if isinstance(item, MultiAsset):
-                if not all(isinstance(asset, effective_asset_type) for asset in item.assets):
-                    raise ValueError("All MultiAssets must contain the same type of assets.")
-            elif not isinstance(item, (MediaAsset, TextAsset, MultiAsset)):
-                raise ValueError("All datapoints must be MediaAsset, TextAsset, or MultiAsset.")
+        datapoints: list[Datapoint],
+    ) -> tuple[list[Datapoint], list[Datapoint]]:
+        effective_asset_type = datapoints[0]._get_effective_asset_type()
         
         if issubclass(effective_asset_type, MediaAsset):
-            media_datapoints = cast(list[MediaAsset] | list[MultiAsset], datapoints)
-            return self._add_media_from_paths(media_datapoints, metadata_list)
+            return self._add_media_from_paths(datapoints)
         elif issubclass(effective_asset_type, TextAsset):
-            text_datapoints = cast(list[TextAsset] | list[MultiAsset], datapoints)
-            return self._add_texts(text_datapoints, metadata_list)
+            return self._add_texts(datapoints)
         else:
             raise ValueError(f"Unsupported asset type: {effective_asset_type}")
 
     def _add_texts(
         self,
-        text_assets: list[TextAsset] | list[MultiAsset],
-        metadata_list: Sequence[Sequence[Metadata]] | None = None,
+        datapoints: list[Datapoint],
         max_workers: int = 10,
-    ) -> tuple[list[str | list[str]], list[str | list[str]]]:
-        for text_asset in text_assets:
-            if isinstance(text_asset, MultiAsset):
-                assert all(
-                    isinstance(asset, TextAsset) for asset in text_asset.assets
-                ), "All assets in a MultiAsset must be of type TextAsset."
+    ) -> tuple[list[Datapoint], list[Datapoint]]:
+        
+        def upload_text_datapoint(datapoint: Datapoint, index: int) -> Datapoint:
+            assert datapoint.is_text_asset(), "Datapoint must be a text asset"
+            text_asset = datapoint.asset
+            metadata_per_datapoint = datapoint.metadata
 
-        def upload_text_datapoint(text_asset: TextAsset | MultiAsset, metadata_per_datapoint: Sequence[Metadata] | None, index: int) -> None:
             if isinstance(text_asset, TextAsset):
                 texts = [text_asset.text]
             elif isinstance(text_asset, MultiAsset):
@@ -95,15 +71,16 @@ class RapidataDataset:
             )
 
             self.openapi_service.dataset_api.dataset_dataset_id_datapoints_texts_post(dataset_id=self.id, create_datapoint_from_text_sources_model=model)
+            return datapoint
 
-        successful_uploads: list[str | list[str]] = []
-        failed_uploads: list[str | list[str]] = []
+        successful_uploads: list[Datapoint] = []
+        failed_uploads: list[Datapoint] = []
 
-        total_uploads = len(text_assets)
+        total_uploads = len(datapoints)
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
             futures = [
-                executor.submit(upload_text_datapoint, text_asset, metadata, index=i)
-                for i, (text_asset, metadata) in enumerate(zip_longest(text_assets, metadata_list or []))
+                executor.submit(upload_text_datapoint, datapoint, index=i)
+                for i, datapoint in enumerate(datapoints)
             ]
 
             with tqdm(total=total_uploads, desc="Uploading text datapoints", disable=RapidataOutputManager.silent_mode) as pbar:
@@ -111,20 +88,19 @@ class RapidataDataset:
                     try:
                         future.result()  # This will raise any exceptions that occurred during execution
                         pbar.update(1)
-                        successful_uploads.append(text_asset.text if isinstance(text_asset, TextAsset) else [asset.text for asset in text_asset.assets if isinstance(asset, TextAsset)])
+                        successful_uploads.append(future.result())
                     except Exception:
-                        failed_uploads.append(text_asset.text if isinstance(text_asset, TextAsset) else [asset.text for asset in text_asset.assets if isinstance(asset, TextAsset)])
-                        logger.error(f"Upload failed for {text_asset.text if isinstance(text_asset, TextAsset) else [asset.text for asset in text_asset.assets if isinstance(asset, TextAsset)]}")
+                        failed_uploads.append(future.result())
+                        logger.error(f"Upload failed for {future.result()}")
 
         return successful_uploads, failed_uploads
 
     def _process_single_upload(
         self,
-        media_asset: MediaAsset | MultiAsset, 
-        meta_list: Sequence[Metadata] | None, 
+        datapoint: Datapoint,
         index: int,
         max_retries: int = 3,
-    ) -> tuple[list[str | list[str]], list[str | list[str]]]:
+    ) -> tuple[list[Datapoint], list[Datapoint]]:
         """
         Process single upload with retry logic and error tracking.
         
@@ -137,34 +113,13 @@ class RapidataDataset:
         Returns:
             tuple[list[str | list[str]], list[str | list[str]]]: Lists of successful and failed identifiers
         """
-        local_successful: list[str | list[str]] = []
-        local_failed: list[str | list[str]] = []
-        identifiers_to_track: list[str] | str = ""
-        
-        # Get identifier for this upload (URL or file path)
-        if isinstance(media_asset, MediaAsset):
-            assets = [media_asset]
-            identifier = media_asset._url if media_asset._url else media_asset.path
-            assert isinstance(identifier, str), "Identifier must be a string"
-            identifiers_to_track = identifier
-        elif isinstance(media_asset, MultiAsset):
-            assets = cast(list[MediaAsset], media_asset.assets)
-            identifiers_to_track = [
-                (asset._url if asset._url else cast(str, asset.path)) 
-                for asset in assets
-            ]
-        else:
-            raise ValueError(f"Unsupported asset type: {type(media_asset)}")
+        local_successful: list[Datapoint] = []
+        local_failed: list[Datapoint] = []
 
-        metadata: list[DatasetDatasetIdDatapointsPostRequestMetadataInner] = []
-        if meta_list:
-            for meta in meta_list:
-                meta_model = meta.to_model() if meta else None
-                if meta_model:
-                    metadata.append(DatasetDatasetIdDatapointsPostRequestMetadataInner(meta_model))
+        metadata = datapoint.get_prepared_metadata()
 
-        local_paths = [asset.to_file() for asset in assets if asset.is_local()]
-        urls = [asset.path for asset in assets if not asset.is_local()]
+        local_paths = datapoint.get_local_file_paths()
+        urls = datapoint.get_urls()
 
         last_exception = None
         for attempt in range(max_retries):
@@ -177,7 +132,7 @@ class RapidataDataset:
                     sort_index=index,
                 )
                 
-                local_successful.append(identifiers_to_track)
+                local_successful.append(datapoint)
 
                 return local_successful, local_failed
                 
@@ -190,8 +145,8 @@ class RapidataDataset:
                     managed_print(f"\nRetrying {attempt + 1} of {max_retries}...\n")
                     
         # If we get here, all retries failed
-        logger.error(f"\nUpload failed for {identifiers_to_track} after {max_retries} attempts. Final error: {str(last_exception)}")
-        local_failed.append(identifiers_to_track)
+        local_failed.append(datapoint)
+        logger.error(f"\nUpload failed for {datapoint} after {max_retries} attempts. Final error: {str(last_exception)}")
 
         return local_successful, local_failed
 
@@ -297,13 +252,12 @@ class RapidataDataset:
 
     def _process_uploads_in_chunks(
         self,
-        media_paths: list[MediaAsset] | list[MultiAsset],
-        multi_metadata: Sequence[Sequence[Metadata]] | None,
+        datapoints: list[Datapoint],
         max_workers: int,
         chunk_size: int,
         stop_progress_tracking: threading.Event,
         progress_tracking_error: threading.Event
-    ) -> tuple[list[str | list[str]], list[str | list[str]]]:
+    ) -> tuple[list[Datapoint], list[Datapoint]]:
         """
         Process uploads in chunks with a ThreadPoolExecutor.
         
@@ -318,23 +272,20 @@ class RapidataDataset:
         Returns:
             tuple[list[str], list[str]]: Lists of successful and failed uploads
         """
-        successful_uploads: list[str | list[str]] = []
-        failed_uploads: list[str | list[str]] = []
+        successful_uploads: list[Datapoint] = []
+        failed_uploads: list[Datapoint] = []
         
         try:
             with ThreadPoolExecutor(max_workers=max_workers) as executor:
                 # Process uploads in chunks to avoid overwhelming the system
-                for chunk_idx, chunk in enumerate(chunk_list(media_paths, chunk_size)):
-                    chunk_multi_metadata = multi_metadata[chunk_idx * chunk_size:(chunk_idx + 1) * chunk_size] if multi_metadata else None
-                    
+                for chunk_idx, chunk in enumerate(chunk_list(datapoints, chunk_size)):
                     futures = [
                         executor.submit(
                             self._process_single_upload, 
-                            media_asset, 
-                            meta_list, 
+                            datapoint, 
                             index=(chunk_idx * chunk_size + i)
                         )
-                        for i, (media_asset, meta_list) in enumerate(zip_longest(chunk, chunk_multi_metadata or []))
+                        for i, datapoint in enumerate(chunk)
                     ]
                     
                     # Wait for this chunk to complete before starting the next one
@@ -358,8 +309,8 @@ class RapidataDataset:
         self, 
         total_uploads: int, 
         progress_poll_interval: float,
-        successful_uploads: list[str | list[str]],
-        failed_uploads: list[str | list[str]]
+        successful_uploads: list[Datapoint],
+        failed_uploads: list[Datapoint]
     ) -> None:
         """
         Log the final progress of the upload operation.
@@ -398,37 +349,32 @@ class RapidataDataset:
 
     def _add_media_from_paths(
         self,
-        media_paths: list[MediaAsset] | list[MultiAsset],
-        multi_metadata: Sequence[Sequence[Metadata]] | None = None,
+        datapoints: list[Datapoint],
         max_workers: int = 10,
         chunk_size: int = 50,
         progress_poll_interval: float = 0.5,
-    ) -> tuple[list[str | list[str]], list[str | list[str]]]:
+    ) -> tuple[list[Datapoint], list[Datapoint]]:
         """
         Upload media paths in chunks with managed resources.
         
         Args:
-            media_paths: List of MediaAsset or MultiAsset objects to upload
-            multi_metadata: Optional sequence of sequences of metadata matching media_paths length
+            datapoints: List of Datapoint objects to upload
             max_workers: Maximum number of concurrent upload workers
             chunk_size: Number of items to process in each batch
             progress_poll_interval: Time in seconds between progress checks
             
         Returns:
-            tuple[list[str | list[str]], list[str | list[str]]]: Lists of successful and failed URLs
+            tuple[list[Datapoint], list[Datapoint]]: Lists of successful and failed datapoints
             
         Raises:
             ValueError: If multi_metadata lengths don't match media_paths length
         """
 
-        if multi_metadata and not len(multi_metadata) == len(media_paths):
-            raise ValueError("The number of assets must match the number of metadatas.")
-        
-        if multi_metadata and not all(len(data) == len(multi_metadata[0]) for data in multi_metadata):
-            raise ValueError("All metadatas must have the same length.")
+        if not all(datapoint._get_effective_asset_type() == MediaAsset for datapoint in datapoints):
+            raise ValueError("All datapoints must be of type MediaAsset or MultiAsset with all assets of type MediaAsset.")
         
         # Setup tracking variables
-        total_uploads = len(media_paths)
+        total_uploads = len(datapoints)
         
         # Create thread control events
         stop_progress_tracking = threading.Event()
@@ -446,8 +392,7 @@ class RapidataDataset:
         # Process uploads in chunks
         try:
             successful_uploads, failed_uploads = self._process_uploads_in_chunks(
-                media_paths,
-                multi_metadata,
+                datapoints,
                 max_workers,
                 chunk_size,
                 stop_progress_tracking,
