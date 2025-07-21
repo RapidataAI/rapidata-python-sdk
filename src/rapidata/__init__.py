@@ -36,6 +36,7 @@ from .rapidata_client import (
     MultiAsset,
     RapidataDataTypes,
     Box,
+    Datapoint,
     PromptMetadata,
     logger,
     configure_logger,
