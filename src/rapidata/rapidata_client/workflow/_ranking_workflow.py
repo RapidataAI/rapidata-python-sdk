@@ -1,7 +1,7 @@
 from rapidata.api_client import CompareWorkflowModelPairMakerConfig, OnlinePairMakerConfigModel, EloConfigModel
 from rapidata.api_client.models.compare_workflow_model import CompareWorkflowModel
 from rapidata.rapidata_client.workflow._base_workflow import Workflow
-from rapidata.rapidata_client.metadata import PromptMetadata
+from rapidata.rapidata_client.datapoints.metadata import PromptMetadata
 from rapidata.api_client.models.dataset_dataset_id_datapoints_post_request_metadata_inner import DatasetDatasetIdDatapointsPostRequestMetadataInner
 
 

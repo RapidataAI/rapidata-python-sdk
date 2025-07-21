@@ -1,4 +1,4 @@
-__version__ = "2.31.2"
+__version__ = "2.32.0"
 
 from .rapidata_client import (
     RapidataClient,
@@ -36,8 +36,10 @@ from .rapidata_client import (
     MultiAsset,
     RapidataDataTypes,
     Box,
+    Datapoint,
     PromptMetadata,
     logger,
     configure_logger,
     RapidataOutputManager,
+    FailedUploadException,
 )

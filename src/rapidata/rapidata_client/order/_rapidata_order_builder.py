@@ -1,35 +1,26 @@
-from rapidata.api_client.models.ab_test_selection_a_inner import (
-    AbTestSelectionAInner,
-)
-from rapidata.api_client.models.create_order_model import CreateOrderModel
-from rapidata.api_client.models.create_order_model_referee import (
-    CreateOrderModelReferee,
-)
-from rapidata.api_client.models.and_user_filter_model_filters_inner import (
-    AndUserFilterModelFiltersInner,
-)
-from rapidata.api_client.models.create_order_model_workflow import (
-    CreateOrderModelWorkflow,
-)
-
-from rapidata.rapidata_client.settings import RapidataSetting
-from rapidata.rapidata_client.metadata._base_metadata import Metadata
-from rapidata.rapidata_client.order._rapidata_dataset import RapidataDataset
-from rapidata.rapidata_client.referee._naive_referee import NaiveReferee
-from rapidata.rapidata_client.selection._base_selection import RapidataSelection
-from rapidata.rapidata_client.filter import RapidataFilter
-from rapidata.rapidata_client.workflow import Workflow
-from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
-from rapidata.rapidata_client.referee import Referee
-from rapidata.service.openapi_service import OpenAPIService
-
-from rapidata.rapidata_client.workflow._compare_workflow import CompareWorkflow
-
-from rapidata.rapidata_client.assets import MediaAsset, TextAsset, MultiAsset, BaseAsset
-
 from typing import Optional, cast, Sequence
 
+from rapidata.api_client.models.ab_test_selection_a_inner import AbTestSelectionAInner
+from rapidata.api_client.models.and_user_filter_model_filters_inner import AndUserFilterModelFiltersInner
+from rapidata.api_client.models.create_order_model import CreateOrderModel
+from rapidata.api_client.models.create_order_model_referee import CreateOrderModelReferee
+from rapidata.api_client.models.create_order_model_workflow import CreateOrderModelWorkflow
+
+from rapidata.rapidata_client.datapoints.assets import MediaAsset, TextAsset, MultiAsset, BaseAsset
+from rapidata.rapidata_client.datapoints.datapoint import Datapoint
+from rapidata.rapidata_client.exceptions.failed_upload_exception import FailedUploadException
+from rapidata.rapidata_client.filter import RapidataFilter
 from rapidata.rapidata_client.logging import logger, managed_print
+from rapidata.rapidata_client.datapoints.metadata import Metadata
+from rapidata.rapidata_client.order._rapidata_dataset import RapidataDataset
+from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
+from rapidata.rapidata_client.referee import Referee
+from rapidata.rapidata_client.referee._naive_referee import NaiveReferee
+from rapidata.rapidata_client.selection._base_selection import RapidataSelection
+from rapidata.rapidata_client.settings import RapidataSetting
+from rapidata.rapidata_client.workflow import Workflow
+from rapidata.rapidata_client.workflow._compare_workflow import CompareWorkflow
+from rapidata.service.openapi_service import OpenAPIService
 
 
 class RapidataOrderBuilder:
@@ -53,13 +44,12 @@ class RapidataOrderBuilder:
         self.__dataset: Optional[RapidataDataset]
         self.__workflow: Workflow | None = None
         self.__referee: Referee | None = None
-        self.__multi_metadata: Sequence[Sequence[Metadata]] | None = None
         self.__validation_set_id: str | None = None
         self.__settings: Sequence[RapidataSetting] | None = None
         self.__user_filters: list[RapidataFilter] = []
         self.__selections: list[RapidataSelection] = []
         self.__priority: int | None = None
-        self.__assets: Sequence[BaseAsset] = []
+        self.__datapoints: list[Datapoint] = []
 
     def _to_model(self) -> CreateOrderModel:
         """
@@ -104,7 +94,7 @@ class RapidataOrderBuilder:
             priority=self.__priority,
         )
 
-    def _create(self, max_upload_workers: int = 10) -> RapidataOrder:
+    def _create(self) -> RapidataOrder:
         """
         Create the Rapidata order by making the necessary API calls based on the builder's configuration.
 
@@ -120,12 +110,6 @@ class RapidataOrderBuilder:
         """
         order_model = self._to_model()
         logger.debug(f"Creating order with model: {order_model}")
-        if isinstance(
-            self.__workflow, CompareWorkflow
-        ):  # Temporary fix; will be handled by backend in the future
-            assert all(
-                isinstance(item, MultiAsset) for item in self.__assets
-            ), "The media paths must be of type MultiAsset for comparison tasks."
 
         result = self.__openapi_service.order_api.order_post(
             create_order_model=order_model
@@ -154,7 +138,13 @@ class RapidataOrderBuilder:
         logger.debug("Adding media to the order.")
 
         if self.__dataset:
-            self.__dataset._add_datapoints(self.__assets, self.__multi_metadata, max_upload_workers)
+            _, failed_uploads = self.__dataset.add_datapoints(self.__datapoints)
+            
+            if failed_uploads:
+                raise FailedUploadException(self.__dataset, order, failed_uploads)
+        
+        else:
+            raise RuntimeError(f"No dataset created for this order. order_id: {self.order_id}")
         
         logger.debug("Media added to the order.")
         logger.debug("Setting order to preview")
@@ -194,46 +184,23 @@ class RapidataOrderBuilder:
         self.__referee = referee
         return self
 
-    def _media(
+    def _datapoints(
         self,
-        assets: Sequence[BaseAsset],
-        multi_metadata: Sequence[Sequence[Metadata]] | None = None,
+        datapoints: list[Datapoint],
     ) -> "RapidataOrderBuilder":
         """
-        Set the media assets for the order.
+        Set the datapoints for the order.
 
         Args:
-            assets: (list[MediaAsset] | list[TextAsset] | list[MultiAsset]): The paths of the media assets to be set.
-            multi_metadata: (list[list[Metadata]] | None, optional): Metadatas for the media assets. Defaults to None.
+            datapoints: (Sequence[Datapoint]): The datapoints to be set.
 
         Returns:
             RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
         """
-        if not isinstance(assets, list):
-            raise TypeError("Media paths must be provided as a list of paths.")
+        if not isinstance(datapoints, list):
+            raise TypeError("Datapoints must be provided as a list of Datapoint objects.")
 
-        for a in assets:
-            if not isinstance(a, (MediaAsset, TextAsset, MultiAsset)):
-                raise TypeError(
-                    "Media paths must be of type MediaAsset, TextAsset, or MultiAsset."
-                )
-
-        if multi_metadata:
-            for data in multi_metadata:
-                if not isinstance(data, list):
-                    raise TypeError("Metadata must be provided as a list of Metadata objects.")
-                for d in data:
-                    if not isinstance(d, Metadata):
-                        raise TypeError("Metadata must be of type Metadata.")
-
-        if multi_metadata and not len(multi_metadata) == len(assets):
-            raise ValueError("The number of assets must match the number of metadatas.")
-        
-        if multi_metadata and not all(len(data) == len(multi_metadata[0]) for data in multi_metadata):
-            raise ValueError("All metadatas must have the same length.")
-
-        self.__assets = assets
-        self.__multi_metadata = multi_metadata
+        self.__datapoints = datapoints
         return self
 
     def _settings(self, settings: Sequence[RapidataSetting]) -> "RapidataOrderBuilder":

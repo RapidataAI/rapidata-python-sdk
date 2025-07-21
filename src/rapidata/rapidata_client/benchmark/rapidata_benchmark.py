@@ -17,7 +17,9 @@ from rapidata.rapidata_client.logging import logger
 from rapidata.service.openapi_service import OpenAPIService
 
 from rapidata.rapidata_client.benchmark.leaderboard.rapidata_leaderboard import RapidataLeaderboard
+from rapidata.rapidata_client.metadata import PromptIdentifierMetadata
 from rapidata.rapidata_client.assets import MediaAsset
+from rapidata.rapidata_client.order._rapidata_dataset import RapidataDataset
 
 class RapidataBenchmark:
     """
@@ -283,6 +285,19 @@ class RapidataBenchmark:
         )
 
         logger.info(f"Participant created: {participant_result.participant_id}")
+        dataset = RapidataDataset(participant_result.dataset_id, self.__openapi_service)
+        
+        try:
+            dataset.add_datapoints([Datapoint(asset=asset, metadata=metadata) for asset, metadata in zip(assets, prompts_metadata)])
+        except Exception as e:
+            logger.warning(f"An error occurred while adding datapoints to the dataset: {e}")
+            upload_progress = self.__openapi_service.dataset_api.dataset_dataset_id_progress_get(
+                dataset_id=dataset.id
+            )
+            if upload_progress.ready == 0:
+                raise RuntimeError("None of the media was uploaded successfully. Please check the media paths and try again.")
+            
+            logger.warning(f"{upload_progress.failed} datapoints failed to upload. \n{upload_progress.ready} datapoints were uploaded successfully. \nEvaluation will continue with the uploaded datapoints.")
 
         participant = BenchmarkParticipant(name, participant_result.participant_id, self.__openapi_service)
 

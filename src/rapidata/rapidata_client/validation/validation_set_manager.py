@@ -5,7 +5,7 @@ from rapidata.api_client.models.create_validation_set_model import CreateValidat
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.validation.rapids.rapids_manager import RapidsManager
 from rapidata.rapidata_client.validation.rapids.rapids import Rapid
-from rapidata.rapidata_client.metadata import PromptMetadata, MediaAssetMetadata
+from rapidata.rapidata_client.datapoints.metadata import PromptMetadata, MediaAssetMetadata
 
 from rapidata.api_client.models.page_info import PageInfo
 from rapidata.api_client.models.root_filter import RootFilter

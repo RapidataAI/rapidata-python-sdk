@@ -1,4 +1,4 @@
-from rapidata.rapidata_client.metadata._base_metadata import Metadata
+from rapidata.rapidata_client.datapoints.metadata._base_metadata import Metadata
 from rapidata.api_client.models.prompt_metadata_input import PromptMetadataInput
 
 

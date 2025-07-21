@@ -51,11 +51,6 @@ class RapidataOrder:
         logger.debug("RapidataOrder initialized")
 
     @property
-    def order_id(self) -> str:
-        managed_print(f"order_id is deprecated. Use id instead.")
-        return self.id
-    
-    @property
     def created_at(self) -> datetime:
         """Returns the creation date of the order."""
         if not self.__created_at:

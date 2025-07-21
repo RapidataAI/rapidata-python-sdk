@@ -4,7 +4,7 @@ from itertools import zip_longest
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 from rapidata.rapidata_client.order._rapidata_order_builder import RapidataOrderBuilder
-from rapidata.rapidata_client.metadata import PromptMetadata, SelectWordsMetadata, PrivateTextMetadata, MediaAssetMetadata, Metadata
+from rapidata.rapidata_client.datapoints.metadata import PromptMetadata, SelectWordsMetadata, PrivateTextMetadata, MediaAssetMetadata, Metadata
 from rapidata.rapidata_client.referee._naive_referee import NaiveReferee
 from rapidata.rapidata_client.referee._early_stopping_referee import EarlyStoppingReferee
 from rapidata.rapidata_client.selection._base_selection import RapidataSelection
@@ -19,7 +19,8 @@ from rapidata.rapidata_client.workflow import (
     TimestampWorkflow,
     RankingWorkflow
 )
-from rapidata.rapidata_client.assets import MediaAsset, TextAsset, MultiAsset
+from rapidata.rapidata_client.datapoints.assets import MediaAsset, TextAsset, MultiAsset
+from rapidata.rapidata_client.datapoints.datapoint import Datapoint
 from rapidata.rapidata_client.filter import RapidataFilter
 from rapidata.rapidata_client.filter.rapidata_filters import RapidataFilters
 from rapidata.rapidata_client.settings import RapidataSettings, RapidataSetting
@@ -114,9 +115,8 @@ class RapidataOrderManager:
 
         order = (order_builder
                  ._workflow(workflow)
-                 ._media(
-                     assets=assets,
-                     multi_metadata=multi_metadata
+                 ._datapoints(
+                     datapoints=[Datapoint(asset=asset, metadata=metadata) for asset, metadata in zip_longest(assets, multi_metadata)]
                      )
                  ._referee(referee)
                  ._filters(filters)

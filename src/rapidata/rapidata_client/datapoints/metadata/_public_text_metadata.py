@@ -1,7 +1,7 @@
 from rapidata.api_client.models.public_text_metadata_input import (
     PublicTextMetadataInput,
 )
-from rapidata.rapidata_client.metadata._base_metadata import Metadata
+from rapidata.rapidata_client.datapoints.metadata._base_metadata import Metadata
 
 
 class PublicTextMetadata(Metadata):
