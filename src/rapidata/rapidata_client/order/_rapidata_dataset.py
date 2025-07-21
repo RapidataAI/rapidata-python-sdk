@@ -456,6 +456,7 @@ class RapidataDataset:
         )
 
         if failed_uploads:
+            logger.warning(f"Upload failed for {failed_uploads}. Order can still be run without them by calling order.run()")
             raise RuntimeError(f"Upload failed for {failed_uploads}")
 
         return successful_uploads, failed_uploads
