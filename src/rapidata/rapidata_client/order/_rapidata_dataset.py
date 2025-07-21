@@ -42,7 +42,7 @@ class RapidataDataset:
         self,
         datapoints: Sequence[BaseAsset],
         metadata_list: Sequence[Sequence[Metadata]] | None = None,
-    ) -> tuple[list[str], list[str]]:
+    ) -> tuple[list[str | list[str]], list[str | list[str]]]:
         effective_asset_type = self._get_effective_asset_type(datapoints)
         
         for item in datapoints:
@@ -66,7 +66,7 @@ class RapidataDataset:
         text_assets: list[TextAsset] | list[MultiAsset],
         metadata_list: Sequence[Sequence[Metadata]] | None = None,
         max_workers: int = 10,
-    ) -> tuple[list[str], list[str]]:
+    ) -> tuple[list[str | list[str]], list[str | list[str]]]:
         for text_asset in text_assets:
             if isinstance(text_asset, MultiAsset):
                 assert all(
@@ -96,8 +96,8 @@ class RapidataDataset:
 
             self.openapi_service.dataset_api.dataset_dataset_id_datapoints_texts_post(dataset_id=self.id, create_datapoint_from_text_sources_model=model)
 
-        successful_uploads: list[str] = []
-        failed_uploads: list[str] = []
+        successful_uploads: list[str | list[str]] = []
+        failed_uploads: list[str | list[str]] = []
 
         total_uploads = len(text_assets)
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
@@ -111,10 +111,10 @@ class RapidataDataset:
                     try:
                         future.result()  # This will raise any exceptions that occurred during execution
                         pbar.update(1)
-                        successful_uploads.append(str(text_asset.text) if isinstance(text_asset, TextAsset) else str(cast(TextAsset, text_asset.assets[0]).text))
+                        successful_uploads.append(text_asset.text if isinstance(text_asset, TextAsset) else [asset.text for asset in text_asset.assets if isinstance(asset, TextAsset)])
                     except Exception:
-                        failed_uploads.append(str(text_asset.text) if isinstance(text_asset, TextAsset) else str(cast(TextAsset, text_asset.assets[0]).text))
-                        logger.error(f"Upload failed for {text_asset.text if isinstance(text_asset, TextAsset) else str(cast(TextAsset, text_asset.assets[0]).text)}")
+                        failed_uploads.append(text_asset.text if isinstance(text_asset, TextAsset) else [asset.text for asset in text_asset.assets if isinstance(asset, TextAsset)])
+                        logger.error(f"Upload failed for {text_asset.text if isinstance(text_asset, TextAsset) else [asset.text for asset in text_asset.assets if isinstance(asset, TextAsset)]}")
 
         return successful_uploads, failed_uploads
 
@@ -124,7 +124,7 @@ class RapidataDataset:
         meta_list: Sequence[Metadata] | None, 
         index: int,
         max_retries: int = 3,
-    ) -> tuple[list[str], list[str]]:
+    ) -> tuple[list[str | list[str]], list[str | list[str]]]:
         """
         Process single upload with retry logic and error tracking.
         
@@ -135,17 +135,18 @@ class RapidataDataset:
             max_retries: Maximum number of retry attempts (default: 3)
             
         Returns:
-            tuple[list[str], list[str]]: Lists of successful and failed identifiers
+            tuple[list[str | list[str]], list[str | list[str]]]: Lists of successful and failed identifiers
         """
-        local_successful: list[str] = []
-        local_failed: list[str] = []
-        identifiers_to_track: list[str] = []
+        local_successful: list[str | list[str]] = []
+        local_failed: list[str | list[str]] = []
+        identifiers_to_track: list[str] | str = ""
         
         # Get identifier for this upload (URL or file path)
         if isinstance(media_asset, MediaAsset):
             assets = [media_asset]
             identifier = media_asset._url if media_asset._url else media_asset.path
-            identifiers_to_track = [identifier] if identifier else []
+            assert isinstance(identifier, str), "Identifier must be a string"
+            identifiers_to_track = identifier
         elif isinstance(media_asset, MultiAsset):
             assets = cast(list[MediaAsset], media_asset.assets)
             identifiers_to_track = [
@@ -176,8 +177,8 @@ class RapidataDataset:
                     sort_index=index,
                 )
                 
-                # If we get here, the upload was successful
-                local_successful.extend(identifiers_to_track)
+                local_successful.append(identifiers_to_track)
+
                 return local_successful, local_failed
                 
             except Exception as e:
@@ -190,7 +191,7 @@ class RapidataDataset:
                     
         # If we get here, all retries failed
         logger.error(f"\nUpload failed for {identifiers_to_track} after {max_retries} attempts. Final error: {str(last_exception)}")
-        local_failed.extend(identifiers_to_track)
+        local_failed.append(identifiers_to_track)
 
         return local_successful, local_failed
 
@@ -302,7 +303,7 @@ class RapidataDataset:
         chunk_size: int,
         stop_progress_tracking: threading.Event,
         progress_tracking_error: threading.Event
-    ) -> tuple[list[str], list[str]]:
+    ) -> tuple[list[str | list[str]], list[str | list[str]]]:
         """
         Process uploads in chunks with a ThreadPoolExecutor.
         
@@ -317,8 +318,8 @@ class RapidataDataset:
         Returns:
             tuple[list[str], list[str]]: Lists of successful and failed uploads
         """
-        successful_uploads: list[str] = []
-        failed_uploads: list[str] = []
+        successful_uploads: list[str | list[str]] = []
+        failed_uploads: list[str | list[str]] = []
         
         try:
             with ThreadPoolExecutor(max_workers=max_workers) as executor:
@@ -357,8 +358,8 @@ class RapidataDataset:
         self, 
         total_uploads: int, 
         progress_poll_interval: float,
-        successful_uploads: list[str],
-        failed_uploads: list[str]
+        successful_uploads: list[str | list[str]],
+        failed_uploads: list[str | list[str]]
     ) -> None:
         """
         Log the final progress of the upload operation.
@@ -402,7 +403,7 @@ class RapidataDataset:
         max_workers: int = 10,
         chunk_size: int = 50,
         progress_poll_interval: float = 0.5,
-    ) -> tuple[list[str], list[str]]:
+    ) -> tuple[list[str | list[str]], list[str | list[str]]]:
         """
         Upload media paths in chunks with managed resources.
         
@@ -414,7 +415,7 @@ class RapidataDataset:
             progress_poll_interval: Time in seconds between progress checks
             
         Returns:
-            tuple[list[str], list[str]]: Lists of successful and failed URLs
+            tuple[list[str | list[str]], list[str | list[str]]]: Lists of successful and failed URLs
             
         Raises:
             ValueError: If multi_metadata lengths don't match media_paths length

@@ -8,7 +8,7 @@ class FailedUploadException(Exception):
         self, 
         dataset: RapidataDataset,
         order: RapidataOrder,
-        failed_uploads: list[str]
+        failed_uploads: list[str | list[str]]
     ):
         self.dataset = dataset
         self.order = order
