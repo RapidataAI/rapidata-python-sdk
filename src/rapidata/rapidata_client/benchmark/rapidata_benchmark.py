@@ -299,6 +299,9 @@ class RapidataBenchmark:
             logger.error(f"Failed uploads for media: {[asset.path for asset in failed_uploads]}")
             logger.warning("Some uploads failed. The model evaluation may be incomplete.")
 
+        if len(successful_uploads) == 0:
+            raise RuntimeError("No uploads were successful. The model evaluation will not be completed.")
+
         self.__openapi_service.participant_api.participants_participant_id_submit_post(
             participant_id=participant_result.participant_id
         )
