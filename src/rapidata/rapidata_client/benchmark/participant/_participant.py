@@ -1,7 +1,7 @@
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
 
-from rapidata.rapidata_client.assets._media_asset import MediaAsset
+from rapidata.rapidata_client.datapoints.assets import MediaAsset
 from rapidata.rapidata_client.logging import logger
 from rapidata.rapidata_client.logging.output_manager import RapidataOutputManager
 from rapidata.api_client.models.create_sample_model import CreateSampleModel
