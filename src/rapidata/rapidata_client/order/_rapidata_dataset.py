@@ -20,7 +20,6 @@ def chunk_list(lst: list, chunk_size: int) -> Generator:
         yield lst[i:i + chunk_size]
 
 class RapidataDataset:
-
     def __init__(self, dataset_id: str, openapi_service: OpenAPIService):
         self.id = dataset_id
         self.openapi_service = openapi_service
@@ -39,12 +38,11 @@ class RapidataDataset:
         
         return type(first_item)
 
-    def _add_datapoints(
+    def add_datapoints(
         self,
         datapoints: Sequence[BaseAsset],
         metadata_list: Sequence[Sequence[Metadata]] | None = None,
-        max_workers: int = 10,
-    ):
+    ) -> tuple[list[str], list[str]]:
         effective_asset_type = self._get_effective_asset_type(datapoints)
         
         for item in datapoints:
@@ -56,10 +54,10 @@ class RapidataDataset:
         
         if issubclass(effective_asset_type, MediaAsset):
             media_datapoints = cast(list[MediaAsset] | list[MultiAsset], datapoints)
-            self._add_media_from_paths(media_datapoints, metadata_list, max_workers)
+            return self._add_media_from_paths(media_datapoints, metadata_list)
         elif issubclass(effective_asset_type, TextAsset):
             text_datapoints = cast(list[TextAsset] | list[MultiAsset], datapoints)
-            self._add_texts(text_datapoints, metadata_list)
+            return self._add_texts(text_datapoints, metadata_list)
         else:
             raise ValueError(f"Unsupported asset type: {effective_asset_type}")
 
@@ -68,7 +66,7 @@ class RapidataDataset:
         text_assets: list[TextAsset] | list[MultiAsset],
         metadata_list: Sequence[Sequence[Metadata]] | None = None,
         max_workers: int = 10,
-    ):
+    ) -> tuple[list[str], list[str]]:
         for text_asset in text_assets:
             if isinstance(text_asset, MultiAsset):
                 assert all(
@@ -98,6 +96,9 @@ class RapidataDataset:
 
             self.openapi_service.dataset_api.dataset_dataset_id_datapoints_texts_post(dataset_id=self.id, create_datapoint_from_text_sources_model=model)
 
+        successful_uploads: list[str] = []
+        failed_uploads: list[str] = []
+
         total_uploads = len(text_assets)
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
             futures = [
@@ -107,8 +108,15 @@ class RapidataDataset:
 
             with tqdm(total=total_uploads, desc="Uploading text datapoints", disable=RapidataOutputManager.silent_mode) as pbar:
                 for future in as_completed(futures):
-                    future.result()  # This will raise any exceptions that occurred during execution
-                    pbar.update(1)
+                    try:
+                        future.result()  # This will raise any exceptions that occurred during execution
+                        pbar.update(1)
+                        successful_uploads.append(str(text_asset.text) if isinstance(text_asset, TextAsset) else str(cast(TextAsset, text_asset.assets[0]).text))
+                    except Exception:
+                        failed_uploads.append(str(text_asset.text) if isinstance(text_asset, TextAsset) else str(cast(TextAsset, text_asset.assets[0]).text))
+                        logger.error(f"Upload failed for {text_asset.text if isinstance(text_asset, TextAsset) else str(cast(TextAsset, text_asset.assets[0]).text)}")
+
+        return successful_uploads, failed_uploads
 
     def _process_single_upload(
         self,
@@ -455,7 +463,10 @@ class RapidataDataset:
             failed_uploads
         )
 
-        if failed_uploads:
-            raise RuntimeError(f"Upload failed for {failed_uploads}")
-
         return successful_uploads, failed_uploads
+
+    def __str__(self) -> str:
+        return f"RapidataDataset(id={self.id})"
+    
+    def __repr__(self) -> str:
+        return self.__str__()

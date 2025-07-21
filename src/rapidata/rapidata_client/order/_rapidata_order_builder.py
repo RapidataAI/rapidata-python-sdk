@@ -1,35 +1,25 @@
-from rapidata.api_client.models.ab_test_selection_a_inner import (
-    AbTestSelectionAInner,
-)
-from rapidata.api_client.models.create_order_model import CreateOrderModel
-from rapidata.api_client.models.create_order_model_referee import (
-    CreateOrderModelReferee,
-)
-from rapidata.api_client.models.and_user_filter_model_filters_inner import (
-    AndUserFilterModelFiltersInner,
-)
-from rapidata.api_client.models.create_order_model_workflow import (
-    CreateOrderModelWorkflow,
-)
-
-from rapidata.rapidata_client.settings import RapidataSetting
-from rapidata.rapidata_client.metadata._base_metadata import Metadata
-from rapidata.rapidata_client.order._rapidata_dataset import RapidataDataset
-from rapidata.rapidata_client.referee._naive_referee import NaiveReferee
-from rapidata.rapidata_client.selection._base_selection import RapidataSelection
-from rapidata.rapidata_client.filter import RapidataFilter
-from rapidata.rapidata_client.workflow import Workflow
-from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
-from rapidata.rapidata_client.referee import Referee
-from rapidata.service.openapi_service import OpenAPIService
-
-from rapidata.rapidata_client.workflow._compare_workflow import CompareWorkflow
-
-from rapidata.rapidata_client.assets import MediaAsset, TextAsset, MultiAsset, BaseAsset
-
 from typing import Optional, cast, Sequence
 
+from rapidata.api_client.models.ab_test_selection_a_inner import AbTestSelectionAInner
+from rapidata.api_client.models.and_user_filter_model_filters_inner import AndUserFilterModelFiltersInner
+from rapidata.api_client.models.create_order_model import CreateOrderModel
+from rapidata.api_client.models.create_order_model_referee import CreateOrderModelReferee
+from rapidata.api_client.models.create_order_model_workflow import CreateOrderModelWorkflow
+
+from rapidata.rapidata_client.assets import MediaAsset, TextAsset, MultiAsset, BaseAsset
+from rapidata.rapidata_client.exceptions.failed_upload_exception import FailedUploadException
+from rapidata.rapidata_client.filter import RapidataFilter
 from rapidata.rapidata_client.logging import logger, managed_print
+from rapidata.rapidata_client.metadata._base_metadata import Metadata
+from rapidata.rapidata_client.order._rapidata_dataset import RapidataDataset
+from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
+from rapidata.rapidata_client.referee import Referee
+from rapidata.rapidata_client.referee._naive_referee import NaiveReferee
+from rapidata.rapidata_client.selection._base_selection import RapidataSelection
+from rapidata.rapidata_client.settings import RapidataSetting
+from rapidata.rapidata_client.workflow import Workflow
+from rapidata.rapidata_client.workflow._compare_workflow import CompareWorkflow
+from rapidata.service.openapi_service import OpenAPIService
 
 
 class RapidataOrderBuilder:
@@ -104,7 +94,7 @@ class RapidataOrderBuilder:
             priority=self.__priority,
         )
 
-    def _create(self, max_upload_workers: int = 10) -> RapidataOrder:
+    def _create(self) -> RapidataOrder:
         """
         Create the Rapidata order by making the necessary API calls based on the builder's configuration.
 
@@ -154,7 +144,12 @@ class RapidataOrderBuilder:
         logger.debug("Adding media to the order.")
 
         if self.__dataset:
-            self.__dataset._add_datapoints(self.__assets, self.__multi_metadata, max_upload_workers)
+            successful_uploads, failed_uploads = self.__dataset.add_datapoints(self.__assets, self.__multi_metadata)
+            if not successful_uploads:
+                raise RuntimeError("No datapoints were uploaded. Please check the media paths and try again.")
+            
+            if failed_uploads:
+                raise FailedUploadException(self.__dataset, order, failed_uploads)
         
         logger.debug("Media added to the order.")
         logger.debug("Setting order to preview")

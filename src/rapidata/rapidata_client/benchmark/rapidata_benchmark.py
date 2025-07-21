@@ -287,7 +287,7 @@ class RapidataBenchmark:
         dataset = RapidataDataset(participant_result.dataset_id, self.__openapi_service)
         
         try:
-            dataset._add_datapoints(assets, prompts_metadata)
+            dataset.add_datapoints(assets, prompts_metadata)
         except Exception as e:
             logger.warning(f"An error occurred while adding datapoints to the dataset: {e}")
             upload_progress = self.__openapi_service.dataset_api.dataset_dataset_id_progress_get(

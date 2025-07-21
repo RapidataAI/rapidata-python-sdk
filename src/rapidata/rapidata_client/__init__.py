@@ -55,3 +55,4 @@ from .logging import (
 )
 
 from .validation import Box
+from .exceptions import FailedUploadException
