@@ -48,30 +48,8 @@ class RapidataDataset:
     ) -> tuple[list[Datapoint], list[Datapoint]]:
         
         def upload_text_datapoint(datapoint: Datapoint, index: int) -> Datapoint:
-            assert datapoint.is_text_asset(), "Datapoint must be a text asset"
-            text_asset = datapoint.asset
-            metadata_per_datapoint = datapoint.metadata
-
-            if isinstance(text_asset, TextAsset):
-                texts = [text_asset.text]
-            elif isinstance(text_asset, MultiAsset):
-                texts = [asset.text for asset in text_asset.assets if isinstance(asset, TextAsset)]
-            else:
-                raise ValueError(f"Unsupported asset type: {type(text_asset)}")
+            model = datapoint.create_text_upload_model(index)
             
-            metadata = []
-            if metadata_per_datapoint:
-                for meta in metadata_per_datapoint:
-                    meta_model = meta.to_model() if meta else None
-                    if meta_model:
-                        metadata.append(DatasetDatasetIdDatapointsPostRequestMetadataInner(meta_model))
-            
-            model = CreateDatapointFromTextSourcesModel(
-                textSources=texts,
-                sortIndex=index,
-                metadata=metadata,
-            )
-
             self.openapi_service.dataset_api.dataset_dataset_id_datapoints_texts_post(dataset_id=self.id, create_datapoint_from_text_sources_model=model)
             return datapoint
 
