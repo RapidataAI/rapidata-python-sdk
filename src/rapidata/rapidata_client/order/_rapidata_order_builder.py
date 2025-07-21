@@ -140,7 +140,7 @@ class RapidataOrderBuilder:
         if self.__dataset:
             successful_uploads, failed_uploads = self.__dataset.add_datapoints(self.__datapoints)
             if not successful_uploads:
-                raise RuntimeError("No datapoints were uploaded. Please check the media paths and try again.")
+                raise RuntimeError("No datapoints were uploaded. Please check the datapoints and try again.")
             
             if failed_uploads:
                 raise FailedUploadException(self.__dataset, order, failed_uploads)

@@ -15,7 +15,6 @@ from rapidata.rapidata_client.logging import logger, managed_print, RapidataOutp
 import time
 import threading
 
-
 def chunk_list(lst: list, chunk_size: int) -> Generator:
     for i in range(0, len(lst), chunk_size):
         yield lst[i:i + chunk_size]
@@ -30,6 +29,9 @@ class RapidataDataset:
         self,
         datapoints: list[Datapoint],
     ) -> tuple[list[Datapoint], list[Datapoint]]:
+        if not datapoints:
+            return [], []
+        
         effective_asset_type = datapoints[0]._get_effective_asset_type()
         
         if issubclass(effective_asset_type, MediaAsset):
@@ -63,7 +65,7 @@ class RapidataDataset:
                     meta_model = meta.to_model() if meta else None
                     if meta_model:
                         metadata.append(DatasetDatasetIdDatapointsPostRequestMetadataInner(meta_model))
-
+            
             model = CreateDatapointFromTextSourcesModel(
                 textSources=texts,
                 sortIndex=index,
@@ -78,20 +80,21 @@ class RapidataDataset:
 
         total_uploads = len(datapoints)
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
-            futures = [
-                executor.submit(upload_text_datapoint, datapoint, index=i)
+            future_to_datapoint = {
+                executor.submit(upload_text_datapoint, datapoint, index=i): datapoint
                 for i, datapoint in enumerate(datapoints)
-            ]
+            }
 
             with tqdm(total=total_uploads, desc="Uploading text datapoints", disable=RapidataOutputManager.silent_mode) as pbar:
-                for future in as_completed(futures):
+                for future in as_completed(future_to_datapoint.keys()):
+                    datapoint = future_to_datapoint[future]
                     try:
-                        future.result()  # This will raise any exceptions that occurred during execution
+                        result = future.result()
                         pbar.update(1)
-                        successful_uploads.append(future.result())
-                    except Exception:
-                        failed_uploads.append(future.result())
-                        logger.error(f"Upload failed for {future.result()}")
+                        successful_uploads.append(result)
+                    except Exception as e:
+                        failed_uploads.append(datapoint)
+                        logger.error(f"Upload failed for {datapoint}: {str(e)}")
 
         return successful_uploads, failed_uploads
 
@@ -111,7 +114,7 @@ class RapidataDataset:
             max_retries: Maximum number of retry attempts (default: 3)
             
         Returns:
-            tuple[list[str | list[str]], list[str | list[str]]]: Lists of successful and failed identifiers
+            tuple[list[Datapoint], list[Datapoint]]: Lists of successful and failed datapoints
         """
         local_successful: list[Datapoint] = []
         local_failed: list[Datapoint] = []
@@ -369,9 +372,6 @@ class RapidataDataset:
         Raises:
             ValueError: If multi_metadata lengths don't match media_paths length
         """
-
-        if not all(datapoint._get_effective_asset_type() == MediaAsset for datapoint in datapoints):
-            raise ValueError("All datapoints must be of type MediaAsset or MultiAsset with all assets of type MediaAsset.")
         
         # Setup tracking variables
         total_uploads = len(datapoints)
