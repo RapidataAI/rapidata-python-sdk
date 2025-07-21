@@ -1,7 +1,7 @@
 import os
 from rapidata.api_client import AttachCategoryTruth, BoundingBoxTruth, BoxShape, ClassifyPayload, ComparePayload, CompareTruth, LinePayload, LocateBoxTruth, LocatePayload, ScrubPayload, ScrubRange, ScrubTruth, TranscriptionPayload, TranscriptionTruth, TranscriptionWord
-from rapidata.rapidata_client.assets import MediaAsset, TextAsset, MultiAsset
-from rapidata.rapidata_client.metadata import Metadata
+from rapidata.rapidata_client.datapoints.assets import MediaAsset, TextAsset, MultiAsset
+from rapidata.rapidata_client.datapoints.metadata import Metadata
 from rapidata.rapidata_client.validation.rapids.box import Box
 
 from typing import Sequence, Literal

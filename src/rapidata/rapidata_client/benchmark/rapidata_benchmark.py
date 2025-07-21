@@ -15,9 +15,10 @@ from rapidata.rapidata_client.logging import logger
 from rapidata.service.openapi_service import OpenAPIService
 
 from rapidata.rapidata_client.benchmark.leaderboard.rapidata_leaderboard import RapidataLeaderboard
-from rapidata.rapidata_client.metadata import PromptIdentifierMetadata
-from rapidata.rapidata_client.assets import MediaAsset
+from rapidata.rapidata_client.datapoints.metadata import PromptIdentifierMetadata
+from rapidata.rapidata_client.datapoints.assets import MediaAsset
 from rapidata.rapidata_client.order._rapidata_dataset import RapidataDataset
+from rapidata.rapidata_client.datapoints.datapoint import Datapoint
 
 class RapidataBenchmark:
     """
@@ -287,7 +288,7 @@ class RapidataBenchmark:
         dataset = RapidataDataset(participant_result.dataset_id, self.__openapi_service)
         
         try:
-            dataset._add_datapoints(assets, prompts_metadata)
+            dataset.add_datapoints([Datapoint(asset=asset, metadata=metadata) for asset, metadata in zip(assets, prompts_metadata)])
         except Exception as e:
             logger.warning(f"An error occurred while adding datapoints to the dataset: {e}")
             upload_progress = self.__openapi_service.dataset_api.dataset_dataset_id_progress_get(

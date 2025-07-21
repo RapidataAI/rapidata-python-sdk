@@ -1,5 +1,5 @@
-from rapidata.rapidata_client.assets import MediaAsset, TextAsset, MultiAsset
-from rapidata.rapidata_client.metadata import Metadata
+from rapidata.rapidata_client.datapoints.assets import MediaAsset, TextAsset, MultiAsset
+from rapidata.rapidata_client.datapoints.metadata import Metadata
 from typing import Sequence, Any, cast
 from rapidata.api_client.models.add_validation_rapid_model import (
     AddValidationRapidModel,

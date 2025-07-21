@@ -1,5 +1,5 @@
 from rapidata.service.openapi_service import OpenAPIService
-from rapidata.rapidata_client.assets import MediaAsset
+from rapidata.rapidata_client.datapoints.assets import MediaAsset
 from rapidata.api_client.models.create_demographic_rapid_model import CreateDemographicRapidModel
 from rapidata.api_client.models.classify_payload import ClassifyPayload
 from rapidata.rapidata_client.logging import logger

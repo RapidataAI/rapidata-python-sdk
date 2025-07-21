@@ -9,11 +9,18 @@ from .selection import (
     RetrievalMode,
     EffortEstimationSelection,
 )
-from .metadata import (
+from .datapoints import Datapoint
+from .datapoints.metadata import (
     PrivateTextMetadata,
     PublicTextMetadata,
     PromptMetadata,
     SelectWordsMetadata,
+)
+from .datapoints.assets import (
+    MediaAsset, 
+    TextAsset, 
+    MultiAsset, 
+    RapidataDataTypes
 )
 from .settings import (
     RapidataSettings, 
@@ -27,12 +34,6 @@ from .settings import (
     AllowNeitherBoth,
     )
 from .country_codes import CountryCodes
-from .assets import (
-    MediaAsset, 
-    TextAsset, 
-    MultiAsset, 
-    RapidataDataTypes
-)
 from .filter import (
     CountryFilter,
     LanguageFilter,
@@ -55,3 +56,4 @@ from .logging import (
 )
 
 from .validation import Box
+from .exceptions import FailedUploadException

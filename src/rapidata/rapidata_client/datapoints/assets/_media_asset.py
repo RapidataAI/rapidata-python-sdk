@@ -7,7 +7,7 @@ Implements lazy loading for URL-based media to prevent unnecessary downloads.
 from typing import Optional, cast
 import os
 from io import BytesIO
-from rapidata.rapidata_client.assets._base_asset import BaseAsset
+from rapidata.rapidata_client.datapoints.assets._base_asset import BaseAsset
 import requests
 import re
 from PIL import Image
@@ -16,7 +16,7 @@ import tempfile
 from pydantic import StrictStr, StrictBytes
 import logging
 from functools import cached_property
-from rapidata.rapidata_client.assets._sessions import SessionManager
+from rapidata.rapidata_client.datapoints.assets._sessions import SessionManager
 from rapidata.rapidata_client.logging import logger
 
 class MediaAsset(BaseAsset):
