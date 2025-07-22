@@ -165,7 +165,9 @@ Class | Method | HTTP request | Description
 *ParticipantApi* | [**participant_participant_id_delete**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_delete) | **DELETE** /participant/{participantId} | Deletes a participant on a benchmark.
 *ParticipantApi* | [**participant_participant_id_disable_post**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_disable_post) | **POST** /participant/{participantId}/disable | This endpoint disables a participant in a benchmark. this means that the participant will no longer actively be matched up against other participants and not collect further results. It will still be visible in the leaderboard.
 *ParticipantApi* | [**participant_participant_id_get**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_get) | **GET** /participant/{participantId} | Gets a participant by it&#39;s Id.
+*ParticipantApi* | [**participant_participant_id_name_put**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_name_put) | **PUT** /participant/{participantId}/name | Updates the name of a participant
 *ParticipantApi* | [**participant_participant_id_sample_post**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_sample_post) | **POST** /participant/{participantId}/sample | Adds a sample to a participant.
+*ParticipantApi* | [**participant_participant_id_samples_get**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_samples_get) | **GET** /participant/{participantId}/samples | Queries all samples of a participant.
 *ParticipantApi* | [**participant_sample_sample_id_delete**](rapidata/api_client/docs/ParticipantApi.md#participant_sample_sample_id_delete) | **DELETE** /participant-sample/{sampleId} | Deletes a sample.
 *ParticipantApi* | [**participants_participant_id_submit_post**](rapidata/api_client/docs/ParticipantApi.md#participants_participant_id_submit_post) | **POST** /participants/{participantId}/submit | Submits a participant to a benchmark.
 *PipelineApi* | [**pipeline_id_workflow_config_artifact_id_put**](rapidata/api_client/docs/PipelineApi.md#pipeline_id_workflow_config_artifact_id_put) | **PUT** /pipeline/{id}/workflow-config/{artifactId} | Updates the workflow configuration for a pipeline.
@@ -186,6 +188,7 @@ Class | Method | HTTP request | Description
 *UserRapidApi* | [**rapid_skip_post**](rapidata/api_client/docs/UserRapidApi.md#rapid_skip_post) | **POST** /rapid/skip | Skips a Rapid for the user.
 *ValidationSetApi* | [**validation_set_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_post) | **POST** /validation-set | Creates a new empty validation set.
 *ValidationSetApi* | [**validation_set_validation_set_id_delete**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_delete) | **DELETE** /validation-set/{validationSetId} | Gets a validation set by the id.
+*ValidationSetApi* | [**validation_set_validation_set_id_dimensions_patch**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_dimensions_patch) | **PATCH** /validation-set/{validationSetId}/dimensions | Updates the dimensions of all rapids within a validation set.
 *ValidationSetApi* | [**validation_set_validation_set_id_dimensions_put**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_dimensions_put) | **PUT** /validation-set/{validationSetId}/dimensions | Updates the dimensions of all rapids within a validation set.
 *ValidationSetApi* | [**validation_set_validation_set_id_export_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_export_get) | **GET** /validation-set/{validationSetId}/export | Exports all rapids of a validation-set to a file.
 *ValidationSetApi* | [**validation_set_validation_set_id_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_get) | **GET** /validation-set/{validationSetId} | Gets a validation set by the id.
@@ -193,6 +196,8 @@ Class | Method | HTTP request | Description
 *ValidationSetApi* | [**validation_set_validation_set_id_rapid_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_rapid_post) | **POST** /validation-set/{validationSetId}/rapid | Adds a new validation rapid to the specified validation set using files to create the assets.
 *ValidationSetApi* | [**validation_set_validation_set_id_rapid_texts_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_rapid_texts_post) | **POST** /validation-set/{validationSetId}/rapid/texts | Adds a new validation rapid to the specified validation set using text sources to create the assets.
 *ValidationSetApi* | [**validation_set_validation_set_id_rapids_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_rapids_get) | **GET** /validation-set/{validationSetId}/rapids | Queries the validation rapids for a specific validation set.
+*ValidationSetApi* | [**validation_set_validation_set_id_shouldalert_patch**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_shouldalert_patch) | **PATCH** /validation-set/{validationSetId}/shouldalert | Updates the dimensions of all rapids within a validation set.
+*ValidationSetApi* | [**validation_set_validation_set_id_shouldalert_put**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_shouldalert_put) | **PUT** /validation-set/{validationSetId}/shouldalert | Updates the dimensions of all rapids within a validation set.
 *ValidationSetApi* | [**validation_set_zip_compare_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_zip_compare_post) | **POST** /validation-set/zip/compare | Imports a compare validation set from a zip file.
 *ValidationSetApi* | [**validation_set_zip_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_zip_post) | **POST** /validation-set/zip | Imports a validation set from a zip file.
 *ValidationSetApi* | [**validation_sets_available_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_sets_available_get) | **GET** /validation-sets/available | Gets the available validation sets for the current user.
@@ -499,6 +504,8 @@ Class | Method | HTTP request | Description
  - [RunStatus](rapidata/api_client/docs/RunStatus.md)
  - [RunsByLeaderboardResult](rapidata/api_client/docs/RunsByLeaderboardResult.md)
  - [RunsByLeaderboardResultPagedResult](rapidata/api_client/docs/RunsByLeaderboardResultPagedResult.md)
+ - [SampleByParticipant](rapidata/api_client/docs/SampleByParticipant.md)
+ - [SampleByParticipantPagedResult](rapidata/api_client/docs/SampleByParticipantPagedResult.md)
  - [ScrubPayload](rapidata/api_client/docs/ScrubPayload.md)
  - [ScrubRange](rapidata/api_client/docs/ScrubRange.md)
  - [ScrubRapidBlueprint](rapidata/api_client/docs/ScrubRapidBlueprint.md)
@@ -555,6 +562,8 @@ Class | Method | HTTP request | Description
  - [UpdateDimensionsModel](rapidata/api_client/docs/UpdateDimensionsModel.md)
  - [UpdateLeaderboardNameModel](rapidata/api_client/docs/UpdateLeaderboardNameModel.md)
  - [UpdateOrderNameModel](rapidata/api_client/docs/UpdateOrderNameModel.md)
+ - [UpdateParticipantNameModel](rapidata/api_client/docs/UpdateParticipantNameModel.md)
+ - [UpdateShouldAlertModel](rapidata/api_client/docs/UpdateShouldAlertModel.md)
  - [UpdateValidationRapidModel](rapidata/api_client/docs/UpdateValidationRapidModel.md)
  - [UpdateValidationRapidModelTruth](rapidata/api_client/docs/UpdateValidationRapidModelTruth.md)
  - [UploadCocoResult](rapidata/api_client/docs/UploadCocoResult.md)
