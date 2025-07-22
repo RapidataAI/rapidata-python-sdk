@@ -27,6 +27,8 @@ class FailedUploadException(Exception):
 
 def _parse_failed_uploads(failed_uploads: GetFailedDatapointsResult) -> list[Datapoint]:
     failed_datapoints = failed_uploads.datapoints
+    if not failed_datapoints:
+        return []
     if isinstance(failed_datapoints[0].asset.actual_instance, FileAssetModel):
         failed_assets = [MediaAsset(__get_asset_name(cast(FileAssetModel, datapoint.asset.actual_instance))) for datapoint in failed_datapoints]
     elif isinstance(failed_datapoints[0].asset.actual_instance, MultiAssetModel):
