@@ -41,11 +41,13 @@ class RapidataValidationSet:
         return self
     
     def update_should_alert(self, should_alert: bool):
-        """Decides if the users should be alerted if answering wrong.
+        """Determines whether users should be alerted if they answer incorrectly.
 
         Args:
-            should_alert (bool): If the users should be alerted if answering wrong. If method is not specifically called, will default to True.
-                The userScore dimensions will be updated either way.
+            should_alert (bool): Specifies whether users should be alerted for incorrect answers. Defaults to True if not specifically overridden by this method.
+
+        Note:
+            The userScore dimensions which are updated when a user answers a validation task are updated regardless of the value of `should_alert`.
         """
         logger.debug(f"Setting shouldAlert for validation set {self.id} to {should_alert}")
         self.__openapi_service.validation_api.validation_set_validation_set_id_shouldalert_patch(
