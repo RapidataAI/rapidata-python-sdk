@@ -30,7 +30,8 @@ class SubmitPromptModel(BaseModel):
     identifier: StrictStr = Field(description="An identifier associated to the prompt")
     prompt: Optional[StrictStr] = Field(default=None, description="The prompt")
     prompt_asset: Optional[SubmitPromptModelPromptAsset] = Field(default=None, alias="promptAsset")
-    __properties: ClassVar[List[str]] = ["identifier", "prompt", "promptAsset"]
+    tags: Optional[List[StrictStr]] = Field(default=None, description="The tags of a given prompt")
+    __properties: ClassVar[List[str]] = ["identifier", "prompt", "promptAsset", "tags"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -84,6 +85,11 @@ class SubmitPromptModel(BaseModel):
         if self.prompt_asset is None and "prompt_asset" in self.model_fields_set:
             _dict['promptAsset'] = None
 
+        # set to None if tags (nullable) is None
+        # and model_fields_set contains the field
+        if self.tags is None and "tags" in self.model_fields_set:
+            _dict['tags'] = None
+
         return _dict
 
     @classmethod
@@ -98,7 +104,8 @@ class SubmitPromptModel(BaseModel):
         _obj = cls.model_validate({
             "identifier": obj.get("identifier"),
             "prompt": obj.get("prompt"),
-            "promptAsset": SubmitPromptModelPromptAsset.from_dict(obj["promptAsset"]) if obj.get("promptAsset") is not None else None
+            "promptAsset": SubmitPromptModelPromptAsset.from_dict(obj["promptAsset"]) if obj.get("promptAsset") is not None else None,
+            "tags": obj.get("tags")
         })
         return _obj
 

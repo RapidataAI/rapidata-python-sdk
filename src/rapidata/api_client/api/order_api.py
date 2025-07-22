@@ -29,7 +29,9 @@ from rapidata.api_client.models.create_unsupported_order_model import CreateUnsu
 from rapidata.api_client.models.get_order_by_id_result import GetOrderByIdResult
 from rapidata.api_client.models.get_public_orders_result import GetPublicOrdersResult
 from rapidata.api_client.models.order_model_paged_result import OrderModelPagedResult
+from rapidata.api_client.models.preview_order_model import PreviewOrderModel
 from rapidata.api_client.models.query_model import QueryModel
+from rapidata.api_client.models.submit_order_model import SubmitOrderModel
 from rapidata.api_client.models.unlock_order_result import UnlockOrderResult
 from rapidata.api_client.models.update_order_name_model import UpdateOrderNameModel
 
@@ -2459,7 +2461,8 @@ class OrderApi:
     @validate_call
     def order_order_id_preview_post(
         self,
-        order_id: StrictStr,
+        order_id: Annotated[StrictStr, Field(description="The id of the order to submit")],
+        preview_order_model: Annotated[Optional[PreviewOrderModel], Field(description="The model containing additional information for the preview.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2476,8 +2479,10 @@ class OrderApi:
         """Puts the order into preview mode, where one can inspect what our labelers receive.
 
 
-        :param order_id:  (required)
+        :param order_id: The id of the order to submit (required)
         :type order_id: str
+        :param preview_order_model: The model containing additional information for the preview.
+        :type preview_order_model: PreviewOrderModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2502,6 +2507,7 @@ class OrderApi:
 
         _param = self._order_order_id_preview_post_serialize(
             order_id=order_id,
+            preview_order_model=preview_order_model,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2525,7 +2531,8 @@ class OrderApi:
     @validate_call
     def order_order_id_preview_post_with_http_info(
         self,
-        order_id: StrictStr,
+        order_id: Annotated[StrictStr, Field(description="The id of the order to submit")],
+        preview_order_model: Annotated[Optional[PreviewOrderModel], Field(description="The model containing additional information for the preview.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2542,8 +2549,10 @@ class OrderApi:
         """Puts the order into preview mode, where one can inspect what our labelers receive.
 
 
-        :param order_id:  (required)
+        :param order_id: The id of the order to submit (required)
         :type order_id: str
+        :param preview_order_model: The model containing additional information for the preview.
+        :type preview_order_model: PreviewOrderModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2568,6 +2577,7 @@ class OrderApi:
 
         _param = self._order_order_id_preview_post_serialize(
             order_id=order_id,
+            preview_order_model=preview_order_model,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2591,7 +2601,8 @@ class OrderApi:
     @validate_call
     def order_order_id_preview_post_without_preload_content(
         self,
-        order_id: StrictStr,
+        order_id: Annotated[StrictStr, Field(description="The id of the order to submit")],
+        preview_order_model: Annotated[Optional[PreviewOrderModel], Field(description="The model containing additional information for the preview.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2608,8 +2619,10 @@ class OrderApi:
         """Puts the order into preview mode, where one can inspect what our labelers receive.
 
 
-        :param order_id:  (required)
+        :param order_id: The id of the order to submit (required)
         :type order_id: str
+        :param preview_order_model: The model containing additional information for the preview.
+        :type preview_order_model: PreviewOrderModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2634,6 +2647,7 @@ class OrderApi:
 
         _param = self._order_order_id_preview_post_serialize(
             order_id=order_id,
+            preview_order_model=preview_order_model,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2653,6 +2667,7 @@ class OrderApi:
     def _order_order_id_preview_post_serialize(
         self,
         order_id,
+        preview_order_model,
         _request_auth,
         _content_type,
         _headers,
@@ -2680,9 +2695,26 @@ class OrderApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
+        if preview_order_model is not None:
+            _body_params = preview_order_model
 
 
 
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json', 
+                        'text/json', 
+                        'application/*+json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
 
         # authentication setting
         _auth_settings: List[str] = [
@@ -3746,6 +3778,7 @@ class OrderApi:
     def order_order_id_submit_post(
         self,
         order_id: Annotated[StrictStr, Field(description="The id of the order to submit")],
+        submit_order_model: Annotated[Optional[SubmitOrderModel], Field(description="The model containing additional information for the submission.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3765,6 +3798,8 @@ class OrderApi:
 
         :param order_id: The id of the order to submit (required)
         :type order_id: str
+        :param submit_order_model: The model containing additional information for the submission.
+        :type submit_order_model: SubmitOrderModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3789,6 +3824,7 @@ class OrderApi:
 
         _param = self._order_order_id_submit_post_serialize(
             order_id=order_id,
+            submit_order_model=submit_order_model,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3813,6 +3849,7 @@ class OrderApi:
     def order_order_id_submit_post_with_http_info(
         self,
         order_id: Annotated[StrictStr, Field(description="The id of the order to submit")],
+        submit_order_model: Annotated[Optional[SubmitOrderModel], Field(description="The model containing additional information for the submission.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3832,6 +3869,8 @@ class OrderApi:
 
         :param order_id: The id of the order to submit (required)
         :type order_id: str
+        :param submit_order_model: The model containing additional information for the submission.
+        :type submit_order_model: SubmitOrderModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3856,6 +3895,7 @@ class OrderApi:
 
         _param = self._order_order_id_submit_post_serialize(
             order_id=order_id,
+            submit_order_model=submit_order_model,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3880,6 +3920,7 @@ class OrderApi:
     def order_order_id_submit_post_without_preload_content(
         self,
         order_id: Annotated[StrictStr, Field(description="The id of the order to submit")],
+        submit_order_model: Annotated[Optional[SubmitOrderModel], Field(description="The model containing additional information for the submission.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3899,6 +3940,8 @@ class OrderApi:
 
         :param order_id: The id of the order to submit (required)
         :type order_id: str
+        :param submit_order_model: The model containing additional information for the submission.
+        :type submit_order_model: SubmitOrderModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3923,6 +3966,7 @@ class OrderApi:
 
         _param = self._order_order_id_submit_post_serialize(
             order_id=order_id,
+            submit_order_model=submit_order_model,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3942,6 +3986,7 @@ class OrderApi:
     def _order_order_id_submit_post_serialize(
         self,
         order_id,
+        submit_order_model,
         _request_auth,
         _content_type,
         _headers,
@@ -3969,9 +4014,26 @@ class OrderApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
+        if submit_order_model is not None:
+            _body_params = submit_order_model
 
 
 
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json', 
+                        'text/json', 
+                        'application/*+json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
 
         # authentication setting
         _auth_settings: List[str] = [
