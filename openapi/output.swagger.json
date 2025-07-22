@@ -1339,6 +1339,26 @@
             }
           }
         ],
+        "requestBody": {
+          "description": "The model containing additional information for the submission.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitOrderModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitOrderModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitOrderModel"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -1473,13 +1493,33 @@
           {
             "name": "orderId",
             "in": "path",
-            "description": "",
+            "description": "The id of the order to submit",
             "required": true,
             "schema": {
               "type": "string"
             }
           }
         ],
+        "requestBody": {
+          "description": "The model containing additional information for the preview.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreviewOrderModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreviewOrderModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreviewOrderModel"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -4819,6 +4859,47 @@
         }
       }
     },
+    "/benchmark/{benchmarkId}/tags": {
+      "get": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Query all tags within a benchmark",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The id of the benchmark the prompts should be retrieved from",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParticipantByBenchmarkPagedResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParticipantByBenchmarkPagedResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParticipantByBenchmarkPagedResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/benchmark/{benchmarkId}/participants/{participantId}/submit": {
       "post": {
         "tags": [
@@ -4868,39 +4949,6 @@
           }
         },
         "deprecated": true
-      }
-    },
-    "/benchmark/{benchmarkId}/participants/{participantId}/disable": {
-      "post": {
-        "tags": [
-          "Benchmark"
-        ],
-        "summary": "This endpoint disables a participant in a benchmark. this means that the participant will no longer actively be matched up against other participants and not collect further results. It will still be visible in the leaderboard.",
-        "parameters": [
-          {
-            "name": "benchmarkId",
-            "in": "path",
-            "description": "The benchmark the participant belongs to",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "participantId",
-            "in": "path",
-            "description": "The id of the participant to be disabled",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
       }
     },
     "/leaderboards": {
@@ -5879,6 +5927,30 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/participant/{participantId}/disable": {
+      "post": {
+        "tags": [
+          "Participant"
+        ],
+        "summary": "This endpoint disables a participant in a benchmark. this means that the participant will no longer actively be matched up against other participants and not collect further results. It will still be visible in the leaderboard.",
+        "parameters": [
+          {
+            "name": "participantId",
+            "in": "path",
+            "description": "The id of the participant to be disabled",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -9764,6 +9836,18 @@
         },
         "additionalProperties": false
       },
+      "PreviewOrderModel": {
+        "type": "object",
+        "properties": {
+          "ignoreFailedDatapoints": {
+            "type": "boolean",
+            "description": "whether the order should proceed to be submitted even if certain datapoints failed.",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for previewing an order."
+      },
       "PublicOrderModel": {
         "required": [
           "id",
@@ -10034,6 +10118,18 @@
           "Permanent"
         ],
         "type": "string"
+      },
+      "SubmitOrderModel": {
+        "type": "object",
+        "properties": {
+          "ignoreFailedDatapoints": {
+            "type": "boolean",
+            "description": "whether the order should proceed to be submitted even if certain datapoints failed.",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for submitting an order."
       },
       "TranscriptionRapidBlueprint": {
         "title": "TranscriptionBlueprint",
@@ -16252,6 +16348,7 @@
         "required": [
           "createdAt",
           "id",
+          "isManaged",
           "name",
           "ownerMail"
         ],
@@ -16262,6 +16359,9 @@
           },
           "name": {
             "type": "string"
+          },
+          "isManaged": {
+            "type": "boolean"
           },
           "createdAt": {
             "type": "string",
@@ -16887,7 +16987,8 @@
       "PromptByBenchmarkResult": {
         "required": [
           "createdAt",
-          "identifier"
+          "identifier",
+          "tags"
         ],
         "type": "object",
         "properties": {
@@ -16921,6 +17022,12 @@
           "createdAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         },
         "additionalProperties": false
@@ -17193,6 +17300,15 @@
             "discriminator": {
               "propertyName": "_t"
             }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The tags of a given prompt",
+            "default": null,
+            "nullable": true
           }
         },
         "additionalProperties": false,

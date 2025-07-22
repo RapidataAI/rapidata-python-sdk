@@ -77,11 +77,11 @@ Class | Method | HTTP request | Description
 *BenchmarkApi* | [**benchmark_benchmark_id_name_put**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_name_put) | **PUT** /benchmark/{benchmarkId}/name | Updates the name of a benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_participant_participant_id_delete**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_participant_participant_id_delete) | **DELETE** /benchmark/{benchmarkId}/participant/{participantId} | Deletes a participant on a benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_participants_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_participants_get) | **GET** /benchmark/{benchmarkId}/participants | Query all participants within a benchmark
-*BenchmarkApi* | [**benchmark_benchmark_id_participants_participant_id_disable_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_participants_participant_id_disable_post) | **POST** /benchmark/{benchmarkId}/participants/{participantId}/disable | This endpoint disables a participant in a benchmark. this means that the participant will no longer actively be matched up against other participants and not collect further results. It will still be visible in the leaderboard.
 *BenchmarkApi* | [**benchmark_benchmark_id_participants_participant_id_submit_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_participants_participant_id_submit_post) | **POST** /benchmark/{benchmarkId}/participants/{participantId}/submit | Submits a participant to a benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_participants_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_participants_post) | **POST** /benchmark/{benchmarkId}/participants | Creates a participant in a benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_prompt_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_prompt_post) | **POST** /benchmark/{benchmarkId}/prompt | Adds a new prompt to a benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_prompts_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_prompts_get) | **GET** /benchmark/{benchmarkId}/prompts | Returns the paged prompts of a benchmark by its ID.
+*BenchmarkApi* | [**benchmark_benchmark_id_tags_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_tags_get) | **GET** /benchmark/{benchmarkId}/tags | Query all tags within a benchmark
 *BenchmarkApi* | [**benchmark_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_post) | **POST** /benchmark | Creates a benchmark
 *BenchmarkApi* | [**benchmarks_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmarks_get) | **GET** /benchmarks | Queries all benchmarks of the user.
 *CampaignApi* | [**campaign_boost_status_get**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_status_get) | **GET** /campaign/boost/status | Gets the status of the boost.
@@ -163,6 +163,7 @@ Class | Method | HTTP request | Description
 *OrderApi* | [**orders_get**](rapidata/api_client/docs/OrderApi.md#orders_get) | **GET** /orders | Queries orders based on a filter, page, and sort criteria.
 *OrderApi* | [**orders_public_get**](rapidata/api_client/docs/OrderApi.md#orders_public_get) | **GET** /orders/public | Retrieves orders that are public and can be cloned by any user.
 *ParticipantApi* | [**participant_participant_id_delete**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_delete) | **DELETE** /participant/{participantId} | Deletes a participant on a benchmark.
+*ParticipantApi* | [**participant_participant_id_disable_post**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_disable_post) | **POST** /participant/{participantId}/disable | This endpoint disables a participant in a benchmark. this means that the participant will no longer actively be matched up against other participants and not collect further results. It will still be visible in the leaderboard.
 *ParticipantApi* | [**participant_participant_id_get**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_get) | **GET** /participant/{participantId} | Gets a participant by it&#39;s Id.
 *ParticipantApi* | [**participant_participant_id_sample_post**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_sample_post) | **POST** /participant/{participantId}/sample | Adds a sample to a participant.
 *ParticipantApi* | [**participant_sample_sample_id_delete**](rapidata/api_client/docs/ParticipantApi.md#participant_sample_sample_id_delete) | **DELETE** /participant-sample/{sampleId} | Deletes a sample.
@@ -462,6 +463,7 @@ Class | Method | HTTP request | Description
  - [PotentialValidationRapidTruth](rapidata/api_client/docs/PotentialValidationRapidTruth.md)
  - [PreliminaryDownloadModel](rapidata/api_client/docs/PreliminaryDownloadModel.md)
  - [PreliminaryDownloadResult](rapidata/api_client/docs/PreliminaryDownloadResult.md)
+ - [PreviewOrderModel](rapidata/api_client/docs/PreviewOrderModel.md)
  - [PrivateTextMetadataInput](rapidata/api_client/docs/PrivateTextMetadataInput.md)
  - [ProbabilisticAttachCategoryRefereeConfig](rapidata/api_client/docs/ProbabilisticAttachCategoryRefereeConfig.md)
  - [ProbabilisticAttachCategoryRefereeInfo](rapidata/api_client/docs/ProbabilisticAttachCategoryRefereeInfo.md)
@@ -527,6 +529,7 @@ Class | Method | HTTP request | Description
  - [StreamsMetadataModel](rapidata/api_client/docs/StreamsMetadataModel.md)
  - [SubmitCocoModel](rapidata/api_client/docs/SubmitCocoModel.md)
  - [SubmitCocoResult](rapidata/api_client/docs/SubmitCocoResult.md)
+ - [SubmitOrderModel](rapidata/api_client/docs/SubmitOrderModel.md)
  - [SubmitParticipantResult](rapidata/api_client/docs/SubmitParticipantResult.md)
  - [SubmitPromptModel](rapidata/api_client/docs/SubmitPromptModel.md)
  - [SubmitPromptModelPromptAsset](rapidata/api_client/docs/SubmitPromptModelPromptAsset.md)
