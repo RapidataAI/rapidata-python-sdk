@@ -2,7 +2,7 @@ from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.logging import logger
 from rapidata.api_client.models.update_dimensions_model import UpdateDimensionsModel
-from rapidata.rapidata_client.datapoints.assets._sessions import SessionManager
+from rapidata.api_client.models.update_should_alert_model import UpdateShouldAlertModel
 
 class RapidataValidationSet:
     """A class for interacting with a Rapidata validation set.
@@ -38,6 +38,20 @@ class RapidataValidationSet:
         """
         logger.debug(f"Updating dimensions for validation set {self.id} to {dimensions}")
         self.__openapi_service.validation_api.validation_set_validation_set_id_dimensions_put(self.id, UpdateDimensionsModel(dimensions=dimensions))
+        return self
+    
+    def update_should_alert(self, should_alert: bool):
+        """Decides if the users should be alerted if answering wrong.
+
+        Args:
+            should_alert (bool): If the users should be alerted if answering wrong. If method is not specifically called, will default to True.
+                The userScore dimensions will be updated either way.
+        """
+        logger.debug(f"Setting shouldAlert for validation set {self.id} to {should_alert}")
+        self.__openapi_service.validation_api.validation_set_validation_set_id_shouldalert_patch(
+            self.id, 
+            UpdateShouldAlertModel(shouldAlert=should_alert)
+        )
         return self
 
     def __str__(self):
