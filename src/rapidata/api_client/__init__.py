@@ -344,6 +344,8 @@ from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.run_status import RunStatus
 from rapidata.api_client.models.runs_by_leaderboard_result import RunsByLeaderboardResult
 from rapidata.api_client.models.runs_by_leaderboard_result_paged_result import RunsByLeaderboardResultPagedResult
+from rapidata.api_client.models.sample_by_participant import SampleByParticipant
+from rapidata.api_client.models.sample_by_participant_paged_result import SampleByParticipantPagedResult
 from rapidata.api_client.models.scrub_payload import ScrubPayload
 from rapidata.api_client.models.scrub_range import ScrubRange
 from rapidata.api_client.models.scrub_rapid_blueprint import ScrubRapidBlueprint
@@ -400,6 +402,8 @@ from rapidata.api_client.models.update_dataset_name_model import UpdateDatasetNa
 from rapidata.api_client.models.update_dimensions_model import UpdateDimensionsModel
 from rapidata.api_client.models.update_leaderboard_name_model import UpdateLeaderboardNameModel
 from rapidata.api_client.models.update_order_name_model import UpdateOrderNameModel
+from rapidata.api_client.models.update_participant_name_model import UpdateParticipantNameModel
+from rapidata.api_client.models.update_should_alert_model import UpdateShouldAlertModel
 from rapidata.api_client.models.update_validation_rapid_model import UpdateValidationRapidModel
 from rapidata.api_client.models.update_validation_rapid_model_truth import UpdateValidationRapidModelTruth
 from rapidata.api_client.models.upload_coco_result import UploadCocoResult

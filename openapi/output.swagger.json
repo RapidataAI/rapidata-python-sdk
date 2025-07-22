@@ -2778,7 +2778,7 @@
           {
             "name": "validationSetId",
             "in": "path",
-            "description": "The ID of the validation set to update the dimensions for.",
+            "description": "The Id of the validation set to update the dimensions for.",
             "required": true,
             "schema": {
               "type": "string"
@@ -2801,6 +2801,136 @@
             "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/UpdateDimensionsModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "deprecated": true
+      },
+      "patch": {
+        "tags": [
+          "ValidationSet"
+        ],
+        "summary": "Updates the dimensions of all rapids within a validation set.",
+        "parameters": [
+          {
+            "name": "validationSetId",
+            "in": "path",
+            "description": "The Id of the validation set to update the dimensions for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The body request for updating the dimensions.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDimensionsModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDimensionsModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDimensionsModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/validation-set/{validationSetId}/shouldalert": {
+      "put": {
+        "tags": [
+          "ValidationSet"
+        ],
+        "summary": "Updates the dimensions of all rapids within a validation set.",
+        "parameters": [
+          {
+            "name": "validationSetId",
+            "in": "path",
+            "description": "The Id of the validation set to update the dimensions for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The body request for updating the shouldAlert property.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateShouldAlertModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateShouldAlertModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateShouldAlertModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "deprecated": true
+      },
+      "patch": {
+        "tags": [
+          "ValidationSet"
+        ],
+        "summary": "Updates the dimensions of all rapids within a validation set.",
+        "parameters": [
+          {
+            "name": "validationSetId",
+            "in": "path",
+            "description": "The Id of the validation set to update the dimensions for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The body request for updating the shouldAlert property.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateShouldAlertModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateShouldAlertModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateShouldAlertModel"
               }
             }
           }
@@ -5890,6 +6020,50 @@
         }
       }
     },
+    "/participant/{participantId}/name": {
+      "put": {
+        "tags": [
+          "Participant"
+        ],
+        "summary": "Updates the name of a participant",
+        "parameters": [
+          {
+            "name": "participantId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateParticipantNameModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateParticipantNameModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateParticipantNameModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
     "/participant-sample/{sampleId}": {
       "delete": {
         "tags": [
@@ -5924,6 +6098,59 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetParticipantByIdResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/participant/{participantId}/samples": {
+      "get": {
+        "tags": [
+          "Participant"
+        ],
+        "summary": "Queries all samples of a participant.",
+        "parameters": [
+          {
+            "name": "participantId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "request",
+            "in": "query",
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SampleByParticipantPagedResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SampleByParticipantPagedResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SampleByParticipantPagedResult"
                 }
               }
             }
@@ -12396,6 +12623,20 @@
         "additionalProperties": false,
         "description": "The model for updating the dimensions of all rapids within a validation set."
       },
+      "UpdateShouldAlertModel": {
+        "required": [
+          "shouldAlert"
+        ],
+        "type": "object",
+        "properties": {
+          "shouldAlert": {
+            "type": "boolean",
+            "description": "If the users should be alerted if answering wrong."
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for updating the shouldAlert field of all rapids within a validation set."
+      },
       "UploadCocoResult": {
         "required": [
           "categories",
@@ -17150,6 +17391,113 @@
         },
         "additionalProperties": false
       },
+      "SampleByParticipant": {
+        "required": [
+          "asset",
+          "id",
+          "identifier",
+          "ownerMail"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "asset": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/FileAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/MultiAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/NullAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/TextAssetModel"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "prompt": {
+            "type": "string",
+            "nullable": true
+          },
+          "promptAsset": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/FileAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/MultiAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/NullAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/TextAssetModel"
+              }
+            ],
+            "nullable": true,
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ownerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SampleByParticipantPagedResult": {
+        "required": [
+          "items",
+          "page",
+          "pageSize",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SampleByParticipant"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
       "StandingByLeaderboard": {
         "required": [
           "datasetId",
@@ -17341,6 +17689,20 @@
         },
         "additionalProperties": false,
         "description": "The model used to update the name of a leaderboard."
+      },
+      "UpdateParticipantNameModel": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The new name of the participant."
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model used to update the name of a participant."
       }
     },
     "securitySchemes": {
