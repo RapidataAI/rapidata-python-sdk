@@ -1,5 +1,6 @@
 from typing import Sequence, Optional, Literal
 from itertools import zip_longest
+from typing import Literal
 
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
@@ -51,6 +52,7 @@ class RapidataOrderManager:
         self.settings = RapidataSettings
         self.selections = RapidataSelections
         self.__priority: int | None = None
+        self.__sticky_state: Literal["None", "Temporary", "Permanent"] | None = None
         logger.debug("RapidataOrderManager initialized")
     
     def _create_general_order(self,
@@ -124,12 +126,19 @@ class RapidataOrderManager:
                  ._settings(settings)
                  ._validation_set_id(validation_set_id if not selections else None)
                  ._priority(self.__priority)
+                 ._sticky_state(self.__sticky_state)
                  ._create()
                  )
         return order
     
     def _set_priority(self, priority: int):
         self.__priority = priority
+        
+    def _set_sticky_state(self, sticky_state: Literal["None", "Temporary", "Permanent"]):
+        if sticky_state not in ["None", "Temporary", "Permanent"]:
+            raise ValueError("Sticky state must be one of 'None', 'Temporary', 'Permanent'")
+        
+        self.__sticky_state = sticky_state
         
     def create_classification_order(self,
             name: str,
