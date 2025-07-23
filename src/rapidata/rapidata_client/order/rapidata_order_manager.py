@@ -132,6 +132,12 @@ class RapidataOrderManager:
         return order
     
     def _set_priority(self, priority: int):
+        if not isinstance(priority, int):
+            raise TypeError("Priority must be an integer")
+        
+        if priority < 0:
+            raise ValueError("Priority must be greater than 0")
+        
         self.__priority = priority
         
     def _set_sticky_state(self, sticky_state: Literal["None", "Temporary", "Permanent"]):
