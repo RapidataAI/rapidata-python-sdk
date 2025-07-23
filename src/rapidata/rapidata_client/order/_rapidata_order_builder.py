@@ -1,4 +1,4 @@
-from typing import Optional, Sequence
+from typing import Literal, Optional, cast, Sequence
 
 from rapidata.api_client.models.ab_test_selection_a_inner import AbTestSelectionAInner
 from rapidata.api_client.models.and_user_filter_model_filters_inner import AndUserFilterModelFiltersInner
@@ -47,6 +47,7 @@ class RapidataOrderBuilder:
         self.__selections: list[RapidataSelection] = []
         self.__priority: int | None = None
         self.__datapoints: list[Datapoint] = []
+        self.__sticky_state: Literal["None", "Temporary", "Permanent"] | None = None
 
     def _to_model(self) -> CreateOrderModel:
         """
@@ -89,6 +90,7 @@ class RapidataOrderBuilder:
                 else None
             ),
             priority=self.__priority,
+            stickyState=self.__sticky_state,
         )
 
     def _create(self) -> RapidataOrder:
@@ -315,4 +317,14 @@ class RapidataOrderBuilder:
             raise TypeError("Priority must be of type int.")
 
         self.__priority = priority
+        return self
+    
+    def _sticky_state(self, sticky_state: Literal["None", "Temporary", "Permanent"] | None = None) -> "RapidataOrderBuilder":
+        """
+        Set the sticky state for the order.
+        """
+        if sticky_state is not None and sticky_state not in ["None", "Temporary", "Permanent"]:
+            raise TypeError("Sticky state must be of type Literal['None', 'Temporary', 'Permanent'].")
+
+        self.__sticky_state = sticky_state
         return self
