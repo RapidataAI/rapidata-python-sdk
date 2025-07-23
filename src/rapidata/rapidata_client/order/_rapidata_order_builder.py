@@ -1,4 +1,4 @@
-from typing import Optional, cast, Sequence
+from typing import Optional, Sequence
 
 from rapidata.api_client.models.ab_test_selection_a_inner import AbTestSelectionAInner
 from rapidata.api_client.models.and_user_filter_model_filters_inner import AndUserFilterModelFiltersInner
@@ -6,12 +6,10 @@ from rapidata.api_client.models.create_order_model import CreateOrderModel
 from rapidata.api_client.models.create_order_model_referee import CreateOrderModelReferee
 from rapidata.api_client.models.create_order_model_workflow import CreateOrderModelWorkflow
 
-from rapidata.rapidata_client.datapoints.assets import MediaAsset, TextAsset, MultiAsset, BaseAsset
 from rapidata.rapidata_client.datapoints.datapoint import Datapoint
-from rapidata.rapidata_client.exceptions.failed_upload_exception import FailedUploadException
+from rapidata.rapidata_client.exceptions.failed_upload_exception import FailedUploadException, _parse_failed_uploads
 from rapidata.rapidata_client.filter import RapidataFilter
 from rapidata.rapidata_client.logging import logger, managed_print
-from rapidata.rapidata_client.datapoints.metadata import Metadata
 from rapidata.rapidata_client.order._rapidata_dataset import RapidataDataset
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 from rapidata.rapidata_client.referee import Referee
@@ -19,7 +17,6 @@ from rapidata.rapidata_client.referee._naive_referee import NaiveReferee
 from rapidata.rapidata_client.selection._base_selection import RapidataSelection
 from rapidata.rapidata_client.settings import RapidataSetting
 from rapidata.rapidata_client.workflow import Workflow
-from rapidata.rapidata_client.workflow._compare_workflow import CompareWorkflow
 from rapidata.service.openapi_service import OpenAPIService
 
 
@@ -148,8 +145,12 @@ class RapidataOrderBuilder:
         
         logger.debug("Media added to the order.")
         logger.debug("Setting order to preview")
-        self.__openapi_service.order_api.order_order_id_preview_post(self.order_id)
-
+        try:
+            self.__openapi_service.order_api.order_order_id_preview_post(self.order_id)
+        except Exception:
+            failed_uploads = _parse_failed_uploads(self.__openapi_service.dataset_api.dataset_dataset_id_datapoints_failed_get(self.__dataset.id))
+            logger.error(f"Internal download error for datapoints: {failed_uploads}\nWARNING: Failed Datapoints in error do not contain metadata.")
+            raise FailedUploadException(self.__dataset, order, failed_uploads)
         return order
 
     def _workflow(self, workflow: Workflow) -> "RapidataOrderBuilder":

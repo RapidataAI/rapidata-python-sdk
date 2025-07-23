@@ -12,6 +12,8 @@ from tqdm import tqdm
 from rapidata.api_client.exceptions import ApiException
 from rapidata.api_client.models.campaign_artifact_model import CampaignArtifactModel
 from rapidata.api_client.models.order_state import OrderState
+from rapidata.api_client.models.preview_order_model import PreviewOrderModel
+from rapidata.api_client.models.submit_order_model import SubmitOrderModel
 from rapidata.api_client.models.preliminary_download_model import PreliminaryDownloadModel
 from rapidata.api_client.models.workflow_artifact_model import WorkflowArtifactModel
 from rapidata.rapidata_client.order.rapidata_results import RapidataResults
@@ -60,7 +62,7 @@ class RapidataOrder:
     def run(self) -> "RapidataOrder":
         """Runs the order to start collecting responses."""
         logger.info(f"Starting order '{self}'")
-        self.__openapi_service.order_api.order_order_id_submit_post(self.id)
+        self.__openapi_service.order_api.order_order_id_submit_post(self.id, SubmitOrderModel(ignoreFailedDatapoints=True))
         logger.debug(f"Order '{self}' has been started.")
         managed_print(f"Order '{self.name}' is now viewable under: {self.order_details_page}")
         return self
@@ -203,7 +205,7 @@ class RapidataOrder:
         logger.info("Opening order preview in browser...")
         if self.get_status() == OrderState.CREATED:
             logger.info("Order is still in state created. Setting it to preview.")
-            self.__openapi_service.order_api.order_order_id_preview_post(self.id)
+            self.__openapi_service.order_api.order_order_id_preview_post(self.id, PreviewOrderModel(ignoreFailedDatapoints=True))
             logger.info("Order is now in preview state.")
 
         campaign_id = self.__get_campaign_id()
