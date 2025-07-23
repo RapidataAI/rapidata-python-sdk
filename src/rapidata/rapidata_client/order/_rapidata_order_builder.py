@@ -149,7 +149,7 @@ class RapidataOrderBuilder:
             self.__openapi_service.order_api.order_order_id_preview_post(self.order_id)
         except Exception:
             failed_uploads = _parse_failed_uploads(self.__openapi_service.dataset_api.dataset_dataset_id_datapoints_failed_get(self.__dataset.id))
-            logger.error(f"Internal download error for datapoints: {failed_uploads}\nWARNING: Datapoints in error do not contain metadata.")
+            logger.error(f"Internal download error for datapoints: {failed_uploads}\nWARNING: Failed Datapoints in error do not contain metadata.")
             raise FailedUploadException(self.__dataset, order, failed_uploads)
         return order
 
