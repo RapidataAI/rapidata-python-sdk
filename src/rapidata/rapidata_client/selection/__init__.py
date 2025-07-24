@@ -8,4 +8,4 @@ from .shuffling_selection import ShufflingSelection
 from .ab_test_selection import AbTestSelection
 from .static_selection import StaticSelection
 from .retrieval_modes import RetrievalMode
-from .effort_selection import EffortEstimationSelection
+from .effort_selection import EffortSelection

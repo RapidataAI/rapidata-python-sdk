@@ -7,7 +7,7 @@ from .selection import (
     CappedSelection,
     ShufflingSelection,
     RetrievalMode,
-    EffortEstimationSelection,
+    EffortSelection,
 )
 from .datapoints import Datapoint
 from .datapoints.metadata import (
