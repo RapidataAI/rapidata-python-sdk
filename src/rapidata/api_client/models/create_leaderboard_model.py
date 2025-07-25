@@ -35,7 +35,8 @@ class CreateLeaderboardModel(BaseModel):
     response_budget: Optional[StrictInt] = Field(default=None, description="Total amount of responses that get collected per run", alias="responseBudget")
     min_responses: Optional[StrictInt] = Field(default=None, description="The minimum amount of responses that need to be collected per comparison.", alias="minResponses")
     is_inversed: Optional[StrictBool] = Field(default=None, description="If the results should be inversed, meaning people should select the worse model.", alias="isInversed")
-    __properties: ClassVar[List[str]] = ["benchmarkId", "benchmarkName", "name", "instruction", "showPrompt", "showPromptAsset", "responseBudget", "minResponses", "isInversed"]
+    validation_set_id: Optional[StrictStr] = Field(default=None, description="The Validation set that should be attached to every run.", alias="validationSetId")
+    __properties: ClassVar[List[str]] = ["benchmarkId", "benchmarkName", "name", "instruction", "showPrompt", "showPromptAsset", "responseBudget", "minResponses", "isInversed", "validationSetId"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -86,6 +87,11 @@ class CreateLeaderboardModel(BaseModel):
         if self.benchmark_name is None and "benchmark_name" in self.model_fields_set:
             _dict['benchmarkName'] = None
 
+        # set to None if validation_set_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.validation_set_id is None and "validation_set_id" in self.model_fields_set:
+            _dict['validationSetId'] = None
+
         return _dict
 
     @classmethod
@@ -106,7 +112,8 @@ class CreateLeaderboardModel(BaseModel):
             "showPromptAsset": obj.get("showPromptAsset"),
             "responseBudget": obj.get("responseBudget"),
             "minResponses": obj.get("minResponses"),
-            "isInversed": obj.get("isInversed")
+            "isInversed": obj.get("isInversed"),
+            "validationSetId": obj.get("validationSetId")
         })
         return _obj
 
