@@ -3186,7 +3186,7 @@ class ValidationSetApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """(Deprecated) Updates the dimensions of all rapids within a validation set.
+        """(Deprecated) Updates the  of all rapshouldAlert property of all rapids within a validation set.
 
 
         :param validation_set_id: The Id of the validation set to update the dimensions for. (required)
@@ -3257,7 +3257,7 @@ class ValidationSetApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """(Deprecated) Updates the dimensions of all rapids within a validation set.
+        """(Deprecated) Updates the  of all rapshouldAlert property of all rapids within a validation set.
 
 
         :param validation_set_id: The Id of the validation set to update the dimensions for. (required)
@@ -3328,7 +3328,7 @@ class ValidationSetApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """(Deprecated) Updates the dimensions of all rapids within a validation set.
+        """(Deprecated) Updates the  of all rapshouldAlert property of all rapids within a validation set.
 
 
         :param validation_set_id: The Id of the validation set to update the dimensions for. (required)

@@ -17,7 +17,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
 from pydantic import Field, StrictStr
-from typing import Optional
+from typing import List, Optional
 from typing_extensions import Annotated
 from rapidata.api_client.models.boost_leaderboard_model import BoostLeaderboardModel
 from rapidata.api_client.models.create_benchmark_participant_model import CreateBenchmarkParticipantModel
@@ -31,6 +31,7 @@ from rapidata.api_client.models.prompt_by_benchmark_result_paged_result import P
 from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.runs_by_leaderboard_result_paged_result import RunsByLeaderboardResultPagedResult
 from rapidata.api_client.models.standing_by_leaderboard_paged_result import StandingByLeaderboardPagedResult
+from rapidata.api_client.models.standings_by_leaderboard_result import StandingsByLeaderboardResult
 from rapidata.api_client.models.submit_participant_result import SubmitParticipantResult
 from rapidata.api_client.models.update_leaderboard_name_model import UpdateLeaderboardNameModel
 
@@ -1697,7 +1698,6 @@ class LeaderboardApi:
     def leaderboard_leaderboard_id_participants_get(
         self,
         leaderboard_id: StrictStr,
-        request: Optional[QueryModel] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1716,8 +1716,6 @@ class LeaderboardApi:
 
         :param leaderboard_id:  (required)
         :type leaderboard_id: str
-        :param request: 
-        :type request: QueryModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1743,7 +1741,6 @@ class LeaderboardApi:
 
         _param = self._leaderboard_leaderboard_id_participants_get_serialize(
             leaderboard_id=leaderboard_id,
-            request=request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1768,7 +1765,6 @@ class LeaderboardApi:
     def leaderboard_leaderboard_id_participants_get_with_http_info(
         self,
         leaderboard_id: StrictStr,
-        request: Optional[QueryModel] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1787,8 +1783,6 @@ class LeaderboardApi:
 
         :param leaderboard_id:  (required)
         :type leaderboard_id: str
-        :param request: 
-        :type request: QueryModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1814,7 +1808,6 @@ class LeaderboardApi:
 
         _param = self._leaderboard_leaderboard_id_participants_get_serialize(
             leaderboard_id=leaderboard_id,
-            request=request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1839,7 +1832,6 @@ class LeaderboardApi:
     def leaderboard_leaderboard_id_participants_get_without_preload_content(
         self,
         leaderboard_id: StrictStr,
-        request: Optional[QueryModel] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1858,8 +1850,6 @@ class LeaderboardApi:
 
         :param leaderboard_id:  (required)
         :type leaderboard_id: str
-        :param request: 
-        :type request: QueryModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1885,7 +1875,6 @@ class LeaderboardApi:
 
         _param = self._leaderboard_leaderboard_id_participants_get_serialize(
             leaderboard_id=leaderboard_id,
-            request=request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1905,7 +1894,6 @@ class LeaderboardApi:
     def _leaderboard_leaderboard_id_participants_get_serialize(
         self,
         leaderboard_id,
-        request,
         _request_auth,
         _content_type,
         _headers,
@@ -1930,10 +1918,6 @@ class LeaderboardApi:
         if leaderboard_id is not None:
             _path_params['leaderboardId'] = leaderboard_id
         # process the query parameters
-        if request is not None:
-            
-            _query_params.append(('request', request))
-            
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -3115,258 +3099,6 @@ class LeaderboardApi:
 
 
     @validate_call
-    def leaderboard_leaderboard_id_refresh_post(
-        self,
-        leaderboard_id: StrictStr,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> None:
-        """This will force an update to all standings of a leaderboard. this could happen if the recorded matches and scores are out of sync
-
-
-        :param leaderboard_id:  (required)
-        :type leaderboard_id: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._leaderboard_leaderboard_id_refresh_post_serialize(
-            leaderboard_id=leaderboard_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def leaderboard_leaderboard_id_refresh_post_with_http_info(
-        self,
-        leaderboard_id: StrictStr,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
-        """This will force an update to all standings of a leaderboard. this could happen if the recorded matches and scores are out of sync
-
-
-        :param leaderboard_id:  (required)
-        :type leaderboard_id: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._leaderboard_leaderboard_id_refresh_post_serialize(
-            leaderboard_id=leaderboard_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def leaderboard_leaderboard_id_refresh_post_without_preload_content(
-        self,
-        leaderboard_id: StrictStr,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """This will force an update to all standings of a leaderboard. this could happen if the recorded matches and scores are out of sync
-
-
-        :param leaderboard_id:  (required)
-        :type leaderboard_id: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._leaderboard_leaderboard_id_refresh_post_serialize(
-            leaderboard_id=leaderboard_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _leaderboard_leaderboard_id_refresh_post_serialize(
-        self,
-        leaderboard_id,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if leaderboard_id is not None:
-            _path_params['leaderboardId'] = leaderboard_id
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-
-
-
-
-        # authentication setting
-        _auth_settings: List[str] = [
-            'bearer', 
-            'oauth2'
-        ]
-
-        return self.api_client.param_serialize(
-            method='POST',
-            resource_path='/leaderboard/{leaderboardId}/refresh',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
     def leaderboard_leaderboard_id_runs_get(
         self,
         leaderboard_id: StrictStr,
@@ -3647,8 +3379,8 @@ class LeaderboardApi:
     @validate_call
     def leaderboard_leaderboard_id_standings_get(
         self,
-        leaderboard_id: StrictStr,
-        request: Optional[QueryModel] = None,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard, which standings should be queried")],
+        tags: Annotated[Optional[List[StrictStr]], Field(description="The tags the leaderboard should filter for.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3661,14 +3393,14 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> StandingByLeaderboardPagedResult:
+    ) -> StandingsByLeaderboardResult:
         """queries all the participants connected to leaderboard by its ID.
 
 
-        :param leaderboard_id:  (required)
+        :param leaderboard_id: The id of the leaderboard, which standings should be queried (required)
         :type leaderboard_id: str
-        :param request: 
-        :type request: QueryModel
+        :param tags: The tags the leaderboard should filter for.
+        :type tags: List[str]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3693,7 +3425,7 @@ class LeaderboardApi:
 
         _param = self._leaderboard_leaderboard_id_standings_get_serialize(
             leaderboard_id=leaderboard_id,
-            request=request,
+            tags=tags,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3701,7 +3433,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "StandingByLeaderboardPagedResult",
+            '200': "StandingsByLeaderboardResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3717,8 +3449,8 @@ class LeaderboardApi:
     @validate_call
     def leaderboard_leaderboard_id_standings_get_with_http_info(
         self,
-        leaderboard_id: StrictStr,
-        request: Optional[QueryModel] = None,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard, which standings should be queried")],
+        tags: Annotated[Optional[List[StrictStr]], Field(description="The tags the leaderboard should filter for.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3731,14 +3463,14 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[StandingByLeaderboardPagedResult]:
+    ) -> ApiResponse[StandingsByLeaderboardResult]:
         """queries all the participants connected to leaderboard by its ID.
 
 
-        :param leaderboard_id:  (required)
+        :param leaderboard_id: The id of the leaderboard, which standings should be queried (required)
         :type leaderboard_id: str
-        :param request: 
-        :type request: QueryModel
+        :param tags: The tags the leaderboard should filter for.
+        :type tags: List[str]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3763,7 +3495,7 @@ class LeaderboardApi:
 
         _param = self._leaderboard_leaderboard_id_standings_get_serialize(
             leaderboard_id=leaderboard_id,
-            request=request,
+            tags=tags,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3771,7 +3503,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "StandingByLeaderboardPagedResult",
+            '200': "StandingsByLeaderboardResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3787,8 +3519,8 @@ class LeaderboardApi:
     @validate_call
     def leaderboard_leaderboard_id_standings_get_without_preload_content(
         self,
-        leaderboard_id: StrictStr,
-        request: Optional[QueryModel] = None,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard, which standings should be queried")],
+        tags: Annotated[Optional[List[StrictStr]], Field(description="The tags the leaderboard should filter for.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3805,10 +3537,10 @@ class LeaderboardApi:
         """queries all the participants connected to leaderboard by its ID.
 
 
-        :param leaderboard_id:  (required)
+        :param leaderboard_id: The id of the leaderboard, which standings should be queried (required)
         :type leaderboard_id: str
-        :param request: 
-        :type request: QueryModel
+        :param tags: The tags the leaderboard should filter for.
+        :type tags: List[str]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3833,7 +3565,7 @@ class LeaderboardApi:
 
         _param = self._leaderboard_leaderboard_id_standings_get_serialize(
             leaderboard_id=leaderboard_id,
-            request=request,
+            tags=tags,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3841,7 +3573,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "StandingByLeaderboardPagedResult",
+            '200': "StandingsByLeaderboardResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3853,7 +3585,7 @@ class LeaderboardApi:
     def _leaderboard_leaderboard_id_standings_get_serialize(
         self,
         leaderboard_id,
-        request,
+        tags,
         _request_auth,
         _content_type,
         _headers,
@@ -3863,6 +3595,7 @@ class LeaderboardApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
+            'tags': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
@@ -3878,9 +3611,9 @@ class LeaderboardApi:
         if leaderboard_id is not None:
             _path_params['leaderboardId'] = leaderboard_id
         # process the query parameters
-        if request is not None:
+        if tags is not None:
             
-            _query_params.append(('request', request))
+            _query_params.append(('tags', tags))
             
         # process the header parameters
         # process the form parameters

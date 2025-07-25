@@ -331,6 +331,7 @@ from rapidata.api_client.models.source_url_metadata_model import SourceUrlMetada
 from rapidata.api_client.models.standing_by_leaderboard import StandingByLeaderboard
 from rapidata.api_client.models.standing_by_leaderboard_paged_result import StandingByLeaderboardPagedResult
 from rapidata.api_client.models.standing_status import StandingStatus
+from rapidata.api_client.models.standings_by_leaderboard_result import StandingsByLeaderboardResult
 from rapidata.api_client.models.static_selection import StaticSelection
 from rapidata.api_client.models.sticky_state import StickyState
 from rapidata.api_client.models.stream_file_wrapper import StreamFileWrapper
@@ -342,6 +343,7 @@ from rapidata.api_client.models.submit_order_model import SubmitOrderModel
 from rapidata.api_client.models.submit_participant_result import SubmitParticipantResult
 from rapidata.api_client.models.submit_prompt_model import SubmitPromptModel
 from rapidata.api_client.models.submit_prompt_model_prompt_asset import SubmitPromptModelPromptAsset
+from rapidata.api_client.models.tags_by_benchmark_result import TagsByBenchmarkResult
 from rapidata.api_client.models.text_asset import TextAsset
 from rapidata.api_client.models.text_asset_input import TextAssetInput
 from rapidata.api_client.models.text_asset_model import TextAssetModel
@@ -365,6 +367,7 @@ from rapidata.api_client.models.update_dimensions_model import UpdateDimensionsM
 from rapidata.api_client.models.update_leaderboard_name_model import UpdateLeaderboardNameModel
 from rapidata.api_client.models.update_order_name_model import UpdateOrderNameModel
 from rapidata.api_client.models.update_participant_name_model import UpdateParticipantNameModel
+from rapidata.api_client.models.update_prompt_tags_model import UpdatePromptTagsModel
 from rapidata.api_client.models.update_should_alert_model import UpdateShouldAlertModel
 from rapidata.api_client.models.update_validation_rapid_model import UpdateValidationRapidModel
 from rapidata.api_client.models.update_validation_rapid_model_truth import UpdateValidationRapidModelTruth
