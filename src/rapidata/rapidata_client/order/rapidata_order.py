@@ -19,6 +19,7 @@ from rapidata.api_client.models.workflow_artifact_model import WorkflowArtifactM
 from rapidata.rapidata_client.order.rapidata_results import RapidataResults
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.logging import logger, managed_print, RapidataOutputManager
+from rapidata.rapidata_client.api.rapidata_exception import suppress_rapidata_error_logging
 
 
 class RapidataOrder:
@@ -149,8 +150,9 @@ class RapidataOrder:
         progress = None
         for _ in range(self._max_retries // 2):
             try:
-                workflow_id = self.__get_workflow_id()
-                progress = self.__openapi_service.workflow_api.workflow_workflow_id_progress_get(workflow_id)
+                with suppress_rapidata_error_logging():
+                    workflow_id = self.__get_workflow_id()
+                    progress = self.__openapi_service.workflow_api.workflow_workflow_id_progress_get(workflow_id)
                 break
             except Exception:
                 sleep(self._retry_delay * 2)
