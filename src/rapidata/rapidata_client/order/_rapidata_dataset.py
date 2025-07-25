@@ -14,6 +14,7 @@ from typing import cast, Sequence, Generator
 from rapidata.rapidata_client.logging import logger, managed_print, RapidataOutputManager
 import time
 import threading
+from rapidata.rapidata_client.api.rapidata_exception import suppress_rapidata_error_logging
 
 def chunk_list(lst: list, chunk_size: int) -> Generator:
     for i in range(0, len(lst), chunk_size):
@@ -94,6 +95,8 @@ class RapidataDataset:
         Returns:
             tuple[list[Datapoint], list[Datapoint]]: Lists of successful and failed datapoints
         """
+        logger.debug(f"Processing single upload for {datapoint} with index {index}")
+        
         local_successful: list[Datapoint] = []
         local_failed: list[Datapoint] = []
 
@@ -105,14 +108,15 @@ class RapidataDataset:
         last_exception = None
         for attempt in range(max_retries):
             try:
-                self.openapi_service.dataset_api.dataset_dataset_id_datapoints_post(
-                    dataset_id=self.id,
-                    file=local_paths,
-                    url=urls,
-                    metadata=metadata,
-                    sort_index=index,
-                )
-                
+                with suppress_rapidata_error_logging():
+                    self.openapi_service.dataset_api.dataset_dataset_id_datapoints_post(
+                        dataset_id=self.id,
+                        file=local_paths,
+                        url=urls,
+                        metadata=metadata,
+                        sort_index=index,
+                    )
+            
                 local_successful.append(datapoint)
 
                 return local_successful, local_failed
@@ -123,11 +127,12 @@ class RapidataDataset:
                     # Exponential backoff: wait 1s, then 2s, then 4s
                     retry_delay = 2 ** attempt
                     time.sleep(retry_delay)
-                    managed_print(f"\nRetrying {attempt + 1} of {max_retries}...\n")
+                    logger.debug(f"Error: {str(last_exception)}")
+                    logger.debug(f"Retrying {attempt + 1} of {max_retries}...")
                     
         # If we get here, all retries failed
         local_failed.append(datapoint)
-        logger.error(f"\nUpload failed for {datapoint} after {max_retries} attempts. Final error: {str(last_exception)}")
+        logger.error(f"\nUpload failed for {datapoint} after {max_retries} attempts. \nFinal error: \n{str(last_exception)}")
 
         return local_successful, local_failed
 
@@ -208,7 +213,7 @@ class RapidataDataset:
                                     # If we're not at 100% but it's been a while with no progress
                                     if stall_count > 5:
                                         # We've polled several times with no progress, assume we're done
-                                        logger.warning(f"\nProgress seems stalled at {total_completed}/{total_uploads}. Please try again.")
+                                        logger.warning(f"\nProgress seems stalled at {total_completed}/{total_uploads}.")
                                         break
                                 
                         except Exception as e:

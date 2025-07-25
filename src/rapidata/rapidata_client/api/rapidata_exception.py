@@ -2,7 +2,26 @@ from typing import Optional, Any
 from rapidata.api_client.api_client import ApiClient, rest, ApiResponse, ApiResponseT
 from rapidata.api_client.exceptions import ApiException
 import json
+import threading
+from contextlib import contextmanager
 from rapidata.rapidata_client.logging import logger
+
+# Thread-local storage for controlling error logging
+_thread_local = threading.local()
+
+@contextmanager
+def suppress_rapidata_error_logging():
+    """Context manager to suppress error logging for RapidataApiClient calls."""
+    old_value = getattr(_thread_local, 'suppress_error_logging', False)
+    _thread_local.suppress_error_logging = True
+    try:
+        yield
+    finally:
+        _thread_local.suppress_error_logging = old_value
+
+def _should_suppress_error_logging() -> bool:
+    """Check if error logging should be suppressed for the current thread."""
+    return getattr(_thread_local, 'suppress_error_logging', False)
 
 class RapidataError(Exception):
     """Custom error class for Rapidata API errors."""
@@ -97,11 +116,17 @@ class RapidataApiClient(ApiClient):
                     # If we can't parse the body as JSON, use the original message
                     pass
             
-            error_formatted =  RapidataError(
+            error_formatted = RapidataError(
                 status_code=status_code, 
                 message=message, 
                 original_exception=e,
                 details=details
             )
-            logger.error(f"Error: {error_formatted}")
+            
+            # Only log error if not suppressed
+            if not _should_suppress_error_logging():
+                logger.error(f"Error: {error_formatted}")
+            else:
+                logger.debug(f"Suppressed Error: {error_formatted}")
+            
             raise error_formatted from None
