@@ -132,8 +132,7 @@ class RapidataDataset:
                     
         # If we get here, all retries failed
         local_failed.append(datapoint)
-        logger.error(f"\nUpload failed for {datapoint} after {max_retries} attempts. \nFinal error: \n{str(last_exception)}")
-
+        tqdm.write(f"Upload failed for {datapoint} after {max_retries} attempts. \nFinal error: \n{str(last_exception)}")
         return local_successful, local_failed
 
     def _get_progress_tracker(
