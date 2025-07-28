@@ -17,8 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -32,10 +32,7 @@ class GetStandingByIdResult(BaseModel):
     dataset_id: StrictStr = Field(alias="datasetId")
     status: StrictStr
     is_disabled: StrictBool = Field(alias="isDisabled")
-    score: Optional[Union[StrictFloat, StrictInt]] = None
-    wins: StrictInt
-    total_matches: StrictInt = Field(alias="totalMatches")
-    __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "datasetId", "status", "isDisabled", "score", "wins", "totalMatches"]
+    __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "datasetId", "status", "isDisabled"]
 
     @field_validator('status')
     def status_validate_enum(cls, value):
@@ -83,11 +80,6 @@ class GetStandingByIdResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if score (nullable) is None
-        # and model_fields_set contains the field
-        if self.score is None and "score" in self.model_fields_set:
-            _dict['score'] = None
-
         return _dict
 
     @classmethod
@@ -105,10 +97,7 @@ class GetStandingByIdResult(BaseModel):
             "benchmarkId": obj.get("benchmarkId"),
             "datasetId": obj.get("datasetId"),
             "status": obj.get("status"),
-            "isDisabled": obj.get("isDisabled"),
-            "score": obj.get("score"),
-            "wins": obj.get("wins"),
-            "totalMatches": obj.get("totalMatches")
+            "isDisabled": obj.get("isDisabled")
         })
         return _obj
 

@@ -30,6 +30,7 @@ from rapidata.api_client.models.prompt_by_benchmark_result_paged_result import P
 from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.submit_participant_result import SubmitParticipantResult
 from rapidata.api_client.models.submit_prompt_model import SubmitPromptModel
+from rapidata.api_client.models.tags_by_benchmark_result import TagsByBenchmarkResult
 from rapidata.api_client.models.update_benchmark_name_model import UpdateBenchmarkNameModel
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
@@ -2522,7 +2523,7 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ParticipantByBenchmarkPagedResult:
+    ) -> TagsByBenchmarkResult:
         """Query all tags within a benchmark
 
 
@@ -2559,7 +2560,7 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ParticipantByBenchmarkPagedResult",
+            '200': "TagsByBenchmarkResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2588,7 +2589,7 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[ParticipantByBenchmarkPagedResult]:
+    ) -> ApiResponse[TagsByBenchmarkResult]:
         """Query all tags within a benchmark
 
 
@@ -2625,7 +2626,7 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ParticipantByBenchmarkPagedResult",
+            '200': "TagsByBenchmarkResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2691,7 +2692,7 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ParticipantByBenchmarkPagedResult",
+            '200': "TagsByBenchmarkResult",
         }
         response_data = self.api_client.call_api(
             *_param,
