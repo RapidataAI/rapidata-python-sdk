@@ -10,6 +10,7 @@ from rapidata.api_client.api.rapid_api import RapidApi
 from rapidata.api_client.api.leaderboard_api import LeaderboardApi
 from rapidata.api_client.api.validation_set_api import ValidationSetApi
 from rapidata.api_client.api.workflow_api import WorkflowApi
+from rapidata.api_client.api.participant_api import ParticipantApi
 from rapidata.api_client.configuration import Configuration
 from rapidata.service.credential_manager import CredentialManager
 from rapidata.rapidata_client.api.rapidata_exception import RapidataApiClient
@@ -117,6 +118,10 @@ class OpenAPIService:
     @property
     def benchmark_api(self) -> BenchmarkApi:
         return BenchmarkApi(self.api_client)
+    
+    @property
+    def participant_api(self) -> ParticipantApi:
+        return ParticipantApi(self.api_client)
 
     def _get_rapidata_package_version(self):
         """

@@ -11,14 +11,13 @@ from rapidata.api_client.models.url_asset_input import UrlAssetInput
 from rapidata.api_client.models.file_asset_model import FileAssetModel
 from rapidata.api_client.models.source_url_metadata_model import SourceUrlMetadataModel
 
+
+from rapidata.rapidata_client.benchmark.participant._participant import BenchmarkParticipant
 from rapidata.rapidata_client.logging import logger
 from rapidata.service.openapi_service import OpenAPIService
 
 from rapidata.rapidata_client.benchmark.leaderboard.rapidata_leaderboard import RapidataLeaderboard
-from rapidata.rapidata_client.datapoints.metadata import PromptIdentifierMetadata
 from rapidata.rapidata_client.datapoints.assets import MediaAsset
-from rapidata.rapidata_client.order._rapidata_dataset import RapidataDataset
-from rapidata.rapidata_client.datapoints.datapoint import Datapoint
 
 class RapidataBenchmark:
     """
@@ -250,7 +249,7 @@ class RapidataBenchmark:
             leaderboard_result.id,
             self.__openapi_service
         )
-    
+
     def evaluate_model(self, name: str, media: list[str], identifiers: list[str]) -> None:
         """
         Evaluates a model on the benchmark across all leaderboards.
@@ -272,11 +271,9 @@ class RapidataBenchmark:
 \nTo see the prompts that are associated with the identifiers, use the prompts property.")
         
         # happens before the creation of the participant to ensure all media paths are valid
-        assets = []
-        prompts_metadata: list[list[PromptIdentifierMetadata]] = []
-        for media_path, identifier in zip(media, identifiers):
+        assets: list[MediaAsset] = []
+        for media_path in media:
             assets.append(MediaAsset(media_path))
-            prompts_metadata.append([PromptIdentifierMetadata(identifier=identifier)])
 
         participant_result = self.__openapi_service.benchmark_api.benchmark_benchmark_id_participants_post(
             benchmark_id=self.id,
@@ -285,22 +282,27 @@ class RapidataBenchmark:
             )
         )
 
-        dataset = RapidataDataset(participant_result.dataset_id, self.__openapi_service)
-        
-        try:
-            dataset.add_datapoints([Datapoint(asset=asset, metadata=metadata) for asset, metadata in zip(assets, prompts_metadata)])
-        except Exception as e:
-            logger.warning(f"An error occurred while adding datapoints to the dataset: {e}")
-            upload_progress = self.__openapi_service.dataset_api.dataset_dataset_id_progress_get(
-                dataset_id=dataset.id
-            )
-            if upload_progress.ready == 0:
-                raise RuntimeError("None of the media was uploaded successfully. Please check the media paths and try again.")
-            
-            logger.warning(f"{upload_progress.failed} datapoints failed to upload. \n{upload_progress.ready} datapoints were uploaded successfully. \nEvaluation will continue with the uploaded datapoints.")
+        logger.info(f"Participant created: {participant_result.participant_id}")
 
-        self.__openapi_service.benchmark_api.benchmark_benchmark_id_participants_participant_id_submit_post(
-            benchmark_id=self.id,
+        participant = BenchmarkParticipant(name, participant_result.participant_id, self.__openapi_service)
+
+        successful_uploads, failed_uploads = participant.upload_media(
+            assets,
+            identifiers,
+        )
+
+        total_uploads = len(assets)
+        success_rate = (len(successful_uploads) / total_uploads * 100) if total_uploads > 0 else 0
+        logger.info(f"Upload complete: {len(successful_uploads)} successful, {len(failed_uploads)} failed ({success_rate:.1f}% success rate)")
+
+        if failed_uploads:
+            logger.error(f"Failed uploads for media: {[asset.path for asset in failed_uploads]}")
+            logger.warning("Some uploads failed. The model evaluation may be incomplete.")
+
+        if len(successful_uploads) == 0:
+            raise RuntimeError("No uploads were successful. The model evaluation will not be completed.")
+
+        self.__openapi_service.participant_api.participants_participant_id_submit_post(
             participant_id=participant_result.participant_id
         )
 
