@@ -38,7 +38,8 @@ class RapidataBenchmark:
         self.__prompt_assets: list[str | None] = []
         self.__leaderboards: list[RapidataLeaderboard] = []
         self.__identifiers: list[str] = []
-
+        self.__tags: list[list[str]] = []
+    
     def __instantiate_prompts(self) -> None:
         current_page = 1
         total_pages = None
@@ -69,7 +70,8 @@ class RapidataBenchmark:
                     source_url = prompt.prompt_asset.actual_instance.metadata["sourceUrl"].actual_instance
                     assert isinstance(source_url, SourceUrlMetadataModel)
                     self.__prompt_assets.append(source_url.url)
-            
+
+                self.__tags.append(prompt.tags)
             if current_page >= total_pages:
                 break
                 
@@ -103,6 +105,15 @@ class RapidataBenchmark:
         return self.__prompt_assets
     
     @property
+    def tags(self) -> list[list[str]]:
+        """
+        Returns the tags that are registered for the benchmark.
+        """
+        if not self.__tags:
+            self.__instantiate_prompts()
+        
+        return self.__tags
+    
     def leaderboards(self) -> list[RapidataLeaderboard]:
         """
         Returns the leaderboards that are registered for the benchmark.
@@ -151,7 +162,7 @@ class RapidataBenchmark:
                 
         return self.__leaderboards
     
-    def add_prompt(self, identifier: str, prompt: str | None = None, asset: str | None = None):
+    def add_prompt(self, identifier: str, prompt: str | None = None, asset: str | None = None, tags: list[str] = []):
         """
         Adds a prompt to the benchmark.
 
@@ -159,6 +170,7 @@ class RapidataBenchmark:
             identifier: The identifier of the prompt/asset that will be used to match up the media.
             prompt: The prompt that will be used to evaluate the model.
             asset: The asset that will be used to evaluate the model. Provided as a link to the asset.
+            tags: The tags can be used to filter the leaderboard results. They will NOT be shown to the users.
         """
         if not isinstance(identifier, str):
             raise ValueError("Identifier must be a string.")
@@ -178,8 +190,12 @@ class RapidataBenchmark:
         if asset is not None and not re.match(r'^https?://', asset):
             raise ValueError("Asset must be a link to the asset.")
         
+        if tags is not None and (not isinstance(tags, list) or not all(isinstance(tag, str) for tag in tags)):
+            raise ValueError("Tags must be a list of strings.")
+        
         self.__identifiers.append(identifier)
 
+        self.__tags.append(tags)
         self.__prompts.append(prompt)
         self.__prompt_assets.append(asset)
 
@@ -193,7 +209,8 @@ class RapidataBenchmark:
                         _t="UrlAssetInput",
                         url=asset
                     )
-                ) if asset is not None else None
+                ) if asset is not None else None,
+                tags=tags
             )
         )
 
