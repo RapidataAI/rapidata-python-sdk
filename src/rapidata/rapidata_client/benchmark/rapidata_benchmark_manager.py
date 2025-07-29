@@ -27,7 +27,7 @@ class RapidataBenchmarkManager:
                              identifiers: list[str],
                              prompts: Optional[list[str | None]] = None,
                              prompt_assets: Optional[list[str | None]] = None,
-                             tags: Optional[list[list[str]]] = None,
+                             tags: Optional[list[list[str] | None]] = None,
                              ) -> RapidataBenchmark:
         """
         Creates a new benchmark with the given name, identifiers, prompts, and media assets.
@@ -49,8 +49,8 @@ class RapidataBenchmarkManager:
         if prompt_assets and (not isinstance(prompt_assets, list) or not all(isinstance(asset, str) or asset is None for asset in prompt_assets)):
             raise ValueError("Media assets must be a list of strings or None.")
         
-        if not isinstance(identifiers, list) or not all(isinstance(identifier, str) or identifier is None for identifier in identifiers):
-            raise ValueError("Identifiers must be a list of strings or None.")
+        if not isinstance(identifiers, list) or not all(isinstance(identifier, str) for identifier in identifiers):
+            raise ValueError("Identifiers must be a list of strings.")
         
         if prompts and len(identifiers) != len(prompts):
             raise ValueError("Identifiers and prompts must have the same length.")
@@ -77,7 +77,7 @@ class RapidataBenchmarkManager:
 
         prompts_list = prompts if prompts is not None else [None] * len(identifiers)
         media_assets_list = prompt_assets if prompt_assets is not None else [None] * len(identifiers)
-        tags_list = tags if tags is not None else [[] for _ in range(len(identifiers))]
+        tags_list = tags if tags is not None else [None] * len(identifiers)
 
         for identifier, prompt, asset, tag in zip(identifiers, prompts_list, media_assets_list, tags_list):
             benchmark.add_prompt(identifier, prompt, asset, tag)

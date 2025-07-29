@@ -1,4 +1,5 @@
 import re
+from typing import Optional
 from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.filter import Filter
 from rapidata.api_client.models.query_model import QueryModel
@@ -162,7 +163,7 @@ class RapidataBenchmark:
                 
         return self.__leaderboards
     
-    def add_prompt(self, identifier: str, prompt: str | None = None, asset: str | None = None, tags: list[str] = []):
+    def add_prompt(self, identifier: str, prompt: str | None = None, asset: str | None = None, tags: Optional[list[str]] = None):
         """
         Adds a prompt to the benchmark.
 
@@ -172,6 +173,9 @@ class RapidataBenchmark:
             asset: The asset that will be used to evaluate the model. Provided as a link to the asset.
             tags: The tags can be used to filter the leaderboard results. They will NOT be shown to the users.
         """
+        if tags is None:
+            tags = []
+
         if not isinstance(identifier, str):
             raise ValueError("Identifier must be a string.")
         
