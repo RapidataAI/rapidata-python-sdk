@@ -2860,7 +2860,7 @@
         "tags": [
           "ValidationSet"
         ],
-        "summary": "Updates the dimensions of all rapids within a validation set.",
+        "summary": "Updates the  of all rapshouldAlert property of all rapids within a validation set.",
         "parameters": [
           {
             "name": "validationSetId",
@@ -5012,17 +5012,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ParticipantByBenchmarkPagedResult"
+                  "$ref": "#/components/schemas/TagsByBenchmarkResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ParticipantByBenchmarkPagedResult"
+                  "$ref": "#/components/schemas/TagsByBenchmarkResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ParticipantByBenchmarkPagedResult"
+                  "$ref": "#/components/schemas/TagsByBenchmarkResult"
                 }
               }
             }
@@ -5398,18 +5398,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "request",
-            "in": "query",
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryModel"
-                }
-              }
-            }
           }
         ],
         "responses": {
@@ -5507,21 +5495,20 @@
           {
             "name": "leaderboardId",
             "in": "path",
-            "description": "",
+            "description": "The id of the leaderboard, which standings should be queried",
             "required": true,
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "request",
+            "name": "tags",
             "in": "query",
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryModel"
-                }
+            "description": "The tags the leaderboard should filter for.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
               }
             }
           }
@@ -5532,17 +5519,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StandingByLeaderboardPagedResult"
+                  "$ref": "#/components/schemas/StandingsByLeaderboardResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StandingByLeaderboardPagedResult"
+                  "$ref": "#/components/schemas/StandingsByLeaderboardResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StandingByLeaderboardPagedResult"
+                  "$ref": "#/components/schemas/StandingsByLeaderboardResult"
                 }
               }
             }
@@ -5812,30 +5799,6 @@
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/leaderboard/{leaderboardId}/refresh": {
-      "post": {
-        "tags": [
-          "Leaderboard"
-        ],
-        "summary": "This will force an update to all standings of a leaderboard. this could happen if the recorded matches and scores are out of sync",
-        "parameters": [
-          {
-            "name": "leaderboardId",
-            "in": "path",
-            "description": "",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
           }
         }
       }
@@ -6178,6 +6141,50 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/benchmark-prompt/{promptId}/tags": {
+      "put": {
+        "tags": [
+          "Prompt"
+        ],
+        "summary": "Updates the tags associated with a prompt.",
+        "parameters": [
+          {
+            "name": "promptId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePromptTagsModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePromptTagsModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePromptTagsModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
           }
         }
       }
@@ -8634,6 +8641,12 @@
           "dimension": {
             "type": "string",
             "nullable": true
+          },
+          "dimensions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         },
         "additionalProperties": false
@@ -16775,6 +16788,11 @@
           "isInversed": {
             "type": "boolean",
             "description": "If the results should be inversed, meaning people should select the worse model."
+          },
+          "validationSetId": {
+            "type": "string",
+            "description": "The Validation set that should be attached to every run.",
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -16977,9 +16995,7 @@
           "id",
           "isDisabled",
           "name",
-          "status",
-          "totalMatches",
-          "wins"
+          "status"
         ],
         "type": "object",
         "properties": {
@@ -17005,19 +17021,6 @@
           },
           "isDisabled": {
             "type": "boolean"
-          },
-          "score": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "wins": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalMatches": {
-            "type": "integer",
-            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -17228,11 +17231,15 @@
       "PromptByBenchmarkResult": {
         "required": [
           "createdAt",
+          "id",
           "identifier",
           "tags"
         ],
         "type": "object",
         "properties": {
+          "id": {
+            "type": "string"
+          },
           "prompt": {
             "type": "string",
             "nullable": true
@@ -17500,7 +17507,6 @@
       },
       "StandingByLeaderboard": {
         "required": [
-          "datasetId",
           "id",
           "isDisabled",
           "leaderboardId",
@@ -17521,7 +17527,8 @@
             "type": "string"
           },
           "datasetId": {
-            "type": "string"
+            "type": "string",
+            "deprecated": true
           },
           "status": {
             "enum": [
@@ -17593,6 +17600,21 @@
         ],
         "type": "string"
       },
+      "StandingsByLeaderboardResult": {
+        "required": [
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StandingByLeaderboard"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
       "SubmitParticipantResult": {
         "required": [
           "invalidDatapoints",
@@ -17662,6 +17684,21 @@
         "additionalProperties": false,
         "description": "The model user for submitting a prompt to a benchmark."
       },
+      "TagsByBenchmarkResult": {
+        "required": [
+          "tags"
+        ],
+        "type": "object",
+        "properties": {
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
       "UpdateBenchmarkNameModel": {
         "required": [
           "name"
@@ -17703,6 +17740,23 @@
         },
         "additionalProperties": false,
         "description": "The model used to update the name of a participant."
+      },
+      "UpdatePromptTagsModel": {
+        "required": [
+          "tags"
+        ],
+        "type": "object",
+        "properties": {
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The list of tags to be associated with the prompt."
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for updating prompt tags."
       }
     },
     "securitySchemes": {

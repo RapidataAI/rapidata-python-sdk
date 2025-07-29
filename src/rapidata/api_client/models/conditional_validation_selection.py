@@ -31,7 +31,8 @@ class ConditionalValidationSelection(BaseModel):
     validation_set_id: StrictStr = Field(alias="validationSetId")
     validation_chances: List[ValidationChance] = Field(alias="validationChances")
     dimension: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["_t", "validationSetId", "validationChances", "dimension"]
+    dimensions: Optional[List[StrictStr]] = None
+    __properties: ClassVar[List[str]] = ["_t", "validationSetId", "validationChances", "dimension", "dimensions"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -106,7 +107,8 @@ class ConditionalValidationSelection(BaseModel):
             "_t": obj.get("_t") if obj.get("_t") is not None else 'ConditionalValidationSelection',
             "validationSetId": obj.get("validationSetId"),
             "validationChances": [ValidationChance.from_dict(_item) for _item in obj["validationChances"]] if obj.get("validationChances") is not None else None,
-            "dimension": obj.get("dimension")
+            "dimension": obj.get("dimension"),
+            "dimensions": obj.get("dimensions")
         })
         return _obj
 
