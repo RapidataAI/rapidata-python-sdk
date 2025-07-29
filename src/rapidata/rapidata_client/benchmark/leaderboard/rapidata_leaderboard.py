@@ -1,8 +1,5 @@
 import pandas as pd
-
-from rapidata.api_client.models.query_model import QueryModel
-from rapidata.api_client.models.page_info import PageInfo
-from rapidata.api_client.models.sort_criterion import SortCriterion
+from typing import Optional
 
 from rapidata.service.openapi_service import OpenAPIService
 
@@ -89,16 +86,22 @@ class RapidataLeaderboard:
         """
         return self.__name
 
-    def get_standings(self) -> pd.DataFrame:
+    def get_standings(self, tags: Optional[list[str]] = None) -> pd.DataFrame:
         """
         Returns the standings of the leaderboard.
+
+        Args:
+            tags: The matchups with these tags should be used to create the standings.
+                If tags are None, all matchups will be considered.
+                If tags are empty, no matchups will be considered.
+
+        Returns:
+            A pandas DataFrame containing the standings of the leaderboard.
         """
+
         participants = self.__openapi_service.leaderboard_api.leaderboard_leaderboard_id_standings_get(
             leaderboard_id=self.id,
-            request=QueryModel(
-                page=PageInfo(index=1, size=1000),
-                sortCriteria=[SortCriterion(direction="Desc", propertyName="Score")]
-            )
+            tags=tags
         )
 
         standings = []
