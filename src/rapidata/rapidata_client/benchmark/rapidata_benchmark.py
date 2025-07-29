@@ -168,7 +168,7 @@ class RapidataBenchmark:
         Adds a prompt to the benchmark.
 
         Args:
-            identifier: The identifier of the prompt/asset that will be used to match up the media.
+            identifier: The identifier of the prompt/asset/tags that will be used to match up the media.
             prompt: The prompt that will be used to evaluate the model.
             asset: The asset that will be used to evaluate the model. Provided as a link to the asset.
             tags: The tags can be used to filter the leaderboard results. They will NOT be shown to the users.

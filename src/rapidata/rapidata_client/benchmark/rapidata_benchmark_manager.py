@@ -31,11 +31,13 @@ class RapidataBenchmarkManager:
                              ) -> RapidataBenchmark:
         """
         Creates a new benchmark with the given name, identifiers, prompts, and media assets.
+        Everything is matched up by the indexes of the lists.
 
         prompts or prompt_assets must be provided.
 
         Args:
             name: The name of the benchmark.
+            identifiers: The identifiers of the prompts/assets/tags that will be used to match up the media
             prompts: The prompts that will be registered for the benchmark.
             prompt_assets: The prompt assets that will be registered for the benchmark.
             tags: The tags that will be associated with the prompts to use for filtering the leaderboard results. They will NOT be shown to the users.
