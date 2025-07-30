@@ -31,6 +31,7 @@ class RapidataLeaderboard:
         show_prompt_asset: bool,
         inverse_ranking: bool,
         response_budget: int,
+        min_responses_per_matchup: int,
         id: str,
         openapi_service: OpenAPIService,
     ):
@@ -41,6 +42,7 @@ class RapidataLeaderboard:
         self.__show_prompt_asset = show_prompt_asset
         self.__inverse_ranking = inverse_ranking
         self.__response_budget = response_budget
+        self.__min_responses_per_matchup = min_responses_per_matchup
         self.id = id
 
     @property
@@ -62,10 +64,40 @@ class RapidataLeaderboard:
             leaderboard_id=self.id,
             update_leaderboard_response_config_model=UpdateLeaderboardResponseConfigModel(
                 responseBudget=DetailMapper.get_budget(level_of_detail),
-                minResponses=DetailMapper.MIN_RESPONSES,
+                minResponses=self.__min_responses_per_matchup,
             ),
         )
         self.__response_budget = DetailMapper.get_budget(level_of_detail)
+
+    @property
+    def min_responses_per_matchup(self) -> int:
+        """
+        Returns the minimum number of responses required to be considered for the leaderboard.
+        """
+        return self.__min_responses_per_matchup
+
+    @min_responses_per_matchup.setter
+    def min_responses_per_matchup(self, min_responses: int):
+        """
+        Sets the minimum number of responses required to be considered for the leaderboard.
+        """
+        if not isinstance(min_responses, int):
+            raise ValueError("Min responses per matchup must be an integer")
+
+        if min_responses < 3:
+            raise ValueError("Min responses per matchup must be at least 3")
+
+        logger.debug(
+            f"Setting min responses per matchup to {min_responses} for leaderboard {self.name}"
+        )
+        self.__openapi_service.leaderboard_api.leaderboard_leaderboard_id_response_config_put(
+            leaderboard_id=self.id,
+            update_leaderboard_response_config_model=UpdateLeaderboardResponseConfigModel(
+                responseBudget=self.__response_budget,
+                minResponses=min_responses,
+            ),
+        )
+        self.__min_responses_per_matchup = min_responses
 
     @property
     def show_prompt_asset(self) -> bool:
