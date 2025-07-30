@@ -135,6 +135,7 @@ Class | Method | HTTP request | Description
 *LeaderboardApi* | [**leaderboard_leaderboard_id_participants_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_participants_post) | **POST** /leaderboard/{leaderboardId}/participants | Creates a participant in a leaderboard.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_prompts_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_prompts_get) | **GET** /leaderboard/{leaderboardId}/prompts | returns the paged prompts of a leaderboard by its ID.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_prompts_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_prompts_post) | **POST** /leaderboard/{leaderboardId}/prompts | adds a new prompt to a leaderboard.
+*LeaderboardApi* | [**leaderboard_leaderboard_id_response_config_put**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_response_config_put) | **PUT** /leaderboard/{leaderboardId}/response-config | Updates the name of a leaderboard.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_runs_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_runs_get) | **GET** /leaderboard/{leaderboardId}/runs | Gets the runs related to a leaderboard
 *LeaderboardApi* | [**leaderboard_leaderboard_id_standings_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_standings_get) | **GET** /leaderboard/{leaderboardId}/standings | queries all the participants connected to leaderboard by its ID.
 *LeaderboardApi* | [**leaderboard_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_post) | **POST** /leaderboard | Creates a new leaderboard with the specified name and criteria.
@@ -563,6 +564,7 @@ Class | Method | HTTP request | Description
  - [UpdateDatasetNameModel](rapidata/api_client/docs/UpdateDatasetNameModel.md)
  - [UpdateDimensionsModel](rapidata/api_client/docs/UpdateDimensionsModel.md)
  - [UpdateLeaderboardNameModel](rapidata/api_client/docs/UpdateLeaderboardNameModel.md)
+ - [UpdateLeaderboardResponseConfigModel](rapidata/api_client/docs/UpdateLeaderboardResponseConfigModel.md)
  - [UpdateOrderNameModel](rapidata/api_client/docs/UpdateOrderNameModel.md)
  - [UpdateParticipantNameModel](rapidata/api_client/docs/UpdateParticipantNameModel.md)
  - [UpdatePromptTagsModel](rapidata/api_client/docs/UpdatePromptTagsModel.md)

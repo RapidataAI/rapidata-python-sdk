@@ -39,8 +39,8 @@ class Filter(BaseModel):
         if value is None:
             return value
 
-        if value not in set(['Eq', 'Neq', 'Gt', 'Gte', 'Lt', 'Lte', 'Contains', 'StartsWith', 'EndsWith']):
-            raise ValueError("must be one of enum values ('Eq', 'Neq', 'Gt', 'Gte', 'Lt', 'Lte', 'Contains', 'StartsWith', 'EndsWith')")
+        if value not in set(['Eq', 'Neq', 'Gt', 'Gte', 'Lt', 'Lte', 'Contains', 'StartsWith', 'EndsWith', 'In']):
+            raise ValueError("must be one of enum values ('Eq', 'Neq', 'Gt', 'Gte', 'Lt', 'Lte', 'Contains', 'StartsWith', 'EndsWith', 'In')")
         return value
 
     @field_validator('logic')

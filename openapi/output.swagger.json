@@ -5231,6 +5231,50 @@
         }
       }
     },
+    "/leaderboard/{leaderboardId}/response-config": {
+      "put": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "Updates the name of a leaderboard.",
+        "parameters": [
+          {
+            "name": "leaderboardId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLeaderboardResponseConfigModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLeaderboardResponseConfigModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLeaderboardResponseConfigModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
     "/leaderboard": {
       "post": {
         "tags": [
@@ -6821,7 +6865,8 @@
               "Lte",
               "Contains",
               "StartsWith",
-              "EndsWith"
+              "EndsWith",
+              "In"
             ],
             "type": "string"
           },
@@ -6852,7 +6897,8 @@
           "Lte",
           "Contains",
           "StartsWith",
-          "EndsWith"
+          "EndsWith",
+          "In"
         ],
         "type": "string"
       },
@@ -17403,7 +17449,8 @@
           "asset",
           "id",
           "identifier",
-          "ownerMail"
+          "ownerMail",
+          "tags"
         ],
         "type": "object",
         "properties": {
@@ -17454,6 +17501,12 @@
             "nullable": true,
             "discriminator": {
               "propertyName": "_t"
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
             }
           },
           "createdAt": {
@@ -17722,6 +17775,27 @@
           "name": {
             "type": "string",
             "description": "The new name of the leaderboard."
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model used to update the name of a leaderboard."
+      },
+      "UpdateLeaderboardResponseConfigModel": {
+        "required": [
+          "minResponses",
+          "responseBudget"
+        ],
+        "type": "object",
+        "properties": {
+          "responseBudget": {
+            "type": "integer",
+            "description": "The amount of responses that will be collected when onboarding a new participant.",
+            "format": "int32"
+          },
+          "minResponses": {
+            "type": "integer",
+            "description": "The amount of responses that will be collected as a minimum on each matchup.",
+            "format": "int32"
           }
         },
         "additionalProperties": false,

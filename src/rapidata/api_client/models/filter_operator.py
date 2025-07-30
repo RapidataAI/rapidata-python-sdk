@@ -35,6 +35,7 @@ class FilterOperator(str, Enum):
     CONTAINS = 'Contains'
     STARTSWITH = 'StartsWith'
     ENDSWITH = 'EndsWith'
+    IN = 'In'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
