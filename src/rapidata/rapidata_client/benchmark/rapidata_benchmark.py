@@ -115,6 +115,7 @@ class RapidataBenchmark:
         
         return self.__tags
     
+    @property
     def leaderboards(self) -> list[RapidataLeaderboard]:
         """
         Returns the leaderboards that are registered for the benchmark.
