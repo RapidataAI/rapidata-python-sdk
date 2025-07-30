@@ -84,8 +84,8 @@ class RapidataLeaderboard:
         if not isinstance(min_responses, int):
             raise ValueError("Min responses per matchup must be an integer")
 
-        if min_responses < 1:
-            raise ValueError("Min responses per matchup must be at least 1")
+        if min_responses < 3:
+            raise ValueError("Min responses per matchup must be at least 3")
 
         logger.debug(
             f"Setting min responses per matchup to {min_responses} for leaderboard {self.name}"
