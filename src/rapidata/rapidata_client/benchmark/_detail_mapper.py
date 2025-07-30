@@ -2,8 +2,6 @@ from typing import Literal
 
 
 class DetailMapper:
-    MIN_RESPONSES = 3
-
     @staticmethod
     def get_budget(
         level_of_detail: Literal["low", "medium", "high", "very high"]

@@ -172,6 +172,7 @@ class RapidataBenchmark:
                             leaderboard.show_prompt_asset,
                             leaderboard.is_inversed,
                             leaderboard.response_budget,
+                            leaderboard.min_responses,
                             leaderboard.id,
                             self.__openapi_service,
                         )
@@ -258,6 +259,7 @@ class RapidataBenchmark:
         show_prompt_asset: bool = False,
         inverse_ranking: bool = False,
         level_of_detail: Literal["low", "medium", "high", "very high"] = "low",
+        min_responses_per_matchup: int = 3,
     ) -> RapidataLeaderboard:
         """
         Creates a new leaderboard for the benchmark.
@@ -269,6 +271,7 @@ class RapidataBenchmark:
             show_prompt_asset: Whether to show the prompt asset to the users. (only works if the prompt asset is a URL) (default: False)
             inverse_ranking: Whether to inverse the ranking of the leaderboard. (if the question is inversed, e.g. "Which video is worse?")
             level_of_detail: The level of detail of the leaderboard. This will effect how many comparisons are done per model evaluation. (default: "low")
+            min_responses_per_matchup: The minimum number of responses required to be considered for the leaderboard. (default: 3)
         """
         leaderboard_result = self.__openapi_service.leaderboard_api.leaderboard_post(
             create_leaderboard_model=CreateLeaderboardModel(
@@ -278,7 +281,7 @@ class RapidataBenchmark:
                 showPrompt=show_prompt,
                 showPromptAsset=show_prompt_asset,
                 isInversed=inverse_ranking,
-                minResponses=DetailMapper.MIN_RESPONSES,
+                minResponses=min_responses_per_matchup,
                 responseBudget=DetailMapper.get_budget(level_of_detail),
             )
         )
@@ -294,6 +297,7 @@ class RapidataBenchmark:
             show_prompt_asset,
             inverse_ranking,
             leaderboard_result.response_budget,
+            min_responses_per_matchup,
             leaderboard_result.id,
             self.__openapi_service,
         )
