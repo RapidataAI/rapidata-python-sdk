@@ -23,10 +23,10 @@ class DetailMapper:
     def get_level_of_detail(
         response_budget: int,
     ) -> Literal["low", "medium", "high", "extreme"]:
-        if response_budget <= 3_999:
+        if response_budget < 4_000:
             return "low"
-        elif response_budget <= 7_999:
+        elif response_budget < 8_000:
             return "medium"
-        elif response_budget <= 15_999:
+        elif response_budget < 16_000:
             return "high"
         return "extreme"
