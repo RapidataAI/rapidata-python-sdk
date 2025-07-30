@@ -44,7 +44,7 @@ class RapidataLeaderboard:
         self.id = id
 
     @property
-    def level_of_detail(self) -> Literal["low", "medium", "high", "extreme"]:
+    def level_of_detail(self) -> Literal["low", "medium", "high", "very high"]:
         """
         Returns the level of detail of the leaderboard.
         """
@@ -52,7 +52,7 @@ class RapidataLeaderboard:
 
     @level_of_detail.setter
     def level_of_detail(
-        self, level_of_detail: Literal["low", "medium", "high", "extreme"]
+        self, level_of_detail: Literal["low", "medium", "high", "very high"]
     ):
         """
         Sets the level of detail of the leaderboard.

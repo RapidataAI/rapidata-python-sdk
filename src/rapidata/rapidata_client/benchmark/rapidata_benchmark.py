@@ -257,7 +257,7 @@ class RapidataBenchmark:
         show_prompt: bool = False,
         show_prompt_asset: bool = False,
         inverse_ranking: bool = False,
-        level_of_detail: Literal["low", "medium", "high", "extreme"] = "low",
+        level_of_detail: Literal["low", "medium", "high", "very high"] = "low",
     ) -> RapidataLeaderboard:
         """
         Creates a new leaderboard for the benchmark.
