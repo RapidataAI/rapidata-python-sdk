@@ -273,6 +273,9 @@ class RapidataBenchmark:
             level_of_detail: The level of detail of the leaderboard. This will effect how many comparisons are done per model evaluation. (default: "low")
             min_responses_per_matchup: The minimum number of responses required to be considered for the leaderboard. (default: 3)
         """
+        if not isinstance(min_responses_per_matchup, int):
+            raise ValueError("Min responses per matchup must be an integer")
+
         if min_responses_per_matchup < 3:
             raise ValueError("Min responses per matchup must be at least 3")
 
