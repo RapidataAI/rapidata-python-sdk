@@ -42,4 +42,5 @@ from .rapidata_client import (
     configure_logger,
     RapidataOutputManager,
     FailedUploadException,
+    rapidata_config,
 )

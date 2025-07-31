@@ -1,25 +1,11 @@
-from itertools import zip_longest
-
-from rapidata.api_client.models.create_datapoint_from_text_sources_model import (
-    CreateDatapointFromTextSourcesModel,
-)
-from rapidata.api_client.models.dataset_dataset_id_datapoints_post_request_metadata_inner import (
-    DatasetDatasetIdDatapointsPostRequestMetadataInner,
-)
 from rapidata.rapidata_client.datapoints.datapoint import Datapoint
-from rapidata.rapidata_client.datapoints.metadata import Metadata
-from rapidata.rapidata_client.datapoints.assets import (
-    TextAsset,
-    MediaAsset,
-    MultiAsset,
-    BaseAsset,
-)
+from rapidata.rapidata_client.datapoints.assets import TextAsset, MediaAsset
 from rapidata.service import LocalFileService
 from rapidata.service.openapi_service import OpenAPIService
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
 
-from typing import cast, Sequence, Generator
+from typing import Generator
 from rapidata.rapidata_client.logging import (
     logger,
     managed_print,
@@ -30,6 +16,7 @@ import threading
 from rapidata.rapidata_client.api.rapidata_exception import (
     suppress_rapidata_error_logging,
 )
+from rapidata.rapidata_client.config.config import rapidata_config
 
 
 def chunk_list(lst: list, chunk_size: int) -> Generator:
@@ -52,17 +39,19 @@ class RapidataDataset:
 
         effective_asset_type = datapoints[0]._get_effective_asset_type()
 
+        logger.debug(f"Config for datapoint upload: {rapidata_config}")
+
         if issubclass(effective_asset_type, MediaAsset):
-            return self._add_media_from_paths(datapoints)
+            return self._add_media_from_paths(
+                datapoints,
+            )
         elif issubclass(effective_asset_type, TextAsset):
             return self._add_texts(datapoints)
         else:
             raise ValueError(f"Unsupported asset type: {effective_asset_type}")
 
     def _add_texts(
-        self,
-        datapoints: list[Datapoint],
-        max_workers: int = 10,
+        self, datapoints: list[Datapoint]
     ) -> tuple[list[Datapoint], list[Datapoint]]:
 
         def upload_text_datapoint(datapoint: Datapoint, index: int) -> Datapoint:
@@ -77,7 +66,9 @@ class RapidataDataset:
         failed_uploads: list[Datapoint] = []
 
         total_uploads = len(datapoints)
-        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        with ThreadPoolExecutor(
+            max_workers=rapidata_config.max_upload_workers
+        ) as executor:
             future_to_datapoint = {
                 executor.submit(upload_text_datapoint, datapoint, index=i): datapoint
                 for i, datapoint in enumerate(datapoints)
@@ -104,7 +95,6 @@ class RapidataDataset:
         self,
         datapoint: Datapoint,
         index: int,
-        max_retries: int = 3,
     ) -> tuple[list[Datapoint], list[Datapoint]]:
         """
         Process single upload with retry logic and error tracking.
@@ -129,7 +119,7 @@ class RapidataDataset:
         urls = datapoint.get_urls()
 
         last_exception = None
-        for attempt in range(max_retries):
+        for attempt in range(rapidata_config.upload_max_retries):
             try:
                 with suppress_rapidata_error_logging():
                     self.openapi_service.dataset_api.dataset_dataset_id_datapoints_post(
@@ -146,17 +136,21 @@ class RapidataDataset:
 
             except Exception as e:
                 last_exception = e
-                if attempt < max_retries - 1:
+                if attempt < rapidata_config.upload_max_retries - 1:
                     # Exponential backoff: wait 1s, then 2s, then 4s
                     retry_delay = 2**attempt
                     time.sleep(retry_delay)
                     logger.debug("Error: %s", str(last_exception))
-                    logger.debug("Retrying %s of %s...", attempt + 1, max_retries)
+                    logger.debug(
+                        "Retrying %s of %s...",
+                        attempt + 1,
+                        rapidata_config.upload_max_retries,
+                    )
 
         # If we get here, all retries failed
         local_failed.append(datapoint)
         tqdm.write(
-            f"Upload failed for {datapoint} after {max_retries} attempts. \nFinal error: \n{str(last_exception)}"
+            f"Upload failed for {datapoint} after {rapidata_config.upload_max_retries} attempts. \nFinal error: \n{str(last_exception)}"
         )
 
         return local_successful, local_failed
@@ -277,7 +271,6 @@ class RapidataDataset:
     def _process_uploads_in_chunks(
         self,
         datapoints: list[Datapoint],
-        max_workers: int,
         chunk_size: int,
         stop_progress_tracking: threading.Event,
         progress_tracking_error: threading.Event,
@@ -288,7 +281,6 @@ class RapidataDataset:
         Args:
             media_paths: List of assets to upload
             multi_metadata: Optional sequence of sequences of metadata
-            max_workers: Maximum number of concurrent workers
             chunk_size: Number of items to process in each batch
             stop_progress_tracking: Event to signal progress tracking to stop
             progress_tracking_error: Event to detect progress tracking errors
@@ -300,7 +292,9 @@ class RapidataDataset:
         failed_uploads: list[Datapoint] = []
 
         try:
-            with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            with ThreadPoolExecutor(
+                max_workers=rapidata_config.max_upload_workers
+            ) as executor:
                 # Process uploads in chunks to avoid overwhelming the system
                 for chunk_idx, chunk in enumerate(chunk_list(datapoints, chunk_size)):
                     futures = [
@@ -395,7 +389,6 @@ class RapidataDataset:
     def _add_media_from_paths(
         self,
         datapoints: list[Datapoint],
-        max_workers: int = 10,
         chunk_size: int = 50,
         progress_poll_interval: float = 0.5,
     ) -> tuple[list[Datapoint], list[Datapoint]]:
@@ -404,10 +397,8 @@ class RapidataDataset:
 
         Args:
             datapoints: List of Datapoint objects to upload
-            max_workers: Maximum number of concurrent upload workers
             chunk_size: Number of items to process in each batch
             progress_poll_interval: Time in seconds between progress checks
-
         Returns:
             tuple[list[Datapoint], list[Datapoint]]: Lists of successful and failed datapoints
 
@@ -435,7 +426,6 @@ class RapidataDataset:
         try:
             successful_uploads, failed_uploads = self._process_uploads_in_chunks(
                 datapoints,
-                max_workers,
                 chunk_size,
                 stop_progress_tracking,
                 progress_tracking_error,
