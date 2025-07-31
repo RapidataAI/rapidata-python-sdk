@@ -3071,6 +3071,36 @@
         }
       }
     },
+    "/rapid/global-responses": {
+      "get": {
+        "tags": [
+          "CustomerRapid"
+        ],
+        "summary": "A public endpoint to query the most recent responses globally",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPublicResponsesResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPublicResponsesResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPublicResponsesResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/rapid/demographic": {
       "post": {
         "tags": [
@@ -4538,6 +4568,55 @@
           "Campaign"
         ],
         "summary": "Gets the status of the boost.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BoostQueryResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BoostQueryResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BoostQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/campaign/boost": {
+      "put": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "Updates the boost with manual boosts.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeBoostModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeBoostModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeBoostModel"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -13054,6 +13133,21 @@
         },
         "additionalProperties": false
       },
+      "GetPublicResponsesResult": {
+        "required": [
+          "responses"
+        ],
+        "type": "object",
+        "properties": {
+          "responses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicRapidResponse"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
       "GetRapidResponsesResult": {
         "required": [
           "asset",
@@ -13530,6 +13624,38 @@
           "maxVotes": {
             "type": "integer",
             "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PublicRapidResponse": {
+        "required": [
+          "country",
+          "id",
+          "userId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "age": {
+            "type": "string",
+            "nullable": true
+          },
+          "occupation": {
+            "type": "string",
+            "nullable": true
+          },
+          "gender": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -16507,10 +16633,18 @@
         },
         "additionalProperties": false
       },
+      "BoostMode": {
+        "enum": [
+          "Automatic",
+          "Manual"
+        ],
+        "type": "string"
+      },
       "BoostQueryResult": {
         "required": [
           "activeCampaigns",
           "inactiveCampaigns",
+          "mode",
           "status",
           "unknownCampaigns"
         ],
@@ -16522,6 +16656,13 @@
               "Inactive",
               "Partial",
               "Unknown"
+            ],
+            "type": "string"
+          },
+          "mode": {
+            "enum": [
+              "Automatic",
+              "Manual"
             ],
             "type": "string"
           },
@@ -16643,6 +16784,25 @@
           "Completed"
         ],
         "type": "string"
+      },
+      "ChangeBoostModel": {
+        "required": [
+          "isActive",
+          "isManual"
+        ],
+        "type": "object",
+        "properties": {
+          "isManual": {
+            "type": "boolean",
+            "description": "If the manual overwrite should be applied"
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "If manual is set to true it will overrule the system with this."
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model to update the manual boost status. or putting it back to autopilot."
       },
       "BenchmarkQueryResult": {
         "required": [
