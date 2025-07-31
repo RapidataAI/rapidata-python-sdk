@@ -16,14 +16,9 @@ from .datapoints.metadata import (
     PromptMetadata,
     SelectWordsMetadata,
 )
-from .datapoints.assets import (
-    MediaAsset, 
-    TextAsset, 
-    MultiAsset, 
-    RapidataDataTypes
-)
+from .datapoints.assets import MediaAsset, TextAsset, MultiAsset, RapidataDataTypes
 from .settings import (
-    RapidataSettings, 
+    RapidataSettings,
     TranslationBehaviourOptions,
     AlertOnFastResponse,
     TranslationBehaviour,
@@ -32,7 +27,7 @@ from .settings import (
     PlayVideoUntilTheEnd,
     CustomSetting,
     AllowNeitherBoth,
-    )
+)
 from .country_codes import CountryCodes
 from .filter import (
     CountryFilter,
@@ -49,11 +44,8 @@ from .filter import (
     ResponseCountFilter,
 )
 
-from .logging import (
-    configure_logger, 
-    logger,
-    RapidataOutputManager
-)
+from .logging import configure_logger, logger, RapidataOutputManager
 
 from .validation import Box
 from .exceptions import FailedUploadException
+from .config import rapidata_config
