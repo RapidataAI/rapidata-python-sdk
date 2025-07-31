@@ -17,35 +17,18 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.public_rapid_response import PublicRapidResponse
 from typing import Optional, Set
 from typing_extensions import Self
 
-class BoostQueryResult(BaseModel):
+class GetPublicResponsesResult(BaseModel):
     """
-    BoostQueryResult
+    GetPublicResponsesResult
     """ # noqa: E501
-    status: StrictStr
-    mode: StrictStr
-    active_campaigns: List[StrictStr] = Field(alias="activeCampaigns")
-    inactive_campaigns: List[StrictStr] = Field(alias="inactiveCampaigns")
-    unknown_campaigns: List[StrictInt] = Field(alias="unknownCampaigns")
-    __properties: ClassVar[List[str]] = ["status", "mode", "activeCampaigns", "inactiveCampaigns", "unknownCampaigns"]
-
-    @field_validator('status')
-    def status_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['Active', 'Inactive', 'Partial', 'Unknown']):
-            raise ValueError("must be one of enum values ('Active', 'Inactive', 'Partial', 'Unknown')")
-        return value
-
-    @field_validator('mode')
-    def mode_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['Automatic', 'Manual']):
-            raise ValueError("must be one of enum values ('Automatic', 'Manual')")
-        return value
+    responses: List[PublicRapidResponse]
+    __properties: ClassVar[List[str]] = ["responses"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -65,7 +48,7 @@ class BoostQueryResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of BoostQueryResult from a JSON string"""
+        """Create an instance of GetPublicResponsesResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -86,11 +69,18 @@ class BoostQueryResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in responses (list)
+        _items = []
+        if self.responses:
+            for _item_responses in self.responses:
+                if _item_responses:
+                    _items.append(_item_responses.to_dict())
+            _dict['responses'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of BoostQueryResult from a dict"""
+        """Create an instance of GetPublicResponsesResult from a dict"""
         if obj is None:
             return None
 
@@ -98,11 +88,7 @@ class BoostQueryResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "status": obj.get("status"),
-            "mode": obj.get("mode"),
-            "activeCampaigns": obj.get("activeCampaigns"),
-            "inactiveCampaigns": obj.get("inactiveCampaigns"),
-            "unknownCampaigns": obj.get("unknownCampaigns")
+            "responses": [PublicRapidResponse.from_dict(_item) for _item in obj["responses"]] if obj.get("responses") is not None else None
         })
         return _obj
 

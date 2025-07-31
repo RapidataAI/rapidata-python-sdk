@@ -17,35 +17,18 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool
 from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class BoostQueryResult(BaseModel):
+class ChangeBoostModel(BaseModel):
     """
-    BoostQueryResult
+    The model to update the manual boost status. or putting it back to autopilot.
     """ # noqa: E501
-    status: StrictStr
-    mode: StrictStr
-    active_campaigns: List[StrictStr] = Field(alias="activeCampaigns")
-    inactive_campaigns: List[StrictStr] = Field(alias="inactiveCampaigns")
-    unknown_campaigns: List[StrictInt] = Field(alias="unknownCampaigns")
-    __properties: ClassVar[List[str]] = ["status", "mode", "activeCampaigns", "inactiveCampaigns", "unknownCampaigns"]
-
-    @field_validator('status')
-    def status_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['Active', 'Inactive', 'Partial', 'Unknown']):
-            raise ValueError("must be one of enum values ('Active', 'Inactive', 'Partial', 'Unknown')")
-        return value
-
-    @field_validator('mode')
-    def mode_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['Automatic', 'Manual']):
-            raise ValueError("must be one of enum values ('Automatic', 'Manual')")
-        return value
+    is_manual: StrictBool = Field(description="If the manual overwrite should be applied", alias="isManual")
+    is_active: StrictBool = Field(description="If manual is set to true it will overrule the system with this.", alias="isActive")
+    __properties: ClassVar[List[str]] = ["isManual", "isActive"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -65,7 +48,7 @@ class BoostQueryResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of BoostQueryResult from a JSON string"""
+        """Create an instance of ChangeBoostModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -90,7 +73,7 @@ class BoostQueryResult(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of BoostQueryResult from a dict"""
+        """Create an instance of ChangeBoostModel from a dict"""
         if obj is None:
             return None
 
@@ -98,11 +81,8 @@ class BoostQueryResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "status": obj.get("status"),
-            "mode": obj.get("mode"),
-            "activeCampaigns": obj.get("activeCampaigns"),
-            "inactiveCampaigns": obj.get("inactiveCampaigns"),
-            "unknownCampaigns": obj.get("unknownCampaigns")
+            "isManual": obj.get("isManual"),
+            "isActive": obj.get("isActive")
         })
         return _obj
 
