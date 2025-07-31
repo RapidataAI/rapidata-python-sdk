@@ -5236,7 +5236,7 @@
         "tags": [
           "Leaderboard"
         ],
-        "summary": "Updates the name of a leaderboard.",
+        "summary": "Updates the response config of a leaderboard.",
         "parameters": [
           {
             "name": "leaderboardId",

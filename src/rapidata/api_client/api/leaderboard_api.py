@@ -3117,7 +3117,7 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Updates the name of a leaderboard.
+        """Updates the response config of a leaderboard.
 
 
         :param leaderboard_id:  (required)
@@ -3187,7 +3187,7 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Updates the name of a leaderboard.
+        """Updates the response config of a leaderboard.
 
 
         :param leaderboard_id:  (required)
@@ -3257,7 +3257,7 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Updates the name of a leaderboard.
+        """Updates the response config of a leaderboard.
 
 
         :param leaderboard_id:  (required)
