@@ -29,7 +29,7 @@ class StandingByLeaderboard(BaseModel):
     id: StrictStr
     name: StrictStr
     leaderboard_id: StrictStr = Field(alias="leaderboardId")
-    dataset_id: StrictStr = Field(alias="datasetId")
+    dataset_id: Optional[StrictStr] = Field(default=None, alias="datasetId")
     status: StrictStr
     score: Optional[Union[StrictFloat, StrictInt]] = None
     wins: StrictInt

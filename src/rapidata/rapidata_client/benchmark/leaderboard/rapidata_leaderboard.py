@@ -1,10 +1,12 @@
 import pandas as pd
+from typing import Literal, Optional
 
-from rapidata.api_client.models.query_model import QueryModel
-from rapidata.api_client.models.page_info import PageInfo
-from rapidata.api_client.models.sort_criterion import SortCriterion
-
+from rapidata.rapidata_client.logging import logger
+from rapidata.rapidata_client.benchmark._detail_mapper import DetailMapper
 from rapidata.service.openapi_service import OpenAPIService
+from rapidata.api_client.models.update_leaderboard_response_config_model import (
+    UpdateLeaderboardResponseConfigModel,
+)
 
 
 class RapidataLeaderboard:
@@ -20,68 +22,111 @@ class RapidataLeaderboard:
         id: The ID of the leaderboard.
         openapi_service: The OpenAPIService instance for API interaction.
     """
-    def __init__(self, 
-                 name: str, 
-                 instruction: str, 
-                 show_prompt: bool, 
-                 show_prompt_asset: bool,
-                 inverse_ranking: bool, 
-                 min_responses: int,
-                 response_budget: int,
-                 id: str, 
-                 openapi_service: OpenAPIService):
+
+    def __init__(
+        self,
+        name: str,
+        instruction: str,
+        show_prompt: bool,
+        show_prompt_asset: bool,
+        inverse_ranking: bool,
+        response_budget: int,
+        min_responses_per_matchup: int,
+        id: str,
+        openapi_service: OpenAPIService,
+    ):
         self.__openapi_service = openapi_service
         self.__name = name
         self.__instruction = instruction
         self.__show_prompt = show_prompt
         self.__show_prompt_asset = show_prompt_asset
         self.__inverse_ranking = inverse_ranking
-        self.__min_responses = min_responses
         self.__response_budget = response_budget
+        self.__min_responses_per_matchup = min_responses_per_matchup
         self.id = id
 
     @property
-    def response_budget(self) -> int:
+    def level_of_detail(self) -> Literal["low", "medium", "high", "very high"]:
         """
-        Returns the response budget of the leaderboard.
+        Returns the level of detail of the leaderboard.
         """
-        return self.__response_budget
-    
+        return DetailMapper.get_level_of_detail(self.__response_budget)
+
+    @level_of_detail.setter
+    def level_of_detail(
+        self, level_of_detail: Literal["low", "medium", "high", "very high"]
+    ):
+        """
+        Sets the level of detail of the leaderboard.
+        """
+        logger.debug(f"Setting level of detail to {level_of_detail}")
+        self.__openapi_service.leaderboard_api.leaderboard_leaderboard_id_response_config_put(
+            leaderboard_id=self.id,
+            update_leaderboard_response_config_model=UpdateLeaderboardResponseConfigModel(
+                responseBudget=DetailMapper.get_budget(level_of_detail),
+                minResponses=self.__min_responses_per_matchup,
+            ),
+        )
+        self.__response_budget = DetailMapper.get_budget(level_of_detail)
+
     @property
-    def min_responses(self) -> int:
+    def min_responses_per_matchup(self) -> int:
         """
         Returns the minimum number of responses required to be considered for the leaderboard.
         """
-        return self.__min_responses
-    
+        return self.__min_responses_per_matchup
+
+    @min_responses_per_matchup.setter
+    def min_responses_per_matchup(self, min_responses: int):
+        """
+        Sets the minimum number of responses required to be considered for the leaderboard.
+        """
+        if not isinstance(min_responses, int):
+            raise ValueError("Min responses per matchup must be an integer")
+
+        if min_responses < 3:
+            raise ValueError("Min responses per matchup must be at least 3")
+
+        logger.debug(
+            f"Setting min responses per matchup to {min_responses} for leaderboard {self.name}"
+        )
+        self.__openapi_service.leaderboard_api.leaderboard_leaderboard_id_response_config_put(
+            leaderboard_id=self.id,
+            update_leaderboard_response_config_model=UpdateLeaderboardResponseConfigModel(
+                responseBudget=self.__response_budget,
+                minResponses=min_responses,
+            ),
+        )
+        self.__min_responses_per_matchup = min_responses
+
     @property
     def show_prompt_asset(self) -> bool:
         """
         Returns whether the prompt asset is shown to the users.
         """
         return self.__show_prompt_asset
-    
+
     @property
     def inverse_ranking(self) -> bool:
         """
         Returns whether the ranking is inverse.
         """
         return self.__inverse_ranking
-    
+
     @property
     def show_prompt(self) -> bool:
         """
         Returns whether the prompt is shown to the users.
         """
         return self.__show_prompt
-    
+
     @property
     def instruction(self) -> str:
         """
         Returns the instruction of the leaderboard.
         """
         return self.__instruction
-    
+
     @property
     def name(self) -> str:
         """
@@ -89,36 +134,42 @@ class RapidataLeaderboard:
         """
         return self.__name
 
-    def get_standings(self) -> pd.DataFrame:
+    def get_standings(self, tags: Optional[list[str]] = None) -> pd.DataFrame:
         """
         Returns the standings of the leaderboard.
+
+        Args:
+            tags: The matchups with these tags should be used to create the standings.
+                If tags are None, all matchups will be considered.
+                If tags are empty, no matchups will be considered.
+
+        Returns:
+            A pandas DataFrame containing the standings of the leaderboard.
         """
+
         participants = self.__openapi_service.leaderboard_api.leaderboard_leaderboard_id_standings_get(
-            leaderboard_id=self.id,
-            request=QueryModel(
-                page=PageInfo(index=1, size=1000),
-                sortCriteria=[SortCriterion(direction="Desc", propertyName="Score")]
-            )
+            leaderboard_id=self.id, tags=tags
         )
 
         standings = []
         for participant in participants.items:
-            standings.append({
-                "name": participant.name,
-                "wins": participant.wins,
-                "total_matches": participant.total_matches,
-                "score": round(participant.score, 2) if participant.score is not None else None,
-            })
+            standings.append(
+                {
+                    "name": participant.name,
+                    "wins": participant.wins,
+                    "total_matches": participant.total_matches,
+                    "score": (
+                        round(participant.score, 2)
+                        if participant.score is not None
+                        else None
+                    ),
+                }
+            )
 
         return pd.DataFrame(standings)
 
     def __str__(self) -> str:
         return f"RapidataLeaderboard(name={self.name}, instruction={self.instruction}, show_prompt={self.show_prompt}, leaderboard_id={self.id})"
-    
+
     def __repr__(self) -> str:
         return self.__str__()
-
-
-        
-
-

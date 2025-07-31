@@ -34,10 +34,11 @@ class SampleByParticipant(BaseModel):
     asset: DatapointAsset
     prompt: Optional[StrictStr] = None
     prompt_asset: Optional[GetValidationRapidsResultAsset] = Field(default=None, alias="promptAsset")
+    tags: List[StrictStr]
     created_at: Optional[datetime] = Field(default=None, alias="createdAt")
     owner_id: Optional[StrictStr] = Field(default=None, alias="ownerId")
     owner_mail: StrictStr = Field(alias="ownerMail")
-    __properties: ClassVar[List[str]] = ["id", "identifier", "asset", "prompt", "promptAsset", "createdAt", "ownerId", "ownerMail"]
+    __properties: ClassVar[List[str]] = ["id", "identifier", "asset", "prompt", "promptAsset", "tags", "createdAt", "ownerId", "ownerMail"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -111,6 +112,7 @@ class SampleByParticipant(BaseModel):
             "asset": DatapointAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "prompt": obj.get("prompt"),
             "promptAsset": GetValidationRapidsResultAsset.from_dict(obj["promptAsset"]) if obj.get("promptAsset") is not None else None,
+            "tags": obj.get("tags"),
             "createdAt": obj.get("createdAt"),
             "ownerId": obj.get("ownerId"),
             "ownerMail": obj.get("ownerMail")

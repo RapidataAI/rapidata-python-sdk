@@ -33,6 +33,7 @@ from rapidata.api_client.api.newsletter_api import NewsletterApi
 from rapidata.api_client.api.order_api import OrderApi
 from rapidata.api_client.api.participant_api import ParticipantApi
 from rapidata.api_client.api.pipeline_api import PipelineApi
+from rapidata.api_client.api.prompt_api import PromptApi
 from rapidata.api_client.api.rapidata_identity_api_api import RapidataIdentityAPIApi
 from rapidata.api_client.api.simple_workflow_api import SimpleWorkflowApi
 from rapidata.api_client.api.user_info_api import UserInfoApi
@@ -369,6 +370,7 @@ from rapidata.api_client.models.source_url_metadata_model import SourceUrlMetada
 from rapidata.api_client.models.standing_by_leaderboard import StandingByLeaderboard
 from rapidata.api_client.models.standing_by_leaderboard_paged_result import StandingByLeaderboardPagedResult
 from rapidata.api_client.models.standing_status import StandingStatus
+from rapidata.api_client.models.standings_by_leaderboard_result import StandingsByLeaderboardResult
 from rapidata.api_client.models.static_selection import StaticSelection
 from rapidata.api_client.models.sticky_state import StickyState
 from rapidata.api_client.models.stream_file_wrapper import StreamFileWrapper
@@ -380,6 +382,7 @@ from rapidata.api_client.models.submit_order_model import SubmitOrderModel
 from rapidata.api_client.models.submit_participant_result import SubmitParticipantResult
 from rapidata.api_client.models.submit_prompt_model import SubmitPromptModel
 from rapidata.api_client.models.submit_prompt_model_prompt_asset import SubmitPromptModelPromptAsset
+from rapidata.api_client.models.tags_by_benchmark_result import TagsByBenchmarkResult
 from rapidata.api_client.models.text_asset import TextAsset
 from rapidata.api_client.models.text_asset_input import TextAssetInput
 from rapidata.api_client.models.text_asset_model import TextAssetModel
@@ -401,8 +404,10 @@ from rapidata.api_client.models.update_campaign_model import UpdateCampaignModel
 from rapidata.api_client.models.update_dataset_name_model import UpdateDatasetNameModel
 from rapidata.api_client.models.update_dimensions_model import UpdateDimensionsModel
 from rapidata.api_client.models.update_leaderboard_name_model import UpdateLeaderboardNameModel
+from rapidata.api_client.models.update_leaderboard_response_config_model import UpdateLeaderboardResponseConfigModel
 from rapidata.api_client.models.update_order_name_model import UpdateOrderNameModel
 from rapidata.api_client.models.update_participant_name_model import UpdateParticipantNameModel
+from rapidata.api_client.models.update_prompt_tags_model import UpdatePromptTagsModel
 from rapidata.api_client.models.update_should_alert_model import UpdateShouldAlertModel
 from rapidata.api_client.models.update_validation_rapid_model import UpdateValidationRapidModel
 from rapidata.api_client.models.update_validation_rapid_model_truth import UpdateValidationRapidModelTruth

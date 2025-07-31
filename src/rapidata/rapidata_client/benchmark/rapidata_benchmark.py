@@ -1,4 +1,5 @@
 import re
+from typing import Literal, Optional
 from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.filter import Filter
 from rapidata.api_client.models.query_model import QueryModel
@@ -15,16 +16,18 @@ from rapidata.api_client.models.url_asset_input import UrlAssetInput
 from rapidata.api_client.models.file_asset_model import FileAssetModel
 from rapidata.api_client.models.source_url_metadata_model import SourceUrlMetadataModel
 
+
+from rapidata.rapidata_client.benchmark.participant._participant import (
+    BenchmarkParticipant,
+)
 from rapidata.rapidata_client.logging import logger
 from rapidata.service.openapi_service import OpenAPIService
 
 from rapidata.rapidata_client.benchmark.leaderboard.rapidata_leaderboard import (
     RapidataLeaderboard,
 )
-from rapidata.rapidata_client.datapoints.metadata import PromptIdentifierMetadata
 from rapidata.rapidata_client.datapoints.assets import MediaAsset
-from rapidata.rapidata_client.order._rapidata_dataset import RapidataDataset
-from rapidata.rapidata_client.datapoints.datapoint import Datapoint
+from rapidata.rapidata_client.benchmark._detail_mapper import DetailMapper
 
 
 class RapidataBenchmark:
@@ -47,6 +50,7 @@ class RapidataBenchmark:
         self.__prompt_assets: list[str | None] = []
         self.__leaderboards: list[RapidataLeaderboard] = []
         self.__identifiers: list[str] = []
+        self.__tags: list[list[str]] = []
 
     def __instantiate_prompts(self) -> None:
         current_page = 1
@@ -82,6 +86,7 @@ class RapidataBenchmark:
                     assert isinstance(source_url, SourceUrlMetadataModel)
                     self.__prompt_assets.append(source_url.url)
 
+                self.__tags.append(prompt.tags)
             if current_page >= total_pages:
                 break
 
@@ -113,6 +118,16 @@ class RapidataBenchmark:
             self.__instantiate_prompts()
 
         return self.__prompt_assets
+
+    @property
+    def tags(self) -> list[list[str]]:
+        """
+        Returns the tags that are registered for the benchmark.
+        """
+        if not self.__tags:
+            self.__instantiate_prompts()
+
+        return self.__tags
 
     @property
     def leaderboards(self) -> list[RapidataLeaderboard]:
@@ -156,8 +171,8 @@ class RapidataBenchmark:
                             leaderboard.show_prompt,
                             leaderboard.show_prompt_asset,
                             leaderboard.is_inversed,
-                            leaderboard.min_responses,
                             leaderboard.response_budget,
+                            leaderboard.min_responses,
                             leaderboard.id,
                             self.__openapi_service,
                         )
@@ -173,16 +188,24 @@ class RapidataBenchmark:
         return self.__leaderboards
 
     def add_prompt(
-        self, identifier: str, prompt: str | None = None, asset: str | None = None
+        self,
+        identifier: str,
+        prompt: str | None = None,
+        asset: str | None = None,
+        tags: Optional[list[str]] = None,
     ):
         """
         Adds a prompt to the benchmark.
 
         Args:
-            identifier: The identifier of the prompt/asset that will be used to match up the media.
+            identifier: The identifier of the prompt/asset/tags that will be used to match up the media.
             prompt: The prompt that will be used to evaluate the model.
             asset: The asset that will be used to evaluate the model. Provided as a link to the asset.
+            tags: The tags can be used to filter the leaderboard results. They will NOT be shown to the users.
         """
+        if tags is None:
+            tags = []
+
         if not isinstance(identifier, str):
             raise ValueError("Identifier must be a string.")
 
@@ -201,8 +224,14 @@ class RapidataBenchmark:
         if asset is not None and not re.match(r"^https?://", asset):
             raise ValueError("Asset must be a link to the asset.")
 
+        if tags is not None and (
+            not isinstance(tags, list) or not all(isinstance(tag, str) for tag in tags)
+        ):
+            raise ValueError("Tags must be a list of strings.")
+
         self.__identifiers.append(identifier)
 
+        self.__tags.append(tags)
         self.__prompts.append(prompt)
         self.__prompt_assets.append(asset)
 
@@ -218,6 +247,7 @@ class RapidataBenchmark:
                     if asset is not None
                     else None
                 ),
+                tags=tags,
             ),
         )
 
@@ -228,8 +258,8 @@ class RapidataBenchmark:
         show_prompt: bool = False,
         show_prompt_asset: bool = False,
         inverse_ranking: bool = False,
-        min_responses: int | None = None,
-        response_budget: int | None = None,
+        level_of_detail: Literal["low", "medium", "high", "very high"] = "low",
+        min_responses_per_matchup: int = 3,
     ) -> RapidataLeaderboard:
         """
         Creates a new leaderboard for the benchmark.
@@ -240,12 +270,14 @@ class RapidataBenchmark:
             show_prompt: Whether to show the prompt to the users. (default: False)
             show_prompt_asset: Whether to show the prompt asset to the users. (only works if the prompt asset is a URL) (default: False)
             inverse_ranking: Whether to inverse the ranking of the leaderboard. (if the question is inversed, e.g. "Which video is worse?")
-            min_responses: The minimum amount of responses that get collected per comparison. if None, it will be defaulted.
-            response_budget: The total amount of responses that get collected per new model evaluation. if None, it will be defaulted. Values below 2000 are not recommended.
+            level_of_detail: The level of detail of the leaderboard. This will effect how many comparisons are done per model evaluation. (default: "low")
+            min_responses_per_matchup: The minimum number of responses required to be considered for the leaderboard. (default: 3)
         """
+        if not isinstance(min_responses_per_matchup, int):
+            raise ValueError("Min responses per matchup must be an integer")
 
-        if response_budget is not None and response_budget < 2000:
-            logger.warning("Response budget is below 2000. This is not recommended.")
+        if min_responses_per_matchup < 3:
+            raise ValueError("Min responses per matchup must be at least 3")
 
         leaderboard_result = self.__openapi_service.leaderboard_api.leaderboard_post(
             create_leaderboard_model=CreateLeaderboardModel(
@@ -255,8 +287,8 @@ class RapidataBenchmark:
                 showPrompt=show_prompt,
                 showPromptAsset=show_prompt_asset,
                 isInversed=inverse_ranking,
-                minResponses=min_responses,
-                responseBudget=response_budget,
+                minResponses=min_responses_per_matchup,
+                responseBudget=DetailMapper.get_budget(level_of_detail),
             )
         )
 
@@ -270,8 +302,8 @@ class RapidataBenchmark:
             show_prompt,
             show_prompt_asset,
             inverse_ranking,
-            leaderboard_result.min_responses,
             leaderboard_result.response_budget,
+            min_responses_per_matchup,
             leaderboard_result.id,
             self.__openapi_service,
         )
@@ -301,11 +333,9 @@ class RapidataBenchmark:
             )
 
         # happens before the creation of the participant to ensure all media paths are valid
-        assets = []
-        prompts_metadata: list[list[PromptIdentifierMetadata]] = []
-        for media_path, identifier in zip(media, identifiers):
+        assets: list[MediaAsset] = []
+        for media_path in media:
             assets.append(MediaAsset(media_path))
-            prompts_metadata.append([PromptIdentifierMetadata(identifier=identifier)])
 
         participant_result = self.__openapi_service.benchmark_api.benchmark_benchmark_id_participants_post(
             benchmark_id=self.id,
@@ -314,37 +344,40 @@ class RapidataBenchmark:
             ),
         )
 
-        dataset = RapidataDataset(participant_result.dataset_id, self.__openapi_service)
+        logger.info(f"Participant created: {participant_result.participant_id}")
 
-        try:
-            dataset.add_datapoints(
-                [
-                    Datapoint(asset=asset, metadata=metadata)
-                    for asset, metadata in zip(assets, prompts_metadata)
-                ]
+        participant = BenchmarkParticipant(
+            name, participant_result.participant_id, self.__openapi_service
+        )
+
+        successful_uploads, failed_uploads = participant.upload_media(
+            assets,
+            identifiers,
+        )
+
+        total_uploads = len(assets)
+        success_rate = (
+            (len(successful_uploads) / total_uploads * 100) if total_uploads > 0 else 0
+        )
+        logger.info(
+            f"Upload complete: {len(successful_uploads)} successful, {len(failed_uploads)} failed ({success_rate:.1f}% success rate)"
+        )
+
+        if failed_uploads:
+            logger.error(
+                f"Failed uploads for media: {[asset.path for asset in failed_uploads]}"
             )
-        except Exception as e:
             logger.warning(
-                "An error occurred while adding datapoints to the dataset: %s", e
-            )
-            upload_progress = (
-                self.__openapi_service.dataset_api.dataset_dataset_id_progress_get(
-                    dataset_id=dataset.id
-                )
-            )
-            if upload_progress.ready == 0:
-                raise RuntimeError(
-                    "None of the media was uploaded successfully. Please check the media paths and try again."
-                )
-
-            logger.warning(
-                "%s datapoints failed to upload. \n%s datapoints were uploaded successfully. \nEvaluation will continue with the uploaded datapoints.",
-                upload_progress.failed,
-                upload_progress.ready,
+                "Some uploads failed. The model evaluation may be incomplete."
             )
 
-        self.__openapi_service.benchmark_api.benchmark_benchmark_id_participants_participant_id_submit_post(
-            benchmark_id=self.id, participant_id=participant_result.participant_id
+        if len(successful_uploads) == 0:
+            raise RuntimeError(
+                "No uploads were successful. The model evaluation will not be completed."
+            )
+
+        self.__openapi_service.participant_api.participants_participant_id_submit_post(
+            participant_id=participant_result.participant_id
         )
 
     def __str__(self) -> str:

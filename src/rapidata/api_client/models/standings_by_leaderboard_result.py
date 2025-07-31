@@ -17,24 +17,18 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.get_validation_rapids_result_asset import GetValidationRapidsResultAsset
+from pydantic import BaseModel, ConfigDict
+from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.standing_by_leaderboard import StandingByLeaderboard
 from typing import Optional, Set
 from typing_extensions import Self
 
-class PromptByBenchmarkResult(BaseModel):
+class StandingsByLeaderboardResult(BaseModel):
     """
-    PromptByBenchmarkResult
+    StandingsByLeaderboardResult
     """ # noqa: E501
-    id: StrictStr
-    prompt: Optional[StrictStr] = None
-    prompt_asset: Optional[GetValidationRapidsResultAsset] = Field(default=None, alias="promptAsset")
-    identifier: StrictStr
-    created_at: datetime = Field(alias="createdAt")
-    tags: List[StrictStr]
-    __properties: ClassVar[List[str]] = ["id", "prompt", "promptAsset", "identifier", "createdAt", "tags"]
+    items: List[StandingByLeaderboard]
+    __properties: ClassVar[List[str]] = ["items"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -54,7 +48,7 @@ class PromptByBenchmarkResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of PromptByBenchmarkResult from a JSON string"""
+        """Create an instance of StandingsByLeaderboardResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -75,24 +69,18 @@ class PromptByBenchmarkResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of prompt_asset
-        if self.prompt_asset:
-            _dict['promptAsset'] = self.prompt_asset.to_dict()
-        # set to None if prompt (nullable) is None
-        # and model_fields_set contains the field
-        if self.prompt is None and "prompt" in self.model_fields_set:
-            _dict['prompt'] = None
-
-        # set to None if prompt_asset (nullable) is None
-        # and model_fields_set contains the field
-        if self.prompt_asset is None and "prompt_asset" in self.model_fields_set:
-            _dict['promptAsset'] = None
-
+        # override the default output from pydantic by calling `to_dict()` of each item in items (list)
+        _items = []
+        if self.items:
+            for _item_items in self.items:
+                if _item_items:
+                    _items.append(_item_items.to_dict())
+            _dict['items'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of PromptByBenchmarkResult from a dict"""
+        """Create an instance of StandingsByLeaderboardResult from a dict"""
         if obj is None:
             return None
 
@@ -100,12 +88,7 @@ class PromptByBenchmarkResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "id": obj.get("id"),
-            "prompt": obj.get("prompt"),
-            "promptAsset": GetValidationRapidsResultAsset.from_dict(obj["promptAsset"]) if obj.get("promptAsset") is not None else None,
-            "identifier": obj.get("identifier"),
-            "createdAt": obj.get("createdAt"),
-            "tags": obj.get("tags")
+            "items": [StandingByLeaderboard.from_dict(_item) for _item in obj["items"]] if obj.get("items") is not None else None
         })
         return _obj
 
