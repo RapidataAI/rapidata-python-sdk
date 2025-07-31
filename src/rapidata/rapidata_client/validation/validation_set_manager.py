@@ -1,11 +1,18 @@
 from typing import Literal
 from rapidata.api_client import QueryModel
-from rapidata.rapidata_client.validation.rapidata_validation_set import RapidataValidationSet
-from rapidata.api_client.models.create_validation_set_model import CreateValidationSetModel
+from rapidata.rapidata_client.validation.rapidata_validation_set import (
+    RapidataValidationSet,
+)
+from rapidata.api_client.models.create_validation_set_model import (
+    CreateValidationSetModel,
+)
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.validation.rapids.rapids_manager import RapidsManager
 from rapidata.rapidata_client.validation.rapids.rapids import Rapid
-from rapidata.rapidata_client.datapoints.metadata import PromptMetadata, MediaAssetMetadata
+from rapidata.rapidata_client.datapoints.metadata import (
+    PromptMetadata,
+    MediaAssetMetadata,
+)
 
 from rapidata.api_client.models.page_info import PageInfo
 from rapidata.api_client.models.root_filter import RootFilter
@@ -14,7 +21,11 @@ from rapidata.api_client.models.sort_criterion import SortCriterion
 
 from rapidata.rapidata_client.validation.rapids.box import Box
 
-from rapidata.rapidata_client.logging import logger, managed_print, RapidataOutputManager
+from rapidata.rapidata_client.logging import (
+    logger,
+    managed_print,
+    RapidataOutputManager,
+)
 from tqdm import tqdm
 
 
@@ -25,12 +36,14 @@ class ValidationSetManager:
     Attributes:
         rapid (RapidsManager): The RapidsManager instance.
     """
+
     def __init__(self, openapi_service: OpenAPIService) -> None:
         self.__openapi_service = openapi_service
         self.rapid = RapidsManager()
         logger.debug("ValidationSetManager initialized")
 
-    def create_classification_set(self,
+    def create_classification_set(
+        self,
         name: str,
         instruction: str,
         answer_options: list[str],
@@ -43,7 +56,7 @@ class ValidationSetManager:
         dimensions: list[str] = [],
     ) -> RapidataValidationSet:
         """Create a classification validation set.
-        
+
         Args:
             name (str): The name of the validation set. (will not be shown to the labeler)
             instruction (str): The instruction by which the labeler will answer.
@@ -74,23 +87,26 @@ class ValidationSetManager:
         """
         if not datapoints:
             raise ValueError("Datapoints cannot be empty")
-        
+
         if len(datapoints) != len(truths):
             raise ValueError("The number of datapoints and truths must be equal")
-        
+
         if not all([isinstance(truth, (list, tuple)) for truth in truths]):
             raise ValueError("Truths must be a list of lists or tuples")
-        
+
         if contexts and len(contexts) != len(datapoints):
             raise ValueError("The number of contexts and datapoints must be equal")
 
         if media_contexts and len(media_contexts) != len(datapoints):
-            raise ValueError("The number of media contexts and datapoints must be equal")
+            raise ValueError(
+                "The number of media contexts and datapoints must be equal"
+            )
 
-        if(explanations and len(explanations) != len(datapoints)):
-            raise ValueError("The number of explanations and datapoints must be equal, the index must align, but can be padded with None")
+        if explanations and len(explanations) != len(datapoints):
+            raise ValueError(
+                "The number of explanations and datapoints must be equal, the index must align, but can be padded with None"
+            )
 
-       
         logger.debug("Creating classification rapids")
         rapids: list[Rapid] = []
         for i in range(len(datapoints)):
@@ -107,14 +123,15 @@ class ValidationSetManager:
                     truths=truths[i],
                     data_type=data_type,
                     metadata=rapid_metadata,
-                    explanation=explanations[i] if explanations != None else None
+                    explanation=explanations[i] if explanations != None else None,
                 )
             )
 
         logger.debug("Submitting classification rapids")
         return self._submit(name=name, rapids=rapids, dimensions=dimensions)
 
-    def create_compare_set(self,
+    def create_compare_set(
+        self,
         name: str,
         instruction: str,
         datapoints: list[list[str]],
@@ -135,7 +152,7 @@ class ValidationSetManager:
                     instruction: "Which image has a cat?"
                     datapoints = [["image1.jpg", "image2.jpg"], ["image3.jpg", "image4.jpg"]]
                     truths: ["image1.jpg", "image4.jpg"] -> first comparison image1.jpg has a cat, second comparison image4.jpg has a cat
-            datapoints (list[list[str]]): The compare datapoints to create the validation set with. 
+            datapoints (list[list[str]]): The compare datapoints to create the validation set with.
                 Outer list is for each comparison, inner list the two images/texts that will be compared.
             data_type (str, optional): The type of data. Defaults to "media" (any form of image, video or audio). Other option: "text".
             contexts (list[str], optional): The contexts for each datapoint. Defaults to None.\n
@@ -157,10 +174,10 @@ class ValidationSetManager:
         """
         if not datapoints:
             raise ValueError("Datapoints cannot be empty")
-        
+
         if len(datapoints) != len(truths):
             raise ValueError("The number of datapoints and truths must be equal")
-        
+
         if not all([isinstance(truth, str) for truth in truths]):
             raise ValueError("Truths must be a list of strings")
 
@@ -168,11 +185,15 @@ class ValidationSetManager:
             raise ValueError("The number of contexts and datapoints must be equal")
 
         if media_contexts and len(media_contexts) != len(datapoints):
-            raise ValueError("The number of media contexts and datapoints must be equal")
- 
-        if(explanation and len(explanation) != len(datapoints)):
-            raise ValueError("The number of explanations and datapoints must be equal, the index must align, but can be padded with None")
-        
+            raise ValueError(
+                "The number of media contexts and datapoints must be equal"
+            )
+
+        if explanation and len(explanation) != len(datapoints):
+            raise ValueError(
+                "The number of explanations and datapoints must be equal, the index must align, but can be padded with None"
+            )
+
         logger.debug("Creating comparison rapids")
         rapids: list[Rapid] = []
         for i in range(len(datapoints)):
@@ -188,14 +209,15 @@ class ValidationSetManager:
                     datapoint=datapoints[i],
                     data_type=data_type,
                     metadata=rapid_metadata,
-                    explanation=explanation[i] if explanation != None else None
+                    explanation=explanation[i] if explanation != None else None,
                 )
             )
-        
+
         logger.debug("Submitting comparison rapids")
         return self._submit(name=name, rapids=rapids, dimensions=dimensions)
-  
-    def create_select_words_set(self,
+
+    def create_select_words_set(
+        self,
         name: str,
         instruction: str,
         truths: list[list[int]],
@@ -231,18 +253,22 @@ class ValidationSetManager:
             truths: [[0, 1], [2]]
             ```
             This would mean: first datapoint the correct words are "this" and "example", second datapoint is "with"
-            """
+        """
         if not datapoints:
             raise ValueError("Datapoints cannot be empty")
-        
+
         if not all([isinstance(truth, (list, tuple)) for truth in truths]):
             raise ValueError("Truths must be a list of lists or tuples")
 
         if len(datapoints) != len(truths) or len(datapoints) != len(sentences):
-            raise ValueError("The number of datapoints, truths, and sentences must be equal")
- 
-        if(explanation and len(explanation) != len(datapoints)):
-            raise ValueError("The number of explanations and datapoints must be equal, the index must align, but can be padded with None")
+            raise ValueError(
+                "The number of datapoints, truths, and sentences must be equal"
+            )
+
+        if explanation and len(explanation) != len(datapoints):
+            raise ValueError(
+                "The number of explanations and datapoints must be equal, the index must align, but can be padded with None"
+            )
 
         logger.debug("Creating select words rapids")
         rapids: list[Rapid] = []
@@ -255,14 +281,15 @@ class ValidationSetManager:
                     sentence=sentences[i],
                     required_precision=required_precision,
                     required_completeness=required_completeness,
-                    explanation=explanation[i] if explanation != None else None
+                    explanation=explanation[i] if explanation != None else None,
                 )
             )
 
         logger.debug("Submitting select words rapids")
         return self._submit(name=name, rapids=rapids, dimensions=dimensions)
 
-    def create_locate_set(self,
+    def create_locate_set(
+        self,
         name: str,
         instruction: str,
         truths: list[list[Box]],
@@ -298,22 +325,26 @@ class ValidationSetManager:
         """
         if not datapoints:
             raise ValueError("Datapoints cannot be empty")
-        
+
         if len(datapoints) != len(truths):
             raise ValueError("The number of datapoints and truths must be equal")
-        
+
         if not all([isinstance(truth, (list, tuple)) for truth in truths]):
             raise ValueError("Truths must be a list of lists or tuples")
-        
+
         if contexts and len(contexts) != len(datapoints):
             raise ValueError("The number of contexts and datapoints must be equal")
- 
-        if media_contexts and len(media_contexts) != len(datapoints):
-            raise ValueError("The number of media contexts and datapoints must be equal")
 
-        if(explanation and len(explanation) != len(datapoints)):
-            raise ValueError("The number of explanations and datapoints must be equal, the index must align, but can be padded with None")
-        
+        if media_contexts and len(media_contexts) != len(datapoints):
+            raise ValueError(
+                "The number of media contexts and datapoints must be equal"
+            )
+
+        if explanation and len(explanation) != len(datapoints):
+            raise ValueError(
+                "The number of explanations and datapoints must be equal, the index must align, but can be padded with None"
+            )
+
         logger.debug("Creating locate rapids")
         rapids = []
         rapids: list[Rapid] = []
@@ -329,15 +360,15 @@ class ValidationSetManager:
                     truths=truths[i],
                     datapoint=datapoints[i],
                     metadata=rapid_metadata,
-                    explanation=explanation[i] if explanation != None else None
-
+                    explanation=explanation[i] if explanation != None else None,
                 )
             )
-        
+
         logger.debug("Submitting locate rapids")
         return self._submit(name=name, rapids=rapids, dimensions=dimensions)
-    
-    def create_draw_set(self,
+
+    def create_draw_set(
+        self,
         name: str,
         instruction: str,
         truths: list[list[Box]],
@@ -373,21 +404,25 @@ class ValidationSetManager:
         """
         if not datapoints:
             raise ValueError("Datapoints cannot be empty")
-        
+
         if len(datapoints) != len(truths):
             raise ValueError("The number of datapoints and truths must be equal")
-        
+
         if not all([isinstance(truth, (list, tuple)) for truth in truths]):
             raise ValueError("Truths must be a list of lists or tuples")
-        
+
         if contexts and len(contexts) != len(datapoints):
             raise ValueError("The number of contexts and datapoints must be equal")
- 
-        if media_contexts and len(media_contexts) != len(datapoints):
-            raise ValueError("The number of media contexts and datapoints must be equal")
 
-        if(explanation and len(explanation) != len(datapoints)):
-            raise ValueError("The number of explanations and datapoints must be equal, the index must align, but can be padded with None")
+        if media_contexts and len(media_contexts) != len(datapoints):
+            raise ValueError(
+                "The number of media contexts and datapoints must be equal"
+            )
+
+        if explanation and len(explanation) != len(datapoints):
+            raise ValueError(
+                "The number of explanations and datapoints must be equal, the index must align, but can be padded with None"
+            )
 
         logger.debug("Creating draw rapids")
         rapids: list[Rapid] = []
@@ -403,15 +438,15 @@ class ValidationSetManager:
                     truths=truths[i],
                     datapoint=datapoints[i],
                     metadata=rapid_metadata,
-                    explanation=explanation[i] if explanation != None else None
-
+                    explanation=explanation[i] if explanation != None else None,
                 )
             )
 
         logger.debug("Submitting draw rapids")
         return self._submit(name=name, rapids=rapids, dimensions=dimensions)
 
-    def create_timestamp_set(self,
+    def create_timestamp_set(
+        self,
         name: str,
         instruction: str,
         truths: list[list[tuple[int, int]]],
@@ -426,7 +461,7 @@ class ValidationSetManager:
         Args:
             name (str): The name of the validation set. (will not be shown to the labeler)
             instruction (str): The instruction to show to the labeler.
-            truths (list[list[tuple[int, int]]]): The truths for each datapoint defined as start and endpoint based on miliseconds. 
+            truths (list[list[tuple[int, int]]]): The truths for each datapoint defined as start and endpoint based on miliseconds.
                 Outer list is for each datapoint, inner list is for each truth.\n
                 example:
                     datapoints: ["datapoint1", "datapoint2"]
@@ -448,22 +483,26 @@ class ValidationSetManager:
         """
         if not datapoints:
             raise ValueError("Datapoints cannot be empty")
-        
+
         if len(datapoints) != len(truths):
             raise ValueError("The number of datapoints and truths must be equal")
-        
+
         if not all([isinstance(truth, (list, tuple)) for truth in truths]):
             raise ValueError("Truths must be a list of lists or tuples")
-        
+
         if contexts and len(contexts) != len(datapoints):
             raise ValueError("The number of contexts and datapoints must be equal")
- 
-        if media_contexts and len(media_contexts) != len(datapoints):
-            raise ValueError("The number of media contexts and datapoints must be equal")
 
-        if(explanation and len(explanation) != len(datapoints)):
-            raise ValueError("The number of explanations and datapoints must be equal, the index must align, but can be padded with None")
-              
+        if media_contexts and len(media_contexts) != len(datapoints):
+            raise ValueError(
+                "The number of media contexts and datapoints must be equal"
+            )
+
+        if explanation and len(explanation) != len(datapoints):
+            raise ValueError(
+                "The number of explanations and datapoints must be equal, the index must align, but can be padded with None"
+            )
+
         logger.debug("Creating timestamp rapids")
         rapids: list[Rapid] = []
         for i in range(len(datapoints)):
@@ -478,14 +517,15 @@ class ValidationSetManager:
                     truths=truths[i],
                     datapoint=datapoints[i],
                     metadata=rapid_metadata,
-                    explanation=explanation[i] if explanation != None else None
+                    explanation=explanation[i] if explanation != None else None,
                 )
             )
 
         logger.debug("Submitting timestamp rapids")
         return self._submit(name=name, rapids=rapids, dimensions=dimensions)
-    
-    def create_mixed_set(self,
+
+    def create_mixed_set(
+        self,
         name: str,
         rapids: list[Rapid],
         dimensions: list[str] = [],
@@ -502,17 +542,17 @@ class ValidationSetManager:
 
         return self._submit(name=name, rapids=rapids, dimensions=dimensions)
 
-    def _submit(self, name: str, rapids: list[Rapid], dimensions: list[str] | None) -> RapidataValidationSet:
+    def _submit(
+        self, name: str, rapids: list[Rapid], dimensions: list[str] | None
+    ) -> RapidataValidationSet:
         logger.debug("Creating validation set")
         validation_set_id = (
             self.__openapi_service.validation_api.validation_set_post(
-                create_validation_set_model=CreateValidationSetModel(
-                    name=name
-                )
+                create_validation_set_model=CreateValidationSetModel(name=name)
             )
         ).validation_set_id
 
-        logger.debug(f"Validation set created with ID: {validation_set_id}")
+        logger.debug("Validation set created with ID: %s", validation_set_id)
 
         if validation_set_id is None:
             raise ValueError("Failed to create validation set")
@@ -522,31 +562,43 @@ class ValidationSetManager:
         validation_set = RapidataValidationSet(
             name=name,
             validation_set_id=validation_set_id,
-            openapi_service=self.__openapi_service
+            openapi_service=self.__openapi_service,
         )
 
         logger.debug("Adding rapids to validation set")
         failed_rapids = []
-        for rapid in tqdm(rapids, desc="Uploading validation tasks", disable=RapidataOutputManager.silent_mode):
-            try: 
+        for rapid in tqdm(
+            rapids,
+            desc="Uploading validation tasks",
+            disable=RapidataOutputManager.silent_mode,
+        ):
+            try:
                 validation_set.add_rapid(rapid)
             except Exception:
                 failed_rapids.append(rapid.asset)
 
         if failed_rapids:
-            logger.error(f"Failed to add {len(failed_rapids)} datapoints to validation set: {failed_rapids}")
-            raise RuntimeError(f"Failed to add {len(failed_rapids)} datapoints to validation set: {failed_rapids}")
+            logger.error(
+                "Failed to add %s datapoints to validation set: %s",
+                len(failed_rapids),
+                failed_rapids,
+            )
+            raise RuntimeError(
+                f"Failed to add {len(failed_rapids)} datapoints to validation set: {failed_rapids}"
+            )
 
         managed_print()
-        managed_print(f"Validation set '{name}' created with ID {validation_set_id}\n",
-                f"Now viewable under: https://app.{self.__openapi_service.environment}/validation-set/detail/{validation_set_id}",
-                sep="")
-        
+        managed_print(
+            f"Validation set '{name}' created with ID {validation_set_id}\n",
+            f"Now viewable under: https://app.{self.__openapi_service.environment}/validation-set/detail/{validation_set_id}",
+            sep="",
+        )
+
         if dimensions:
             validation_set.update_dimensions(dimensions)
-        
+
         return validation_set
-    
+
     def get_validation_set_by_id(self, validation_set_id: str) -> RapidataValidationSet:
         """Get a validation set by ID.
 
@@ -556,13 +608,20 @@ class ValidationSetManager:
         Returns:
             RapidataValidationSet: The ValidationSet instance.
         """
-        
-        validation_set = self.__openapi_service.validation_api.validation_set_validation_set_id_get(validation_set_id=validation_set_id)
-        
-        return RapidataValidationSet(validation_set_id, str(validation_set.name), self.__openapi_service)
 
+        validation_set = (
+            self.__openapi_service.validation_api.validation_set_validation_set_id_get(
+                validation_set_id=validation_set_id
+            )
+        )
 
-    def find_validation_sets(self, name: str = "", amount: int = 1) -> list[RapidataValidationSet]:
+        return RapidataValidationSet(
+            validation_set_id, str(validation_set.name), self.__openapi_service
+        )
+
+    def find_validation_sets(
+        self, name: str = "", amount: int = 1
+    ) -> list[RapidataValidationSet]:
         """Find validation sets by name.
 
         Args:
@@ -573,12 +632,22 @@ class ValidationSetManager:
             list[RapidataValidationSet]: The list of validation sets.
         """
 
-        validation_page_result = self.__openapi_service.validation_api.validation_sets_get(QueryModel(
-            page=PageInfo(index=1, size=amount),
-            filter=RootFilter(filters=[Filter(field="Name", operator="Contains", value=name)]),
-            sortCriteria=[SortCriterion(direction="Desc", propertyName="CreatedAt")]
-            ))
+        validation_page_result = (
+            self.__openapi_service.validation_api.validation_sets_get(
+                QueryModel(
+                    page=PageInfo(index=1, size=amount),
+                    filter=RootFilter(
+                        filters=[Filter(field="Name", operator="Contains", value=name)]
+                    ),
+                    sortCriteria=[
+                        SortCriterion(direction="Desc", propertyName="CreatedAt")
+                    ],
+                )
+            )
+        )
 
-        validation_sets = [self.get_validation_set_by_id(str(validation_set.id)) for validation_set in validation_page_result.items]
+        validation_sets = [
+            self.get_validation_set_by_id(str(validation_set.id))
+            for validation_set in validation_page_result.items
+        ]
         return validation_sets
-

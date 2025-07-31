@@ -1,13 +1,22 @@
 from typing import Literal, Optional, cast, Sequence
 
 from rapidata.api_client.models.ab_test_selection_a_inner import AbTestSelectionAInner
-from rapidata.api_client.models.and_user_filter_model_filters_inner import AndUserFilterModelFiltersInner
+from rapidata.api_client.models.and_user_filter_model_filters_inner import (
+    AndUserFilterModelFiltersInner,
+)
 from rapidata.api_client.models.create_order_model import CreateOrderModel
-from rapidata.api_client.models.create_order_model_referee import CreateOrderModelReferee
-from rapidata.api_client.models.create_order_model_workflow import CreateOrderModelWorkflow
+from rapidata.api_client.models.create_order_model_referee import (
+    CreateOrderModelReferee,
+)
+from rapidata.api_client.models.create_order_model_workflow import (
+    CreateOrderModelWorkflow,
+)
 
 from rapidata.rapidata_client.datapoints.datapoint import Datapoint
-from rapidata.rapidata_client.exceptions.failed_upload_exception import FailedUploadException, _parse_failed_uploads
+from rapidata.rapidata_client.exceptions.failed_upload_exception import (
+    FailedUploadException,
+    _parse_failed_uploads,
+)
 from rapidata.rapidata_client.filter import RapidataFilter
 from rapidata.rapidata_client.logging import logger, managed_print
 from rapidata.rapidata_client.order._rapidata_dataset import RapidataDataset
@@ -108,14 +117,14 @@ class RapidataOrderBuilder:
             RapidataOrder: The created RapidataOrder instance.
         """
         order_model = self._to_model()
-        logger.debug(f"Creating order with model: {order_model}")
+        logger.debug("Creating order with model: %s", order_model)
 
         result = self.__openapi_service.order_api.order_post(
             create_order_model=order_model
         )
 
         self.order_id = str(result.order_id)
-        logger.debug(f"Order created with ID: {self.order_id}")
+        logger.debug("Order created with ID: %s", self.order_id)
 
         self.__dataset = (
             RapidataDataset(result.dataset_id, self.__openapi_service)
@@ -123,7 +132,7 @@ class RapidataOrderBuilder:
             else None
         )
         if self.__dataset:
-            logger.debug(f"Dataset created with ID: {self.__dataset.id}")
+            logger.debug("Dataset created with ID: %s", self.__dataset.id)
         else:
             logger.warning("No dataset created for this order.")
 
@@ -133,25 +142,34 @@ class RapidataOrderBuilder:
             name=self._name,
         )
 
-        logger.debug(f"Order created: {order}")
+        logger.debug("Order created: %s", order)
         logger.debug("Adding media to the order.")
 
         if self.__dataset:
             _, failed_uploads = self.__dataset.add_datapoints(self.__datapoints)
-            
+
             if failed_uploads:
                 raise FailedUploadException(self.__dataset, order, failed_uploads)
-        
+
         else:
-            raise RuntimeError(f"No dataset created for this order. order_id: {self.order_id}")
-        
+            raise RuntimeError(
+                f"No dataset created for this order. order_id: {self.order_id}"
+            )
+
         logger.debug("Media added to the order.")
         logger.debug("Setting order to preview")
         try:
             self.__openapi_service.order_api.order_order_id_preview_post(self.order_id)
         except Exception:
-            failed_uploads = _parse_failed_uploads(self.__openapi_service.dataset_api.dataset_dataset_id_datapoints_failed_get(self.__dataset.id))
-            logger.error(f"Internal download error for datapoints: {failed_uploads}\nWARNING: Failed Datapoints in error do not contain metadata.")
+            failed_uploads = _parse_failed_uploads(
+                self.__openapi_service.dataset_api.dataset_dataset_id_datapoints_failed_get(
+                    self.__dataset.id
+                )
+            )
+            logger.error(
+                "Internal download error for datapoints: %s\nWARNING: Failed Datapoints in error do not contain metadata.",
+                failed_uploads,
+            )
             raise FailedUploadException(self.__dataset, order, failed_uploads)
         return order
 
@@ -201,7 +219,9 @@ class RapidataOrderBuilder:
             RapidataOrderBuilder: The updated RapidataOrderBuilder instance.
         """
         if not isinstance(datapoints, list):
-            raise TypeError("Datapoints must be provided as a list of Datapoint objects.")
+            raise TypeError(
+                "Datapoints must be provided as a list of Datapoint objects."
+            )
 
         self.__datapoints = datapoints
         return self
@@ -219,7 +239,7 @@ class RapidataOrderBuilder:
 
         if not isinstance(settings, list):
             raise TypeError("Settings must be provided as a list of Setting objects.")
-        
+
         for s in settings:
             if not isinstance(s, RapidataSetting):
                 raise TypeError("The settings list must only contain Setting objects.")
@@ -250,7 +270,9 @@ class RapidataOrderBuilder:
         self.__user_filters = filters
         return self
 
-    def _validation_set_id(self, validation_set_id: str | None = None) -> "RapidataOrderBuilder":
+    def _validation_set_id(
+        self, validation_set_id: str | None = None
+    ) -> "RapidataOrderBuilder":
         """
         Set the validation set ID for the order.
 
@@ -281,7 +303,9 @@ class RapidataOrderBuilder:
         """
         raise NotImplementedError("Not implemented yet.")
 
-    def _selections(self, selections: Sequence[RapidataSelection]) -> "RapidataOrderBuilder":
+    def _selections(
+        self, selections: Sequence[RapidataSelection]
+    ) -> "RapidataOrderBuilder":
         """
         Set the selections for the order.
 
@@ -318,13 +342,21 @@ class RapidataOrderBuilder:
 
         self.__priority = priority
         return self
-    
-    def _sticky_state(self, sticky_state: Literal["None", "Temporary", "Permanent"] | None = None) -> "RapidataOrderBuilder":
+
+    def _sticky_state(
+        self, sticky_state: Literal["None", "Temporary", "Permanent"] | None = None
+    ) -> "RapidataOrderBuilder":
         """
         Set the sticky state for the order.
         """
-        if sticky_state is not None and sticky_state not in ["None", "Temporary", "Permanent"]:
-            raise TypeError("Sticky state must be of type Literal['None', 'Temporary', 'Permanent'].")
+        if sticky_state is not None and sticky_state not in [
+            "None",
+            "Temporary",
+            "Permanent",
+        ]:
+            raise TypeError(
+                "Sticky state must be of type Literal['None', 'Temporary', 'Permanent']."
+            )
 
         self.__sticky_state = sticky_state
         return self
