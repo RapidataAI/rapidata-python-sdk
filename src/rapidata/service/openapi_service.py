@@ -18,14 +18,14 @@ from rapidata.rapidata_client.logging import logger
 
 class OpenAPIService:
     def __init__(
-            self,
-            client_id: str | None,
-            client_secret: str | None,
-            environment: str,
-            oauth_scope: str,
-            cert_path: str | None = None,
-            token: dict | None = None,
-            leeway: int = 60,
+        self,
+        client_id: str | None,
+        client_secret: str | None,
+        environment: str,
+        oauth_scope: str,
+        cert_path: str | None = None,
+        token: dict | None = None,
+        leeway: int = 60,
     ):
         self.environment = environment
         endpoint = f"https://api.{environment}"
@@ -34,7 +34,14 @@ class OpenAPIService:
         if environment == "rapidata.dev" and not cert_path:
             cert_path = _get_local_certificate()
 
-        logger.debug(f"Using cert_path: {cert_path} environment: {environment} token: {token} client_id: {client_id} client_secret: {client_secret}")
+        logger.debug(
+            "Using cert_path: %s environment: %s token: %s client_id: %s client_secret: %s",
+            cert_path,
+            environment,
+            token,
+            client_id,
+            client_secret,
+        )
         logger.debug("Initializing OpenAPIService")
         self.credential_manager = CredentialManager(
             endpoint=auth_endpoint, cert_path=cert_path
@@ -43,7 +50,7 @@ class OpenAPIService:
 
         logger.debug("Initializing RapidataApiClient")
         client_configuration = Configuration(host=endpoint, ssl_ca_cert=cert_path)
-        logger.debug(f"Client configuration: {client_configuration}")
+        logger.debug("Client configuration: %s", client_configuration)
         self.api_client = RapidataApiClient(
             configuration=client_configuration,
             header_name="X-Client",
@@ -64,7 +71,9 @@ class OpenAPIService:
             return
 
         if not client_id or not client_secret:
-            logger.debug("Client ID and secret not provided, fetching from credential manager")
+            logger.debug(
+                "Client ID and secret not provided, fetching from credential manager"
+            )
             credentials = self.credential_manager.get_client_credentials()
             if not credentials:
                 raise ValueError("Failed to fetch client credentials")
@@ -109,11 +118,11 @@ class OpenAPIService:
     @property
     def workflow_api(self) -> WorkflowApi:
         return WorkflowApi(self.api_client)
-    
+
     @property
     def leaderboard_api(self) -> LeaderboardApi:
         return LeaderboardApi(self.api_client)
-    
+
     @property
     def benchmark_api(self) -> BenchmarkApi:
         return BenchmarkApi(self.api_client)

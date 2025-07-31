@@ -14,12 +14,20 @@ from rapidata.api_client.models.campaign_artifact_model import CampaignArtifactM
 from rapidata.api_client.models.order_state import OrderState
 from rapidata.api_client.models.preview_order_model import PreviewOrderModel
 from rapidata.api_client.models.submit_order_model import SubmitOrderModel
-from rapidata.api_client.models.preliminary_download_model import PreliminaryDownloadModel
+from rapidata.api_client.models.preliminary_download_model import (
+    PreliminaryDownloadModel,
+)
 from rapidata.api_client.models.workflow_artifact_model import WorkflowArtifactModel
 from rapidata.rapidata_client.order.rapidata_results import RapidataResults
 from rapidata.service.openapi_service import OpenAPIService
-from rapidata.rapidata_client.logging import logger, managed_print, RapidataOutputManager
-from rapidata.rapidata_client.api.rapidata_exception import suppress_rapidata_error_logging
+from rapidata.rapidata_client.logging import (
+    logger,
+    managed_print,
+    RapidataOutputManager,
+)
+from rapidata.rapidata_client.api.rapidata_exception import (
+    suppress_rapidata_error_logging,
+)
 
 
 class RapidataOrder:
@@ -48,45 +56,53 @@ class RapidataOrder:
         self.__workflow_id: str = ""
         self.__campaign_id: str = ""
         self.__pipeline_id: str = ""
-        self._max_retries = 10  
+        self._max_retries = 10
         self._retry_delay = 2
-        self.order_details_page = f"https://app.{self.__openapi_service.environment}/order/detail/{self.id}"
+        self.order_details_page = (
+            f"https://app.{self.__openapi_service.environment}/order/detail/{self.id}"
+        )
         logger.debug("RapidataOrder initialized")
 
     @property
     def created_at(self) -> datetime:
         """Returns the creation date of the order."""
         if not self.__created_at:
-            self.__created_at = self.__openapi_service.order_api.order_order_id_get(self.id).order_date
+            self.__created_at = self.__openapi_service.order_api.order_order_id_get(
+                self.id
+            ).order_date
         return self.__created_at
-    
+
     def run(self) -> "RapidataOrder":
         """Runs the order to start collecting responses."""
-        logger.info(f"Starting order '{self}'")
-        self.__openapi_service.order_api.order_order_id_submit_post(self.id, SubmitOrderModel(ignoreFailedDatapoints=True))
-        logger.debug(f"Order '{self}' has been started.")
-        managed_print(f"Order '{self.name}' is now viewable under: {self.order_details_page}")
+        logger.info("Starting order '%s'", self)
+        self.__openapi_service.order_api.order_order_id_submit_post(
+            self.id, SubmitOrderModel(ignoreFailedDatapoints=True)
+        )
+        logger.debug("Order '%s' has been started.", self)
+        managed_print(
+            f"Order '{self.name}' is now viewable under: {self.order_details_page}"
+        )
         return self
 
     def pause(self) -> None:
         """Pauses the order."""
-        logger.info(f"Pausing order '{self}'")
+        logger.info("Pausing order '%s'", self)
         self.__openapi_service.order_api.order_order_id_pause_post(self.id)
-        logger.debug(f"Order '{self}' has been paused.")
+        logger.debug("Order '%s' has been paused.", self)
         managed_print(f"Order '{self}' has been paused.")
 
     def unpause(self) -> None:
         """Unpauses/resumes the order."""
-        logger.info(f"Unpausing order '{self}'")
+        logger.info("Unpausing order '%s'", self)
         self.__openapi_service.order_api.order_order_id_resume_post(self.id)
-        logger.debug(f"Order '{self}' has been unpaused.")
+        logger.debug("Order '%s' has been unpaused.", self)
         managed_print(f"Order '{self}' has been unpaused.")
 
     def delete(self) -> None:
         """Deletes the order."""
-        logger.info(f"Deleting order '{self}'")
+        logger.info("Deleting order '%s'", self)
         self.__openapi_service.order_api.order_order_id_delete(self.id)
-        logger.debug(f"Order '{self}' has been deleted.")
+        logger.debug("Order '%s' has been deleted.", self)
         managed_print(f"Order '{self}' has been deleted.")
 
     def get_status(self) -> str:
@@ -105,31 +121,37 @@ class RapidataOrder:
         """
         return self.__openapi_service.order_api.order_order_id_get(self.id).state
 
-    def display_progress_bar(self, refresh_rate: int=5) -> None:
+    def display_progress_bar(self, refresh_rate: int = 5) -> None:
         """
         Displays a progress bar for the order processing using tqdm.
-        
-        Args: 
+
+        Args:
             refresh_rate: How often to refresh the progress bar, in seconds.
         """
         if refresh_rate < 1:
             raise ValueError("refresh_rate must be at least 1")
-        
+
         if self.get_status() == OrderState.CREATED:
             raise Exception("Order has not been started yet. Please start it first.")
-        
+
         while self.get_status() == OrderState.SUBMITTED:
-            managed_print(f"Order '{self}' is submitted and being reviewed. Standby...", end="\r")
+            managed_print(
+                f"Order '{self}' is submitted and being reviewed. Standby...", end="\r"
+            )
             sleep(1)
 
         if self.get_status() == OrderState.MANUALREVIEW:
             raise Exception(
-                f"Order '{self}' is in manual review. It might take some time to start. "
-                "To speed up the process, contact support (info@rapidata.ai).\n"
-                "Once started, run this method again to display the progress bar."
+                f"Order '{self}' is in manual review. It might take some time to start. To speed up the process, contact support (info@rapidata.ai).\nOnce started, run this method again to display the progress bar."
             )
-        
-        with tqdm(total=100, desc="Processing order", unit="%", bar_format="{desc}: {percentage:3.0f}%|{bar}| completed [{elapsed}<{remaining}, {rate_fmt}]", disable=RapidataOutputManager.silent_mode) as pbar:
+
+        with tqdm(
+            total=100,
+            desc="Processing order",
+            unit="%",
+            bar_format="{desc}: {percentage:3.0f}%|{bar}| completed [{elapsed}<{remaining}, {rate_fmt}]",
+            disable=RapidataOutputManager.silent_mode,
+        ) as pbar:
             last_percentage = 0
             while True:
                 current_percentage = self._workflow_progress.completion_percentage
@@ -152,7 +174,9 @@ class RapidataOrder:
             try:
                 with suppress_rapidata_error_logging():
                     workflow_id = self.__get_workflow_id()
-                    progress = self.__openapi_service.workflow_api.workflow_workflow_id_progress_get(workflow_id)
+                    progress = self.__openapi_service.workflow_api.workflow_workflow_id_progress_get(
+                        workflow_id
+                    )
                 break
             except Exception:
                 sleep(self._retry_delay * 2)
@@ -162,52 +186,71 @@ class RapidataOrder:
 
     def get_results(self, preliminary_results: bool = False) -> RapidataResults:
         """
-        Gets the results of the order. 
+        Gets the results of the order.
         If the order is still processing, this method will block until the order is completed and then return the results.
 
         Args:
-            preliminary_results: If True, returns the preliminary results of the order. Defaults to False. 
+            preliminary_results: If True, returns the preliminary results of the order. Defaults to False.
                 Note that preliminary results are not final and may not contain all the datapoints & responses. Only the onese that are already available.
         """
-        logger.info(f"Getting results for order '{self}'...")
+        logger.info("Getting results for order '%s'...", self)
         if preliminary_results and self.get_status() not in [OrderState.COMPLETED]:
             return self.__get_preliminary_results()
-        
+
         elif preliminary_results and self.get_status() in [OrderState.COMPLETED]:
             managed_print("Order is already completed. Returning final results.")
 
-        while self.get_status() not in [OrderState.COMPLETED, OrderState.PAUSED, OrderState.MANUALREVIEW, OrderState.FAILED]:
+        while self.get_status() not in [
+            OrderState.COMPLETED,
+            OrderState.PAUSED,
+            OrderState.MANUALREVIEW,
+            OrderState.FAILED,
+        ]:
             sleep(5)
 
         try:
-            return RapidataResults(json.loads(self.__openapi_service.order_api.order_order_id_download_results_get(order_id=self.id)))
+            return RapidataResults(
+                json.loads(
+                    self.__openapi_service.order_api.order_order_id_download_results_get(
+                        order_id=self.id
+                    )
+                )
+            )
         except (ApiException, json.JSONDecodeError) as e:
             raise Exception(f"Failed to get order results: {str(e)}") from e
-        
+
     def view(self) -> None:
         """
         Opens the order details page in the browser.
-        
+
         Raises:
             Exception: If the order is not in processing state.
         """
         logger.info("Opening order details page in browser...")
         could_open_browser = webbrowser.open(self.order_details_page)
         if not could_open_browser:
-            encoded_url = urllib.parse.quote(self.order_details_page, safe="%/:=&?~#+!$,;'@()*[]")
-            managed_print(Fore.RED + f'Please open this URL in your browser: "{encoded_url}"' + Fore.RESET)
-        
+            encoded_url = urllib.parse.quote(
+                self.order_details_page, safe="%/:=&?~#+!$,;'@()*[]"
+            )
+            managed_print(
+                Fore.RED
+                + f"Please open this URL in your browser: '{encoded_url}'"
+                + Fore.RESET
+            )
+
     def preview(self) -> None:
         """
         Opens a preview of the order in the browser.
-        
+
         Raises:
             Exception: If the order is not in processing state.
         """
         logger.info("Opening order preview in browser...")
         if self.get_status() == OrderState.CREATED:
             logger.info("Order is still in state created. Setting it to preview.")
-            self.__openapi_service.order_api.order_order_id_preview_post(self.id, PreviewOrderModel(ignoreFailedDatapoints=True))
+            self.__openapi_service.order_api.order_order_id_preview_post(
+                self.id, PreviewOrderModel(ignoreFailedDatapoints=True)
+            )
             logger.info("Order is now in preview state.")
 
         campaign_id = self.__get_campaign_id()
@@ -215,14 +258,22 @@ class RapidataOrder:
         could_open_browser = webbrowser.open(auth_url)
         if not could_open_browser:
             encoded_url = urllib.parse.quote(auth_url, safe="%/:=&?~#+!$,;'@()*[]")
-            managed_print(Fore.RED + f'Please open this URL in your browser: "{encoded_url}"' + Fore.RESET)
+            managed_print(
+                Fore.RED
+                + f"Please open this URL in your browser: '{encoded_url}'"
+                + Fore.RESET
+            )
 
     def __get_pipeline_id(self) -> str:
         """Internal method to fetch and cache the pipeline ID."""
         if not self.__pipeline_id:
             for _ in range(self._max_retries):
                 try:
-                    self.__pipeline_id = self.__openapi_service.order_api.order_order_id_get(self.id).pipeline_id
+                    self.__pipeline_id = (
+                        self.__openapi_service.order_api.order_order_id_get(
+                            self.id
+                        ).pipeline_id
+                    )
                     break
                 except Exception:
                     sleep(self._retry_delay)
@@ -249,9 +300,17 @@ class RapidataOrder:
         pipeline_id = self.__get_pipeline_id()
         for _ in range(self._max_retries):
             try:
-                pipeline = self.__openapi_service.pipeline_api.pipeline_pipeline_id_get(pipeline_id)
-                self.__workflow_id = cast(WorkflowArtifactModel, pipeline.artifacts["workflow-artifact"].actual_instance).workflow_id
-                self.__campaign_id = cast(CampaignArtifactModel, pipeline.artifacts["campaign-artifact"].actual_instance).campaign_id
+                pipeline = self.__openapi_service.pipeline_api.pipeline_pipeline_id_get(
+                    pipeline_id
+                )
+                self.__workflow_id = cast(
+                    WorkflowArtifactModel,
+                    pipeline.artifacts["workflow-artifact"].actual_instance,
+                ).workflow_id
+                self.__campaign_id = cast(
+                    CampaignArtifactModel,
+                    pipeline.artifacts["campaign-artifact"].actual_instance,
+                ).campaign_id
                 return
             except Exception:
                 sleep(self._retry_delay)
@@ -264,7 +323,7 @@ class RapidataOrder:
             download_id = self.__openapi_service.pipeline_api.pipeline_pipeline_id_preliminary_download_post(
                 pipeline_id, PreliminaryDownloadModel(sendEmail=False)
             ).download_id
-            
+
             elapsed = 0
             timeout = 60
             while elapsed < timeout:

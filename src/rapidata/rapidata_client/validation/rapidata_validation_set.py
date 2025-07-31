@@ -4,6 +4,7 @@ from rapidata.rapidata_client.logging import logger
 from rapidata.api_client.models.update_dimensions_model import UpdateDimensionsModel
 from rapidata.api_client.models.update_should_alert_model import UpdateShouldAlertModel
 
+
 class RapidataValidationSet:
     """A class for interacting with a Rapidata validation set.
 
@@ -20,7 +21,7 @@ class RapidataValidationSet:
         self.id = validation_set_id
         self.name = name
         self.__openapi_service = openapi_service
-    
+
     def add_rapid(self, rapid: Rapid):
         """Add a Rapid to the validation set.
 
@@ -36,10 +37,14 @@ class RapidataValidationSet:
         Args:
             dimensions (list[str]): The new dimensions of the validation set.
         """
-        logger.debug(f"Updating dimensions for validation set {self.id} to {dimensions}")
-        self.__openapi_service.validation_api.validation_set_validation_set_id_dimensions_put(self.id, UpdateDimensionsModel(dimensions=dimensions))
+        logger.debug(
+            "Updating dimensions for validation set %s to %s", self.id, dimensions
+        )
+        self.__openapi_service.validation_api.validation_set_validation_set_id_dimensions_put(
+            self.id, UpdateDimensionsModel(dimensions=dimensions)
+        )
         return self
-    
+
     def update_should_alert(self, should_alert: bool):
         """Determines whether users should be alerted if they answer incorrectly.
 
@@ -49,10 +54,11 @@ class RapidataValidationSet:
         Note:
             The userScore dimensions which are updated when a user answers a validation task are updated regardless of the value of `should_alert`.
         """
-        logger.debug(f"Setting shouldAlert for validation set {self.id} to {should_alert}")
+        logger.debug(
+            "Setting shouldAlert for validation set %s to %s", self.id, should_alert
+        )
         self.__openapi_service.validation_api.validation_set_validation_set_id_shouldalert_patch(
-            self.id, 
-            UpdateShouldAlertModel(shouldAlert=should_alert)
+            self.id, UpdateShouldAlertModel(shouldAlert=should_alert)
         )
         return self
 
