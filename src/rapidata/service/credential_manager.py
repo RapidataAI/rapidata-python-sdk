@@ -52,7 +52,7 @@ class CredentialManager:
 
     def _read_credentials(self) -> Dict[str, List[ClientCredential]]:
         """Read all stored credentials from the config file."""
-        logger.debug(f"Reading credentials from {self.config_path}")
+        logger.debug("Reading credentials from %s", self.config_path)
         if not self.config_path.exists():
             return {}
 
@@ -77,12 +77,12 @@ class CredentialManager:
         with open(self.config_path, "w") as f:
             json.dump(data, f, indent=2)
 
-        logger.debug(f"Credentials written to {self.config_path} with data: {data}")
+        logger.debug("Credentials written to %s with data: %s", self.config_path, data)
 
         # Ensure file is only readable by the user
         os.chmod(self.config_path, 0o600)
         logger.debug(
-            f"Set permissions for {self.config_path} to read/write for user only."
+            "Set permissions for %s to read/write for user only.", self.config_path
         )
 
     def _store_credential(self, credential: ClientCredential) -> None:
@@ -109,19 +109,19 @@ class CredentialManager:
     def get_client_credentials(self) -> Optional[ClientCredential]:
         """Gets stored client credentials or create new ones via browser auth."""
         credentials = self._read_credentials()
-        logger.debug(f"Stored credentials: {credentials}")
+        logger.debug("Stored credentials: %s", credentials)
         env_credentials = credentials.get(self.endpoint, [])
 
         if env_credentials:
-            logger.debug(f"Found credentials for {self.endpoint}: {env_credentials}")
+            logger.debug("Found credentials for %s: %s", self.endpoint, env_credentials)
             credential = self._select_credential(env_credentials)
-            logger.debug(f"Selected credential: {credential}")
+            logger.debug("Selected credential: %s", credential)
             if credential:
                 credential.last_used = datetime.now(timezone.utc)
                 self._write_credentials(credentials)
                 return credential
 
-        logger.debug(f"No credentials found for {self.endpoint}. Creating new ones.")
+        logger.debug("No credentials found for %s. Creating new ones.", self.endpoint)
         return self._create_new_credentials()
 
     def reset_credentials(self) -> None:
@@ -130,7 +130,7 @@ class CredentialManager:
         if self.endpoint in credentials:
             del credentials[self.endpoint]
             self._write_credentials(credentials)
-            logger.info(f"Credentials for {self.endpoint} have been reset.")
+            logger.info("Credentials for %s have been reset.", self.endpoint)
 
     def _get_bridge_tokens(self) -> Optional[BridgeToken]:
         """Get bridge tokens from the identity endpoint."""
@@ -141,13 +141,13 @@ class CredentialManager:
             )
             response = requests.post(bridge_endpoint, verify=self.cert_path)
             if not response.ok:
-                logger.error(f"Failed to get bridge tokens: {response.status_code}")
+                logger.error("Failed to get bridge tokens: %s", response.status_code)
                 return None
 
             data = response.json()
             return BridgeToken(read_key=data["readKey"], write_key=data["writeKey"])
         except requests.RequestException as e:
-            logger.error(f"Failed to get bridge tokens: {e}")
+            logger.error("Failed to get bridge tokens: %s", e)
             return None
 
     def _poll_read_key(self, read_key: str) -> Optional[str]:
@@ -169,11 +169,11 @@ class CredentialManager:
                     continue
                 else:
                     # Error occurred
-                    logger.error(f"Error polling read key: {response.status_code}")
+                    logger.error("Error polling read key: %s", response.status_code)
                     return None
 
             except requests.RequestException as e:
-                logger.error(f"Error polling read key: {e}")
+                logger.error("Error polling read key: %s", e)
                 return None
 
         logger.error("Polling timed out")
@@ -198,7 +198,7 @@ class CredentialManager:
             data = response.json()
             return data.get("clientId"), data.get("clientSecret"), display_name
         except requests.RequestException as e:
-            logger.error(f"Failed to create client: {e}")
+            logger.error("Failed to create client: %s", e)
             return None
 
     def _create_new_credentials(self) -> Optional[ClientCredential]:

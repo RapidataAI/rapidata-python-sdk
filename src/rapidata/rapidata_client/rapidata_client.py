@@ -5,7 +5,9 @@ from rapidata import __version__
 from rapidata.service.openapi_service import OpenAPIService
 
 from rapidata.rapidata_client.order.rapidata_order_manager import RapidataOrderManager
-from rapidata.rapidata_client.benchmark.rapidata_benchmark_manager import RapidataBenchmarkManager
+from rapidata.rapidata_client.benchmark.rapidata_benchmark_manager import (
+    RapidataBenchmarkManager,
+)
 
 from rapidata.rapidata_client.validation.validation_set_manager import (
     ValidationSetManager,
@@ -15,18 +17,19 @@ from rapidata.rapidata_client.demographic.demographic_manager import Demographic
 
 from rapidata.rapidata_client.logging import logger, managed_print
 
+
 class RapidataClient:
     """The Rapidata client is the main entry point for interacting with the Rapidata API. It allows you to create orders and validation sets."""
 
     def __init__(
-            self,
-            client_id: str | None = None,
-            client_secret: str | None = None,
-            environment: str = "rapidata.ai",
-            oauth_scope: str = "openid",
-            cert_path: str | None = None,
-            token: dict | None = None,
-            leeway: int = 60
+        self,
+        client_id: str | None = None,
+        client_secret: str | None = None,
+        environment: str = "rapidata.ai",
+        oauth_scope: str = "openid",
+        cert_path: str | None = None,
+        token: dict | None = None,
+        leeway: int = 60,
     ):
         """Initialize the RapidataClient. If both the client_id and client_secret are None, it will try using your credentials under "~/.config/rapidata/credentials.json".
         If this is not successful, it will open a browser window and ask you to log in, then save your new credentials in said json file.
@@ -69,7 +72,7 @@ class RapidataClient:
 
         logger.debug("Initializing RapidataBenchmarkManager")
         self.mri = RapidataBenchmarkManager(openapi_service=self._openapi_service)
-        
+
     def reset_credentials(self):
         """Reset the credentials saved in the configuration file for the current environment."""
         self._openapi_service.reset_credentials()
@@ -79,12 +82,14 @@ class RapidataClient:
             response = requests.get(
                 "https://api.github.com/repos/RapidataAI/rapidata-python-sdk/releases/latest",
                 headers={"Accept": "application/vnd.github.v3+json"},
-                timeout=3
+                timeout=3,
             )
             if response.status_code == 200:
                 latest_version = response.json()["tag_name"].lstrip("v")
                 if version.parse(latest_version) > version.parse(__version__):
-                    managed_print(f"""A new version of the Rapidata SDK is available: {latest_version}
-Your current version is: {__version__}""")
+                    managed_print(
+                        f"""A new version of the Rapidata SDK is available: {latest_version}
+Your current version is: {__version__}"""
+                    )
         except Exception as e:
-            logger.debug(f"Failed to check for updates: {e}")
+            logger.debug("Failed to check for updates: %s", e)
