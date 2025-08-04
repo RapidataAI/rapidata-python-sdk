@@ -67,26 +67,29 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
 
 nav:
-  - Overview: index.md
-  - quickstart.md
-  - Understanding the Results: understanding_the_results.md
-  - Improve Quality: improve_order_quality.md
-  - Confidence Stopping: confidence_stopping.md
-  - Human Prompting Guide: human_prompting.md
-  - Task Examples:
-      - Classification: examples/classify_order.md
-      - Compare: examples/compare_order.md
-      - Free Text: examples/free_text_order.md
-      - Select Words: examples/select_words_order.md
-      - Locate: examples/locate_order.md
-      - Draw: examples/draw_order.md
-      - Ranking: examples/ranking_order.md
-  - Filters: reference/rapidata/rapidata_client/filter/rapidata_filters/
-  - Settings: reference/rapidata/rapidata_client/settings/rapidata_settings/
-  - Selections: reference/rapidata/rapidata_client/selection/rapidata_selections/
-  - Model Ranking Insights: mri.md
-  - Logging: logging.md
-  - API Documentation: api.md
+  - "⚡Custom Usage":
+      - "🏠 Guides":
+          - "👀 Overview": starting_page.md
+          - "🚀 Quick Start": quickstart.md
+          - "📊 Understanding Results": understanding_the_results.md
+          - "🎯 Improve Quality": improve_order_quality.md
+          - "🛑 Confidence Stopping": confidence_stopping.md
+          - "💡 Human Prompting": human_prompting.md
+      - "📋 Task Examples":
+          - "🏷️ Classification": examples/classify_order.md
+          - "⚖️ Compare": examples/compare_order.md
+          - "✍️ Free Text": examples/free_text_order.md
+          - "🔤 Select Words": examples/select_words_order.md
+          - "📍 Locate": examples/locate_order.md
+          - "✏️ Draw": examples/draw_order.md
+          - "📊 Ranking": examples/ranking_order.md
+      - "🔧 Configuration":
+          - "🔍 Filters": reference/rapidata/rapidata_client/filter/rapidata_filters.md
+          - "⚙️ Settings": reference/rapidata/rapidata_client/settings/rapidata_settings.md
+          - "📤 Selections": reference/rapidata/rapidata_client/selection/rapidata_selections.md
+  - "📈 Benchmarks":
+      - "🧠 Model Ranking Insights": mri.md
+      - "📝 Logging": logging.md
 
 theme:
   name: material
@@ -114,4 +117,15 @@ theme:
 
   features:
     - content.code.copy
-    - navigation.expand
+    # - navigation.expand
+    - navigation.sections          # Group nav items into sections
+    - navigation.tabs             # Top-level tabs (optional)
+    - navigation.tabs.sticky      # Keep tabs visible while scrolling
+    - navigation.top              # Back to top button
+    - navigation.tracking         # Update URL when scrolling
+    - navigation.indexes          # Enable section index pages
+    - toc.follow                  # Sidebar follows scrolling
+    - toc.integrate               # Integrate TOC into navigation
+    - search.highlight
+    - search.share
+    - search.suggest

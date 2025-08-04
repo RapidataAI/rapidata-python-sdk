@@ -14,7 +14,7 @@ Set up your environment and make your first API request in minutes.
 
     ---
 
-    The user is given mutliple answer options for the given question and image.
+    Compare two items and determine which one better matches your criteria.
 
     *Estimated time: 5 minutes*
 
