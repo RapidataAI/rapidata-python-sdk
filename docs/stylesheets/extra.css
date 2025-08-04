@@ -41,3 +41,76 @@
 [data-md-color-scheme="slate"] .image-switch img.dark {
     display: block;
 }
+
+/* Navigation section styling */
+.md-nav__title {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--md-primary-fg-color);
+    border-bottom: 1px solid var(--md-default-fg-color--lightest);
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+/* Navigation items */
+.md-nav__item {
+    margin: 0.2rem 0;
+}
+
+.md-nav__link {
+    border-radius: 0.3rem;
+    transition: all 0.2s ease;
+    padding: 0.4rem 0.8rem;
+}
+
+.md-nav__link:hover {
+    background-color: var(--md-accent-fg-color--transparent);
+    transform: translateX(4px);
+}
+
+/* Active navigation item */
+.md-nav__link--active {
+    background-color: var(--md-accent-fg-color--transparent);
+    border-left: 3px solid var(--md-accent-fg-color);
+    font-weight: 600;
+}
+
+/* Navigation sections */
+.md-nav--secondary .md-nav__title {
+    background: linear-gradient(135deg, var(--md-primary-fg-color), var(--md-accent-fg-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Collapsible sections styling */
+.md-nav__toggle:checked~.md-nav__list {
+    border-left: 2px solid var(--md-accent-fg-color--transparent);
+    margin-left: 0.5rem;
+    padding-left: 1rem;
+}
+
+/* Add subtle animation to navigation */
+.md-nav__list {
+    transition: all 0.3s ease;
+}
+
+/* Style the navigation container */
+.md-sidebar--primary .md-sidebar__scrollwrap {
+    border-right: 1px solid var(--md-default-fg-color--lightest);
+}
+
+/* Add spacing between navigation groups */
+.md-nav__item--nested>.md-nav__link {
+    font-weight: 600;
+    margin-top: 1rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid var(--md-default-fg-color--lightest);
+}
+
+/* First navigation group shouldn't have top border */
+.md-nav__item:first-child.md-nav__item--nested>.md-nav__link {
+    border-top: none;
+    margin-top: 0;
+    padding-top: 0.4rem;
+}
