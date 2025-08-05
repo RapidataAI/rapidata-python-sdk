@@ -81,6 +81,7 @@ Class | Method | HTTP request | Description
 *BenchmarkApi* | [**benchmark_benchmark_id_participants_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_participants_post) | **POST** /benchmark/{benchmarkId}/participants | Creates a participant in a benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_prompt_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_prompt_post) | **POST** /benchmark/{benchmarkId}/prompt | Adds a new prompt to a benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_prompts_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_prompts_get) | **GET** /benchmark/{benchmarkId}/prompts | Returns the paged prompts of a benchmark by its ID.
+*BenchmarkApi* | [**benchmark_benchmark_id_samples_identifier_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_samples_identifier_get) | **GET** /benchmark/{benchmarkId}/samples/{identifier} | Returns the paged prompts of a benchmark by its ID.
 *BenchmarkApi* | [**benchmark_benchmark_id_tags_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_tags_get) | **GET** /benchmark/{benchmarkId}/tags | Query all tags within a benchmark
 *BenchmarkApi* | [**benchmark_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_post) | **POST** /benchmark | Creates a benchmark
 *BenchmarkApi* | [**benchmarks_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmarks_get) | **GET** /benchmarks | Queries all benchmarks of the user.
@@ -262,7 +263,6 @@ Class | Method | HTTP request | Description
  - [CloneOrderResult](rapidata/api_client/docs/CloneOrderResult.md)
  - [ComparePayload](rapidata/api_client/docs/ComparePayload.md)
  - [CompareRapidBlueprint](rapidata/api_client/docs/CompareRapidBlueprint.md)
- - [CompareRapidBlueprint1](rapidata/api_client/docs/CompareRapidBlueprint1.md)
  - [CompareResult](rapidata/api_client/docs/CompareResult.md)
  - [CompareTruth](rapidata/api_client/docs/CompareTruth.md)
  - [CompareWorkflowConfig](rapidata/api_client/docs/CompareWorkflowConfig.md)
@@ -507,6 +507,8 @@ Class | Method | HTTP request | Description
  - [RunStatus](rapidata/api_client/docs/RunStatus.md)
  - [RunsByLeaderboardResult](rapidata/api_client/docs/RunsByLeaderboardResult.md)
  - [RunsByLeaderboardResultPagedResult](rapidata/api_client/docs/RunsByLeaderboardResultPagedResult.md)
+ - [SampleByIdentifier](rapidata/api_client/docs/SampleByIdentifier.md)
+ - [SampleByIdentifierPagedResult](rapidata/api_client/docs/SampleByIdentifierPagedResult.md)
  - [SampleByParticipant](rapidata/api_client/docs/SampleByParticipant.md)
  - [SampleByParticipantPagedResult](rapidata/api_client/docs/SampleByParticipantPagedResult.md)
  - [ScrubPayload](rapidata/api_client/docs/ScrubPayload.md)
@@ -518,7 +520,6 @@ Class | Method | HTTP request | Description
  - [Shape](rapidata/api_client/docs/Shape.md)
  - [ShufflingSelection](rapidata/api_client/docs/ShufflingSelection.md)
  - [SimpleWorkflowConfig](rapidata/api_client/docs/SimpleWorkflowConfig.md)
- - [SimpleWorkflowConfigBlueprint](rapidata/api_client/docs/SimpleWorkflowConfigBlueprint.md)
  - [SimpleWorkflowConfigModel](rapidata/api_client/docs/SimpleWorkflowConfigModel.md)
  - [SimpleWorkflowConfigModelBlueprint](rapidata/api_client/docs/SimpleWorkflowConfigModelBlueprint.md)
  - [SimpleWorkflowModel](rapidata/api_client/docs/SimpleWorkflowModel.md)

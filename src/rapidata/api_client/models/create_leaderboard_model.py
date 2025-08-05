@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.and_user_filter_model_filters_inner import AndUserFilterModelFiltersInner
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -36,7 +37,8 @@ class CreateLeaderboardModel(BaseModel):
     min_responses: Optional[StrictInt] = Field(default=None, description="The minimum amount of responses that need to be collected per comparison.", alias="minResponses")
     is_inversed: Optional[StrictBool] = Field(default=None, description="If the results should be inversed, meaning people should select the worse model.", alias="isInversed")
     validation_set_id: Optional[StrictStr] = Field(default=None, description="The Validation set that should be attached to every run.", alias="validationSetId")
-    __properties: ClassVar[List[str]] = ["benchmarkId", "benchmarkName", "name", "instruction", "showPrompt", "showPromptAsset", "responseBudget", "minResponses", "isInversed", "validationSetId"]
+    filters: Optional[List[AndUserFilterModelFiltersInner]] = Field(default=None, description="The filters will be applied on every order that is created by this leaderboard.")
+    __properties: ClassVar[List[str]] = ["benchmarkId", "benchmarkName", "name", "instruction", "showPrompt", "showPromptAsset", "responseBudget", "minResponses", "isInversed", "validationSetId", "filters"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -77,6 +79,13 @@ class CreateLeaderboardModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in filters (list)
+        _items = []
+        if self.filters:
+            for _item_filters in self.filters:
+                if _item_filters:
+                    _items.append(_item_filters.to_dict())
+            _dict['filters'] = _items
         # set to None if benchmark_id (nullable) is None
         # and model_fields_set contains the field
         if self.benchmark_id is None and "benchmark_id" in self.model_fields_set:
@@ -91,6 +100,11 @@ class CreateLeaderboardModel(BaseModel):
         # and model_fields_set contains the field
         if self.validation_set_id is None and "validation_set_id" in self.model_fields_set:
             _dict['validationSetId'] = None
+
+        # set to None if filters (nullable) is None
+        # and model_fields_set contains the field
+        if self.filters is None and "filters" in self.model_fields_set:
+            _dict['filters'] = None
 
         return _dict
 
@@ -113,7 +127,8 @@ class CreateLeaderboardModel(BaseModel):
             "responseBudget": obj.get("responseBudget"),
             "minResponses": obj.get("minResponses"),
             "isInversed": obj.get("isInversed"),
-            "validationSetId": obj.get("validationSetId")
+            "validationSetId": obj.get("validationSetId"),
+            "filters": [AndUserFilterModelFiltersInner.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None
         })
         return _obj
 

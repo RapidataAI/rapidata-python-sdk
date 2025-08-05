@@ -58,7 +58,7 @@ class CampaignApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> BoostQueryResult:
+    ) -> None:
         """Updates the boost with manual boosts.
 
 
@@ -95,7 +95,7 @@ class CampaignApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "BoostQueryResult",
+            '204': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -124,7 +124,7 @@ class CampaignApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[BoostQueryResult]:
+    ) -> ApiResponse[None]:
         """Updates the boost with manual boosts.
 
 
@@ -161,7 +161,7 @@ class CampaignApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "BoostQueryResult",
+            '204': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -227,7 +227,7 @@ class CampaignApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "BoostQueryResult",
+            '204': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -268,15 +268,6 @@ class CampaignApi:
             _body_params = change_boost_model
 
 
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
-                ]
-            )
 
         # set the HTTP header `Content-Type`
         if _content_type:
