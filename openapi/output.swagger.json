@@ -4462,25 +4462,8 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/BoostQueryResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BoostQueryResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BoostQueryResult"
-                }
-              }
-            }
+          "204": {
+            "description": "No Content"
           }
         }
       }
@@ -4861,6 +4844,68 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PromptByBenchmarkResultPagedResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/benchmark/{benchmarkId}/samples/{identifier}": {
+      "get": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Returns the paged prompts of a benchmark by its ID.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The id of the benchmark to query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "identifier",
+            "in": "path",
+            "description": "The identifier to filter all samples for",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "request",
+            "in": "query",
+            "description": "additional query settings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SampleByIdentifierPagedResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SampleByIdentifierPagedResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SampleByIdentifierPagedResult"
                 }
               }
             }
@@ -15016,29 +15061,6 @@
         },
         "additionalProperties": false
       },
-      "CompareRapidBlueprint1": {
-        "title": "CompareBlueprint",
-        "required": [
-          "_t",
-          "criteria"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "CompareBlueprint"
-            ],
-            "type": "string",
-            "description": "Discriminator value for CompareBlueprint",
-            "default": "CompareBlueprint",
-            "example": "CompareBlueprint"
-          },
-          "criteria": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "CompareWorkflowConfig": {
         "title": "CompareWorkflowConfig",
         "required": [
@@ -15944,7 +15966,7 @@
                 "$ref": "#/components/schemas/FreeTextRapidBlueprint"
               },
               {
-                "$ref": "#/components/schemas/CompareRapidBlueprint1"
+                "$ref": "#/components/schemas/CompareRapidBlueprint"
               },
               {
                 "$ref": "#/components/schemas/AttachCategoryRapidBlueprint"
@@ -16019,7 +16041,7 @@
                 "$ref": "#/components/schemas/FreeTextRapidBlueprint"
               },
               {
-                "$ref": "#/components/schemas/CompareRapidBlueprint1"
+                "$ref": "#/components/schemas/CompareRapidBlueprint"
               },
               {
                 "$ref": "#/components/schemas/AttachCategoryRapidBlueprint"
@@ -16686,6 +16708,54 @@
             "type": "string",
             "description": "The Validation set that should be attached to every run.",
             "nullable": true
+          },
+          "filters": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AgeUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/AndUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/CampaignUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/CountryUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/CustomUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/GenderUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/LanguageUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/NewUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/NotUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/OrUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/ResponseCountUserFilterModel"
+                },
+                {
+                  "$ref": "#/components/schemas/UserScoreUserFilterModel"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            },
+            "description": "The filters will be applied on every order that is created by this leaderboard.",
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -17281,6 +17351,124 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/RunsByLeaderboardResult"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SampleByIdentifier": {
+        "required": [
+          "asset",
+          "id",
+          "identifier",
+          "ownerMail",
+          "participantName",
+          "tags"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "participantName": {
+            "type": "string"
+          },
+          "asset": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/FileAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/MultiAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/NullAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/TextAssetModel"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "prompt": {
+            "type": "string",
+            "nullable": true
+          },
+          "promptAsset": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/FileAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/MultiAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/NullAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/TextAssetModel"
+              }
+            ],
+            "nullable": true,
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ownerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SampleByIdentifierPagedResult": {
+        "required": [
+          "items",
+          "page",
+          "pageSize",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SampleByIdentifier"
             }
           },
           "totalPages": {
