@@ -1,5 +1,7 @@
 from typing import Any
-from rapidata.api_client.models.simple_workflow_model_blueprint import SimpleWorkflowModelBlueprint
+from rapidata.api_client.models.simple_workflow_model_blueprint import (
+    SimpleWorkflowModelBlueprint,
+)
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.api_client.models.compare_rapid_blueprint import CompareRapidBlueprint
 from rapidata.api_client.models.simple_workflow_model import SimpleWorkflowModel
@@ -19,20 +21,23 @@ class CompareWorkflow(Workflow):
         instruction (str): The instruction to be used for comparison.
     """
 
-    def __init__(self, instruction: str):
+    def __init__(self, instruction: str, A_B_naming: list[str] | None = None):
         super().__init__(type="CompareWorkflowConfig")
         self._instruction = instruction
+        self._A_B_naming = A_B_naming
 
     def _to_dict(self) -> dict[str, Any]:
         return {
             **super()._to_dict(),
             "criteria": self._instruction,
+            "indexIdentifiers": self._A_B_naming,
         }
 
     def _to_model(self) -> SimpleWorkflowModel:
         blueprint = CompareRapidBlueprint(
             _t="CompareBlueprint",
             criteria=self._instruction,
+            indexIdentifiers=self._A_B_naming,
         )
 
         return SimpleWorkflowModel(
