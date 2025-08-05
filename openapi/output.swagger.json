@@ -3071,6 +3071,36 @@
         }
       }
     },
+    "/rapid/global-responses": {
+      "get": {
+        "tags": [
+          "CustomerRapid"
+        ],
+        "summary": "A public endpoint to query the most recent responses globally",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPublicResponsesResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPublicResponsesResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPublicResponsesResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/rapid/demographic": {
       "post": {
         "tags": [
@@ -3997,162 +4027,6 @@
         }
       }
     },
-    "/pipeline/{pipelineId}/campaign": {
-      "post": {
-        "tags": [
-          "Pipeline"
-        ],
-        "summary": "Adds a campaign to a pipeline.",
-        "parameters": [
-          {
-            "name": "pipelineId",
-            "in": "path",
-            "description": "The id of the pipeline to update",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The body request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddCampaignModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddCampaignModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddCampaignModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddCampaignArtifactResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddCampaignArtifactResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddCampaignArtifactResult"
-                }
-              }
-            }
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "Pipeline"
-        ],
-        "summary": "Updates a specific campaign for a pipeline.",
-        "parameters": [
-          {
-            "name": "pipelineId",
-            "in": "path",
-            "description": "The id of the pipeline to update.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The new campaign settings.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateCampaignModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateCampaignModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateCampaignModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        }
-      }
-    },
-    "/pipeline/{pipelineId}/campaign/{artifactId}": {
-      "put": {
-        "tags": [
-          "Pipeline"
-        ],
-        "summary": "Updates a specific campaign for a pipeline.",
-        "parameters": [
-          {
-            "name": "pipelineId",
-            "in": "path",
-            "description": "The id of the pipeline to update.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "artifactId",
-            "in": "path",
-            "description": "The id of the campaign artifact to update.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The new campaign settings.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateCampaignModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateCampaignModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateCampaignModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        }
-      }
-    },
     "/pipeline/{id}/workflow-config": {
       "put": {
         "tags": [
@@ -4538,6 +4412,55 @@
           "Campaign"
         ],
         "summary": "Gets the status of the boost.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BoostQueryResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BoostQueryResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BoostQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/campaign/boost": {
+      "put": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "Updates the boost with manual boosts.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeBoostModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeBoostModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeBoostModel"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK",
@@ -8576,6 +8499,12 @@
           },
           "criteria": {
             "type": "string"
+          },
+          "indexIdentifiers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         },
         "additionalProperties": false
@@ -13054,6 +12983,21 @@
         },
         "additionalProperties": false
       },
+      "GetPublicResponsesResult": {
+        "required": [
+          "responses"
+        ],
+        "type": "object",
+        "properties": {
+          "responses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicRapidResponse"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
       "GetRapidResponsesResult": {
         "required": [
           "asset",
@@ -13530,6 +13474,38 @@
           "maxVotes": {
             "type": "integer",
             "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PublicRapidResponse": {
+        "required": [
+          "country",
+          "id",
+          "userId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "age": {
+            "type": "string",
+            "nullable": true
+          },
+          "occupation": {
+            "type": "string",
+            "nullable": true
+          },
+          "gender": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -14351,11 +14327,20 @@
       },
       "GetCompareAbSummaryResult": {
         "required": [
+          "winCounter",
           "winnerCounts"
         ],
         "type": "object",
         "properties": {
           "winnerCounts": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "format": "double"
+            },
+            "deprecated": true
+          },
+          "winCounter": {
             "type": "object",
             "additionalProperties": {
               "type": "number",
@@ -14935,180 +14920,6 @@
         ],
         "type": "string"
       },
-      "AddCampaignArtifactResult": {
-        "required": [
-          "campaignId"
-        ],
-        "type": "object",
-        "properties": {
-          "campaignId": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "AddCampaignModel": {
-        "title": "AddCampaignModel",
-        "required": [
-          "_t",
-          "campaignName",
-          "featureFlags",
-          "priority"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "AddCampaignModel"
-            ],
-            "type": "string",
-            "description": "Discriminator value for AddCampaignModel",
-            "default": "AddCampaignModel",
-            "example": "AddCampaignModel"
-          },
-          "artifactId": {
-            "type": "string",
-            "description": "The id of the campaign artifact. If not provided a random value will be used.",
-            "nullable": true
-          },
-          "campaignName": {
-            "type": "string",
-            "description": "The name of the campaign."
-          },
-          "userFilters": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/AgeUserFilterModel"
-                },
-                {
-                  "$ref": "#/components/schemas/AndUserFilterModel"
-                },
-                {
-                  "$ref": "#/components/schemas/CampaignUserFilterModel"
-                },
-                {
-                  "$ref": "#/components/schemas/CountryUserFilterModel"
-                },
-                {
-                  "$ref": "#/components/schemas/CustomUserFilterModel"
-                },
-                {
-                  "$ref": "#/components/schemas/GenderUserFilterModel"
-                },
-                {
-                  "$ref": "#/components/schemas/LanguageUserFilterModel"
-                },
-                {
-                  "$ref": "#/components/schemas/NewUserFilterModel"
-                },
-                {
-                  "$ref": "#/components/schemas/NotUserFilterModel"
-                },
-                {
-                  "$ref": "#/components/schemas/OrUserFilterModel"
-                },
-                {
-                  "$ref": "#/components/schemas/ResponseCountUserFilterModel"
-                },
-                {
-                  "$ref": "#/components/schemas/UserScoreUserFilterModel"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            },
-            "description": "The user filters to apply to the campaign.",
-            "nullable": true
-          },
-          "validationSetId": {
-            "type": "string",
-            "description": "A validation set that should be used.",
-            "nullable": true
-          },
-          "selections": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/AbTestSelection"
-                },
-                {
-                  "$ref": "#/components/schemas/CappedSelection"
-                },
-                {
-                  "$ref": "#/components/schemas/ConditionalValidationSelection"
-                },
-                {
-                  "$ref": "#/components/schemas/DemographicSelection"
-                },
-                {
-                  "$ref": "#/components/schemas/EffortCappedSelection"
-                },
-                {
-                  "$ref": "#/components/schemas/LabelingSelection"
-                },
-                {
-                  "$ref": "#/components/schemas/ShufflingSelection"
-                },
-                {
-                  "$ref": "#/components/schemas/StaticSelection"
-                },
-                {
-                  "$ref": "#/components/schemas/ValidationSelection"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            },
-            "description": "The selections that the campaign should have.",
-            "nullable": true
-          },
-          "retrievalMode": {
-            "enum": [
-              "Random",
-              "Shuffled",
-              "Sequential"
-            ],
-            "type": "string",
-            "description": "The retrieval mode defines how rapids are retrieved from the active labeling pool.",
-            "nullable": true
-          },
-          "maxIterations": {
-            "type": "integer",
-            "description": "The maximum number of times a user is allowed to see the same rapid.",
-            "format": "int32",
-            "nullable": true
-          },
-          "featureFlags": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FeatureFlag"
-            },
-            "description": "The feature flags that should be applied to the campaign."
-          },
-          "priority": {
-            "type": "integer",
-            "description": "The priority of the campaign.",
-            "format": "int32"
-          },
-          "isSticky": {
-            "type": "boolean",
-            "description": "Indicates if the campaign is sticky.",
-            "nullable": true
-          },
-          "isPreviewEnabled": {
-            "type": "boolean",
-            "description": "A flag to indicate whether the campaign should be put into preview mode after creation.\nThis way the campaign will not start automatically and the user will have to manually start it.",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false,
-        "description": "The model for adding a campaign to an existing pipeline."
-      },
       "AssetMetadata": {
         "title": "AssetMetadata",
         "required": [
@@ -15200,6 +15011,29 @@
             "type": "string"
           },
           "visibilities": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CompareRapidBlueprint1": {
+        "title": "CompareBlueprint",
+        "required": [
+          "_t",
+          "criteria"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "CompareBlueprint"
+            ],
+            "type": "string",
+            "description": "Discriminator value for CompareBlueprint",
+            "default": "CompareBlueprint",
+            "example": "CompareBlueprint"
+          },
+          "criteria": {
             "type": "string"
           }
         },
@@ -16110,7 +15944,7 @@
                 "$ref": "#/components/schemas/FreeTextRapidBlueprint"
               },
               {
-                "$ref": "#/components/schemas/CompareRapidBlueprint"
+                "$ref": "#/components/schemas/CompareRapidBlueprint1"
               },
               {
                 "$ref": "#/components/schemas/AttachCategoryRapidBlueprint"
@@ -16185,7 +16019,7 @@
                 "$ref": "#/components/schemas/FreeTextRapidBlueprint"
               },
               {
-                "$ref": "#/components/schemas/CompareRapidBlueprint"
+                "$ref": "#/components/schemas/CompareRapidBlueprint1"
               },
               {
                 "$ref": "#/components/schemas/AttachCategoryRapidBlueprint"
@@ -16392,27 +16226,6 @@
         },
         "additionalProperties": false
       },
-      "UpdateCampaignModel": {
-        "type": "object",
-        "properties": {
-          "priority": {
-            "type": "integer",
-            "description": "A value above 0 indicating how much the campaign should be prioritized.\nThe higher the value the more weight it will be given during campaign selection.",
-            "format": "int32",
-            "nullable": true
-          },
-          "featureFlags": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
-            },
-            "description": "The feature flags to assign this campaign.",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false,
-        "description": "The model containing the new configuration for a campaign."
-      },
       "VideoDurationMetadata": {
         "title": "VideoDurationMetadata",
         "required": [
@@ -16507,10 +16320,18 @@
         },
         "additionalProperties": false
       },
+      "BoostMode": {
+        "enum": [
+          "Automatic",
+          "Manual"
+        ],
+        "type": "string"
+      },
       "BoostQueryResult": {
         "required": [
           "activeCampaigns",
           "inactiveCampaigns",
+          "mode",
           "status",
           "unknownCampaigns"
         ],
@@ -16522,6 +16343,13 @@
               "Inactive",
               "Partial",
               "Unknown"
+            ],
+            "type": "string"
+          },
+          "mode": {
+            "enum": [
+              "Automatic",
+              "Manual"
             ],
             "type": "string"
           },
@@ -16643,6 +16471,25 @@
           "Completed"
         ],
         "type": "string"
+      },
+      "ChangeBoostModel": {
+        "required": [
+          "isActive",
+          "isManual"
+        ],
+        "type": "object",
+        "properties": {
+          "isManual": {
+            "type": "boolean",
+            "description": "If the manual overwrite should be applied"
+          },
+          "isActive": {
+            "type": "boolean",
+            "description": "If manual is set to true it will overrule the system with this."
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model to update the manual boost status. or putting it back to autopilot."
       },
       "BenchmarkQueryResult": {
         "required": [

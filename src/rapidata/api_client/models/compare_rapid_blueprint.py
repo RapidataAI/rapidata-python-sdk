@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,7 +28,8 @@ class CompareRapidBlueprint(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for CompareBlueprint", alias="_t")
     criteria: StrictStr
-    __properties: ClassVar[List[str]] = ["_t", "criteria"]
+    index_identifiers: Optional[List[StrictStr]] = Field(default=None, alias="indexIdentifiers")
+    __properties: ClassVar[List[str]] = ["_t", "criteria", "indexIdentifiers"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -89,7 +90,8 @@ class CompareRapidBlueprint(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'CompareBlueprint',
-            "criteria": obj.get("criteria")
+            "criteria": obj.get("criteria"),
+            "indexIdentifiers": obj.get("indexIdentifiers")
         })
         return _obj
 

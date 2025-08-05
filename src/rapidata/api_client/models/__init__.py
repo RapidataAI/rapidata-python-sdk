@@ -16,8 +16,6 @@
 # import models into model package
 from rapidata.api_client.models.ab_test_selection import AbTestSelection
 from rapidata.api_client.models.ab_test_selection_a_inner import AbTestSelectionAInner
-from rapidata.api_client.models.add_campaign_artifact_result import AddCampaignArtifactResult
-from rapidata.api_client.models.add_campaign_model import AddCampaignModel
 from rapidata.api_client.models.add_user_response_result import AddUserResponseResult
 from rapidata.api_client.models.add_validation_rapid_model import AddValidationRapidModel
 from rapidata.api_client.models.add_validation_rapid_model_payload import AddValidationRapidModelPayload
@@ -39,6 +37,7 @@ from rapidata.api_client.models.attach_category_truth import AttachCategoryTruth
 from rapidata.api_client.models.benchmark_query_result import BenchmarkQueryResult
 from rapidata.api_client.models.benchmark_query_result_paged_result import BenchmarkQueryResultPagedResult
 from rapidata.api_client.models.boost_leaderboard_model import BoostLeaderboardModel
+from rapidata.api_client.models.boost_mode import BoostMode
 from rapidata.api_client.models.boost_query_result import BoostQueryResult
 from rapidata.api_client.models.boost_status import BoostStatus
 from rapidata.api_client.models.bounding_box_payload import BoundingBoxPayload
@@ -52,6 +51,7 @@ from rapidata.api_client.models.campaign_query_result_paged_result import Campai
 from rapidata.api_client.models.campaign_status import CampaignStatus
 from rapidata.api_client.models.campaign_user_filter_model import CampaignUserFilterModel
 from rapidata.api_client.models.capped_selection import CappedSelection
+from rapidata.api_client.models.change_boost_model import ChangeBoostModel
 from rapidata.api_client.models.classification_metadata import ClassificationMetadata
 from rapidata.api_client.models.classification_metadata_filter_config import ClassificationMetadataFilterConfig
 from rapidata.api_client.models.classification_metadata_model import ClassificationMetadataModel
@@ -64,6 +64,7 @@ from rapidata.api_client.models.clone_order_model import CloneOrderModel
 from rapidata.api_client.models.clone_order_result import CloneOrderResult
 from rapidata.api_client.models.compare_payload import ComparePayload
 from rapidata.api_client.models.compare_rapid_blueprint import CompareRapidBlueprint
+from rapidata.api_client.models.compare_rapid_blueprint1 import CompareRapidBlueprint1
 from rapidata.api_client.models.compare_result import CompareResult
 from rapidata.api_client.models.compare_truth import CompareTruth
 from rapidata.api_client.models.compare_workflow_config import CompareWorkflowConfig
@@ -176,6 +177,7 @@ from rapidata.api_client.models.get_participant_by_id_result import GetParticipa
 from rapidata.api_client.models.get_pipeline_by_id_result import GetPipelineByIdResult
 from rapidata.api_client.models.get_pipeline_by_id_result_artifacts_value import GetPipelineByIdResultArtifactsValue
 from rapidata.api_client.models.get_public_orders_result import GetPublicOrdersResult
+from rapidata.api_client.models.get_public_responses_result import GetPublicResponsesResult
 from rapidata.api_client.models.get_rapid_responses_result import GetRapidResponsesResult
 from rapidata.api_client.models.get_responses_result import GetResponsesResult
 from rapidata.api_client.models.get_simple_workflow_results_model import GetSimpleWorkflowResultsModel
@@ -283,6 +285,7 @@ from rapidata.api_client.models.prompt_metadata_input import PromptMetadataInput
 from rapidata.api_client.models.prompt_metadata_model import PromptMetadataModel
 from rapidata.api_client.models.proxy_file_wrapper import ProxyFileWrapper
 from rapidata.api_client.models.public_order_model import PublicOrderModel
+from rapidata.api_client.models.public_rapid_response import PublicRapidResponse
 from rapidata.api_client.models.public_text_metadata_input import PublicTextMetadataInput
 from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.query_validation_model import QueryValidationModel
@@ -317,6 +320,7 @@ from rapidata.api_client.models.send_completion_mail_step_model import SendCompl
 from rapidata.api_client.models.shape import Shape
 from rapidata.api_client.models.shuffling_selection import ShufflingSelection
 from rapidata.api_client.models.simple_workflow_config import SimpleWorkflowConfig
+from rapidata.api_client.models.simple_workflow_config_blueprint import SimpleWorkflowConfigBlueprint
 from rapidata.api_client.models.simple_workflow_config_model import SimpleWorkflowConfigModel
 from rapidata.api_client.models.simple_workflow_config_model_blueprint import SimpleWorkflowConfigModelBlueprint
 from rapidata.api_client.models.simple_workflow_model import SimpleWorkflowModel
@@ -361,7 +365,6 @@ from rapidata.api_client.models.translated_prompt_metadata_model import Translat
 from rapidata.api_client.models.translated_string import TranslatedString
 from rapidata.api_client.models.unlock_order_result import UnlockOrderResult
 from rapidata.api_client.models.update_benchmark_name_model import UpdateBenchmarkNameModel
-from rapidata.api_client.models.update_campaign_model import UpdateCampaignModel
 from rapidata.api_client.models.update_dataset_name_model import UpdateDatasetNameModel
 from rapidata.api_client.models.update_dimensions_model import UpdateDimensionsModel
 from rapidata.api_client.models.update_leaderboard_name_model import UpdateLeaderboardNameModel
