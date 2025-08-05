@@ -27,16 +27,24 @@ class BoostQueryResult(BaseModel):
     BoostQueryResult
     """ # noqa: E501
     status: StrictStr
+    mode: StrictStr
     active_campaigns: List[StrictStr] = Field(alias="activeCampaigns")
     inactive_campaigns: List[StrictStr] = Field(alias="inactiveCampaigns")
     unknown_campaigns: List[StrictInt] = Field(alias="unknownCampaigns")
-    __properties: ClassVar[List[str]] = ["status", "activeCampaigns", "inactiveCampaigns", "unknownCampaigns"]
+    __properties: ClassVar[List[str]] = ["status", "mode", "activeCampaigns", "inactiveCampaigns", "unknownCampaigns"]
 
     @field_validator('status')
     def status_validate_enum(cls, value):
         """Validates the enum"""
         if value not in set(['Active', 'Inactive', 'Partial', 'Unknown']):
             raise ValueError("must be one of enum values ('Active', 'Inactive', 'Partial', 'Unknown')")
+        return value
+
+    @field_validator('mode')
+    def mode_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['Automatic', 'Manual']):
+            raise ValueError("must be one of enum values ('Automatic', 'Manual')")
         return value
 
     model_config = ConfigDict(
@@ -91,6 +99,7 @@ class BoostQueryResult(BaseModel):
 
         _obj = cls.model_validate({
             "status": obj.get("status"),
+            "mode": obj.get("mode"),
             "activeCampaigns": obj.get("activeCampaigns"),
             "inactiveCampaigns": obj.get("inactiveCampaigns"),
             "unknownCampaigns": obj.get("unknownCampaigns")

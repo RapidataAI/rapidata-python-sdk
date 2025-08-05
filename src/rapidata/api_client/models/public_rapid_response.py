@@ -17,28 +17,22 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.compare_workflow_model1_referee import CompareWorkflowModel1Referee
-from rapidata.api_client.models.simple_workflow_config_blueprint import SimpleWorkflowConfigBlueprint
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class SimpleWorkflowConfig(BaseModel):
+class PublicRapidResponse(BaseModel):
     """
-    SimpleWorkflowConfig
+    PublicRapidResponse
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for SimpleWorkflowConfig", alias="_t")
-    referee: CompareWorkflowModel1Referee
-    blueprint: SimpleWorkflowConfigBlueprint
-    __properties: ClassVar[List[str]] = ["_t", "referee", "blueprint"]
-
-    @field_validator('t')
-    def t_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['SimpleWorkflowConfig']):
-            raise ValueError("must be one of enum values ('SimpleWorkflowConfig')")
-        return value
+    id: StrictStr
+    user_id: StrictStr = Field(alias="userId")
+    country: StrictStr
+    age: Optional[StrictStr] = None
+    occupation: Optional[StrictStr] = None
+    gender: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = ["id", "userId", "country", "age", "occupation", "gender"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -58,7 +52,7 @@ class SimpleWorkflowConfig(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of SimpleWorkflowConfig from a JSON string"""
+        """Create an instance of PublicRapidResponse from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -79,17 +73,26 @@ class SimpleWorkflowConfig(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of referee
-        if self.referee:
-            _dict['referee'] = self.referee.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of blueprint
-        if self.blueprint:
-            _dict['blueprint'] = self.blueprint.to_dict()
+        # set to None if age (nullable) is None
+        # and model_fields_set contains the field
+        if self.age is None and "age" in self.model_fields_set:
+            _dict['age'] = None
+
+        # set to None if occupation (nullable) is None
+        # and model_fields_set contains the field
+        if self.occupation is None and "occupation" in self.model_fields_set:
+            _dict['occupation'] = None
+
+        # set to None if gender (nullable) is None
+        # and model_fields_set contains the field
+        if self.gender is None and "gender" in self.model_fields_set:
+            _dict['gender'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of SimpleWorkflowConfig from a dict"""
+        """Create an instance of PublicRapidResponse from a dict"""
         if obj is None:
             return None
 
@@ -97,9 +100,12 @@ class SimpleWorkflowConfig(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'SimpleWorkflowConfig',
-            "referee": CompareWorkflowModel1Referee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
-            "blueprint": SimpleWorkflowConfigBlueprint.from_dict(obj["blueprint"]) if obj.get("blueprint") is not None else None
+            "id": obj.get("id"),
+            "userId": obj.get("userId"),
+            "country": obj.get("country"),
+            "age": obj.get("age"),
+            "occupation": obj.get("occupation"),
+            "gender": obj.get("gender")
         })
         return _obj
 

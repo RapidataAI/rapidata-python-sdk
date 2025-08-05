@@ -84,6 +84,7 @@ Class | Method | HTTP request | Description
 *BenchmarkApi* | [**benchmark_benchmark_id_tags_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_tags_get) | **GET** /benchmark/{benchmarkId}/tags | Query all tags within a benchmark
 *BenchmarkApi* | [**benchmark_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_post) | **POST** /benchmark | Creates a benchmark
 *BenchmarkApi* | [**benchmarks_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmarks_get) | **GET** /benchmarks | Queries all benchmarks of the user.
+*CampaignApi* | [**campaign_boost_put**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_put) | **PUT** /campaign/boost | Updates the boost with manual boosts.
 *CampaignApi* | [**campaign_boost_status_get**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_status_get) | **GET** /campaign/boost/status | Gets the status of the boost.
 *CampaignApi* | [**campaign_campaign_id_pause_post**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_pause_post) | **POST** /campaign/{campaignId}/pause | Pauses a campaign.
 *CampaignApi* | [**campaign_campaign_id_resume_post**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_resume_post) | **POST** /campaign/{campaignId}/resume | Resumes a campaign.
@@ -99,6 +100,7 @@ Class | Method | HTTP request | Description
 *CompareWorkflowApi* | [**workflow_compare_workflow_id_results_get**](rapidata/api_client/docs/CompareWorkflowApi.md#workflow_compare_workflow_id_results_get) | **GET** /workflow/compare/{workflowId}/results | Get the result overview for a compare workflow.
 *CustomerRapidApi* | [**rapid_correlation_id_validation_potential_get**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_correlation_id_validation_potential_get) | **GET** /rapid/{correlationId}/validation-potential | Queries rapids that are potentially eligible for validation set creation.
 *CustomerRapidApi* | [**rapid_demographic_post**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_demographic_post) | **POST** /rapid/demographic | Creates a new Demographic Rapid.
+*CustomerRapidApi* | [**rapid_global_responses_get**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_global_responses_get) | **GET** /rapid/global-responses | A public endpoint to query the most recent responses globally
 *CustomerRapidApi* | [**rapid_rapid_id_delete**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_rapid_id_delete) | **DELETE** /rapid/{rapidId} | Deletes a rapid.
 *CustomerRapidApi* | [**rapid_rapid_id_responses_get**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_rapid_id_responses_get) | **GET** /rapid/{rapidId}/responses | Gets all responses for a given rapid.
 *CustomerRapidApi* | [**rapid_rapid_id_unflag_post**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_rapid_id_unflag_post) | **POST** /rapid/{rapidId}/unflag | Unflags a flagged rapid. This will add the rapid back to the active labeling pool and prevent it from being flagged again.
@@ -172,9 +174,6 @@ Class | Method | HTTP request | Description
 *ParticipantApi* | [**participants_participant_id_submit_post**](rapidata/api_client/docs/ParticipantApi.md#participants_participant_id_submit_post) | **POST** /participants/{participantId}/submit | Submits a participant to a benchmark.
 *PipelineApi* | [**pipeline_id_workflow_config_artifact_id_put**](rapidata/api_client/docs/PipelineApi.md#pipeline_id_workflow_config_artifact_id_put) | **PUT** /pipeline/{id}/workflow-config/{artifactId} | Updates the workflow configuration for a pipeline.
 *PipelineApi* | [**pipeline_id_workflow_config_put**](rapidata/api_client/docs/PipelineApi.md#pipeline_id_workflow_config_put) | **PUT** /pipeline/{id}/workflow-config | Updates the workflow configuration for a pipeline.
-*PipelineApi* | [**pipeline_pipeline_id_campaign_artifact_id_put**](rapidata/api_client/docs/PipelineApi.md#pipeline_pipeline_id_campaign_artifact_id_put) | **PUT** /pipeline/{pipelineId}/campaign/{artifactId} | Updates a specific campaign for a pipeline.
-*PipelineApi* | [**pipeline_pipeline_id_campaign_post**](rapidata/api_client/docs/PipelineApi.md#pipeline_pipeline_id_campaign_post) | **POST** /pipeline/{pipelineId}/campaign | Adds a campaign to a pipeline.
-*PipelineApi* | [**pipeline_pipeline_id_campaign_put**](rapidata/api_client/docs/PipelineApi.md#pipeline_pipeline_id_campaign_put) | **PUT** /pipeline/{pipelineId}/campaign | Updates a specific campaign for a pipeline.
 *PipelineApi* | [**pipeline_pipeline_id_get**](rapidata/api_client/docs/PipelineApi.md#pipeline_pipeline_id_get) | **GET** /pipeline/{pipelineId} | Gets a pipeline by its id.
 *PipelineApi* | [**pipeline_pipeline_id_preliminary_download_post**](rapidata/api_client/docs/PipelineApi.md#pipeline_pipeline_id_preliminary_download_post) | **POST** /pipeline/{pipelineId}/preliminary-download | Initiates a preliminary download of the pipeline.
 *PipelineApi* | [**pipeline_preliminary_download_preliminary_download_id_get**](rapidata/api_client/docs/PipelineApi.md#pipeline_preliminary_download_preliminary_download_id_get) | **GET** /pipeline/preliminary-download/{preliminaryDownloadId} | Gets the preliminary download.
@@ -215,8 +214,6 @@ Class | Method | HTTP request | Description
 
  - [AbTestSelection](rapidata/api_client/docs/AbTestSelection.md)
  - [AbTestSelectionAInner](rapidata/api_client/docs/AbTestSelectionAInner.md)
- - [AddCampaignArtifactResult](rapidata/api_client/docs/AddCampaignArtifactResult.md)
- - [AddCampaignModel](rapidata/api_client/docs/AddCampaignModel.md)
  - [AddUserResponseResult](rapidata/api_client/docs/AddUserResponseResult.md)
  - [AddValidationRapidModel](rapidata/api_client/docs/AddValidationRapidModel.md)
  - [AddValidationRapidModelPayload](rapidata/api_client/docs/AddValidationRapidModelPayload.md)
@@ -238,6 +235,7 @@ Class | Method | HTTP request | Description
  - [BenchmarkQueryResult](rapidata/api_client/docs/BenchmarkQueryResult.md)
  - [BenchmarkQueryResultPagedResult](rapidata/api_client/docs/BenchmarkQueryResultPagedResult.md)
  - [BoostLeaderboardModel](rapidata/api_client/docs/BoostLeaderboardModel.md)
+ - [BoostMode](rapidata/api_client/docs/BoostMode.md)
  - [BoostQueryResult](rapidata/api_client/docs/BoostQueryResult.md)
  - [BoostStatus](rapidata/api_client/docs/BoostStatus.md)
  - [BoundingBoxPayload](rapidata/api_client/docs/BoundingBoxPayload.md)
@@ -251,6 +249,7 @@ Class | Method | HTTP request | Description
  - [CampaignStatus](rapidata/api_client/docs/CampaignStatus.md)
  - [CampaignUserFilterModel](rapidata/api_client/docs/CampaignUserFilterModel.md)
  - [CappedSelection](rapidata/api_client/docs/CappedSelection.md)
+ - [ChangeBoostModel](rapidata/api_client/docs/ChangeBoostModel.md)
  - [ClassificationMetadata](rapidata/api_client/docs/ClassificationMetadata.md)
  - [ClassificationMetadataFilterConfig](rapidata/api_client/docs/ClassificationMetadataFilterConfig.md)
  - [ClassificationMetadataModel](rapidata/api_client/docs/ClassificationMetadataModel.md)
@@ -263,6 +262,7 @@ Class | Method | HTTP request | Description
  - [CloneOrderResult](rapidata/api_client/docs/CloneOrderResult.md)
  - [ComparePayload](rapidata/api_client/docs/ComparePayload.md)
  - [CompareRapidBlueprint](rapidata/api_client/docs/CompareRapidBlueprint.md)
+ - [CompareRapidBlueprint1](rapidata/api_client/docs/CompareRapidBlueprint1.md)
  - [CompareResult](rapidata/api_client/docs/CompareResult.md)
  - [CompareTruth](rapidata/api_client/docs/CompareTruth.md)
  - [CompareWorkflowConfig](rapidata/api_client/docs/CompareWorkflowConfig.md)
@@ -375,6 +375,7 @@ Class | Method | HTTP request | Description
  - [GetPipelineByIdResult](rapidata/api_client/docs/GetPipelineByIdResult.md)
  - [GetPipelineByIdResultArtifactsValue](rapidata/api_client/docs/GetPipelineByIdResultArtifactsValue.md)
  - [GetPublicOrdersResult](rapidata/api_client/docs/GetPublicOrdersResult.md)
+ - [GetPublicResponsesResult](rapidata/api_client/docs/GetPublicResponsesResult.md)
  - [GetRapidResponsesResult](rapidata/api_client/docs/GetRapidResponsesResult.md)
  - [GetResponsesResult](rapidata/api_client/docs/GetResponsesResult.md)
  - [GetSimpleWorkflowResultsModel](rapidata/api_client/docs/GetSimpleWorkflowResultsModel.md)
@@ -482,6 +483,7 @@ Class | Method | HTTP request | Description
  - [PromptMetadataModel](rapidata/api_client/docs/PromptMetadataModel.md)
  - [ProxyFileWrapper](rapidata/api_client/docs/ProxyFileWrapper.md)
  - [PublicOrderModel](rapidata/api_client/docs/PublicOrderModel.md)
+ - [PublicRapidResponse](rapidata/api_client/docs/PublicRapidResponse.md)
  - [PublicTextMetadataInput](rapidata/api_client/docs/PublicTextMetadataInput.md)
  - [QueryModel](rapidata/api_client/docs/QueryModel.md)
  - [QueryValidationModel](rapidata/api_client/docs/QueryValidationModel.md)
@@ -516,6 +518,7 @@ Class | Method | HTTP request | Description
  - [Shape](rapidata/api_client/docs/Shape.md)
  - [ShufflingSelection](rapidata/api_client/docs/ShufflingSelection.md)
  - [SimpleWorkflowConfig](rapidata/api_client/docs/SimpleWorkflowConfig.md)
+ - [SimpleWorkflowConfigBlueprint](rapidata/api_client/docs/SimpleWorkflowConfigBlueprint.md)
  - [SimpleWorkflowConfigModel](rapidata/api_client/docs/SimpleWorkflowConfigModel.md)
  - [SimpleWorkflowConfigModelBlueprint](rapidata/api_client/docs/SimpleWorkflowConfigModelBlueprint.md)
  - [SimpleWorkflowModel](rapidata/api_client/docs/SimpleWorkflowModel.md)
@@ -560,7 +563,6 @@ Class | Method | HTTP request | Description
  - [TranslatedString](rapidata/api_client/docs/TranslatedString.md)
  - [UnlockOrderResult](rapidata/api_client/docs/UnlockOrderResult.md)
  - [UpdateBenchmarkNameModel](rapidata/api_client/docs/UpdateBenchmarkNameModel.md)
- - [UpdateCampaignModel](rapidata/api_client/docs/UpdateCampaignModel.md)
  - [UpdateDatasetNameModel](rapidata/api_client/docs/UpdateDatasetNameModel.md)
  - [UpdateDimensionsModel](rapidata/api_client/docs/UpdateDimensionsModel.md)
  - [UpdateLeaderboardNameModel](rapidata/api_client/docs/UpdateLeaderboardNameModel.md)
