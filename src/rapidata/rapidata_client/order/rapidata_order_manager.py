@@ -267,7 +267,7 @@ class RapidataOrderManager:
         responses_per_datapoint: int = 10,
         contexts: list[str] | None = None,
         media_contexts: list[str] | None = None,
-        A_B_naming: list[str] | None = None,
+        a_b_names: list[str] | None = None,
         validation_set_id: str | None = None,
         confidence_threshold: float | None = None,
         filters: Sequence[RapidataFilter] = [],
@@ -292,12 +292,12 @@ class RapidataOrderManager:
             media_contexts (list[str], optional): The list of media contexts i.e. links to the images / videos for the comparison. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
-            A_B_naming (list[str], optional): Custom naming for the two opposing models defined by the index in the datapoints list. Defaults to None.\n
+            a_b_names (list[str], optional): Custom naming for the two opposing models defined by the index in the datapoints list. Defaults to None.\n
                 If provided has to be a list of exactly two strings.
                 example:
                 ```python
                 datapoints = [["path_to_image_A", "path_to_image_B"], ["path_to_text_A", "path_to_text_B"]]
-                A_B_naming = ["Model A", "Model B"]
+                a_b_naming = ["Model A", "Model B"]
                 ```
                 The results will then correctly show "Model A" and "Model B".
                 If not provided, the results will be shown as "A" and "B".
@@ -319,7 +319,7 @@ class RapidataOrderManager:
         if any(len(datapoint) != 2 for datapoint in datapoints):
             raise ValueError("Each datapoint must contain exactly two options")
 
-        if A_B_naming is not None and len(A_B_naming) != 2:
+        if a_b_names is not None and len(a_b_names) != 2:
             raise ValueError("A_B_naming must be a list of exactly two strings or None")
 
         if data_type == "media":
@@ -339,7 +339,7 @@ class RapidataOrderManager:
 
         return self._create_general_order(
             name=name,
-            workflow=CompareWorkflow(instruction=instruction, A_B_naming=A_B_naming),
+            workflow=CompareWorkflow(instruction=instruction, a_b_names=a_b_names),
             assets=assets,
             responses_per_datapoint=responses_per_datapoint,
             contexts=contexts,
