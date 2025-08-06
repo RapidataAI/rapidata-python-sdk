@@ -100,19 +100,7 @@ theme:
   palette:
     # Palette toggle for dark mode (default)
     - scheme: slate
-      accent: cyan
       primary: black
-      toggle:
-        icon: material/brightness-4
-        name: Switch to light mode
-
-    # Palette toggle for light mode
-    - scheme: default
-      accent: cyan
-      primary: black
-      toggle:
-        icon: material/brightness-7
-        name: Switch to dark mode
 
   icon:
     repo: fontawesome/brands/github-alt
