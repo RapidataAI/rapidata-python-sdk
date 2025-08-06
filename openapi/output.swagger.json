@@ -6200,6 +6200,47 @@
           }
         }
       }
+    },
+    "/benchmark-sample/{sampleId}": {
+      "get": {
+        "tags": [
+          "Sample"
+        ],
+        "summary": "Gets a sample by its Id.",
+        "parameters": [
+          {
+            "name": "sampleId",
+            "in": "path",
+            "description": "The Id of the sample to be retrieved",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSampleByIdResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSampleByIdResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSampleByIdResult"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -9478,6 +9519,10 @@
           },
           "question": {
             "type": "string"
+          },
+          "validationSystemPrompt": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -11828,6 +11873,10 @@
           },
           "question": {
             "type": "string"
+          },
+          "validationSystemPrompt": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -16513,6 +16562,118 @@
         "additionalProperties": false,
         "description": "The model to update the manual boost status. or putting it back to autopilot."
       },
+      "AndFilter": {
+        "title": "AndFilter",
+        "required": [
+          "_t",
+          "filters"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "AndFilter"
+            ],
+            "type": "string",
+            "description": "Discriminator value for AndFilter",
+            "default": "AndFilter",
+            "example": "AndFilter"
+          },
+          "filters": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AndFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/CampaignFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/CountryFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/DemographicFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/LanguageFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/NewUserFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/NotFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/OrFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/ResponseCountFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/UserScoreFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/UserStateFilter"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "innerFilters": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AndFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/CampaignFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/CountryFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/DemographicFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/LanguageFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/NewUserFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/NotFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/OrFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/ResponseCountFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/UserScoreFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/UserStateFilter"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            },
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
       "BenchmarkQueryResult": {
         "required": [
           "createdAt",
@@ -16599,6 +16760,66 @@
         },
         "additionalProperties": false,
         "description": "The model for boosting a leaderboard."
+      },
+      "CampaignFilter": {
+        "title": "CampaignFilter",
+        "required": [
+          "_t",
+          "campaignIds"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "CampaignFilter"
+            ],
+            "type": "string",
+            "description": "Discriminator value for CampaignFilter",
+            "default": "CampaignFilter",
+            "example": "CampaignFilter"
+          },
+          "campaignIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CountryFilter": {
+        "title": "CountryFilter",
+        "required": [
+          "_t",
+          "countries"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "CountryFilter"
+            ],
+            "type": "string",
+            "description": "Discriminator value for CountryFilter",
+            "default": "CountryFilter",
+            "example": "CountryFilter"
+          },
+          "countries": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
       },
       "CreateBenchmarkModel": {
         "required": [
@@ -16756,6 +16977,14 @@
             },
             "description": "The filters will be applied on every order that is created by this leaderboard.",
             "nullable": true
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            },
+            "description": "Feature flags that will be applied to every order that is created by this leaderboard.",
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -16812,6 +17041,40 @@
         },
         "additionalProperties": false,
         "description": "The model used to create a sample to a participant."
+      },
+      "DemographicFilter": {
+        "title": "DemographicFilter",
+        "required": [
+          "_t",
+          "identifier",
+          "values"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "DemographicFilter"
+            ],
+            "type": "string",
+            "description": "Discriminator value for DemographicFilter",
+            "default": "DemographicFilter",
+            "example": "DemographicFilter"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
       },
       "FileAssetInput3": {
         "title": "FileAssetInput",
@@ -16883,6 +17146,8 @@
       },
       "GetLeaderboardByIdResult": {
         "required": [
+          "featureFlags",
+          "filters",
           "id",
           "instruction",
           "isInversed",
@@ -16923,6 +17188,59 @@
           "minResponses": {
             "type": "integer",
             "format": "int32"
+          },
+          "validationSetId": {
+            "type": "string",
+            "nullable": true
+          },
+          "filters": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AndFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/CampaignFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/CountryFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/DemographicFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/LanguageFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/NewUserFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/NotFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/OrFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/ResponseCountFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/UserScoreFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/UserStateFilter"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
           }
         },
         "additionalProperties": false
@@ -16946,6 +17264,93 @@
             "type": "string"
           },
           "datasetId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetSampleByIdResult": {
+        "required": [
+          "asset",
+          "id",
+          "identifier",
+          "ownerMail",
+          "participantId",
+          "participantName",
+          "tags"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "participantId": {
+            "type": "string"
+          },
+          "participantName": {
+            "type": "string"
+          },
+          "asset": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/FileAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/MultiAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/NullAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/TextAssetModel"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "prompt": {
+            "type": "string",
+            "nullable": true
+          },
+          "promptAsset": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/FileAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/MultiAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/NullAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/TextAssetModel"
+              }
+            ],
+            "nullable": true,
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ownerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ownerMail": {
             "type": "string"
           }
         },
@@ -16988,8 +17393,40 @@
         },
         "additionalProperties": false
       },
+      "LanguageFilter": {
+        "title": "LanguageFilter",
+        "required": [
+          "_t",
+          "languages"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "LanguageFilter"
+            ],
+            "type": "string",
+            "description": "Discriminator value for LanguageFilter",
+            "default": "LanguageFilter",
+            "example": "LanguageFilter"
+          },
+          "languages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "LeaderboardQueryResult": {
         "required": [
+          "featureFlags",
+          "filters",
           "id",
           "instruction",
           "isInversed",
@@ -17030,6 +17467,59 @@
           "minResponses": {
             "type": "integer",
             "format": "int32"
+          },
+          "validationSetId": {
+            "type": "string",
+            "nullable": true
+          },
+          "filters": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AndFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/CampaignFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/CountryFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/DemographicFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/LanguageFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/NewUserFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/NotFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/OrFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/ResponseCountFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/UserScoreFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/UserStateFilter"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
           }
         },
         "additionalProperties": false
@@ -17110,6 +17600,250 @@
           },
           "identifier": {
             "type": "string",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "NewUserFilter": {
+        "title": "NewUserFilter",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "NewUserFilter"
+            ],
+            "type": "string",
+            "description": "Discriminator value for NewUserFilter",
+            "default": "NewUserFilter",
+            "example": "NewUserFilter"
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "NotFilter": {
+        "title": "NotFilter",
+        "required": [
+          "_t",
+          "filter"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "NotFilter"
+            ],
+            "type": "string",
+            "description": "Discriminator value for NotFilter",
+            "default": "NotFilter",
+            "example": "NotFilter"
+          },
+          "filter": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AndFilter"
+              },
+              {
+                "$ref": "#/components/schemas/CampaignFilter"
+              },
+              {
+                "$ref": "#/components/schemas/CountryFilter"
+              },
+              {
+                "$ref": "#/components/schemas/DemographicFilter"
+              },
+              {
+                "$ref": "#/components/schemas/LanguageFilter"
+              },
+              {
+                "$ref": "#/components/schemas/NewUserFilter"
+              },
+              {
+                "$ref": "#/components/schemas/NotFilter"
+              },
+              {
+                "$ref": "#/components/schemas/OrFilter"
+              },
+              {
+                "$ref": "#/components/schemas/ResponseCountFilter"
+              },
+              {
+                "$ref": "#/components/schemas/UserScoreFilter"
+              },
+              {
+                "$ref": "#/components/schemas/UserStateFilter"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "innerFilters": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AndFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/CampaignFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/CountryFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/DemographicFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/LanguageFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/NewUserFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/NotFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/OrFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/ResponseCountFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/UserScoreFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/UserStateFilter"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            },
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OrFilter": {
+        "title": "OrFilter",
+        "required": [
+          "_t",
+          "filters"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "OrFilter"
+            ],
+            "type": "string",
+            "description": "Discriminator value for OrFilter",
+            "default": "OrFilter",
+            "example": "OrFilter"
+          },
+          "filters": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AndFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/CampaignFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/CountryFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/DemographicFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/LanguageFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/NewUserFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/NotFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/OrFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/ResponseCountFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/UserScoreFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/UserStateFilter"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "innerFilters": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AndFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/CampaignFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/CountryFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/DemographicFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/LanguageFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/NewUserFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/NotFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/OrFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/ResponseCountFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/UserScoreFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/UserStateFilter"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            },
             "readOnly": true
           }
         },
@@ -17278,6 +18012,50 @@
         },
         "additionalProperties": false
       },
+      "ResponseCountFilter": {
+        "title": "ResponseCountFilter",
+        "required": [
+          "_t",
+          "dimension",
+          "operator",
+          "responseCount"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "ResponseCountFilter"
+            ],
+            "type": "string",
+            "description": "Discriminator value for ResponseCountFilter",
+            "default": "ResponseCountFilter",
+            "example": "ResponseCountFilter"
+          },
+          "responseCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dimension": {
+            "type": "string"
+          },
+          "operator": {
+            "enum": [
+              "Equal",
+              "NotEqual",
+              "LessThan",
+              "LessThanOrEqual",
+              "GreaterThan",
+              "GreaterThanOrEqual"
+            ],
+            "type": "string"
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "RunStatus": {
         "enum": [
           "Queued",
@@ -17367,6 +18145,7 @@
           "id",
           "identifier",
           "ownerMail",
+          "participantId",
           "participantName",
           "tags"
         ],
@@ -17376,6 +18155,9 @@
             "type": "string"
           },
           "identifier": {
+            "type": "string"
+          },
+          "participantId": {
             "type": "string"
           },
           "participantName": {
@@ -17866,6 +18648,82 @@
         },
         "additionalProperties": false,
         "description": "The model for updating prompt tags."
+      },
+      "UserScoreFilter": {
+        "title": "UserScoreFilter",
+        "required": [
+          "_t",
+          "dimension",
+          "lowerbound",
+          "upperbound"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "UserScoreFilter"
+            ],
+            "type": "string",
+            "description": "Discriminator value for UserScoreFilter",
+            "default": "UserScoreFilter",
+            "example": "UserScoreFilter"
+          },
+          "lowerbound": {
+            "type": "number",
+            "format": "double"
+          },
+          "upperbound": {
+            "type": "number",
+            "format": "double"
+          },
+          "dimension": {
+            "type": "string"
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserState": {
+        "enum": [
+          "Training",
+          "Blacklist",
+          "Active"
+        ],
+        "type": "string"
+      },
+      "UserStateFilter": {
+        "title": "UserStateFilter",
+        "required": [
+          "_t",
+          "states"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "UserStateFilter"
+            ],
+            "type": "string",
+            "description": "Discriminator value for UserStateFilter",
+            "default": "UserStateFilter",
+            "example": "UserStateFilter"
+          },
+          "states": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserState"
+            }
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
       }
     },
     "securitySchemes": {

@@ -19,6 +19,7 @@ from rapidata.api_client.api.participant_api import ParticipantApi
 from rapidata.api_client.api.pipeline_api import PipelineApi
 from rapidata.api_client.api.prompt_api import PromptApi
 from rapidata.api_client.api.rapidata_identity_api_api import RapidataIdentityAPIApi
+from rapidata.api_client.api.sample_api import SampleApi
 from rapidata.api_client.api.simple_workflow_api import SimpleWorkflowApi
 from rapidata.api_client.api.user_info_api import UserInfoApi
 from rapidata.api_client.api.user_rapid_api import UserRapidApi

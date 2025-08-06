@@ -20,6 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.and_user_filter_model_filters_inner import AndUserFilterModelFiltersInner
+from rapidata.api_client.models.feature_flag import FeatureFlag
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -38,7 +39,8 @@ class CreateLeaderboardModel(BaseModel):
     is_inversed: Optional[StrictBool] = Field(default=None, description="If the results should be inversed, meaning people should select the worse model.", alias="isInversed")
     validation_set_id: Optional[StrictStr] = Field(default=None, description="The Validation set that should be attached to every run.", alias="validationSetId")
     filters: Optional[List[AndUserFilterModelFiltersInner]] = Field(default=None, description="The filters will be applied on every order that is created by this leaderboard.")
-    __properties: ClassVar[List[str]] = ["benchmarkId", "benchmarkName", "name", "instruction", "showPrompt", "showPromptAsset", "responseBudget", "minResponses", "isInversed", "validationSetId", "filters"]
+    feature_flags: Optional[List[FeatureFlag]] = Field(default=None, description="Feature flags that will be applied to every order that is created by this leaderboard.", alias="featureFlags")
+    __properties: ClassVar[List[str]] = ["benchmarkId", "benchmarkName", "name", "instruction", "showPrompt", "showPromptAsset", "responseBudget", "minResponses", "isInversed", "validationSetId", "filters", "featureFlags"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -86,6 +88,13 @@ class CreateLeaderboardModel(BaseModel):
                 if _item_filters:
                     _items.append(_item_filters.to_dict())
             _dict['filters'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each item in feature_flags (list)
+        _items = []
+        if self.feature_flags:
+            for _item_feature_flags in self.feature_flags:
+                if _item_feature_flags:
+                    _items.append(_item_feature_flags.to_dict())
+            _dict['featureFlags'] = _items
         # set to None if benchmark_id (nullable) is None
         # and model_fields_set contains the field
         if self.benchmark_id is None and "benchmark_id" in self.model_fields_set:
@@ -105,6 +114,11 @@ class CreateLeaderboardModel(BaseModel):
         # and model_fields_set contains the field
         if self.filters is None and "filters" in self.model_fields_set:
             _dict['filters'] = None
+
+        # set to None if feature_flags (nullable) is None
+        # and model_fields_set contains the field
+        if self.feature_flags is None and "feature_flags" in self.model_fields_set:
+            _dict['featureFlags'] = None
 
         return _dict
 
@@ -128,7 +142,8 @@ class CreateLeaderboardModel(BaseModel):
             "minResponses": obj.get("minResponses"),
             "isInversed": obj.get("isInversed"),
             "validationSetId": obj.get("validationSetId"),
-            "filters": [AndUserFilterModelFiltersInner.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None
+            "filters": [AndUserFilterModelFiltersInner.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
+            "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
         })
         return _obj
 
