@@ -17,17 +17,17 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
 class FeatureFlagModel(BaseModel):
     """
-    A feature flag is used to enable or disable certain features.
+    FeatureFlagModel
     """ # noqa: E501
-    key: StrictStr = Field(description="The key is used to identify the feature flag.")
-    value: StrictStr = Field(description="The value is used to determine if the feature flag is enabled or disabled or can be a configuration option.")
+    key: StrictStr
+    value: StrictStr
     __properties: ClassVar[List[str]] = ["key", "value"]
 
     model_config = ConfigDict(
