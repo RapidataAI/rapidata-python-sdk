@@ -19,6 +19,8 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.and_filter_filters_inner import AndFilterFiltersInner
+from rapidata.api_client.models.feature_flag import FeatureFlag
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -35,7 +37,10 @@ class GetLeaderboardByIdResult(BaseModel):
     is_inversed: StrictBool = Field(alias="isInversed")
     response_budget: StrictInt = Field(alias="responseBudget")
     min_responses: StrictInt = Field(alias="minResponses")
-    __properties: ClassVar[List[str]] = ["id", "orderId", "name", "instruction", "showPrompt", "showPromptAsset", "isInversed", "responseBudget", "minResponses"]
+    validation_set_id: Optional[StrictStr] = Field(default=None, alias="validationSetId")
+    filters: List[AndFilterFiltersInner]
+    feature_flags: List[FeatureFlag] = Field(alias="featureFlags")
+    __properties: ClassVar[List[str]] = ["id", "orderId", "name", "instruction", "showPrompt", "showPromptAsset", "isInversed", "responseBudget", "minResponses", "validationSetId", "filters", "featureFlags"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -76,10 +81,29 @@ class GetLeaderboardByIdResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in filters (list)
+        _items = []
+        if self.filters:
+            for _item_filters in self.filters:
+                if _item_filters:
+                    _items.append(_item_filters.to_dict())
+            _dict['filters'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each item in feature_flags (list)
+        _items = []
+        if self.feature_flags:
+            for _item_feature_flags in self.feature_flags:
+                if _item_feature_flags:
+                    _items.append(_item_feature_flags.to_dict())
+            _dict['featureFlags'] = _items
         # set to None if order_id (nullable) is None
         # and model_fields_set contains the field
         if self.order_id is None and "order_id" in self.model_fields_set:
             _dict['orderId'] = None
+
+        # set to None if validation_set_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.validation_set_id is None and "validation_set_id" in self.model_fields_set:
+            _dict['validationSetId'] = None
 
         return _dict
 
@@ -101,7 +125,10 @@ class GetLeaderboardByIdResult(BaseModel):
             "showPromptAsset": obj.get("showPromptAsset"),
             "isInversed": obj.get("isInversed"),
             "responseBudget": obj.get("responseBudget"),
-            "minResponses": obj.get("minResponses")
+            "minResponses": obj.get("minResponses"),
+            "validationSetId": obj.get("validationSetId"),
+            "filters": [AndFilterFiltersInner.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
+            "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
         })
         return _obj
 

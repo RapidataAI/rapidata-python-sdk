@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,7 +28,8 @@ class FreeTextRapidBlueprint(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for FreeTextBlueprint", alias="_t")
     question: StrictStr
-    __properties: ClassVar[List[str]] = ["_t", "question"]
+    validation_system_prompt: Optional[StrictStr] = Field(default=None, alias="validationSystemPrompt")
+    __properties: ClassVar[List[str]] = ["_t", "question", "validationSystemPrompt"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -76,6 +77,11 @@ class FreeTextRapidBlueprint(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if validation_system_prompt (nullable) is None
+        # and model_fields_set contains the field
+        if self.validation_system_prompt is None and "validation_system_prompt" in self.model_fields_set:
+            _dict['validationSystemPrompt'] = None
+
         return _dict
 
     @classmethod
@@ -89,7 +95,8 @@ class FreeTextRapidBlueprint(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'FreeTextBlueprint',
-            "question": obj.get("question")
+            "question": obj.get("question"),
+            "validationSystemPrompt": obj.get("validationSystemPrompt")
         })
         return _obj
 

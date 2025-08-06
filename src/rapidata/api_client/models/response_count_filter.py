@@ -17,25 +17,34 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class FreeTextPayload(BaseModel):
+class ResponseCountFilter(BaseModel):
     """
-    FreeTextPayload
+    ResponseCountFilter
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for FreeTextPayload", alias="_t")
-    question: StrictStr
-    validation_system_prompt: Optional[StrictStr] = Field(default=None, alias="validationSystemPrompt")
-    __properties: ClassVar[List[str]] = ["_t", "question", "validationSystemPrompt"]
+    t: StrictStr = Field(description="Discriminator value for ResponseCountFilter", alias="_t")
+    response_count: StrictInt = Field(alias="responseCount")
+    dimension: StrictStr
+    operator: StrictStr
+    execution_order: Optional[StrictInt] = Field(default=None, alias="executionOrder")
+    __properties: ClassVar[List[str]] = ["_t", "responseCount", "dimension", "operator", "executionOrder"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['FreeTextPayload']):
-            raise ValueError("must be one of enum values ('FreeTextPayload')")
+        if value not in set(['ResponseCountFilter']):
+            raise ValueError("must be one of enum values ('ResponseCountFilter')")
+        return value
+
+    @field_validator('operator')
+    def operator_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['Equal', 'NotEqual', 'LessThan', 'LessThanOrEqual', 'GreaterThan', 'GreaterThanOrEqual']):
+            raise ValueError("must be one of enum values ('Equal', 'NotEqual', 'LessThan', 'LessThanOrEqual', 'GreaterThan', 'GreaterThanOrEqual')")
         return value
 
     model_config = ConfigDict(
@@ -56,7 +65,7 @@ class FreeTextPayload(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of FreeTextPayload from a JSON string"""
+        """Create an instance of ResponseCountFilter from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -77,16 +86,11 @@ class FreeTextPayload(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if validation_system_prompt (nullable) is None
-        # and model_fields_set contains the field
-        if self.validation_system_prompt is None and "validation_system_prompt" in self.model_fields_set:
-            _dict['validationSystemPrompt'] = None
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of FreeTextPayload from a dict"""
+        """Create an instance of ResponseCountFilter from a dict"""
         if obj is None:
             return None
 
@@ -94,9 +98,11 @@ class FreeTextPayload(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'FreeTextPayload',
-            "question": obj.get("question"),
-            "validationSystemPrompt": obj.get("validationSystemPrompt")
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'ResponseCountFilter',
+            "responseCount": obj.get("responseCount"),
+            "dimension": obj.get("dimension"),
+            "operator": obj.get("operator"),
+            "executionOrder": obj.get("executionOrder")
         })
         return _obj
 
