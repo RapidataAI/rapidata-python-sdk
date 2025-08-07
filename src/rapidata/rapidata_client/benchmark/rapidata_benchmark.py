@@ -280,7 +280,8 @@ class RapidataBenchmark:
             level_of_detail: The level of detail of the leaderboard. This will effect how many comparisons are done per model evaluation. (default: "low")
             min_responses_per_matchup: The minimum number of responses required to be considered for the leaderboard. (default: 3)
             validation_set_id: The id of the validation set that should be attached to the leaderboard. (default: None)
-            filters: The filters that should be applied to the leaderboard. (default: [])
+            filters: The filters that should be applied to the leaderboard. Will determine who can solve answer in the leaderboard. (default: [])
+            settings: The settings that should be applied to the leaderboard. Will determine the behavior of the tasks on the leaderboard. (default: [])
         """
         if not isinstance(min_responses_per_matchup, int):
             raise ValueError("Min responses per matchup must be an integer")
