@@ -87,6 +87,9 @@ class AddValidationRapidModelTruth(BaseModel):
 
     @field_validator('actual_instance')
     def actual_instance_must_validate_oneof(cls, v):
+        if v is None:
+            return v
+
         instance = AddValidationRapidModelTruth.model_construct()
         error_messages = []
         match = 0
@@ -164,9 +167,12 @@ class AddValidationRapidModelTruth(BaseModel):
         return cls.from_json(json.dumps(obj))
 
     @classmethod
-    def from_json(cls, json_str: str) -> Self:
+    def from_json(cls, json_str: Optional[str]) -> Self:
         """Returns the object represented by the json string"""
         instance = cls.model_construct()
+        if json_str is None:
+            return instance
+
         error_messages = []
         match = 0
 

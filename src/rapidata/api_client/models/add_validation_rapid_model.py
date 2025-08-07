@@ -30,8 +30,8 @@ class AddValidationRapidModel(BaseModel):
     The model for adding a validation rapid.
     """ # noqa: E501
     payload: AddValidationRapidModelPayload
-    metadata: List[DatasetDatasetIdDatapointsPostRequestMetadataInner] = Field(description="Some metadata to attach to the rapid.")
-    truth: AddValidationRapidModelTruth
+    metadata: Optional[List[DatasetDatasetIdDatapointsPostRequestMetadataInner]] = Field(default=None, description="Some metadata to attach to the rapid.")
+    truth: Optional[AddValidationRapidModelTruth] = None
     random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The probability for an answer to be correct when randomly guessing.", alias="randomCorrectProbability")
     explanation: Optional[StrictStr] = Field(default=None, description="An explanation for the users if they answer the rapid incorrectly.")
     __properties: ClassVar[List[str]] = ["payload", "metadata", "truth", "randomCorrectProbability", "explanation"]
@@ -88,6 +88,16 @@ class AddValidationRapidModel(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of truth
         if self.truth:
             _dict['truth'] = self.truth.to_dict()
+        # set to None if metadata (nullable) is None
+        # and model_fields_set contains the field
+        if self.metadata is None and "metadata" in self.model_fields_set:
+            _dict['metadata'] = None
+
+        # set to None if truth (nullable) is None
+        # and model_fields_set contains the field
+        if self.truth is None and "truth" in self.model_fields_set:
+            _dict['truth'] = None
+
         # set to None if random_correct_probability (nullable) is None
         # and model_fields_set contains the field
         if self.random_correct_probability is None and "random_correct_probability" in self.model_fields_set:

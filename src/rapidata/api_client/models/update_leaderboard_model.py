@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
@@ -26,9 +26,9 @@ class UpdateLeaderboardModel(BaseModel):
     """
     The model used to update a leaderboard.
     """ # noqa: E501
-    name: Optional[Dict[str, Any]] = None
-    response_budget: Optional[Dict[str, Any]] = Field(default=None, alias="responseBudget")
-    min_responses: Optional[Dict[str, Any]] = Field(default=None, alias="minResponses")
+    name: Optional[StrictStr] = None
+    response_budget: Optional[StrictInt] = Field(default=None, alias="responseBudget")
+    min_responses: Optional[StrictInt] = Field(default=None, alias="minResponses")
     __properties: ClassVar[List[str]] = ["name", "responseBudget", "minResponses"]
 
     model_config = ConfigDict(

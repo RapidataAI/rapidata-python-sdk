@@ -2559,139 +2559,6 @@
         }
       }
     },
-    "/validation-set/{validationSetId}/rapid/files": {
-      "post": {
-        "tags": [
-          "ValidationSet"
-        ],
-        "summary": "Adds a new validation rapid to the specified validation set using files to create the assets.",
-        "parameters": [
-          {
-            "name": "validationSetId",
-            "in": "path",
-            "description": "The ID of the validation set to add the rapid to.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "model": {
-                    "$ref": "#/components/schemas/AddValidationRapidModel"
-                  },
-                  "files": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "format": "binary"
-                    }
-                  }
-                }
-              },
-              "encoding": {
-                "model": {
-                  "style": "form"
-                },
-                "files": {
-                  "style": "form"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddValidationRapidResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddValidationRapidResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddValidationRapidResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
-    "/validation-set/{validationSetId}/rapid/texts": {
-      "post": {
-        "tags": [
-          "ValidationSet"
-        ],
-        "summary": "Adds a new validation rapid to the specified validation set using text sources to create the assets.",
-        "parameters": [
-          {
-            "name": "validationSetId",
-            "in": "path",
-            "description": "The ID of the validation set to add the rapid to.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The model containing the information needed to add the validation rapid.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddValidationTextRapidModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddValidationTextRapidModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddValidationTextRapidModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddValidationRapidResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddValidationRapidResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddValidationRapidResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/validation-set/zip": {
       "post": {
         "tags": [
@@ -11438,9 +11305,7 @@
       },
       "AddValidationRapidModel": {
         "required": [
-          "metadata",
-          "payload",
-          "truth"
+          "payload"
         ],
         "type": "object",
         "properties": {
@@ -11506,7 +11371,8 @@
                 "propertyName": "_t"
               }
             },
-            "description": "Some metadata to attach to the rapid."
+            "description": "Some metadata to attach to the rapid.",
+            "nullable": true
           },
           "truth": {
             "oneOf": [
@@ -11548,6 +11414,7 @@
               }
             ],
             "description": "The ground truth for the rapid.",
+            "nullable": true,
             "discriminator": {
               "propertyName": "_t"
             }
@@ -11578,145 +11445,6 @@
           }
         },
         "additionalProperties": false
-      },
-      "AddValidationTextRapidModel": {
-        "required": [
-          "metadata",
-          "payload",
-          "texts",
-          "truth"
-        ],
-        "type": "object",
-        "properties": {
-          "payload": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/TranscriptionPayload"
-              },
-              {
-                "$ref": "#/components/schemas/ScrubPayload"
-              },
-              {
-                "$ref": "#/components/schemas/PolygonPayload"
-              },
-              {
-                "$ref": "#/components/schemas/NamedEntityPayload"
-              },
-              {
-                "$ref": "#/components/schemas/LocatePayload"
-              },
-              {
-                "$ref": "#/components/schemas/LinePayload"
-              },
-              {
-                "$ref": "#/components/schemas/FreeTextPayload"
-              },
-              {
-                "$ref": "#/components/schemas/ComparePayload"
-              },
-              {
-                "$ref": "#/components/schemas/ClassifyPayload"
-              },
-              {
-                "$ref": "#/components/schemas/BoundingBoxPayload"
-              }
-            ],
-            "description": "The payload to use for the rapid.",
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          },
-          "metadata": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/PrivateTextMetadataInput"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptAssetMetadataInput"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptMetadataInput"
-                },
-                {
-                  "$ref": "#/components/schemas/PublicTextMetadataInput"
-                },
-                {
-                  "$ref": "#/components/schemas/TranscriptionMetadataInput"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            },
-            "description": "Some metadata to attach to the rapid."
-          },
-          "truth": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/TranscriptionTruth"
-              },
-              {
-                "$ref": "#/components/schemas/ScrubTruth"
-              },
-              {
-                "$ref": "#/components/schemas/PolygonTruth"
-              },
-              {
-                "$ref": "#/components/schemas/NamedEntityTruth"
-              },
-              {
-                "$ref": "#/components/schemas/LocateBoxTruth"
-              },
-              {
-                "$ref": "#/components/schemas/LineTruth"
-              },
-              {
-                "$ref": "#/components/schemas/EmptyValidationTruth"
-              },
-              {
-                "$ref": "#/components/schemas/CompareTruth"
-              },
-              {
-                "$ref": "#/components/schemas/MultiCompareTruth"
-              },
-              {
-                "$ref": "#/components/schemas/SkipTruth"
-              },
-              {
-                "$ref": "#/components/schemas/AttachCategoryTruth"
-              },
-              {
-                "$ref": "#/components/schemas/BoundingBoxTruth"
-              }
-            ],
-            "description": "The ground truth for the rapid.",
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          },
-          "texts": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "The texts to use for the rapid."
-          },
-          "randomCorrectProbability": {
-            "type": "number",
-            "description": "The probability for an answer to be correct when randomly guessing.",
-            "format": "double",
-            "nullable": true
-          },
-          "explanation": {
-            "type": "string",
-            "description": "An explanation for the users if they answer the rapid incorrectly.",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false,
-        "description": "The model for adding a validation rapid."
       },
       "AssetType": {
         "enum": [
@@ -18823,13 +18551,13 @@
         "type": "object",
         "properties": {
           "name": {
-            "$ref": "#/components/schemas/StringOptional"
+            "type": "string"
           },
           "responseBudget": {
-            "$ref": "#/components/schemas/Int32Optional"
+            "type": "integer"
           },
           "minResponses": {
-            "$ref": "#/components/schemas/Int32Optional"
+            "type": "integer"
           }
         },
         "additionalProperties": false,
