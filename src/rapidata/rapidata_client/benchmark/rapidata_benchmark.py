@@ -1,5 +1,5 @@
 import re
-from typing import Literal, Optional
+from typing import Literal, Optional, Sequence
 from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.filter import Filter
 from rapidata.api_client.models.query_model import QueryModel
@@ -15,7 +15,9 @@ from rapidata.api_client.models.submit_prompt_model_prompt_asset import (
 from rapidata.api_client.models.url_asset_input import UrlAssetInput
 from rapidata.api_client.models.file_asset_model import FileAssetModel
 from rapidata.api_client.models.source_url_metadata_model import SourceUrlMetadataModel
-
+from rapidata.api_client.models.and_user_filter_model_filters_inner import (
+    AndUserFilterModelFiltersInner,
+)
 
 from rapidata.rapidata_client.benchmark.participant._participant import (
     BenchmarkParticipant,
@@ -29,6 +31,7 @@ from rapidata.rapidata_client.benchmark.leaderboard.rapidata_leaderboard import 
 from rapidata.rapidata_client.datapoints.assets import MediaAsset
 from rapidata.rapidata_client.benchmark._detail_mapper import DetailMapper
 from rapidata.rapidata_client.filter import RapidataFilter
+from rapidata.rapidata_client.settings import RapidataSetting
 
 
 class RapidataBenchmark:
@@ -262,7 +265,8 @@ class RapidataBenchmark:
         level_of_detail: Literal["low", "medium", "high", "very high"] = "low",
         min_responses_per_matchup: int = 3,
         validation_set_id: str | None = None,
-        filters: list[RapidataFilter] = [],
+        filters: Sequence[RapidataFilter] = [],
+        settings: Sequence[RapidataSetting] = [],
     ) -> RapidataLeaderboard:
         """
         Creates a new leaderboard for the benchmark.
@@ -295,7 +299,19 @@ class RapidataBenchmark:
                 minResponses=min_responses_per_matchup,
                 responseBudget=DetailMapper.get_budget(level_of_detail),
                 validationSetId=validation_set_id,
-                filters=[filter._to_model() for filter in filters] if filters else None,
+                filters=(
+                    [
+                        AndUserFilterModelFiltersInner(filter._to_model())
+                        for filter in filters
+                    ]
+                    if filters
+                    else None
+                ),
+                featureFlags=(
+                    [setting._to_feature_flag() for setting in settings]
+                    if settings
+                    else None
+                ),
             )
         )
 
