@@ -27,6 +27,14 @@ from rapidata.rapidata_client.logging import (
     RapidataOutputManager,
 )
 from tqdm import tqdm
+from rapidata.rapidata_client.workflow import Workflow
+from rapidata.rapidata_client.workflow._classify_workflow import ClassifyWorkflow
+from rapidata.rapidata_client.datapoints._datapoint import Datapoint
+from rapidata.rapidata_client.datapoints.assets import MediaAsset, TextAsset
+from rapidata.rapidata_client.validation.rapids.rapids import Rapid
+from rapidata.rapidata_client.datapoints.metadata._select_words_metadata import (
+    SelectWordsMetadata,
+)
 
 
 class ValidationSetManager:
@@ -41,6 +49,26 @@ class ValidationSetManager:
         self.__openapi_service = openapi_service
         self.rapid = RapidsManager()
         logger.debug("ValidationSetManager initialized")
+
+    def _create_order_validation_set(
+        self,
+        workflow: Workflow,
+        order_name: str,
+        datapoints: list[Datapoint],
+    ) -> RapidataValidationSet:
+        rapids: list[Rapid] = []
+        for datapoint in datapoints:
+            rapids.append(
+                Rapid(
+                    asset=datapoint.asset,
+                    metadata=datapoint.metadata if datapoint.metadata else [],
+                    payload=workflow._to_payload(datapoint),
+                    truth=None,
+                    randomCorrectProbability=0.5,
+                    explanation=None,
+                )
+            )
+        return self._submit(name=order_name, rapids=rapids, dimensions=[])
 
     def create_classification_set(
         self,

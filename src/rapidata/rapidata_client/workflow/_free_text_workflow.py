@@ -5,6 +5,8 @@ from rapidata.api_client.models.simple_workflow_model_blueprint import (
 )
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.api_client.models.free_text_rapid_blueprint import FreeTextRapidBlueprint
+from rapidata.api_client import FreeTextPayload
+from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 
 
 class FreeTextWorkflow(Workflow):
@@ -48,4 +50,10 @@ class FreeTextWorkflow(Workflow):
         return SimpleWorkflowModel(
             _t="SimpleWorkflow",
             blueprint=SimpleWorkflowModelBlueprint(blueprint),
+        )
+
+    def _to_payload(self, datapoint: Datapoint) -> FreeTextPayload:
+        return FreeTextPayload(
+            _t="FreeTextPayload",
+            question=self._instruction,
         )

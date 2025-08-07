@@ -1,4 +1,4 @@
-from rapidata.rapidata_client.datapoints.datapoint import Datapoint
+from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.rapidata_client.datapoints.assets import TextAsset, MediaAsset
 from rapidata.service import LocalFileService
 from rapidata.service.openapi_service import OpenAPIService

@@ -1,14 +1,18 @@
 from rapidata.api_client.models.simple_workflow_model import SimpleWorkflowModel
-from rapidata.api_client.models.simple_workflow_model_blueprint import SimpleWorkflowModelBlueprint
+from rapidata.api_client.models.simple_workflow_model_blueprint import (
+    SimpleWorkflowModelBlueprint,
+)
 from rapidata.api_client.models.scrub_rapid_blueprint import ScrubRapidBlueprint
 from rapidata.rapidata_client.workflow._base_workflow import Workflow
+from rapidata.api_client import ScrubPayload
+from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 
 
 class TimestampWorkflow(Workflow):
     """
     A workflow for timestamp tasks.
 
-    This class represents a timestamp workflow 
+    This class represents a timestamp workflow
     where audio or video content receives timestamps based on the instruction.
 
     Attributes:
@@ -23,12 +27,14 @@ class TimestampWorkflow(Workflow):
         self._instruction = instruction
 
     def _to_model(self) -> SimpleWorkflowModel:
-        blueprint = ScrubRapidBlueprint(
-            _t="ScrubBlueprint",
-            target=self._instruction
-        )
+        blueprint = ScrubRapidBlueprint(_t="ScrubBlueprint", target=self._instruction)
 
         return SimpleWorkflowModel(
-            _t="SimpleWorkflow",
-            blueprint=SimpleWorkflowModelBlueprint(blueprint)
+            _t="SimpleWorkflow", blueprint=SimpleWorkflowModelBlueprint(blueprint)
+        )
+
+    def _to_payload(self, datapoint: Datapoint) -> ScrubPayload:
+        return ScrubPayload(
+            _t="ScrubPayload",
+            target=self._instruction,
         )

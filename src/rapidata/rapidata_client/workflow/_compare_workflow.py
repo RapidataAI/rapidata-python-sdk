@@ -5,6 +5,8 @@ from rapidata.api_client.models.simple_workflow_model_blueprint import (
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.api_client.models.compare_rapid_blueprint import CompareRapidBlueprint
 from rapidata.api_client.models.simple_workflow_model import SimpleWorkflowModel
+from rapidata.api_client import ComparePayload
+from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 
 
 class CompareWorkflow(Workflow):
@@ -43,4 +45,10 @@ class CompareWorkflow(Workflow):
         return SimpleWorkflowModel(
             _t="SimpleWorkflow",
             blueprint=SimpleWorkflowModelBlueprint(blueprint),
+        )
+
+    def _to_payload(self, datapoint: Datapoint) -> ComparePayload:
+        return ComparePayload(
+            _t="ComparePayload",
+            criteria=self._instruction,
         )

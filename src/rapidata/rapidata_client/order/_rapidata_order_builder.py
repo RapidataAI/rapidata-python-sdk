@@ -1,5 +1,6 @@
-from typing import Literal, Optional, cast, Sequence
+from typing import Literal, Optional, Sequence
 
+from rapidata.api_client import AssetType, PromptType, RapidModality
 from rapidata.api_client.models.ab_test_selection_a_inner import AbTestSelectionAInner
 from rapidata.api_client.models.and_user_filter_model_filters_inner import (
     AndUserFilterModelFiltersInner,
@@ -12,13 +13,16 @@ from rapidata.api_client.models.create_order_model_workflow import (
     CreateOrderModelWorkflow,
 )
 
-from rapidata.rapidata_client.datapoints.datapoint import Datapoint
+from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.rapidata_client.exceptions.failed_upload_exception import (
     FailedUploadException,
     _parse_failed_uploads,
 )
 from rapidata.rapidata_client.filter import RapidataFilter
 from rapidata.rapidata_client.logging import logger, managed_print
+from rapidata.rapidata_client.validation.validation_set_manager import (
+    ValidationSetManager,
+)
 from rapidata.rapidata_client.order._rapidata_dataset import RapidataDataset
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 from rapidata.rapidata_client.referee import Referee
@@ -47,7 +51,7 @@ class RapidataOrderBuilder:
         self._name = name
         self.order_id: str | None = None
         self.__openapi_service = openapi_service
-        self.__dataset: Optional[RapidataDataset]
+        self.__dataset: Optional[RapidataDataset] = None
         self.__workflow: Workflow | None = None
         self.__referee: Referee | None = None
         self.__validation_set_id: str | None = None
@@ -57,6 +61,9 @@ class RapidataOrderBuilder:
         self.__priority: int | None = None
         self.__datapoints: list[Datapoint] = []
         self.__sticky_state: Literal["None", "Temporary", "Permanent"] | None = None
+        self.__validation_set_manager: ValidationSetManager = ValidationSetManager(
+            self.__openapi_service
+        )
 
     def _to_model(self) -> CreateOrderModel:
         """
@@ -102,6 +109,43 @@ class RapidataOrderBuilder:
             stickyState=self.__sticky_state,
         )
 
+    def _set_validation_set_id(self) -> None:
+        """
+        Get the validation set ID for the order.
+        """
+        if self.__validation_set_id:
+            logger.debug(
+                "Using specified validation set with ID: %s", self.__validation_set_id
+            )
+            return
+
+        try:
+            self.__validation_set_id = (
+                self.__openapi_service.validation_api.validation_set_recommended_get(
+                    asset_type=AssetType.IMAGE,
+                    modality=RapidModality.TRANSCRIPTION,
+                    prompt_type=PromptType.TEXT,
+                )
+            ).id
+            logger.debug(
+                "Using recommended validation set with ID: %s", self.__validation_set_id
+            )
+        except Exception as e:
+            logger.error("Error getting validation set: %s", e)
+
+        # if len(self.__datapoints) > 100:
+        #     logger.debug(
+        #         "No recommended validation set found, dataset too small to create one."
+        #     ) # commeted out for testing
+
+        assert self.__workflow is not None
+
+        self.__validation_set_manager._create_order_validation_set(
+            workflow=self.__workflow,
+            order_name=self._name,
+            datapoints=self.__datapoints,
+        )
+
     def _create(self) -> RapidataOrder:
         """
         Create the Rapidata order by making the necessary API calls based on the builder's configuration.
@@ -143,6 +187,9 @@ class RapidataOrderBuilder:
         )
 
         logger.debug("Order created: %s", order)
+
+        self._set_validation_set_id()
+
         logger.debug("Adding media to the order.")
 
         if self.__dataset:

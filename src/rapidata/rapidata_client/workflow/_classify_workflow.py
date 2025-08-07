@@ -1,8 +1,14 @@
 from typing import Any
-from rapidata.api_client.models.attach_category_rapid_blueprint import AttachCategoryRapidBlueprint
+from rapidata.api_client.models.attach_category_rapid_blueprint import (
+    AttachCategoryRapidBlueprint,
+)
 from rapidata.api_client.models.simple_workflow_model import SimpleWorkflowModel
-from rapidata.api_client.models.simple_workflow_model_blueprint import SimpleWorkflowModelBlueprint
+from rapidata.api_client.models.simple_workflow_model_blueprint import (
+    SimpleWorkflowModelBlueprint,
+)
 from rapidata.rapidata_client.workflow import Workflow
+from rapidata.api_client import ClassifyPayload
+from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 
 
 class ClassifyWorkflow(Workflow):
@@ -23,27 +29,34 @@ class ClassifyWorkflow(Workflow):
 
     def __init__(self, instruction: str, answer_options: list[str]):
         super().__init__(type="SimpleWorkflowConfig")
-        self._question = instruction
-        self._options = answer_options
+        self._instruction = instruction
+        self._answer_options = answer_options
 
     def _to_dict(self) -> dict[str, Any]:
         return {
             **super()._to_dict(),
             "blueprint": {
                 "_t": "ClassifyBlueprint",
-                "title": self._question,
-                "possibleCategories": self._options,
-            }
+                "title": self._instruction,
+                "possibleCategories": self._answer_options,
+            },
         }
 
     def _to_model(self) -> SimpleWorkflowModel:
         blueprint = AttachCategoryRapidBlueprint(
             _t="ClassifyBlueprint",
-            title=self._question,
-            possibleCategories=self._options,
+            title=self._instruction,
+            possibleCategories=self._answer_options,
         )
 
         return SimpleWorkflowModel(
             _t="SimpleWorkflow",
             blueprint=SimpleWorkflowModelBlueprint(blueprint),
+        )
+
+    def _to_payload(self, datapoint: Datapoint) -> ClassifyPayload:
+        return ClassifyPayload(
+            _t="ClassifyPayload",
+            possibleCategories=self._answer_options,
+            title=self._instruction,
         )
