@@ -20,7 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.and_user_filter_model_filters_inner import AndUserFilterModelFiltersInner
-from rapidata.api_client.models.feature_flag import FeatureFlag
+from rapidata.api_client.models.feature_flag_model import FeatureFlagModel
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -39,7 +39,7 @@ class CreateLeaderboardModel(BaseModel):
     is_inversed: Optional[StrictBool] = Field(default=None, description="If the results should be inversed, meaning people should select the worse model.", alias="isInversed")
     validation_set_id: Optional[StrictStr] = Field(default=None, description="The Validation set that should be attached to every run.", alias="validationSetId")
     filters: Optional[List[AndUserFilterModelFiltersInner]] = Field(default=None, description="The filters will be applied on every order that is created by this leaderboard.")
-    feature_flags: Optional[List[FeatureFlag]] = Field(default=None, description="Feature flags that will be applied to every order that is created by this leaderboard.", alias="featureFlags")
+    feature_flags: Optional[List[FeatureFlagModel]] = Field(default=None, description="Feature flags that will be applied to every order that is created by this leaderboard.", alias="featureFlags")
     __properties: ClassVar[List[str]] = ["benchmarkId", "benchmarkName", "name", "instruction", "showPrompt", "showPromptAsset", "responseBudget", "minResponses", "isInversed", "validationSetId", "filters", "featureFlags"]
 
     model_config = ConfigDict(
@@ -143,7 +143,7 @@ class CreateLeaderboardModel(BaseModel):
             "isInversed": obj.get("isInversed"),
             "validationSetId": obj.get("validationSetId"),
             "filters": [AndUserFilterModelFiltersInner.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
-            "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
+            "featureFlags": [FeatureFlagModel.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
         })
         return _obj
 

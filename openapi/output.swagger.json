@@ -9420,16 +9420,13 @@
         "type": "object",
         "properties": {
           "key": {
-            "type": "string",
-            "description": "The key is used to identify the feature flag."
+            "type": "string"
           },
           "value": {
-            "type": "string",
-            "description": "The value is used to determine if the feature flag is enabled or disabled or can be a configuration option."
+            "type": "string"
           }
         },
-        "additionalProperties": false,
-        "description": "A feature flag is used to enable or disable certain features."
+        "additionalProperties": false
       },
       "FeedbackModel": {
         "required": [
@@ -16981,7 +16978,7 @@
           "featureFlags": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/FeatureFlag"
+              "$ref": "#/components/schemas/FeatureFlagModel"
             },
             "description": "Feature flags that will be applied to every order that is created by this leaderboard.",
             "nullable": true
