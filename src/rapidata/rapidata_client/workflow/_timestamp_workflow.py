@@ -6,6 +6,7 @@ from rapidata.api_client.models.scrub_rapid_blueprint import ScrubRapidBlueprint
 from rapidata.rapidata_client.workflow._base_workflow import Workflow
 from rapidata.api_client import ScrubPayload
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
+from rapidata.api_client.models.rapid_modality import RapidModality
 
 
 class TimestampWorkflow(Workflow):
@@ -21,6 +22,8 @@ class TimestampWorkflow(Workflow):
     Args:
         instruction (str): The instruction to be provided for the timestamp task.
     """
+
+    modality = RapidModality.SCRUB
 
     def __init__(self, instruction: str):
         super().__init__(type="SimpleWorkflowConfig")

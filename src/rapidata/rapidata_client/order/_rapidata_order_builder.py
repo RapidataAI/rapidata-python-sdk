@@ -19,7 +19,11 @@ from rapidata.rapidata_client.exceptions.failed_upload_exception import (
     _parse_failed_uploads,
 )
 from rapidata.rapidata_client.filter import RapidataFilter
-from rapidata.rapidata_client.logging import logger, managed_print
+from rapidata.rapidata_client.logging import (
+    logger,
+    managed_print,
+    RapidataOutputManager,
+)
 from rapidata.rapidata_client.validation.validation_set_manager import (
     ValidationSetManager,
 )
@@ -113,6 +117,7 @@ class RapidataOrderBuilder:
         """
         Get the validation set ID for the order.
         """
+        assert self.__workflow is not None
         if self.__validation_set_id:
             logger.debug(
                 "Using specified validation set with ID: %s", self.__validation_set_id
@@ -122,29 +127,36 @@ class RapidataOrderBuilder:
         try:
             self.__validation_set_id = (
                 self.__openapi_service.validation_api.validation_set_recommended_get(
-                    asset_type=AssetType.IMAGE,
-                    modality=RapidModality.TRANSCRIPTION,
-                    prompt_type=PromptType.TEXT,
+                    asset_type=self.__datapoints[0].get_asset_type(),
+                    modality=self.__workflow.modality,
+                    prompt_type=self.__datapoints[0].get_prompt_type()[
+                        0
+                    ],  # TODO: REMOVE 0 index when new specs
                 )
             ).id
             logger.debug(
                 "Using recommended validation set with ID: %s", self.__validation_set_id
             )
         except Exception as e:
-            logger.error("Error getting validation set: %s", e)
+            logger.info("No recommended validation set found, creating new one.")
 
         # if len(self.__datapoints) > 100:
         #     logger.debug(
         #         "No recommended validation set found, dataset too small to create one."
         #     ) # commeted out for testing
 
-        assert self.__workflow is not None
-
-        self.__validation_set_manager._create_order_validation_set(
+        managed_print()
+        managed_print(
+            f"No recommended validation set found, new one will be created.\nWe recommend adding some truths to ensure the order is accurate."
+        )
+        validation_set = self.__validation_set_manager._create_order_validation_set(
             workflow=self.__workflow,
             order_name=self._name,
-            datapoints=self.__datapoints,
+            datapoints=self.__datapoints[:20],
         )
+
+        logger.debug("New validation set created for order: %s", validation_set)
+        self.__validation_set_id = validation_set.id
 
     def _create(self) -> RapidataOrder:
         """

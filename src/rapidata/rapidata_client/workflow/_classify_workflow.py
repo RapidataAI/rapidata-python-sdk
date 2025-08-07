@@ -9,6 +9,7 @@ from rapidata.api_client.models.simple_workflow_model_blueprint import (
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.api_client import ClassifyPayload
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
+from rapidata.api_client.models.rapid_modality import RapidModality
 
 
 class ClassifyWorkflow(Workflow):
@@ -26,6 +27,8 @@ class ClassifyWorkflow(Workflow):
         _question (str): The classification question.
         _options (list[str]): The list of classification options.
     """
+
+    modality = RapidModality.CLASSIFY
 
     def __init__(self, instruction: str, answer_options: list[str]):
         super().__init__(type="SimpleWorkflowConfig")

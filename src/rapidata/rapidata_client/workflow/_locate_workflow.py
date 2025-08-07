@@ -6,9 +6,11 @@ from rapidata.api_client.models.locate_rapid_blueprint import LocateRapidBluepri
 from rapidata.rapidata_client.workflow._base_workflow import Workflow
 from rapidata.api_client import LocatePayload
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
+from rapidata.api_client.models.rapid_modality import RapidModality
 
 
 class LocateWorkflow(Workflow):
+    modality = RapidModality.LOCATE
 
     def __init__(self, target: str):
         super().__init__(type="SimpleWorkflowConfig")

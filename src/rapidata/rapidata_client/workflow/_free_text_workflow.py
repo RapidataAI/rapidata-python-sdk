@@ -7,6 +7,7 @@ from rapidata.rapidata_client.workflow import Workflow
 from rapidata.api_client.models.free_text_rapid_blueprint import FreeTextRapidBlueprint
 from rapidata.api_client import FreeTextPayload
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
+from rapidata.api_client.models.rapid_modality import RapidModality
 
 
 class FreeTextWorkflow(Workflow):
@@ -24,6 +25,8 @@ class FreeTextWorkflow(Workflow):
         validation_system_prompt (str): The system prompt to determine if the provided free text response is spam or not.
             Should always specify that the LLM should respond with 'not spam' or 'spam'.
     """
+
+    modality = RapidModality.FREETEXT
 
     def __init__(self, instruction: str, validation_system_prompt: str | None = None):
         super().__init__(type="SimpleWorkflowConfig")

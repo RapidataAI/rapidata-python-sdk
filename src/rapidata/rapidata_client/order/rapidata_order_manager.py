@@ -164,6 +164,7 @@ class RapidataOrderManager:
             ._sticky_state(self.__sticky_state)
             ._create()
         )
+        logger.debug("Order created: %s", order)
         return order
 
     def _set_priority(self, priority: int):
