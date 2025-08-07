@@ -21,7 +21,6 @@ from rapidata.api_client.models.add_validation_rapid_model import AddValidationR
 from rapidata.api_client.models.add_validation_rapid_model_payload import AddValidationRapidModelPayload
 from rapidata.api_client.models.add_validation_rapid_model_truth import AddValidationRapidModelTruth
 from rapidata.api_client.models.add_validation_rapid_result import AddValidationRapidResult
-from rapidata.api_client.models.add_validation_text_rapid_model import AddValidationTextRapidModel
 from rapidata.api_client.models.age_group import AgeGroup
 from rapidata.api_client.models.age_user_filter_model import AgeUserFilterModel
 from rapidata.api_client.models.aggregator_type import AggregatorType
