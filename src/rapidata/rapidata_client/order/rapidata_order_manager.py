@@ -28,7 +28,7 @@ from rapidata.rapidata_client.workflow import (
     RankingWorkflow,
 )
 from rapidata.rapidata_client.datapoints.assets import MediaAsset, TextAsset, MultiAsset
-from rapidata.rapidata_client.datapoints.datapoint import Datapoint
+from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.rapidata_client.filter import RapidataFilter
 from rapidata.rapidata_client.filter.rapidata_filters import RapidataFilters
 from rapidata.rapidata_client.settings import RapidataSettings, RapidataSetting
@@ -509,7 +509,9 @@ class RapidataOrderManager:
 
         return self._create_general_order(
             name=name,
-            workflow=SelectWordsWorkflow(instruction=instruction),
+            workflow=SelectWordsWorkflow(
+                instruction=instruction,
+            ),
             assets=assets,
             responses_per_datapoint=responses_per_datapoint,
             validation_set_id=validation_set_id,
