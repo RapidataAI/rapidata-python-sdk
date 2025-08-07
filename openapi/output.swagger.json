@@ -2174,7 +2174,7 @@
         "tags": [
           "ValidationSet"
         ],
-        "summary": "Queries validation sets based on the provided filter, paging and sorting criteria.",
+        "summary": "Queries available validation sets based on the provided filter, paging and sorting criteria.",
         "parameters": [
           {
             "name": "model",
@@ -2206,6 +2206,62 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ValidationSetModelPagedResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/validation-set/recommended": {
+      "get": {
+        "tags": [
+          "ValidationSet"
+        ],
+        "summary": "Gets a validation set that is available to the user and best matches the provided parameters.",
+        "parameters": [
+          {
+            "name": "assetType",
+            "in": "query",
+            "description": "The types of assets that the validation set should contain.\nAn asset type can be an image, video, audio, text, or any combination of these.\n<para />\nThis parameter is a flag, meaning that it can be null or contain multiple values.\nIf multiple values are provided, a validation set will be chosen that contains at least one of the specified asset types.",
+            "schema": {
+              "$ref": "#/components/schemas/AssetType"
+            }
+          },
+          {
+            "name": "modality",
+            "in": "query",
+            "description": "The rapid modalities that the validation set should contain.\nThe modality is the type of rapid such as classify, compare, locate, etc.\n<para />\nThis parameter is a flag, meaning that it can be null or contain multiple values.\nIf multiple values are provided, a validation set will be chosen that contains at least one of the specified modalities.",
+            "schema": {
+              "$ref": "#/components/schemas/RapidModality"
+            }
+          },
+          {
+            "name": "promptType",
+            "in": "query",
+            "description": "The prompt types that the validation set should contain.\nA prompt type is the additional information that is presented to the user when solving a rapid.\nFor example, a prompt type can be either text or an asset if the context is an image or video.\n<para />\nThis parameter is a flag, meaning that it can be null or contain multiple values.\nIf multiple values are provided, a validation set will be chosen that contains at least one of the specified prompt types.",
+            "schema": {
+              "$ref": "#/components/schemas/PromptType"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationSetModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationSetModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationSetModel"
                 }
               }
             }
@@ -2715,6 +2771,64 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/validation-set/{validationSetId}/update-labeling-hints": {
+      "post": {
+        "tags": [
+          "ValidationSet"
+        ],
+        "summary": "Refreshes the labeling hints for a validation set.",
+        "description": "This will sample the rapids in the validation set and update the labeling hints based on the sampled rapids.",
+        "parameters": [
+          {
+            "name": "validationSetId",
+            "in": "path",
+            "description": "The id of the validation set to update the labeling hints for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/validation-set/{validationSetId}/visibility": {
+      "patch": {
+        "tags": [
+          "ValidationSet"
+        ],
+        "summary": "Updates the visibility of a validation set.",
+        "description": "Public validation sets are used to automatically add a validation set to an order if no validation set is specified.\nIf the validation set is made public, the labeling hints will be updated automatically.",
+        "parameters": [
+          {
+            "name": "validationSetId",
+            "in": "path",
+            "description": "The id of the validation set to update the visibility for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "isPublic",
+            "in": "query",
+            "description": "Whether the validation set should be public or private.",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
           }
         }
       }
@@ -5132,6 +5246,48 @@
           }
         }
       },
+      "patch": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "Updates the response config of a leaderboard.",
+        "parameters": [
+          {
+            "name": "leaderboardId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLeaderboardModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLeaderboardModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLeaderboardModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
       "delete": {
         "tags": [
           "Leaderboard"
@@ -5196,7 +5352,8 @@
           "204": {
             "description": "No Content"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/leaderboard/{leaderboardId}/response-config": {
@@ -5240,7 +5397,8 @@
           "204": {
             "description": "No Content"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/leaderboard": {
@@ -11560,6 +11718,16 @@
         "additionalProperties": false,
         "description": "The model for adding a validation rapid."
       },
+      "AssetType": {
+        "enum": [
+          "None",
+          "Image",
+          "Video",
+          "Audio",
+          "Text"
+        ],
+        "type": "string"
+      },
       "AttachCategoryTruth": {
         "title": "AttachCategoryTruth",
         "required": [
@@ -12467,6 +12635,30 @@
         },
         "additionalProperties": false
       },
+      "PromptType": {
+        "enum": [
+          "None",
+          "Text",
+          "Asset"
+        ],
+        "type": "string"
+      },
+      "RapidModality": {
+        "enum": [
+          "None",
+          "BoundingBox",
+          "Classify",
+          "Compare",
+          "FreeText",
+          "Line",
+          "Locate",
+          "NamedEntity",
+          "Polygon",
+          "Scrub",
+          "Transcription"
+        ],
+        "type": "string"
+      },
       "RapidState": {
         "enum": [
           "Labeling",
@@ -12755,6 +12947,43 @@
           },
           "name": {
             "type": "string"
+          },
+          "assetType": {
+            "enum": [
+              "None",
+              "Image",
+              "Video",
+              "Audio",
+              "Text"
+            ],
+            "type": "string",
+            "nullable": true
+          },
+          "modality": {
+            "enum": [
+              "None",
+              "BoundingBox",
+              "Classify",
+              "Compare",
+              "FreeText",
+              "Line",
+              "Locate",
+              "NamedEntity",
+              "Polygon",
+              "Scrub",
+              "Transcription"
+            ],
+            "type": "string",
+            "nullable": true
+          },
+          "promptType": {
+            "enum": [
+              "None",
+              "Text",
+              "Asset"
+            ],
+            "type": "string",
+            "nullable": true
           },
           "ownerId": {
             "type": "string",
@@ -17390,6 +17619,11 @@
         },
         "additionalProperties": false
       },
+      "Int32Optional": {
+        "title": "Optional`1",
+        "type": "integer",
+        "additionalProperties": false
+      },
       "LanguageFilter": {
         "title": "LanguageFilter",
         "required": [
@@ -18482,6 +18716,11 @@
         },
         "additionalProperties": false
       },
+      "StringOptional": {
+        "title": "Optional`1",
+        "type": "string",
+        "additionalProperties": false
+      },
       "SubmitParticipantResult": {
         "required": [
           "invalidDatapoints",
@@ -18579,6 +18818,22 @@
         },
         "additionalProperties": false,
         "description": "The model used to update the name of a benchmark."
+      },
+      "UpdateLeaderboardModel": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/StringOptional"
+          },
+          "responseBudget": {
+            "$ref": "#/components/schemas/Int32Optional"
+          },
+          "minResponses": {
+            "$ref": "#/components/schemas/Int32Optional"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model used to update a leaderboard."
       },
       "UpdateLeaderboardNameModel": {
         "required": [

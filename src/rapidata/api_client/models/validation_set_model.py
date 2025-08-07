@@ -18,8 +18,8 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -29,10 +29,43 @@ class ValidationSetModel(BaseModel):
     """ # noqa: E501
     id: StrictStr
     name: StrictStr
+    asset_type: Optional[StrictStr] = Field(default=None, alias="assetType")
+    modality: Optional[StrictStr] = None
+    prompt_type: Optional[StrictStr] = Field(default=None, alias="promptType")
     owner_id: StrictStr = Field(alias="ownerId")
     owner_mail: StrictStr = Field(alias="ownerMail")
     created_at: datetime = Field(alias="createdAt")
-    __properties: ClassVar[List[str]] = ["id", "name", "ownerId", "ownerMail", "createdAt"]
+    __properties: ClassVar[List[str]] = ["id", "name", "assetType", "modality", "promptType", "ownerId", "ownerMail", "createdAt"]
+
+    @field_validator('asset_type')
+    def asset_type_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['None', 'Image', 'Video', 'Audio', 'Text']):
+            raise ValueError("must be one of enum values ('None', 'Image', 'Video', 'Audio', 'Text')")
+        return value
+
+    @field_validator('modality')
+    def modality_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['None', 'BoundingBox', 'Classify', 'Compare', 'FreeText', 'Line', 'Locate', 'NamedEntity', 'Polygon', 'Scrub', 'Transcription']):
+            raise ValueError("must be one of enum values ('None', 'BoundingBox', 'Classify', 'Compare', 'FreeText', 'Line', 'Locate', 'NamedEntity', 'Polygon', 'Scrub', 'Transcription')")
+        return value
+
+    @field_validator('prompt_type')
+    def prompt_type_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['None', 'Text', 'Asset']):
+            raise ValueError("must be one of enum values ('None', 'Text', 'Asset')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -73,6 +106,21 @@ class ValidationSetModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if asset_type (nullable) is None
+        # and model_fields_set contains the field
+        if self.asset_type is None and "asset_type" in self.model_fields_set:
+            _dict['assetType'] = None
+
+        # set to None if modality (nullable) is None
+        # and model_fields_set contains the field
+        if self.modality is None and "modality" in self.model_fields_set:
+            _dict['modality'] = None
+
+        # set to None if prompt_type (nullable) is None
+        # and model_fields_set contains the field
+        if self.prompt_type is None and "prompt_type" in self.model_fields_set:
+            _dict['promptType'] = None
+
         return _dict
 
     @classmethod
@@ -87,6 +135,9 @@ class ValidationSetModel(BaseModel):
         _obj = cls.model_validate({
             "id": obj.get("id"),
             "name": obj.get("name"),
+            "assetType": obj.get("assetType"),
+            "modality": obj.get("modality"),
+            "promptType": obj.get("promptType"),
             "ownerId": obj.get("ownerId"),
             "ownerMail": obj.get("ownerMail"),
             "createdAt": obj.get("createdAt")

@@ -73,6 +73,7 @@ from rapidata.api_client.models.are_rapids_active_result import AreRapidsActiveR
 from rapidata.api_client.models.asset_metadata import AssetMetadata
 from rapidata.api_client.models.asset_metadata_asset import AssetMetadataAsset
 from rapidata.api_client.models.asset_metadata_model import AssetMetadataModel
+from rapidata.api_client.models.asset_type import AssetType
 from rapidata.api_client.models.attach_category_rapid_blueprint import AttachCategoryRapidBlueprint
 from rapidata.api_client.models.attach_category_result import AttachCategoryResult
 from rapidata.api_client.models.attach_category_truth import AttachCategoryTruth
@@ -332,6 +333,7 @@ from rapidata.api_client.models.prompt_by_benchmark_result_paged_result import P
 from rapidata.api_client.models.prompt_metadata import PromptMetadata
 from rapidata.api_client.models.prompt_metadata_input import PromptMetadataInput
 from rapidata.api_client.models.prompt_metadata_model import PromptMetadataModel
+from rapidata.api_client.models.prompt_type import PromptType
 from rapidata.api_client.models.proxy_file_wrapper import ProxyFileWrapper
 from rapidata.api_client.models.public_order_model import PublicOrderModel
 from rapidata.api_client.models.public_rapid_response import PublicRapidResponse
@@ -339,6 +341,7 @@ from rapidata.api_client.models.public_text_metadata_input import PublicTextMeta
 from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.query_validation_model import QueryValidationModel
 from rapidata.api_client.models.rapid_issue import RapidIssue
+from rapidata.api_client.models.rapid_modality import RapidModality
 from rapidata.api_client.models.rapid_model import RapidModel
 from rapidata.api_client.models.rapid_model_paged_result import RapidModelPagedResult
 from rapidata.api_client.models.rapid_model_referee import RapidModelReferee
@@ -418,6 +421,7 @@ from rapidata.api_client.models.unlock_order_result import UnlockOrderResult
 from rapidata.api_client.models.update_benchmark_name_model import UpdateBenchmarkNameModel
 from rapidata.api_client.models.update_dataset_name_model import UpdateDatasetNameModel
 from rapidata.api_client.models.update_dimensions_model import UpdateDimensionsModel
+from rapidata.api_client.models.update_leaderboard_model import UpdateLeaderboardModel
 from rapidata.api_client.models.update_leaderboard_name_model import UpdateLeaderboardNameModel
 from rapidata.api_client.models.update_leaderboard_response_config_model import UpdateLeaderboardResponseConfigModel
 from rapidata.api_client.models.update_order_name_model import UpdateOrderNameModel
