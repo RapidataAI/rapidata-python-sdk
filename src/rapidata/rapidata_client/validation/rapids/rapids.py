@@ -22,11 +22,11 @@ class Rapid:
     def __init__(
         self,
         asset: MediaAsset | TextAsset | MultiAsset,
-        metadata: Sequence[Metadata],
         payload: Any,
-        truth: Any,
-        randomCorrectProbability: float,
-        explanation: str | None,
+        metadata: Sequence[Metadata] | None = None,
+        truth: Any | None = None,
+        randomCorrectProbability: float | None = None,
+        explanation: str | None = None,
     ):
         self.asset = asset
         self.metadata = metadata
@@ -90,10 +90,14 @@ class Rapid:
         return AddValidationRapidModel(
             payload=AddValidationRapidModelPayload(self.payload),
             truth=AddValidationRapidModelTruth(self.truth),
-            metadata=[
-                DatasetDatasetIdDatapointsPostRequestMetadataInner(meta.to_model())
-                for meta in self.metadata
-            ],
+            metadata=(
+                [
+                    DatasetDatasetIdDatapointsPostRequestMetadataInner(meta.to_model())
+                    for meta in self.metadata
+                ]
+                if self.metadata
+                else None
+            ),
             randomCorrectProbability=self.randomCorrectProbability,
             explanation=self.explanation,
         )

@@ -7,6 +7,7 @@ from rapidata.api_client.models.compare_rapid_blueprint import CompareRapidBluep
 from rapidata.api_client.models.simple_workflow_model import SimpleWorkflowModel
 from rapidata.api_client import ComparePayload
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
+from rapidata.api_client.models.rapid_modality import RapidModality
 
 
 class CompareWorkflow(Workflow):
@@ -22,6 +23,8 @@ class CompareWorkflow(Workflow):
     Args:
         instruction (str): The instruction to be used for comparison.
     """
+
+    modality = RapidModality.COMPARE
 
     def __init__(self, instruction: str, a_b_names: list[str] | None = None):
         super().__init__(type="CompareWorkflowConfig")

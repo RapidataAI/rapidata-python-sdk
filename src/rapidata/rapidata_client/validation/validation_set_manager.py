@@ -28,13 +28,8 @@ from rapidata.rapidata_client.logging import (
 )
 from tqdm import tqdm
 from rapidata.rapidata_client.workflow import Workflow
-from rapidata.rapidata_client.workflow._classify_workflow import ClassifyWorkflow
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
-from rapidata.rapidata_client.datapoints.assets import MediaAsset, TextAsset
 from rapidata.rapidata_client.validation.rapids.rapids import Rapid
-from rapidata.rapidata_client.datapoints.metadata._select_words_metadata import (
-    SelectWordsMetadata,
-)
 
 
 class ValidationSetManager:
@@ -61,11 +56,8 @@ class ValidationSetManager:
             rapids.append(
                 Rapid(
                     asset=datapoint.asset,
-                    metadata=datapoint.metadata if datapoint.metadata else [],
                     payload=workflow._to_payload(datapoint),
-                    truth=None,
-                    randomCorrectProbability=0.5,
-                    explanation=None,
+                    metadata=datapoint.metadata,
                 )
             )
         return self._submit(name=order_name, rapids=rapids, dimensions=[])
@@ -618,7 +610,7 @@ class ValidationSetManager:
         managed_print()
         managed_print(
             f"Validation set '{name}' created with ID {validation_set_id}\n",
-            f"Now viewable under: https://app.{self.__openapi_service.environment}/validation-set/detail/{validation_set_id}",
+            f"Now viewable under: {validation_set.validation_set_details_page}",
             sep="",
         )
 

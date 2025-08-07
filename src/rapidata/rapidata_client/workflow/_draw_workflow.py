@@ -6,9 +6,11 @@ from rapidata.api_client.models.line_rapid_blueprint import LineRapidBlueprint
 from rapidata.rapidata_client.workflow._base_workflow import Workflow
 from rapidata.api_client import LinePayload
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
+from rapidata.api_client.models.rapid_modality import RapidModality
 
 
 class DrawWorkflow(Workflow):
+    modality = RapidModality.LINE
 
     def __init__(self, target: str):
         super().__init__(type="SimpleWorkflowConfig")

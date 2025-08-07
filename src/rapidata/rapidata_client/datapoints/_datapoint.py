@@ -5,6 +5,11 @@ from rapidata.rapidata_client.datapoints.assets import (
     MultiAsset,
     BaseAsset,
 )
+from rapidata.rapidata_client.datapoints.assets.constants import (
+    ALLOWED_VIDEO_EXTENSIONS,
+    ALLOWED_IMAGE_EXTENSIONS,
+    ALLOWED_AUDIO_EXTENSIONS,
+)
 from rapidata.rapidata_client.datapoints.metadata import Metadata
 from rapidata.api_client.models.dataset_dataset_id_datapoints_post_request_metadata_inner import (
     DatasetDatasetIdDatapointsPostRequestMetadataInner,
@@ -13,6 +18,13 @@ from rapidata.api_client.models.create_datapoint_from_text_sources_model import 
     CreateDatapointFromTextSourcesModel,
 )
 from pydantic import StrictStr, StrictBytes
+from rapidata.api_client.models.asset_type import AssetType
+from rapidata.api_client.models.prompt_type import PromptType
+from rapidata.rapidata_client.datapoints.metadata._media_asset_metadata import (
+    MediaAssetMetadata,
+)
+from rapidata.rapidata_client.datapoints.metadata._prompt_metadata import PromptMetadata
+from rapidata.rapidata_client.logging import logger
 
 
 class Datapoint:
@@ -50,6 +62,45 @@ class Datapoint:
         """Check if this datapoint contains text assets."""
         effective_type = self._get_effective_asset_type()
         return issubclass(effective_type, TextAsset)
+
+    def get_asset_type(self) -> AssetType:
+        """Get the asset type of the datapoint."""
+        if self.is_text_asset():
+            return AssetType.TEXT
+        elif self.is_media_asset():
+            if isinstance(self.asset, MultiAsset):
+                asset = self.asset.assets[0]
+            else:
+                asset = self.asset
+            assert isinstance(asset, MediaAsset)
+            if any(asset.path.endswith(ext) for ext in ALLOWED_IMAGE_EXTENSIONS):
+                return AssetType.IMAGE
+            elif any(asset.path.endswith(ext) for ext in ALLOWED_VIDEO_EXTENSIONS):
+                return AssetType.VIDEO
+            elif any(asset.path.endswith(ext) for ext in ALLOWED_AUDIO_EXTENSIONS):
+                return AssetType.AUDIO
+            else:
+                logger.debug(
+                    f"Cannot get asset type for asset type: {type(self.asset)}"
+                )
+                return AssetType.NONE
+        else:
+            logger.debug(f"Cannot get asset type for asset type: {type(self.asset)}")
+            return AssetType.NONE
+
+    def get_prompt_type(self) -> list[PromptType]:
+        """Get the prompt type of the datapoint."""
+        prompt_types = []
+        for metadata in self.metadata or []:
+            if isinstance(metadata, MediaAssetMetadata):
+                prompt_types.append(PromptType.ASSET)
+            elif isinstance(metadata, PromptMetadata):
+                prompt_types.append(PromptType.TEXT)
+
+        if len(prompt_types) == 0:
+            return [PromptType.NONE]
+
+        return prompt_types
 
     def get_texts(self) -> list[str]:
         """Extract text content from the asset(s)."""

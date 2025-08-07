@@ -11,6 +11,7 @@ from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.rapidata_client.datapoints.metadata._select_words_metadata import (
     SelectWordsMetadata,
 )
+from rapidata.api_client.models.rapid_modality import RapidModality
 
 
 class SelectWordsWorkflow(Workflow):
@@ -26,6 +27,8 @@ class SelectWordsWorkflow(Workflow):
     Args:
         instruction (str): The instruction to be provided for the select words task.
     """
+
+    modality = RapidModality.TRANSCRIPTION
 
     def __init__(self, instruction: str):
         super().__init__(type="SimpleWorkflowConfig")

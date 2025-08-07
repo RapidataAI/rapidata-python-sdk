@@ -15,9 +15,11 @@ from rapidata.api_client import (
     FreeTextPayload,
 )
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
+from rapidata.api_client.models.rapid_modality import RapidModality
 
 
 class Workflow(ABC):
+    modality: RapidModality
 
     def __init__(self, type: str):
         self._type = type

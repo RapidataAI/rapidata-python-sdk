@@ -7,6 +7,7 @@ from rapidata.rapidata_client.workflow import Workflow
 from rapidata.api_client.models.free_text_rapid_blueprint import FreeTextRapidBlueprint
 from rapidata.api_client import FreeTextPayload
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
+from rapidata.api_client.models.rapid_modality import RapidModality
 
 
 class FreeTextWorkflow(Workflow):
@@ -22,6 +23,8 @@ class FreeTextWorkflow(Workflow):
     Args:
         instruction (str): The instruction to be presented for free text input.
     """
+
+    modality = RapidModality.FREETEXT
 
     def __init__(self, instruction: str):
         super().__init__(type="SimpleWorkflowConfig")

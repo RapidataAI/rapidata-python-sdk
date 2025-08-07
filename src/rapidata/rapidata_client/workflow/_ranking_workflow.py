@@ -11,9 +11,12 @@ from rapidata.api_client.models.dataset_dataset_id_datapoints_post_request_metad
 )
 from rapidata.api_client import ComparePayload
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
+from rapidata.api_client.models.rapid_modality import RapidModality
 
 
 class RankingWorkflow(Workflow):
+    modality = RapidModality.COMPARE
+
     def __init__(
         self,
         criteria: str,
