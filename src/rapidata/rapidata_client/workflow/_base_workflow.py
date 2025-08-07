@@ -5,6 +5,16 @@ from rapidata.api_client.models.simple_workflow_model import SimpleWorkflowModel
 from rapidata.api_client.models.evaluation_workflow_model import EvaluationWorkflowModel
 from rapidata.api_client.models.compare_workflow_model import CompareWorkflowModel
 from rapidata.rapidata_client.referee._base_referee import Referee
+from rapidata.api_client import (
+    ClassifyPayload,
+    ComparePayload,
+    LocatePayload,
+    ScrubPayload,
+    TranscriptionPayload,
+    LinePayload,
+    FreeTextPayload,
+)
+from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 
 
 class Workflow(ABC):
@@ -17,6 +27,21 @@ class Workflow(ABC):
         return {
             "_t": self._type,
         }
+
+    @abstractmethod
+    def _to_payload(
+        self,
+        datapoint: Datapoint,
+    ) -> (
+        ClassifyPayload
+        | ComparePayload
+        | LocatePayload
+        | ScrubPayload
+        | LinePayload
+        | FreeTextPayload
+        | TranscriptionPayload
+    ):
+        pass
 
     @abstractmethod
     def _to_model(
