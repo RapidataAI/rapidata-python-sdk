@@ -63,6 +63,6 @@ class SelectWordsWorkflow(Workflow):
             title=self._instruction,
             transcription=[
                 TranscriptionWord(word=word, wordIndex=i)
-                for i, word in enumerate(select_words_metadata.select_words.split(" "))
+                for i, word in enumerate(select_words_metadata.select_words.split())
             ],
         )
