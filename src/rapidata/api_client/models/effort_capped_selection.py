@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.retrieval_mode import RetrievalMode
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,7 +29,7 @@ class EffortCappedSelection(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for EffortCappedSelection", alias="_t")
     effort_budget: StrictInt = Field(alias="effortBudget")
-    retrieval_mode: Optional[StrictStr] = Field(default=None, alias="retrievalMode")
+    retrieval_mode: Optional[RetrievalMode] = Field(default=None, alias="retrievalMode")
     max_iterations: Optional[StrictInt] = Field(default=None, alias="maxIterations")
     __properties: ClassVar[List[str]] = ["_t", "effortBudget", "retrievalMode", "maxIterations"]
 
@@ -37,16 +38,6 @@ class EffortCappedSelection(BaseModel):
         """Validates the enum"""
         if value not in set(['EffortCappedSelection']):
             raise ValueError("must be one of enum values ('EffortCappedSelection')")
-        return value
-
-    @field_validator('retrieval_mode')
-    def retrieval_mode_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in set(['Random', 'Shuffled', 'Sequential']):
-            raise ValueError("must be one of enum values ('Random', 'Shuffled', 'Sequential')")
         return value
 
     model_config = ConfigDict(

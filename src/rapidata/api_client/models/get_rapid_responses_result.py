@@ -17,10 +17,11 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.datapoint_asset import DatapointAsset
 from rapidata.api_client.models.rapid_response import RapidResponse
+from rapidata.api_client.models.rapid_state import RapidState
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -31,15 +32,8 @@ class GetRapidResponsesResult(BaseModel):
     rapid_id: StrictStr = Field(alias="rapidId")
     asset: DatapointAsset
     responses: List[RapidResponse]
-    state: StrictStr
+    state: RapidState
     __properties: ClassVar[List[str]] = ["rapidId", "asset", "responses", "state"]
-
-    @field_validator('state')
-    def state_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['Labeling', 'Paused', 'Incomplete', 'Flagged', 'Done', 'None']):
-            raise ValueError("must be one of enum values ('Labeling', 'Paused', 'Incomplete', 'Flagged', 'Done', 'None')")
-        return value
 
     model_config = ConfigDict(
         populate_by_name=True,

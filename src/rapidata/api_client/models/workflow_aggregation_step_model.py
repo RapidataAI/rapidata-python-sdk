@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.aggregator_type import AggregatorType
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -30,7 +31,7 @@ class WorkflowAggregationStepModel(BaseModel):
     campaign_artifact_id: StrictStr = Field(description="The campaign artifact id", alias="campaignArtifactId")
     workflow_artifact_id: StrictStr = Field(description="The workflow artifact id", alias="workflowArtifactId")
     file_artifact_id: StrictStr = Field(description="The file artifact id", alias="fileArtifactId")
-    aggregator_type: Optional[StrictStr] = Field(default='NonCommittal', description="The type of the aggregator", alias="aggregatorType")
+    aggregator_type: Optional[AggregatorType] = Field(default=None, alias="aggregatorType")
     __properties: ClassVar[List[str]] = ["_t", "campaignArtifactId", "workflowArtifactId", "fileArtifactId", "aggregatorType"]
 
     @field_validator('t')
@@ -38,16 +39,6 @@ class WorkflowAggregationStepModel(BaseModel):
         """Validates the enum"""
         if value not in set(['WorkflowAggregationStepModel']):
             raise ValueError("must be one of enum values ('WorkflowAggregationStepModel')")
-        return value
-
-    @field_validator('aggregator_type')
-    def aggregator_type_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in set(['NonCommittal', 'MajorityVote', 'SimpleMatchup', 'LocateCluster', 'Classification', 'Locate', 'BoundingBox', 'Line', 'Transcription', 'SinglePointLocate', 'FreeText', 'Scrub']):
-            raise ValueError("must be one of enum values ('NonCommittal', 'MajorityVote', 'SimpleMatchup', 'LocateCluster', 'Classification', 'Locate', 'BoundingBox', 'Line', 'Transcription', 'SinglePointLocate', 'FreeText', 'Scrub')")
         return value
 
     model_config = ConfigDict(
@@ -105,7 +96,7 @@ class WorkflowAggregationStepModel(BaseModel):
             "campaignArtifactId": obj.get("campaignArtifactId"),
             "workflowArtifactId": obj.get("workflowArtifactId"),
             "fileArtifactId": obj.get("fileArtifactId"),
-            "aggregatorType": obj.get("aggregatorType") if obj.get("aggregatorType") is not None else 'NonCommittal'
+            "aggregatorType": obj.get("aggregatorType")
         })
         return _obj
 

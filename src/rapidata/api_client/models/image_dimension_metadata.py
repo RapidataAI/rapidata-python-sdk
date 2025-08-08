@@ -29,7 +29,7 @@ class ImageDimensionMetadata(BaseModel):
     t: StrictStr = Field(description="Discriminator value for ImageDimensionMetadata", alias="_t")
     height: Optional[StrictInt] = None
     width: Optional[StrictInt] = None
-    visibilities: Optional[StrictStr] = None
+    visibilities: Optional[List[StrictStr]] = None
     __properties: ClassVar[List[str]] = ["_t", "height", "width", "visibilities"]
 
     @field_validator('t')
@@ -37,6 +37,17 @@ class ImageDimensionMetadata(BaseModel):
         """Validates the enum"""
         if value not in set(['ImageDimensionMetadata']):
             raise ValueError("must be one of enum values ('ImageDimensionMetadata')")
+        return value
+
+    @field_validator('visibilities')
+    def visibilities_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        for i in value:
+            if i not in set(['None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All']):
+                raise ValueError("each list item must be one of ('None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All')")
         return value
 
     model_config = ConfigDict(

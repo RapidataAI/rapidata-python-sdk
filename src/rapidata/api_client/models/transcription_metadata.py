@@ -28,7 +28,7 @@ class TranscriptionMetadata(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for TranscriptionMetadata", alias="_t")
     transcription: StrictStr
-    visibilities: StrictStr
+    visibilities: List[StrictStr]
     __properties: ClassVar[List[str]] = ["_t", "transcription", "visibilities"]
 
     @field_validator('t')
@@ -36,6 +36,14 @@ class TranscriptionMetadata(BaseModel):
         """Validates the enum"""
         if value not in set(['TranscriptionMetadata']):
             raise ValueError("must be one of enum values ('TranscriptionMetadata')")
+        return value
+
+    @field_validator('visibilities')
+    def visibilities_validate_enum(cls, value):
+        """Validates the enum"""
+        for i in value:
+            if i not in set(['None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All']):
+                raise ValueError("each list item must be one of ('None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All')")
         return value
 
     model_config = ConfigDict(

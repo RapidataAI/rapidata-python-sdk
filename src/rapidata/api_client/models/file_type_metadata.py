@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.file_type import FileType
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,8 +28,8 @@ class FileTypeMetadata(BaseModel):
     FileTypeMetadata
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for FileTypeMetadata", alias="_t")
-    file_type: StrictStr = Field(alias="fileType")
-    visibilities: Optional[StrictStr] = None
+    file_type: FileType = Field(alias="fileType")
+    visibilities: Optional[List[StrictStr]] = None
     __properties: ClassVar[List[str]] = ["_t", "fileType", "visibilities"]
 
     @field_validator('t')
@@ -38,11 +39,15 @@ class FileTypeMetadata(BaseModel):
             raise ValueError("must be one of enum values ('FileTypeMetadata')")
         return value
 
-    @field_validator('file_type')
-    def file_type_validate_enum(cls, value):
+    @field_validator('visibilities')
+    def visibilities_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['Unknown', 'Image', 'Video', 'Audio']):
-            raise ValueError("must be one of enum values ('Unknown', 'Image', 'Video', 'Audio')")
+        if value is None:
+            return value
+
+        for i in value:
+            if i not in set(['None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All']):
+                raise ValueError("each list item must be one of ('None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All')")
         return value
 
     model_config = ConfigDict(

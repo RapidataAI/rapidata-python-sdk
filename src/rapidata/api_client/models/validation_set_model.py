@@ -29,9 +29,9 @@ class ValidationSetModel(BaseModel):
     """ # noqa: E501
     id: StrictStr
     name: StrictStr
-    asset_type: Optional[StrictStr] = Field(default=None, alias="assetType")
-    modality: Optional[StrictStr] = None
-    prompt_type: Optional[StrictStr] = Field(default=None, alias="promptType")
+    asset_type: Optional[List[StrictStr]] = Field(default=None, alias="assetType")
+    modality: Optional[List[StrictStr]] = None
+    prompt_type: Optional[List[StrictStr]] = Field(default=None, alias="promptType")
     owner_id: StrictStr = Field(alias="ownerId")
     owner_mail: StrictStr = Field(alias="ownerMail")
     created_at: datetime = Field(alias="createdAt")
@@ -43,8 +43,9 @@ class ValidationSetModel(BaseModel):
         if value is None:
             return value
 
-        if value not in set(['None', 'Image', 'Video', 'Audio', 'Text']):
-            raise ValueError("must be one of enum values ('None', 'Image', 'Video', 'Audio', 'Text')")
+        for i in value:
+            if i not in set(['None', 'Image', 'Video', 'Audio', 'Text']):
+                raise ValueError("each list item must be one of ('None', 'Image', 'Video', 'Audio', 'Text')")
         return value
 
     @field_validator('modality')
@@ -53,8 +54,9 @@ class ValidationSetModel(BaseModel):
         if value is None:
             return value
 
-        if value not in set(['None', 'BoundingBox', 'Classify', 'Compare', 'FreeText', 'Line', 'Locate', 'NamedEntity', 'Polygon', 'Scrub', 'Transcription']):
-            raise ValueError("must be one of enum values ('None', 'BoundingBox', 'Classify', 'Compare', 'FreeText', 'Line', 'Locate', 'NamedEntity', 'Polygon', 'Scrub', 'Transcription')")
+        for i in value:
+            if i not in set(['None', 'BoundingBox', 'Classify', 'Compare', 'FreeText', 'Line', 'Locate', 'NamedEntity', 'Polygon', 'Scrub', 'Transcription']):
+                raise ValueError("each list item must be one of ('None', 'BoundingBox', 'Classify', 'Compare', 'FreeText', 'Line', 'Locate', 'NamedEntity', 'Polygon', 'Scrub', 'Transcription')")
         return value
 
     @field_validator('prompt_type')
@@ -63,8 +65,9 @@ class ValidationSetModel(BaseModel):
         if value is None:
             return value
 
-        if value not in set(['None', 'Text', 'Asset']):
-            raise ValueError("must be one of enum values ('None', 'Text', 'Asset')")
+        for i in value:
+            if i not in set(['None', 'Text', 'Asset']):
+                raise ValueError("each list item must be one of ('None', 'Text', 'Asset')")
         return value
 
     model_config = ConfigDict(
@@ -106,21 +109,6 @@ class ValidationSetModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if asset_type (nullable) is None
-        # and model_fields_set contains the field
-        if self.asset_type is None and "asset_type" in self.model_fields_set:
-            _dict['assetType'] = None
-
-        # set to None if modality (nullable) is None
-        # and model_fields_set contains the field
-        if self.modality is None and "modality" in self.model_fields_set:
-            _dict['modality'] = None
-
-        # set to None if prompt_type (nullable) is None
-        # and model_fields_set contains the field
-        if self.prompt_type is None and "prompt_type" in self.model_fields_set:
-            _dict['promptType'] = None
-
         return _dict
 
     @classmethod

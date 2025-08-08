@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.comparison_operator import ComparisonOperator
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -29,7 +30,7 @@ class ResponseCountUserFilterModel(BaseModel):
     t: StrictStr = Field(description="Discriminator value for ResponseCountFilter", alias="_t")
     response_count: StrictInt = Field(alias="responseCount")
     dimension: StrictStr
-    operator: StrictStr
+    operator: ComparisonOperator
     __properties: ClassVar[List[str]] = ["_t", "responseCount", "dimension", "operator"]
 
     @field_validator('t')
@@ -37,13 +38,6 @@ class ResponseCountUserFilterModel(BaseModel):
         """Validates the enum"""
         if value not in set(['ResponseCountFilter']):
             raise ValueError("must be one of enum values ('ResponseCountFilter')")
-        return value
-
-    @field_validator('operator')
-    def operator_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['Equal', 'NotEqual', 'LessThan', 'LessThanOrEqual', 'GreaterThan', 'GreaterThanOrEqual']):
-            raise ValueError("must be one of enum values ('Equal', 'NotEqual', 'LessThan', 'LessThanOrEqual', 'GreaterThan', 'GreaterThanOrEqual')")
         return value
 
     model_config = ConfigDict(

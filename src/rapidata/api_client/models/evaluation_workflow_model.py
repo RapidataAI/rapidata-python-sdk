@@ -18,7 +18,8 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.feature_flag import FeatureFlag
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -29,7 +30,8 @@ class EvaluationWorkflowModel(BaseModel):
     t: StrictStr = Field(description="Discriminator value for EvaluationWorkflow", alias="_t")
     validation_set_id: StrictStr = Field(description="The Validation Set id is used to as a source for the tasks that will be sent to the user.", alias="validationSetId")
     should_accept_incorrect: StrictBool = Field(description="Indicates if the user should get feedback on their answers if they answer wrong. If set to true the user will not notice that he was tested.", alias="shouldAcceptIncorrect")
-    __properties: ClassVar[List[str]] = ["_t", "validationSetId", "shouldAcceptIncorrect"]
+    feature_flags: Optional[List[FeatureFlag]] = Field(default=None, description="The list of feature flags that will be applied to the rapids created by this workflow.", alias="featureFlags")
+    __properties: ClassVar[List[str]] = ["_t", "validationSetId", "shouldAcceptIncorrect", "featureFlags"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -77,6 +79,13 @@ class EvaluationWorkflowModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in feature_flags (list)
+        _items = []
+        if self.feature_flags:
+            for _item_feature_flags in self.feature_flags:
+                if _item_feature_flags:
+                    _items.append(_item_feature_flags.to_dict())
+            _dict['featureFlags'] = _items
         return _dict
 
     @classmethod
@@ -91,7 +100,8 @@ class EvaluationWorkflowModel(BaseModel):
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'EvaluationWorkflow',
             "validationSetId": obj.get("validationSetId"),
-            "shouldAcceptIncorrect": obj.get("shouldAcceptIncorrect")
+            "shouldAcceptIncorrect": obj.get("shouldAcceptIncorrect"),
+            "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
         })
         return _obj
 

@@ -22,6 +22,7 @@ from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.add_validation_rapid_model_payload import AddValidationRapidModelPayload
 from rapidata.api_client.models.add_validation_rapid_model_truth import AddValidationRapidModelTruth
 from rapidata.api_client.models.dataset_dataset_id_datapoints_post_request_metadata_inner import DatasetDatasetIdDatapointsPostRequestMetadataInner
+from rapidata.api_client.models.feature_flag_model import FeatureFlagModel
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -34,7 +35,8 @@ class AddValidationRapidModel(BaseModel):
     truth: Optional[AddValidationRapidModelTruth] = None
     random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The probability for an answer to be correct when randomly guessing.", alias="randomCorrectProbability")
     explanation: Optional[StrictStr] = Field(default=None, description="An explanation for the users if they answer the rapid incorrectly.")
-    __properties: ClassVar[List[str]] = ["payload", "metadata", "truth", "randomCorrectProbability", "explanation"]
+    feature_flags: Optional[List[FeatureFlagModel]] = Field(default=None, description="The feature flags to enable for the rapid.", alias="featureFlags")
+    __properties: ClassVar[List[str]] = ["payload", "metadata", "truth", "randomCorrectProbability", "explanation", "featureFlags"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -88,6 +90,13 @@ class AddValidationRapidModel(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of truth
         if self.truth:
             _dict['truth'] = self.truth.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in feature_flags (list)
+        _items = []
+        if self.feature_flags:
+            for _item_feature_flags in self.feature_flags:
+                if _item_feature_flags:
+                    _items.append(_item_feature_flags.to_dict())
+            _dict['featureFlags'] = _items
         # set to None if metadata (nullable) is None
         # and model_fields_set contains the field
         if self.metadata is None and "metadata" in self.model_fields_set:
@@ -108,6 +117,11 @@ class AddValidationRapidModel(BaseModel):
         if self.explanation is None and "explanation" in self.model_fields_set:
             _dict['explanation'] = None
 
+        # set to None if feature_flags (nullable) is None
+        # and model_fields_set contains the field
+        if self.feature_flags is None and "feature_flags" in self.model_fields_set:
+            _dict['featureFlags'] = None
+
         return _dict
 
     @classmethod
@@ -124,7 +138,8 @@ class AddValidationRapidModel(BaseModel):
             "metadata": [DatasetDatasetIdDatapointsPostRequestMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
             "truth": AddValidationRapidModelTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
             "randomCorrectProbability": obj.get("randomCorrectProbability"),
-            "explanation": obj.get("explanation")
+            "explanation": obj.get("explanation"),
+            "featureFlags": [FeatureFlagModel.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
         })
         return _obj
 
