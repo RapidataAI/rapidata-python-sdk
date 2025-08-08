@@ -1,4 +1,5 @@
 from typing import Literal, Optional, Sequence
+import random
 from rapidata.api_client.models.ab_test_selection_a_inner import AbTestSelectionAInner
 from rapidata.api_client.models.and_user_filter_model_filters_inner import (
     AndUserFilterModelFiltersInner,
@@ -35,6 +36,9 @@ from rapidata.rapidata_client.settings import RapidataSetting
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.config.config import rapidata_config
+from rapidata.rapidata_client.api.rapidata_exception import (
+    suppress_rapidata_error_logging,
+)
 
 
 class RapidataOrderBuilder:
@@ -131,29 +135,31 @@ class RapidataOrderBuilder:
             return
 
         try:
-            self.__validation_set_id = (
-                (
-                    self.__openapi_service.validation_api.validation_set_recommended_get(
-                        asset_type=[self.__datapoints[0].get_asset_type()],
-                        modality=[self.__workflow.modality],
-                        prompt_type=[
-                            self.__datapoints[0].get_prompt_type()[0]
-                        ],  # TODO: REMOVE 0 index when new specs
+            with suppress_rapidata_error_logging():
+                self.__validation_set_id = (
+                    (
+                        self.__openapi_service.validation_api.validation_set_recommended_get(
+                            asset_type=[self.__datapoints[0].get_asset_type()],
+                            modality=[self.__workflow.modality],
+                            prompt_type=[
+                                t.value for t in self.__datapoints[0].get_prompt_type()
+                            ],
+                        )
                     )
+                    .validation_sets[0]
+                    .id
                 )
-                .validation_sets[0]
-                .id
-            )
             logger.debug(
                 "Using recommended validation set with ID: %s", self.__validation_set_id
             )
         except Exception as e:
             logger.info("No recommended validation set found, creating new one.")
 
-        # if len(self.__datapoints) > 100:
-        #     logger.debug(
-        #         "No recommended validation set found, dataset too small to create one."
-        #     ) # commeted out for testing
+        if len(self.__datapoints) < 50:
+            logger.debug(
+                "No recommended validation set found, dataset too small to create one."
+            )
+            return
 
         managed_print()
         managed_print(
@@ -162,7 +168,7 @@ class RapidataOrderBuilder:
         validation_set = self.__validation_set_manager._create_order_validation_set(
             workflow=self.__workflow,
             order_name=self._name,
-            datapoints=self.__datapoints[:20],
+            datapoints=random.sample(self.__datapoints, 20),
             settings=self.__settings,
         )
 
