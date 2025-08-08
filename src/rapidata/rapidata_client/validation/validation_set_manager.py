@@ -33,6 +33,7 @@ from rapidata.rapidata_client.workflow import Workflow
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
+from typing import Sequence
 
 
 class ValidationSetManager:
@@ -53,7 +54,7 @@ class ValidationSetManager:
         workflow: Workflow,
         order_name: str,
         datapoints: list[Datapoint],
-        settings: list[RapidataSetting] = [],
+        settings: Sequence[RapidataSetting] | None = None,
     ) -> RapidataValidationSet:
         rapids: list[Rapid] = []
         for datapoint in datapoints:
@@ -62,11 +63,10 @@ class ValidationSetManager:
                     asset=datapoint.asset,
                     payload=workflow._to_payload(datapoint),
                     metadata=datapoint.metadata,
+                    settings=settings,
                 )
             )
-        return self._submit(
-            name=order_name, rapids=rapids, dimensions=[], settings=settings
-        )
+        return self._submit(name=order_name, rapids=rapids, dimensions=[])
 
     def create_classification_set(
         self,
@@ -573,7 +573,6 @@ class ValidationSetManager:
         name: str,
         rapids: list[Rapid],
         dimensions: list[str] | None,
-        settings: list[RapidataSetting] = [],
     ) -> RapidataValidationSet:
         logger.debug("Creating validation set")
         validation_set_id = (

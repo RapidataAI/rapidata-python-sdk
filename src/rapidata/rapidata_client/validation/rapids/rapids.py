@@ -1,6 +1,6 @@
 from rapidata.rapidata_client.datapoints.assets import MediaAsset, TextAsset, MultiAsset
 from rapidata.rapidata_client.datapoints.metadata import Metadata
-from typing import Sequence, Any, cast
+from typing import Any, cast, Sequence
 from rapidata.api_client.models.add_validation_rapid_model import (
     AddValidationRapidModel,
 )
@@ -16,6 +16,7 @@ from rapidata.api_client.models.dataset_dataset_id_datapoints_post_request_metad
 from rapidata.service.openapi_service import OpenAPIService
 
 from rapidata.rapidata_client.logging import logger
+from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
 
 
 class Rapid:
@@ -27,6 +28,7 @@ class Rapid:
         truth: Any | None = None,
         randomCorrectProbability: float | None = None,
         explanation: str | None = None,
+        settings: Sequence[RapidataSetting] | None = None,
     ):
         self.asset = asset
         self.metadata = metadata
@@ -34,6 +36,7 @@ class Rapid:
         self.truth = truth
         self.randomCorrectProbability = randomCorrectProbability
         self.explanation = explanation
+        self.settings = settings
         logger.debug(
             f"Created Rapid with asset: {self.asset}, metadata: {self.metadata}, payload: {self.payload}, truth: {self.truth}, randomCorrectProbability: {self.randomCorrectProbability}, explanation: {self.explanation}"
         )
@@ -100,4 +103,9 @@ class Rapid:
             ),
             randomCorrectProbability=self.randomCorrectProbability,
             explanation=self.explanation,
+            featureFlags=(
+                [setting._to_feature_flag() for setting in self.settings]
+                if self.settings
+                else None
+            ),
         )

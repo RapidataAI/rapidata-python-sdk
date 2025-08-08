@@ -64,7 +64,9 @@ class RapidataOrderBuilder:
         self.__selections: list[RapidataSelection] = []
         self.__priority: int | None = None
         self.__datapoints: list[Datapoint] = []
-        self.__sticky_state: Literal["None", "Temporary", "Permanent"] | None = None
+        self.__sticky_state_value: Literal["None", "Temporary", "Permanent"] | None = (
+            None
+        )
         self.__validation_set_manager: ValidationSetManager = ValidationSetManager(
             self.__openapi_service
         )
@@ -110,7 +112,11 @@ class RapidataOrderBuilder:
                 else None
             ),
             priority=self.__priority,
-            stickyState=StickyState(self.__sticky_state),
+            stickyState=(
+                StickyState(self.__sticky_state_value)
+                if self.__sticky_state_value
+                else None
+            ),
         )
 
     def _set_validation_set_id(self) -> None:
@@ -157,6 +163,7 @@ class RapidataOrderBuilder:
             workflow=self.__workflow,
             order_name=self._name,
             datapoints=self.__datapoints[:20],
+            settings=self.__settings,
         )
 
         logger.debug("New validation set created for order: %s", validation_set)
@@ -421,5 +428,5 @@ class RapidataOrderBuilder:
                 "Sticky state must be of type Literal['None', 'Temporary', 'Permanent']."
             )
 
-        self.__sticky_state = sticky_state
+        self.__sticky_state_value = sticky_state
         return self

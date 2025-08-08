@@ -39,9 +39,10 @@ from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.page_info import PageInfo
 from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.filter import Filter
+from rapidata.api_client.models.filter_operator import FilterOperator
 from rapidata.api_client.models.sort_criterion import SortCriterion
 from rapidata.api_client.models.sort_direction import SortDirection
-from rapidata.api_client.models.filter_operator import FilterOperator
+
 
 from tqdm import tqdm
 
