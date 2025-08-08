@@ -18,6 +18,8 @@ from rapidata.api_client.models.page_info import PageInfo
 from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.filter import Filter
 from rapidata.api_client.models.sort_criterion import SortCriterion
+from rapidata.api_client.models.sort_direction import SortDirection
+from rapidata.api_client.models.filter_operator import FilterOperator
 
 from rapidata.rapidata_client.validation.rapids.box import Box
 
@@ -27,6 +29,11 @@ from rapidata.rapidata_client.logging import (
     RapidataOutputManager,
 )
 from tqdm import tqdm
+from rapidata.rapidata_client.workflow import Workflow
+from rapidata.rapidata_client.datapoints._datapoint import Datapoint
+from rapidata.rapidata_client.validation.rapids.rapids import Rapid
+from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
+from typing import Sequence
 
 
 class ValidationSetManager:
@@ -41,6 +48,25 @@ class ValidationSetManager:
         self.__openapi_service = openapi_service
         self.rapid = RapidsManager()
         logger.debug("ValidationSetManager initialized")
+
+    def _create_order_validation_set(
+        self,
+        workflow: Workflow,
+        order_name: str,
+        datapoints: list[Datapoint],
+        settings: Sequence[RapidataSetting] | None = None,
+    ) -> RapidataValidationSet:
+        rapids: list[Rapid] = []
+        for datapoint in datapoints:
+            rapids.append(
+                Rapid(
+                    asset=datapoint.asset,
+                    payload=workflow._to_payload(datapoint),
+                    metadata=datapoint.metadata,
+                    settings=settings,
+                )
+            )
+        return self._submit(name=order_name, rapids=rapids, dimensions=[])
 
     def create_classification_set(
         self,
@@ -543,7 +569,10 @@ class ValidationSetManager:
         return self._submit(name=name, rapids=rapids, dimensions=dimensions)
 
     def _submit(
-        self, name: str, rapids: list[Rapid], dimensions: list[str] | None
+        self,
+        name: str,
+        rapids: list[Rapid],
+        dimensions: list[str] | None,
     ) -> RapidataValidationSet:
         logger.debug("Creating validation set")
         validation_set_id = (
@@ -590,7 +619,7 @@ class ValidationSetManager:
         managed_print()
         managed_print(
             f"Validation set '{name}' created with ID {validation_set_id}\n",
-            f"Now viewable under: https://app.{self.__openapi_service.environment}/validation-set/detail/{validation_set_id}",
+            f"Now viewable under: {validation_set.validation_set_details_page}",
             sep="",
         )
 
@@ -637,10 +666,18 @@ class ValidationSetManager:
                 QueryModel(
                     page=PageInfo(index=1, size=amount),
                     filter=RootFilter(
-                        filters=[Filter(field="Name", operator="Contains", value=name)]
+                        filters=[
+                            Filter(
+                                field="Name",
+                                operator=FilterOperator.CONTAINS,
+                                value=name,
+                            )
+                        ]
                     ),
                     sortCriteria=[
-                        SortCriterion(direction="Desc", propertyName="CreatedAt")
+                        SortCriterion(
+                            direction=SortDirection.DESC, propertyName="CreatedAt"
+                        )
                     ],
                 )
             )

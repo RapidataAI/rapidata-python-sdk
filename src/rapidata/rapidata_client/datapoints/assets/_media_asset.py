@@ -18,6 +18,11 @@ import logging
 from functools import cached_property
 from rapidata.rapidata_client.datapoints.assets._sessions import SessionManager
 from rapidata.rapidata_client.logging import logger
+from rapidata.rapidata_client.datapoints.assets.constants import (
+    ALLOWED_IMAGE_EXTENSIONS,
+    ALLOWED_MEDIA_EXTENSIONS,
+)
+
 
 class MediaAsset(BaseAsset):
     """MediaAsset Class with Lazy Loading
@@ -32,34 +37,35 @@ class MediaAsset(BaseAsset):
     Raises:
         FileNotFoundError: If the provided file path does not exist.
     """
-    _logger = logging.getLogger(__name__ + '.MediaAsset')
+
+    _logger = logging.getLogger(__name__ + ".MediaAsset")
 
     ALLOWED_TYPES = [
-        'image/', 
-        'audio/mp3',      # MP3
-        'video/mp4',       # MP4
+        "image/",
+        "audio/mp3",  # MP3
+        "video/mp4",  # MP4
     ]
 
     MIME_TYPES = {
-        'jpg': 'image/jpeg',
-        'jpeg': 'image/jpeg',
-        'png': 'image/png',
-        'gif': 'image/gif',
-        'webp': 'image/webp',
-        'mp3': 'audio/mp3',
-        'mp4': 'video/mp4'
+        "jpg": "image/jpeg",
+        "jpeg": "image/jpeg",
+        "png": "image/png",
+        "gif": "image/gif",
+        "webp": "image/webp",
+        "mp3": "audio/mp3",
+        "mp4": "video/mp4",
     }
 
     FILE_SIGNATURES = {
-        b'\xFF\xD8\xFF': 'image/jpeg',
-        b'\x89PNG\r\n\x1a\n': 'image/png',
-        b'GIF87a': 'image/gif',
-        b'GIF89a': 'image/gif',
-        b'RIFF': 'image/webp',
-        b'ID3': 'audio/mp3',
-        b'\xFF\xFB': 'audio/mp3',
-        b'\xFF\xF3': 'audio/mp3',
-        b'ftyp': 'video/mp4',
+        b"\xFF\xD8\xFF": "image/jpeg",
+        b"\x89PNG\r\n\x1a\n": "image/png",
+        b"GIF87a": "image/gif",
+        b"GIF89a": "image/gif",
+        b"RIFF": "image/webp",
+        b"ID3": "audio/mp3",
+        b"\xFF\xFB": "audio/mp3",
+        b"\xFF\xF3": "audio/mp3",
+        b"ftyp": "video/mp4",
     }
 
     def __init__(self, path: str):
@@ -74,22 +80,24 @@ class MediaAsset(BaseAsset):
             ValueError: If path is not a string.
         """
         if not isinstance(path, str):
-            raise ValueError(f"Media must be a string, either a local file path or a URL, got {type(path)}")
-        
+            raise ValueError(
+                f"Media must be a string, either a local file path or a URL, got {type(path)}"
+            )
+
         self._url = None
         self._content = None
-        self.session: requests.Session  = SessionManager.get_session()
-        
-        if re.match(r'^https?://', path):
+        self.session: requests.Session = SessionManager.get_session()
+
+        if re.match(r"^https?://", path):
             self._url = path
-            self.name = path.split('/')[-1]
+            self.name = path.split("/")[-1]
             self.name = self.__check_name_ending(self.name)
             self.path = path
             return
-        
+
         if not os.path.exists(path):
             raise FileNotFoundError(f"File not found: {path}")
-        
+
         self.path = path
         self.name = path
 
@@ -101,9 +109,9 @@ class MediaAsset(BaseAsset):
         """
         if self._url is None:
             self.path = cast(str, self.path)
-            with open(self.path, 'rb') as f:
+            with open(self.path, "rb") as f:
                 return f.read()
-            
+
         return self.__get_media_bytes(self._url)
 
     def get_duration(self) -> int:
@@ -118,29 +126,31 @@ class MediaAsset(BaseAsset):
             ValueError: If the duration cannot be determined
         """
         path_to_check = self.name.lower()
-        
+
         # Return 0 for static images
-        if any(path_to_check.endswith(ext) for ext in ('.jpg', '.jpeg', '.png', '.webp', '.gif')):
+        if any(path_to_check.endswith(ext) for ext in ALLOWED_IMAGE_EXTENSIONS):
             return 0
 
         try:
             # Create temporary file from content
-            with tempfile.NamedTemporaryFile(suffix=os.path.splitext(self.name)[1], delete=False) as tmp:
+            with tempfile.NamedTemporaryFile(
+                suffix=os.path.splitext(self.name)[1], delete=False
+            ) as tmp:
                 tmp.write(self.content)
                 tmp.flush()
                 tmp_path = tmp.name
-                
+
             try:
                 tag = TinyTag.get(tmp_path)
             finally:
                 # Clean up the temporary file
                 os.unlink(tmp_path)
-            
+
             if tag.duration is None:
                 raise ValueError("Could not read duration from file")
-                
+
             return int(tag.duration * 1000)  # Convert to milliseconds
-            
+
         except Exception as e:
             raise ValueError(f"Could not determine media duration: {str(e)}")
 
@@ -149,53 +159,55 @@ class MediaAsset(BaseAsset):
         Get the dimensions (width, height) of an image file.
         Returns None for non-image files or if dimensions can't be determined.
         """
-        if not any(self.name.lower().endswith(ext) for ext in ('.jpg', '.jpeg', '.png', '.gif', '.webp')):
+        if not any(self.name.lower().endswith(ext) for ext in ALLOWED_IMAGE_EXTENSIONS):
             return None
-            
+
         try:
             img = Image.open(BytesIO(self.content))
             return img.size
         except Exception:
             return None
 
-    def set_custom_name(self, name: str) -> 'MediaAsset':
+    def set_custom_name(self, name: str) -> "MediaAsset":
         """Set a custom name for the media asset (only works with URLs)."""
         if self._url is not None:
             self.name = self.__check_name_ending(name)
         else:
             raise ValueError("Custom name can only be set for URLs.")
         return self
-    
+
     def __check_name_ending(self, name: str) -> str:
         """Check if the media path is valid."""
-        if not name.endswith(('.jpg', '.jpeg', '.png', '.gif', '.mp3', '.mp4', '.webp')):
-            logger.warning("Warning: Supported file types: jpg, jpeg, png, gif, mp3, mp4. Image might not be displayed correctly.")
-            name = name + '.jpg'
+        if not any(name.endswith(ext) for ext in ALLOWED_MEDIA_EXTENSIONS):
+            logger.warning(
+                f"Warning: Supported file types: {ALLOWED_MEDIA_EXTENSIONS}. Image might not be displayed correctly."
+            )
+            name = name + ".jpg"
         return name
 
     def __get_media_type_from_extension(self, url: str) -> Optional[str]:
         """
         Determine media type from URL file extension.
-        
+
         Args:
             url: The URL to check
-            
+
         Returns:
             Optional[str]: MIME type if valid extension found, None otherwise
         """
         try:
-            ext = url.lower().split('?')[0].split('.')[-1]
+            ext = url.lower().split("?")[0].split(".")[-1]
             return self.MIME_TYPES.get(ext)
         except IndexError:
             return None
-        
+
     def __validate_image_content(self, content: bytes) -> bool:
         """
         Validate image content using PIL.
-        
+
         Args:
             content: Image bytes to validate
-            
+
         Returns:
             bool: True if valid image, False otherwise
         """
@@ -206,14 +218,14 @@ class MediaAsset(BaseAsset):
         except Exception as e:
             self._logger.debug(f"Image validation failed: {str(e)}")
             return False
-        
+
     def __get_media_type_from_signature(self, content: bytes) -> Optional[str]:
         """
         Determine media type from file signature.
-        
+
         Args:
             content: File content bytes
-            
+
         Returns:
             Optional[str]: MIME type if valid signature found, None otherwise
         """
@@ -226,13 +238,13 @@ class MediaAsset(BaseAsset):
     def __get_media_bytes(self, url: str) -> bytes:
         """
         Downloads and validates media files from URL with retry logic and session reuse.
-        
+
         Args:
             url: URL of the media file
-            
+
         Returns:
             bytes: Validated media content
-            
+
         Raises:
             ValueError: If media type is unsupported or content validation fails
             requests.exceptions.RequestException: If download fails after all retries
@@ -243,17 +255,17 @@ class MediaAsset(BaseAsset):
 
         try:
             response = self.session.get(
-                url, 
-                stream=False,
-                timeout=(5, 30)  # (connect timeout, read timeout)
+                url, stream=False, timeout=(5, 30)  # (connect timeout, read timeout)
             )
             response.raise_for_status()
         except requests.exceptions.RequestException as e:
-            self._logger.error(f"Failed to download media from {url} after retries: {str(e)}")
+            self._logger.error(
+                f"Failed to download media from {url} after retries: {str(e)}"
+            )
             raise
 
         content = response.content
-        content_type = response.headers.get('content-type', '').lower()
+        content_type = response.headers.get("content-type", "").lower()
 
         # Case 1: Content-type is already allowed
         if any(content_type.startswith(t) for t in self.ALLOWED_TYPES):
@@ -279,18 +291,18 @@ class MediaAsset(BaseAsset):
 
         # If we get here, validation failed
         error_msg = (
-            f'Could not validate media type from content.\n'
-            f'Content-Type: {content_type}\n'
+            f"Could not validate media type from content.\n"
+            f"Content-Type: {content_type}\n"
             f'URL extension: {url.split("?")[0].split(".")[-1]}\n'
-            f'Allowed types: {self.ALLOWED_TYPES}'
+            f"Allowed types: {self.ALLOWED_TYPES}"
         )
         self._logger.error(error_msg)
         raise ValueError(error_msg)
-    
+
     def is_local(self) -> bool:
         """Check if the media asset is a local file."""
         return self._url is None
-    
+
     def to_file(self) -> StrictStr | tuple[StrictStr, StrictBytes] | StrictBytes:
         """Convert the media asset to a file representation."""
         if self._url is None:
@@ -298,9 +310,9 @@ class MediaAsset(BaseAsset):
             return self.path
         else:
             return (self.name, self.content)
-        
+
     def __str__(self) -> str:
         return f"MediaAsset(path={self.path})"
-    
+
     def __repr__(self) -> str:
         return f"MediaAsset(path={self.path})"

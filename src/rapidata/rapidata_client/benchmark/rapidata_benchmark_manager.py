@@ -7,6 +7,8 @@ from rapidata.api_client.models.page_info import PageInfo
 from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.filter import Filter
 from rapidata.api_client.models.sort_criterion import SortCriterion
+from rapidata.api_client.models.sort_direction import SortDirection
+from rapidata.api_client.models.filter_operator import FilterOperator
 
 
 class RapidataBenchmarkManager:
@@ -139,10 +141,16 @@ class RapidataBenchmarkManager:
             QueryModel(
                 page=PageInfo(index=1, size=amount),
                 filter=RootFilter(
-                    filters=[Filter(field="Name", operator="Contains", value=name)]
+                    filters=[
+                        Filter(
+                            field="Name", operator=FilterOperator.CONTAINS, value=name
+                        )
+                    ]
                 ),
                 sortCriteria=[
-                    SortCriterion(direction="Desc", propertyName="CreatedAt")
+                    SortCriterion(
+                        direction=SortDirection.DESC, propertyName="CreatedAt"
+                    )
                 ],
             )
         )

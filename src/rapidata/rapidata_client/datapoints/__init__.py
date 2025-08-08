@@ -1,3 +1,11 @@
-from .datapoint import Datapoint
+from ._datapoint import Datapoint
 from .assets import MediaAsset, MultiAsset, TextAsset
-from .metadata import Metadata, PromptMetadata, PrivateTextMetadata, PublicTextMetadata, SelectWordsMetadata, MediaAssetMetadata, PromptIdentifierMetadata
+from .metadata import (
+    Metadata,
+    PromptMetadata,
+    PrivateTextMetadata,
+    PublicTextMetadata,
+    SelectWordsMetadata,
+    MediaAssetMetadata,
+    PromptIdentifierMetadata,
+)

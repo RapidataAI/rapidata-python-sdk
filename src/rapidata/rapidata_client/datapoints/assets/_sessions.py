@@ -18,8 +18,8 @@ class SessionManager:
             requests.Session: A singleton requests session with retry logic.
         """
         if cls._session is None:
-            max_retries: int = rapidata_config.upload_max_retries
-            max_workers: int = rapidata_config.max_upload_workers
+            max_retries: int = rapidata_config.uploadMaxRetries
+            max_workers: int = rapidata_config.maxUploadWorkers
             cls._session = requests.Session()
             retries = Retry(
                 total=max_retries,

@@ -1,6 +1,9 @@
+import webbrowser
+import urllib.parse
+from colorama import Fore
 from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 from rapidata.service.openapi_service import OpenAPIService
-from rapidata.rapidata_client.logging import logger
+from rapidata.rapidata_client.logging import logger, managed_print
 from rapidata.api_client.models.update_dimensions_model import UpdateDimensionsModel
 from rapidata.api_client.models.update_should_alert_model import UpdateShouldAlertModel
 
@@ -20,6 +23,9 @@ class RapidataValidationSet:
     def __init__(self, validation_set_id, name: str, openapi_service: OpenAPIService):
         self.id = validation_set_id
         self.name = name
+        self.validation_set_details_page = (
+            f"https://app.{openapi_service.environment}/validation-set/detail/{self.id}"
+        )
         self.__openapi_service = openapi_service
 
     def add_rapid(self, rapid: Rapid):
@@ -61,6 +67,25 @@ class RapidataValidationSet:
             self.id, UpdateShouldAlertModel(shouldAlert=should_alert)
         )
         return self
+
+    def view(self) -> None:
+        """
+        Opens the validation set details page in the browser.
+
+        Raises:
+            Exception: If the order is not in processing state.
+        """
+        logger.info("Opening validation set details page in browser...")
+        could_open_browser = webbrowser.open(self.validation_set_details_page)
+        if not could_open_browser:
+            encoded_url = urllib.parse.quote(
+                self.validation_set_details_page, safe="%/:=&?~#+!$,;'@()*[]"
+            )
+            managed_print(
+                Fore.RED
+                + f"Please open this URL in your browser: '{encoded_url}'"
+                + Fore.RESET
+            )
 
     def __str__(self):
         return f"name: '{self.name}' id: {self.id}"

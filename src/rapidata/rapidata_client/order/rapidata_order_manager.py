@@ -28,7 +28,7 @@ from rapidata.rapidata_client.workflow import (
     RankingWorkflow,
 )
 from rapidata.rapidata_client.datapoints.assets import MediaAsset, TextAsset, MultiAsset
-from rapidata.rapidata_client.datapoints.datapoint import Datapoint
+from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.rapidata_client.filter import RapidataFilter
 from rapidata.rapidata_client.filter.rapidata_filters import RapidataFilters
 from rapidata.rapidata_client.settings import RapidataSettings, RapidataSetting
@@ -39,7 +39,10 @@ from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.page_info import PageInfo
 from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.filter import Filter
+from rapidata.api_client.models.filter_operator import FilterOperator
 from rapidata.api_client.models.sort_criterion import SortCriterion
+from rapidata.api_client.models.sort_direction import SortDirection
+
 
 from tqdm import tqdm
 
@@ -164,6 +167,7 @@ class RapidataOrderManager:
             ._sticky_state(self.__sticky_state)
             ._create()
         )
+        logger.debug("Order created: %s", order)
         return order
 
     def _set_priority(self, priority: int):
@@ -509,7 +513,9 @@ class RapidataOrderManager:
 
         return self._create_general_order(
             name=name,
-            workflow=SelectWordsWorkflow(instruction=instruction),
+            workflow=SelectWordsWorkflow(
+                instruction=instruction,
+            ),
             assets=assets,
             responses_per_datapoint=responses_per_datapoint,
             validation_set_id=validation_set_id,
@@ -730,10 +736,18 @@ class RapidataOrderManager:
             QueryModel(
                 page=PageInfo(index=1, size=amount),
                 filter=RootFilter(
-                    filters=[Filter(field="OrderName", operator="Contains", value=name)]
+                    filters=[
+                        Filter(
+                            field="OrderName",
+                            operator=FilterOperator.CONTAINS,
+                            value=name,
+                        )
+                    ]
                 ),
                 sortCriteria=[
-                    SortCriterion(direction="Desc", propertyName="OrderDate")
+                    SortCriterion(
+                        direction=SortDirection.DESC, propertyName="OrderDate"
+                    )
                 ],
             )
         )

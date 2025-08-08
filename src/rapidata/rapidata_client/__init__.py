@@ -6,7 +6,7 @@ from .selection import (
     ConditionalValidationSelection,
     CappedSelection,
     ShufflingSelection,
-    RetrievalMode,
+    RapidataRetrievalMode,
     EffortSelection,
 )
 from .datapoints import Datapoint
