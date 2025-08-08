@@ -1,6 +1,4 @@
 from typing import Literal, Optional, Sequence
-
-from rapidata.api_client import AssetType, PromptType, RapidModality
 from rapidata.api_client.models.ab_test_selection_a_inner import AbTestSelectionAInner
 from rapidata.api_client.models.and_user_filter_model_filters_inner import (
     AndUserFilterModelFiltersInner,
@@ -12,6 +10,7 @@ from rapidata.api_client.models.create_order_model_referee import (
 from rapidata.api_client.models.create_order_model_workflow import (
     CreateOrderModelWorkflow,
 )
+from rapidata.api_client.models.sticky_state import StickyState
 
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.rapidata_client.exceptions.failed_upload_exception import (
@@ -111,7 +110,7 @@ class RapidataOrderBuilder:
                 else None
             ),
             priority=self.__priority,
-            stickyState=self.__sticky_state,
+            stickyState=StickyState(self.__sticky_state),
         )
 
     def _set_validation_set_id(self) -> None:
@@ -127,14 +126,18 @@ class RapidataOrderBuilder:
 
         try:
             self.__validation_set_id = (
-                self.__openapi_service.validation_api.validation_set_recommended_get(
-                    asset_type=self.__datapoints[0].get_asset_type(),
-                    modality=self.__workflow.modality,
-                    prompt_type=self.__datapoints[0].get_prompt_type()[
-                        0
-                    ],  # TODO: REMOVE 0 index when new specs
+                (
+                    self.__openapi_service.validation_api.validation_set_recommended_get(
+                        asset_type=[self.__datapoints[0].get_asset_type()],
+                        modality=[self.__workflow.modality],
+                        prompt_type=[
+                            self.__datapoints[0].get_prompt_type()[0]
+                        ],  # TODO: REMOVE 0 index when new specs
+                    )
                 )
-            ).id
+                .validation_sets[0]
+                .id
+            )
             logger.debug(
                 "Using recommended validation set with ID: %s", self.__validation_set_id
             )
@@ -173,6 +176,9 @@ class RapidataOrderBuilder:
         Returns:
             RapidataOrder: The created RapidataOrder instance.
         """
+        if rapidata_config.enableBetaFeatures:
+            self._set_validation_set_id()
+
         order_model = self._to_model()
         logger.debug("Creating order with model: %s", order_model)
 
@@ -200,10 +206,6 @@ class RapidataOrderBuilder:
         )
 
         logger.debug("Order created: %s", order)
-
-        if rapidata_config.enableBetaFeatures:
-            self._set_validation_set_id()
-
         logger.debug("Adding media to the order.")
 
         if self.__dataset:

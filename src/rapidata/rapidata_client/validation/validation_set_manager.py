@@ -18,6 +18,8 @@ from rapidata.api_client.models.page_info import PageInfo
 from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.filter import Filter
 from rapidata.api_client.models.sort_criterion import SortCriterion
+from rapidata.api_client.models.sort_direction import SortDirection
+from rapidata.api_client.models.filter_operator import FilterOperator
 
 from rapidata.rapidata_client.validation.rapids.box import Box
 
@@ -30,6 +32,7 @@ from tqdm import tqdm
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.rapidata_client.validation.rapids.rapids import Rapid
+from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
 
 
 class ValidationSetManager:
@@ -50,6 +53,7 @@ class ValidationSetManager:
         workflow: Workflow,
         order_name: str,
         datapoints: list[Datapoint],
+        settings: list[RapidataSetting] = [],
     ) -> RapidataValidationSet:
         rapids: list[Rapid] = []
         for datapoint in datapoints:
@@ -60,7 +64,9 @@ class ValidationSetManager:
                     metadata=datapoint.metadata,
                 )
             )
-        return self._submit(name=order_name, rapids=rapids, dimensions=[])
+        return self._submit(
+            name=order_name, rapids=rapids, dimensions=[], settings=settings
+        )
 
     def create_classification_set(
         self,
@@ -563,7 +569,11 @@ class ValidationSetManager:
         return self._submit(name=name, rapids=rapids, dimensions=dimensions)
 
     def _submit(
-        self, name: str, rapids: list[Rapid], dimensions: list[str] | None
+        self,
+        name: str,
+        rapids: list[Rapid],
+        dimensions: list[str] | None,
+        settings: list[RapidataSetting] = [],
     ) -> RapidataValidationSet:
         logger.debug("Creating validation set")
         validation_set_id = (
@@ -657,10 +667,18 @@ class ValidationSetManager:
                 QueryModel(
                     page=PageInfo(index=1, size=amount),
                     filter=RootFilter(
-                        filters=[Filter(field="Name", operator="Contains", value=name)]
+                        filters=[
+                            Filter(
+                                field="Name",
+                                operator=FilterOperator.CONTAINS,
+                                value=name,
+                            )
+                        ]
                     ),
                     sortCriteria=[
-                        SortCriterion(direction="Desc", propertyName="CreatedAt")
+                        SortCriterion(
+                            direction=SortDirection.DESC, propertyName="CreatedAt"
+                        )
                     ],
                 )
             )
