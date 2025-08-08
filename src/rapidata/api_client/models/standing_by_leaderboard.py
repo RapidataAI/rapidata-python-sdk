@@ -17,8 +17,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from rapidata.api_client.models.standing_status import StandingStatus
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -30,19 +31,12 @@ class StandingByLeaderboard(BaseModel):
     name: StrictStr
     leaderboard_id: StrictStr = Field(alias="leaderboardId")
     dataset_id: Optional[StrictStr] = Field(default=None, alias="datasetId")
-    status: StrictStr
+    status: StandingStatus
     score: Optional[Union[StrictFloat, StrictInt]] = None
     wins: StrictInt
     total_matches: StrictInt = Field(alias="totalMatches")
     is_disabled: StrictBool = Field(alias="isDisabled")
     __properties: ClassVar[List[str]] = ["id", "name", "leaderboardId", "datasetId", "status", "score", "wins", "totalMatches", "isDisabled"]
-
-    @field_validator('status')
-    def status_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['Created', 'Active', 'Idle']):
-            raise ValueError("must be one of enum values ('Created', 'Active', 'Idle')")
-        return value
 
     model_config = ConfigDict(
         populate_by_name=True,

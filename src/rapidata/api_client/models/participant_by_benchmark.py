@@ -17,8 +17,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.participant_status import ParticipantStatus
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -30,15 +31,8 @@ class ParticipantByBenchmark(BaseModel):
     name: StrictStr
     benchmark_id: StrictStr = Field(alias="benchmarkId")
     dataset_id: StrictStr = Field(alias="datasetId")
-    status: StrictStr
+    status: ParticipantStatus
     __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "datasetId", "status"]
-
-    @field_validator('status')
-    def status_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['Created', 'Submitted', 'Disabled']):
-            raise ValueError("must be one of enum values ('Created', 'Submitted', 'Disabled')")
-        return value
 
     model_config = ConfigDict(
         populate_by_name=True,

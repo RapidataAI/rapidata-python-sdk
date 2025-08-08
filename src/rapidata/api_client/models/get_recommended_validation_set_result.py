@@ -17,21 +17,18 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.classify_payload import ClassifyPayload
-from rapidata.api_client.models.feature_flag import FeatureFlag
+from pydantic import BaseModel, ConfigDict, Field
+from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.validation_set_model import ValidationSetModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateDemographicRapidModel(BaseModel):
+class GetRecommendedValidationSetResult(BaseModel):
     """
-    The model for creating a demographic rapid.
+    GetRecommendedValidationSetResult
     """ # noqa: E501
-    key: StrictStr = Field(description="The identifier of the demographic classification.")
-    payload: ClassifyPayload
-    feature_flags: Optional[List[FeatureFlag]] = Field(default=None, description="Optional feature flags to apply to the rapid.", alias="featureFlags")
-    __properties: ClassVar[List[str]] = ["key", "payload", "featureFlags"]
+    validation_sets: List[ValidationSetModel] = Field(alias="validationSets")
+    __properties: ClassVar[List[str]] = ["validationSets"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -51,7 +48,7 @@ class CreateDemographicRapidModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateDemographicRapidModel from a JSON string"""
+        """Create an instance of GetRecommendedValidationSetResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -72,26 +69,18 @@ class CreateDemographicRapidModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of payload
-        if self.payload:
-            _dict['payload'] = self.payload.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in feature_flags (list)
+        # override the default output from pydantic by calling `to_dict()` of each item in validation_sets (list)
         _items = []
-        if self.feature_flags:
-            for _item_feature_flags in self.feature_flags:
-                if _item_feature_flags:
-                    _items.append(_item_feature_flags.to_dict())
-            _dict['featureFlags'] = _items
-        # set to None if feature_flags (nullable) is None
-        # and model_fields_set contains the field
-        if self.feature_flags is None and "feature_flags" in self.model_fields_set:
-            _dict['featureFlags'] = None
-
+        if self.validation_sets:
+            for _item_validation_sets in self.validation_sets:
+                if _item_validation_sets:
+                    _items.append(_item_validation_sets.to_dict())
+            _dict['validationSets'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateDemographicRapidModel from a dict"""
+        """Create an instance of GetRecommendedValidationSetResult from a dict"""
         if obj is None:
             return None
 
@@ -99,9 +88,7 @@ class CreateDemographicRapidModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "key": obj.get("key"),
-            "payload": ClassifyPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
-            "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
+            "validationSets": [ValidationSetModel.from_dict(_item) for _item in obj["validationSets"]] if obj.get("validationSets") is not None else None
         })
         return _obj
 

@@ -17,8 +17,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt
 from typing import Any, ClassVar, Dict, List, Union
+from rapidata.api_client.models.workflow_state import WorkflowState
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -29,15 +30,8 @@ class GetWorkflowProgressResult(BaseModel):
     completion_percentage: Union[StrictFloat, StrictInt] = Field(alias="completionPercentage")
     total: StrictInt
     completed: StrictInt
-    state: StrictStr
+    state: WorkflowState
     __properties: ClassVar[List[str]] = ["completionPercentage", "total", "completed", "state"]
-
-    @field_validator('state')
-    def state_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['Created', 'Started', 'Labeling', 'Paused', 'Done', 'Failed']):
-            raise ValueError("must be one of enum values ('Created', 'Started', 'Labeling', 'Paused', 'Done', 'Failed')")
-        return value
 
     model_config = ConfigDict(
         populate_by_name=True,

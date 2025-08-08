@@ -18,8 +18,9 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.order_state import OrderState
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -31,17 +32,10 @@ class OrderModel(BaseModel):
     pipeline_id: StrictStr = Field(alias="pipelineId")
     order_date: Optional[datetime] = Field(default=None, alias="orderDate")
     customer_mail: StrictStr = Field(alias="customerMail")
-    state: StrictStr
+    state: OrderState
     order_name: StrictStr = Field(alias="orderName")
     is_public: StrictBool = Field(alias="isPublic")
     __properties: ClassVar[List[str]] = ["id", "pipelineId", "orderDate", "customerMail", "state", "orderName", "isPublic"]
-
-    @field_validator('state')
-    def state_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['Created', 'Preview', 'Submitted', 'ManualReview', 'Processing', 'Paused', 'Completed', 'Cancelled', 'Failed']):
-            raise ValueError("must be one of enum values ('Created', 'Preview', 'Submitted', 'ManualReview', 'Processing', 'Paused', 'Completed', 'Cancelled', 'Failed')")
-        return value
 
     model_config = ConfigDict(
         populate_by_name=True,

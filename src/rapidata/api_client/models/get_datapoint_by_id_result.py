@@ -18,9 +18,10 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.datapoint_asset import DatapointAsset
+from rapidata.api_client.models.datapoint_state import DatapointState
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -30,18 +31,11 @@ class GetDatapointByIdResult(BaseModel):
     """ # noqa: E501
     id: StrictStr
     dataset_id: StrictStr = Field(alias="datasetId")
-    state: StrictStr
+    state: DatapointState
     sort_index: Optional[StrictInt] = Field(default=None, alias="sortIndex")
     asset: DatapointAsset
     created_at: datetime = Field(alias="createdAt")
     __properties: ClassVar[List[str]] = ["id", "datasetId", "state", "sortIndex", "asset", "createdAt"]
-
-    @field_validator('state')
-    def state_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['Ready', 'Pending', 'Failed']):
-            raise ValueError("must be one of enum values ('Ready', 'Pending', 'Failed')")
-        return value
 
     model_config = ConfigDict(
         populate_by_name=True,

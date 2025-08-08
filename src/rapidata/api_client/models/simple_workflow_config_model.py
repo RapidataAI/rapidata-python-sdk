@@ -20,6 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.compare_workflow_model1_referee import CompareWorkflowModel1Referee
+from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.simple_workflow_config_model_blueprint import SimpleWorkflowConfigModelBlueprint
 from typing import Optional, Set
 from typing_extensions import Self
@@ -31,8 +32,8 @@ class SimpleWorkflowConfigModel(BaseModel):
     t: StrictStr = Field(description="Discriminator value for SimpleWorkflowConfig", alias="_t")
     referee: CompareWorkflowModel1Referee
     blueprint: SimpleWorkflowConfigModelBlueprint
-    target_country_codes: List[StrictStr] = Field(description="A list of country codes that this workflow is targeting.", alias="targetCountryCodes")
-    __properties: ClassVar[List[str]] = ["_t", "referee", "blueprint", "targetCountryCodes"]
+    feature_flags: List[FeatureFlag] = Field(description="The list of feature flags that will be applied to the rapids created by this workflow.", alias="featureFlags")
+    __properties: ClassVar[List[str]] = ["_t", "referee", "blueprint", "featureFlags"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -86,6 +87,13 @@ class SimpleWorkflowConfigModel(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of blueprint
         if self.blueprint:
             _dict['blueprint'] = self.blueprint.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in feature_flags (list)
+        _items = []
+        if self.feature_flags:
+            for _item_feature_flags in self.feature_flags:
+                if _item_feature_flags:
+                    _items.append(_item_feature_flags.to_dict())
+            _dict['featureFlags'] = _items
         return _dict
 
     @classmethod
@@ -101,7 +109,7 @@ class SimpleWorkflowConfigModel(BaseModel):
             "_t": obj.get("_t") if obj.get("_t") is not None else 'SimpleWorkflowConfig',
             "referee": CompareWorkflowModel1Referee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
             "blueprint": SimpleWorkflowConfigModelBlueprint.from_dict(obj["blueprint"]) if obj.get("blueprint") is not None else None,
-            "targetCountryCodes": obj.get("targetCountryCodes")
+            "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
         })
         return _obj
 

@@ -17,12 +17,13 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.file_asset_model_metadata_value import FileAssetModelMetadataValue
 from rapidata.api_client.models.get_validation_rapids_result_asset import GetValidationRapidsResultAsset
 from rapidata.api_client.models.get_validation_rapids_result_payload import GetValidationRapidsResultPayload
 from rapidata.api_client.models.get_validation_rapids_result_truth import GetValidationRapidsResultTruth
+from rapidata.api_client.models.rapid_state import RapidState
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -40,15 +41,8 @@ class GetValidationRapidsResult(BaseModel):
     invalid_validation_count: StrictInt = Field(alias="invalidValidationCount")
     explanation: Optional[StrictStr] = None
     random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="randomCorrectProbability")
-    state: StrictStr
+    state: RapidState
     __properties: ClassVar[List[str]] = ["id", "type", "asset", "truth", "payload", "metadata", "correctValidationCount", "invalidValidationCount", "explanation", "randomCorrectProbability", "state"]
-
-    @field_validator('state')
-    def state_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['Labeling', 'Paused', 'Incomplete', 'Flagged', 'Done', 'None']):
-            raise ValueError("must be one of enum values ('Labeling', 'Paused', 'Incomplete', 'Flagged', 'Done', 'None')")
-        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
