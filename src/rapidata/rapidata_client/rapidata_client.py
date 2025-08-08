@@ -16,6 +16,7 @@ from rapidata.rapidata_client.validation.validation_set_manager import (
 from rapidata.rapidata_client.demographic.demographic_manager import DemographicManager
 
 from rapidata.rapidata_client.logging import logger, managed_print
+from rapidata.rapidata_client.config.config import rapidata_config
 
 
 class RapidataClient:
@@ -76,6 +77,11 @@ class RapidataClient:
     def reset_credentials(self):
         """Reset the credentials saved in the configuration file for the current environment."""
         self._openapi_service.reset_credentials()
+
+    def _enable_beta_features(self):
+        """Enable beta features for the client."""
+        logger.debug("Enabling beta features")
+        rapidata_config.enableBetaFeatures = True
 
     def _check_version(self):
         try:
