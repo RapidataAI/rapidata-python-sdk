@@ -17,8 +17,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.rapid_issue import RapidIssue
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -26,18 +27,11 @@ class ReportModel(BaseModel):
     """
     The model for reporting an issue with a rapid.
     """ # noqa: E501
-    issue: StrictStr
+    issue: RapidIssue
     message: Optional[StrictStr] = Field(default=None, description="An optional message typed by the user.")
     dump: Optional[StrictStr] = Field(default=None, description="A dump, that the frontend defines and can read again.")
     source: Optional[StrictStr] = Field(default=None, description="An optional identifier where the report originated from.")
     __properties: ClassVar[List[str]] = ["issue", "message", "dump", "source"]
-
-    @field_validator('issue')
-    def issue_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['Other', 'CannotSubmit', 'NoAsset', 'Inappropriate', 'NoCorrectOption', 'WrongLanguage', 'DoNotUnderstand', 'DoNotCare', 'NotSeeOptionsOrMediaDidntLoad', 'MyAnswerIsCorrect']):
-            raise ValueError("must be one of enum values ('Other', 'CannotSubmit', 'NoAsset', 'Inappropriate', 'NoCorrectOption', 'WrongLanguage', 'DoNotUnderstand', 'DoNotCare', 'NotSeeOptionsOrMediaDidntLoad', 'MyAnswerIsCorrect')")
-        return value
 
     model_config = ConfigDict(
         populate_by_name=True,

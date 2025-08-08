@@ -20,10 +20,13 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.ab_test_selection_a_inner import AbTestSelectionAInner
+from rapidata.api_client.models.aggregator_type import AggregatorType
 from rapidata.api_client.models.and_user_filter_model_filters_inner import AndUserFilterModelFiltersInner
 from rapidata.api_client.models.create_order_model_referee import CreateOrderModelReferee
 from rapidata.api_client.models.create_order_model_workflow import CreateOrderModelWorkflow
 from rapidata.api_client.models.feature_flag_model import FeatureFlagModel
+from rapidata.api_client.models.retrieval_mode import RetrievalMode
+from rapidata.api_client.models.sticky_state import StickyState
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -35,16 +38,16 @@ class CreateOrderModel(BaseModel):
     order_name: StrictStr = Field(description="The name is used as an identifier for an order and can be freely chosen.", alias="orderName")
     workflow: CreateOrderModelWorkflow
     referee: CreateOrderModelReferee
-    aggregator: Optional[StrictStr] = Field(default=None, description="The aggregator is used to determine how the data will be aggregated. The default behavior is enough for most cases")
+    aggregator: Optional[AggregatorType] = None
     feature_flags: Optional[List[FeatureFlagModel]] = Field(default=None, description="The feature flags are used to enable or disable certain features.", alias="featureFlags")
     priority: Optional[StrictInt] = Field(default=None, description="The priority is used to prioritize over other orders.")
-    sticky_state: Optional[StrictStr] = Field(default=None, description="Indicates if the underlying campaign should be sticky.", alias="stickyState")
+    sticky_state: Optional[StickyState] = Field(default=None, alias="stickyState")
     user_score_dimensions: Optional[List[StrictStr]] = Field(default=None, description="The user score dimensions are used to determine the score of the responses from the user.", alias="userScoreDimensions")
     demographic_keys: Optional[List[StrictStr]] = Field(default=None, description="The demographic keys are used to determine which demographics to store on the resposnes from the user.", alias="demographicKeys")
     user_filters: Optional[List[AndUserFilterModelFiltersInner]] = Field(default=None, description="The user filters are used to restrict the order to only collect votes from a specific demographic.", alias="userFilters")
     validation_set_id: Optional[StrictStr] = Field(default=None, description="The validation set id can be changed to point to a specific validation set. if not provided a sane default will be used.", alias="validationSetId")
     selections: Optional[List[AbTestSelectionAInner]] = Field(default=None, description="The selections are used to determine which tasks are shown to a user.")
-    retrieval_mode: Optional[StrictStr] = Field(default=None, description="The retrieval mode defines how rapids are retrieved from the active labeling pool.", alias="retrievalMode")
+    retrieval_mode: Optional[RetrievalMode] = Field(default=None, alias="retrievalMode")
     max_iterations: Optional[StrictInt] = Field(default=None, description="The maximum number of times a user is allowed to see the same rapid.", alias="maxIterations")
     __properties: ClassVar[List[str]] = ["_t", "orderName", "workflow", "referee", "aggregator", "featureFlags", "priority", "stickyState", "userScoreDimensions", "demographicKeys", "userFilters", "validationSetId", "selections", "retrievalMode", "maxIterations"]
 
@@ -53,36 +56,6 @@ class CreateOrderModel(BaseModel):
         """Validates the enum"""
         if value not in set(['CreateOrderModel']):
             raise ValueError("must be one of enum values ('CreateOrderModel')")
-        return value
-
-    @field_validator('aggregator')
-    def aggregator_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in set(['NonCommittal', 'MajorityVote', 'SimpleMatchup', 'LocateCluster', 'Classification', 'Locate', 'BoundingBox', 'Line', 'Transcription', 'SinglePointLocate', 'FreeText', 'Scrub']):
-            raise ValueError("must be one of enum values ('NonCommittal', 'MajorityVote', 'SimpleMatchup', 'LocateCluster', 'Classification', 'Locate', 'BoundingBox', 'Line', 'Transcription', 'SinglePointLocate', 'FreeText', 'Scrub')")
-        return value
-
-    @field_validator('sticky_state')
-    def sticky_state_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in set(['None', 'Temporary', 'Permanent']):
-            raise ValueError("must be one of enum values ('None', 'Temporary', 'Permanent')")
-        return value
-
-    @field_validator('retrieval_mode')
-    def retrieval_mode_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in set(['Random', 'Shuffled', 'Sequential']):
-            raise ValueError("must be one of enum values ('Random', 'Shuffled', 'Sequential')")
         return value
 
     model_config = ConfigDict(
@@ -151,11 +124,6 @@ class CreateOrderModel(BaseModel):
                 if _item_selections:
                     _items.append(_item_selections.to_dict())
             _dict['selections'] = _items
-        # set to None if aggregator (nullable) is None
-        # and model_fields_set contains the field
-        if self.aggregator is None and "aggregator" in self.model_fields_set:
-            _dict['aggregator'] = None
-
         # set to None if feature_flags (nullable) is None
         # and model_fields_set contains the field
         if self.feature_flags is None and "feature_flags" in self.model_fields_set:
@@ -165,11 +133,6 @@ class CreateOrderModel(BaseModel):
         # and model_fields_set contains the field
         if self.priority is None and "priority" in self.model_fields_set:
             _dict['priority'] = None
-
-        # set to None if sticky_state (nullable) is None
-        # and model_fields_set contains the field
-        if self.sticky_state is None and "sticky_state" in self.model_fields_set:
-            _dict['stickyState'] = None
 
         # set to None if user_score_dimensions (nullable) is None
         # and model_fields_set contains the field
@@ -195,11 +158,6 @@ class CreateOrderModel(BaseModel):
         # and model_fields_set contains the field
         if self.selections is None and "selections" in self.model_fields_set:
             _dict['selections'] = None
-
-        # set to None if retrieval_mode (nullable) is None
-        # and model_fields_set contains the field
-        if self.retrieval_mode is None and "retrieval_mode" in self.model_fields_set:
-            _dict['retrievalMode'] = None
 
         # set to None if max_iterations (nullable) is None
         # and model_fields_set contains the field

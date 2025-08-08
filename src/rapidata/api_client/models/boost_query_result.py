@@ -17,8 +17,10 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.boost_mode import BoostMode
+from rapidata.api_client.models.boost_status import BoostStatus
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -26,26 +28,12 @@ class BoostQueryResult(BaseModel):
     """
     BoostQueryResult
     """ # noqa: E501
-    status: StrictStr
-    mode: StrictStr
+    status: BoostStatus
+    mode: BoostMode
     active_campaigns: List[StrictStr] = Field(alias="activeCampaigns")
     inactive_campaigns: List[StrictStr] = Field(alias="inactiveCampaigns")
     unknown_campaigns: List[StrictInt] = Field(alias="unknownCampaigns")
     __properties: ClassVar[List[str]] = ["status", "mode", "activeCampaigns", "inactiveCampaigns", "unknownCampaigns"]
-
-    @field_validator('status')
-    def status_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['Active', 'Inactive', 'Partial', 'Unknown']):
-            raise ValueError("must be one of enum values ('Active', 'Inactive', 'Partial', 'Unknown')")
-        return value
-
-    @field_validator('mode')
-    def mode_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['Automatic', 'Manual']):
-            raise ValueError("must be one of enum values ('Automatic', 'Manual')")
-        return value
 
     model_config = ConfigDict(
         populate_by_name=True,

@@ -17,9 +17,10 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.filter import Filter
+from rapidata.api_client.models.logic_operator import LogicOperator
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,18 +29,8 @@ class RootFilter(BaseModel):
     RootFilter
     """ # noqa: E501
     filters: Optional[List[Filter]] = None
-    logic: Optional[StrictStr] = None
+    logic: Optional[LogicOperator] = None
     __properties: ClassVar[List[str]] = ["filters", "logic"]
-
-    @field_validator('logic')
-    def logic_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in set(['And', 'Or', 'Not']):
-            raise ValueError("must be one of enum values ('And', 'Or', 'Not')")
-        return value
 
     model_config = ConfigDict(
         populate_by_name=True,

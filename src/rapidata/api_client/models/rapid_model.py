@@ -18,13 +18,14 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.datapoint_asset import DatapointAsset
 from rapidata.api_client.models.file_asset_model_metadata_value import FileAssetModelMetadataValue
 from rapidata.api_client.models.get_validation_rapids_result_payload import GetValidationRapidsResultPayload
 from rapidata.api_client.models.get_validation_rapids_result_truth import GetValidationRapidsResultTruth
 from rapidata.api_client.models.rapid_model_referee import RapidModelReferee
+from rapidata.api_client.models.rapid_state import RapidState
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -37,7 +38,7 @@ class RapidModel(BaseModel):
     referee: RapidModelReferee
     asset: DatapointAsset
     metadata: Dict[str, FileAssetModelMetadataValue]
-    state: StrictStr
+    state: RapidState
     has_responses: StrictBool = Field(alias="hasResponses")
     should_accept_incorrect: StrictBool = Field(alias="shouldAcceptIncorrect")
     truth: Optional[GetValidationRapidsResultTruth] = None
@@ -46,13 +47,6 @@ class RapidModel(BaseModel):
     key: Optional[StrictStr] = None
     completed_at: Optional[datetime] = Field(default=None, alias="completedAt")
     __properties: ClassVar[List[str]] = ["id", "payload", "referee", "asset", "metadata", "state", "hasResponses", "shouldAcceptIncorrect", "truth", "explanation", "randomCorrectProbability", "key", "completedAt"]
-
-    @field_validator('state')
-    def state_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['Labeling', 'Paused', 'Incomplete', 'Flagged', 'Done', 'None']):
-            raise ValueError("must be one of enum values ('Labeling', 'Paused', 'Incomplete', 'Flagged', 'Done', 'None')")
-        return value
 
     model_config = ConfigDict(
         populate_by_name=True,

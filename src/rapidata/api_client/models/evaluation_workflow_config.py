@@ -18,8 +18,9 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.compare_workflow_model1_referee import CompareWorkflowModel1Referee
+from rapidata.api_client.models.feature_flag import FeatureFlag
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -31,7 +32,8 @@ class EvaluationWorkflowConfig(BaseModel):
     validation_set_id: StrictStr = Field(alias="validationSetId")
     referee: CompareWorkflowModel1Referee
     should_accept_incorrect: StrictBool = Field(alias="shouldAcceptIncorrect")
-    __properties: ClassVar[List[str]] = ["_t", "validationSetId", "referee", "shouldAcceptIncorrect"]
+    feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
+    __properties: ClassVar[List[str]] = ["_t", "validationSetId", "referee", "shouldAcceptIncorrect", "featureFlags"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -82,6 +84,13 @@ class EvaluationWorkflowConfig(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of referee
         if self.referee:
             _dict['referee'] = self.referee.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in feature_flags (list)
+        _items = []
+        if self.feature_flags:
+            for _item_feature_flags in self.feature_flags:
+                if _item_feature_flags:
+                    _items.append(_item_feature_flags.to_dict())
+            _dict['featureFlags'] = _items
         return _dict
 
     @classmethod
@@ -97,7 +106,8 @@ class EvaluationWorkflowConfig(BaseModel):
             "_t": obj.get("_t") if obj.get("_t") is not None else 'EvaluationWorkflowConfig',
             "validationSetId": obj.get("validationSetId"),
             "referee": CompareWorkflowModel1Referee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
-            "shouldAcceptIncorrect": obj.get("shouldAcceptIncorrect")
+            "shouldAcceptIncorrect": obj.get("shouldAcceptIncorrect"),
+            "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
         })
         return _obj
 

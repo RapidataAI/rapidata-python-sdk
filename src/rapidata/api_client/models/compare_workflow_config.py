@@ -23,6 +23,7 @@ from rapidata.api_client.models.compare_workflow_config_metadata_value import Co
 from rapidata.api_client.models.compare_workflow_config_pair_maker_config import CompareWorkflowConfigPairMakerConfig
 from rapidata.api_client.models.compare_workflow_model1_referee import CompareWorkflowModel1Referee
 from rapidata.api_client.models.elo_config import EloConfig
+from rapidata.api_client.models.feature_flag import FeatureFlag
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -32,12 +33,13 @@ class CompareWorkflowConfig(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for CompareWorkflowConfig", alias="_t")
     criteria: StrictStr
-    elo_config: Optional[EloConfig] = Field(default=None, alias="eloConfig")
-    pair_maker_config: Optional[CompareWorkflowConfigPairMakerConfig] = Field(default=None, alias="pairMakerConfig")
     referee: CompareWorkflowModel1Referee
     target_country_codes: List[StrictStr] = Field(alias="targetCountryCodes")
     metadata: Dict[str, CompareWorkflowConfigMetadataValue]
-    __properties: ClassVar[List[str]] = ["_t", "criteria", "eloConfig", "pairMakerConfig", "referee", "targetCountryCodes", "metadata"]
+    elo_config: Optional[EloConfig] = Field(default=None, alias="eloConfig")
+    pair_maker_config: Optional[CompareWorkflowConfigPairMakerConfig] = Field(default=None, alias="pairMakerConfig")
+    feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
+    __properties: ClassVar[List[str]] = ["_t", "criteria", "referee", "targetCountryCodes", "metadata", "eloConfig", "pairMakerConfig", "featureFlags"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -85,12 +87,6 @@ class CompareWorkflowConfig(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of elo_config
-        if self.elo_config:
-            _dict['eloConfig'] = self.elo_config.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of pair_maker_config
-        if self.pair_maker_config:
-            _dict['pairMakerConfig'] = self.pair_maker_config.to_dict()
         # override the default output from pydantic by calling `to_dict()` of referee
         if self.referee:
             _dict['referee'] = self.referee.to_dict()
@@ -101,6 +97,19 @@ class CompareWorkflowConfig(BaseModel):
                 if self.metadata[_key_metadata]:
                     _field_dict[_key_metadata] = self.metadata[_key_metadata].to_dict()
             _dict['metadata'] = _field_dict
+        # override the default output from pydantic by calling `to_dict()` of elo_config
+        if self.elo_config:
+            _dict['eloConfig'] = self.elo_config.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of pair_maker_config
+        if self.pair_maker_config:
+            _dict['pairMakerConfig'] = self.pair_maker_config.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in feature_flags (list)
+        _items = []
+        if self.feature_flags:
+            for _item_feature_flags in self.feature_flags:
+                if _item_feature_flags:
+                    _items.append(_item_feature_flags.to_dict())
+            _dict['featureFlags'] = _items
         return _dict
 
     @classmethod
@@ -115,8 +124,6 @@ class CompareWorkflowConfig(BaseModel):
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'CompareWorkflowConfig',
             "criteria": obj.get("criteria"),
-            "eloConfig": EloConfig.from_dict(obj["eloConfig"]) if obj.get("eloConfig") is not None else None,
-            "pairMakerConfig": CompareWorkflowConfigPairMakerConfig.from_dict(obj["pairMakerConfig"]) if obj.get("pairMakerConfig") is not None else None,
             "referee": CompareWorkflowModel1Referee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
             "targetCountryCodes": obj.get("targetCountryCodes"),
             "metadata": dict(
@@ -124,7 +131,10 @@ class CompareWorkflowConfig(BaseModel):
                 for _k, _v in obj["metadata"].items()
             )
             if obj.get("metadata") is not None
-            else None
+            else None,
+            "eloConfig": EloConfig.from_dict(obj["eloConfig"]) if obj.get("eloConfig") is not None else None,
+            "pairMakerConfig": CompareWorkflowConfigPairMakerConfig.from_dict(obj["pairMakerConfig"]) if obj.get("pairMakerConfig") is not None else None,
+            "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
         })
         return _obj
 

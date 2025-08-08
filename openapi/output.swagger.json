@@ -2219,6 +2219,7 @@
           "ValidationSet"
         ],
         "summary": "Gets a validation set that is available to the user and best matches the provided parameters.",
+        "description": "This is not a hard filter, instead it is used to find validation sets that have similar characteristics to the provided instruction.",
         "parameters": [
           {
             "name": "assetType",
@@ -2243,6 +2244,14 @@
             "schema": {
               "$ref": "#/components/schemas/PromptType"
             }
+          },
+          {
+            "name": "instruction",
+            "in": "query",
+            "description": "An instruction that can be used to filter for validation sets that have similar instructions.\nAn instruction is a text that is presented to the user when solving a rapid that explains how to solve the rapid.",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -2251,17 +2260,37 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ValidationSetModel"
+                  "$ref": "#/components/schemas/GetRecommendedValidationSetResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ValidationSetModel"
+                  "$ref": "#/components/schemas/GetRecommendedValidationSetResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ValidationSetModel"
+                  "$ref": "#/components/schemas/GetRecommendedValidationSetResult"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -6868,13 +6897,7 @@
             "example": "FileTypeMetadata"
           },
           "fileType": {
-            "enum": [
-              "Unknown",
-              "Image",
-              "Video",
-              "Audio"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/FileType"
           }
         },
         "additionalProperties": false
@@ -6890,27 +6913,10 @@
             "nullable": true
           },
           "operator": {
-            "enum": [
-              "Eq",
-              "Neq",
-              "Gt",
-              "Gte",
-              "Lt",
-              "Lte",
-              "Contains",
-              "StartsWith",
-              "EndsWith",
-              "In"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/FilterOperator"
           },
           "logic": {
-            "enum": [
-              "And",
-              "Or",
-              "Not"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/LogicOperator"
           },
           "filters": {
             "type": "array",
@@ -6991,12 +6997,7 @@
             "type": "string"
           },
           "state": {
-            "enum": [
-              "Ready",
-              "Pending",
-              "Failed"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/DatapointState"
           },
           "sortIndex": {
             "type": "integer",
@@ -7673,12 +7674,7 @@
             }
           },
           "logic": {
-            "enum": [
-              "And",
-              "Or",
-              "Not"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/LogicOperator"
           }
         },
         "additionalProperties": false
@@ -7694,11 +7690,7 @@
             "type": "string"
           },
           "direction": {
-            "enum": [
-              "Asc",
-              "Desc"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/SortDirection"
           }
         },
         "additionalProperties": false
@@ -8681,6 +8673,13 @@
             },
             "description": "The metadata is attached to every single rapid and can be used for something like the prompt.",
             "nullable": true
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            },
+            "description": "The list of feature flags that will be applied to the rapids created by this workflow."
           }
         },
         "additionalProperties": false,
@@ -8929,23 +8928,7 @@
             }
           },
           "aggregator": {
-            "enum": [
-              "NonCommittal",
-              "MajorityVote",
-              "SimpleMatchup",
-              "LocateCluster",
-              "Classification",
-              "Locate",
-              "BoundingBox",
-              "Line",
-              "Transcription",
-              "SinglePointLocate",
-              "FreeText",
-              "Scrub"
-            ],
-            "type": "string",
-            "description": "The aggregator is used to determine how the data will be aggregated. The default behavior is enough for most cases",
-            "nullable": true
+            "$ref": "#/components/schemas/AggregatorType"
           },
           "featureFlags": {
             "type": "array",
@@ -8962,14 +8945,7 @@
             "nullable": true
           },
           "stickyState": {
-            "enum": [
-              "None",
-              "Temporary",
-              "Permanent"
-            ],
-            "type": "string",
-            "description": "Indicates if the underlying campaign should be sticky.",
-            "nullable": true
+            "$ref": "#/components/schemas/StickyState"
           },
           "userScoreDimensions": {
             "type": "array",
@@ -9080,14 +9056,7 @@
             "nullable": true
           },
           "retrievalMode": {
-            "enum": [
-              "Random",
-              "Shuffled",
-              "Sequential"
-            ],
-            "type": "string",
-            "description": "The retrieval mode defines how rapids are retrieved from the active labeling pool.",
-            "nullable": true
+            "$ref": "#/components/schemas/RetrievalMode"
           },
           "maxIterations": {
             "type": "integer",
@@ -9370,12 +9339,7 @@
             "format": "int32"
           },
           "retrievalMode": {
-            "enum": [
-              "Random",
-              "Shuffled",
-              "Sequential"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/RetrievalMode"
           },
           "maxIterations": {
             "type": "integer",
@@ -9432,10 +9396,33 @@
           "shouldAcceptIncorrect": {
             "type": "boolean",
             "description": "Indicates if the user should get feedback on their answers if they answer wrong. If set to true the user will not\nnotice that he was tested."
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            },
+            "description": "The list of feature flags that will be applied to the rapids created by this workflow."
           }
         },
         "additionalProperties": false,
         "description": "If the EvaluationWorkflow is chosen a validation set will be used as a source for all tasks.\nIt functions similarly to the SimpleWorkflow as there is a 1:1 mapping between validation rapids and tasks."
+      },
+      "FeatureFlag": {
+        "required": [
+          "key",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
       },
       "FeatureFlagModel": {
         "required": [
@@ -9657,12 +9644,7 @@
             "format": "int32"
           },
           "retrievalMode": {
-            "enum": [
-              "Random",
-              "Shuffled",
-              "Sequential"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/RetrievalMode"
           },
           "maxIterations": {
             "type": "integer",
@@ -10069,18 +10051,7 @@
             "type": "string"
           },
           "state": {
-            "enum": [
-              "Created",
-              "Preview",
-              "Submitted",
-              "ManualReview",
-              "Processing",
-              "Paused",
-              "Completed",
-              "Cancelled",
-              "Failed"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/OrderState"
           },
           "orderName": {
             "type": "string"
@@ -10222,15 +10193,7 @@
             "type": "string"
           },
           "operator": {
-            "enum": [
-              "Equal",
-              "NotEqual",
-              "LessThan",
-              "LessThanOrEqual",
-              "GreaterThan",
-              "GreaterThanOrEqual"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/ComparisonOperator"
           }
         },
         "additionalProperties": false
@@ -10407,6 +10370,13 @@
             "discriminator": {
               "propertyName": "_t"
             }
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            },
+            "description": "The list of feature flags that will be applied to the rapids created by this workflow."
           }
         },
         "additionalProperties": false,
@@ -10624,23 +10594,7 @@
             "description": "The file artifact id"
           },
           "aggregatorType": {
-            "enum": [
-              "NonCommittal",
-              "MajorityVote",
-              "SimpleMatchup",
-              "LocateCluster",
-              "Classification",
-              "Locate",
-              "BoundingBox",
-              "Line",
-              "Transcription",
-              "SinglePointLocate",
-              "FreeText",
-              "Scrub"
-            ],
-            "type": "string",
-            "description": "The type of the aggregator",
-            "default": "NonCommittal"
+            "$ref": "#/components/schemas/AggregatorType"
           }
         },
         "additionalProperties": false,
@@ -11429,6 +11383,15 @@
             "type": "string",
             "description": "An explanation for the users if they answer the rapid incorrectly.",
             "nullable": true
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlagModel"
+            },
+            "description": "The feature flags to enable for the rapid.",
+            "default": null,
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -11447,14 +11410,17 @@
         "additionalProperties": false
       },
       "AssetType": {
-        "enum": [
-          "None",
-          "Image",
-          "Video",
-          "Audio",
-          "Text"
-        ],
-        "type": "string"
+        "type": "array",
+        "items": {
+          "enum": [
+            "None",
+            "Image",
+            "Video",
+            "Audio",
+            "Text"
+          ],
+          "type": "string"
+        }
       },
       "AttachCategoryTruth": {
         "title": "AttachCategoryTruth",
@@ -11789,6 +11755,21 @@
         },
         "additionalProperties": false
       },
+      "GetRecommendedValidationSetResult": {
+        "required": [
+          "validationSets"
+        ],
+        "type": "object",
+        "properties": {
+          "validationSets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationSetModel"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
       "GetValidationRapidsResult": {
         "required": [
           "correctValidationCount",
@@ -11981,15 +11962,7 @@
             "nullable": true
           },
           "state": {
-            "enum": [
-              "Labeling",
-              "Paused",
-              "Incomplete",
-              "Flagged",
-              "Done",
-              "None"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/RapidState"
           }
         },
         "additionalProperties": false
@@ -12363,29 +12336,62 @@
         },
         "additionalProperties": false
       },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": {}
+      },
       "PromptType": {
-        "enum": [
-          "None",
-          "Text",
-          "Asset"
-        ],
-        "type": "string"
+        "type": "array",
+        "items": {
+          "enum": [
+            "None",
+            "Text",
+            "Asset"
+          ],
+          "type": "string"
+        }
       },
       "RapidModality": {
-        "enum": [
-          "None",
-          "BoundingBox",
-          "Classify",
-          "Compare",
-          "FreeText",
-          "Line",
-          "Locate",
-          "NamedEntity",
-          "Polygon",
-          "Scrub",
-          "Transcription"
-        ],
-        "type": "string"
+        "type": "array",
+        "items": {
+          "enum": [
+            "None",
+            "BoundingBox",
+            "Classify",
+            "Compare",
+            "FreeText",
+            "Line",
+            "Locate",
+            "NamedEntity",
+            "Polygon",
+            "Scrub",
+            "Transcription"
+          ],
+          "type": "string"
+        }
       },
       "RapidState": {
         "enum": [
@@ -12630,7 +12636,7 @@
         "properties": {
           "shouldAlert": {
             "type": "boolean",
-            "description": "If the users should be alerted if answering wrong."
+            "description": "A flag indicating whether the users should be alerted if they answer incorrectly."
           }
         },
         "additionalProperties": false,
@@ -12677,41 +12683,13 @@
             "type": "string"
           },
           "assetType": {
-            "enum": [
-              "None",
-              "Image",
-              "Video",
-              "Audio",
-              "Text"
-            ],
-            "type": "string",
-            "nullable": true
+            "$ref": "#/components/schemas/AssetType"
           },
           "modality": {
-            "enum": [
-              "None",
-              "BoundingBox",
-              "Classify",
-              "Compare",
-              "FreeText",
-              "Line",
-              "Locate",
-              "NamedEntity",
-              "Polygon",
-              "Scrub",
-              "Transcription"
-            ],
-            "type": "string",
-            "nullable": true
+            "$ref": "#/components/schemas/RapidModality"
           },
           "promptType": {
-            "enum": [
-              "None",
-              "Text",
-              "Asset"
-            ],
-            "type": "string",
-            "nullable": true
+            "$ref": "#/components/schemas/PromptType"
           },
           "ownerId": {
             "type": "string",
@@ -12987,6 +12965,15 @@
           },
           "payload": {
             "$ref": "#/components/schemas/ClassifyPayload"
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            },
+            "description": "Optional feature flags to apply to the rapid.",
+            "default": null,
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -13084,15 +13071,7 @@
             }
           },
           "state": {
-            "enum": [
-              "Labeling",
-              "Paused",
-              "Incomplete",
-              "Flagged",
-              "Done",
-              "None"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/RapidState"
           }
         },
         "additionalProperties": false
@@ -13730,15 +13709,7 @@
             }
           },
           "state": {
-            "enum": [
-              "Labeling",
-              "Paused",
-              "Incomplete",
-              "Flagged",
-              "Done",
-              "None"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/RapidState"
           },
           "hasResponses": {
             "type": "boolean"
@@ -14011,19 +13982,7 @@
         "type": "object",
         "properties": {
           "issue": {
-            "enum": [
-              "Other",
-              "CannotSubmit",
-              "NoAsset",
-              "Inappropriate",
-              "NoCorrectOption",
-              "WrongLanguage",
-              "DoNotUnderstand",
-              "DoNotCare",
-              "NotSeeOptionsOrMediaDidntLoad",
-              "MyAnswerIsCorrect"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/RapidIssue"
           },
           "message": {
             "type": "string",
@@ -14576,15 +14535,7 @@
             "format": "int64"
           },
           "state": {
-            "enum": [
-              "Created",
-              "Started",
-              "Labeling",
-              "Paused",
-              "Done",
-              "Failed"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/WorkflowState"
           }
         },
         "additionalProperties": false
@@ -14665,15 +14616,7 @@
             }
           },
           "state": {
-            "enum": [
-              "Labeling",
-              "Paused",
-              "Incomplete",
-              "Flagged",
-              "Done",
-              "None"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/RapidState"
           }
         },
         "additionalProperties": false
@@ -15006,7 +14949,7 @@
             }
           },
           "visibilities": {
-            "type": "string"
+            "$ref": "#/components/schemas/MetadataVisibilities"
           }
         },
         "additionalProperties": false
@@ -15059,7 +15002,7 @@
             "type": "string"
           },
           "visibilities": {
-            "type": "string"
+            "$ref": "#/components/schemas/MetadataVisibilities"
           }
         },
         "additionalProperties": false
@@ -15086,19 +15029,6 @@
           },
           "criteria": {
             "type": "string"
-          },
-          "eloConfig": {
-            "$ref": "#/components/schemas/EloConfig"
-          },
-          "pairMakerConfig": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/OnlinePairMakerConfig"
-              }
-            ],
-            "discriminator": {
-              "propertyName": "_t"
-            }
           },
           "referee": {
             "oneOf": [
@@ -15170,6 +15100,25 @@
                 "propertyName": "_t"
               }
             }
+          },
+          "eloConfig": {
+            "$ref": "#/components/schemas/EloConfig"
+          },
+          "pairMakerConfig": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/OnlinePairMakerConfig"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
           }
         },
         "additionalProperties": false
@@ -15179,6 +15128,7 @@
         "required": [
           "_t",
           "criteria",
+          "featureFlags",
           "metadata",
           "pairMakerConfig",
           "referee",
@@ -15285,6 +15235,13 @@
               }
             },
             "description": "The metadata is attached to every single rapid and can be used for something like the prompt."
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            },
+            "description": "The list of feature flags that will be applied to the rapids created by this workflow."
           }
         },
         "additionalProperties": false,
@@ -15312,7 +15269,7 @@
             "format": "int32"
           },
           "visibilities": {
-            "type": "string"
+            "$ref": "#/components/schemas/MetadataVisibilities"
           }
         },
         "additionalProperties": false
@@ -15384,22 +15341,12 @@
           },
           "shouldAcceptIncorrect": {
             "type": "boolean"
-          }
-        },
-        "additionalProperties": false
-      },
-      "FeatureFlag": {
-        "required": [
-          "key",
-          "value"
-        ],
-        "type": "object",
-        "properties": {
-          "key": {
-            "type": "string"
           },
-          "value": {
-            "type": "string"
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
           }
         },
         "additionalProperties": false
@@ -15521,16 +15468,10 @@
             "example": "FileTypeMetadata"
           },
           "fileType": {
-            "enum": [
-              "Unknown",
-              "Image",
-              "Video",
-              "Audio"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/FileType"
           },
           "visibilities": {
-            "type": "string"
+            "$ref": "#/components/schemas/MetadataVisibilities"
           }
         },
         "additionalProperties": false
@@ -15601,7 +15542,7 @@
             "format": "int32"
           },
           "visibilities": {
-            "type": "string"
+            "$ref": "#/components/schemas/MetadataVisibilities"
           }
         },
         "additionalProperties": false
@@ -15633,21 +15574,24 @@
             "format": "float"
           },
           "visibilities": {
-            "type": "string"
+            "$ref": "#/components/schemas/MetadataVisibilities"
           }
         },
         "additionalProperties": false
       },
       "MetadataVisibilities": {
-        "enum": [
-          "None",
-          "Users",
-          "Customers",
-          "Admins",
-          "Dashboard",
-          "All"
-        ],
-        "type": "string"
+        "type": "array",
+        "items": {
+          "enum": [
+            "None",
+            "Users",
+            "Customers",
+            "Admins",
+            "Dashboard",
+            "All"
+          ],
+          "type": "string"
+        }
       },
       "MultiAsset": {
         "title": "MultiAsset",
@@ -15856,7 +15800,7 @@
             "type": "string"
           },
           "visibilities": {
-            "type": "string"
+            "$ref": "#/components/schemas/MetadataVisibilities"
           }
         },
         "additionalProperties": false
@@ -15906,7 +15850,7 @@
             "type": "string"
           },
           "visibilities": {
-            "type": "string"
+            "$ref": "#/components/schemas/MetadataVisibilities"
           }
         },
         "additionalProperties": false
@@ -15981,6 +15925,12 @@
             "discriminator": {
               "propertyName": "_t"
             }
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
           }
         },
         "additionalProperties": false
@@ -15990,8 +15940,8 @@
         "required": [
           "_t",
           "blueprint",
-          "referee",
-          "targetCountryCodes"
+          "featureFlags",
+          "referee"
         ],
         "type": "object",
         "properties": {
@@ -16058,12 +16008,12 @@
               "propertyName": "_t"
             }
           },
-          "targetCountryCodes": {
+          "featureFlags": {
             "type": "array",
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/FeatureFlag"
             },
-            "description": "A list of country codes that this workflow is targeting."
+            "description": "The list of feature flags that will be applied to the rapids created by this workflow."
           }
         },
         "additionalProperties": false,
@@ -16090,7 +16040,7 @@
             "type": "string"
           },
           "visibilities": {
-            "type": "string"
+            "$ref": "#/components/schemas/MetadataVisibilities"
           }
         },
         "additionalProperties": false
@@ -16121,7 +16071,7 @@
             "type": "boolean"
           },
           "visibilities": {
-            "type": "string"
+            "$ref": "#/components/schemas/MetadataVisibilities"
           }
         },
         "additionalProperties": false
@@ -16219,7 +16169,7 @@
             "type": "string"
           },
           "visibilities": {
-            "type": "string"
+            "$ref": "#/components/schemas/MetadataVisibilities"
           }
         },
         "additionalProperties": false
@@ -16246,7 +16196,7 @@
             "type": "string"
           },
           "visibilities": {
-            "type": "string"
+            "$ref": "#/components/schemas/MetadataVisibilities"
           }
         },
         "additionalProperties": false
@@ -16273,7 +16223,7 @@
             "format": "date-span"
           },
           "visibilities": {
-            "type": "string"
+            "$ref": "#/components/schemas/MetadataVisibilities"
           }
         },
         "additionalProperties": false
@@ -16363,20 +16313,10 @@
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "Active",
-              "Inactive",
-              "Partial",
-              "Unknown"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/BoostStatus"
           },
           "mode": {
-            "enum": [
-              "Automatic",
-              "Manual"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/BoostMode"
           },
           "activeCampaigns": {
             "type": "array",
@@ -16430,15 +16370,7 @@
             "type": "string"
           },
           "status": {
-            "enum": [
-              "Created",
-              "Preview",
-              "Active",
-              "Analysis",
-              "Paused",
-              "Completed"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/CampaignStatus"
           },
           "priority": {
             "type": "integer",
@@ -17334,12 +17266,7 @@
             "type": "string"
           },
           "status": {
-            "enum": [
-              "Created",
-              "Active",
-              "Idle"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/StandingStatus"
           },
           "isDisabled": {
             "type": "boolean"
@@ -17831,12 +17758,7 @@
             "type": "string"
           },
           "status": {
-            "enum": [
-              "Created",
-              "Submitted",
-              "Disabled"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/ParticipantStatus"
           }
         },
         "additionalProperties": false
@@ -17998,15 +17920,7 @@
             "type": "string"
           },
           "operator": {
-            "enum": [
-              "Equal",
-              "NotEqual",
-              "LessThan",
-              "LessThanOrEqual",
-              "GreaterThan",
-              "GreaterThanOrEqual"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/ComparisonOperator"
           },
           "executionOrder": {
             "type": "integer",
@@ -18041,13 +17955,7 @@
             "type": "string"
           },
           "status": {
-            "enum": [
-              "Queued",
-              "Running",
-              "Completed",
-              "Failed"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/RunStatus"
           },
           "createdAt": {
             "type": "string",
@@ -18360,12 +18268,7 @@
             "deprecated": true
           },
           "status": {
-            "enum": [
-              "Created",
-              "Active",
-              "Idle"
-            ],
-            "type": "string"
+            "$ref": "#/components/schemas/StandingStatus"
           },
           "score": {
             "type": "number",

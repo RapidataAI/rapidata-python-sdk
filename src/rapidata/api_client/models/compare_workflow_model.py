@@ -22,6 +22,7 @@ from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.compare_workflow_model_pair_maker_config import CompareWorkflowModelPairMakerConfig
 from rapidata.api_client.models.dataset_dataset_id_datapoints_post_request_metadata_inner import DatasetDatasetIdDatapointsPostRequestMetadataInner
 from rapidata.api_client.models.elo_config_model import EloConfigModel
+from rapidata.api_client.models.feature_flag import FeatureFlag
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -34,7 +35,8 @@ class CompareWorkflowModel(BaseModel):
     pair_maker_config: Optional[CompareWorkflowModelPairMakerConfig] = Field(default=None, alias="pairMakerConfig")
     elo_config: Optional[EloConfigModel] = Field(default=None, alias="eloConfig")
     metadata: Optional[List[DatasetDatasetIdDatapointsPostRequestMetadataInner]] = Field(default=None, description="The metadata is attached to every single rapid and can be used for something like the prompt.")
-    __properties: ClassVar[List[str]] = ["_t", "criteria", "pairMakerConfig", "eloConfig", "metadata"]
+    feature_flags: Optional[List[FeatureFlag]] = Field(default=None, description="The list of feature flags that will be applied to the rapids created by this workflow.", alias="featureFlags")
+    __properties: ClassVar[List[str]] = ["_t", "criteria", "pairMakerConfig", "eloConfig", "metadata", "featureFlags"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -95,6 +97,13 @@ class CompareWorkflowModel(BaseModel):
                 if _item_metadata:
                     _items.append(_item_metadata.to_dict())
             _dict['metadata'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each item in feature_flags (list)
+        _items = []
+        if self.feature_flags:
+            for _item_feature_flags in self.feature_flags:
+                if _item_feature_flags:
+                    _items.append(_item_feature_flags.to_dict())
+            _dict['featureFlags'] = _items
         # set to None if metadata (nullable) is None
         # and model_fields_set contains the field
         if self.metadata is None and "metadata" in self.model_fields_set:
@@ -116,7 +125,8 @@ class CompareWorkflowModel(BaseModel):
             "criteria": obj.get("criteria"),
             "pairMakerConfig": CompareWorkflowModelPairMakerConfig.from_dict(obj["pairMakerConfig"]) if obj.get("pairMakerConfig") is not None else None,
             "eloConfig": EloConfigModel.from_dict(obj["eloConfig"]) if obj.get("eloConfig") is not None else None,
-            "metadata": [DatasetDatasetIdDatapointsPostRequestMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None
+            "metadata": [DatasetDatasetIdDatapointsPostRequestMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
+            "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
         })
         return _obj
 

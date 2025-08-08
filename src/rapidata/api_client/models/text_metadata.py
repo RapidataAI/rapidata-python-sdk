@@ -28,7 +28,7 @@ class TextMetadata(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for TextMetadata", alias="_t")
     text: StrictStr
-    visibilities: Optional[StrictStr] = None
+    visibilities: Optional[List[StrictStr]] = None
     __properties: ClassVar[List[str]] = ["_t", "text", "visibilities"]
 
     @field_validator('t')
@@ -36,6 +36,17 @@ class TextMetadata(BaseModel):
         """Validates the enum"""
         if value not in set(['TextMetadata']):
             raise ValueError("must be one of enum values ('TextMetadata')")
+        return value
+
+    @field_validator('visibilities')
+    def visibilities_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        for i in value:
+            if i not in set(['None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All']):
+                raise ValueError("each list item must be one of ('None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All')")
         return value
 
     model_config = ConfigDict(

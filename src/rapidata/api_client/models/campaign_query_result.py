@@ -18,8 +18,9 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.campaign_status import CampaignStatus
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -30,17 +31,10 @@ class CampaignQueryResult(BaseModel):
     id: StrictStr
     owner_mail: StrictStr = Field(alias="ownerMail")
     name: StrictStr
-    status: StrictStr
+    status: CampaignStatus
     priority: StrictInt
     created_at: datetime = Field(alias="createdAt")
     __properties: ClassVar[List[str]] = ["id", "ownerMail", "name", "status", "priority", "createdAt"]
-
-    @field_validator('status')
-    def status_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['Created', 'Preview', 'Active', 'Analysis', 'Paused', 'Completed']):
-            raise ValueError("must be one of enum values ('Created', 'Preview', 'Active', 'Analysis', 'Paused', 'Completed')")
-        return value
 
     model_config = ConfigDict(
         populate_by_name=True,

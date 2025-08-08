@@ -30,7 +30,7 @@ class StreamsMetadata(BaseModel):
     has_audio: Optional[StrictBool] = Field(default=None, alias="hasAudio")
     has_video: Optional[StrictBool] = Field(default=None, alias="hasVideo")
     has_subtitles: Optional[StrictBool] = Field(default=None, alias="hasSubtitles")
-    visibilities: Optional[StrictStr] = None
+    visibilities: Optional[List[StrictStr]] = None
     __properties: ClassVar[List[str]] = ["_t", "hasAudio", "hasVideo", "hasSubtitles", "visibilities"]
 
     @field_validator('t')
@@ -38,6 +38,17 @@ class StreamsMetadata(BaseModel):
         """Validates the enum"""
         if value not in set(['StreamsMetadata']):
             raise ValueError("must be one of enum values ('StreamsMetadata')")
+        return value
+
+    @field_validator('visibilities')
+    def visibilities_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        for i in value:
+            if i not in set(['None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All']):
+                raise ValueError("each list item must be one of ('None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All')")
         return value
 
     model_config = ConfigDict(
