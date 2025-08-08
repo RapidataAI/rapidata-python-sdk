@@ -168,7 +168,7 @@ class RapidataOrderBuilder:
         validation_set = self.__validation_set_manager._create_order_validation_set(
             workflow=self.__workflow,
             order_name=self._name,
-            datapoints=random.sample(self.__datapoints, 20),
+            datapoints=random.sample(self.__datapoints, min(20, len(self.__datapoints))),
             settings=self.__settings,
         )
 
