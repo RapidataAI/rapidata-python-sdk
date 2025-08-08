@@ -127,7 +127,7 @@ class OpenAPIService:
     @property
     def benchmark_api(self) -> BenchmarkApi:
         return BenchmarkApi(self.api_client)
-    
+
     @property
     def participant_api(self) -> ParticipantApi:
         return ParticipantApi(self.api_client)
