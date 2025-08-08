@@ -20,7 +20,7 @@ class FreeTextWorkflow(Workflow):
     Args:
         instruction (str): The instruction to be presented for free text input.
         validation_system_prompt (str): The system prompt to determine if the provided free text response is spam or not.
-            Should always specifiy that the LLM should respond with 'not spam' or 'spam'.
+            Should always specify that the LLM should respond with 'not spam' or 'spam'.
     """
 
     def __init__(self, instruction: str, validation_system_prompt: str | None = None):
