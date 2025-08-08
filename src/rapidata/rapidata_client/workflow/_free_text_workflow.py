@@ -1,6 +1,8 @@
 from typing import Any
 from rapidata.api_client.models.simple_workflow_model import SimpleWorkflowModel
-from rapidata.api_client.models.simple_workflow_model_blueprint import SimpleWorkflowModelBlueprint
+from rapidata.api_client.models.simple_workflow_model_blueprint import (
+    SimpleWorkflowModelBlueprint,
+)
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.api_client.models.free_text_rapid_blueprint import FreeTextRapidBlueprint
 
@@ -17,11 +19,14 @@ class FreeTextWorkflow(Workflow):
 
     Args:
         instruction (str): The instruction to be presented for free text input.
+        validation_system_prompt (str): The system prompt to determine if the provided free text response is spam or not.
+            Should always specify that the LLM should respond with 'not spam' or 'spam'.
     """
 
-    def __init__(self, instruction: str):
+    def __init__(self, instruction: str, validation_system_prompt: str | None = None):
         super().__init__(type="SimpleWorkflowConfig")
         self._instruction = instruction
+        self._validation_system_prompt = validation_system_prompt
 
     def _to_dict(self) -> dict[str, Any]:
         return {
@@ -29,6 +34,7 @@ class FreeTextWorkflow(Workflow):
             "blueprint": {
                 "_t": "FreeTextBlueprint",
                 "question": self._instruction,
+                "validationSystemPrompt": self._validation_system_prompt,
             },
         }
 
@@ -36,6 +42,7 @@ class FreeTextWorkflow(Workflow):
         blueprint = FreeTextRapidBlueprint(
             _t="FreeTextBlueprint",
             question=self._instruction,
+            validationSystemPrompt=self._validation_system_prompt,
         )
 
         return SimpleWorkflowModel(
