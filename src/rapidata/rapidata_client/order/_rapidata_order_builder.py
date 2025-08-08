@@ -35,6 +35,7 @@ from rapidata.rapidata_client.selection._base_selection import RapidataSelection
 from rapidata.rapidata_client.settings import RapidataSetting
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.service.openapi_service import OpenAPIService
+from rapidata.rapidata_client.config.config import rapidata_config
 
 
 class RapidataOrderBuilder:
@@ -200,7 +201,8 @@ class RapidataOrderBuilder:
 
         logger.debug("Order created: %s", order)
 
-        self._set_validation_set_id()
+        if rapidata_config.enableBetaFeatures:
+            self._set_validation_set_id()
 
         logger.debug("Adding media to the order.")
 
