@@ -116,6 +116,5 @@ theme:
     - navigation.indexes
     - toc.follow
     - toc.integrate
-    - search.highlight
     - search.share
     - search.suggest
