@@ -131,6 +131,11 @@ class RapidataLeaderboard:
         """
         Sets the name of the leaderboard.
         """
+        if not isinstance(name, str):
+            raise ValueError("Name must be a string")
+        if len(name) < 1:
+            raise ValueError("Name must be at least 1 character long")
+
         self.__name = name
         self._update_config()
 
