@@ -168,6 +168,17 @@ class RapidataLeaderboard:
 
         return pd.DataFrame(standings)
 
+    def _custom_config(self, response_budget: int, min_responses_per_matchup: int):
+        self.__response_budget = response_budget
+        self.__min_responses_per_matchup = min_responses_per_matchup
+        self.__openapi_service.leaderboard_api.leaderboard_leaderboard_id_response_config_put(
+            leaderboard_id=self.id,
+            update_leaderboard_response_config_model=UpdateLeaderboardResponseConfigModel(
+                responseBudget=self.__response_budget,
+                minResponses=self.__min_responses_per_matchup,
+            ),
+        )
+
     def __str__(self) -> str:
         return f"RapidataLeaderboard(name={self.name}, instruction={self.instruction}, show_prompt={self.show_prompt}, leaderboard_id={self.id})"
 
