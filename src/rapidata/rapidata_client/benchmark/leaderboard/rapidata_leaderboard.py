@@ -1,12 +1,13 @@
+import urllib.parse
+import webbrowser
+from colorama import Fore
 import pandas as pd
 from typing import Literal, Optional
 
-from rapidata.rapidata_client.logging import logger
+from rapidata.rapidata_client.logging import logger, managed_print
 from rapidata.rapidata_client.benchmark._detail_mapper import DetailMapper
 from rapidata.service.openapi_service import OpenAPIService
-from rapidata.api_client.models.update_leaderboard_response_config_model import (
-    UpdateLeaderboardResponseConfigModel,
-)
+from rapidata.api_client.models.update_leaderboard_model import UpdateLeaderboardModel
 
 
 class RapidataLeaderboard:
@@ -32,6 +33,7 @@ class RapidataLeaderboard:
         inverse_ranking: bool,
         response_budget: int,
         min_responses_per_matchup: int,
+        benchmark_id: str,
         id: str,
         openapi_service: OpenAPIService,
     ):
@@ -43,7 +45,9 @@ class RapidataLeaderboard:
         self.__inverse_ranking = inverse_ranking
         self.__response_budget = response_budget
         self.__min_responses_per_matchup = min_responses_per_matchup
+        self.__benchmark_id = benchmark_id
         self.id = id
+        self.__leaderboard_page = f"https://app.{self.__openapi_service.environment}/mri/benchmarks/{self.__benchmark_id}/leaderboard/{self.id}"
 
     @property
     def level_of_detail(self) -> Literal["low", "medium", "high", "very high"]:
@@ -60,14 +64,8 @@ class RapidataLeaderboard:
         Sets the level of detail of the leaderboard.
         """
         logger.debug(f"Setting level of detail to {level_of_detail}")
-        self.__openapi_service.leaderboard_api.leaderboard_leaderboard_id_response_config_put(
-            leaderboard_id=self.id,
-            update_leaderboard_response_config_model=UpdateLeaderboardResponseConfigModel(
-                responseBudget=DetailMapper.get_budget(level_of_detail),
-                minResponses=self.__min_responses_per_matchup,
-            ),
-        )
         self.__response_budget = DetailMapper.get_budget(level_of_detail)
+        self._update_config()
 
     @property
     def min_responses_per_matchup(self) -> int:
@@ -90,14 +88,8 @@ class RapidataLeaderboard:
         logger.debug(
             f"Setting min responses per matchup to {min_responses} for leaderboard {self.name}"
         )
-        self.__openapi_service.leaderboard_api.leaderboard_leaderboard_id_response_config_put(
-            leaderboard_id=self.id,
-            update_leaderboard_response_config_model=UpdateLeaderboardResponseConfigModel(
-                responseBudget=self.__response_budget,
-                minResponses=min_responses,
-            ),
-        )
         self.__min_responses_per_matchup = min_responses
+        self._update_config()
 
     @property
     def show_prompt_asset(self) -> bool:
@@ -134,6 +126,14 @@ class RapidataLeaderboard:
         """
         return self.__name
 
+    @name.setter
+    def name(self, name: str):
+        """
+        Sets the name of the leaderboard.
+        """
+        self.__name = name
+        self._update_config()
+
     def get_standings(self, tags: Optional[list[str]] = None) -> pd.DataFrame:
         """
         Returns the standings of the leaderboard.
@@ -168,12 +168,32 @@ class RapidataLeaderboard:
 
         return pd.DataFrame(standings)
 
+    def view(self) -> None:
+        """
+        Views the leaderboard.
+        """
+        logger.info("Opening leaderboard page in browser...")
+        could_open_browser = webbrowser.open(self.__leaderboard_page)
+        if not could_open_browser:
+            encoded_url = urllib.parse.quote(
+                self.__leaderboard_page, safe="%/:=&?~#+!$,;'@()*[]"
+            )
+            managed_print(
+                Fore.RED
+                + f"Please open this URL in your browser: '{encoded_url}'"
+                + Fore.RESET
+            )
+
     def _custom_config(self, response_budget: int, min_responses_per_matchup: int):
         self.__response_budget = response_budget
         self.__min_responses_per_matchup = min_responses_per_matchup
-        self.__openapi_service.leaderboard_api.leaderboard_leaderboard_id_response_config_put(
+        self._update_config()
+
+    def _update_config(self):
+        self.__openapi_service.leaderboard_api.leaderboard_leaderboard_id_patch(
             leaderboard_id=self.id,
-            update_leaderboard_response_config_model=UpdateLeaderboardResponseConfigModel(
+            update_leaderboard_model=UpdateLeaderboardModel(
+                name=self.__name,
                 responseBudget=self.__response_budget,
                 minResponses=self.__min_responses_per_matchup,
             ),

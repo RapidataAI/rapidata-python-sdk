@@ -1,38 +1,41 @@
 import re
+import urllib.parse
+import webbrowser
+from colorama import Fore
 from typing import Literal, Optional, Sequence
-from rapidata.api_client.models.root_filter import RootFilter
-from rapidata.api_client.models.filter import Filter
-from rapidata.api_client.models.query_model import QueryModel
-from rapidata.api_client.models.page_info import PageInfo
-from rapidata.api_client.models.create_leaderboard_model import CreateLeaderboardModel
+
+from rapidata.api_client.models.and_user_filter_model_filters_inner import (
+    AndUserFilterModelFiltersInner,
+)
 from rapidata.api_client.models.create_benchmark_participant_model import (
     CreateBenchmarkParticipantModel,
 )
+from rapidata.api_client.models.create_leaderboard_model import CreateLeaderboardModel
+from rapidata.api_client.models.filter import Filter
+from rapidata.api_client.models.filter_operator import FilterOperator
+from rapidata.api_client.models.file_asset_model import FileAssetModel
+from rapidata.api_client.models.query_model import QueryModel
+from rapidata.api_client.models.page_info import PageInfo
+from rapidata.api_client.models.root_filter import RootFilter
+from rapidata.api_client.models.source_url_metadata_model import SourceUrlMetadataModel
 from rapidata.api_client.models.submit_prompt_model import SubmitPromptModel
 from rapidata.api_client.models.submit_prompt_model_prompt_asset import (
     SubmitPromptModelPromptAsset,
 )
 from rapidata.api_client.models.url_asset_input import UrlAssetInput
-from rapidata.api_client.models.file_asset_model import FileAssetModel
-from rapidata.api_client.models.source_url_metadata_model import SourceUrlMetadataModel
-from rapidata.api_client.models.and_user_filter_model_filters_inner import (
-    AndUserFilterModelFiltersInner,
-)
-from rapidata.api_client.models.filter_operator import FilterOperator
 
-from rapidata.rapidata_client.benchmark.participant._participant import (
-    BenchmarkParticipant,
-)
-from rapidata.rapidata_client.logging import logger
-from rapidata.service.openapi_service import OpenAPIService
-
+from rapidata.rapidata_client.benchmark._detail_mapper import DetailMapper
 from rapidata.rapidata_client.benchmark.leaderboard.rapidata_leaderboard import (
     RapidataLeaderboard,
 )
+from rapidata.rapidata_client.benchmark.participant._participant import (
+    BenchmarkParticipant,
+)
 from rapidata.rapidata_client.datapoints.assets import MediaAsset
-from rapidata.rapidata_client.benchmark._detail_mapper import DetailMapper
 from rapidata.rapidata_client.filter import RapidataFilter
+from rapidata.rapidata_client.logging import logger, managed_print
 from rapidata.rapidata_client.settings import RapidataSetting
+from rapidata.service.openapi_service import OpenAPIService
 
 
 class RapidataBenchmark:
@@ -56,6 +59,9 @@ class RapidataBenchmark:
         self.__leaderboards: list[RapidataLeaderboard] = []
         self.__identifiers: list[str] = []
         self.__tags: list[list[str]] = []
+        self.__benchmark_page: str = (
+            f"https://app.{self.__openapi_service.environment}/mri/benchmarks/{self.id}"
+        )
 
     def __instantiate_prompts(self) -> None:
         current_page = 1
@@ -178,6 +184,7 @@ class RapidataBenchmark:
                             leaderboard.is_inversed,
                             leaderboard.response_budget,
                             leaderboard.min_responses,
+                            self.id,
                             leaderboard.id,
                             self.__openapi_service,
                         )
@@ -329,6 +336,7 @@ class RapidataBenchmark:
             inverse_ranking,
             leaderboard_result.response_budget,
             min_responses_per_matchup,
+            self.id,
             leaderboard_result.id,
             self.__openapi_service,
         )
@@ -404,6 +412,22 @@ class RapidataBenchmark:
         self.__openapi_service.participant_api.participants_participant_id_submit_post(
             participant_id=participant_result.participant_id
         )
+
+    def view(self) -> None:
+        """
+        Views the benchmark.
+        """
+        logger.info("Opening benchmark page in browser...")
+        could_open_browser = webbrowser.open(self.__benchmark_page)
+        if not could_open_browser:
+            encoded_url = urllib.parse.quote(
+                self.__benchmark_page, safe="%/:=&?~#+!$,;'@()*[]"
+            )
+            managed_print(
+                Fore.RED
+                + f"Please open this URL in your browser: '{encoded_url}'"
+                + Fore.RESET
+            )
 
     def __str__(self) -> str:
         return f"RapidataBenchmark(name={self.name}, id={self.id})"
