@@ -18,6 +18,7 @@ from rapidata.api_client.models.source_url_metadata_model import SourceUrlMetada
 from rapidata.api_client.models.and_user_filter_model_filters_inner import (
     AndUserFilterModelFiltersInner,
 )
+from rapidata.api_client.models.filter_operator import FilterOperator
 
 from rapidata.rapidata_client.benchmark.participant._participant import (
     BenchmarkParticipant,
@@ -150,7 +151,7 @@ class RapidataBenchmark:
                                 filters=[
                                     Filter(
                                         field="BenchmarkId",
-                                        operator="Eq",
+                                        operator=FilterOperator.EQ,
                                         value=self.id,
                                     )
                                 ]

@@ -1,5 +1,5 @@
-from typing import Literal, Optional, cast, Sequence
-
+from typing import Literal, Optional, Sequence
+import random
 from rapidata.api_client.models.ab_test_selection_a_inner import AbTestSelectionAInner
 from rapidata.api_client.models.and_user_filter_model_filters_inner import (
     AndUserFilterModelFiltersInner,
@@ -11,14 +11,22 @@ from rapidata.api_client.models.create_order_model_referee import (
 from rapidata.api_client.models.create_order_model_workflow import (
     CreateOrderModelWorkflow,
 )
+from rapidata.api_client.models.sticky_state import StickyState
 
-from rapidata.rapidata_client.datapoints.datapoint import Datapoint
+from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.rapidata_client.exceptions.failed_upload_exception import (
     FailedUploadException,
     _parse_failed_uploads,
 )
 from rapidata.rapidata_client.filter import RapidataFilter
-from rapidata.rapidata_client.logging import logger, managed_print
+from rapidata.rapidata_client.logging import (
+    logger,
+    managed_print,
+    RapidataOutputManager,
+)
+from rapidata.rapidata_client.validation.validation_set_manager import (
+    ValidationSetManager,
+)
 from rapidata.rapidata_client.order._rapidata_dataset import RapidataDataset
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 from rapidata.rapidata_client.referee import Referee
@@ -27,6 +35,10 @@ from rapidata.rapidata_client.selection._base_selection import RapidataSelection
 from rapidata.rapidata_client.settings import RapidataSetting
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.service.openapi_service import OpenAPIService
+from rapidata.rapidata_client.config.rapidata_config import rapidata_config
+from rapidata.rapidata_client.api.rapidata_exception import (
+    suppress_rapidata_error_logging,
+)
 
 
 class RapidataOrderBuilder:
@@ -47,7 +59,7 @@ class RapidataOrderBuilder:
         self._name = name
         self.order_id: str | None = None
         self.__openapi_service = openapi_service
-        self.__dataset: Optional[RapidataDataset]
+        self.__dataset: Optional[RapidataDataset] = None
         self.__workflow: Workflow | None = None
         self.__referee: Referee | None = None
         self.__validation_set_id: str | None = None
@@ -56,7 +68,12 @@ class RapidataOrderBuilder:
         self.__selections: list[RapidataSelection] = []
         self.__priority: int | None = None
         self.__datapoints: list[Datapoint] = []
-        self.__sticky_state: Literal["None", "Temporary", "Permanent"] | None = None
+        self.__sticky_state_value: Literal["None", "Temporary", "Permanent"] | None = (
+            None
+        )
+        self.__validation_set_manager: ValidationSetManager = ValidationSetManager(
+            self.__openapi_service
+        )
 
     def _to_model(self) -> CreateOrderModel:
         """
@@ -99,8 +116,67 @@ class RapidataOrderBuilder:
                 else None
             ),
             priority=self.__priority,
-            stickyState=self.__sticky_state,
+            stickyState=(
+                StickyState(self.__sticky_state_value)
+                if self.__sticky_state_value
+                else None
+            ),
         )
+
+    def _set_validation_set_id(self) -> None:
+        """
+        Get the validation set ID for the order.
+        """
+        assert self.__workflow is not None
+        if self.__validation_set_id:
+            logger.debug(
+                "Using specified validation set with ID: %s", self.__validation_set_id
+            )
+            return
+
+        try:
+            with suppress_rapidata_error_logging():
+                self.__validation_set_id = (
+                    (
+                        self.__openapi_service.validation_api.validation_set_recommended_get(
+                            asset_type=[self.__datapoints[0].get_asset_type()],
+                            modality=[self.__workflow.modality],
+                            prompt_type=[
+                                t.value for t in self.__datapoints[0].get_prompt_type()
+                            ],
+                        )
+                    )
+                    .validation_sets[0]
+                    .id
+                )
+            logger.debug(
+                "Using recommended validation set with ID: %s", self.__validation_set_id
+            )
+        except Exception as e:
+            logger.info("No recommended validation set found, creating new one.")
+
+        if len(self.__datapoints) < rapidata_config.minOrderDatapointsForValidation:
+            logger.debug(
+                "No recommended validation set found, dataset too small to create one."
+            )
+            return
+
+        managed_print()
+        managed_print(
+            f"No recommended validation set found, new one will be created.\nWe recommend adding some truths to ensure the order is accurate."
+        )
+        validation_set = self.__validation_set_manager._create_order_validation_set(
+            workflow=self.__workflow,
+            order_name=self._name,
+            datapoints=random.sample(
+                self.__datapoints,
+                min(rapidata_config.autoValidationSetSize, len(self.__datapoints)),
+            ),
+            settings=self.__settings,
+        )
+
+        logger.debug("New validation set created for order: %s", validation_set)
+        self.__validation_set_id = validation_set.id
 
     def _create(self) -> RapidataOrder:
         """
@@ -116,6 +192,9 @@ class RapidataOrderBuilder:
         Returns:
             RapidataOrder: The created RapidataOrder instance.
         """
+        if rapidata_config.enableBetaFeatures:
+            self._set_validation_set_id()
+
         order_model = self._to_model()
         logger.debug("Creating order with model: %s", order_model)
 
@@ -358,5 +437,5 @@ class RapidataOrderBuilder:
                 "Sticky state must be of type Literal['None', 'Temporary', 'Permanent']."
             )
 
-        self.__sticky_state = sticky_state
+        self.__sticky_state_value = sticky_state
         return self

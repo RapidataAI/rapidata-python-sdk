@@ -7,5 +7,5 @@ from .capped_selection import CappedSelection
 from .shuffling_selection import ShufflingSelection
 from .ab_test_selection import AbTestSelection
 from .static_selection import StaticSelection
-from .retrieval_modes import RetrievalMode
+from .rapidata_retrieval_modes import RapidataRetrievalMode
 from .effort_selection import EffortSelection
