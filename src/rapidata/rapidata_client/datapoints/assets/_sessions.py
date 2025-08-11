@@ -2,7 +2,7 @@ import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-from rapidata.rapidata_client.config.config import rapidata_config
+from rapidata.rapidata_client.config.rapidata_config import rapidata_config
 
 
 class SessionManager:

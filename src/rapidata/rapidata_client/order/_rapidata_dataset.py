@@ -16,7 +16,7 @@ import threading
 from rapidata.rapidata_client.api.rapidata_exception import (
     suppress_rapidata_error_logging,
 )
-from rapidata.rapidata_client.config.config import rapidata_config
+from rapidata.rapidata_client.config.rapidata_config import rapidata_config
 
 
 def chunk_list(lst: list, chunk_size: int) -> Generator:

@@ -35,7 +35,7 @@ from rapidata.rapidata_client.selection._base_selection import RapidataSelection
 from rapidata.rapidata_client.settings import RapidataSetting
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.service.openapi_service import OpenAPIService
-from rapidata.rapidata_client.config.config import rapidata_config
+from rapidata.rapidata_client.config.rapidata_config import rapidata_config
 from rapidata.rapidata_client.api.rapidata_exception import (
     suppress_rapidata_error_logging,
 )
@@ -155,7 +155,7 @@ class RapidataOrderBuilder:
         except Exception as e:
             logger.info("No recommended validation set found, creating new one.")
 
-        if len(self.__datapoints) < 50:
+        if len(self.__datapoints) < rapidata_config.minOrderDatapointsForValidation:
             logger.debug(
                 "No recommended validation set found, dataset too small to create one."
             )
@@ -168,7 +168,10 @@ class RapidataOrderBuilder:
         validation_set = self.__validation_set_manager._create_order_validation_set(
             workflow=self.__workflow,
             order_name=self._name,
-            datapoints=random.sample(self.__datapoints, min(20, len(self.__datapoints))),
+            datapoints=random.sample(
+                self.__datapoints,
+                min(rapidata_config.autoValidationSetSize, len(self.__datapoints)),
+            ),
             settings=self.__settings,
         )
 
