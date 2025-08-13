@@ -1,3 +1,4 @@
+import secrets
 from typing import Optional, Any
 from rapidata.api_client.api_client import (
     ApiClient,
@@ -12,7 +13,7 @@ import threading
 from contextlib import contextmanager
 from rapidata.rapidata_client.config import logger, tracer
 from opentelemetry import trace
-from opentelemetry.trace import format_trace_id, format_span_id
+from opentelemetry.trace import format_trace_id, format_span_id, Link, SpanContext
 
 # Thread-local storage for controlling error logging
 _thread_local = threading.local()
@@ -123,27 +124,55 @@ class RapidataApiClient(ApiClient):
 
         # Add tracing headers if we have a valid span
         if current_span.is_recording():
-            span_context = current_span.get_span_context()
+            current_span_context = current_span.get_span_context()
 
-            # Format the traceparent header according to W3C Trace Context specification
-            # Format: 00-{trace_id}-{span_id}-{trace_flags}
-            trace_id = format_trace_id(span_context.trace_id)
-            span_id = format_span_id(span_context.span_id)
-            trace_flags = f"{span_context.trace_flags:02x}"
+            # Generate a new trace ID for backend communication
+            # This separates the backend trace from the SDK trace
+            backend_trace_id = int(secrets.token_hex(16), 16)
+            backend_span_id = int(secrets.token_hex(8), 16)
 
-            traceparent = f"00-{trace_id}-{span_id}-{trace_flags}"
-            header_params["traceparent"] = traceparent
+            # Create a link to maintain the relationship with the current span
+            link_to_backend = Link(
+                SpanContext(
+                    trace_id=backend_trace_id,
+                    span_id=backend_span_id,
+                    is_remote=True,
+                    trace_flags=current_span_context.trace_flags,
+                )
+            )
 
-            # Add tracestate if present
-            # if span_context.trace_state:
-            #     header_params["tracestate"] = span_context.trace_state.to_header()
+            # Create a span for the backend request with a link to the current span
+            # This span will use the current trace but we'll send different headers
+            with tracer.start_span(
+                f"backend_request_{method}_{resource_path.replace('/', '_')}",
+                links=[link_to_backend],
+            ) as backend_span:
+                # Set attributes for observability
+                backend_span.set_attribute("http.method", method)
+                backend_span.set_attribute("http.target", resource_path)
+                backend_span.set_attribute(
+                    "rapidata.backend_trace_id", format_trace_id(backend_trace_id)
+                )
+                backend_span.set_attribute(
+                    "rapidata.original_trace_id",
+                    format_trace_id(current_span_context.trace_id),
+                )
+
+                # Format the traceparent header with the NEW trace ID for backend
+                # Format: 00-{trace_id}-{span_id}-{trace_flags}
+                trace_flags = f"{current_span_context.trace_flags:02x}"
+
+                traceparent = f"00-{format_trace_id(backend_trace_id)}-{format_span_id(backend_span_id)}-{trace_flags}"
+                header_params["traceparent"] = traceparent
+
+                # Don't send tracestate since we're starting a new trace for the backend
 
         return super().param_serialize(
             method,
             resource_path,
             path_params,
             query_params,
-            header_params,  # Pass the updated header_params
+            header_params,
             body,
             post_params,
             files,
