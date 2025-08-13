@@ -3,8 +3,7 @@ import time
 from tqdm import tqdm
 
 from rapidata.rapidata_client.datapoints.assets import MediaAsset
-from rapidata.rapidata_client.logging import logger
-from rapidata.rapidata_client.logging.output_manager import RapidataOutputManager
+from rapidata.rapidata_client.config import logger
 from rapidata.api_client.models.create_sample_model import CreateSampleModel
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.config.rapidata_config import rapidata_config
@@ -42,7 +41,7 @@ class BenchmarkParticipant:
             urls = [asset.path]
 
         last_exception = None
-        for attempt in range(rapidata_config.uploadMaxRetries):
+        for attempt in range(rapidata_config.upload.uploadMaxRetries):
             try:
                 with suppress_rapidata_error_logging():
                     self.__openapi_service.participant_api.participant_participant_id_sample_post(
@@ -56,7 +55,7 @@ class BenchmarkParticipant:
 
             except Exception as e:
                 last_exception = e
-                if attempt < rapidata_config.uploadMaxRetries - 1:
+                if attempt < rapidata_config.upload.uploadMaxRetries - 1:
                     # Exponential backoff: wait 1s, then 2s, then 4s
                     retry_delay = 2**attempt
                     time.sleep(retry_delay)
@@ -64,7 +63,7 @@ class BenchmarkParticipant:
                     logger.debug(
                         "Retrying %s of %s...",
                         attempt + 1,
-                        rapidata_config.uploadMaxRetries,
+                        rapidata_config.upload.uploadMaxRetries,
                     )
 
         logger.error(f"Upload failed for {identifier}. Error: {str(last_exception)}")
@@ -90,7 +89,7 @@ class BenchmarkParticipant:
         total_uploads = len(assets)
 
         with ThreadPoolExecutor(
-            max_workers=rapidata_config.maxUploadWorkers
+            max_workers=rapidata_config.upload.maxUploadWorkers
         ) as executor:
             futures = [
                 executor.submit(
@@ -104,7 +103,7 @@ class BenchmarkParticipant:
             with tqdm(
                 total=total_uploads,
                 desc="Uploading media",
-                disable=RapidataOutputManager.silent_mode,
+                disable=rapidata_config.logging.silent_mode,
             ) as pbar:
                 for future in as_completed(futures):
                     try:

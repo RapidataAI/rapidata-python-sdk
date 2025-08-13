@@ -11,7 +11,7 @@ from typing import Dict, List, Optional, Tuple
 import requests
 from colorama import Fore
 from pydantic import BaseModel
-from rapidata.rapidata_client.logging import logger, managed_print
+from rapidata.rapidata_client.config import logger, managed_print
 
 
 class ClientCredential(BaseModel):

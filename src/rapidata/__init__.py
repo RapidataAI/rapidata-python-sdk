@@ -38,9 +38,8 @@ from .rapidata_client import (
     Box,
     Datapoint,
     PromptMetadata,
-    logger,
-    configure_logger,
-    RapidataOutputManager,
     FailedUploadException,
     rapidata_config,
+    logger,
+    managed_print,
 )

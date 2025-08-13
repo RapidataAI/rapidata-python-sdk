@@ -14,7 +14,7 @@ from rapidata.api_client.api.participant_api import ParticipantApi
 from rapidata.api_client.configuration import Configuration
 from rapidata.service.credential_manager import CredentialManager
 from rapidata.rapidata_client.api.rapidata_exception import RapidataApiClient
-from rapidata.rapidata_client.logging import logger
+from rapidata.rapidata_client.config import logger
 
 
 class OpenAPIService:

@@ -6,11 +6,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
 
 from typing import Generator
-from rapidata.rapidata_client.logging import (
-    logger,
-    managed_print,
-    RapidataOutputManager,
-)
+from rapidata.rapidata_client.config import logger, managed_print
 import time
 import threading
 from rapidata.rapidata_client.api.rapidata_exception import (
@@ -67,7 +63,7 @@ class RapidataDataset:
 
         total_uploads = len(datapoints)
         with ThreadPoolExecutor(
-            max_workers=rapidata_config.maxUploadWorkers
+            max_workers=rapidata_config.upload.maxUploadWorkers
         ) as executor:
             future_to_datapoint = {
                 executor.submit(upload_text_datapoint, datapoint, index=i): datapoint
@@ -77,7 +73,7 @@ class RapidataDataset:
             with tqdm(
                 total=total_uploads,
                 desc="Uploading text datapoints",
-                disable=RapidataOutputManager.silent_mode,
+                disable=rapidata_config.logging.silent_mode,
             ) as pbar:
                 for future in as_completed(future_to_datapoint.keys()):
                     datapoint = future_to_datapoint[future]
@@ -119,7 +115,7 @@ class RapidataDataset:
         urls = datapoint.get_urls()
 
         last_exception = None
-        for attempt in range(rapidata_config.uploadMaxRetries):
+        for attempt in range(rapidata_config.upload.uploadMaxRetries):
             try:
                 with suppress_rapidata_error_logging():
                     self.openapi_service.dataset_api.dataset_dataset_id_datapoints_post(
@@ -136,7 +132,7 @@ class RapidataDataset:
 
             except Exception as e:
                 last_exception = e
-                if attempt < rapidata_config.uploadMaxRetries - 1:
+                if attempt < rapidata_config.upload.uploadMaxRetries - 1:
                     # Exponential backoff: wait 1s, then 2s, then 4s
                     retry_delay = 2**attempt
                     time.sleep(retry_delay)
@@ -144,13 +140,13 @@ class RapidataDataset:
                     logger.debug(
                         "Retrying %s of %s...",
                         attempt + 1,
-                        rapidata_config.uploadMaxRetries,
+                        rapidata_config.upload.uploadMaxRetries,
                     )
 
         # If we get here, all retries failed
         local_failed.append(datapoint)
         tqdm.write(
-            f"Upload failed for {datapoint} after {rapidata_config.uploadMaxRetries} attempts. \nFinal error: \n{str(last_exception)}"
+            f"Upload failed for {datapoint} after {rapidata_config.upload.uploadMaxRetries} attempts. \nFinal error: \n{str(last_exception)}"
         )
 
         return local_successful, local_failed
@@ -183,7 +179,7 @@ class RapidataDataset:
                 with tqdm(
                     total=total_uploads,
                     desc="Uploading datapoints",
-                    disable=RapidataOutputManager.silent_mode,
+                    disable=rapidata_config.logging.silent_mode,
                 ) as pbar:
                     prev_ready = 0
                     prev_failed = 0
@@ -293,7 +289,7 @@ class RapidataDataset:
 
         try:
             with ThreadPoolExecutor(
-                max_workers=rapidata_config.maxUploadWorkers
+                max_workers=rapidata_config.upload.maxUploadWorkers
             ) as executor:
                 # Process uploads in chunks to avoid overwhelming the system
                 for chunk_idx, chunk in enumerate(chunk_list(datapoints, chunk_size)):

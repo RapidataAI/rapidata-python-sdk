@@ -15,8 +15,7 @@ from rapidata.rapidata_client.validation.validation_set_manager import (
 
 from rapidata.rapidata_client.demographic.demographic_manager import DemographicManager
 
-from rapidata.rapidata_client.logging import logger, managed_print
-from rapidata.rapidata_client.config.rapidata_config import rapidata_config
+from rapidata.rapidata_client.config import logger, managed_print, rapidata_config
 
 
 class RapidataClient:

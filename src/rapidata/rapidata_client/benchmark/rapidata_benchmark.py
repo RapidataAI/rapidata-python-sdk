@@ -33,7 +33,7 @@ from rapidata.rapidata_client.benchmark.participant._participant import (
 )
 from rapidata.rapidata_client.datapoints.assets import MediaAsset
 from rapidata.rapidata_client.filter import RapidataFilter
-from rapidata.rapidata_client.logging import logger, managed_print
+from rapidata.rapidata_client.config import logger, managed_print
 from rapidata.rapidata_client.settings import RapidataSetting
 from rapidata.service.openapi_service import OpenAPIService
 

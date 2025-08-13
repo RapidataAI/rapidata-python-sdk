@@ -24,7 +24,7 @@ from rapidata.rapidata_client.datapoints.metadata._media_asset_metadata import (
     MediaAssetMetadata,
 )
 from rapidata.rapidata_client.datapoints.metadata._prompt_metadata import PromptMetadata
-from rapidata.rapidata_client.logging import logger
+from rapidata.rapidata_client.config import logger
 
 
 class Datapoint:

@@ -4,7 +4,7 @@ from colorama import Fore
 import pandas as pd
 from typing import Literal, Optional
 
-from rapidata.rapidata_client.logging import logger, managed_print
+from rapidata.rapidata_client.config import logger, managed_print
 from rapidata.rapidata_client.benchmark._detail_mapper import DetailMapper
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.api_client.models.update_leaderboard_model import UpdateLeaderboardModel

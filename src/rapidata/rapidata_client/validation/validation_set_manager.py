@@ -23,11 +23,7 @@ from rapidata.api_client.models.filter_operator import FilterOperator
 
 from rapidata.rapidata_client.validation.rapids.box import Box
 
-from rapidata.rapidata_client.logging import (
-    logger,
-    managed_print,
-    RapidataOutputManager,
-)
+from rapidata.rapidata_client.config import logger, managed_print, rapidata_config
 from tqdm import tqdm
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
@@ -599,7 +595,7 @@ class ValidationSetManager:
         for rapid in tqdm(
             rapids,
             desc="Uploading validation tasks",
-            disable=RapidataOutputManager.silent_mode,
+            disable=rapidata_config.logging.silent_mode,
         ):
             try:
                 validation_set.add_rapid(rapid)

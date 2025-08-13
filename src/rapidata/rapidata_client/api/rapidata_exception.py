@@ -4,7 +4,7 @@ from rapidata.api_client.exceptions import ApiException
 import json
 import threading
 from contextlib import contextmanager
-from rapidata.rapidata_client.logging import logger
+from rapidata.rapidata_client.config import logger
 
 # Thread-local storage for controlling error logging
 _thread_local = threading.local()

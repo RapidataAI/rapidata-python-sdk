@@ -33,7 +33,7 @@ from rapidata.rapidata_client.filter import RapidataFilter
 from rapidata.rapidata_client.filter.rapidata_filters import RapidataFilters
 from rapidata.rapidata_client.settings import RapidataSettings, RapidataSetting
 from rapidata.rapidata_client.selection.rapidata_selections import RapidataSelections
-from rapidata.rapidata_client.logging import logger, RapidataOutputManager
+from rapidata.rapidata_client.config import logger, rapidata_config
 
 from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.page_info import PageInfo
@@ -693,7 +693,7 @@ class RapidataOrderManager:
         for asset in tqdm(
             assets,
             desc="Downloading assets and checking duration",
-            disable=RapidataOutputManager.silent_mode,
+            disable=rapidata_config.logging.silent_mode,
         ):
             if not asset.get_duration():
                 raise ValueError(

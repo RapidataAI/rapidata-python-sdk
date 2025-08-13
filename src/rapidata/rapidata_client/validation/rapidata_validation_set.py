@@ -3,7 +3,7 @@ import urllib.parse
 from colorama import Fore
 from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 from rapidata.service.openapi_service import OpenAPIService
-from rapidata.rapidata_client.logging import logger, managed_print
+from rapidata.rapidata_client.config import logger, managed_print
 from rapidata.api_client.models.update_dimensions_model import UpdateDimensionsModel
 from rapidata.api_client.models.update_should_alert_model import UpdateShouldAlertModel
 

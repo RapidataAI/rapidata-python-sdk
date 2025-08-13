@@ -20,11 +20,7 @@ from rapidata.api_client.models.preliminary_download_model import (
 from rapidata.api_client.models.workflow_artifact_model import WorkflowArtifactModel
 from rapidata.rapidata_client.order.rapidata_results import RapidataResults
 from rapidata.service.openapi_service import OpenAPIService
-from rapidata.rapidata_client.logging import (
-    logger,
-    managed_print,
-    RapidataOutputManager,
-)
+from rapidata.rapidata_client.config import logger, managed_print, rapidata_config
 from rapidata.rapidata_client.api.rapidata_exception import (
     suppress_rapidata_error_logging,
 )
@@ -150,7 +146,7 @@ class RapidataOrder:
             desc="Processing order",
             unit="%",
             bar_format="{desc}: {percentage:3.0f}%|{bar}| completed [{elapsed}<{remaining}, {rate_fmt}]",
-            disable=RapidataOutputManager.silent_mode,
+            disable=rapidata_config.logging.silent_mode,
         ) as pbar:
             last_percentage = 0
             while True:

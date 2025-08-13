@@ -19,11 +19,7 @@ from rapidata.rapidata_client.exceptions.failed_upload_exception import (
     _parse_failed_uploads,
 )
 from rapidata.rapidata_client.filter import RapidataFilter
-from rapidata.rapidata_client.logging import (
-    logger,
-    managed_print,
-    RapidataOutputManager,
-)
+from rapidata.rapidata_client.config import logger, managed_print
 from rapidata.rapidata_client.validation.validation_set_manager import (
     ValidationSetManager,
 )
@@ -155,7 +151,10 @@ class RapidataOrderBuilder:
         except Exception as e:
             logger.info("No recommended validation set found, creating new one.")
 
-        if len(self.__datapoints) < rapidata_config.minOrderDatapointsForValidation:
+        if (
+            len(self.__datapoints)
+            < rapidata_config.order.minOrderDatapointsForValidation
+        ):
             logger.debug(
                 "No recommended validation set found, dataset too small to create one."
             )
@@ -170,7 +169,9 @@ class RapidataOrderBuilder:
             order_name=self._name,
             datapoints=random.sample(
                 self.__datapoints,
-                min(rapidata_config.autoValidationSetSize, len(self.__datapoints)),
+                min(
+                    rapidata_config.order.autoValidationSetSize, len(self.__datapoints)
+                ),
             ),
             settings=self.__settings,
         )
