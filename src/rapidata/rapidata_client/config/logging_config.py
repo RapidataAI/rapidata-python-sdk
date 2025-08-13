@@ -26,12 +26,14 @@ class LoggingConfig(BaseModel):
         log_file (str | None): The logging file. Defaults to None.
         format (str): The logging format. Defaults to "%(asctime)s - %(name)s - %(levelname)s - %(message)s".
         silent_mode (bool): Whether to disable the prints and progress bars. Does NOT affect the logging. Defaults to False.
+        enable_otlp (bool): Whether to enable OpenTelemetry trace logs. Defaults to True.
     """
 
     level: str = Field(default="WARNING")
     log_file: str | None = Field(default=None)
     format: str = Field(default="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     silent_mode: bool = Field(default=False)
+    enable_otlp: bool = Field(default=True)
 
     def __setattr__(self, name: str, value) -> None:
         super().__setattr__(name, value)
@@ -40,8 +42,8 @@ class LoggingConfig(BaseModel):
     def _update_logger(self) -> None:
         global _otlp_initialized, _otlp_handler
 
-        # Initialize OTLP logging only once
-        if not _otlp_initialized:
+        # Initialize OTLP logging only once and only if not disabled
+        if not _otlp_initialized and self.enable_otlp:
             try:
                 logger_provider = LoggerProvider(
                     resource=Resource.create(
@@ -89,13 +91,15 @@ class LoggingConfig(BaseModel):
         # Configure the logger
         logger.setLevel(logging.DEBUG)  # Logger must allow DEBUG for OTLP
 
-        # Remove any existing handlers (except OTLP)
+        # Remove any existing handlers (except OTLP when appropriate)
         for handler in logger.handlers[:]:
             if handler != _otlp_handler:
                 logger.removeHandler(handler)
+            elif handler == _otlp_handler and not self.enable_otlp:
+                logger.removeHandler(handler)
 
-        # Add OTLP handler if initialized
-        if _otlp_handler and _otlp_handler not in logger.handlers:
+        # Add OTLP handler if initialized and not disabled
+        if _otlp_handler and _otlp_handler not in logger.handlers and self.enable_otlp:
             logger.addHandler(_otlp_handler)
 
         # Add console handler
