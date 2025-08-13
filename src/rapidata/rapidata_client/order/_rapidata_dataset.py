@@ -9,7 +9,7 @@ from typing import Generator
 from rapidata.rapidata_client.config import logger, managed_print
 import time
 import threading
-from rapidata.rapidata_client.api.rapidata_exception import (
+from rapidata.rapidata_client.api.rapidata_api_client import (
     suppress_rapidata_error_logging,
 )
 from rapidata.rapidata_client.config.rapidata_config import rapidata_config

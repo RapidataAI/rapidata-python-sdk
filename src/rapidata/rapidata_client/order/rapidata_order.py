@@ -21,7 +21,7 @@ from rapidata.api_client.models.workflow_artifact_model import WorkflowArtifactM
 from rapidata.rapidata_client.order.rapidata_results import RapidataResults
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.config import logger, managed_print, rapidata_config
-from rapidata.rapidata_client.api.rapidata_exception import (
+from rapidata.rapidata_client.api.rapidata_api_client import (
     suppress_rapidata_error_logging,
 )
 

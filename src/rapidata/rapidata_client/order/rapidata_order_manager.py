@@ -1,6 +1,7 @@
 from typing import Sequence, Optional, Literal
 from itertools import zip_longest
 
+from rapidata.rapidata_client.config.tracer import tracer
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 from rapidata.rapidata_client.order._rapidata_order_builder import RapidataOrderBuilder
@@ -316,45 +317,47 @@ class RapidataOrderManager:
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
+        with tracer.start_as_current_span("RapidataOrderManager.create_compare_order"):
+            if any(type(datapoint) != list for datapoint in datapoints):
+                raise ValueError("Each datapoint must be a list of 2 paths/texts")
 
-        if any(type(datapoint) != list for datapoint in datapoints):
-            raise ValueError("Each datapoint must be a list of 2 paths/texts")
+            if any(len(datapoint) != 2 for datapoint in datapoints):
+                raise ValueError("Each datapoint must contain exactly two options")
 
-        if any(len(datapoint) != 2 for datapoint in datapoints):
-            raise ValueError("Each datapoint must contain exactly two options")
+            if a_b_names is not None and len(a_b_names) != 2:
+                raise ValueError(
+                    "A_B_naming must be a list of exactly two strings or None"
+                )
 
-        if a_b_names is not None and len(a_b_names) != 2:
-            raise ValueError("A_B_naming must be a list of exactly two strings or None")
+            if data_type == "media":
+                assets = [
+                    MultiAsset([MediaAsset(path=path) for path in datapoint])
+                    for datapoint in datapoints
+                ]
+            elif data_type == "text":
+                assets = [
+                    MultiAsset([TextAsset(text=text) for text in datapoint])
+                    for datapoint in datapoints
+                ]
+            else:
+                raise ValueError(
+                    f"Unsupported data type: {data_type}, must be one of 'media' or 'text'"
+                )
 
-        if data_type == "media":
-            assets = [
-                MultiAsset([MediaAsset(path=path) for path in datapoint])
-                for datapoint in datapoints
-            ]
-        elif data_type == "text":
-            assets = [
-                MultiAsset([TextAsset(text=text) for text in datapoint])
-                for datapoint in datapoints
-            ]
-        else:
-            raise ValueError(
-                f"Unsupported data type: {data_type}, must be one of 'media' or 'text'"
+            return self._create_general_order(
+                name=name,
+                workflow=CompareWorkflow(instruction=instruction, a_b_names=a_b_names),
+                assets=assets,
+                responses_per_datapoint=responses_per_datapoint,
+                contexts=contexts,
+                media_contexts=media_contexts,
+                validation_set_id=validation_set_id,
+                confidence_threshold=confidence_threshold,
+                filters=filters,
+                selections=selections,
+                settings=settings,
+                private_notes=private_notes,
             )
-
-        return self._create_general_order(
-            name=name,
-            workflow=CompareWorkflow(instruction=instruction, a_b_names=a_b_names),
-            assets=assets,
-            responses_per_datapoint=responses_per_datapoint,
-            contexts=contexts,
-            media_contexts=media_contexts,
-            validation_set_id=validation_set_id,
-            confidence_threshold=confidence_threshold,
-            filters=filters,
-            selections=selections,
-            settings=settings,
-            private_notes=private_notes,
-        )
 
     def create_ranking_order(
         self,

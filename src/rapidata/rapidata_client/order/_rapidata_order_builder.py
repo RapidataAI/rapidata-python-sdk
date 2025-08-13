@@ -32,7 +32,7 @@ from rapidata.rapidata_client.settings import RapidataSetting
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.config.rapidata_config import rapidata_config
-from rapidata.rapidata_client.api.rapidata_exception import (
+from rapidata.rapidata_client.api.rapidata_api_client import (
     suppress_rapidata_error_logging,
 )
 

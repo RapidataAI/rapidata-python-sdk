@@ -15,7 +15,12 @@ from rapidata.rapidata_client.validation.validation_set_manager import (
 
 from rapidata.rapidata_client.demographic.demographic_manager import DemographicManager
 
-from rapidata.rapidata_client.config import logger, managed_print, rapidata_config
+from rapidata.rapidata_client.config import (
+    logger,
+    tracer,
+    managed_print,
+    rapidata_config,
+)
 
 
 class RapidataClient:
@@ -47,31 +52,36 @@ class RapidataClient:
             order (RapidataOrderManager): The RapidataOrderManager instance.
             validation (ValidationSetManager): The ValidationSetManager instance.
         """
-        logger.debug("Checking version")
-        self._check_version()
+        with tracer.start_as_current_span("RapidataClient.__init__"):
+            logger.debug("Checking version")
+            self._check_version()
 
-        logger.debug("Initializing OpenAPIService")
-        self._openapi_service = OpenAPIService(
-            client_id=client_id,
-            client_secret=client_secret,
-            environment=environment,
-            oauth_scope=oauth_scope,
-            cert_path=cert_path,
-            token=token,
-            leeway=leeway,
-        )
+            logger.debug("Initializing OpenAPIService")
+            self._openapi_service = OpenAPIService(
+                client_id=client_id,
+                client_secret=client_secret,
+                environment=environment,
+                oauth_scope=oauth_scope,
+                cert_path=cert_path,
+                token=token,
+                leeway=leeway,
+            )
 
-        logger.debug("Initializing RapidataOrderManager")
-        self.order = RapidataOrderManager(openapi_service=self._openapi_service)
+            logger.debug("Initializing RapidataOrderManager")
+            self.order = RapidataOrderManager(openapi_service=self._openapi_service)
 
-        logger.debug("Initializing ValidationSetManager")
-        self.validation = ValidationSetManager(openapi_service=self._openapi_service)
+            logger.debug("Initializing ValidationSetManager")
+            self.validation = ValidationSetManager(
+                openapi_service=self._openapi_service
+            )
 
-        logger.debug("Initializing DemographicManager")
-        self._demographic = DemographicManager(openapi_service=self._openapi_service)
+            logger.debug("Initializing DemographicManager")
+            self._demographic = DemographicManager(
+                openapi_service=self._openapi_service
+            )
 
-        logger.debug("Initializing RapidataBenchmarkManager")
-        self.mri = RapidataBenchmarkManager(openapi_service=self._openapi_service)
+            logger.debug("Initializing RapidataBenchmarkManager")
+            self.mri = RapidataBenchmarkManager(openapi_service=self._openapi_service)
 
     def reset_credentials(self):
         """Reset the credentials saved in the configuration file for the current environment."""
@@ -95,6 +105,10 @@ class RapidataClient:
                     managed_print(
                         f"""A new version of the Rapidata SDK is available: {latest_version}
 Your current version is: {__version__}"""
+                    )
+                else:
+                    logger.debug(
+                        "Current version is up to date. Version: %s", __version__
                     )
         except Exception as e:
             logger.debug("Failed to check for updates: %s", e)

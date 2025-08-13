@@ -1,20 +1,22 @@
-import logging
+from typing import Callable
 from pydantic import BaseModel, Field
-from opentelemetry._logs import set_logger_provider
-from opentelemetry.exporter.otlp.proto.http._log_exporter import OTLPLogExporter
-from opentelemetry.sdk._logs import LoggerProvider, LoggingHandler
-from opentelemetry.sdk._logs.export import BatchLogRecordProcessor
-from opentelemetry.sdk.resources import Resource
-from rapidata import __version__
 
-# from rapidata.rapidata_client.logging import logger
+# Type alias for config update handlers
+ConfigUpdateHandler = Callable[["LoggingConfig"], None]
 
-# Module-level flag to track OTLP initialization
-_otlp_initialized = False
-_otlp_handler = None
+# Global list to store registered handlers
+_config_handlers: list[ConfigUpdateHandler] = []
 
-# Create module-level logger
-logger = logging.getLogger("rapidata")
+
+def register_config_handler(handler: ConfigUpdateHandler) -> None:
+    """Register a handler to be called when the logging configuration updates."""
+    _config_handlers.append(handler)
+
+
+def unregister_config_handler(handler: ConfigUpdateHandler) -> None:
+    """Unregister a previously registered handler."""
+    if handler in _config_handlers:
+        _config_handlers.remove(handler)
 
 
 class LoggingConfig(BaseModel):
@@ -37,78 +39,16 @@ class LoggingConfig(BaseModel):
 
     def __setattr__(self, name: str, value) -> None:
         super().__setattr__(name, value)
-        self._update_logger()
+        self._notify_handlers()
 
-    def _update_logger(self) -> None:
-        global _otlp_initialized, _otlp_handler
-
-        # Initialize OTLP logging only once and only if not disabled
-        if not _otlp_initialized and self.enable_otlp:
+    def _notify_handlers(self) -> None:
+        """Notify all registered handlers that the configuration has updated."""
+        for handler in _config_handlers:
             try:
-                logger_provider = LoggerProvider(
-                    resource=Resource.create(
-                        {
-                            "service.name": "Rapidata.Python.SDK",
-                            "service.version": __version__,
-                        }
-                    ),
-                )
-                set_logger_provider(logger_provider)
-
-                exporter = OTLPLogExporter(
-                    endpoint="https://otlp-sdk.rapidata.ai/v1/logs",
-                    timeout=30,
-                )
-
-                processor = BatchLogRecordProcessor(
-                    exporter,
-                    max_queue_size=2048,
-                    export_timeout_millis=30000,
-                    max_export_batch_size=512,
-                )
-
-                logger_provider.add_log_record_processor(processor)
-
-                # OTLP handler - captures DEBUG and above
-                _otlp_handler = LoggingHandler(logger_provider=logger_provider)
-                _otlp_handler.setLevel(logging.DEBUG)  # OTLP gets everything
-
-                _otlp_initialized = True
-
+                handler(self)
             except Exception as e:
-                logger.warning(f"Warning: Failed to initialize OTLP logging: {e}")
-                import traceback
+                # Log the error but don't let one handler failure break others
+                print(f"Warning: Config handler failed: {e}")
 
-                traceback.print_exc()
 
-        # Console handler with configurable level
-        console_handler = logging.StreamHandler()
-        console_level = getattr(logging, self.level.upper())
-        console_handler.setLevel(console_level)
-        console_formatter = logging.Formatter(self.format)
-        console_handler.setFormatter(console_formatter)
-
-        # Configure the logger
-        logger.setLevel(logging.DEBUG)  # Logger must allow DEBUG for OTLP
-
-        # Remove any existing handlers (except OTLP when appropriate)
-        for handler in logger.handlers[:]:
-            if handler != _otlp_handler:
-                logger.removeHandler(handler)
-            elif handler == _otlp_handler and not self.enable_otlp:
-                logger.removeHandler(handler)
-
-        # Add OTLP handler if initialized and not disabled
-        if _otlp_handler and _otlp_handler not in logger.handlers and self.enable_otlp:
-            logger.addHandler(_otlp_handler)
-
-        # Add console handler
-        logger.addHandler(console_handler)
-
-        # Add file handler if log_file is provided
-        if self.log_file:
-            file_handler = logging.FileHandler(self.log_file)
-            file_handler.setLevel(console_level)  # Use same level as console
-            file_formatter = logging.Formatter(self.format)
-            file_handler.setFormatter(file_formatter)
-            logger.addHandler(file_handler)
+# Tracer is now handled in tracer.py with event-based updates

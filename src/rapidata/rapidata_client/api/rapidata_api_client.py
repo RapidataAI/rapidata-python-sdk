@@ -1,10 +1,18 @@
 from typing import Optional, Any
-from rapidata.api_client.api_client import ApiClient, rest, ApiResponse, ApiResponseT
+from rapidata.api_client.api_client import (
+    ApiClient,
+    rest,
+    ApiResponse,
+    ApiResponseT,
+    RequestSerialized,
+)
 from rapidata.api_client.exceptions import ApiException
 import json
 import threading
 from contextlib import contextmanager
-from rapidata.rapidata_client.config import logger
+from rapidata.rapidata_client.config import logger, tracer
+from opentelemetry import trace
+from opentelemetry.trace import format_trace_id, format_span_id
 
 # Thread-local storage for controlling error logging
 _thread_local = threading.local()
@@ -90,6 +98,60 @@ class RapidataError(Exception):
 
 class RapidataApiClient(ApiClient):
     """Custom API client that wraps errors in RapidataError."""
+
+    def param_serialize(
+        self,
+        method,
+        resource_path,
+        path_params=None,
+        query_params=None,
+        header_params=None,
+        body=None,
+        post_params=None,
+        files=None,
+        auth_settings=None,
+        collection_formats=None,
+        _host=None,
+        _request_auth=None,
+    ) -> RequestSerialized:
+        # Get the current span from OpenTelemetry
+        current_span = trace.get_current_span()
+
+        # Initialize header_params if it's None
+        if header_params is None:
+            header_params = {}
+
+        # Add tracing headers if we have a valid span
+        if current_span.is_recording():
+            span_context = current_span.get_span_context()
+
+            # Format the traceparent header according to W3C Trace Context specification
+            # Format: 00-{trace_id}-{span_id}-{trace_flags}
+            trace_id = format_trace_id(span_context.trace_id)
+            span_id = format_span_id(span_context.span_id)
+            trace_flags = f"{span_context.trace_flags:02x}"
+
+            traceparent = f"00-{trace_id}-{span_id}-{trace_flags}"
+            header_params["traceparent"] = traceparent
+
+            # Add tracestate if present
+            # if span_context.trace_state:
+            #     header_params["tracestate"] = span_context.trace_state.to_header()
+
+        return super().param_serialize(
+            method,
+            resource_path,
+            path_params,
+            query_params,
+            header_params,  # Pass the updated header_params
+            body,
+            post_params,
+            files,
+            auth_settings,
+            collection_formats,
+            _host,
+            _request_auth,
+        )
 
     def response_deserialize(
         self,
