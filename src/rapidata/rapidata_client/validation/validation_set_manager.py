@@ -653,15 +653,16 @@ class ValidationSetManager:
             RapidataValidationSet: The ValidationSet instance.
         """
 
-        validation_set = (
-            self.__openapi_service.validation_api.validation_set_validation_set_id_get(
+        with tracer.start_as_current_span(
+            "ValidationSetManager.get_validation_set_by_id"
+        ):
+            validation_set = self.__openapi_service.validation_api.validation_set_validation_set_id_get(
                 validation_set_id=validation_set_id
             )
-        )
 
-        return RapidataValidationSet(
-            validation_set_id, str(validation_set.name), self.__openapi_service
-        )
+            return RapidataValidationSet(
+                validation_set_id, str(validation_set.name), self.__openapi_service
+            )
 
     def find_validation_sets(
         self, name: str = "", amount: int = 1
@@ -675,31 +676,32 @@ class ValidationSetManager:
         Returns:
             list[RapidataValidationSet]: The list of validation sets.
         """
+        with tracer.start_as_current_span("ValidationSetManager.find_validation_sets"):
 
-        validation_page_result = (
-            self.__openapi_service.validation_api.validation_sets_get(
-                QueryModel(
-                    page=PageInfo(index=1, size=amount),
-                    filter=RootFilter(
-                        filters=[
-                            Filter(
-                                field="Name",
-                                operator=FilterOperator.CONTAINS,
-                                value=name,
+            validation_page_result = (
+                self.__openapi_service.validation_api.validation_sets_get(
+                    QueryModel(
+                        page=PageInfo(index=1, size=amount),
+                        filter=RootFilter(
+                            filters=[
+                                Filter(
+                                    field="Name",
+                                    operator=FilterOperator.CONTAINS,
+                                    value=name,
+                                )
+                            ]
+                        ),
+                        sortCriteria=[
+                            SortCriterion(
+                                direction=SortDirection.DESC, propertyName="CreatedAt"
                             )
-                        ]
-                    ),
-                    sortCriteria=[
-                        SortCriterion(
-                            direction=SortDirection.DESC, propertyName="CreatedAt"
-                        )
-                    ],
+                        ],
+                    )
                 )
             )
-        )
 
-        validation_sets = [
-            self.get_validation_set_by_id(str(validation_set.id))
-            for validation_set in validation_page_result.items
-        ]
-        return validation_sets
+            validation_sets = [
+                self.get_validation_set_by_id(str(validation_set.id))
+                for validation_set in validation_page_result.items
+            ]
+            return validation_sets

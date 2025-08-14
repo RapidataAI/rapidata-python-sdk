@@ -1,7 +1,6 @@
 from typing import Optional
 from rapidata.rapidata_client.benchmark.rapidata_benchmark import RapidataBenchmark
 from rapidata.api_client.models.create_benchmark_model import CreateBenchmarkModel
-from rapidata.rapidata_client.config import tracer
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.page_info import PageInfo
@@ -10,7 +9,7 @@ from rapidata.api_client.models.filter import Filter
 from rapidata.api_client.models.sort_criterion import SortCriterion
 from rapidata.api_client.models.sort_direction import SortDirection
 from rapidata.api_client.models.filter_operator import FilterOperator
-from rapidata.rapidata_client.config import logger
+from rapidata.rapidata_client.config import logger, tracer
 
 
 class RapidataBenchmarkManager:
@@ -139,14 +138,17 @@ class RapidataBenchmarkManager:
         """
         Returns a benchmark by its ID.
         """
-        benchmark_result = (
-            self.__openapi_service.benchmark_api.benchmark_benchmark_id_get(
-                benchmark_id=id
+        with tracer.start_as_current_span(
+            "RapidataBenchmarkManager.get_benchmark_by_id"
+        ):
+            benchmark_result = (
+                self.__openapi_service.benchmark_api.benchmark_benchmark_id_get(
+                    benchmark_id=id
+                )
             )
-        )
-        return RapidataBenchmark(
-            benchmark_result.name, benchmark_result.id, self.__openapi_service
-        )
+            return RapidataBenchmark(
+                benchmark_result.name, benchmark_result.id, self.__openapi_service
+            )
 
     def find_benchmarks(
         self, name: str = "", amount: int = 10
@@ -154,24 +156,27 @@ class RapidataBenchmarkManager:
         """
         Returns a list of benchmarks by their name.
         """
-        benchmark_result = self.__openapi_service.benchmark_api.benchmarks_get(
-            QueryModel(
-                page=PageInfo(index=1, size=amount),
-                filter=RootFilter(
-                    filters=[
-                        Filter(
-                            field="Name", operator=FilterOperator.CONTAINS, value=name
+        with tracer.start_as_current_span("RapidataBenchmarkManager.find_benchmarks"):
+            benchmark_result = self.__openapi_service.benchmark_api.benchmarks_get(
+                QueryModel(
+                    page=PageInfo(index=1, size=amount),
+                    filter=RootFilter(
+                        filters=[
+                            Filter(
+                                field="Name",
+                                operator=FilterOperator.CONTAINS,
+                                value=name,
+                            )
+                        ]
+                    ),
+                    sortCriteria=[
+                        SortCriterion(
+                            direction=SortDirection.DESC, propertyName="CreatedAt"
                         )
-                    ]
-                ),
-                sortCriteria=[
-                    SortCriterion(
-                        direction=SortDirection.DESC, propertyName="CreatedAt"
-                    )
-                ],
+                    ],
+                )
             )
-        )
-        return [
-            RapidataBenchmark(benchmark.name, benchmark.id, self.__openapi_service)
-            for benchmark in benchmark_result.items
-        ]
+            return [
+                RapidataBenchmark(benchmark.name, benchmark.id, self.__openapi_service)
+                for benchmark in benchmark_result.items
+            ]

@@ -4,7 +4,7 @@ from colorama import Fore
 import pandas as pd
 from typing import Literal, Optional
 
-from rapidata.rapidata_client.config import logger, managed_print
+from rapidata.rapidata_client.config import logger, managed_print, tracer
 from rapidata.rapidata_client.benchmark._detail_mapper import DetailMapper
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.api_client.models.update_leaderboard_model import UpdateLeaderboardModel
@@ -63,9 +63,10 @@ class RapidataLeaderboard:
         """
         Sets the level of detail of the leaderboard.
         """
-        logger.debug(f"Setting level of detail to {level_of_detail}")
-        self.__response_budget = DetailMapper.get_budget(level_of_detail)
-        self._update_config()
+        with tracer.start_as_current_span("RapidataLeaderboard.level_of_detail.setter"):
+            logger.debug(f"Setting level of detail to {level_of_detail}")
+            self.__response_budget = DetailMapper.get_budget(level_of_detail)
+            self._update_config()
 
     @property
     def min_responses_per_matchup(self) -> int:
@@ -79,17 +80,20 @@ class RapidataLeaderboard:
         """
         Sets the minimum number of responses required to be considered for the leaderboard.
         """
-        if not isinstance(min_responses, int):
-            raise ValueError("Min responses per matchup must be an integer")
+        with tracer.start_as_current_span(
+            "RapidataLeaderboard.min_responses_per_matchup.setter"
+        ):
+            if not isinstance(min_responses, int):
+                raise ValueError("Min responses per matchup must be an integer")
 
-        if min_responses < 3:
-            raise ValueError("Min responses per matchup must be at least 3")
+            if min_responses < 3:
+                raise ValueError("Min responses per matchup must be at least 3")
 
-        logger.debug(
-            f"Setting min responses per matchup to {min_responses} for leaderboard {self.name}"
-        )
-        self.__min_responses_per_matchup = min_responses
-        self._update_config()
+            logger.debug(
+                f"Setting min responses per matchup to {min_responses} for leaderboard {self.name}"
+            )
+            self.__min_responses_per_matchup = min_responses
+            self._update_config()
 
     @property
     def show_prompt_asset(self) -> bool:
@@ -131,13 +135,14 @@ class RapidataLeaderboard:
         """
         Sets the name of the leaderboard.
         """
-        if not isinstance(name, str):
-            raise ValueError("Name must be a string")
-        if len(name) < 1:
-            raise ValueError("Name must be at least 1 character long")
+        with tracer.start_as_current_span("RapidataLeaderboard.name.setter"):
+            if not isinstance(name, str):
+                raise ValueError("Name must be a string")
+            if len(name) < 1:
+                raise ValueError("Name must be at least 1 character long")
 
-        self.__name = name
-        self._update_config()
+            self.__name = name
+            self._update_config()
 
     def get_standings(self, tags: Optional[list[str]] = None) -> pd.DataFrame:
         """
@@ -151,27 +156,27 @@ class RapidataLeaderboard:
         Returns:
             A pandas DataFrame containing the standings of the leaderboard.
         """
-
-        participants = self.__openapi_service.leaderboard_api.leaderboard_leaderboard_id_standings_get(
-            leaderboard_id=self.id, tags=tags
-        )
-
-        standings = []
-        for participant in participants.items:
-            standings.append(
-                {
-                    "name": participant.name,
-                    "wins": participant.wins,
-                    "total_matches": participant.total_matches,
-                    "score": (
-                        round(participant.score, 2)
-                        if participant.score is not None
-                        else None
-                    ),
-                }
+        with tracer.start_as_current_span("RapidataLeaderboard.get_standings"):
+            participants = self.__openapi_service.leaderboard_api.leaderboard_leaderboard_id_standings_get(
+                leaderboard_id=self.id, tags=tags
             )
 
-        return pd.DataFrame(standings)
+            standings = []
+            for participant in participants.items:
+                standings.append(
+                    {
+                        "name": participant.name,
+                        "wins": participant.wins,
+                        "total_matches": participant.total_matches,
+                        "score": (
+                            round(participant.score, 2)
+                            if participant.score is not None
+                            else None
+                        ),
+                    }
+                )
+
+            return pd.DataFrame(standings)
 
     def view(self) -> None:
         """
@@ -195,14 +200,15 @@ class RapidataLeaderboard:
         self._update_config()
 
     def _update_config(self):
-        self.__openapi_service.leaderboard_api.leaderboard_leaderboard_id_patch(
-            leaderboard_id=self.id,
-            update_leaderboard_model=UpdateLeaderboardModel(
-                name=self.__name,
-                responseBudget=self.__response_budget,
-                minResponses=self.__min_responses_per_matchup,
-            ),
-        )
+        with tracer.start_as_current_span("RapidataLeaderboard._update_config"):
+            self.__openapi_service.leaderboard_api.leaderboard_leaderboard_id_patch(
+                leaderboard_id=self.id,
+                update_leaderboard_model=UpdateLeaderboardModel(
+                    name=self.__name,
+                    responseBudget=self.__response_budget,
+                    minResponses=self.__min_responses_per_matchup,
+                ),
+            )
 
     def __str__(self) -> str:
         return f"RapidataLeaderboard(name={self.name}, instruction={self.instruction}, show_prompt={self.show_prompt}, leaderboard_id={self.id})"
