@@ -103,7 +103,7 @@ class RapidataTracer:
                 self._otlp_initialized = True
 
             except Exception as e:
-                print(f"Warning: Failed to initialize tracing: {e}")
+                logger.warning(f"Failed to initialize tracing: {e}")
                 self._enabled = False
 
     def start_span(self, name: str, *args, **kwargs) -> Any:

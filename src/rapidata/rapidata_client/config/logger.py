@@ -86,7 +86,7 @@ class RapidataLogger:
                 self._otlp_initialized = True
 
             except Exception as e:
-                self._logger.warning(f"Warning: Failed to initialize OTLP logging: {e}")
+                self._logger.warning(f"Failed to initialize OTLP logging: {e}")
                 import traceback
 
                 traceback.print_exc()
