@@ -1,7 +1,9 @@
 from typing import Any
 from rapidata.rapidata_client.filter._base_filter import RapidataFilter
 from rapidata.api_client.models.not_user_filter_model import NotUserFilterModel
-from rapidata.api_client.models.and_user_filter_model_filters_inner import AndUserFilterModelFiltersInner
+from rapidata.api_client.models.and_user_filter_model_filters_inner import (
+    AndUserFilterModelFiltersInner,
+)
 
 
 class NotFilter(RapidataFilter):
@@ -10,21 +12,31 @@ class NotFilter(RapidataFilter):
 
     Args:
         filter (RapidataFilter): The filter whose condition should be negated.
-        
+
     Example:
         ```python
         from rapidata import NotFilter, LanguageFilter
 
-        NotFilter(LanguageFilter(["en"])) 
+        NotFilter(LanguageFilter(["en"]))
         ```
 
         This will limit the order to be shown to only people who have their phone set to a language other than English.
     """
+
     def __init__(self, filter: RapidataFilter):
         if not isinstance(filter, RapidataFilter):
             raise ValueError("Filter must be a RapidataFilter object")
-        
+
         self.filter = filter
 
     def _to_model(self):
-        return NotUserFilterModel(_t="NotFilter", filter=AndUserFilterModelFiltersInner(self.filter._to_model()))
+        return NotUserFilterModel(
+            _t="NotFilter",
+            filter=AndUserFilterModelFiltersInner(self.filter._to_model()),
+        )
+
+    def __str__(self) -> str:
+        return f"NotFilter(filter={self.filter})"
+
+    def __repr__(self) -> str:
+        return f"NotFilter(filter={self.filter!r})"

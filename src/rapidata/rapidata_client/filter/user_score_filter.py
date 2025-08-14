@@ -7,28 +7,34 @@ from rapidata.api_client.models.user_score_user_filter_model import (
 
 class UserScoreFilter(RapidataFilter):
     """UserScoreFilter Class
-    
+
     Can be used to filter who to target based on their user score.
-    
+
     Args:
         lower_bound (float): The lower bound of the user score.
         upper_bound (float): The upper bound of the user score.
         dimension (str): The dimension of the userScore to be considerd for the filter.
 
-    Example: 
+    Example:
         ```python
         UserScoreFilter(0.5, 0.9)
         ```
         This will only show the order to users that have a UserScore of >=0.5 and <=0.9
     """
-    def __init__(self, lower_bound: float = 0.0, upper_bound: float = 1.0, dimension: str | None = None):
+
+    def __init__(
+        self,
+        lower_bound: float = 0.0,
+        upper_bound: float = 1.0,
+        dimension: str | None = None,
+    ):
         if lower_bound < 0 or lower_bound > 1:
             raise ValueError("The lower bound must be between 0 and 1.")
         if upper_bound < 0 or upper_bound > 1:
             raise ValueError("The upper bound must be between 0 and 1.")
         if lower_bound >= upper_bound:
             raise ValueError("The lower bound must be less than the upper bound.")
-        
+
         self.upper_bound = upper_bound
         self.lower_bound = lower_bound
         self.dimension = dimension
@@ -40,3 +46,9 @@ class UserScoreFilter(RapidataFilter):
             lowerbound=self.lower_bound,
             dimension=self.dimension,
         )
+
+    def __str__(self) -> str:
+        return f"UserScoreFilter(lower_bound={self.lower_bound}, upper_bound={self.upper_bound}, dimension={self.dimension})"
+
+    def __repr__(self) -> str:
+        return f"UserScoreFilter(lower_bound={self.lower_bound!r}, upper_bound={self.upper_bound!r}, dimension={self.dimension!r})"

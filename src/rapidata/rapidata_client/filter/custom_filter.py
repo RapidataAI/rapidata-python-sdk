@@ -8,10 +8,10 @@ class CustomFilter(RapidataFilter):
 
     Can be used to filter who to target based on custom filters.
 
-    Ought to be used with contact to Rapidata. 
-    
+    Ought to be used with contact to Rapidata.
+
     Warning: If identifier does not exist, order will not get any responses.
-    
+
     Args:
         identifier (str): Identifier of the custom filter.
         values (list[str]): List of values to filter by.
@@ -27,3 +27,9 @@ class CustomFilter(RapidataFilter):
             identifier=self.identifier,
             values=self.values,
         )
+
+    def __str__(self) -> str:
+        return f"CustomFilter(identifier={self.identifier}, values={self.values})"
+
+    def __repr__(self) -> str:
+        return f"CustomFilter(identifier={self.identifier!r}, values={self.values!r})"

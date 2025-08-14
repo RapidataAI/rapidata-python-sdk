@@ -7,7 +7,7 @@ class CountryFilter(RapidataFilter):
     """CountryFilter Class
 
     Can be used to filter who to target based on country codes.
-    
+
     Args:
         country_codes (list[str]): List of country codes (capitalized) to filter by.
     """
@@ -16,7 +16,7 @@ class CountryFilter(RapidataFilter):
         # check that all characters in the country codes are uppercase
         if not isinstance(country_codes, list):
             raise ValueError("Country codes must be a list")
-        
+
         if not all([code.isupper() for code in country_codes]):
             raise ValueError("Country codes must be uppercase")
 
@@ -24,3 +24,9 @@ class CountryFilter(RapidataFilter):
 
     def _to_model(self):
         return CountryUserFilterModel(_t="CountryFilter", countries=self.country_codes)
+
+    def __str__(self) -> str:
+        return f"CountryFilter(country_codes={self.country_codes})"
+
+    def __repr__(self) -> str:
+        return f"CountryFilter(country_codes={self.country_codes!r})"

@@ -55,3 +55,9 @@ class CompareWorkflow(Workflow):
             _t="ComparePayload",
             criteria=self._instruction,
         )
+
+    def __str__(self) -> str:
+        return f"CompareWorkflow(instruction='{self._instruction}', a_b_names={self._a_b_names})"
+
+    def __repr__(self) -> str:
+        return f"CompareWorkflow(instruction={self._instruction!r}, a_b_names={self._a_b_names!r})"

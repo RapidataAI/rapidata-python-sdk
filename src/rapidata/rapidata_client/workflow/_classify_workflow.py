@@ -63,3 +63,9 @@ class ClassifyWorkflow(Workflow):
             possibleCategories=self._answer_options,
             title=self._instruction,
         )
+
+    def __str__(self) -> str:
+        return f"ClassifyWorkflow(instruction='{self._instruction}', options={self._answer_options})"
+
+    def __repr__(self) -> str:
+        return f"ClassifyWorkflow(instruction='{self._instruction}', answer_options={self._answer_options!r})"

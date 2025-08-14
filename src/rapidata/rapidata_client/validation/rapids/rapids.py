@@ -109,3 +109,9 @@ class Rapid:
                 else None
             ),
         )
+
+    def __str__(self) -> str:
+        return f"Rapid(asset={self.asset}, metadata={self.metadata}, payload={self.payload}, truth={self.truth}, randomCorrectProbability={self.randomCorrectProbability}, explanation={self.explanation}, settings={self.settings})"
+
+    def __repr__(self) -> str:
+        return self.__str__()

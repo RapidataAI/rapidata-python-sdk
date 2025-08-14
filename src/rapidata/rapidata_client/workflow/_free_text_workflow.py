@@ -60,3 +60,9 @@ class FreeTextWorkflow(Workflow):
             _t="FreeTextPayload",
             question=self._instruction,
         )
+
+    def __str__(self) -> str:
+        return f"FreeTextWorkflow(instruction='{self._instruction}', validation_system_prompt={self._validation_system_prompt})"
+
+    def __repr__(self) -> str:
+        return f"FreeTextWorkflow(instruction={self._instruction!r}, validation_system_prompt={self._validation_system_prompt!r})"

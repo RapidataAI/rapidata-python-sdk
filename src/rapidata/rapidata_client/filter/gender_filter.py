@@ -6,10 +6,10 @@ from rapidata.rapidata_client.filter.models.gender import Gender
 
 class GenderFilter(RapidataFilter):
     """GenderFilter Class
-    
+
     Can be used to filter who to target based on their gender.
-    
-    
+
+
     Args:
         genders (list[Gender]): List of genders to filter by."""
 
@@ -21,3 +21,9 @@ class GenderFilter(RapidataFilter):
             _t="GenderFilter",
             genders=[gender._to_backend_model() for gender in self.genders],
         )
+
+    def __str__(self) -> str:
+        return f"GenderFilter(genders={self.genders})"
+
+    def __repr__(self) -> str:
+        return f"GenderFilter(genders={self.genders!r})"

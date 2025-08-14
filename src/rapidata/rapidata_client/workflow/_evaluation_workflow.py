@@ -31,3 +31,9 @@ class EvaluationWorkflow(Workflow):
 
     def _to_payload(self, datapoint: Datapoint):
         raise NotImplementedError("EvaluationWorkflow does not have a payload")
+
+    def __str__(self) -> str:
+        return f"EvaluationWorkflow(validation_set_id='{self.validation_set_id}', should_accept_incorrect={self.should_accept_incorrect})"
+
+    def __repr__(self) -> str:
+        return f"EvaluationWorkflow(validation_set_id={self.validation_set_id!r}, should_accept_incorrect={self.should_accept_incorrect!r})"

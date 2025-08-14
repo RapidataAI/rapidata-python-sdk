@@ -41,3 +41,9 @@ class TimestampWorkflow(Workflow):
             _t="ScrubPayload",
             target=self._instruction,
         )
+
+    def __str__(self) -> str:
+        return f"TimestampWorkflow(instruction='{self._instruction}')"
+
+    def __repr__(self) -> str:
+        return f"TimestampWorkflow(instruction={self._instruction!r})"

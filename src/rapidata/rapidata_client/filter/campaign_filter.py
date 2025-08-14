@@ -11,7 +11,7 @@ class CampaignFilter(RapidataFilter):
     Can be used to filter who to target based on campaign IDs.
 
     This filter can only be used when directly in contact with Rapidata.
-    
+
     Args:
         campaign_ids (list[str]): List of campaign IDs to filter by.
     """
@@ -24,3 +24,9 @@ class CampaignFilter(RapidataFilter):
             _t="CampaignFilter",
             campaignIds=self.campaign_ids,
         )
+
+    def __str__(self) -> str:
+        return f"CampaignFilter(campaign_ids={self.campaign_ids})"
+
+    def __repr__(self) -> str:
+        return f"CampaignFilter(campaign_ids={self.campaign_ids!r})"

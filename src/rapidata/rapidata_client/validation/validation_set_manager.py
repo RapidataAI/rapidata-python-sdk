@@ -23,7 +23,12 @@ from rapidata.api_client.models.filter_operator import FilterOperator
 
 from rapidata.rapidata_client.validation.rapids.box import Box
 
-from rapidata.rapidata_client.config import logger, managed_print, rapidata_config
+from rapidata.rapidata_client.config import (
+    logger,
+    managed_print,
+    rapidata_config,
+    tracer,
+)
 from tqdm import tqdm
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
@@ -52,17 +57,20 @@ class ValidationSetManager:
         datapoints: list[Datapoint],
         settings: Sequence[RapidataSetting] | None = None,
     ) -> RapidataValidationSet:
-        rapids: list[Rapid] = []
-        for datapoint in datapoints:
-            rapids.append(
-                Rapid(
-                    asset=datapoint.asset,
-                    payload=workflow._to_payload(datapoint),
-                    metadata=datapoint.metadata,
-                    settings=settings,
+        with tracer.start_as_current_span(
+            "ValidationSetManager._create_order_validation_set"
+        ):
+            rapids: list[Rapid] = []
+            for datapoint in datapoints:
+                rapids.append(
+                    Rapid(
+                        asset=datapoint.asset,
+                        payload=workflow._to_payload(datapoint),
+                        metadata=datapoint.metadata,
+                        settings=settings,
+                    )
                 )
-            )
-        return self._submit(name=order_name, rapids=rapids, dimensions=[])
+            return self._submit(name=order_name, rapids=rapids, dimensions=[])
 
     def create_classification_set(
         self,
@@ -107,50 +115,53 @@ class ValidationSetManager:
             ```
             This would mean: first datapoint correct answer is "yes", second datapoint is "no" or "maybe"
         """
-        if not datapoints:
-            raise ValueError("Datapoints cannot be empty")
+        with tracer.start_as_current_span(
+            "ValidationSetManager.create_classification_set"
+        ):
+            if not datapoints:
+                raise ValueError("Datapoints cannot be empty")
 
-        if len(datapoints) != len(truths):
-            raise ValueError("The number of datapoints and truths must be equal")
+            if len(datapoints) != len(truths):
+                raise ValueError("The number of datapoints and truths must be equal")
 
-        if not all([isinstance(truth, (list, tuple)) for truth in truths]):
-            raise ValueError("Truths must be a list of lists or tuples")
+            if not all([isinstance(truth, (list, tuple)) for truth in truths]):
+                raise ValueError("Truths must be a list of lists or tuples")
 
-        if contexts and len(contexts) != len(datapoints):
-            raise ValueError("The number of contexts and datapoints must be equal")
+            if contexts and len(contexts) != len(datapoints):
+                raise ValueError("The number of contexts and datapoints must be equal")
 
-        if media_contexts and len(media_contexts) != len(datapoints):
-            raise ValueError(
-                "The number of media contexts and datapoints must be equal"
-            )
-
-        if explanations and len(explanations) != len(datapoints):
-            raise ValueError(
-                "The number of explanations and datapoints must be equal, the index must align, but can be padded with None"
-            )
-
-        logger.debug("Creating classification rapids")
-        rapids: list[Rapid] = []
-        for i in range(len(datapoints)):
-            rapid_metadata = []
-            if contexts:
-                rapid_metadata.append(PromptMetadata(contexts[i]))
-            if media_contexts:
-                rapid_metadata.append(MediaAssetMetadata(media_contexts[i]))
-            rapids.append(
-                self.rapid.classification_rapid(
-                    instruction=instruction,
-                    answer_options=answer_options,
-                    datapoint=datapoints[i],
-                    truths=truths[i],
-                    data_type=data_type,
-                    metadata=rapid_metadata,
-                    explanation=explanations[i] if explanations != None else None,
+            if media_contexts and len(media_contexts) != len(datapoints):
+                raise ValueError(
+                    "The number of media contexts and datapoints must be equal"
                 )
-            )
 
-        logger.debug("Submitting classification rapids")
-        return self._submit(name=name, rapids=rapids, dimensions=dimensions)
+            if explanations and len(explanations) != len(datapoints):
+                raise ValueError(
+                    "The number of explanations and datapoints must be equal, the index must align, but can be padded with None"
+                )
+
+            logger.debug("Creating classification rapids")
+            rapids: list[Rapid] = []
+            for i in range(len(datapoints)):
+                rapid_metadata = []
+                if contexts:
+                    rapid_metadata.append(PromptMetadata(contexts[i]))
+                if media_contexts:
+                    rapid_metadata.append(MediaAssetMetadata(media_contexts[i]))
+                rapids.append(
+                    self.rapid.classification_rapid(
+                        instruction=instruction,
+                        answer_options=answer_options,
+                        datapoint=datapoints[i],
+                        truths=truths[i],
+                        data_type=data_type,
+                        metadata=rapid_metadata,
+                        explanation=explanations[i] if explanations != None else None,
+                    )
+                )
+
+            logger.debug("Submitting classification rapids")
+            return self._submit(name=name, rapids=rapids, dimensions=dimensions)
 
     def create_compare_set(
         self,
@@ -194,49 +205,50 @@ class ValidationSetManager:
             ```
             This would mean: first comparison image1.jpg has a cat, second comparison image4.jpg has a cat
         """
-        if not datapoints:
-            raise ValueError("Datapoints cannot be empty")
+        with tracer.start_as_current_span("ValidationSetManager.create_compare_set"):
+            if not datapoints:
+                raise ValueError("Datapoints cannot be empty")
 
-        if len(datapoints) != len(truths):
-            raise ValueError("The number of datapoints and truths must be equal")
+            if len(datapoints) != len(truths):
+                raise ValueError("The number of datapoints and truths must be equal")
 
-        if not all([isinstance(truth, str) for truth in truths]):
-            raise ValueError("Truths must be a list of strings")
+            if not all([isinstance(truth, str) for truth in truths]):
+                raise ValueError("Truths must be a list of strings")
 
-        if contexts and len(contexts) != len(datapoints):
-            raise ValueError("The number of contexts and datapoints must be equal")
+            if contexts and len(contexts) != len(datapoints):
+                raise ValueError("The number of contexts and datapoints must be equal")
 
-        if media_contexts and len(media_contexts) != len(datapoints):
-            raise ValueError(
-                "The number of media contexts and datapoints must be equal"
-            )
-
-        if explanation and len(explanation) != len(datapoints):
-            raise ValueError(
-                "The number of explanations and datapoints must be equal, the index must align, but can be padded with None"
-            )
-
-        logger.debug("Creating comparison rapids")
-        rapids: list[Rapid] = []
-        for i in range(len(datapoints)):
-            rapid_metadata = []
-            if contexts:
-                rapid_metadata.append(PromptMetadata(contexts[i]))
-            if media_contexts:
-                rapid_metadata.append(MediaAssetMetadata(media_contexts[i]))
-            rapids.append(
-                self.rapid.compare_rapid(
-                    instruction=instruction,
-                    truth=truths[i],
-                    datapoint=datapoints[i],
-                    data_type=data_type,
-                    metadata=rapid_metadata,
-                    explanation=explanation[i] if explanation != None else None,
+            if media_contexts and len(media_contexts) != len(datapoints):
+                raise ValueError(
+                    "The number of media contexts and datapoints must be equal"
                 )
-            )
 
-        logger.debug("Submitting comparison rapids")
-        return self._submit(name=name, rapids=rapids, dimensions=dimensions)
+            if explanation and len(explanation) != len(datapoints):
+                raise ValueError(
+                    "The number of explanations and datapoints must be equal, the index must align, but can be padded with None"
+                )
+
+            logger.debug("Creating comparison rapids")
+            rapids: list[Rapid] = []
+            for i in range(len(datapoints)):
+                rapid_metadata = []
+                if contexts:
+                    rapid_metadata.append(PromptMetadata(contexts[i]))
+                if media_contexts:
+                    rapid_metadata.append(MediaAssetMetadata(media_contexts[i]))
+                rapids.append(
+                    self.rapid.compare_rapid(
+                        instruction=instruction,
+                        truth=truths[i],
+                        datapoint=datapoints[i],
+                        data_type=data_type,
+                        metadata=rapid_metadata,
+                        explanation=explanation[i] if explanation != None else None,
+                    )
+                )
+
+            logger.debug("Submitting comparison rapids")
+            return self._submit(name=name, rapids=rapids, dimensions=dimensions)
 
     def create_select_words_set(
         self,
@@ -276,39 +288,42 @@ class ValidationSetManager:
             ```
             This would mean: first datapoint the correct words are "this" and "example", second datapoint is "with"
         """
-        if not datapoints:
-            raise ValueError("Datapoints cannot be empty")
+        with tracer.start_as_current_span(
+            "ValidationSetManager.create_select_words_set"
+        ):
+            if not datapoints:
+                raise ValueError("Datapoints cannot be empty")
 
-        if not all([isinstance(truth, (list, tuple)) for truth in truths]):
-            raise ValueError("Truths must be a list of lists or tuples")
+            if not all([isinstance(truth, (list, tuple)) for truth in truths]):
+                raise ValueError("Truths must be a list of lists or tuples")
 
-        if len(datapoints) != len(truths) or len(datapoints) != len(sentences):
-            raise ValueError(
-                "The number of datapoints, truths, and sentences must be equal"
-            )
-
-        if explanation and len(explanation) != len(datapoints):
-            raise ValueError(
-                "The number of explanations and datapoints must be equal, the index must align, but can be padded with None"
-            )
-
-        logger.debug("Creating select words rapids")
-        rapids: list[Rapid] = []
-        for i in range(len(datapoints)):
-            rapids.append(
-                self.rapid.select_words_rapid(
-                    instruction=instruction,
-                    truths=truths[i],
-                    datapoint=datapoints[i],
-                    sentence=sentences[i],
-                    required_precision=required_precision,
-                    required_completeness=required_completeness,
-                    explanation=explanation[i] if explanation != None else None,
+            if len(datapoints) != len(truths) or len(datapoints) != len(sentences):
+                raise ValueError(
+                    "The number of datapoints, truths, and sentences must be equal"
                 )
-            )
 
-        logger.debug("Submitting select words rapids")
-        return self._submit(name=name, rapids=rapids, dimensions=dimensions)
+            if explanation and len(explanation) != len(datapoints):
+                raise ValueError(
+                    "The number of explanations and datapoints must be equal, the index must align, but can be padded with None"
+                )
+
+            logger.debug("Creating select words rapids")
+            rapids: list[Rapid] = []
+            for i in range(len(datapoints)):
+                rapids.append(
+                    self.rapid.select_words_rapid(
+                        instruction=instruction,
+                        truths=truths[i],
+                        datapoint=datapoints[i],
+                        sentence=sentences[i],
+                        required_precision=required_precision,
+                        required_completeness=required_completeness,
+                        explanation=explanation[i] if explanation != None else None,
+                    )
+                )
+
+            logger.debug("Submitting select words rapids")
+            return self._submit(name=name, rapids=rapids, dimensions=dimensions)
 
     def create_locate_set(
         self,
@@ -345,49 +360,50 @@ class ValidationSetManager:
             ```
             This would mean: first datapoint the object is in the top left corner, second datapoint the object is in the center
         """
-        if not datapoints:
-            raise ValueError("Datapoints cannot be empty")
+        with tracer.start_as_current_span("ValidationSetManager.create_locate_set"):
+            if not datapoints:
+                raise ValueError("Datapoints cannot be empty")
 
-        if len(datapoints) != len(truths):
-            raise ValueError("The number of datapoints and truths must be equal")
+            if len(datapoints) != len(truths):
+                raise ValueError("The number of datapoints and truths must be equal")
 
-        if not all([isinstance(truth, (list, tuple)) for truth in truths]):
-            raise ValueError("Truths must be a list of lists or tuples")
+            if not all([isinstance(truth, (list, tuple)) for truth in truths]):
+                raise ValueError("Truths must be a list of lists or tuples")
 
-        if contexts and len(contexts) != len(datapoints):
-            raise ValueError("The number of contexts and datapoints must be equal")
+            if contexts and len(contexts) != len(datapoints):
+                raise ValueError("The number of contexts and datapoints must be equal")
 
-        if media_contexts and len(media_contexts) != len(datapoints):
-            raise ValueError(
-                "The number of media contexts and datapoints must be equal"
-            )
-
-        if explanation and len(explanation) != len(datapoints):
-            raise ValueError(
-                "The number of explanations and datapoints must be equal, the index must align, but can be padded with None"
-            )
-
-        logger.debug("Creating locate rapids")
-        rapids = []
-        rapids: list[Rapid] = []
-        for i in range(len(datapoints)):
-            rapid_metadata = []
-            if contexts:
-                rapid_metadata.append(PromptMetadata(contexts[i]))
-            if media_contexts:
-                rapid_metadata.append(MediaAssetMetadata(media_contexts[i]))
-            rapids.append(
-                self.rapid.locate_rapid(
-                    instruction=instruction,
-                    truths=truths[i],
-                    datapoint=datapoints[i],
-                    metadata=rapid_metadata,
-                    explanation=explanation[i] if explanation != None else None,
+            if media_contexts and len(media_contexts) != len(datapoints):
+                raise ValueError(
+                    "The number of media contexts and datapoints must be equal"
                 )
-            )
 
-        logger.debug("Submitting locate rapids")
-        return self._submit(name=name, rapids=rapids, dimensions=dimensions)
+            if explanation and len(explanation) != len(datapoints):
+                raise ValueError(
+                    "The number of explanations and datapoints must be equal, the index must align, but can be padded with None"
+                )
+
+            logger.debug("Creating locate rapids")
+            rapids = []
+            rapids: list[Rapid] = []
+            for i in range(len(datapoints)):
+                rapid_metadata = []
+                if contexts:
+                    rapid_metadata.append(PromptMetadata(contexts[i]))
+                if media_contexts:
+                    rapid_metadata.append(MediaAssetMetadata(media_contexts[i]))
+                rapids.append(
+                    self.rapid.locate_rapid(
+                        instruction=instruction,
+                        truths=truths[i],
+                        datapoint=datapoints[i],
+                        metadata=rapid_metadata,
+                        explanation=explanation[i] if explanation != None else None,
+                    )
+                )
+
+            logger.debug("Submitting locate rapids")
+            return self._submit(name=name, rapids=rapids, dimensions=dimensions)
 
     def create_draw_set(
         self,
@@ -424,48 +440,49 @@ class ValidationSetManager:
             ```
             This would mean: first datapoint the object is in the top left corner, second datapoint the object is in the center
         """
-        if not datapoints:
-            raise ValueError("Datapoints cannot be empty")
+        with tracer.start_as_current_span("ValidationSetManager.create_draw_set"):
+            if not datapoints:
+                raise ValueError("Datapoints cannot be empty")
 
-        if len(datapoints) != len(truths):
-            raise ValueError("The number of datapoints and truths must be equal")
+            if len(datapoints) != len(truths):
+                raise ValueError("The number of datapoints and truths must be equal")
 
-        if not all([isinstance(truth, (list, tuple)) for truth in truths]):
-            raise ValueError("Truths must be a list of lists or tuples")
+            if not all([isinstance(truth, (list, tuple)) for truth in truths]):
+                raise ValueError("Truths must be a list of lists or tuples")
 
-        if contexts and len(contexts) != len(datapoints):
-            raise ValueError("The number of contexts and datapoints must be equal")
+            if contexts and len(contexts) != len(datapoints):
+                raise ValueError("The number of contexts and datapoints must be equal")
 
-        if media_contexts and len(media_contexts) != len(datapoints):
-            raise ValueError(
-                "The number of media contexts and datapoints must be equal"
-            )
-
-        if explanation and len(explanation) != len(datapoints):
-            raise ValueError(
-                "The number of explanations and datapoints must be equal, the index must align, but can be padded with None"
-            )
-
-        logger.debug("Creating draw rapids")
-        rapids: list[Rapid] = []
-        for i in range(len(datapoints)):
-            rapid_metadata = []
-            if contexts:
-                rapid_metadata.append(PromptMetadata(contexts[i]))
-            if media_contexts:
-                rapid_metadata.append(MediaAssetMetadata(media_contexts[i]))
-            rapids.append(
-                self.rapid.draw_rapid(
-                    instruction=instruction,
-                    truths=truths[i],
-                    datapoint=datapoints[i],
-                    metadata=rapid_metadata,
-                    explanation=explanation[i] if explanation != None else None,
+            if media_contexts and len(media_contexts) != len(datapoints):
+                raise ValueError(
+                    "The number of media contexts and datapoints must be equal"
                 )
-            )
 
-        logger.debug("Submitting draw rapids")
-        return self._submit(name=name, rapids=rapids, dimensions=dimensions)
+            if explanation and len(explanation) != len(datapoints):
+                raise ValueError(
+                    "The number of explanations and datapoints must be equal, the index must align, but can be padded with None"
+                )
+
+            logger.debug("Creating draw rapids")
+            rapids: list[Rapid] = []
+            for i in range(len(datapoints)):
+                rapid_metadata = []
+                if contexts:
+                    rapid_metadata.append(PromptMetadata(contexts[i]))
+                if media_contexts:
+                    rapid_metadata.append(MediaAssetMetadata(media_contexts[i]))
+                rapids.append(
+                    self.rapid.draw_rapid(
+                        instruction=instruction,
+                        truths=truths[i],
+                        datapoint=datapoints[i],
+                        metadata=rapid_metadata,
+                        explanation=explanation[i] if explanation != None else None,
+                    )
+                )
+
+            logger.debug("Submitting draw rapids")
+            return self._submit(name=name, rapids=rapids, dimensions=dimensions)
 
     def create_timestamp_set(
         self,
@@ -503,48 +520,49 @@ class ValidationSetManager:
             ```
             This would mean: first datapoint the correct interval is from 0 to 10, second datapoint the correct interval is from 20 to 30
         """
-        if not datapoints:
-            raise ValueError("Datapoints cannot be empty")
+        with tracer.start_as_current_span("ValidationSetManager.create_timestamp_set"):
+            if not datapoints:
+                raise ValueError("Datapoints cannot be empty")
 
-        if len(datapoints) != len(truths):
-            raise ValueError("The number of datapoints and truths must be equal")
+            if len(datapoints) != len(truths):
+                raise ValueError("The number of datapoints and truths must be equal")
 
-        if not all([isinstance(truth, (list, tuple)) for truth in truths]):
-            raise ValueError("Truths must be a list of lists or tuples")
+            if not all([isinstance(truth, (list, tuple)) for truth in truths]):
+                raise ValueError("Truths must be a list of lists or tuples")
 
-        if contexts and len(contexts) != len(datapoints):
-            raise ValueError("The number of contexts and datapoints must be equal")
+            if contexts and len(contexts) != len(datapoints):
+                raise ValueError("The number of contexts and datapoints must be equal")
 
-        if media_contexts and len(media_contexts) != len(datapoints):
-            raise ValueError(
-                "The number of media contexts and datapoints must be equal"
-            )
-
-        if explanation and len(explanation) != len(datapoints):
-            raise ValueError(
-                "The number of explanations and datapoints must be equal, the index must align, but can be padded with None"
-            )
-
-        logger.debug("Creating timestamp rapids")
-        rapids: list[Rapid] = []
-        for i in range(len(datapoints)):
-            rapid_metadata = []
-            if contexts:
-                rapid_metadata.append(PromptMetadata(contexts[i]))
-            if media_contexts:
-                rapid_metadata.append(MediaAssetMetadata(media_contexts[i]))
-            rapids.append(
-                self.rapid.timestamp_rapid(
-                    instruction=instruction,
-                    truths=truths[i],
-                    datapoint=datapoints[i],
-                    metadata=rapid_metadata,
-                    explanation=explanation[i] if explanation != None else None,
+            if media_contexts and len(media_contexts) != len(datapoints):
+                raise ValueError(
+                    "The number of media contexts and datapoints must be equal"
                 )
-            )
 
-        logger.debug("Submitting timestamp rapids")
-        return self._submit(name=name, rapids=rapids, dimensions=dimensions)
+            if explanation and len(explanation) != len(datapoints):
+                raise ValueError(
+                    "The number of explanations and datapoints must be equal, the index must align, but can be padded with None"
+                )
+
+            logger.debug("Creating timestamp rapids")
+            rapids: list[Rapid] = []
+            for i in range(len(datapoints)):
+                rapid_metadata = []
+                if contexts:
+                    rapid_metadata.append(PromptMetadata(contexts[i]))
+                if media_contexts:
+                    rapid_metadata.append(MediaAssetMetadata(media_contexts[i]))
+                rapids.append(
+                    self.rapid.timestamp_rapid(
+                        instruction=instruction,
+                        truths=truths[i],
+                        datapoint=datapoints[i],
+                        metadata=rapid_metadata,
+                        explanation=explanation[i] if explanation != None else None,
+                    )
+                )
+
+            logger.debug("Submitting timestamp rapids")
+            return self._submit(name=name, rapids=rapids, dimensions=dimensions)
 
     def create_mixed_set(
         self,
@@ -559,10 +577,11 @@ class ValidationSetManager:
             rapids (list[Rapid]): The list of rapids to add to the validation set.
             dimensions (list[str], optional): The dimensions to add to the validation set accross which users will be tracked. Defaults to [] which is the default dimension.
         """
-        if not rapids:
-            raise ValueError("Rapids cannot be empty")
+        with tracer.start_as_current_span("ValidationSetManager.create_mixed_set"):
+            if not rapids:
+                raise ValueError("Rapids cannot be empty")
 
-        return self._submit(name=name, rapids=rapids, dimensions=dimensions)
+            return self._submit(name=name, rapids=rapids, dimensions=dimensions)
 
     def _submit(
         self,
@@ -589,28 +608,28 @@ class ValidationSetManager:
             validation_set_id=validation_set_id,
             openapi_service=self.__openapi_service,
         )
+        with tracer.start_as_current_span("Adding rapids to validation set"):
+            logger.debug("Adding rapids to validation set")
+            failed_rapids = []
+            for rapid in tqdm(
+                rapids,
+                desc="Uploading validation tasks",
+                disable=rapidata_config.logging.silent_mode,
+            ):
+                try:
+                    validation_set.add_rapid(rapid)
+                except Exception:
+                    failed_rapids.append(rapid.asset)
 
-        logger.debug("Adding rapids to validation set")
-        failed_rapids = []
-        for rapid in tqdm(
-            rapids,
-            desc="Uploading validation tasks",
-            disable=rapidata_config.logging.silent_mode,
-        ):
-            try:
-                validation_set.add_rapid(rapid)
-            except Exception:
-                failed_rapids.append(rapid.asset)
-
-        if failed_rapids:
-            logger.error(
-                "Failed to add %s datapoints to validation set: %s",
-                len(failed_rapids),
-                failed_rapids,
-            )
-            raise RuntimeError(
-                f"Failed to add {len(failed_rapids)} datapoints to validation set: {failed_rapids}"
-            )
+            if failed_rapids:
+                logger.error(
+                    "Failed to add %s datapoints to validation set: %s",
+                    len(failed_rapids),
+                    failed_rapids,
+                )
+                raise RuntimeError(
+                    f"Failed to add {len(failed_rapids)} datapoints to validation set: {failed_rapids}"
+                )
 
         managed_print()
         managed_print(
