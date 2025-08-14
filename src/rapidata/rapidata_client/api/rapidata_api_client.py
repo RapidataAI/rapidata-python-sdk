@@ -1,11 +1,9 @@
-import secrets
 from typing import Optional, Any
 from rapidata.api_client.api_client import (
     ApiClient,
     rest,
     ApiResponse,
     ApiResponseT,
-    RequestSerialized,
 )
 from rapidata.api_client.exceptions import ApiException
 import json
@@ -14,6 +12,8 @@ from contextlib import contextmanager
 from rapidata.rapidata_client.config import logger, tracer
 from opentelemetry import trace
 from opentelemetry.trace import format_trace_id, format_span_id, Link, SpanContext
+from opentelemetry.sdk.trace.id_generator import RandomIdGenerator
+
 
 # Thread-local storage for controlling error logging
 _thread_local = threading.local()
@@ -100,6 +100,10 @@ class RapidataError(Exception):
 class RapidataApiClient(ApiClient):
     """Custom API client that wraps errors in RapidataError."""
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.id_generator = RandomIdGenerator()
+
     def call_api(
         self,
         method,
@@ -122,8 +126,8 @@ class RapidataApiClient(ApiClient):
 
             # Generate a new trace ID for backend communication
             # This separates the backend trace from the SDK trace
-            backend_trace_id = int(secrets.token_hex(16), 16)
-            backend_span_id = int(secrets.token_hex(8), 16)
+            backend_trace_id = self.id_generator.generate_trace_id()
+            backend_span_id = self.id_generator.generate_span_id()
 
             # Create a new span context for the backend trace
             backend_span_context = SpanContext(
