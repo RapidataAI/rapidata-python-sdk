@@ -14,6 +14,9 @@ from rapidata.rapidata_client.api.rapidata_api_client import (
 )
 from rapidata.rapidata_client.config.rapidata_config import rapidata_config
 
+# Add OpenTelemetry context imports for thread propagation
+from opentelemetry import context as otel_context
+
 
 def chunk_list(lst: list, chunk_size: int) -> Generator:
     for i in range(0, len(lst), chunk_size):
@@ -58,15 +61,30 @@ class RapidataDataset:
             )
             return datapoint
 
+        def upload_with_context(
+            context: otel_context.Context, datapoint: Datapoint, index: int
+        ) -> Datapoint:
+            """Wrapper function that runs upload_text_datapoint with the provided context."""
+            token = otel_context.attach(context)
+            try:
+                return upload_text_datapoint(datapoint, index)
+            finally:
+                otel_context.detach(token)
+
         successful_uploads: list[Datapoint] = []
         failed_uploads: list[Datapoint] = []
+
+        # Capture the current OpenTelemetry context before creating threads
+        current_context = otel_context.get_current()
 
         total_uploads = len(datapoints)
         with ThreadPoolExecutor(
             max_workers=rapidata_config.upload.maxUploadWorkers
         ) as executor:
             future_to_datapoint = {
-                executor.submit(upload_text_datapoint, datapoint, index=i): datapoint
+                executor.submit(
+                    upload_with_context, current_context, datapoint, i
+                ): datapoint
                 for i, datapoint in enumerate(datapoints)
             }
 
@@ -287,6 +305,19 @@ class RapidataDataset:
         successful_uploads: list[Datapoint] = []
         failed_uploads: list[Datapoint] = []
 
+        def process_upload_with_context(
+            context: otel_context.Context, datapoint: Datapoint, index: int
+        ) -> tuple[list[Datapoint], list[Datapoint]]:
+            """Wrapper function that runs _process_single_upload with the provided context."""
+            token = otel_context.attach(context)
+            try:
+                return self._process_single_upload(datapoint, index)
+            finally:
+                otel_context.detach(token)
+
+        # Capture the current OpenTelemetry context before creating threads
+        current_context = otel_context.get_current()
+
         try:
             with ThreadPoolExecutor(
                 max_workers=rapidata_config.upload.maxUploadWorkers
@@ -295,9 +326,10 @@ class RapidataDataset:
                 for chunk_idx, chunk in enumerate(chunk_list(datapoints, chunk_size)):
                     futures = [
                         executor.submit(
-                            self._process_single_upload,
+                            process_upload_with_context,
+                            current_context,
                             datapoint,
-                            index=(chunk_idx * chunk_size + i),
+                            chunk_idx * chunk_size + i,
                         )
                         for i, datapoint in enumerate(chunk)
                     ]
