@@ -11,6 +11,9 @@ from rapidata.rapidata_client.api.rapidata_api_client import (
     suppress_rapidata_error_logging,
 )
 
+# Add OpenTelemetry context imports for thread propagation
+from opentelemetry import context as otel_context
+
 
 class BenchmarkParticipant:
     def __init__(self, name: str, id: str, openapi_service: OpenAPIService):
@@ -84,16 +87,31 @@ class BenchmarkParticipant:
         Returns:
             tuple[list[str], list[str]]: Lists of successful and failed identifiers
         """
+
+        def upload_with_context(
+            context: otel_context.Context, asset: MediaAsset, identifier: str
+        ) -> tuple[MediaAsset | None, MediaAsset | None]:
+            """Wrapper function that runs _process_single_sample_upload with the provided context."""
+            token = otel_context.attach(context)
+            try:
+                return self._process_single_sample_upload(asset, identifier)
+            finally:
+                otel_context.detach(token)
+
         successful_uploads: list[MediaAsset] = []
         failed_uploads: list[MediaAsset] = []
         total_uploads = len(assets)
+
+        # Capture the current OpenTelemetry context before creating threads
+        current_context = otel_context.get_current()
 
         with ThreadPoolExecutor(
             max_workers=rapidata_config.upload.maxUploadWorkers
         ) as executor:
             futures = [
                 executor.submit(
-                    self._process_single_sample_upload,
+                    upload_with_context,
+                    current_context,
                     asset,
                     identifier,
                 )

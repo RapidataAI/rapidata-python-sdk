@@ -154,7 +154,7 @@ class RapidataOrderBuilder:
                 "Using recommended validation set with ID: %s", self.__validation_set_id
             )
         except Exception as e:
-            logger.info("No recommended validation set found, creating new one.")
+            logger.debug("No recommended validation set found, error: %s", e)
 
         if (
             len(self.__datapoints)
@@ -164,6 +164,8 @@ class RapidataOrderBuilder:
                 "No recommended validation set found, dataset too small to create one."
             )
             return
+
+        logger.info("No recommended validation set found, creating new one.")
 
         managed_print()
         managed_print(
@@ -187,9 +189,6 @@ class RapidataOrderBuilder:
     def _create(self) -> RapidataOrder:
         """
         Create the Rapidata order by making the necessary API calls based on the builder's configuration.
-
-        Args:
-            max_upload_workers (int, optional): The maximum number of worker threads for processing media paths. Defaults to 10.
 
         Raises:
             ValueError: If both media paths and texts are provided, or if neither is provided.

@@ -33,7 +33,7 @@ from rapidata.rapidata_client.benchmark.participant._participant import (
 )
 from rapidata.rapidata_client.datapoints.assets import MediaAsset
 from rapidata.rapidata_client.filter import RapidataFilter
-from rapidata.rapidata_client.config import logger, managed_print
+from rapidata.rapidata_client.config import logger, managed_print, tracer
 from rapidata.rapidata_client.settings import RapidataSetting
 from rapidata.service.openapi_service import OpenAPIService
 
@@ -241,6 +241,15 @@ class RapidataBenchmark:
         ):
             raise ValueError("Tags must be a list of strings.")
 
+        logger.info(
+            "Adding identifier %s with prompt %s, asset %s and tags %s to benchmark %s",
+            identifier,
+            prompt,
+            asset,
+            tags,
+            self.id,
+        )
+
         self.__identifiers.append(identifier)
 
         self.__tags.append(tags)
@@ -291,55 +300,74 @@ class RapidataBenchmark:
             filters: The filters that should be applied to the leaderboard. Will determine who can solve answer in the leaderboard. (default: [])
             settings: The settings that should be applied to the leaderboard. Will determine the behavior of the tasks on the leaderboard. (default: [])
         """
-        if not isinstance(min_responses_per_matchup, int):
-            raise ValueError("Min responses per matchup must be an integer")
+        with tracer.start_as_current_span("create_leaderboard"):
+            if not isinstance(min_responses_per_matchup, int):
+                raise ValueError("Min responses per matchup must be an integer")
 
-        if min_responses_per_matchup < 3:
-            raise ValueError("Min responses per matchup must be at least 3")
+            if min_responses_per_matchup < 3:
+                raise ValueError("Min responses per matchup must be at least 3")
 
-        leaderboard_result = self.__openapi_service.leaderboard_api.leaderboard_post(
-            create_leaderboard_model=CreateLeaderboardModel(
-                benchmarkId=self.id,
-                name=name,
-                instruction=instruction,
-                showPrompt=show_prompt,
-                showPromptAsset=show_prompt_asset,
-                isInversed=inverse_ranking,
-                minResponses=min_responses_per_matchup,
-                responseBudget=DetailMapper.get_budget(level_of_detail),
-                validationSetId=validation_set_id,
-                filters=(
-                    [
-                        AndUserFilterModelFiltersInner(filter._to_model())
-                        for filter in filters
-                    ]
-                    if filters
-                    else None
-                ),
-                featureFlags=(
-                    [setting._to_feature_flag() for setting in settings]
-                    if settings
-                    else None
-                ),
+            logger.info(
+                "Creating leaderboard %s with instruction %s, show_prompt %s, show_prompt_asset %s, inverse_ranking %s, level_of_detail %s, min_responses_per_matchup %s, validation_set_id %s, filters %s, settings %s",
+                name,
+                instruction,
+                show_prompt,
+                show_prompt_asset,
+                inverse_ranking,
+                level_of_detail,
+                min_responses_per_matchup,
+                validation_set_id,
+                filters,
+                settings,
             )
-        )
 
-        assert (
-            leaderboard_result.benchmark_id == self.id
-        ), "The leaderboard was not created for the correct benchmark."
+            leaderboard_result = (
+                self.__openapi_service.leaderboard_api.leaderboard_post(
+                    create_leaderboard_model=CreateLeaderboardModel(
+                        benchmarkId=self.id,
+                        name=name,
+                        instruction=instruction,
+                        showPrompt=show_prompt,
+                        showPromptAsset=show_prompt_asset,
+                        isInversed=inverse_ranking,
+                        minResponses=min_responses_per_matchup,
+                        responseBudget=DetailMapper.get_budget(level_of_detail),
+                        validationSetId=validation_set_id,
+                        filters=(
+                            [
+                                AndUserFilterModelFiltersInner(filter._to_model())
+                                for filter in filters
+                            ]
+                            if filters
+                            else None
+                        ),
+                        featureFlags=(
+                            [setting._to_feature_flag() for setting in settings]
+                            if settings
+                            else None
+                        ),
+                    )
+                )
+            )
 
-        return RapidataLeaderboard(
-            name,
-            instruction,
-            show_prompt,
-            show_prompt_asset,
-            inverse_ranking,
-            leaderboard_result.response_budget,
-            min_responses_per_matchup,
-            self.id,
-            leaderboard_result.id,
-            self.__openapi_service,
-        )
+            assert (
+                leaderboard_result.benchmark_id == self.id
+            ), "The leaderboard was not created for the correct benchmark."
+
+            logger.info("Leaderboard created with id %s", leaderboard_result.id)
+
+            return RapidataLeaderboard(
+                name,
+                instruction,
+                show_prompt,
+                show_prompt_asset,
+                inverse_ranking,
+                leaderboard_result.response_budget,
+                min_responses_per_matchup,
+                self.id,
+                leaderboard_result.id,
+                self.__openapi_service,
+            )
 
     def evaluate_model(
         self, name: str, media: list[str], identifiers: list[str]
@@ -353,65 +381,73 @@ class RapidataBenchmark:
             identifiers: The identifiers that correspond to the media. The order of the identifiers must match the order of the media.
                 The identifiers that are used must be registered for the benchmark. To see the registered identifiers, use the identifiers property.
         """
-        if not media:
-            raise ValueError("Media must be a non-empty list of strings")
+        with tracer.start_as_current_span("evaluate_model"):
+            if not media:
+                raise ValueError("Media must be a non-empty list of strings")
 
-        if len(media) != len(identifiers):
-            raise ValueError("Media and identifiers must have the same length")
+            if len(media) != len(identifiers):
+                raise ValueError("Media and identifiers must have the same length")
 
-        if not all(identifier in self.identifiers for identifier in identifiers):
-            raise ValueError(
-                "All identifiers must be in the registered identifiers list. To see the registered identifiers, use the identifiers property.\
-\nTo see the prompts that are associated with the identifiers, use the prompts property."
+            if not all(identifier in self.identifiers for identifier in identifiers):
+                raise ValueError(
+                    "All identifiers must be in the registered identifiers list. To see the registered identifiers, use the identifiers property.\
+            \nTo see the prompts that are associated with the identifiers, use the prompts property."
+                )
+
+            # happens before the creation of the participant to ensure all media paths are valid
+            assets: list[MediaAsset] = []
+            for media_path in media:
+                assets.append(MediaAsset(media_path))
+
+            participant_result = self.__openapi_service.benchmark_api.benchmark_benchmark_id_participants_post(
+                benchmark_id=self.id,
+                create_benchmark_participant_model=CreateBenchmarkParticipantModel(
+                    name=name,
+                ),
             )
 
-        # happens before the creation of the participant to ensure all media paths are valid
-        assets: list[MediaAsset] = []
-        for media_path in media:
-            assets.append(MediaAsset(media_path))
+            logger.info(f"Participant created: {participant_result.participant_id}")
 
-        participant_result = self.__openapi_service.benchmark_api.benchmark_benchmark_id_participants_post(
-            benchmark_id=self.id,
-            create_benchmark_participant_model=CreateBenchmarkParticipantModel(
-                name=name,
-            ),
-        )
-
-        logger.info(f"Participant created: {participant_result.participant_id}")
-
-        participant = BenchmarkParticipant(
-            name, participant_result.participant_id, self.__openapi_service
-        )
-
-        successful_uploads, failed_uploads = participant.upload_media(
-            assets,
-            identifiers,
-        )
-
-        total_uploads = len(assets)
-        success_rate = (
-            (len(successful_uploads) / total_uploads * 100) if total_uploads > 0 else 0
-        )
-        logger.info(
-            f"Upload complete: {len(successful_uploads)} successful, {len(failed_uploads)} failed ({success_rate:.1f}% success rate)"
-        )
-
-        if failed_uploads:
-            logger.error(
-                f"Failed uploads for media: {[asset.path for asset in failed_uploads]}"
-            )
-            logger.warning(
-                "Some uploads failed. The model evaluation may be incomplete."
+            participant = BenchmarkParticipant(
+                name, participant_result.participant_id, self.__openapi_service
             )
 
-        if len(successful_uploads) == 0:
-            raise RuntimeError(
-                "No uploads were successful. The model evaluation will not be completed."
-            )
+            with tracer.start_as_current_span("upload_media_for_participant"):
+                logger.info(
+                    f"Uploading {len(assets)} media assets to participant {participant.id}"
+                )
 
-        self.__openapi_service.participant_api.participants_participant_id_submit_post(
-            participant_id=participant_result.participant_id
-        )
+                successful_uploads, failed_uploads = participant.upload_media(
+                    assets,
+                    identifiers,
+                )
+
+                total_uploads = len(assets)
+                success_rate = (
+                    (len(successful_uploads) / total_uploads * 100)
+                    if total_uploads > 0
+                    else 0
+                )
+                logger.info(
+                    f"Upload complete: {len(successful_uploads)} successful, {len(failed_uploads)} failed ({success_rate:.1f}% success rate)"
+                )
+
+                if failed_uploads:
+                    logger.error(
+                        f"Failed uploads for media: {[asset.path for asset in failed_uploads]}"
+                    )
+                    logger.warning(
+                        "Some uploads failed. The model evaluation may be incomplete."
+                    )
+
+                if len(successful_uploads) == 0:
+                    raise RuntimeError(
+                        "No uploads were successful. The model evaluation will not be completed."
+                    )
+
+            self.__openapi_service.participant_api.participants_participant_id_submit_post(
+                participant_id=participant_result.participant_id
+            )
 
     def view(self) -> None:
         """
