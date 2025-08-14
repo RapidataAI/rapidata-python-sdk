@@ -6,6 +6,7 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.sdk.resources import Resource
 from rapidata import __version__
 from .logging_config import LoggingConfig, register_config_handler
+from rapidata.rapidata_client.config import logger
 
 
 @runtime_checkable
