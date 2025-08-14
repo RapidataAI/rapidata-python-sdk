@@ -100,21 +100,15 @@ class RapidataError(Exception):
 class RapidataApiClient(ApiClient):
     """Custom API client that wraps errors in RapidataError."""
 
-    def param_serialize(
+    def call_api(
         self,
         method,
-        resource_path,
-        path_params=None,
-        query_params=None,
+        url,
         header_params=None,
         body=None,
         post_params=None,
-        files=None,
-        auth_settings=None,
-        collection_formats=None,
-        _host=None,
-        _request_auth=None,
-    ) -> RequestSerialized:
+        _request_timeout=None,
+    ) -> rest.RESTResponse:
         # Get the current span from OpenTelemetry
         current_span = trace.get_current_span()
 
@@ -147,12 +141,12 @@ class RapidataApiClient(ApiClient):
 
             # Create a span in the current SDK trace that links to the backend
             with tracer.start_span(
-                f"sdk_request_{method}_{resource_path.replace('/', '_')}",
+                f"sdk_request_{method}_{url.replace('/', '_')}",
                 links=[link_to_backend],
             ) as sdk_request_span:
                 # Set attributes on the SDK span
                 sdk_request_span.set_attribute("http.method", method)
-                sdk_request_span.set_attribute("http.target", resource_path)
+                sdk_request_span.set_attribute("http.target", url)
                 sdk_request_span.set_attribute(
                     "rapidata.backend_trace_id", format_trace_id(backend_trace_id)
                 )
@@ -164,7 +158,7 @@ class RapidataApiClient(ApiClient):
                 # Now create the initial span for the backend trace that will be sent
                 # This span will be the starting point for the backend trace
                 with tracer.start_span(
-                    f"backend_trace_start_{method}_{resource_path.replace('/', '_')}",
+                    f"backend_trace_start_{method}_{url.replace('/', '_')}",
                     context=trace.set_span_in_context(
                         trace.NonRecordingSpan(backend_span_context)
                     ),
@@ -172,7 +166,7 @@ class RapidataApiClient(ApiClient):
                 ) as backend_initial_span:
                     # Set attributes on the backend initial span
                     backend_initial_span.set_attribute("http.method", method)
-                    backend_initial_span.set_attribute("http.target", resource_path)
+                    backend_initial_span.set_attribute("http.target", url)
                     backend_initial_span.set_attribute(
                         "rapidata.trace_type", "backend_start"
                     )
@@ -202,35 +196,23 @@ class RapidataApiClient(ApiClient):
                         + f"{current_span_context.trace_flags:02x}"
                     )
 
-                    return super().param_serialize(
+                    return super().call_api(
                         method,
-                        resource_path,
-                        path_params,
-                        query_params,
+                        url,
                         header_params,
                         body,
                         post_params,
-                        files,
-                        auth_settings,
-                        collection_formats,
-                        _host,
-                        _request_auth,
+                        _request_timeout,
                     )
         else:
             # No active span, proceed without tracing headers
-            return super().param_serialize(
+            return super().call_api(
                 method,
-                resource_path,
-                path_params,
-                query_params,
+                url,
                 header_params,
                 body,
                 post_params,
-                files,
-                auth_settings,
-                collection_formats,
-                _host,
-                _request_auth,
+                _request_timeout,
             )
 
     def response_deserialize(
