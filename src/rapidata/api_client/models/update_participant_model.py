@@ -17,23 +17,17 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
+from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.standing_status import StandingStatus
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetStandingByIdResult(BaseModel):
+class UpdateParticipantModel(BaseModel):
     """
-    GetStandingByIdResult
+    The model used to update a participant.
     """ # noqa: E501
-    id: StrictStr
-    name: StrictStr
-    benchmark_id: StrictStr = Field(alias="benchmarkId")
-    dataset_id: Optional[StrictStr] = Field(default=None, alias="datasetId")
-    status: StandingStatus
-    is_disabled: StrictBool = Field(alias="isDisabled")
-    __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "datasetId", "status", "isDisabled"]
+    name: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = ["name"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -53,7 +47,7 @@ class GetStandingByIdResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetStandingByIdResult from a JSON string"""
+        """Create an instance of UpdateParticipantModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -74,16 +68,11 @@ class GetStandingByIdResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if dataset_id (nullable) is None
-        # and model_fields_set contains the field
-        if self.dataset_id is None and "dataset_id" in self.model_fields_set:
-            _dict['datasetId'] = None
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetStandingByIdResult from a dict"""
+        """Create an instance of UpdateParticipantModel from a dict"""
         if obj is None:
             return None
 
@@ -91,12 +80,7 @@ class GetStandingByIdResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "id": obj.get("id"),
-            "name": obj.get("name"),
-            "benchmarkId": obj.get("benchmarkId"),
-            "datasetId": obj.get("datasetId"),
-            "status": obj.get("status"),
-            "isDisabled": obj.get("isDisabled")
+            "name": obj.get("name")
         })
         return _obj
 

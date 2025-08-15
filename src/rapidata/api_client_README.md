@@ -79,6 +79,7 @@ Class | Method | HTTP request | Description
 *BenchmarkApi* | [**benchmark_benchmark_id_participants_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_participants_get) | **GET** /benchmark/{benchmarkId}/participants | Query all participants within a benchmark
 *BenchmarkApi* | [**benchmark_benchmark_id_participants_participant_id_submit_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_participants_participant_id_submit_post) | **POST** /benchmark/{benchmarkId}/participants/{participantId}/submit | Submits a participant to a benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_participants_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_participants_post) | **POST** /benchmark/{benchmarkId}/participants | Creates a participant in a benchmark.
+*BenchmarkApi* | [**benchmark_benchmark_id_patch**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_patch) | **PATCH** /benchmark/{benchmarkId} | Updates a benchmark using patch semantics.
 *BenchmarkApi* | [**benchmark_benchmark_id_prompt_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_prompt_post) | **POST** /benchmark/{benchmarkId}/prompt | Adds a new prompt to a benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_prompts_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_prompts_get) | **GET** /benchmark/{benchmarkId}/prompts | Returns the paged prompts of a benchmark by its ID.
 *BenchmarkApi* | [**benchmark_benchmark_id_samples_identifier_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_samples_identifier_get) | **GET** /benchmark/{benchmarkId}/samples/{identifier} | Returns the paged prompts of a benchmark by its ID.
@@ -170,6 +171,7 @@ Class | Method | HTTP request | Description
 *ParticipantApi* | [**participant_participant_id_disable_post**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_disable_post) | **POST** /participant/{participantId}/disable | This endpoint disables a participant in a benchmark. this means that the participant will no longer actively be matched up against other participants and not collect further results. It will still be visible in the leaderboard.
 *ParticipantApi* | [**participant_participant_id_get**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_get) | **GET** /participant/{participantId} | Gets a participant by it&#39;s Id.
 *ParticipantApi* | [**participant_participant_id_name_put**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_name_put) | **PUT** /participant/{participantId}/name | Updates the name of a participant
+*ParticipantApi* | [**participant_participant_id_patch**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_patch) | **PATCH** /participant/{participantId} | Updates a participant using patch semantics.
 *ParticipantApi* | [**participant_participant_id_sample_post**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_sample_post) | **POST** /participant/{participantId}/sample | Adds a sample to a participant.
 *ParticipantApi* | [**participant_participant_id_samples_get**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_samples_get) | **GET** /participant/{participantId}/samples | Queries all samples of a participant.
 *ParticipantApi* | [**participant_sample_sample_id_delete**](rapidata/api_client/docs/ParticipantApi.md#participant_sample_sample_id_delete) | **DELETE** /participant-sample/{sampleId} | Deletes a sample.
@@ -193,13 +195,12 @@ Class | Method | HTTP request | Description
 *ValidationSetApi* | [**validation_set_recommended_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_recommended_get) | **GET** /validation-set/recommended | Gets a validation set that is available to the user and best matches the provided parameters.
 *ValidationSetApi* | [**validation_set_validation_set_id_delete**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_delete) | **DELETE** /validation-set/{validationSetId} | Gets a validation set by the id.
 *ValidationSetApi* | [**validation_set_validation_set_id_dimensions_patch**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_dimensions_patch) | **PATCH** /validation-set/{validationSetId}/dimensions | Updates the dimensions of all rapids within a validation set.
-*ValidationSetApi* | [**validation_set_validation_set_id_dimensions_put**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_dimensions_put) | **PUT** /validation-set/{validationSetId}/dimensions | Updates the dimensions of all rapids within a validation set.
 *ValidationSetApi* | [**validation_set_validation_set_id_export_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_export_get) | **GET** /validation-set/{validationSetId}/export | Exports all rapids of a validation-set to a file.
 *ValidationSetApi* | [**validation_set_validation_set_id_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_get) | **GET** /validation-set/{validationSetId} | Gets a validation set by the id.
+*ValidationSetApi* | [**validation_set_validation_set_id_patch**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_patch) | **PATCH** /validation-set/{validationSetId} | Updates different characteristics of a validation set.
 *ValidationSetApi* | [**validation_set_validation_set_id_rapid_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_rapid_post) | **POST** /validation-set/{validationSetId}/rapid | Adds a new validation rapid to the specified validation set using files to create the assets.
 *ValidationSetApi* | [**validation_set_validation_set_id_rapids_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_rapids_get) | **GET** /validation-set/{validationSetId}/rapids | Queries the validation rapids for a specific validation set.
 *ValidationSetApi* | [**validation_set_validation_set_id_shouldalert_patch**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_shouldalert_patch) | **PATCH** /validation-set/{validationSetId}/shouldalert | Updates the dimensions of all rapids within a validation set.
-*ValidationSetApi* | [**validation_set_validation_set_id_shouldalert_put**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_shouldalert_put) | **PUT** /validation-set/{validationSetId}/shouldalert | Updates the  of all rapshouldAlert property of all rapids within a validation set.
 *ValidationSetApi* | [**validation_set_validation_set_id_update_labeling_hints_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_update_labeling_hints_post) | **POST** /validation-set/{validationSetId}/update-labeling-hints | Refreshes the labeling hints for a validation set.
 *ValidationSetApi* | [**validation_set_validation_set_id_visibility_patch**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_visibility_patch) | **PATCH** /validation-set/{validationSetId}/visibility | Updates the visibility of a validation set.
 *ValidationSetApi* | [**validation_set_zip_compare_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_zip_compare_post) | **POST** /validation-set/zip/compare | Imports a compare validation set from a zip file.
@@ -257,7 +258,6 @@ Class | Method | HTTP request | Description
  - [CappedSelection](rapidata/api_client/docs/CappedSelection.md)
  - [ChangeBoostModel](rapidata/api_client/docs/ChangeBoostModel.md)
  - [ClassificationMetadata](rapidata/api_client/docs/ClassificationMetadata.md)
- - [ClassificationMetadataFilterConfig](rapidata/api_client/docs/ClassificationMetadataFilterConfig.md)
  - [ClassificationMetadataModel](rapidata/api_client/docs/ClassificationMetadataModel.md)
  - [ClassifyPayload](rapidata/api_client/docs/ClassifyPayload.md)
  - [ClientModel](rapidata/api_client/docs/ClientModel.md)
@@ -282,8 +282,8 @@ Class | Method | HTTP request | Description
  - [CompareWorkflowModelPairMakerConfig](rapidata/api_client/docs/CompareWorkflowModelPairMakerConfig.md)
  - [ComparisonOperator](rapidata/api_client/docs/ComparisonOperator.md)
  - [ConditionalValidationSelection](rapidata/api_client/docs/ConditionalValidationSelection.md)
+ - [ConfidenceInterval](rapidata/api_client/docs/ConfidenceInterval.md)
  - [Coordinate](rapidata/api_client/docs/Coordinate.md)
- - [CountClassificationMetadataFilterConfig](rapidata/api_client/docs/CountClassificationMetadataFilterConfig.md)
  - [CountMetadata](rapidata/api_client/docs/CountMetadata.md)
  - [CountMetadataModel](rapidata/api_client/docs/CountMetadataModel.md)
  - [CountryFilter](rapidata/api_client/docs/CountryFilter.md)
@@ -427,7 +427,6 @@ Class | Method | HTTP request | Description
  - [LocateRapidBlueprint](rapidata/api_client/docs/LocateRapidBlueprint.md)
  - [LocateResult](rapidata/api_client/docs/LocateResult.md)
  - [LocationMetadata](rapidata/api_client/docs/LocationMetadata.md)
- - [LocationMetadataExistsFilterConfig](rapidata/api_client/docs/LocationMetadataExistsFilterConfig.md)
  - [LocationMetadataModel](rapidata/api_client/docs/LocationMetadataModel.md)
  - [LogicOperator](rapidata/api_client/docs/LogicOperator.md)
  - [MultiAsset](rapidata/api_client/docs/MultiAsset.md)
@@ -577,6 +576,7 @@ Class | Method | HTTP request | Description
  - [TranslatedPromptMetadataModel](rapidata/api_client/docs/TranslatedPromptMetadataModel.md)
  - [TranslatedString](rapidata/api_client/docs/TranslatedString.md)
  - [UnlockOrderResult](rapidata/api_client/docs/UnlockOrderResult.md)
+ - [UpdateBenchmarkModel](rapidata/api_client/docs/UpdateBenchmarkModel.md)
  - [UpdateBenchmarkNameModel](rapidata/api_client/docs/UpdateBenchmarkNameModel.md)
  - [UpdateDatasetNameModel](rapidata/api_client/docs/UpdateDatasetNameModel.md)
  - [UpdateDimensionsModel](rapidata/api_client/docs/UpdateDimensionsModel.md)
@@ -584,11 +584,13 @@ Class | Method | HTTP request | Description
  - [UpdateLeaderboardNameModel](rapidata/api_client/docs/UpdateLeaderboardNameModel.md)
  - [UpdateLeaderboardResponseConfigModel](rapidata/api_client/docs/UpdateLeaderboardResponseConfigModel.md)
  - [UpdateOrderNameModel](rapidata/api_client/docs/UpdateOrderNameModel.md)
+ - [UpdateParticipantModel](rapidata/api_client/docs/UpdateParticipantModel.md)
  - [UpdateParticipantNameModel](rapidata/api_client/docs/UpdateParticipantNameModel.md)
  - [UpdatePromptTagsModel](rapidata/api_client/docs/UpdatePromptTagsModel.md)
  - [UpdateShouldAlertModel](rapidata/api_client/docs/UpdateShouldAlertModel.md)
  - [UpdateValidationRapidModel](rapidata/api_client/docs/UpdateValidationRapidModel.md)
  - [UpdateValidationRapidModelTruth](rapidata/api_client/docs/UpdateValidationRapidModelTruth.md)
+ - [UpdateValidationSetModel](rapidata/api_client/docs/UpdateValidationSetModel.md)
  - [UploadCocoResult](rapidata/api_client/docs/UploadCocoResult.md)
  - [UploadFromS3Result](rapidata/api_client/docs/UploadFromS3Result.md)
  - [UrlAssetInput](rapidata/api_client/docs/UrlAssetInput.md)
@@ -609,8 +611,6 @@ Class | Method | HTTP request | Description
  - [WorkflowConfigArtifactModel](rapidata/api_client/docs/WorkflowConfigArtifactModel.md)
  - [WorkflowConfigArtifactModelWorkflowConfig](rapidata/api_client/docs/WorkflowConfigArtifactModelWorkflowConfig.md)
  - [WorkflowLabelingStepModel](rapidata/api_client/docs/WorkflowLabelingStepModel.md)
- - [WorkflowSplitModel](rapidata/api_client/docs/WorkflowSplitModel.md)
- - [WorkflowSplitModelFilterConfigsInner](rapidata/api_client/docs/WorkflowSplitModelFilterConfigsInner.md)
  - [WorkflowState](rapidata/api_client/docs/WorkflowState.md)
  - [ZipEntryFileWrapper](rapidata/api_client/docs/ZipEntryFileWrapper.md)
 
