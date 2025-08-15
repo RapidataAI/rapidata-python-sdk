@@ -79,7 +79,7 @@ class RapidataDataset:
 
         total_uploads = len(datapoints)
         with ThreadPoolExecutor(
-            max_workers=rapidata_config.upload.maxUploadWorkers
+            max_workers=rapidata_config.upload.maxWorkers
         ) as executor:
             future_to_datapoint = {
                 executor.submit(
@@ -133,7 +133,7 @@ class RapidataDataset:
         urls = datapoint.get_urls()
 
         last_exception = None
-        for attempt in range(rapidata_config.upload.uploadMaxRetries):
+        for attempt in range(rapidata_config.upload.maxRetries):
             try:
                 with suppress_rapidata_error_logging():
                     self.openapi_service.dataset_api.dataset_dataset_id_datapoints_post(
@@ -150,7 +150,7 @@ class RapidataDataset:
 
             except Exception as e:
                 last_exception = e
-                if attempt < rapidata_config.upload.uploadMaxRetries - 1:
+                if attempt < rapidata_config.upload.maxRetries - 1:
                     # Exponential backoff: wait 1s, then 2s, then 4s
                     retry_delay = 2**attempt
                     time.sleep(retry_delay)
@@ -158,13 +158,13 @@ class RapidataDataset:
                     logger.debug(
                         "Retrying %s of %s...",
                         attempt + 1,
-                        rapidata_config.upload.uploadMaxRetries,
+                        rapidata_config.upload.maxRetries,
                     )
 
         # If we get here, all retries failed
         local_failed.append(datapoint)
         tqdm.write(
-            f"Upload failed for {datapoint} after {rapidata_config.upload.uploadMaxRetries} attempts. \nFinal error: \n{str(last_exception)}"
+            f"Upload failed for {datapoint} after {rapidata_config.upload.maxRetries} attempts. \nFinal error: \n{str(last_exception)}"
         )
 
         return local_successful, local_failed
@@ -320,7 +320,7 @@ class RapidataDataset:
 
         try:
             with ThreadPoolExecutor(
-                max_workers=rapidata_config.upload.maxUploadWorkers
+                max_workers=rapidata_config.upload.maxWorkers
             ) as executor:
                 # Process uploads in chunks to avoid overwhelming the system
                 for chunk_idx, chunk in enumerate(chunk_list(datapoints, chunk_size)):

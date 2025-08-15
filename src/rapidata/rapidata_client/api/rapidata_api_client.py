@@ -121,95 +121,7 @@ class RapidataApiClient(ApiClient):
             header_params = {}
 
         # Add tracing headers if we have a valid span
-        if current_span.is_recording():
-            current_span_context = current_span.get_span_context()
-
-            # Generate a new trace ID for backend communication
-            # This separates the backend trace from the SDK trace
-            backend_trace_id = self.id_generator.generate_trace_id()
-            backend_span_id = self.id_generator.generate_span_id()
-
-            # Create a new span context for the backend trace
-            backend_span_context = SpanContext(
-                trace_id=backend_trace_id,
-                span_id=backend_span_id,
-                is_remote=True,
-                trace_flags=current_span_context.trace_flags,
-            )
-
-            # Create a link from current SDK span to the backend trace
-            link_to_backend = Link(backend_span_context)
-
-            # Create a link from backend trace back to the original SDK span
-            link_back_to_sdk = Link(current_span_context)
-
-            # Create a span in the current SDK trace that links to the backend
-            with tracer.start_span(
-                f"sdk_request_{method}_{url.replace('/', '_')}",
-                links=[link_to_backend],
-            ) as sdk_request_span:
-                # Set attributes on the SDK span
-                sdk_request_span.set_attribute("http.method", method)
-                sdk_request_span.set_attribute("http.target", url)
-                sdk_request_span.set_attribute(
-                    "rapidata.backend_trace_id", format_trace_id(backend_trace_id)
-                )
-                sdk_request_span.set_attribute(
-                    "rapidata.original_trace_id",
-                    format_trace_id(current_span_context.trace_id),
-                )
-
-                # Now create the initial span for the backend trace that will be sent
-                # This span will be the starting point for the backend trace
-                with tracer.start_span(
-                    f"backend_trace_start_{method}_{url.replace('/', '_')}",
-                    context=trace.set_span_in_context(
-                        trace.NonRecordingSpan(backend_span_context)
-                    ),
-                    links=[link_back_to_sdk],
-                ) as backend_initial_span:
-                    # Set attributes on the backend initial span
-                    backend_initial_span.set_attribute("http.method", method)
-                    backend_initial_span.set_attribute("http.target", url)
-                    backend_initial_span.set_attribute(
-                        "rapidata.trace_type", "backend_start"
-                    )
-                    backend_initial_span.set_attribute(
-                        "rapidata.sdk_trace_id",
-                        format_trace_id(current_span_context.trace_id),
-                    )
-
-                    # Format the traceparent header with the backend trace ID
-                    # The backend will receive this and continue the trace
-                    header_params["traceparent"] = (
-                        "00-"
-                        + format_trace_id(backend_trace_id)
-                        + "-"
-                        + format_span_id(backend_span_id)
-                        + "-"
-                        + f"{backend_span_context.trace_flags:02x}"
-                    )
-
-                    # Also add a custom header with the original SDK trace info for linking
-                    header_params["x-rapidata-original-trace"] = (
-                        "00-"
-                        + format_trace_id(current_span_context.trace_id)
-                        + "-"
-                        + format_span_id(current_span_context.span_id)
-                        + "-"
-                        + f"{current_span_context.trace_flags:02x}"
-                    )
-
-                    return super().call_api(
-                        method,
-                        url,
-                        header_params,
-                        body,
-                        post_params,
-                        _request_timeout,
-                    )
-        else:
-            # No active span, proceed without tracing headers
+        if not current_span.is_recording():
             return super().call_api(
                 method,
                 url,
@@ -218,6 +130,83 @@ class RapidataApiClient(ApiClient):
                 post_params,
                 _request_timeout,
             )
+
+        current_span_context = current_span.get_span_context()
+
+        # Generate a new trace ID for backend communication
+        # This separates the backend trace from the SDK trace
+        backend_trace_id = self.id_generator.generate_trace_id()
+        backend_span_id = self.id_generator.generate_span_id()
+
+        # Create a new span context for the backend trace
+        backend_span_context = SpanContext(
+            trace_id=backend_trace_id,
+            span_id=backend_span_id,
+            is_remote=True,
+            trace_flags=current_span_context.trace_flags,
+        )
+
+        # Create a link from current SDK span to the backend trace
+        link_to_backend = Link(backend_span_context)
+
+        # Create a link from backend trace back to the original SDK span
+        link_back_to_sdk = Link(current_span_context)
+
+        # Create a span in the current SDK trace that links to the backend
+        with tracer.start_span(
+            f"sdk_request_{method}_{url.replace('/', '_')}",
+            links=[link_to_backend],
+        ) as sdk_request_span:
+            # Set attributes on the SDK span
+            sdk_request_span.set_attribute("http.method", method)
+            sdk_request_span.set_attribute("http.target", url)
+            sdk_request_span.set_attribute(
+                "rapidata.backend_trace_id", format_trace_id(backend_trace_id)
+            )
+            sdk_request_span.set_attribute(
+                "rapidata.original_trace_id",
+                format_trace_id(current_span_context.trace_id),
+            )
+
+            # Now create the initial span for the backend trace that will be sent
+            # This span will be the starting point for the backend trace
+            with tracer.start_span(
+                f"backend_trace_start_{method}_{url.replace('/', '_')}",
+                context=trace.set_span_in_context(
+                    trace.NonRecordingSpan(backend_span_context)
+                ),
+                links=[link_back_to_sdk],
+            ) as backend_initial_span:
+                # Set attributes on the backend initial span
+                backend_initial_span.set_attribute("http.method", method)
+                backend_initial_span.set_attribute("http.target", url)
+                backend_initial_span.set_attribute(
+                    "rapidata.trace_type", "backend_start"
+                )
+                backend_initial_span.set_attribute(
+                    "rapidata.sdk_trace_id",
+                    format_trace_id(current_span_context.trace_id),
+                )
+
+                # Format the traceparent header with the backend trace ID
+                # The backend will receive this and continue the trace
+                header_params["traceparent"] = (
+                    "00-"
+                    + format_trace_id(backend_trace_id)
+                    + "-"
+                    + format_span_id(backend_span_id)
+                    + "-"
+                    + f"{backend_span_context.trace_flags:02x}"
+                )
+
+                return super().call_api(
+                    method,
+                    url,
+                    header_params,
+                    body,
+                    post_params,
+                    _request_timeout,
+                )
 
     def response_deserialize(
         self,

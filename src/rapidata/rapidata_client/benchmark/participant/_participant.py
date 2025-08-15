@@ -44,7 +44,7 @@ class BenchmarkParticipant:
             urls = [asset.path]
 
         last_exception = None
-        for attempt in range(rapidata_config.upload.uploadMaxRetries):
+        for attempt in range(rapidata_config.upload.maxRetries):
             try:
                 with suppress_rapidata_error_logging():
                     self.__openapi_service.participant_api.participant_participant_id_sample_post(
@@ -58,7 +58,7 @@ class BenchmarkParticipant:
 
             except Exception as e:
                 last_exception = e
-                if attempt < rapidata_config.upload.uploadMaxRetries - 1:
+                if attempt < rapidata_config.upload.maxRetries - 1:
                     # Exponential backoff: wait 1s, then 2s, then 4s
                     retry_delay = 2**attempt
                     time.sleep(retry_delay)
@@ -66,7 +66,7 @@ class BenchmarkParticipant:
                     logger.debug(
                         "Retrying %s of %s...",
                         attempt + 1,
-                        rapidata_config.upload.uploadMaxRetries,
+                        rapidata_config.upload.maxRetries,
                     )
 
         logger.error(f"Upload failed for {identifier}. Error: {str(last_exception)}")
@@ -106,7 +106,7 @@ class BenchmarkParticipant:
         current_context = otel_context.get_current()
 
         with ThreadPoolExecutor(
-            max_workers=rapidata_config.upload.maxUploadWorkers
+            max_workers=rapidata_config.upload.maxWorkers
         ) as executor:
             futures = [
                 executor.submit(
