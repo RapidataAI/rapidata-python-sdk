@@ -49,3 +49,9 @@ class ResponseCountFilter(RapidataFilter):
             dimension=self.dimension,
             operator=self.operator,
         )
+
+    def __str__(self) -> str:
+        return f"ResponseCountFilter(response_count={self.response_count}, dimension={self.dimension}, operator={self.operator})"
+
+    def __repr__(self) -> str:
+        return f"ResponseCountFilter(response_count={self.response_count!r}, dimension={self.dimension!r}, operator={self.operator!r})"

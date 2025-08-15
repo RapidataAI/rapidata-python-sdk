@@ -20,12 +20,13 @@ from rapidata.api_client.models.preliminary_download_model import (
 from rapidata.api_client.models.workflow_artifact_model import WorkflowArtifactModel
 from rapidata.rapidata_client.order.rapidata_results import RapidataResults
 from rapidata.service.openapi_service import OpenAPIService
-from rapidata.rapidata_client.logging import (
+from rapidata.rapidata_client.config import (
     logger,
     managed_print,
-    RapidataOutputManager,
+    rapidata_config,
+    tracer,
 )
-from rapidata.rapidata_client.api.rapidata_exception import (
+from rapidata.rapidata_client.api.rapidata_api_client import (
     suppress_rapidata_error_logging,
 )
 
@@ -74,36 +75,40 @@ class RapidataOrder:
 
     def run(self) -> "RapidataOrder":
         """Runs the order to start collecting responses."""
-        logger.info("Starting order '%s'", self)
-        self.__openapi_service.order_api.order_order_id_submit_post(
-            self.id, SubmitOrderModel(ignoreFailedDatapoints=True)
-        )
-        logger.debug("Order '%s' has been started.", self)
-        managed_print(
-            f"Order '{self.name}' is now viewable under: {self.order_details_page}"
-        )
-        return self
+        with tracer.start_as_current_span("RapidataOrder.run"):
+            logger.info("Starting order '%s'", self)
+            self.__openapi_service.order_api.order_order_id_submit_post(
+                self.id, SubmitOrderModel(ignoreFailedDatapoints=True)
+            )
+            logger.debug("Order '%s' has been started.", self)
+            managed_print(
+                f"Order '{self.name}' is now viewable under: {self.order_details_page}"
+            )
+            return self
 
     def pause(self) -> None:
         """Pauses the order."""
-        logger.info("Pausing order '%s'", self)
-        self.__openapi_service.order_api.order_order_id_pause_post(self.id)
-        logger.debug("Order '%s' has been paused.", self)
-        managed_print(f"Order '{self}' has been paused.")
+        with tracer.start_as_current_span("RapidataOrder.pause"):
+            logger.info("Pausing order '%s'", self)
+            self.__openapi_service.order_api.order_order_id_pause_post(self.id)
+            logger.debug("Order '%s' has been paused.", self)
+            managed_print(f"Order '{self}' has been paused.")
 
     def unpause(self) -> None:
         """Unpauses/resumes the order."""
-        logger.info("Unpausing order '%s'", self)
-        self.__openapi_service.order_api.order_order_id_resume_post(self.id)
-        logger.debug("Order '%s' has been unpaused.", self)
-        managed_print(f"Order '{self}' has been unpaused.")
+        with tracer.start_as_current_span("RapidataOrder.unpause"):
+            logger.info("Unpausing order '%s'", self)
+            self.__openapi_service.order_api.order_order_id_resume_post(self.id)
+            logger.debug("Order '%s' has been unpaused.", self)
+            managed_print(f"Order '{self}' has been unpaused.")
 
     def delete(self) -> None:
         """Deletes the order."""
-        logger.info("Deleting order '%s'", self)
-        self.__openapi_service.order_api.order_order_id_delete(self.id)
-        logger.debug("Order '%s' has been deleted.", self)
-        managed_print(f"Order '{self}' has been deleted.")
+        with tracer.start_as_current_span("RapidataOrder.delete"):
+            logger.info("Deleting order '%s'", self)
+            self.__openapi_service.order_api.order_order_id_delete(self.id)
+            logger.debug("Order '%s' has been deleted.", self)
+            managed_print(f"Order '{self}' has been deleted.")
 
     def get_status(self) -> str:
         """
@@ -119,7 +124,8 @@ class RapidataOrder:
             Completed: The order has been completed.\n
             Failed: The order has failed.
         """
-        return self.__openapi_service.order_api.order_order_id_get(self.id).state
+        with tracer.start_as_current_span("RapidataOrder.get_status"):
+            return self.__openapi_service.order_api.order_order_id_get(self.id).state
 
     def display_progress_bar(self, refresh_rate: int = 5) -> None:
         """
@@ -150,7 +156,7 @@ class RapidataOrder:
             desc="Processing order",
             unit="%",
             bar_format="{desc}: {percentage:3.0f}%|{bar}| completed [{elapsed}<{remaining}, {rate_fmt}]",
-            disable=RapidataOutputManager.silent_mode,
+            disable=rapidata_config.logging.silent_mode,
         ) as pbar:
             last_percentage = 0
             while True:
@@ -193,31 +199,37 @@ class RapidataOrder:
             preliminary_results: If True, returns the preliminary results of the order. Defaults to False.
                 Note that preliminary results are not final and may not contain all the datapoints & responses. Only the onese that are already available.
         """
-        logger.info("Getting results for order '%s'...", self)
-        if preliminary_results and self.get_status() not in [OrderState.COMPLETED]:
-            return self.__get_preliminary_results()
+        with tracer.start_as_current_span("RapidataOrder.get_results"):
+            logger.info("Getting results for order '%s'...", self)
+            if preliminary_results and self.get_status() not in [OrderState.COMPLETED]:
+                return self.__get_preliminary_results()
 
-        elif preliminary_results and self.get_status() in [OrderState.COMPLETED]:
-            managed_print("Order is already completed. Returning final results.")
+            elif preliminary_results and self.get_status() in [OrderState.COMPLETED]:
+                managed_print("Order is already completed. Returning final results.")
 
-        while self.get_status() not in [
-            OrderState.COMPLETED,
-            OrderState.PAUSED,
-            OrderState.MANUALREVIEW,
-            OrderState.FAILED,
-        ]:
-            sleep(5)
+            while (state := self.get_status()) not in [
+                OrderState.COMPLETED,
+                OrderState.PAUSED,
+                OrderState.MANUALREVIEW,
+                OrderState.FAILED,
+            ]:
+                sleep(5)
+                logger.debug(
+                    "Order '%s' is in state %s not yet completed. Waiting...",
+                    self,
+                    state,
+                )
 
-        try:
-            return RapidataResults(
-                json.loads(
-                    self.__openapi_service.order_api.order_order_id_download_results_get(
-                        order_id=self.id
+            try:
+                return RapidataResults(
+                    json.loads(
+                        self.__openapi_service.order_api.order_order_id_download_results_get(
+                            order_id=self.id
+                        )
                     )
                 )
-            )
-        except (ApiException, json.JSONDecodeError) as e:
-            raise Exception(f"Failed to get order results: {str(e)}") from e
+            except (ApiException, json.JSONDecodeError) as e:
+                raise Exception(f"Failed to get order results: {str(e)}") from e
 
     def view(self) -> None:
         """

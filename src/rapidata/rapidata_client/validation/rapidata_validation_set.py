@@ -3,7 +3,7 @@ import urllib.parse
 from colorama import Fore
 from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 from rapidata.service.openapi_service import OpenAPIService
-from rapidata.rapidata_client.logging import logger, managed_print
+from rapidata.rapidata_client.config import logger, managed_print, tracer
 from rapidata.api_client.models.update_dimensions_model import UpdateDimensionsModel
 from rapidata.api_client.models.update_should_alert_model import UpdateShouldAlertModel
 
@@ -34,7 +34,9 @@ class RapidataValidationSet:
         Args:
             rapid (Rapid): The Rapid to add to the validation set.
         """
-        rapid._add_to_validation_set(self.id, self.__openapi_service)
+        with tracer.start_as_current_span("RapidataValidationSet.add_rapid"):
+            logger.debug("Adding rapid %s to validation set %s", rapid, self.id)
+            rapid._add_to_validation_set(self.id, self.__openapi_service)
         return self
 
     def update_dimensions(self, dimensions: list[str]):
@@ -43,13 +45,14 @@ class RapidataValidationSet:
         Args:
             dimensions (list[str]): The new dimensions of the validation set.
         """
-        logger.debug(
-            "Updating dimensions for validation set %s to %s", self.id, dimensions
-        )
-        self.__openapi_service.validation_api.validation_set_validation_set_id_dimensions_put(
-            self.id, UpdateDimensionsModel(dimensions=dimensions)
-        )
-        return self
+        with tracer.start_as_current_span("RapidataValidationSet.update_dimensions"):
+            logger.debug(
+                "Updating dimensions for validation set %s to %s", self.id, dimensions
+            )
+            self.__openapi_service.validation_api.validation_set_validation_set_id_dimensions_put(
+                self.id, UpdateDimensionsModel(dimensions=dimensions)
+            )
+            return self
 
     def update_should_alert(self, should_alert: bool):
         """Determines whether users should be alerted if they answer incorrectly.
@@ -60,13 +63,14 @@ class RapidataValidationSet:
         Note:
             The userScore dimensions which are updated when a user answers a validation task are updated regardless of the value of `should_alert`.
         """
-        logger.debug(
-            "Setting shouldAlert for validation set %s to %s", self.id, should_alert
-        )
-        self.__openapi_service.validation_api.validation_set_validation_set_id_shouldalert_patch(
-            self.id, UpdateShouldAlertModel(shouldAlert=should_alert)
-        )
-        return self
+        with tracer.start_as_current_span("RapidataValidationSet.update_should_alert"):
+            logger.debug(
+                "Setting shouldAlert for validation set %s to %s", self.id, should_alert
+            )
+            self.__openapi_service.validation_api.validation_set_validation_set_id_shouldalert_patch(
+                self.id, UpdateShouldAlertModel(shouldAlert=should_alert)
+            )
+            return self
 
     def view(self) -> None:
         """

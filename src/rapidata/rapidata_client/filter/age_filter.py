@@ -6,10 +6,10 @@ from rapidata.rapidata_client.filter.models.age_group import AgeGroup
 
 class AgeFilter(RapidataFilter):
     """AgeFilter Class
-    
+
     Can be used to filter who to target based on age groups.
-    
-    
+
+
     Args:
         age_groups (list[AgeGroup]): List of age groups to filter by."""
 
@@ -21,3 +21,9 @@ class AgeFilter(RapidataFilter):
             _t="AgeFilter",
             ageGroups=[age_group._to_backend_model() for age_group in self.age_groups],
         )
+
+    def __str__(self) -> str:
+        return f"AgeFilter(age_groups={self.age_groups})"
+
+    def __repr__(self) -> str:
+        return f"AgeFilter(age_groups={self.age_groups!r})"

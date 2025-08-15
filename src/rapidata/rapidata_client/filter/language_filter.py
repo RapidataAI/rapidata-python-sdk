@@ -7,26 +7,27 @@ from rapidata.api_client.models.language_user_filter_model import (
 
 class LanguageFilter(RapidataFilter):
     """LanguageFilter Class
-    
+
     Can be used to filter who to target based on language codes.
 
     Args:
         language_codes (list[str]): List of language codes to filter by.
-            
-    Example: 
+
+    Example:
         ```python
         LanguageFilter(["en", "de"])
         ```
         This will limit the order to be shown to only people who have their phone set to english or german
     """
+
     def __init__(self, language_codes: list[str]):
         if not isinstance(language_codes, list):
             raise ValueError("Language codes must be a list")
-        
+
         # check that all characters in the language codes are lowercase
         if not all([code.islower() for code in language_codes]):
             raise ValueError("Language codes must be lowercase")
-        
+
         for code in language_codes:
             if not len(code) == 2:
                 raise ValueError("Language codes must be two characters long")
@@ -35,3 +36,9 @@ class LanguageFilter(RapidataFilter):
 
     def _to_model(self):
         return LanguageUserFilterModel(_t="LanguageFilter", languages=self.languages)
+
+    def __str__(self):
+        return f"LanguageFilter({self.languages})"
+
+    def __repr__(self):
+        return f"LanguageFilter({self.languages})"

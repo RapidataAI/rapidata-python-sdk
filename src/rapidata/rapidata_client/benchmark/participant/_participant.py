@@ -3,14 +3,16 @@ import time
 from tqdm import tqdm
 
 from rapidata.rapidata_client.datapoints.assets import MediaAsset
-from rapidata.rapidata_client.logging import logger
-from rapidata.rapidata_client.logging.output_manager import RapidataOutputManager
+from rapidata.rapidata_client.config import logger
 from rapidata.api_client.models.create_sample_model import CreateSampleModel
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.config.rapidata_config import rapidata_config
-from rapidata.rapidata_client.api.rapidata_exception import (
+from rapidata.rapidata_client.api.rapidata_api_client import (
     suppress_rapidata_error_logging,
 )
+
+# Add OpenTelemetry context imports for thread propagation
+from opentelemetry import context as otel_context
 
 
 class BenchmarkParticipant:
@@ -42,7 +44,7 @@ class BenchmarkParticipant:
             urls = [asset.path]
 
         last_exception = None
-        for attempt in range(rapidata_config.uploadMaxRetries):
+        for attempt in range(rapidata_config.upload.maxRetries):
             try:
                 with suppress_rapidata_error_logging():
                     self.__openapi_service.participant_api.participant_participant_id_sample_post(
@@ -56,7 +58,7 @@ class BenchmarkParticipant:
 
             except Exception as e:
                 last_exception = e
-                if attempt < rapidata_config.uploadMaxRetries - 1:
+                if attempt < rapidata_config.upload.maxRetries - 1:
                     # Exponential backoff: wait 1s, then 2s, then 4s
                     retry_delay = 2**attempt
                     time.sleep(retry_delay)
@@ -64,7 +66,7 @@ class BenchmarkParticipant:
                     logger.debug(
                         "Retrying %s of %s...",
                         attempt + 1,
-                        rapidata_config.uploadMaxRetries,
+                        rapidata_config.upload.maxRetries,
                     )
 
         logger.error(f"Upload failed for {identifier}. Error: {str(last_exception)}")
@@ -85,16 +87,31 @@ class BenchmarkParticipant:
         Returns:
             tuple[list[str], list[str]]: Lists of successful and failed identifiers
         """
+
+        def upload_with_context(
+            context: otel_context.Context, asset: MediaAsset, identifier: str
+        ) -> tuple[MediaAsset | None, MediaAsset | None]:
+            """Wrapper function that runs _process_single_sample_upload with the provided context."""
+            token = otel_context.attach(context)
+            try:
+                return self._process_single_sample_upload(asset, identifier)
+            finally:
+                otel_context.detach(token)
+
         successful_uploads: list[MediaAsset] = []
         failed_uploads: list[MediaAsset] = []
         total_uploads = len(assets)
 
+        # Capture the current OpenTelemetry context before creating threads
+        current_context = otel_context.get_current()
+
         with ThreadPoolExecutor(
-            max_workers=rapidata_config.maxUploadWorkers
+            max_workers=rapidata_config.upload.maxWorkers
         ) as executor:
             futures = [
                 executor.submit(
-                    self._process_single_sample_upload,
+                    upload_with_context,
+                    current_context,
                     asset,
                     identifier,
                 )
@@ -104,7 +121,7 @@ class BenchmarkParticipant:
             with tqdm(
                 total=total_uploads,
                 desc="Uploading media",
-                disable=RapidataOutputManager.silent_mode,
+                disable=rapidata_config.logging.silent_mode,
             ) as pbar:
                 for future in as_completed(futures):
                     try:

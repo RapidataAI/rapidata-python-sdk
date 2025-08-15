@@ -40,6 +40,12 @@ class RankingWorkflow(Workflow):
         )
 
         self.criteria = criteria
+        self.total_comparison_budget = total_comparison_budget
+        self.random_comparisons_ratio = random_comparisons_ratio
+        self.elo_start = elo_start
+        self.elo_k_factor = elo_k_factor
+        self.elo_scaling_factor = elo_scaling_factor
+
         self.pair_maker_config = CompareWorkflowModelPairMakerConfig(
             OnlinePairMakerConfigModel(
                 _t="OnlinePairMaker",
@@ -69,3 +75,9 @@ class RankingWorkflow(Workflow):
             _t="ComparePayload",
             criteria=self.criteria,
         )
+
+    def __str__(self) -> str:
+        return f"RankingWorkflow(criteria='{self.criteria}', context={self.context})"
+
+    def __repr__(self) -> str:
+        return f"RankingWorkflow(criteria={self.criteria!r}, total_comparison_budget={self.total_comparison_budget!r}, random_comparisons_ratio={self.random_comparisons_ratio!r}, elo_start={self.elo_start!r}, elo_k_factor={self.elo_k_factor!r}, elo_scaling_factor={self.elo_scaling_factor!r}, context={self.context!r})"

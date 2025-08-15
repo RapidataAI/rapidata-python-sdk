@@ -17,7 +17,7 @@ from pydantic import StrictStr, StrictBytes
 import logging
 from functools import cached_property
 from rapidata.rapidata_client.datapoints.assets._sessions import SessionManager
-from rapidata.rapidata_client.logging import logger
+from rapidata.rapidata_client.config import logger
 from rapidata.rapidata_client.datapoints.assets.constants import (
     ALLOWED_IMAGE_EXTENSIONS,
     ALLOWED_MEDIA_EXTENSIONS,

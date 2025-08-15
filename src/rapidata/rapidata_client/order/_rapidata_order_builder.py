@@ -19,10 +19,11 @@ from rapidata.rapidata_client.exceptions.failed_upload_exception import (
     _parse_failed_uploads,
 )
 from rapidata.rapidata_client.filter import RapidataFilter
-from rapidata.rapidata_client.logging import (
+from rapidata.rapidata_client.config import (
     logger,
     managed_print,
-    RapidataOutputManager,
+    rapidata_config,
+    tracer,
 )
 from rapidata.rapidata_client.validation.validation_set_manager import (
     ValidationSetManager,
@@ -35,9 +36,9 @@ from rapidata.rapidata_client.selection._base_selection import RapidataSelection
 from rapidata.rapidata_client.settings import RapidataSetting
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.service.openapi_service import OpenAPIService
-from rapidata.rapidata_client.config.rapidata_config import rapidata_config
-from rapidata.rapidata_client.api.rapidata_exception import (
+from rapidata.rapidata_client.api.rapidata_api_client import (
     suppress_rapidata_error_logging,
+    RapidataApiClient,
 )
 
 
@@ -153,13 +154,18 @@ class RapidataOrderBuilder:
                 "Using recommended validation set with ID: %s", self.__validation_set_id
             )
         except Exception as e:
-            logger.info("No recommended validation set found, creating new one.")
+            logger.debug("No recommended validation set found, error: %s", e)
 
-        if len(self.__datapoints) < rapidata_config.minOrderDatapointsForValidation:
+        if (
+            len(self.__datapoints)
+            < rapidata_config.order.minOrderDatapointsForValidation
+        ):
             logger.debug(
                 "No recommended validation set found, dataset too small to create one."
             )
             return
+
+        logger.info("No recommended validation set found, creating new one.")
 
         managed_print()
         managed_print(
@@ -170,7 +176,9 @@ class RapidataOrderBuilder:
             order_name=self._name,
             datapoints=random.sample(
                 self.__datapoints,
-                min(rapidata_config.autoValidationSetSize, len(self.__datapoints)),
+                min(
+                    rapidata_config.order.autoValidationSetSize, len(self.__datapoints)
+                ),
             ),
             settings=self.__settings,
         )
@@ -181,9 +189,6 @@ class RapidataOrderBuilder:
     def _create(self) -> RapidataOrder:
         """
         Create the Rapidata order by making the necessary API calls based on the builder's configuration.
-
-        Args:
-            max_upload_workers (int, optional): The maximum number of worker threads for processing media paths. Defaults to 10.
 
         Raises:
             ValueError: If both media paths and texts are provided, or if neither is provided.
@@ -225,10 +230,11 @@ class RapidataOrderBuilder:
         logger.debug("Adding media to the order.")
 
         if self.__dataset:
-            _, failed_uploads = self.__dataset.add_datapoints(self.__datapoints)
+            with tracer.start_as_current_span("add_datapoints"):
+                _, failed_uploads = self.__dataset.add_datapoints(self.__datapoints)
 
-            if failed_uploads:
-                raise FailedUploadException(self.__dataset, order, failed_uploads)
+                if failed_uploads:
+                    raise FailedUploadException(self.__dataset, order, failed_uploads)
 
         else:
             raise RuntimeError(

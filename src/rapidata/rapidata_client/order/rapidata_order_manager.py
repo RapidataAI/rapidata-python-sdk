@@ -1,6 +1,7 @@
 from typing import Sequence, Optional, Literal
 from itertools import zip_longest
 
+from rapidata.rapidata_client.config.tracer import tracer
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 from rapidata.rapidata_client.order._rapidata_order_builder import RapidataOrderBuilder
@@ -33,7 +34,7 @@ from rapidata.rapidata_client.filter import RapidataFilter
 from rapidata.rapidata_client.filter.rapidata_filters import RapidataFilters
 from rapidata.rapidata_client.settings import RapidataSettings, RapidataSetting
 from rapidata.rapidata_client.selection.rapidata_selections import RapidataSelections
-from rapidata.rapidata_client.logging import logger, RapidataOutputManager
+from rapidata.rapidata_client.config import logger, rapidata_config
 
 from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.page_info import PageInfo
@@ -107,6 +108,23 @@ class RapidataOrderManager:
                 threshold=confidence_threshold,
                 max_vote_count=responses_per_datapoint,
             )
+
+        logger.debug(
+            "Creating order with parameters: name %s, workflow %s, assets %s, responses_per_datapoint %s, contexts %s, media_contexts %s, validation_set_id %s, confidence_threshold %s, filters %s, settings %s, sentences %s, selections %s, private_notes %s",
+            name,
+            workflow,
+            assets,
+            responses_per_datapoint,
+            contexts,
+            media_contexts,
+            validation_set_id,
+            confidence_threshold,
+            filters,
+            settings,
+            sentences,
+            selections,
+            private_notes,
+        )
 
         order_builder = RapidataOrderBuilder(
             name=name, openapi_service=self.__openapi_service
@@ -235,32 +253,34 @@ class RapidataOrderManager:
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
+        with tracer.start_as_current_span(
+            "RapidataOrderManager.create_classification_order"
+        ):
+            if data_type == "media":
+                assets = [MediaAsset(path=path) for path in datapoints]
+            elif data_type == "text":
+                assets = [TextAsset(text=text) for text in datapoints]
+            else:
+                raise ValueError(
+                    f"Unsupported data type: {data_type}, must be one of 'media' or 'text'"
+                )
 
-        if data_type == "media":
-            assets = [MediaAsset(path=path) for path in datapoints]
-        elif data_type == "text":
-            assets = [TextAsset(text=text) for text in datapoints]
-        else:
-            raise ValueError(
-                f"Unsupported data type: {data_type}, must be one of 'media' or 'text'"
+            return self._create_general_order(
+                name=name,
+                workflow=ClassifyWorkflow(
+                    instruction=instruction, answer_options=answer_options
+                ),
+                assets=assets,
+                responses_per_datapoint=responses_per_datapoint,
+                contexts=contexts,
+                media_contexts=media_contexts,
+                validation_set_id=validation_set_id,
+                confidence_threshold=confidence_threshold,
+                filters=filters,
+                selections=selections,
+                settings=settings,
+                private_notes=private_notes,
             )
-
-        return self._create_general_order(
-            name=name,
-            workflow=ClassifyWorkflow(
-                instruction=instruction, answer_options=answer_options
-            ),
-            assets=assets,
-            responses_per_datapoint=responses_per_datapoint,
-            contexts=contexts,
-            media_contexts=media_contexts,
-            validation_set_id=validation_set_id,
-            confidence_threshold=confidence_threshold,
-            filters=filters,
-            selections=selections,
-            settings=settings,
-            private_notes=private_notes,
-        )
 
     def create_compare_order(
         self,
@@ -316,45 +336,47 @@ class RapidataOrderManager:
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
+        with tracer.start_as_current_span("RapidataOrderManager.create_compare_order"):
+            if any(type(datapoint) != list for datapoint in datapoints):
+                raise ValueError("Each datapoint must be a list of 2 paths/texts")
 
-        if any(type(datapoint) != list for datapoint in datapoints):
-            raise ValueError("Each datapoint must be a list of 2 paths/texts")
+            if any(len(datapoint) != 2 for datapoint in datapoints):
+                raise ValueError("Each datapoint must contain exactly two options")
 
-        if any(len(datapoint) != 2 for datapoint in datapoints):
-            raise ValueError("Each datapoint must contain exactly two options")
+            if a_b_names is not None and len(a_b_names) != 2:
+                raise ValueError(
+                    "A_B_naming must be a list of exactly two strings or None"
+                )
 
-        if a_b_names is not None and len(a_b_names) != 2:
-            raise ValueError("A_B_naming must be a list of exactly two strings or None")
+            if data_type == "media":
+                assets = [
+                    MultiAsset([MediaAsset(path=path) for path in datapoint])
+                    for datapoint in datapoints
+                ]
+            elif data_type == "text":
+                assets = [
+                    MultiAsset([TextAsset(text=text) for text in datapoint])
+                    for datapoint in datapoints
+                ]
+            else:
+                raise ValueError(
+                    f"Unsupported data type: {data_type}, must be one of 'media' or 'text'"
+                )
 
-        if data_type == "media":
-            assets = [
-                MultiAsset([MediaAsset(path=path) for path in datapoint])
-                for datapoint in datapoints
-            ]
-        elif data_type == "text":
-            assets = [
-                MultiAsset([TextAsset(text=text) for text in datapoint])
-                for datapoint in datapoints
-            ]
-        else:
-            raise ValueError(
-                f"Unsupported data type: {data_type}, must be one of 'media' or 'text'"
+            return self._create_general_order(
+                name=name,
+                workflow=CompareWorkflow(instruction=instruction, a_b_names=a_b_names),
+                assets=assets,
+                responses_per_datapoint=responses_per_datapoint,
+                contexts=contexts,
+                media_contexts=media_contexts,
+                validation_set_id=validation_set_id,
+                confidence_threshold=confidence_threshold,
+                filters=filters,
+                selections=selections,
+                settings=settings,
+                private_notes=private_notes,
             )
-
-        return self._create_general_order(
-            name=name,
-            workflow=CompareWorkflow(instruction=instruction, a_b_names=a_b_names),
-            assets=assets,
-            responses_per_datapoint=responses_per_datapoint,
-            contexts=contexts,
-            media_contexts=media_contexts,
-            validation_set_id=validation_set_id,
-            confidence_threshold=confidence_threshold,
-            filters=filters,
-            selections=selections,
-            settings=settings,
-            private_notes=private_notes,
-        )
 
     def create_ranking_order(
         self,
@@ -396,30 +418,31 @@ class RapidataOrderManager:
             selections (Sequence[RapidataSelection], optional): The list of selections for the order. Defaults to []. Decides in what order the tasks should be shown.
         """
 
-        if data_type == "media":
-            assets = [MediaAsset(path=path) for path in datapoints]
-        elif data_type == "text":
-            assets = [TextAsset(text=text) for text in datapoints]
-        else:
-            raise ValueError(
-                f"Unsupported data type: {data_type}, must be one of 'media' or 'text'"
-            )
+        with tracer.start_as_current_span("RapidataOrderManager.create_ranking_order"):
+            if data_type == "media":
+                assets = [MediaAsset(path=path) for path in datapoints]
+            elif data_type == "text":
+                assets = [TextAsset(text=text) for text in datapoints]
+            else:
+                raise ValueError(
+                    f"Unsupported data type: {data_type}, must be one of 'media' or 'text'"
+                )
 
-        return self._create_general_order(
-            name=name,
-            workflow=RankingWorkflow(
-                criteria=instruction,
-                total_comparison_budget=total_comparison_budget,
-                random_comparisons_ratio=random_comparisons_ratio,
-                context=context,
-            ),
-            assets=assets,
-            responses_per_datapoint=responses_per_comparison,
-            validation_set_id=validation_set_id,
-            filters=filters,
-            selections=selections,
-            settings=settings,
-        )
+            return self._create_general_order(
+                name=name,
+                workflow=RankingWorkflow(
+                    criteria=instruction,
+                    total_comparison_budget=total_comparison_budget,
+                    random_comparisons_ratio=random_comparisons_ratio,
+                    context=context,
+                ),
+                assets=assets,
+                responses_per_datapoint=responses_per_comparison,
+                validation_set_id=validation_set_id,
+                filters=filters,
+                selections=selections,
+                settings=settings,
+            )
 
     def create_free_text_order(
         self,
@@ -460,28 +483,31 @@ class RapidataOrderManager:
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
+        with tracer.start_as_current_span(
+            "RapidataOrderManager.create_free_text_order"
+        ):
 
-        if data_type == "media":
-            assets = [MediaAsset(path=path) for path in datapoints]
-        elif data_type == "text":
-            assets = [TextAsset(text=text) for text in datapoints]
-        else:
-            raise ValueError(
-                f"Unsupported data type: {data_type}, must be one of 'media' or 'text'"
+            if data_type == "media":
+                assets = [MediaAsset(path=path) for path in datapoints]
+            elif data_type == "text":
+                assets = [TextAsset(text=text) for text in datapoints]
+            else:
+                raise ValueError(
+                    f"Unsupported data type: {data_type}, must be one of 'media' or 'text'"
+                )
+
+            return self._create_general_order(
+                name=name,
+                workflow=FreeTextWorkflow(instruction=instruction),
+                assets=assets,
+                responses_per_datapoint=responses_per_datapoint,
+                contexts=contexts,
+                media_contexts=media_contexts,
+                filters=filters,
+                selections=selections,
+                settings=settings,
+                private_notes=private_notes,
             )
-
-        return self._create_general_order(
-            name=name,
-            workflow=FreeTextWorkflow(instruction=instruction),
-            assets=assets,
-            responses_per_datapoint=responses_per_datapoint,
-            contexts=contexts,
-            media_contexts=media_contexts,
-            filters=filters,
-            selections=selections,
-            settings=settings,
-            private_notes=private_notes,
-        )
 
     def create_select_words_order(
         self,
@@ -518,23 +544,25 @@ class RapidataOrderManager:
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
+        with tracer.start_as_current_span(
+            "RapidataOrderManager.create_select_words_order"
+        ):
+            assets = [MediaAsset(path=path) for path in datapoints]
 
-        assets = [MediaAsset(path=path) for path in datapoints]
-
-        return self._create_general_order(
-            name=name,
-            workflow=SelectWordsWorkflow(
-                instruction=instruction,
-            ),
-            assets=assets,
-            responses_per_datapoint=responses_per_datapoint,
-            validation_set_id=validation_set_id,
-            filters=filters,
-            selections=selections,
-            settings=settings,
-            sentences=sentences,
-            private_notes=private_notes,
-        )
+            return self._create_general_order(
+                name=name,
+                workflow=SelectWordsWorkflow(
+                    instruction=instruction,
+                ),
+                assets=assets,
+                responses_per_datapoint=responses_per_datapoint,
+                validation_set_id=validation_set_id,
+                filters=filters,
+                selections=selections,
+                settings=settings,
+                sentences=sentences,
+                private_notes=private_notes,
+            )
 
     def create_locate_order(
         self,
@@ -574,22 +602,22 @@ class RapidataOrderManager:
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
+        with tracer.start_as_current_span("RapidataOrderManager.create_locate_order"):
+            assets = [MediaAsset(path=path) for path in datapoints]
 
-        assets = [MediaAsset(path=path) for path in datapoints]
-
-        return self._create_general_order(
-            name=name,
-            workflow=LocateWorkflow(target=instruction),
-            assets=assets,
-            responses_per_datapoint=responses_per_datapoint,
-            contexts=contexts,
-            media_contexts=media_contexts,
-            validation_set_id=validation_set_id,
-            filters=filters,
-            selections=selections,
-            settings=settings,
-            private_notes=private_notes,
-        )
+            return self._create_general_order(
+                name=name,
+                workflow=LocateWorkflow(target=instruction),
+                assets=assets,
+                responses_per_datapoint=responses_per_datapoint,
+                contexts=contexts,
+                media_contexts=media_contexts,
+                validation_set_id=validation_set_id,
+                filters=filters,
+                selections=selections,
+                settings=settings,
+                private_notes=private_notes,
+            )
 
     def create_draw_order(
         self,
@@ -629,22 +657,22 @@ class RapidataOrderManager:
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
+        with tracer.start_as_current_span("RapidataOrderManager.create_draw_order"):
+            assets = [MediaAsset(path=path) for path in datapoints]
 
-        assets = [MediaAsset(path=path) for path in datapoints]
-
-        return self._create_general_order(
-            name=name,
-            workflow=DrawWorkflow(target=instruction),
-            assets=assets,
-            responses_per_datapoint=responses_per_datapoint,
-            contexts=contexts,
-            media_contexts=media_contexts,
-            validation_set_id=validation_set_id,
-            filters=filters,
-            selections=selections,
-            settings=settings,
-            private_notes=private_notes,
-        )
+            return self._create_general_order(
+                name=name,
+                workflow=DrawWorkflow(target=instruction),
+                assets=assets,
+                responses_per_datapoint=responses_per_datapoint,
+                contexts=contexts,
+                media_contexts=media_contexts,
+                validation_set_id=validation_set_id,
+                filters=filters,
+                selections=selections,
+                settings=settings,
+                private_notes=private_notes,
+            )
 
     def create_timestamp_order(
         self,
@@ -688,31 +716,34 @@ class RapidataOrderManager:
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
 
-        assets = [MediaAsset(path=path) for path in datapoints]
-
-        for asset in tqdm(
-            assets,
-            desc="Downloading assets and checking duration",
-            disable=RapidataOutputManager.silent_mode,
+        with tracer.start_as_current_span(
+            "RapidataOrderManager.create_timestamp_order"
         ):
-            if not asset.get_duration():
-                raise ValueError(
-                    "The datapoints for this order must have a duration. (e.g. video or audio)"
-                )
+            assets = [MediaAsset(path=path) for path in datapoints]
 
-        return self._create_general_order(
-            name=name,
-            workflow=TimestampWorkflow(instruction=instruction),
-            assets=assets,
-            responses_per_datapoint=responses_per_datapoint,
-            contexts=contexts,
-            media_contexts=media_contexts,
-            validation_set_id=validation_set_id,
-            filters=filters,
-            selections=selections,
-            settings=settings,
-            private_notes=private_notes,
-        )
+            for asset in tqdm(
+                assets,
+                desc="Downloading assets and checking duration",
+                disable=rapidata_config.logging.silent_mode,
+            ):
+                if not asset.get_duration():
+                    raise ValueError(
+                        "The datapoints for this order must have a duration. (e.g. video or audio)"
+                    )
+
+            return self._create_general_order(
+                name=name,
+                workflow=TimestampWorkflow(instruction=instruction),
+                assets=assets,
+                responses_per_datapoint=responses_per_datapoint,
+                contexts=contexts,
+                media_contexts=media_contexts,
+                validation_set_id=validation_set_id,
+                filters=filters,
+                selections=selections,
+                settings=settings,
+                private_notes=private_notes,
+            )
 
     def get_order_by_id(self, order_id: str) -> RapidataOrder:
         """Get an order by ID.
@@ -723,14 +754,14 @@ class RapidataOrderManager:
         Returns:
             RapidataOrder: The Order instance.
         """
+        with tracer.start_as_current_span("RapidataOrderManager.get_order_by_id"):
+            order = self.__openapi_service.order_api.order_order_id_get(order_id)
 
-        order = self.__openapi_service.order_api.order_order_id_get(order_id)
-
-        return RapidataOrder(
-            order_id=order_id,
-            name=order.order_name,
-            openapi_service=self.__openapi_service,
-        )
+            return RapidataOrder(
+                order_id=order_id,
+                name=order.order_name,
+                openapi_service=self.__openapi_service,
+            )
 
     def find_orders(self, name: str = "", amount: int = 10) -> list[RapidataOrder]:
         """Find your recent orders given criteria. If nothing is provided, it will return the most recent order.
@@ -742,25 +773,28 @@ class RapidataOrderManager:
         Returns:
             list[RapidataOrder]: A list of RapidataOrder instances.
         """
-        order_page_result = self.__openapi_service.order_api.orders_get(
-            QueryModel(
-                page=PageInfo(index=1, size=amount),
-                filter=RootFilter(
-                    filters=[
-                        Filter(
-                            field="OrderName",
-                            operator=FilterOperator.CONTAINS,
-                            value=name,
+        with tracer.start_as_current_span("RapidataOrderManager.find_orders"):
+            order_page_result = self.__openapi_service.order_api.orders_get(
+                QueryModel(
+                    page=PageInfo(index=1, size=amount),
+                    filter=RootFilter(
+                        filters=[
+                            Filter(
+                                field="OrderName",
+                                operator=FilterOperator.CONTAINS,
+                                value=name,
+                            )
+                        ]
+                    ),
+                    sortCriteria=[
+                        SortCriterion(
+                            direction=SortDirection.DESC, propertyName="OrderDate"
                         )
-                    ]
-                ),
-                sortCriteria=[
-                    SortCriterion(
-                        direction=SortDirection.DESC, propertyName="OrderDate"
-                    )
-                ],
+                    ],
+                )
             )
-        )
 
-        orders = [self.get_order_by_id(order.id) for order in order_page_result.items]
-        return orders
+            orders = [
+                self.get_order_by_id(order.id) for order in order_page_result.items
+            ]
+            return orders

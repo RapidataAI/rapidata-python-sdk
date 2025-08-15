@@ -23,7 +23,6 @@ class Workflow(ABC):
 
     def __init__(self, type: str):
         self._type = type
-        self._target_country_codes: list[str] = []
 
     def _to_dict(self) -> dict[str, Any]:
         return {
@@ -50,3 +49,9 @@ class Workflow(ABC):
         self,
     ) -> SimpleWorkflowModel | CompareWorkflowModel | EvaluationWorkflowModel:
         pass
+
+    def __str__(self) -> str:
+        return self._type
+
+    def __repr__(self) -> str:
+        return self._type

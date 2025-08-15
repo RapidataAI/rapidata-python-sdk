@@ -66,3 +66,9 @@ class SelectWordsWorkflow(Workflow):
                 for i, word in enumerate(select_words_metadata.select_words.split())
             ],
         )
+
+    def __str__(self) -> str:
+        return f"SelectWordsWorkflow(instruction='{self._instruction}')"
+
+    def __repr__(self) -> str:
+        return f"SelectWordsWorkflow(instruction={self._instruction!r})"

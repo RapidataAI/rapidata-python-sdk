@@ -28,3 +28,9 @@ class LocateWorkflow(Workflow):
             _t="LocatePayload",
             target=self._target,
         )
+
+    def __str__(self) -> str:
+        return f"LocateWorkflow(target='{self._target}')"
+
+    def __repr__(self) -> str:
+        return f"LocateWorkflow(target={self._target!r})"

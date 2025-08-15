@@ -28,3 +28,9 @@ class DrawWorkflow(Workflow):
             _t="LinePayload",
             target=self._target,
         )
+
+    def __str__(self) -> str:
+        return f"DrawWorkflow(target='{self._target}')"
+
+    def __repr__(self) -> str:
+        return f"DrawWorkflow(target={self._target!r})"

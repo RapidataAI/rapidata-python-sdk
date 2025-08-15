@@ -15,7 +15,7 @@ from rapidata.api_client.models.dataset_dataset_id_datapoints_post_request_metad
 )
 from rapidata.service.openapi_service import OpenAPIService
 
-from rapidata.rapidata_client.logging import logger
+from rapidata.rapidata_client.config import logger
 from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
 
 
@@ -109,3 +109,9 @@ class Rapid:
                 else None
             ),
         )
+
+    def __str__(self) -> str:
+        return f"Rapid(asset={self.asset}, metadata={self.metadata}, payload={self.payload}, truth={self.truth}, randomCorrectProbability={self.randomCorrectProbability}, explanation={self.explanation}, settings={self.settings})"
+
+    def __repr__(self) -> str:
+        return self.__str__()

@@ -89,7 +89,7 @@ nav:
       - "🔍 Filters": reference/rapidata/rapidata_client/filter/rapidata_filters.md
       - "⚙️ Settings": reference/rapidata/rapidata_client/settings/rapidata_settings.md
       - "📤 Selections": reference/rapidata/rapidata_client/selection/rapidata_selections.md
-      - "📝 Logging": logging.md
+      - "📝 Logging & Config": config.md
     - "📈 Benchmarks":
       - "🧠 Model Ranking Insights": mri.md
 

@@ -9,6 +9,7 @@ from rapidata.api_client.models.filter import Filter
 from rapidata.api_client.models.sort_criterion import SortCriterion
 from rapidata.api_client.models.sort_direction import SortDirection
 from rapidata.api_client.models.filter_operator import FilterOperator
+from rapidata.rapidata_client.config import logger, tracer
 
 
 class RapidataBenchmarkManager:
@@ -58,78 +59,96 @@ class RapidataBenchmarkManager:
             benchmark = create_new_benchmark(name=name, identifiers=identifiers, prompts=prompts, prompt_assets=prompt_assets, tags=tags)
             ```
         """
-        if not isinstance(name, str):
-            raise ValueError("Name must be a string.")
-
-        if prompts and (
-            not isinstance(prompts, list)
-            or not all(isinstance(prompt, str) or prompt is None for prompt in prompts)
+        with tracer.start_as_current_span(
+            "RapidataBenchmarkManager.create_new_benchmark"
         ):
-            raise ValueError("Prompts must be a list of strings or None.")
+            if not isinstance(name, str):
+                raise ValueError("Name must be a string.")
 
-        if prompt_assets and (
-            not isinstance(prompt_assets, list)
-            or not all(
-                isinstance(asset, str) or asset is None for asset in prompt_assets
+            if prompts and (
+                not isinstance(prompts, list)
+                or not all(
+                    isinstance(prompt, str) or prompt is None for prompt in prompts
+                )
+            ):
+                raise ValueError("Prompts must be a list of strings or None.")
+
+            if prompt_assets and (
+                not isinstance(prompt_assets, list)
+                or not all(
+                    isinstance(asset, str) or asset is None for asset in prompt_assets
+                )
+            ):
+                raise ValueError("Media assets must be a list of strings or None.")
+
+            if not isinstance(identifiers, list) or not all(
+                isinstance(identifier, str) for identifier in identifiers
+            ):
+                raise ValueError("Identifiers must be a list of strings.")
+
+            if prompts and len(identifiers) != len(prompts):
+                raise ValueError("Identifiers and prompts must have the same length.")
+
+            if prompt_assets and len(identifiers) != len(prompt_assets):
+                raise ValueError(
+                    "Identifiers and media assets must have the same length."
+                )
+
+            if not prompts and not prompt_assets:
+                raise ValueError(
+                    "At least one of prompts or media assets must be provided."
+                )
+
+            if len(set(identifiers)) != len(identifiers):
+                raise ValueError("Identifiers must be unique.")
+
+            if tags and len(identifiers) != len(tags):
+                raise ValueError("Identifiers and tags must have the same length.")
+
+            logger.info("Creating new benchmark %s", name)
+
+            benchmark_result = self.__openapi_service.benchmark_api.benchmark_post(
+                create_benchmark_model=CreateBenchmarkModel(
+                    name=name,
+                )
             )
-        ):
-            raise ValueError("Media assets must be a list of strings or None.")
 
-        if not isinstance(identifiers, list) or not all(
-            isinstance(identifier, str) for identifier in identifiers
-        ):
-            raise ValueError("Identifiers must be a list of strings.")
+            logger.info("Benchmark created with id %s", benchmark_result.id)
 
-        if prompts and len(identifiers) != len(prompts):
-            raise ValueError("Identifiers and prompts must have the same length.")
-
-        if prompt_assets and len(identifiers) != len(prompt_assets):
-            raise ValueError("Identifiers and media assets must have the same length.")
-
-        if not prompts and not prompt_assets:
-            raise ValueError(
-                "At least one of prompts or media assets must be provided."
+            benchmark = RapidataBenchmark(
+                name, benchmark_result.id, self.__openapi_service
             )
 
-        if len(set(identifiers)) != len(identifiers):
-            raise ValueError("Identifiers must be unique.")
-
-        if tags and len(identifiers) != len(tags):
-            raise ValueError("Identifiers and tags must have the same length.")
-
-        benchmark_result = self.__openapi_service.benchmark_api.benchmark_post(
-            create_benchmark_model=CreateBenchmarkModel(
-                name=name,
+            prompts_list = prompts if prompts is not None else [None] * len(identifiers)
+            media_assets_list = (
+                prompt_assets
+                if prompt_assets is not None
+                else [None] * len(identifiers)
             )
-        )
+            tags_list = tags if tags is not None else [None] * len(identifiers)
 
-        benchmark = RapidataBenchmark(name, benchmark_result.id, self.__openapi_service)
+            for identifier, prompt, asset, tag in zip(
+                identifiers, prompts_list, media_assets_list, tags_list
+            ):
+                benchmark.add_prompt(identifier, prompt, asset, tag)
 
-        prompts_list = prompts if prompts is not None else [None] * len(identifiers)
-        media_assets_list = (
-            prompt_assets if prompt_assets is not None else [None] * len(identifiers)
-        )
-        tags_list = tags if tags is not None else [None] * len(identifiers)
-
-        for identifier, prompt, asset, tag in zip(
-            identifiers, prompts_list, media_assets_list, tags_list
-        ):
-            benchmark.add_prompt(identifier, prompt, asset, tag)
-
-        return benchmark
+            return benchmark
 
     def get_benchmark_by_id(self, id: str) -> RapidataBenchmark:
         """
         Returns a benchmark by its ID.
         """
-        benchmark_result = (
-            self.__openapi_service.benchmark_api.benchmark_benchmark_id_get(
-                benchmark_id=id
+        with tracer.start_as_current_span(
+            "RapidataBenchmarkManager.get_benchmark_by_id"
+        ):
+            benchmark_result = (
+                self.__openapi_service.benchmark_api.benchmark_benchmark_id_get(
+                    benchmark_id=id
+                )
             )
-        )
-        return RapidataBenchmark(
-            benchmark_result.name, benchmark_result.id, self.__openapi_service
-        )
+            return RapidataBenchmark(
+                benchmark_result.name, benchmark_result.id, self.__openapi_service
+            )
 
     def find_benchmarks(
         self, name: str = "", amount: int = 10
@@ -137,24 +156,27 @@ class RapidataBenchmarkManager:
         """
         Returns a list of benchmarks by their name.
         """
-        benchmark_result = self.__openapi_service.benchmark_api.benchmarks_get(
-            QueryModel(
-                page=PageInfo(index=1, size=amount),
-                filter=RootFilter(
-                    filters=[
-                        Filter(
-                            field="Name", operator=FilterOperator.CONTAINS, value=name
+        with tracer.start_as_current_span("RapidataBenchmarkManager.find_benchmarks"):
+            benchmark_result = self.__openapi_service.benchmark_api.benchmarks_get(
+                QueryModel(
+                    page=PageInfo(index=1, size=amount),
+                    filter=RootFilter(
+                        filters=[
+                            Filter(
+                                field="Name",
+                                operator=FilterOperator.CONTAINS,
+                                value=name,
+                            )
+                        ]
+                    ),
+                    sortCriteria=[
+                        SortCriterion(
+                            direction=SortDirection.DESC, propertyName="CreatedAt"
                         )
-                    ]
-                ),
-                sortCriteria=[
-                    SortCriterion(
-                        direction=SortDirection.DESC, propertyName="CreatedAt"
-                    )
-                ],
+                    ],
+                )
             )
-        )
-        return [
-            RapidataBenchmark(benchmark.name, benchmark.id, self.__openapi_service)
-            for benchmark in benchmark_result.items
-        ]
+            return [
+                RapidataBenchmark(benchmark.name, benchmark.id, self.__openapi_service)
+                for benchmark in benchmark_result.items
+            ]
