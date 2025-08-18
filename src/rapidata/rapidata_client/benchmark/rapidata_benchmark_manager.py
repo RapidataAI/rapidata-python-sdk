@@ -192,7 +192,7 @@ class RapidataBenchmarkManager:
                 asset is None for asset in prompt_assets
             ):
                 raise ValueError(
-                    "Provide a prompts list and/or prompt_assets list without None values. Otherwise use the identifiers parameter."
+                    "Both prompts and prompt_assets lists must be provided without None values, or use the identifiers parameter instead"
                 )
             if not len(prompts) == len(prompt_assets):
                 raise ValueError(
@@ -216,7 +216,7 @@ class RapidataBenchmarkManager:
                 raise ValueError(
                     "Prompts must be unique. Otherwise use the identifiers parameter."
                 )
-            return [prompt for prompt in prompts if prompt is not None]
+            return prompts  # type: ignore
         elif prompt_assets:
             if any(asset is None for asset in prompt_assets):
                 raise ValueError(
@@ -226,7 +226,7 @@ class RapidataBenchmarkManager:
                 raise ValueError(
                     "Prompt assets must be unique. Otherwise use the identifiers parameter."
                 )
-            return [asset for asset in prompt_assets if asset is not None]
+            return prompt_assets  # type: ignore
         else:
             raise ValueError(
                 "At least one of prompts or media assets must be provided."
