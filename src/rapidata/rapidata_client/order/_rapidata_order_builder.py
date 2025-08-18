@@ -38,7 +38,6 @@ from rapidata.rapidata_client.workflow import Workflow
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.api.rapidata_api_client import (
     suppress_rapidata_error_logging,
-    RapidataApiClient,
 )
 
 
@@ -209,6 +208,11 @@ class RapidataOrderBuilder:
 
         self.order_id = str(result.order_id)
         logger.debug("Order created with ID: %s", self.order_id)
+
+        if rapidata_config.enableBetaFeatures:
+            managed_print(
+                f"https://app.{self.__openapi_service.environment}/validation-set/detail/{self.__validation_set_id}/annotate?orderId={self.order_id}&required={3}"
+            )
 
         self.__dataset = (
             RapidataDataset(result.dataset_id, self.__openapi_service)
