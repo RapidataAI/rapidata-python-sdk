@@ -1,11 +1,13 @@
 from rapidata import RapidataClient
 
-IMAGE_URLS = ["https://assets.rapidata.ai/midjourney-5.2_37_3.jpg", 
-              "https://assets.rapidata.ai/flux-1-pro_37_0.jpg",
-              "https://assets.rapidata.ai/frames-23-1-25_37_4.png",
-              "https://assets.rapidata.ai/aurora-20-1-25_37_3.png"]
+IMAGE_URLS = [
+    "https://assets.rapidata.ai/midjourney-5.2_37_3.jpg",
+    "https://assets.rapidata.ai/flux-1-pro_37_0.jpg",
+    "https://assets.rapidata.ai/frames-23-1-25_37_4.png",
+    "https://assets.rapidata.ai/aurora-20-1-25_37_3.png",
+]
 
-    
+
 if __name__ == "__main__":
     rapi = RapidataClient()
 

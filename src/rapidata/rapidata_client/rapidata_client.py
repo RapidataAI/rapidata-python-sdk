@@ -22,6 +22,11 @@ from rapidata.rapidata_client.config import (
     rapidata_config,
 )
 
+# Add OpenTelemetry imports for linking
+from opentelemetry import trace
+from opentelemetry.trace import SpanContext
+from opentelemetry.sdk.trace.id_generator import RandomIdGenerator
+
 
 class RapidataClient:
     """The Rapidata client is the main entry point for interacting with the Rapidata API. It allows you to create orders and validation sets."""
@@ -52,36 +57,77 @@ class RapidataClient:
             order (RapidataOrderManager): The RapidataOrderManager instance.
             validation (ValidationSetManager): The ValidationSetManager instance.
         """
-        with tracer.start_as_current_span("RapidataClient.__init__"):
-            logger.debug("Checking version")
-            self._check_version()
 
-            logger.debug("Initializing OpenAPIService")
-            self._openapi_service = OpenAPIService(
-                client_id=client_id,
-                client_secret=client_secret,
-                environment=environment,
-                oauth_scope=oauth_scope,
-                cert_path=cert_path,
-                token=token,
-                leeway=leeway,
-            )
+        # Create the lifetime trace and span context
+        id_generator = RandomIdGenerator()
+        lifetime_trace_id = id_generator.generate_trace_id()
+        lifetime_span_id = id_generator.generate_span_id()
 
-            logger.debug("Initializing RapidataOrderManager")
-            self.order = RapidataOrderManager(openapi_service=self._openapi_service)
+        # Create the lifetime span context
+        lifetime_span_context = SpanContext(
+            trace_id=lifetime_trace_id,
+            span_id=lifetime_span_id,
+            is_remote=False,
+            trace_flags=trace.TraceFlags(1),
+        )
 
-            logger.debug("Initializing ValidationSetManager")
-            self.validation = ValidationSetManager(
-                openapi_service=self._openapi_service
-            )
+        # Set the lifetime context in the tracer for automatic linking
+        tracer.set_client_lifetime_context(lifetime_span_context)
 
-            logger.debug("Initializing DemographicManager")
-            self._demographic = DemographicManager(
-                openapi_service=self._openapi_service
-            )
+        # Create the actual lifetime span
+        with tracer.start_span(
+            "RapidataClient.lifetime",
+            context=trace.set_span_in_context(
+                trace.NonRecordingSpan(lifetime_span_context)
+            ),
+        ) as lifetime_span:
+            # Set attributes on the lifetime span
+            lifetime_span.set_attribute("rapidata.client.environment", environment)
+            lifetime_span.set_attribute("rapidata.client.oauth_scope", oauth_scope)
+            lifetime_span.set_attribute("rapidata.trace_type", "client_lifetime")
 
-            logger.debug("Initializing RapidataBenchmarkManager")
-            self.mri = RapidataBenchmarkManager(openapi_service=self._openapi_service)
+            # Now use linked spans for all initialization operations
+            with tracer.start_linked_as_current_span(
+                "RapidataClient.__init__"
+            ) as init_span:
+                # Set attributes to show the linking
+                init_span.set_attribute(
+                    "rapidata.lifetime_trace_id",
+                    trace.format_trace_id(lifetime_trace_id),
+                )
+                init_span.set_attribute("rapidata.trace_type", "client_initialization")
+
+                logger.debug("Checking version")
+                self._check_version()
+
+                logger.debug("Initializing OpenAPIService")
+                self._openapi_service = OpenAPIService(
+                    client_id=client_id,
+                    client_secret=client_secret,
+                    environment=environment,
+                    oauth_scope=oauth_scope,
+                    cert_path=cert_path,
+                    token=token,
+                    leeway=leeway,
+                )
+
+                logger.debug("Initializing RapidataOrderManager")
+                self.order = RapidataOrderManager(openapi_service=self._openapi_service)
+
+                logger.debug("Initializing ValidationSetManager")
+                self.validation = ValidationSetManager(
+                    openapi_service=self._openapi_service
+                )
+
+                logger.debug("Initializing DemographicManager")
+                self._demographic = DemographicManager(
+                    openapi_service=self._openapi_service
+                )
+
+                logger.debug("Initializing RapidataBenchmarkManager")
+                self.mri = RapidataBenchmarkManager(
+                    openapi_service=self._openapi_service
+                )
 
     def reset_credentials(self):
         """Reset the credentials saved in the configuration file for the current environment."""
@@ -91,6 +137,21 @@ class RapidataClient:
         """Enable beta features for the client."""
         logger.debug("Enabling beta features")
         rapidata_config.enableBetaFeatures = True
+
+    def close(self):
+        """Close the client and end the lifetime trace."""
+        with tracer.start_linked_as_current_span("RapidataClient.close") as close_span:
+            close_span.set_attribute("rapidata.trace_type", "client_close")
+            logger.debug("Closing RapidataClient")
+
+        # Clear the lifetime context from the tracer
+        tracer.clear_client_lifetime_context()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
 
     def _check_version(self):
         try:

@@ -75,7 +75,8 @@ class RapidataOrder:
 
     def run(self) -> "RapidataOrder":
         """Runs the order to start collecting responses."""
-        with tracer.start_as_current_span("RapidataOrder.run"):
+        # Use linked span - this will automatically link to client lifetime if available
+        with tracer.start_linked_as_current_span("RapidataOrder.run"):
             logger.info("Starting order '%s'", self)
             self.__openapi_service.order_api.order_order_id_submit_post(
                 self.id, SubmitOrderModel(ignoreFailedDatapoints=True)
@@ -88,7 +89,8 @@ class RapidataOrder:
 
     def pause(self) -> None:
         """Pauses the order."""
-        with tracer.start_as_current_span("RapidataOrder.pause"):
+        # Use linked span - this will automatically link to client lifetime if available
+        with tracer.start_linked_as_current_span("RapidataOrder.pause"):
             logger.info("Pausing order '%s'", self)
             self.__openapi_service.order_api.order_order_id_pause_post(self.id)
             logger.debug("Order '%s' has been paused.", self)
