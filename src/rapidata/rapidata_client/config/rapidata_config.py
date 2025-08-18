@@ -11,7 +11,7 @@ class RapidataConfig(BaseModel):
 
     To adjust the configurations used, you can modify the `rapidata_config` object.
 
-    Args:
+    Attributes:
         enableBetaFeatures (bool): Whether to enable beta features. Defaults to False.
         upload (UploadConfig): The configuration for the upload process.
             Such as the maximum number of worker threads for processing media paths and the maximum number of retries for failed uploads.

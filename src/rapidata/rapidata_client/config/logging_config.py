@@ -23,7 +23,7 @@ class LoggingConfig(BaseModel):
     """
     Holds the configuration for the logging process.
 
-    Args:
+    Attributes:
         level (str): The logging level. Defaults to "WARNING".
         log_file (str | None): The logging file. Defaults to None.
         format (str): The logging format. Defaults to "%(asctime)s - %(name)s - %(levelname)s - %(message)s".
