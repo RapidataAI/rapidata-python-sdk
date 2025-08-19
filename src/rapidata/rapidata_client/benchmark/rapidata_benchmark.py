@@ -208,7 +208,7 @@ class RapidataBenchmark:
         self,
         identifier: str | None = None,
         prompt: str | None = None,
-        asset: str | None = None,
+        prompt_asset: str | None = None,
         tags: Optional[list[str]] = None,
     ):
         """
@@ -217,15 +217,15 @@ class RapidataBenchmark:
         Args:
             identifier: The identifier of the prompt/asset/tags that will be used to match up the media. If not provided, it will use the prompt, asset or prompt + asset as the identifier.
             prompt: The prompt that will be used to evaluate the model.
-            asset: The asset that will be used to evaluate the model. Provided as a link to the asset.
+            prompt_asset: The prompt asset that will be used to evaluate the model. Provided as a link to the asset.
             tags: The tags can be used to filter the leaderboard results. They will NOT be shown to the users.
         """
         with tracer.start_as_current_span("RapidataBenchmark.add_prompt"):
             if tags is None:
                 tags = []
 
-            if prompt is None and asset is None:
-                raise ValueError("Prompt or asset must be provided.")
+            if prompt is None and prompt_asset is None:
+                raise ValueError("Prompt or prompt asset must be provided.")
 
             if identifier is None and prompt is None:
                 raise ValueError("Identifier or prompt must be provided.")
@@ -236,7 +236,7 @@ class RapidataBenchmark:
             if prompt and not isinstance(prompt, str):
                 raise ValueError("Prompt must be a string.")
 
-            if asset and not isinstance(asset, str):
+            if prompt_asset and not isinstance(prompt_asset, str):
                 raise ValueError(
                     "Asset must be a string. That is the link to the asset."
                 )
@@ -252,8 +252,8 @@ class RapidataBenchmark:
             if identifier in self.identifiers:
                 raise ValueError("Identifier already exists in the benchmark.")
 
-            if asset is not None and not re.match(r"^https?://", asset):
-                raise ValueError("Asset must be a link to the asset.")
+            if prompt_asset is not None and not re.match(r"^https?://", prompt_asset):
+                raise ValueError("Prompt asset must be a link to the asset.")
 
             if tags is not None and (
                 not isinstance(tags, list)
@@ -262,10 +262,10 @@ class RapidataBenchmark:
                 raise ValueError("Tags must be a list of strings.")
 
             logger.info(
-                "Adding identifier %s with prompt %s, asset %s and tags %s to benchmark %s",
+                "Adding identifier %s with prompt %s, prompt asset %s and tags %s to benchmark %s",
                 identifier,
                 prompt,
-                asset,
+                prompt_asset,
                 tags,
                 self.id,
             )
@@ -274,7 +274,7 @@ class RapidataBenchmark:
 
             self.__tags.append(tags)
             self.__prompts.append(prompt)
-            self.__prompt_assets.append(asset)
+            self.__prompt_assets.append(prompt_asset)
 
             self.__openapi_service.benchmark_api.benchmark_benchmark_id_prompt_post(
                 benchmark_id=self.id,
@@ -283,9 +283,9 @@ class RapidataBenchmark:
                     prompt=prompt,
                     promptAsset=(
                         SubmitPromptModelPromptAsset(
-                            UrlAssetInput(_t="UrlAssetInput", url=asset)
+                            UrlAssetInput(_t="UrlAssetInput", url=prompt_asset)
                         )
-                        if asset is not None
+                        if prompt_asset is not None
                         else None
                     ),
                     tags=tags,
