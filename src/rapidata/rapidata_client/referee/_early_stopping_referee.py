@@ -15,7 +15,7 @@ class EarlyStoppingReferee(Referee):
     The threshold behaves logarithmically, meaning small increments (e.g., from 0.99
     to 0.999) can significantly impact the stopping criteria.
 
-    This referee is supported for the classification and compare tasks (in compare, 
+    This referee is supported for the classification and compare tasks (in compare,
     the two options are treated as the categories).
 
     Args:
@@ -34,7 +34,7 @@ class EarlyStoppingReferee(Referee):
             raise ValueError("The threshold must be between 0 and 1.")
         if max_vote_count < 1:
             raise ValueError("The number of responses must be greater than 0.")
-        
+
         self.threshold = threshold
         self.max_vote_count = max_vote_count
 

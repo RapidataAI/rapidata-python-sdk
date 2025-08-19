@@ -1,10 +1,12 @@
 from abc import ABC, abstractmethod
 from typing import Any, Mapping
 
+
 class Referee(ABC):
     """
-    The referee defines when a rapid is considered complete. 
+    The referee defines when a rapid is considered complete.
     """
+
     @abstractmethod
     def _to_dict(self) -> Mapping[str, str | int | float]:
         """

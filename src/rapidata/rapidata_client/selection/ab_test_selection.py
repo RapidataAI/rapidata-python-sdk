@@ -10,17 +10,21 @@ from typing import Sequence
 
 class AbTestSelection(RapidataSelection):
     """AbTestSelection Class
-    
+
     Splits the userbase into two segments and serves them a different collection of rapids.
 
     Useful for A/B Test.
-    
+
     Args:
         a_selections (Sequence[RapidataSelection]): List of selections for group A.
         b_selections (Sequence[RapidataSelection]): List of selections for group B.
     """
 
-    def __init__(self, a_selections: Sequence[RapidataSelection], b_selections: Sequence[RapidataSelection]):
+    def __init__(
+        self,
+        a_selections: Sequence[RapidataSelection],
+        b_selections: Sequence[RapidataSelection],
+    ):
         self.a_selections = a_selections
         self.b_selections = b_selections
 

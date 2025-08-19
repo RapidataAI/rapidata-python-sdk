@@ -1,5 +1,6 @@
 from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
 
+
 class AllowNeitherBoth(RapidataSetting):
     """
     Set whether to allow neither or both options.

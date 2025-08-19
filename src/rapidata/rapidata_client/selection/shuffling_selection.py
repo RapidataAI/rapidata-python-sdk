@@ -1,6 +1,7 @@
-
 from rapidata.api_client.models.ab_test_selection_a_inner import AbTestSelectionAInner
-from rapidata.api_client.models.shuffling_selection import ShufflingSelection as ShufflingSelectionModel
+from rapidata.api_client.models.shuffling_selection import (
+    ShufflingSelection as ShufflingSelectionModel,
+)
 from rapidata.rapidata_client.selection._base_selection import RapidataSelection
 
 from typing import Sequence
@@ -10,7 +11,7 @@ class ShufflingSelection(RapidataSelection):
     """ShufflingSelection Class
 
     Shuffles the selections provided in the list.
-    
+
     Args:
         selections (Sequence[RapidataSelection]): List of selections to shuffle.
 
@@ -31,6 +32,5 @@ class ShufflingSelection(RapidataSelection):
             selections=[
                 AbTestSelectionAInner(selection._to_model())
                 for selection in self.selections
-            ]
+            ],
         )
-    

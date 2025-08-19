@@ -2,6 +2,7 @@
 
 This package provides classes for different types of assets, including MediaAsset, TextAsset, and MultiAsset.
 """
+
 from ._base_asset import BaseAsset
 from ._media_asset import MediaAsset
 from ._text_asset import TextAsset

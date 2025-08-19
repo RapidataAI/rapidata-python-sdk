@@ -5,14 +5,15 @@ from rapidata.rapidata_client.settings import (
     NoShuffle,
     PlayVideoUntilTheEnd,
     AllowNeitherBoth,
-    )
+)
+
 
 class RapidataSettings:
     """
     Container class for all setting factory functions
 
     Settings can be added to an order to determine the behaviour of the task.
-    
+
     Attributes:
         alert_on_fast_response (AlertOnFastResponse): Gives an alert as a pop up on the UI when the response time is less than the milliseconds.
         translation_behaviour (TranslationBehaviour): Defines what's the behaviour of the translation in the UI.
@@ -27,7 +28,7 @@ class RapidataSettings:
         settings=[FreeTextMinimumCharacters(10)]
         ```
 
-        This can be used in a free text order to set the minimum number of characters required to submit the task. 
+        This can be used in a free text order to set the minimum number of characters required to submit the task.
     """
 
     alert_on_fast_response = AlertOnFastResponse

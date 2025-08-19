@@ -24,11 +24,11 @@ class TextAsset(BaseAsset):
         """
         if not isinstance(text, str):
             raise ValueError(f"Text must be a string, got {type(text)}")
-        
+
         self.text = text
 
     def __str__(self) -> str:
         return f"TextAsset(text={self.text})"
-    
+
     def __repr__(self) -> str:
         return f"TextAsset(text={self.text})"

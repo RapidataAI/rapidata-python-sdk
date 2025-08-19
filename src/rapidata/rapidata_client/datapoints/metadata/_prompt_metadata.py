@@ -10,9 +10,8 @@ class PromptMetadata(Metadata):
 
         if not isinstance(prompt, str):
             raise ValueError("Prompt must be a string")
-        
+
         self._prompt = prompt
-    
 
     def to_model(self):
         return PromptMetadataInput(_t="PromptMetadataInput", prompt=self._prompt)

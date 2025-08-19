@@ -1,12 +1,14 @@
 from rapidata.rapidata_client.filter import (
-    AgeFilter, 
-    CountryFilter, 
-    GenderFilter, 
-    LanguageFilter, 
+    AgeFilter,
+    CountryFilter,
+    GenderFilter,
+    LanguageFilter,
     UserScoreFilter,
     NotFilter,
     OrFilter,
-    AndFilter)
+    AndFilter,
+)
+
 
 class RapidataFilters:
     """RapidataFilters Classes
@@ -15,9 +17,9 @@ class RapidataFilters:
 
     Note that adding multiple filters to the same order will result in a logical AND operation between the filters.
 
-    Warning: 
+    Warning:
         This might significantly slow down the number of responses you receive.
-    
+
     Attributes:
         user_score (UserScoreFilter): Filters for users with a specific user score.
         age (AgeFilter): Filters for users with a specific age.
@@ -36,7 +38,7 @@ class RapidataFilters:
 
         This ensures the order is only shown to users in the US and Germany whose phones are set to English.
 
-    Info:        
+    Info:
         The OR, AND and NOT filter support the |, & and ~ operators respectively.
         The AND is additionally given by the elements in the list.
 
@@ -47,8 +49,9 @@ class RapidataFilters:
 
         This would return users who are not under 18 years old and are from the US or who are from Canada and whose phones are set to English.
     """
+
     user_score = UserScoreFilter
-    age = AgeFilter 
+    age = AgeFilter
     country = CountryFilter
     gender = GenderFilter
     language = LanguageFilter

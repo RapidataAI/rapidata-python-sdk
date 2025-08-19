@@ -12,9 +12,9 @@ class CappedSelection(RapidataSelection):
     """CappedSelection Class
 
     Takes in different selections and caps the amount of rapids that can be shown.
-    
+
     Useful for demographic and conditional validation selections.
-    
+
     Args:
         selections (Sequence[RapidataSelection]): List of selections to cap.
         max_rapids (int): The maximum amount of rapids that can be shown for this selection.

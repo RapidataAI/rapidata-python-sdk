@@ -12,7 +12,7 @@ class ConditionalValidationSelection(RapidataSelection):
     """Conditional validation selection class.
 
     Probabilistically decides how many validation rapids you want to show per session based on the user score.
-    
+
     Args:
         validation_set_id (str): The id of the validation set to be used.
         thresholds (list[float]): The thresholds to use for the user score.
@@ -29,7 +29,7 @@ class ConditionalValidationSelection(RapidataSelection):
             rapid_counts=[1, 1]
         )
         ```
-        This means that there's a 100% chance of showing a validation rapid if the user score is between 0 and 0.7, 
+        This means that there's a 100% chance of showing a validation rapid if the user score is between 0 and 0.7,
         and a 20% chance of showing a validation rapid if the user score is between 0.7 and 1.
     """
 
@@ -45,7 +45,7 @@ class ConditionalValidationSelection(RapidataSelection):
             raise ValueError(
                 "The lengths of thresholds, chances and rapid_counts must be equal."
             )
-        
+
         self.validation_set_id = validation_set_id
         self.thresholds = thresholds
         self.chances = chances
