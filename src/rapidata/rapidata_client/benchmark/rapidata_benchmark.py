@@ -390,31 +390,48 @@ class RapidataBenchmark:
             )
 
     def evaluate_model(
-        self, name: str, media: list[str], identifiers: list[str]
+        self,
+        name: str,
+        media: list[str],
+        identifiers: list[str] | None = None,
+        prompts: list[str] | None = None,
     ) -> None:
         """
         Evaluates a model on the benchmark across all leaderboards.
+
+        prompts or identifiers must be provided to match the media.
 
         Args:
             name: The name of the model.
             media: The generated images/videos that will be used to evaluate the model.
             identifiers: The identifiers that correspond to the media. The order of the identifiers must match the order of the media.\n
                 The identifiers that are used must be registered for the benchmark. To see the registered identifiers, use the identifiers property.
-
-        Notes:
-            If the identifiers were not manually provided when creating the benchmark, they have been generated from the prompts and/or assets and are still visible through the identifiers property.
+            prompts: The prompts that correspond to the media. The order of the prompts must match the order of the media.
         """
         with tracer.start_as_current_span("evaluate_model"):
             if not media:
                 raise ValueError("Media must be a non-empty list of strings")
 
+            if not identifiers and not prompts:
+                raise ValueError("Identifiers or prompts must be provided.")
+
+            if identifiers and prompts:
+                raise ValueError(
+                    "Identifiers and prompts cannot be provided at the same time. Use one or the other."
+                )
+
+            if not identifiers:
+                assert prompts is not None
+                identifiers = prompts
+
             if len(media) != len(identifiers):
-                raise ValueError("Media and identifiers must have the same length")
+                raise ValueError(
+                    "Media and identifiers/prompts must have the same length"
+                )
 
             if not all(identifier in self.identifiers for identifier in identifiers):
                 raise ValueError(
-                    "All identifiers must be in the registered identifiers list. To see the registered identifiers, use the identifiers property.\
-            \nTo see the prompts that are associated with the identifiers, use the prompts property."
+                    "All identifiers/prompts must be in the registered identifiers/prompts list. To see the registered identifiers/prompts, use the identifiers/prompts property."
                 )
 
             # happens before the creation of the participant to ensure all media paths are valid
