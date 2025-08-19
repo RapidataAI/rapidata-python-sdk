@@ -206,7 +206,7 @@ class RapidataBenchmark:
 
     def add_prompt(
         self,
-        identifier: str,
+        identifier: str | None = None,
         prompt: str | None = None,
         asset: str | None = None,
         tags: Optional[list[str]] = None,
@@ -215,7 +215,7 @@ class RapidataBenchmark:
         Adds a prompt to the benchmark.
 
         Args:
-            identifier: The identifier of the prompt/asset/tags that will be used to match up the media.
+            identifier: The identifier of the prompt/asset/tags that will be used to match up the media. If not provided, it will use the prompt, asset or prompt + asset as the identifier.
             prompt: The prompt that will be used to evaluate the model.
             asset: The asset that will be used to evaluate the model. Provided as a link to the asset.
             tags: The tags can be used to filter the leaderboard results. They will NOT be shown to the users.
@@ -224,11 +224,21 @@ class RapidataBenchmark:
             if tags is None:
                 tags = []
 
-            if not isinstance(identifier, str):
-                raise ValueError("Identifier must be a string.")
-
             if prompt is None and asset is None:
                 raise ValueError("Prompt or asset must be provided.")
+
+            if identifier is None:
+                if prompt and asset:
+                    identifier = f"{prompt}-{asset}"
+                elif prompt:
+                    identifier = prompt
+                elif asset:
+                    identifier = asset
+                else:
+                    raise ValueError("Prompt or asset must be provided.")
+
+            if not isinstance(identifier, str):
+                raise ValueError("Identifier must be a string.")
 
             if prompt is not None and not isinstance(prompt, str):
                 raise ValueError("Prompt must be a string.")
@@ -387,8 +397,11 @@ class RapidataBenchmark:
         Args:
             name: The name of the model.
             media: The generated images/videos that will be used to evaluate the model.
-            identifiers: The identifiers that correspond to the media. The order of the identifiers must match the order of the media.
+            identifiers: The identifiers that correspond to the media. The order of the identifiers must match the order of the media.\n
                 The identifiers that are used must be registered for the benchmark. To see the registered identifiers, use the identifiers property.
+
+        Notes:
+            If the identifiers were not manually provided when creating the benchmark, they have been generated from the prompts and/or assets and are still visible through the identifiers property.
         """
         with tracer.start_as_current_span("evaluate_model"):
             if not media:

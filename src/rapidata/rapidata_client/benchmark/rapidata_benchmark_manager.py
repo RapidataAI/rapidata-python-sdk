@@ -30,7 +30,7 @@ class RapidataBenchmarkManager:
     def create_new_benchmark(
         self,
         name: str,
-        identifiers: list[str],
+        identifiers: Optional[list[str]] = None,
         prompts: Optional[list[str | None]] = None,
         prompt_assets: Optional[list[str | None]] = None,
         tags: Optional[list[list[str] | None]] = None,
@@ -43,7 +43,7 @@ class RapidataBenchmarkManager:
 
         Args:
             name: The name of the benchmark.
-            identifiers: The identifiers of the prompts/assets/tags that will be used to match up the media
+            identifiers: The identifiers of the prompts/assets/tags that will be used to match up the media. If not provided, it will use the prompts / assets / prompt+asset as the identifiers.
             prompts: The prompts that will be registered for the benchmark.
             prompt_assets: The prompt assets that will be registered for the benchmark.
             tags: The tags that will be associated with the prompts to use for filtering the leaderboard results. They will NOT be shown to the users.
@@ -62,6 +62,14 @@ class RapidataBenchmarkManager:
         with tracer.start_as_current_span(
             "RapidataBenchmarkManager.create_new_benchmark"
         ):
+            if not prompts and not prompt_assets:
+                raise ValueError(
+                    "At least one of prompts or media assets must be provided."
+                )
+
+            if not identifiers:
+                identifiers = self._get_identifiers(prompts, prompt_assets)
+
             if not isinstance(name, str):
                 raise ValueError("Name must be a string.")
 
@@ -92,11 +100,6 @@ class RapidataBenchmarkManager:
             if prompt_assets and len(identifiers) != len(prompt_assets):
                 raise ValueError(
                     "Identifiers and media assets must have the same length."
-                )
-
-            if not prompts and not prompt_assets:
-                raise ValueError(
-                    "At least one of prompts or media assets must be provided."
                 )
 
             if len(set(identifiers)) != len(identifiers):
@@ -180,3 +183,51 @@ class RapidataBenchmarkManager:
                 RapidataBenchmark(benchmark.name, benchmark.id, self.__openapi_service)
                 for benchmark in benchmark_result.items
             ]
+
+    def _get_identifiers(
+        self, prompts: list[str | None] | None, prompt_assets: list[str | None] | None
+    ) -> list[str]:
+        if prompts and prompt_assets:
+            if any(prompt is None for prompt in prompts) or any(
+                asset is None for asset in prompt_assets
+            ):
+                raise ValueError(
+                    "Both prompts and prompt_assets lists must be provided without None values, or use the identifiers parameter instead"
+                )
+            if not len(prompts) == len(prompt_assets):
+                raise ValueError(
+                    "Prompts and prompt_assets must have the same length. Otherwise use the identifiers parameter and set the prompts and/or prompt_assets to None where they shouldn't be used."
+                )
+            prompts_with_assets = [
+                f"{prompt}-{asset}" for prompt, asset in zip(prompts, prompt_assets)
+            ]
+            if not len(prompts_with_assets) == len(set(prompts_with_assets)):
+                raise ValueError(
+                    "Prompts + prompt assets must be unique. Otherwise use the identifiers parameter."
+                )
+            return prompts_with_assets
+
+        elif prompts:
+            if any(prompt is None for prompt in prompts):
+                raise ValueError(
+                    "Provide a prompts list without None values. Otherwise use the identifiers parameter."
+                )
+            if not len(prompts) == len(set(prompts)):
+                raise ValueError(
+                    "Prompts must be unique. Otherwise use the identifiers parameter."
+                )
+            return prompts  # type: ignore
+        elif prompt_assets:
+            if any(asset is None for asset in prompt_assets):
+                raise ValueError(
+                    "Provide a prompt_assets list without None values. Otherwise use the identifiers parameter."
+                )
+            if not len(prompt_assets) == len(set(prompt_assets)):
+                raise ValueError(
+                    "Prompt assets must be unique. Otherwise use the identifiers parameter."
+                )
+            return prompt_assets  # type: ignore
+        else:
+            raise ValueError(
+                "At least one of prompts or media assets must be provided."
+            )
