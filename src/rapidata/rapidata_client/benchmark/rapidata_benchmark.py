@@ -227,26 +227,27 @@ class RapidataBenchmark:
             if prompt is None and asset is None:
                 raise ValueError("Prompt or asset must be provided.")
 
-            if identifier is None:
-                if prompt and asset:
-                    identifier = f"{prompt}-{asset}"
-                elif prompt:
-                    identifier = prompt
-                elif asset:
-                    identifier = asset
-                else:
-                    raise ValueError("Prompt or asset must be provided.")
+            if identifier is None and prompt is None:
+                raise ValueError("Identifier or prompt must be provided.")
 
-            if not isinstance(identifier, str):
+            if identifier and not isinstance(identifier, str):
                 raise ValueError("Identifier must be a string.")
 
-            if prompt is not None and not isinstance(prompt, str):
+            if prompt and not isinstance(prompt, str):
                 raise ValueError("Prompt must be a string.")
 
-            if asset is not None and not isinstance(asset, str):
+            if asset and not isinstance(asset, str):
                 raise ValueError(
                     "Asset must be a string. That is the link to the asset."
                 )
+
+            if identifier is None:
+                assert prompt is not None
+                if prompt in self.prompts:
+                    raise ValueError(
+                        "Prompts must be unique. Otherwise use identifiers."
+                    )
+                identifier = prompt
 
             if identifier in self.identifiers:
                 raise ValueError("Identifier already exists in the benchmark.")
