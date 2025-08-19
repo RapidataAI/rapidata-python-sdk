@@ -91,16 +91,18 @@ class RapidataBenchmarkManager:
                 if not len(set(identifiers)) == len(identifiers):
                     raise ValueError("Identifiers must be unique.")
 
-            if tags and (
-                not isinstance(tags, list)
-                or not all(
-                    isinstance(tag, list)
-                    or tag is None
-                    or all(isinstance(tag_item, str) for tag_item in tag)  # type: ignore
-                    for tag in tags
-                )
-            ):
-                raise ValueError("Tags must be a list of lists of strings or None.")
+            if tags is not None:
+                if not isinstance(tags, list):
+                    raise ValueError("Tags must be a list of lists of strings or None.")
+
+                for tag in tags:
+                    if tag is not None and (
+                        not isinstance(tag, list)
+                        or not all(isinstance(item, str) for item in tag)
+                    ):
+                        raise ValueError(
+                            "Tags must be a list of lists of strings or None."
+                        )
 
             if not identifiers and not prompts:
                 raise ValueError(
@@ -123,7 +125,7 @@ class RapidataBenchmarkManager:
                         "Prompts must not be None. Otherwise use identifiers."
                     )
 
-                identifiers = prompts  # type: ignore
+                identifiers = cast(list[str], prompts)
 
             assert identifiers is not None
 
