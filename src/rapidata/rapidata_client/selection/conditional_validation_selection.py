@@ -50,7 +50,7 @@ class ConditionalValidationSelection(RapidataSelection):
 
         if dimension:
             logger.warning("dimension is deprecated, use dimensions instead")
-            dimensions = dimensions.append(dimension) if dimensions else [dimension]
+            dimensions = (dimensions or []) + [dimension]
 
         self.validation_set_id = validation_set_id
         self.thresholds = thresholds
