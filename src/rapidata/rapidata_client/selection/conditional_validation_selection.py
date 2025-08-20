@@ -1,3 +1,4 @@
+from rapidata.rapidata_client.config.logger import logger
 from rapidata.rapidata_client.selection._base_selection import RapidataSelection
 from rapidata.api_client.models.conditional_validation_rapid_selection_config import (
     ValidationChance,
@@ -18,7 +19,7 @@ class ConditionalValidationSelection(RapidataSelection):
         thresholds (list[float]): The thresholds to use for the user score.
         chances (list[float]): The chances of showing a validation rapid for each threshold.
         rapid_counts (list[int]): The amount of validation rapids that will be shown per session of this validation set for each threshold if selected by probability. (all or nothing)
-        dimension (Optional[str], optional): The dimension of the userScore that will be used in the thresholds. Defaults to None.
+        dimensions (Optional[list[str]], optional): The dimensions of the userScore that will be used in the thresholds. Defaults to None.
 
     Example:
         ```python
@@ -40,17 +41,22 @@ class ConditionalValidationSelection(RapidataSelection):
         chances: list[float],
         rapid_counts: list[int],
         dimension: Optional[str] = None,
+        dimensions: Optional[list[str]] = None,
     ):
         if len(thresholds) != len(chances) or len(thresholds) != len(rapid_counts):
             raise ValueError(
                 "The lengths of thresholds, chances and rapid_counts must be equal."
             )
 
+        if dimension:
+            logger.warning("dimension is deprecated, use dimensions instead")
+            dimensions = dimensions.append(dimension) if dimensions else [dimension]
+
         self.validation_set_id = validation_set_id
         self.thresholds = thresholds
         self.chances = chances
         self.rapid_counts = rapid_counts
-        self.dimension = dimension
+        self.dimensions = dimensions
 
     def _to_model(self):
         return ConditionalValidationSelectionModel(
@@ -64,5 +70,5 @@ class ConditionalValidationSelection(RapidataSelection):
                     self.thresholds, self.chances, self.rapid_counts
                 )
             ],
-            dimension=self.dimension,
+            dimensions=self.dimensions,
         )
