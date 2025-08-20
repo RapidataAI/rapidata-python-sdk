@@ -4,7 +4,9 @@ from colorama import Fore
 from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.config import logger, managed_print, tracer
-from rapidata.api_client.models.update_dimensions_model import UpdateDimensionsModel
+from rapidata.api_client.models.update_validation_set_model import (
+    UpdateValidationSetModel,
+)
 from rapidata.api_client.models.update_should_alert_model import UpdateShouldAlertModel
 
 
@@ -49,8 +51,8 @@ class RapidataValidationSet:
             logger.debug(
                 "Updating dimensions for validation set %s to %s", self.id, dimensions
             )
-            self.__openapi_service.validation_api.validation_set_validation_set_id_dimensions_put(
-                self.id, UpdateDimensionsModel(dimensions=dimensions)
+            self.__openapi_service.validation_api.validation_set_validation_set_id_patch(
+                self.id, UpdateValidationSetModel(dimensions=dimensions)
             )
             return self
 
@@ -67,8 +69,8 @@ class RapidataValidationSet:
             logger.debug(
                 "Setting shouldAlert for validation set %s to %s", self.id, should_alert
             )
-            self.__openapi_service.validation_api.validation_set_validation_set_id_shouldalert_patch(
-                self.id, UpdateShouldAlertModel(shouldAlert=should_alert)
+            self.__openapi_service.validation_api.validation_set_validation_set_id_patch(
+                self.id, UpdateValidationSetModel(shouldAlert=should_alert)
             )
             return self
 
