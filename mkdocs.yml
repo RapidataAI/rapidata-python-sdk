@@ -92,6 +92,7 @@ nav:
       - "📝 Logging & Config": config.md
     - "📈 Benchmarks":
       - "🧠 Model Ranking Insights": mri.md
+      - "🔭 Model Ranking Insights Advanced": mri_advanced.md
 
 theme:
   name: material

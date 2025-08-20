@@ -208,7 +208,7 @@ class RapidataBenchmark:
         self,
         identifier: str | None = None,
         prompt: str | None = None,
-        asset: str | None = None,
+        prompt_asset: str | None = None,
         tags: Optional[list[str]] = None,
     ):
         """
@@ -217,42 +217,43 @@ class RapidataBenchmark:
         Args:
             identifier: The identifier of the prompt/asset/tags that will be used to match up the media. If not provided, it will use the prompt, asset or prompt + asset as the identifier.
             prompt: The prompt that will be used to evaluate the model.
-            asset: The asset that will be used to evaluate the model. Provided as a link to the asset.
+            prompt_asset: The prompt asset that will be used to evaluate the model. Provided as a link to the asset.
             tags: The tags can be used to filter the leaderboard results. They will NOT be shown to the users.
         """
         with tracer.start_as_current_span("RapidataBenchmark.add_prompt"):
             if tags is None:
                 tags = []
 
-            if prompt is None and asset is None:
-                raise ValueError("Prompt or asset must be provided.")
+            if prompt is None and prompt_asset is None:
+                raise ValueError("Prompt or prompt asset must be provided.")
 
-            if identifier is None:
-                if prompt and asset:
-                    identifier = f"{prompt}-{asset}"
-                elif prompt:
-                    identifier = prompt
-                elif asset:
-                    identifier = asset
-                else:
-                    raise ValueError("Prompt or asset must be provided.")
+            if identifier is None and prompt is None:
+                raise ValueError("Identifier or prompt must be provided.")
 
-            if not isinstance(identifier, str):
+            if identifier and not isinstance(identifier, str):
                 raise ValueError("Identifier must be a string.")
 
-            if prompt is not None and not isinstance(prompt, str):
+            if prompt and not isinstance(prompt, str):
                 raise ValueError("Prompt must be a string.")
 
-            if asset is not None and not isinstance(asset, str):
+            if prompt_asset and not isinstance(prompt_asset, str):
                 raise ValueError(
                     "Asset must be a string. That is the link to the asset."
                 )
 
+            if identifier is None:
+                assert prompt is not None
+                if prompt in self.prompts:
+                    raise ValueError(
+                        "Prompts must be unique. Otherwise use identifiers."
+                    )
+                identifier = prompt
+
             if identifier in self.identifiers:
                 raise ValueError("Identifier already exists in the benchmark.")
 
-            if asset is not None and not re.match(r"^https?://", asset):
-                raise ValueError("Asset must be a link to the asset.")
+            if prompt_asset is not None and not re.match(r"^https?://", prompt_asset):
+                raise ValueError("Prompt asset must be a link to the asset.")
 
             if tags is not None and (
                 not isinstance(tags, list)
@@ -261,10 +262,10 @@ class RapidataBenchmark:
                 raise ValueError("Tags must be a list of strings.")
 
             logger.info(
-                "Adding identifier %s with prompt %s, asset %s and tags %s to benchmark %s",
+                "Adding identifier %s with prompt %s, prompt asset %s and tags %s to benchmark %s",
                 identifier,
                 prompt,
-                asset,
+                prompt_asset,
                 tags,
                 self.id,
             )
@@ -273,7 +274,7 @@ class RapidataBenchmark:
 
             self.__tags.append(tags)
             self.__prompts.append(prompt)
-            self.__prompt_assets.append(asset)
+            self.__prompt_assets.append(prompt_asset)
 
             self.__openapi_service.benchmark_api.benchmark_benchmark_id_prompt_post(
                 benchmark_id=self.id,
@@ -282,9 +283,9 @@ class RapidataBenchmark:
                     prompt=prompt,
                     promptAsset=(
                         SubmitPromptModelPromptAsset(
-                            UrlAssetInput(_t="UrlAssetInput", url=asset)
+                            UrlAssetInput(_t="UrlAssetInput", url=prompt_asset)
                         )
-                        if asset is not None
+                        if prompt_asset is not None
                         else None
                     ),
                     tags=tags,
@@ -389,31 +390,48 @@ class RapidataBenchmark:
             )
 
     def evaluate_model(
-        self, name: str, media: list[str], identifiers: list[str]
+        self,
+        name: str,
+        media: list[str],
+        identifiers: list[str] | None = None,
+        prompts: list[str] | None = None,
     ) -> None:
         """
         Evaluates a model on the benchmark across all leaderboards.
+
+        prompts or identifiers must be provided to match the media.
 
         Args:
             name: The name of the model.
             media: The generated images/videos that will be used to evaluate the model.
             identifiers: The identifiers that correspond to the media. The order of the identifiers must match the order of the media.\n
                 The identifiers that are used must be registered for the benchmark. To see the registered identifiers, use the identifiers property.
-
-        Notes:
-            If the identifiers were not manually provided when creating the benchmark, they have been generated from the prompts and/or assets and are still visible through the identifiers property.
+            prompts: The prompts that correspond to the media. The order of the prompts must match the order of the media.
         """
         with tracer.start_as_current_span("evaluate_model"):
             if not media:
                 raise ValueError("Media must be a non-empty list of strings")
 
+            if not identifiers and not prompts:
+                raise ValueError("Identifiers or prompts must be provided.")
+
+            if identifiers and prompts:
+                raise ValueError(
+                    "Identifiers and prompts cannot be provided at the same time. Use one or the other."
+                )
+
+            if not identifiers:
+                assert prompts is not None
+                identifiers = prompts
+
             if len(media) != len(identifiers):
-                raise ValueError("Media and identifiers must have the same length")
+                raise ValueError(
+                    "Media and identifiers/prompts must have the same length"
+                )
 
             if not all(identifier in self.identifiers for identifier in identifiers):
                 raise ValueError(
-                    "All identifiers must be in the registered identifiers list. To see the registered identifiers, use the identifiers property.\
-            \nTo see the prompts that are associated with the identifiers, use the prompts property."
+                    "All identifiers/prompts must be in the registered identifiers/prompts list. To see the registered identifiers/prompts, use the identifiers/prompts property."
                 )
 
             # happens before the creation of the participant to ensure all media paths are valid
