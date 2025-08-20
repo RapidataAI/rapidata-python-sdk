@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from rapidata.api_client.models.confidence_interval import ConfidenceInterval
 from rapidata.api_client.models.standing_status import StandingStatus
 from typing import Optional, Set
 from typing_extensions import Self
@@ -33,10 +34,11 @@ class StandingByLeaderboard(BaseModel):
     dataset_id: Optional[StrictStr] = Field(default=None, alias="datasetId")
     status: StandingStatus
     score: Optional[Union[StrictFloat, StrictInt]] = None
-    wins: StrictInt
-    total_matches: StrictInt = Field(alias="totalMatches")
+    wins: Union[StrictFloat, StrictInt]
+    total_matches: Union[StrictFloat, StrictInt] = Field(alias="totalMatches")
     is_disabled: StrictBool = Field(alias="isDisabled")
-    __properties: ClassVar[List[str]] = ["id", "name", "leaderboardId", "datasetId", "status", "score", "wins", "totalMatches", "isDisabled"]
+    confidence_interval: Optional[ConfidenceInterval] = Field(default=None, alias="confidenceInterval")
+    __properties: ClassVar[List[str]] = ["id", "name", "leaderboardId", "datasetId", "status", "score", "wins", "totalMatches", "isDisabled", "confidenceInterval"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -77,6 +79,9 @@ class StandingByLeaderboard(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of confidence_interval
+        if self.confidence_interval:
+            _dict['confidenceInterval'] = self.confidence_interval.to_dict()
         # set to None if score (nullable) is None
         # and model_fields_set contains the field
         if self.score is None and "score" in self.model_fields_set:
@@ -102,7 +107,8 @@ class StandingByLeaderboard(BaseModel):
             "score": obj.get("score"),
             "wins": obj.get("wins"),
             "totalMatches": obj.get("totalMatches"),
-            "isDisabled": obj.get("isDisabled")
+            "isDisabled": obj.get("isDisabled"),
+            "confidenceInterval": ConfidenceInterval.from_dict(obj["confidenceInterval"]) if obj.get("confidenceInterval") is not None else None
         })
         return _obj
 

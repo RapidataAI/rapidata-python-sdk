@@ -21,12 +21,11 @@ from rapidata.api_client.models.dataset_evaluation_step_model import DatasetEval
 from rapidata.api_client.models.send_completion_mail_step_model import SendCompletionMailStepModel
 from rapidata.api_client.models.workflow_aggregation_step_model import WorkflowAggregationStepModel
 from rapidata.api_client.models.workflow_labeling_step_model import WorkflowLabelingStepModel
-from rapidata.api_client.models.workflow_split_model import WorkflowSplitModel
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-CREATESIMPLEPIPELINEMODELPIPELINESTEPSINNER_ONE_OF_SCHEMAS = ["DatasetEvaluationStepModel", "SendCompletionMailStepModel", "WorkflowAggregationStepModel", "WorkflowLabelingStepModel", "WorkflowSplitModel"]
+CREATESIMPLEPIPELINEMODELPIPELINESTEPSINNER_ONE_OF_SCHEMAS = ["DatasetEvaluationStepModel", "SendCompletionMailStepModel", "WorkflowAggregationStepModel", "WorkflowLabelingStepModel"]
 
 class CreateSimplePipelineModelPipelineStepsInner(BaseModel):
     """
@@ -40,10 +39,8 @@ class CreateSimplePipelineModelPipelineStepsInner(BaseModel):
     oneof_schema_3_validator: Optional[WorkflowAggregationStepModel] = None
     # data type: WorkflowLabelingStepModel
     oneof_schema_4_validator: Optional[WorkflowLabelingStepModel] = None
-    # data type: WorkflowSplitModel
-    oneof_schema_5_validator: Optional[WorkflowSplitModel] = None
-    actual_instance: Optional[Union[DatasetEvaluationStepModel, SendCompletionMailStepModel, WorkflowAggregationStepModel, WorkflowLabelingStepModel, WorkflowSplitModel]] = None
-    one_of_schemas: Set[str] = { "DatasetEvaluationStepModel", "SendCompletionMailStepModel", "WorkflowAggregationStepModel", "WorkflowLabelingStepModel", "WorkflowSplitModel" }
+    actual_instance: Optional[Union[DatasetEvaluationStepModel, SendCompletionMailStepModel, WorkflowAggregationStepModel, WorkflowLabelingStepModel]] = None
+    one_of_schemas: Set[str] = { "DatasetEvaluationStepModel", "SendCompletionMailStepModel", "WorkflowAggregationStepModel", "WorkflowLabelingStepModel" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -89,17 +86,12 @@ class CreateSimplePipelineModelPipelineStepsInner(BaseModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `WorkflowLabelingStepModel`")
         else:
             match += 1
-        # validate data type: WorkflowSplitModel
-        if not isinstance(v, WorkflowSplitModel):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `WorkflowSplitModel`")
-        else:
-            match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in CreateSimplePipelineModelPipelineStepsInner with oneOf schemas: DatasetEvaluationStepModel, SendCompletionMailStepModel, WorkflowAggregationStepModel, WorkflowLabelingStepModel, WorkflowSplitModel. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in CreateSimplePipelineModelPipelineStepsInner with oneOf schemas: DatasetEvaluationStepModel, SendCompletionMailStepModel, WorkflowAggregationStepModel, WorkflowLabelingStepModel. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in CreateSimplePipelineModelPipelineStepsInner with oneOf schemas: DatasetEvaluationStepModel, SendCompletionMailStepModel, WorkflowAggregationStepModel, WorkflowLabelingStepModel, WorkflowSplitModel. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in CreateSimplePipelineModelPipelineStepsInner with oneOf schemas: DatasetEvaluationStepModel, SendCompletionMailStepModel, WorkflowAggregationStepModel, WorkflowLabelingStepModel. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -138,19 +130,13 @@ class CreateSimplePipelineModelPipelineStepsInner(BaseModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # deserialize data into WorkflowSplitModel
-        try:
-            instance.actual_instance = WorkflowSplitModel.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into CreateSimplePipelineModelPipelineStepsInner with oneOf schemas: DatasetEvaluationStepModel, SendCompletionMailStepModel, WorkflowAggregationStepModel, WorkflowLabelingStepModel, WorkflowSplitModel. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into CreateSimplePipelineModelPipelineStepsInner with oneOf schemas: DatasetEvaluationStepModel, SendCompletionMailStepModel, WorkflowAggregationStepModel, WorkflowLabelingStepModel. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into CreateSimplePipelineModelPipelineStepsInner with oneOf schemas: DatasetEvaluationStepModel, SendCompletionMailStepModel, WorkflowAggregationStepModel, WorkflowLabelingStepModel, WorkflowSplitModel. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into CreateSimplePipelineModelPipelineStepsInner with oneOf schemas: DatasetEvaluationStepModel, SendCompletionMailStepModel, WorkflowAggregationStepModel, WorkflowLabelingStepModel. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -164,7 +150,7 @@ class CreateSimplePipelineModelPipelineStepsInner(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], DatasetEvaluationStepModel, SendCompletionMailStepModel, WorkflowAggregationStepModel, WorkflowLabelingStepModel, WorkflowSplitModel]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], DatasetEvaluationStepModel, SendCompletionMailStepModel, WorkflowAggregationStepModel, WorkflowLabelingStepModel]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

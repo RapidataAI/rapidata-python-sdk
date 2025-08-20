@@ -17,20 +17,17 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from pydantic import BaseModel, ConfigDict, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class ValidationChance(BaseModel):
+class UpdateParticipantModel(BaseModel):
     """
-    ValidationChance
+    The model used to update a participant.
     """ # noqa: E501
-    user_score_threshold: Union[StrictFloat, StrictInt] = Field(alias="userScoreThreshold")
-    chance: Union[StrictFloat, StrictInt]
-    rapid_count: StrictInt = Field(alias="rapidCount")
-    selections: Optional[List[AbTestSelectionAInner]] = None
-    __properties: ClassVar[List[str]] = ["userScoreThreshold", "chance", "rapidCount", "selections"]
+    name: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = ["name"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -50,7 +47,7 @@ class ValidationChance(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of ValidationChance from a JSON string"""
+        """Create an instance of UpdateParticipantModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -71,23 +68,11 @@ class ValidationChance(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in selections (list)
-        _items = []
-        if self.selections:
-            for _item_selections in self.selections:
-                if _item_selections:
-                    _items.append(_item_selections.to_dict())
-            _dict['selections'] = _items
-        # set to None if selections (nullable) is None
-        # and model_fields_set contains the field
-        if self.selections is None and "selections" in self.model_fields_set:
-            _dict['selections'] = None
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of ValidationChance from a dict"""
+        """Create an instance of UpdateParticipantModel from a dict"""
         if obj is None:
             return None
 
@@ -95,14 +80,8 @@ class ValidationChance(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "userScoreThreshold": obj.get("userScoreThreshold"),
-            "chance": obj.get("chance"),
-            "rapidCount": obj.get("rapidCount"),
-            "selections": [AbTestSelectionAInner.from_dict(_item) for _item in obj["selections"]] if obj.get("selections") is not None else None
+            "name": obj.get("name")
         })
         return _obj
 
-from rapidata.api_client.models.ab_test_selection_a_inner import AbTestSelectionAInner
-# TODO: Rewrite to not use raise_errors
-ValidationChance.model_rebuild(raise_errors=False)
 

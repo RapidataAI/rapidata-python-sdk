@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.standing_status import StandingStatus
 from typing import Optional, Set
 from typing_extensions import Self
@@ -30,7 +30,7 @@ class GetStandingByIdResult(BaseModel):
     id: StrictStr
     name: StrictStr
     benchmark_id: StrictStr = Field(alias="benchmarkId")
-    dataset_id: StrictStr = Field(alias="datasetId")
+    dataset_id: Optional[StrictStr] = Field(default=None, alias="datasetId")
     status: StandingStatus
     is_disabled: StrictBool = Field(alias="isDisabled")
     __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "datasetId", "status", "isDisabled"]
@@ -74,6 +74,11 @@ class GetStandingByIdResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if dataset_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.dataset_id is None and "dataset_id" in self.model_fields_set:
+            _dict['datasetId'] = None
+
         return _dict
 
     @classmethod
