@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
@@ -29,9 +29,10 @@ class GetValidationSetByIdResult(BaseModel):
     """ # noqa: E501
     id: StrictStr
     name: StrictStr
+    is_public: StrictBool = Field(alias="isPublic")
     owner_mail: StrictStr = Field(alias="ownerMail")
     created_at: datetime = Field(alias="createdAt")
-    __properties: ClassVar[List[str]] = ["id", "name", "ownerMail", "createdAt"]
+    __properties: ClassVar[List[str]] = ["id", "name", "isPublic", "ownerMail", "createdAt"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -86,6 +87,7 @@ class GetValidationSetByIdResult(BaseModel):
         _obj = cls.model_validate({
             "id": obj.get("id"),
             "name": obj.get("name"),
+            "isPublic": obj.get("isPublic"),
             "ownerMail": obj.get("ownerMail"),
             "createdAt": obj.get("createdAt")
         })

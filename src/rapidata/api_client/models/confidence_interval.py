@@ -17,31 +17,25 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.compare_workflow_model1_referee import CompareWorkflowModel1Referee
-from rapidata.api_client.models.validation_set_zip_post_request_blueprint import ValidationSetZipPostRequestBlueprint
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Union
 from typing import Optional, Set
 from typing_extensions import Self
 
-class SimpleWorkflowModel1(BaseModel):
+class ConfidenceInterval(BaseModel):
     """
-    SimpleWorkflowModel1
+    ConfidenceInterval
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for SimpleWorkflowModel", alias="_t")
-    id: StrictStr
-    state: StrictStr
-    blueprint: ValidationSetZipPostRequestBlueprint
-    referee: CompareWorkflowModel1Referee
-    name: StrictStr
-    owner_mail: Optional[StrictStr] = Field(default=None, alias="ownerMail")
-    __properties: ClassVar[List[str]] = ["_t", "id", "state", "blueprint", "referee", "name", "ownerMail"]
+    t: StrictStr = Field(description="Discriminator value for ConfidenceInterval", alias="_t")
+    lower_offset: Union[StrictFloat, StrictInt] = Field(alias="lowerOffset")
+    upper_offset: Union[StrictFloat, StrictInt] = Field(alias="upperOffset")
+    __properties: ClassVar[List[str]] = ["_t", "lowerOffset", "upperOffset"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['SimpleWorkflowModel']):
-            raise ValueError("must be one of enum values ('SimpleWorkflowModel')")
+        if value not in set(['ConfidenceInterval']):
+            raise ValueError("must be one of enum values ('ConfidenceInterval')")
         return value
 
     model_config = ConfigDict(
@@ -62,7 +56,7 @@ class SimpleWorkflowModel1(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of SimpleWorkflowModel1 from a JSON string"""
+        """Create an instance of ConfidenceInterval from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -83,22 +77,11 @@ class SimpleWorkflowModel1(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of blueprint
-        if self.blueprint:
-            _dict['blueprint'] = self.blueprint.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of referee
-        if self.referee:
-            _dict['referee'] = self.referee.to_dict()
-        # set to None if owner_mail (nullable) is None
-        # and model_fields_set contains the field
-        if self.owner_mail is None and "owner_mail" in self.model_fields_set:
-            _dict['ownerMail'] = None
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of SimpleWorkflowModel1 from a dict"""
+        """Create an instance of ConfidenceInterval from a dict"""
         if obj is None:
             return None
 
@@ -106,13 +89,9 @@ class SimpleWorkflowModel1(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'SimpleWorkflowModel',
-            "id": obj.get("id"),
-            "state": obj.get("state"),
-            "blueprint": ValidationSetZipPostRequestBlueprint.from_dict(obj["blueprint"]) if obj.get("blueprint") is not None else None,
-            "referee": CompareWorkflowModel1Referee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
-            "name": obj.get("name"),
-            "ownerMail": obj.get("ownerMail")
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'ConfidenceInterval',
+            "lowerOffset": obj.get("lowerOffset"),
+            "upperOffset": obj.get("upperOffset")
         })
         return _obj
 

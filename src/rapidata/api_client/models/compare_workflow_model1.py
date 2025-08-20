@@ -31,7 +31,6 @@ class CompareWorkflowModel1(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for CompareWorkflowModel", alias="_t")
     id: StrictStr
-    dataset_id: Optional[StrictStr] = Field(default=None, alias="datasetId")
     referee: CompareWorkflowModel1Referee
     pair_maker_information: CompareWorkflowModel1PairMakerInformation = Field(alias="pairMakerInformation")
     state: StrictStr
@@ -39,7 +38,7 @@ class CompareWorkflowModel1(BaseModel):
     name: StrictStr
     owner_mail: Optional[StrictStr] = Field(default=None, alias="ownerMail")
     elo_config: EloConfig = Field(alias="eloConfig")
-    __properties: ClassVar[List[str]] = ["_t", "id", "datasetId", "referee", "pairMakerInformation", "state", "criteria", "name", "ownerMail", "eloConfig"]
+    __properties: ClassVar[List[str]] = ["_t", "id", "referee", "pairMakerInformation", "state", "criteria", "name", "ownerMail", "eloConfig"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -96,11 +95,6 @@ class CompareWorkflowModel1(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of elo_config
         if self.elo_config:
             _dict['eloConfig'] = self.elo_config.to_dict()
-        # set to None if dataset_id (nullable) is None
-        # and model_fields_set contains the field
-        if self.dataset_id is None and "dataset_id" in self.model_fields_set:
-            _dict['datasetId'] = None
-
         # set to None if owner_mail (nullable) is None
         # and model_fields_set contains the field
         if self.owner_mail is None and "owner_mail" in self.model_fields_set:
@@ -120,7 +114,6 @@ class CompareWorkflowModel1(BaseModel):
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'CompareWorkflowModel',
             "id": obj.get("id"),
-            "datasetId": obj.get("datasetId"),
             "referee": CompareWorkflowModel1Referee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
             "pairMakerInformation": CompareWorkflowModel1PairMakerInformation.from_dict(obj["pairMakerInformation"]) if obj.get("pairMakerInformation") is not None else None,
             "state": obj.get("state"),

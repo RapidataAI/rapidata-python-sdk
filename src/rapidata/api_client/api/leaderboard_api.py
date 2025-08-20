@@ -16,7 +16,7 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictStr
+from pydantic import Field, StrictBool, StrictStr
 from typing import List, Optional
 from typing_extensions import Annotated
 from rapidata.api_client.models.boost_leaderboard_model import BoostLeaderboardModel
@@ -3953,6 +3953,8 @@ class LeaderboardApi:
         self,
         leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard, which standings should be queried")],
         tags: Annotated[Optional[List[StrictStr]], Field(description="The tags the leaderboard should filter for.")] = None,
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)")] = None,
+        include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include the confidence intervals")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3973,6 +3975,10 @@ class LeaderboardApi:
         :type leaderboard_id: str
         :param tags: The tags the leaderboard should filter for.
         :type tags: List[str]
+        :param use_weighted_scoring: Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)
+        :type use_weighted_scoring: bool
+        :param include_confidence_intervals: Whether to include the confidence intervals
+        :type include_confidence_intervals: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3998,6 +4004,8 @@ class LeaderboardApi:
         _param = self._leaderboard_leaderboard_id_standings_get_serialize(
             leaderboard_id=leaderboard_id,
             tags=tags,
+            use_weighted_scoring=use_weighted_scoring,
+            include_confidence_intervals=include_confidence_intervals,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4023,6 +4031,8 @@ class LeaderboardApi:
         self,
         leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard, which standings should be queried")],
         tags: Annotated[Optional[List[StrictStr]], Field(description="The tags the leaderboard should filter for.")] = None,
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)")] = None,
+        include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include the confidence intervals")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4043,6 +4053,10 @@ class LeaderboardApi:
         :type leaderboard_id: str
         :param tags: The tags the leaderboard should filter for.
         :type tags: List[str]
+        :param use_weighted_scoring: Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)
+        :type use_weighted_scoring: bool
+        :param include_confidence_intervals: Whether to include the confidence intervals
+        :type include_confidence_intervals: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -4068,6 +4082,8 @@ class LeaderboardApi:
         _param = self._leaderboard_leaderboard_id_standings_get_serialize(
             leaderboard_id=leaderboard_id,
             tags=tags,
+            use_weighted_scoring=use_weighted_scoring,
+            include_confidence_intervals=include_confidence_intervals,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4093,6 +4109,8 @@ class LeaderboardApi:
         self,
         leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard, which standings should be queried")],
         tags: Annotated[Optional[List[StrictStr]], Field(description="The tags the leaderboard should filter for.")] = None,
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)")] = None,
+        include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include the confidence intervals")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4113,6 +4131,10 @@ class LeaderboardApi:
         :type leaderboard_id: str
         :param tags: The tags the leaderboard should filter for.
         :type tags: List[str]
+        :param use_weighted_scoring: Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)
+        :type use_weighted_scoring: bool
+        :param include_confidence_intervals: Whether to include the confidence intervals
+        :type include_confidence_intervals: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -4138,6 +4160,8 @@ class LeaderboardApi:
         _param = self._leaderboard_leaderboard_id_standings_get_serialize(
             leaderboard_id=leaderboard_id,
             tags=tags,
+            use_weighted_scoring=use_weighted_scoring,
+            include_confidence_intervals=include_confidence_intervals,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4158,6 +4182,8 @@ class LeaderboardApi:
         self,
         leaderboard_id,
         tags,
+        use_weighted_scoring,
+        include_confidence_intervals,
         _request_auth,
         _content_type,
         _headers,
@@ -4186,6 +4212,14 @@ class LeaderboardApi:
         if tags is not None:
             
             _query_params.append(('tags', tags))
+            
+        if use_weighted_scoring is not None:
+            
+            _query_params.append(('useWeightedScoring', use_weighted_scoring))
+            
+        if include_confidence_intervals is not None:
+            
+            _query_params.append(('includeConfidenceIntervals', include_confidence_intervals))
             
         # process the header parameters
         # process the form parameters

@@ -17,7 +17,6 @@ import json
 import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
-from rapidata.api_client.models.conditional_validation_selection import ConditionalValidationSelection
 from rapidata.api_client.models.demographic_selection import DemographicSelection
 from rapidata.api_client.models.effort_capped_selection import EffortCappedSelection
 from rapidata.api_client.models.labeling_selection import LabelingSelection
@@ -234,6 +233,7 @@ class AbTestSelectionAInner(BaseModel):
 
 from rapidata.api_client.models.ab_test_selection import AbTestSelection
 from rapidata.api_client.models.capped_selection import CappedSelection
+from rapidata.api_client.models.conditional_validation_selection import ConditionalValidationSelection
 from rapidata.api_client.models.shuffling_selection import ShufflingSelection
 # TODO: Rewrite to not use raise_errors
 AbTestSelectionAInner.model_rebuild(raise_errors=False)

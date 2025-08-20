@@ -2359,6 +2359,48 @@
             }
           }
         }
+      },
+      "patch": {
+        "tags": [
+          "ValidationSet"
+        ],
+        "summary": "Updates different characteristics of a validation set.",
+        "parameters": [
+          {
+            "name": "validationSetId",
+            "in": "path",
+            "description": "The Id of the validation set to update the dimensions for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The body request for updating the shouldAlert property.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateValidationSetModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateValidationSetModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateValidationSetModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
       }
     },
     "/validation-sets/available": {
@@ -2779,7 +2821,7 @@
       }
     },
     "/validation-set/{validationSetId}/dimensions": {
-      "put": {
+      "patch": {
         "tags": [
           "ValidationSet"
         ],
@@ -2821,94 +2863,9 @@
           }
         },
         "deprecated": true
-      },
-      "patch": {
-        "tags": [
-          "ValidationSet"
-        ],
-        "summary": "Updates the dimensions of all rapids within a validation set.",
-        "parameters": [
-          {
-            "name": "validationSetId",
-            "in": "path",
-            "description": "The Id of the validation set to update the dimensions for.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The body request for updating the dimensions.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateDimensionsModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateDimensionsModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateDimensionsModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        }
       }
     },
     "/validation-set/{validationSetId}/shouldalert": {
-      "put": {
-        "tags": [
-          "ValidationSet"
-        ],
-        "summary": "Updates the  of all rapshouldAlert property of all rapids within a validation set.",
-        "parameters": [
-          {
-            "name": "validationSetId",
-            "in": "path",
-            "description": "The Id of the validation set to update the dimensions for.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The body request for updating the shouldAlert property.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateShouldAlertModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateShouldAlertModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateShouldAlertModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        },
-        "deprecated": true
-      },
       "patch": {
         "tags": [
           "ValidationSet"
@@ -2949,7 +2906,8 @@
           "204": {
             "description": "No Content"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/validation-set/{validationSetId}/export": {
@@ -4630,6 +4588,48 @@
             "description": "No Content"
           }
         }
+      },
+      "patch": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Updates a benchmark using patch semantics.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBenchmarkModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBenchmarkModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBenchmarkModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
       }
     },
     "/benchmark/{benchmarkId}/participants": {
@@ -4805,7 +4805,8 @@
           "204": {
             "description": "No Content"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/benchmark/{benchmarkId}/prompts": {
@@ -5577,6 +5578,24 @@
                 "type": "string"
               }
             }
+          },
+          {
+            "name": "useWeightedScoring",
+            "in": "query",
+            "description": "Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "includeConfidenceIntervals",
+            "in": "query",
+            "description": "Whether to include the confidence intervals",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
           }
         ],
         "responses": {
@@ -6006,6 +6025,48 @@
             }
           }
         }
+      },
+      "patch": {
+        "tags": [
+          "Participant"
+        ],
+        "summary": "Updates a participant using patch semantics.",
+        "parameters": [
+          {
+            "name": "participantId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateParticipantModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateParticipantModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateParticipantModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
       }
     },
     "/participants/{participantId}/submit": {
@@ -6090,7 +6151,8 @@
           "204": {
             "description": "No Content"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/participant-sample/{sampleId}": {
@@ -8500,29 +8562,6 @@
         },
         "additionalProperties": false
       },
-      "ClassificationMetadataFilterConfig": {
-        "title": "ClassificationMetadataFilterConfig",
-        "required": [
-          "_t",
-          "classification"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "ClassificationMetadataFilterConfig"
-            ],
-            "type": "string",
-            "description": "Discriminator value for ClassificationMetadataFilterConfig",
-            "default": "ClassificationMetadataFilterConfig",
-            "example": "ClassificationMetadataFilterConfig"
-          },
-          "classification": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "CloneDatasetModel": {
         "title": "CloneDatasetModel",
         "required": [
@@ -8723,34 +8762,11 @@
               "$ref": "#/components/schemas/ValidationChance"
             }
           },
-          "dimension": {
-            "type": "string",
-            "nullable": true
-          },
           "dimensions": {
             "type": "array",
             "items": {
               "type": "string"
             }
-          }
-        },
-        "additionalProperties": false
-      },
-      "CountClassificationMetadataFilterConfig": {
-        "title": "CountClassificationMetadataFilterConfig",
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "CountClassificationMetadataFilterConfig"
-            ],
-            "type": "string",
-            "description": "Discriminator value for CountClassificationMetadataFilterConfig",
-            "default": "CountClassificationMetadataFilterConfig",
-            "example": "CountClassificationMetadataFilterConfig"
           }
         },
         "additionalProperties": false
@@ -9141,9 +9157,6 @@
                 },
                 {
                   "$ref": "#/components/schemas/WorkflowLabelingStepModel"
-                },
-                {
-                  "$ref": "#/components/schemas/WorkflowSplitModel"
                 }
               ],
               "description": "Base model for a pipeline step",
@@ -9722,25 +9735,6 @@
           },
           "target": {
             "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "LocationMetadataExistsFilterConfig": {
-        "title": "LocationMetadataExistsFilterConfig",
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "LocationMetadataExistsFilterConfig"
-            ],
-            "type": "string",
-            "description": "Discriminator value for LocationMetadataExistsFilterConfig",
-            "default": "LocationMetadataExistsFilterConfig",
-            "example": "LocationMetadataExistsFilterConfig"
           }
         },
         "additionalProperties": false
@@ -10530,6 +10524,44 @@
           "rapidCount": {
             "type": "integer",
             "format": "int32"
+          },
+          "selections": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AbTestSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/CappedSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/ConditionalValidationSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/DemographicSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/EffortCappedSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/LabelingSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/ShufflingSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/StaticSelection"
+                },
+                {
+                  "$ref": "#/components/schemas/ValidationSelection"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -10624,62 +10656,6 @@
         },
         "additionalProperties": false,
         "description": "Model for the labeling step"
-      },
-      "WorkflowSplitModel": {
-        "title": "WorkflowSplitModel",
-        "required": [
-          "_t",
-          "aggregationResultArtifactId",
-          "destinationDatasetArtifactId",
-          "filterConfigs",
-          "sourceDatasetArtifactId"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "WorkflowSplitModel"
-            ],
-            "type": "string",
-            "description": "Discriminator value for WorkflowSplitModel",
-            "default": "WorkflowSplitModel",
-            "example": "WorkflowSplitModel"
-          },
-          "sourceDatasetArtifactId": {
-            "type": "string",
-            "description": "The source dataset artifact id"
-          },
-          "destinationDatasetArtifactId": {
-            "type": "string",
-            "description": "The destination dataset artifact id"
-          },
-          "aggregationResultArtifactId": {
-            "type": "string",
-            "description": "The aggregation result artifact id"
-          },
-          "filterConfigs": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/ClassificationMetadataFilterConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/CountClassificationMetadataFilterConfig"
-                },
-                {
-                  "$ref": "#/components/schemas/LocationMetadataExistsFilterConfig"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            },
-            "description": "The filter configurations"
-          }
-        },
-        "additionalProperties": false,
-        "description": "Model for the workflow split step"
       },
       "ClientModel": {
         "required": [
@@ -11448,6 +11424,11 @@
         },
         "additionalProperties": false
       },
+      "BooleanOption": {
+        "title": "Option`1",
+        "type": "boolean",
+        "additionalProperties": false
+      },
       "BoundingBoxPayload": {
         "title": "BoundingBoxPayload",
         "required": [
@@ -12006,6 +11987,7 @@
         "required": [
           "createdAt",
           "id",
+          "isPublic",
           "name",
           "ownerMail"
         ],
@@ -12016,6 +11998,9 @@
           },
           "name": {
             "type": "string"
+          },
+          "isPublic": {
+            "type": "boolean"
           },
           "ownerMail": {
             "type": "string"
@@ -12490,6 +12475,16 @@
         },
         "additionalProperties": false
       },
+      "StringIReadOnlyListOption": {
+        "title": "Option`1",
+        "type": "array",
+        "additionalProperties": false
+      },
+      "StringOption": {
+        "title": "Option`1",
+        "type": "string",
+        "additionalProperties": false
+      },
       "SubmitCocoModel": {
         "required": [
           "categories",
@@ -12642,6 +12637,25 @@
         "additionalProperties": false,
         "description": "The model for updating the shouldAlert field of all rapids within a validation set."
       },
+      "UpdateValidationSetModel": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "dimensions": {
+            "type": "array"
+          },
+          "shouldAlert": {
+            "type": "boolean"
+          },
+          "isPublic": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Allows for specific updates to a validation set without needing to provide all properties."
+      },
       "UploadCocoResult": {
         "required": [
           "categories",
@@ -12670,6 +12684,7 @@
         "required": [
           "createdAt",
           "id",
+          "isPublic",
           "name",
           "ownerId",
           "ownerMail"
@@ -12682,14 +12697,8 @@
           "name": {
             "type": "string"
           },
-          "assetType": {
-            "$ref": "#/components/schemas/AssetType"
-          },
-          "modality": {
-            "$ref": "#/components/schemas/RapidModality"
-          },
-          "promptType": {
-            "$ref": "#/components/schemas/PromptType"
+          "isPublic": {
+            "type": "boolean"
           },
           "ownerId": {
             "type": "string",
@@ -14209,10 +14218,6 @@
           "id": {
             "type": "string"
           },
-          "datasetId": {
-            "type": "string",
-            "nullable": true
-          },
           "referee": {
             "oneOf": [
               {
@@ -14829,10 +14834,6 @@
           },
           "id": {
             "type": "string"
-          },
-          "datasetId": {
-            "type": "string",
-            "nullable": true
           },
           "state": {
             "type": "string"
@@ -16677,6 +16678,35 @@
         },
         "additionalProperties": false
       },
+      "ConfidenceInterval": {
+        "title": "ConfidenceInterval",
+        "required": [
+          "_t",
+          "lowerOffset",
+          "upperOffset"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "ConfidenceInterval"
+            ],
+            "type": "string",
+            "description": "Discriminator value for ConfidenceInterval",
+            "default": "ConfidenceInterval",
+            "example": "ConfidenceInterval"
+          },
+          "lowerOffset": {
+            "type": "number",
+            "format": "double"
+          },
+          "upperOffset": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
       "CountryFilter": {
         "title": "CountryFilter",
         "required": [
@@ -17245,7 +17275,6 @@
       "GetStandingByIdResult": {
         "required": [
           "benchmarkId",
-          "datasetId",
           "id",
           "isDisabled",
           "name",
@@ -17263,7 +17292,8 @@
             "type": "string"
           },
           "datasetId": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "status": {
             "$ref": "#/components/schemas/StandingStatus"
@@ -17274,8 +17304,8 @@
         },
         "additionalProperties": false
       },
-      "Int32Optional": {
-        "title": "Optional`1",
+      "Int32Option": {
+        "title": "Option`1",
         "type": "integer",
         "additionalProperties": false
       },
@@ -18276,15 +18306,18 @@
             "nullable": true
           },
           "wins": {
-            "type": "integer",
-            "format": "int32"
+            "type": "number",
+            "format": "double"
           },
           "totalMatches": {
-            "type": "integer",
-            "format": "int32"
+            "type": "number",
+            "format": "double"
           },
           "isDisabled": {
             "type": "boolean"
+          },
+          "confidenceInterval": {
+            "$ref": "#/components/schemas/ConfidenceInterval"
           }
         },
         "additionalProperties": false
@@ -18345,11 +18378,6 @@
             }
           }
         },
-        "additionalProperties": false
-      },
-      "StringOptional": {
-        "title": "Optional`1",
-        "type": "string",
         "additionalProperties": false
       },
       "SubmitParticipantResult": {
@@ -18436,6 +18464,16 @@
         },
         "additionalProperties": false
       },
+      "UpdateBenchmarkModel": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model used to update a benchmark."
+      },
       "UpdateBenchmarkNameModel": {
         "required": [
           "name"
@@ -18500,6 +18538,16 @@
         },
         "additionalProperties": false,
         "description": "The model used to update the name of a leaderboard."
+      },
+      "UpdateParticipantModel": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model used to update a participant."
       },
       "UpdateParticipantNameModel": {
         "required": [
