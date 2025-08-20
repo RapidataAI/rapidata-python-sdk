@@ -8,9 +8,7 @@ To unlock the full potential of Model Ranking Insights (MRI), you can use the ad
 
 ### Using Identifiers
 
-Identifiers are unique keys used to match up prompts, media assets, and tags across your benchmark. They provide a robust way to organize and reference your evaluation data.
-
-Media assets are images, videos, or audio files that provide visual or auditory context for your evaluation prompts. For example when evaluating image to video models.
+In the MRI quickstart we used the prompts to identify the media and create the appropriate matchups. However, more generally you might not have an exact 1-to-1 relationship between prompts and media (e.g., you may have different settings or inputs for the same prompt - for example input images for image-to-video models. More about this below). To handle this case, we allow you to supply your own identifiers, which will then be used when creating the matchups.
 
 ```python
 # Example 1: Explicit identifiers
@@ -45,6 +43,8 @@ benchmark = benchmark_manager.create_new_benchmark(
 )
 ```
 
+> **Note:** Media assets are images, videos, or audio files that provide visual or auditory context for your evaluation prompts. For example when evaluating image to video models.
+
 ### Tagging System
 
 Tags provide metadata for filtering and organizing benchmark results without showing them to evaluators. These tags can also be set and used in the frontend. To view the frontend, you can use the `view` method of the benchmark or leaderboard.
@@ -70,6 +70,9 @@ standings = leaderboard.get_standings(tags=["landscape", "outdoor"])
 ```
 
 ### Adding prompts and assets after benchmark creation
+
+If you have already created a benchmark and want to add new prompts and assets after the fact. Note however that these will only take effect for new models.
+
 ```python
 # Adding individual prompts with assets
 benchmark.add_prompt(
