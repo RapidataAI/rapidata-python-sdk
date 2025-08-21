@@ -202,7 +202,7 @@ class RapidataOrderBuilder:
         Returns:
             RapidataOrder: The created RapidataOrder instance.
         """
-        if rapidata_config.enableBetaFeatures:
+        if rapidata_config.order.autoValidationSetCreation:
             new_validation_set = self._set_validation_set_id()
         else:
             new_validation_set = False
@@ -217,7 +217,7 @@ class RapidataOrderBuilder:
         self.order_id = str(result.order_id)
         logger.debug("Order created with ID: %s", self.order_id)
 
-        if rapidata_config.enableBetaFeatures and new_validation_set:
+        if rapidata_config.order.autoValidationSetCreation and new_validation_set:
             required_amount = min(int(len(self.__datapoints) * 0.01) or 1, 10)
             managed_print()
             managed_print(
