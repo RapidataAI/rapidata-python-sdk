@@ -44,6 +44,7 @@ jobs:
           token: ${{ steps.generate-token.outputs.token }}
           add-paths: |
             openapi/output.swagger.json
+            openapi/filtered.swagger.json
             src/rapidata/api_client/
             src/rapidata/api_client_README.md
           reviewers: |
