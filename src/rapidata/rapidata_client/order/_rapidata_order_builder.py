@@ -174,9 +174,7 @@ class RapidataOrderBuilder:
         logger.info("No recommended validation set found, creating new one.")
 
         managed_print()
-        managed_print(
-            f"No recommended validation set found, new one will be created.\nWe recommend adding some truths to ensure the order is accurate."
-        )
+        managed_print(f"No recommended validation set found, new one will be created.")
         validation_set = self.__validation_set_manager._create_order_validation_set(
             workflow=self.__workflow,
             order_name=self._name,
@@ -220,11 +218,14 @@ class RapidataOrderBuilder:
         logger.debug("Order created with ID: %s", self.order_id)
 
         if rapidata_config.enableBetaFeatures and new_validation_set:
+            required_amount = min(int(len(self.__datapoints) * 0.01) or 1, 10)
             managed_print()
             managed_print(
-                f"A new validation set was created. Please annotate it so the order runs correctly."
+                Fore.YELLOW
+                + f"A new validation set was created. Please annotate {required_amount} datapoint{('s' if required_amount != 1 else '')} so the order runs correctly."
+                + Fore.RESET
             )
-            link = f"https://app.{self.__openapi_service.environment}/validation-set/detail/{self.__validation_set_id}/annotate?orderId={self.order_id}&required={min(int(len(self.__datapoints)*0.01) or 1, 10)}"
+            link = f"https://app.{self.__openapi_service.environment}/validation-set/detail/{self.__validation_set_id}/annotate?orderId={self.order_id}&required={required_amount}"
             could_open_browser = webbrowser.open(link)
             if not could_open_browser:
                 encoded_url = urllib.parse.quote(link, safe="%/:=&?~#+!$,;'@()*[]")
