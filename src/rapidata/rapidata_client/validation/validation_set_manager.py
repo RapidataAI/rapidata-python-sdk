@@ -641,6 +641,10 @@ class ValidationSetManager:
         if dimensions:
             validation_set.update_dimensions(dimensions)
 
+        self.__openapi_service.validation_api.validation_set_validation_set_id_update_labeling_hints_post(
+            validation_set_id=validation_set_id
+        )
+
         return validation_set
 
     def get_validation_set_by_id(self, validation_set_id: str) -> RapidataValidationSet:
