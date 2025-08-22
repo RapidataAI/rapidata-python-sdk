@@ -94,7 +94,7 @@ class RapidataValidationSet:
             )
 
     def delete(self) -> None:
-        """Deletes the validationset"""
+        """Deletes the validation set"""
         with tracer.start_as_current_span("RapidataValidationSet.delete"):
             logger.info("Deleting ValidationSet '%s'", self)
             self.__openapi_service.validation_api.validation_set_validation_set_id_delete(
