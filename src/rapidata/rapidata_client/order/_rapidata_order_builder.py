@@ -1,5 +1,9 @@
 from typing import Literal, Optional, Sequence
 import random
+import urllib.parse
+import webbrowser
+
+from colorama import Fore
 from rapidata.api_client.models.ab_test_selection_a_inner import AbTestSelectionAInner
 from rapidata.api_client.models.and_user_filter_model_filters_inner import (
     AndUserFilterModelFiltersInner,
@@ -38,7 +42,6 @@ from rapidata.rapidata_client.workflow import Workflow
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.api.rapidata_api_client import (
     suppress_rapidata_error_logging,
-    RapidataApiClient,
 )
 
 
@@ -124,16 +127,19 @@ class RapidataOrderBuilder:
             ),
         )
 
-    def _set_validation_set_id(self) -> None:
+    def _set_validation_set_id(self) -> bool:
         """
         Get the validation set ID for the order.
+
+        Returns:
+            bool: True if a new validation set was created, False otherwise.
         """
         assert self.__workflow is not None
         if self.__validation_set_id:
             logger.debug(
                 "Using specified validation set with ID: %s", self.__validation_set_id
             )
-            return
+            return False
 
         try:
             with suppress_rapidata_error_logging():
@@ -163,14 +169,12 @@ class RapidataOrderBuilder:
             logger.debug(
                 "No recommended validation set found, dataset too small to create one."
             )
-            return
+            return False
 
         logger.info("No recommended validation set found, creating new one.")
 
         managed_print()
-        managed_print(
-            f"No recommended validation set found, new one will be created.\nWe recommend adding some truths to ensure the order is accurate."
-        )
+        managed_print(f"No recommended validation set found, new one will be created.")
         validation_set = self.__validation_set_manager._create_order_validation_set(
             workflow=self.__workflow,
             order_name=self._name,
@@ -185,6 +189,7 @@ class RapidataOrderBuilder:
 
         logger.debug("New validation set created for order: %s", validation_set)
         self.__validation_set_id = validation_set.id
+        return True
 
     def _create(self) -> RapidataOrder:
         """
@@ -197,8 +202,10 @@ class RapidataOrderBuilder:
         Returns:
             RapidataOrder: The created RapidataOrder instance.
         """
-        if rapidata_config.enableBetaFeatures:
-            self._set_validation_set_id()
+        if rapidata_config.order.autoValidationSetCreation:
+            new_validation_set = self._set_validation_set_id()
+        else:
+            new_validation_set = False
 
         order_model = self._to_model()
         logger.debug("Creating order with model: %s", order_model)
@@ -209,6 +216,24 @@ class RapidataOrderBuilder:
 
         self.order_id = str(result.order_id)
         logger.debug("Order created with ID: %s", self.order_id)
+
+        if rapidata_config.order.autoValidationSetCreation and new_validation_set:
+            required_amount = min(int(len(self.__datapoints) * 0.01) or 1, 10)
+            managed_print()
+            managed_print(
+                Fore.YELLOW
+                + f"A new validation set was created. Please annotate {required_amount} datapoint{('s' if required_amount != 1 else '')} so the order runs correctly."
+                + Fore.RESET
+            )
+            link = f"https://app.{self.__openapi_service.environment}/validation-set/detail/{self.__validation_set_id}/annotate?orderId={self.order_id}&required={required_amount}"
+            could_open_browser = webbrowser.open(link)
+            if not could_open_browser:
+                encoded_url = urllib.parse.quote(link, safe="%/:=&?~#+!$,;'@()*[]")
+                managed_print(
+                    Fore.RED
+                    + f"Please open this URL in your browser: '{encoded_url}'"
+                    + Fore.RESET
+                )
 
         self.__dataset = (
             RapidataDataset(result.dataset_id, self.__openapi_service)
