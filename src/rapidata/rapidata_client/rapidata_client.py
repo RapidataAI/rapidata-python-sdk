@@ -1,3 +1,5 @@
+import json
+from typing import Any
 import requests
 from packaging import version
 from rapidata import __version__
@@ -31,7 +33,7 @@ class RapidataClient:
         client_id: str | None = None,
         client_secret: str | None = None,
         environment: str = "rapidata.ai",
-        oauth_scope: str = "openid",
+        oauth_scope: str = "openid roles",
         cert_path: str | None = None,
         token: dict | None = None,
         leeway: int = 60,
@@ -51,10 +53,14 @@ class RapidataClient:
         Attributes:
             order (RapidataOrderManager): The RapidataOrderManager instance.
             validation (ValidationSetManager): The ValidationSetManager instance.
+            demographic (DemographicManager): The DemographicManager instance.
+            mri (RapidataBenchmarkManager): The RapidataBenchmarkManager instance.
         """
         with tracer.start_as_current_span("RapidataClient.__init__"):
             logger.debug("Checking version")
             self._check_version()
+            if environment != "rapidata.ai":
+                rapidata_config.logging.enable_otlp = False
 
             logger.debug("Initializing OpenAPIService")
             self._openapi_service = OpenAPIService(
@@ -83,13 +89,28 @@ class RapidataClient:
             logger.debug("Initializing RapidataBenchmarkManager")
             self.mri = RapidataBenchmarkManager(openapi_service=self._openapi_service)
 
+            self._check_beta_features()
+
     def reset_credentials(self):
         """Reset the credentials saved in the configuration file for the current environment."""
         self._openapi_service.reset_credentials()
 
-    def _enable_beta_features(self):
+    def _check_beta_features(self):
         """Enable beta features for the client."""
-        logger.debug("Enabling beta features")
+        result: dict[str, Any] = json.loads(
+            self._openapi_service.api_client.call_api(
+                "GET",
+                f"https://auth.{self._openapi_service.environment}/connect/userinfo",
+            )
+            .read()
+            .decode("utf-8")
+        )
+        logger.debug("Userinfo: %s", result)
+        if result.get("role") != ["Admin"]:
+            logger.debug("User is not an admin, not enabling beta features")
+            return
+
+        logger.debug("User is an admin, enabling beta features")
         rapidata_config.enableBetaFeatures = True
 
     def _check_version(self):
