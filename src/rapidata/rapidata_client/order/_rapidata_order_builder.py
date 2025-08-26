@@ -159,6 +159,7 @@ class RapidataOrderBuilder:
             logger.debug(
                 "Using recommended validation set with ID: %s", self.__validation_set_id
             )
+            return False
         except Exception as e:
             logger.debug("No recommended validation set found, error: %s", e)
 
