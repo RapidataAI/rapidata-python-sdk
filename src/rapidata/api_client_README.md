@@ -80,6 +80,7 @@ Class | Method | HTTP request | Description
 *BenchmarkApi* | [**benchmark_benchmark_id_prompt_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_prompt_post) | **POST** /benchmark/{benchmarkId}/prompt | Adds a new prompt to a benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_prompts_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_prompts_get) | **GET** /benchmark/{benchmarkId}/prompts | Returns the paged prompts of a benchmark by its ID.
 *BenchmarkApi* | [**benchmark_benchmark_id_samples_identifier_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_samples_identifier_get) | **GET** /benchmark/{benchmarkId}/samples/{identifier} | Returns the paged prompts of a benchmark by its ID.
+*BenchmarkApi* | [**benchmark_benchmark_id_standings_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_standings_get) | **GET** /benchmark/{benchmarkId}/standings | Queries all the standings for a benchmark by its ID.
 *BenchmarkApi* | [**benchmark_benchmark_id_tags_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_tags_get) | **GET** /benchmark/{benchmarkId}/tags | Query all tags within a benchmark
 *BenchmarkApi* | [**benchmark_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_post) | **POST** /benchmark | Creates a benchmark
 *BenchmarkApi* | [**benchmarks_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmarks_get) | **GET** /benchmarks | Queries all benchmarks of the user.
@@ -124,7 +125,6 @@ Class | Method | HTTP request | Description
 *IdentityApi* | [**identity_bridge_token_post**](rapidata/api_client/docs/IdentityApi.md#identity_bridge_token_post) | **POST** /identity/bridge-token | Creates a pair of read and write keys for a client. The write key is used to store the authentication result. The read key is used to retrieve the authentication result.
 *IdentityApi* | [**identity_google_one_tap_post**](rapidata/api_client/docs/IdentityApi.md#identity_google_one_tap_post) | **POST** /identity/google-one-tap | Signs in a user using a token received from Google One Tap.
 *IdentityApi* | [**identity_referrer_post**](rapidata/api_client/docs/IdentityApi.md#identity_referrer_post) | **POST** /identity/referrer | Sets the referrer for the current customer.
-*IdentityApi* | [**identity_temporary_post**](rapidata/api_client/docs/IdentityApi.md#identity_temporary_post) | **POST** /identity/temporary | Registers and logs in a temporary customer.
 *LeaderboardApi* | [**benchmark_standing_leaderboard_id_participant_id_get**](rapidata/api_client/docs/LeaderboardApi.md#benchmark_standing_leaderboard_id_participant_id_get) | **GET** /benchmark/standing/{leaderboardId}/{participantId} | Gets a standing by leaderboardId and participantId.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_boost_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_boost_post) | **POST** /leaderboard/{leaderboardId}/boost | Boosts a subset of participants within a leaderboard.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_delete**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_delete) | **DELETE** /leaderboard/{leaderboardId} | Deletes a leaderboard by its ID.
@@ -496,8 +496,6 @@ Class | Method | HTTP request | Description
  - [RapidSkippedModel](rapidata/api_client/docs/RapidSkippedModel.md)
  - [RapidState](rapidata/api_client/docs/RapidState.md)
  - [ReadBridgeTokenKeysResult](rapidata/api_client/docs/ReadBridgeTokenKeysResult.md)
- - [RegisterTemporaryCustomerModel](rapidata/api_client/docs/RegisterTemporaryCustomerModel.md)
- - [RegisterTemporaryCustomerResult](rapidata/api_client/docs/RegisterTemporaryCustomerResult.md)
  - [ReportModel](rapidata/api_client/docs/ReportModel.md)
  - [ResponseCountFilter](rapidata/api_client/docs/ResponseCountFilter.md)
  - [ResponseCountUserFilterModel](rapidata/api_client/docs/ResponseCountUserFilterModel.md)
@@ -530,9 +528,11 @@ Class | Method | HTTP request | Description
  - [SortDirection](rapidata/api_client/docs/SortDirection.md)
  - [SourceUrlMetadata](rapidata/api_client/docs/SourceUrlMetadata.md)
  - [SourceUrlMetadataModel](rapidata/api_client/docs/SourceUrlMetadataModel.md)
+ - [StandingByBenchmark](rapidata/api_client/docs/StandingByBenchmark.md)
  - [StandingByLeaderboard](rapidata/api_client/docs/StandingByLeaderboard.md)
  - [StandingByLeaderboardPagedResult](rapidata/api_client/docs/StandingByLeaderboardPagedResult.md)
  - [StandingStatus](rapidata/api_client/docs/StandingStatus.md)
+ - [StandingsByBenchmarkResult](rapidata/api_client/docs/StandingsByBenchmarkResult.md)
  - [StandingsByLeaderboardResult](rapidata/api_client/docs/StandingsByLeaderboardResult.md)
  - [StaticSelection](rapidata/api_client/docs/StaticSelection.md)
  - [StickyState](rapidata/api_client/docs/StickyState.md)
