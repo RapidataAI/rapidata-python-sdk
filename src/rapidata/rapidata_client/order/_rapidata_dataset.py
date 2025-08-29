@@ -6,7 +6,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
 
 from typing import Generator
-from rapidata.rapidata_client.config import logger, managed_print
+from rapidata.rapidata_client.config import logger
 import time
 import threading
 from rapidata.rapidata_client.api.rapidata_api_client import (
@@ -208,7 +208,7 @@ class RapidataDataset:
                     # for the backend to fully process everything
                     all_uploads_complete = threading.Event()
 
-                    while not stop_event.is_set() or not all_uploads_complete.is_set():
+                    while True:
                         try:
                             current_progress = self.openapi_service.dataset_api.dataset_dataset_id_progress_get(
                                 self.id
@@ -227,6 +227,9 @@ class RapidataDataset:
                             # First reset to match the actual completed count
                             pbar.n = total_completed
                             pbar.refresh()
+
+                            if total_completed >= total_uploads:
+                                break
 
                             if new_ready > 0 or new_failed > 0:
                                 # We saw progress
@@ -285,7 +288,6 @@ class RapidataDataset:
     def _process_uploads_in_chunks(
         self,
         datapoints: list[Datapoint],
-        chunk_size: int,
         stop_progress_tracking: threading.Event,
         progress_tracking_error: threading.Event,
     ) -> tuple[list[Datapoint], list[Datapoint]]:
@@ -323,13 +325,15 @@ class RapidataDataset:
                 max_workers=rapidata_config.upload.maxWorkers
             ) as executor:
                 # Process uploads in chunks to avoid overwhelming the system
-                for chunk_idx, chunk in enumerate(chunk_list(datapoints, chunk_size)):
+                for chunk_idx, chunk in enumerate(
+                    chunk_list(datapoints, rapidata_config.upload.chunkSize)
+                ):
                     futures = [
                         executor.submit(
                             process_upload_with_context,
                             current_context,
                             datapoint,
-                            chunk_idx * chunk_size + i,
+                            chunk_idx * rapidata_config.upload.chunkSize + i,
                         )
                         for i, datapoint in enumerate(chunk)
                     ]
@@ -382,9 +386,7 @@ class RapidataDataset:
             total_failed = final_progress.failed
 
             # Make sure we account for all uploads
-            if total_ready + total_failed < total_uploads:
-                # Try one more time after a longer wait
-                time.sleep(5 * progress_poll_interval)
+            while total_ready + total_failed < total_uploads:
                 final_progress = (
                     self.openapi_service.dataset_api.dataset_dataset_id_progress_get(
                         self.id
@@ -392,6 +394,7 @@ class RapidataDataset:
                 )
                 total_ready = final_progress.ready
                 total_failed = final_progress.failed
+                time.sleep(progress_poll_interval)
 
             success_rate = (
                 (total_ready / total_uploads * 100) if total_uploads > 0 else 0
@@ -417,7 +420,6 @@ class RapidataDataset:
     def _add_media_from_paths(
         self,
         datapoints: list[Datapoint],
-        chunk_size: int = 50,
         progress_poll_interval: float = 0.5,
     ) -> tuple[list[Datapoint], list[Datapoint]]:
         """
@@ -454,7 +456,6 @@ class RapidataDataset:
         try:
             successful_uploads, failed_uploads = self._process_uploads_in_chunks(
                 datapoints,
-                chunk_size,
                 stop_progress_tracking,
                 progress_tracking_error,
             )
