@@ -32,10 +32,11 @@ class ProgressTracker:
             return self.openapi_service.dataset_api.dataset_dataset_id_progress_get(
                 self.dataset_id
             )
-        except Exception:  # noqa: BLE001
+        except Exception:
             return None
 
     def complete(self) -> None:
+        logger.debug("Upload complete, setting upload_complete to True")
         self.upload_complete = True
 
     def run(self) -> None:
@@ -45,6 +46,7 @@ class ProgressTracker:
                 desc="Uploading datapoints",
                 disable=rapidata_config.logging.silent_mode,
             ) as pbar:
+                final_pass = False
                 while True:
                     current_progress = self._get_progress_or_none()
                     if current_progress is None:
@@ -65,6 +67,12 @@ class ProgressTracker:
                         break
 
                     if self.upload_complete and current_progress.pending == 0:
+                        if not final_pass:
+                            logger.debug("Final pass")
+                            time.sleep(self.progress_poll_interval)
+                            final_pass = True
+                            continue
+                        logger.debug("Final pass done, breaking out of loop")
                         break
 
                 pbar.close()
@@ -76,12 +84,13 @@ class ProgressTracker:
                 )
 
                 logger.info(
-                    "Upload complete: %s ready, %s failed (%s%% success rate)",
+                    "Upload complete: %s ready, %s failed, %s pending (%s%% success rate)",
                     current_progress.ready,
                     current_progress.failed,
+                    current_progress.pending,
                     success_rate,
                 )
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:
             logger.error("Progress tracking thread error: %s", str(e))
             raise RuntimeError("Progress tracking failed, aborting uploads")
 
