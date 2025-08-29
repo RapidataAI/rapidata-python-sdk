@@ -49,6 +49,10 @@ class ProgressTracker:
                     current_progress = self._get_progress_or_none()
                     if current_progress is None:
                         time.sleep(self.progress_poll_interval)
+                        logger.debug(
+                            "No progress yet, sleeping for %s seconds",
+                            self.progress_poll_interval,
+                        )
                         continue
 
                     total_completed = current_progress.ready + current_progress.failed
