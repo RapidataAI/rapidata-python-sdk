@@ -347,8 +347,6 @@ from rapidata.api_client.models.rapid_result_model_result import RapidResultMode
 from rapidata.api_client.models.rapid_skipped_model import RapidSkippedModel
 from rapidata.api_client.models.rapid_state import RapidState
 from rapidata.api_client.models.read_bridge_token_keys_result import ReadBridgeTokenKeysResult
-from rapidata.api_client.models.register_temporary_customer_model import RegisterTemporaryCustomerModel
-from rapidata.api_client.models.register_temporary_customer_result import RegisterTemporaryCustomerResult
 from rapidata.api_client.models.report_model import ReportModel
 from rapidata.api_client.models.response_count_filter import ResponseCountFilter
 from rapidata.api_client.models.response_count_user_filter_model import ResponseCountUserFilterModel
@@ -381,9 +379,11 @@ from rapidata.api_client.models.sort_criterion import SortCriterion
 from rapidata.api_client.models.sort_direction import SortDirection
 from rapidata.api_client.models.source_url_metadata import SourceUrlMetadata
 from rapidata.api_client.models.source_url_metadata_model import SourceUrlMetadataModel
+from rapidata.api_client.models.standing_by_benchmark import StandingByBenchmark
 from rapidata.api_client.models.standing_by_leaderboard import StandingByLeaderboard
 from rapidata.api_client.models.standing_by_leaderboard_paged_result import StandingByLeaderboardPagedResult
 from rapidata.api_client.models.standing_status import StandingStatus
+from rapidata.api_client.models.standings_by_benchmark_result import StandingsByBenchmarkResult
 from rapidata.api_client.models.standings_by_leaderboard_result import StandingsByLeaderboardResult
 from rapidata.api_client.models.static_selection import StaticSelection
 from rapidata.api_client.models.sticky_state import StickyState
