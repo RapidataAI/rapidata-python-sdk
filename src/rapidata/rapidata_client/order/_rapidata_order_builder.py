@@ -235,6 +235,10 @@ class RapidataOrderBuilder:
                     + f"Please open this URL in your browser: '{encoded_url}'"
                     + Fore.RESET
                 )
+            managed_print(
+                "If you want to avoid the automatic validation set creation in the future, set `rapidata_config.order.autoValidationSetCreation = False`."
+            )
+            managed_print()
 
         self.__dataset = (
             RapidataDataset(result.dataset_id, self.__openapi_service)
