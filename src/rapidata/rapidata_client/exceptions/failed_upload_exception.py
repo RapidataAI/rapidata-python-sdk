@@ -10,7 +10,7 @@ from rapidata.api_client.models.original_filename_metadata_model import (
 from rapidata.api_client.models.source_url_metadata_model import SourceUrlMetadataModel
 from rapidata.rapidata_client.datapoints.assets import MediaAsset, MultiAsset
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
-from rapidata.rapidata_client.order._rapidata_dataset import RapidataDataset
+from rapidata.rapidata_client.order.dataset._rapidata_dataset import RapidataDataset
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 
 

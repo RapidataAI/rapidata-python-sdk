@@ -32,7 +32,7 @@ from rapidata.rapidata_client.config import (
 from rapidata.rapidata_client.validation.validation_set_manager import (
     ValidationSetManager,
 )
-from rapidata.rapidata_client.order._rapidata_dataset import RapidataDataset
+from rapidata.rapidata_client.order.dataset._rapidata_dataset import RapidataDataset
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 from rapidata.rapidata_client.referee import Referee
 from rapidata.rapidata_client.referee._naive_referee import NaiveReferee
@@ -257,7 +257,7 @@ class RapidataOrderBuilder:
         )
 
         logger.debug("Order created: %s", order)
-        logger.debug("Adding media to the order.")
+        logger.debug("Adding datapoints to the order.")
 
         if self.__dataset:
             with tracer.start_as_current_span("add_datapoints"):
@@ -271,7 +271,7 @@ class RapidataOrderBuilder:
                 f"No dataset created for this order. order_id: {self.order_id}"
             )
 
-        logger.debug("Media added to the order.")
+        logger.debug("Datapoints added to the order.")
         logger.debug("Setting order to preview")
         try:
             self.__openapi_service.order_api.order_order_id_preview_post(self.order_id)
