@@ -252,12 +252,13 @@ class RapidataDataset:
         total_uploads = len(datapoints)
 
         # Create and start progress tracking thread
-        progress_thread = ProgressTracker(
+        progress_tracker = ProgressTracker(
             dataset_id=self.id,
             openapi_service=self.openapi_service,
             total_uploads=total_uploads,
             progress_poll_interval=progress_poll_interval,
-        ).create_thread()
+        )
+        progress_thread = progress_tracker.create_thread()
         progress_thread.start()
 
         # Process uploads in chunks
@@ -266,6 +267,7 @@ class RapidataDataset:
                 datapoints,
             )
         finally:
+            progress_tracker.complete()
             progress_thread.join(10)
 
         if failed_uploads:

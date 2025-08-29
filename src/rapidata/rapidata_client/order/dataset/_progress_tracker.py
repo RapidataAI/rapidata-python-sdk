@@ -25,6 +25,7 @@ class ProgressTracker:
         self.openapi_service = openapi_service
         self.total_uploads = total_uploads
         self.progress_poll_interval = progress_poll_interval
+        self.upload_complete = False
 
     def _get_progress_or_none(self):
         try:
@@ -33,6 +34,9 @@ class ProgressTracker:
             )
         except Exception:  # noqa: BLE001
             return None
+
+    def complete(self) -> None:
+        self.upload_complete = True
 
     def run(self) -> None:
         try:
@@ -56,17 +60,22 @@ class ProgressTracker:
                     if total_completed >= self.total_uploads:
                         break
 
+                    if self.upload_complete and current_progress.pending == 0:
+                        break
+
                 pbar.close()
+
+                success_rate = (
+                    round((current_progress.ready / self.total_uploads * 100), 2)
+                    if self.total_uploads > 0
+                    else 0
+                )
 
                 logger.info(
                     "Upload complete: %s ready, %s failed (%s%% success rate)",
                     current_progress.ready,
                     current_progress.failed,
-                    (
-                        (current_progress.ready / self.total_uploads * 100)
-                        if self.total_uploads > 0
-                        else 0
-                    ),
+                    success_rate,
                 )
         except Exception as e:  # noqa: BLE001
             logger.error("Progress tracking thread error: %s", str(e))
