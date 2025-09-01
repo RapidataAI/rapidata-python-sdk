@@ -419,6 +419,9 @@ class RapidataOrderManager:
         """
 
         with tracer.start_as_current_span("RapidataOrderManager.create_ranking_order"):
+            if len(datapoints) < 2:
+                raise ValueError("At least two datapoints are required")
+
             if data_type == "media":
                 assets = [MediaAsset(path=path) for path in datapoints]
             elif data_type == "text":
