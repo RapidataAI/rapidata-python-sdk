@@ -90,7 +90,6 @@ class RapidataTracer:
                 )
 
                 self._tracer_provider = TracerProvider(resource=resource)
-                trace.set_tracer_provider(self._tracer_provider)
 
                 exporter = OTLPSpanExporter(
                     endpoint="https://otlp-sdk.rapidata.ai/v1/traces",
@@ -100,7 +99,7 @@ class RapidataTracer:
                 span_processor = BatchSpanProcessor(exporter)
                 self._tracer_provider.add_span_processor(span_processor)
 
-                self._real_tracer = trace.get_tracer(self._name)
+                self._real_tracer = self._tracer_provider.get_tracer(self._name)
                 self._otlp_initialized = True
 
             except Exception as e:

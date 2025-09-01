@@ -89,8 +89,6 @@ class RapidataClient:
             logger.debug("Initializing RapidataBenchmarkManager")
             self.mri = RapidataBenchmarkManager(openapi_service=self._openapi_service)
 
-            self._check_beta_features()
-
     def reset_credentials(self):
         """Reset the credentials saved in the configuration file for the current environment."""
         self._openapi_service.reset_credentials()
