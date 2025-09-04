@@ -31,14 +31,13 @@ class StandingByLeaderboard(BaseModel):
     id: StrictStr
     name: StrictStr
     leaderboard_id: StrictStr = Field(alias="leaderboardId")
-    dataset_id: Optional[StrictStr] = Field(default=None, alias="datasetId")
     status: StandingStatus
     score: Optional[Union[StrictFloat, StrictInt]] = None
     wins: Union[StrictFloat, StrictInt]
     total_matches: Union[StrictFloat, StrictInt] = Field(alias="totalMatches")
     is_disabled: StrictBool = Field(alias="isDisabled")
     confidence_interval: Optional[ConfidenceInterval] = Field(default=None, alias="confidenceInterval")
-    __properties: ClassVar[List[str]] = ["id", "name", "leaderboardId", "datasetId", "status", "score", "wins", "totalMatches", "isDisabled", "confidenceInterval"]
+    __properties: ClassVar[List[str]] = ["id", "name", "leaderboardId", "status", "score", "wins", "totalMatches", "isDisabled", "confidenceInterval"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -102,7 +101,6 @@ class StandingByLeaderboard(BaseModel):
             "id": obj.get("id"),
             "name": obj.get("name"),
             "leaderboardId": obj.get("leaderboardId"),
-            "datasetId": obj.get("datasetId"),
             "status": obj.get("status"),
             "score": obj.get("score"),
             "wins": obj.get("wins"),

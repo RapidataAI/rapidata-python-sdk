@@ -29,8 +29,7 @@ class GetParticipantByIdResult(BaseModel):
     id: StrictStr
     name: StrictStr
     benchmark_id: StrictStr = Field(alias="benchmarkId")
-    dataset_id: StrictStr = Field(alias="datasetId")
-    __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "datasetId"]
+    __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -85,8 +84,7 @@ class GetParticipantByIdResult(BaseModel):
         _obj = cls.model_validate({
             "id": obj.get("id"),
             "name": obj.get("name"),
-            "benchmarkId": obj.get("benchmarkId"),
-            "datasetId": obj.get("datasetId")
+            "benchmarkId": obj.get("benchmarkId")
         })
         return _obj
 

@@ -20,7 +20,6 @@ from pydantic import Field, StrictBool, StrictBytes, StrictStr, field_validator
 from typing import List, Optional, Tuple, Union
 from typing_extensions import Annotated
 from rapidata.api_client.models.add_validation_rapid_model import AddValidationRapidModel
-from rapidata.api_client.models.add_validation_rapid_result import AddValidationRapidResult
 from rapidata.api_client.models.create_empty_validation_set_result import CreateEmptyValidationSetResult
 from rapidata.api_client.models.create_validation_set_model import CreateValidationSetModel
 from rapidata.api_client.models.get_available_validation_sets_result import GetAvailableValidationSetsResult
@@ -1726,7 +1725,7 @@ class ValidationSetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> AddValidationRapidResult:
+    ) -> None:
         """Adds a new validation rapid to the specified validation set using files to create the assets.
 
 
@@ -1775,7 +1774,7 @@ class ValidationSetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "AddValidationRapidResult",
+            '204': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1808,7 +1807,7 @@ class ValidationSetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[AddValidationRapidResult]:
+    ) -> ApiResponse[None]:
         """Adds a new validation rapid to the specified validation set using files to create the assets.
 
 
@@ -1857,7 +1856,7 @@ class ValidationSetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "AddValidationRapidResult",
+            '204': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1939,7 +1938,7 @@ class ValidationSetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "AddValidationRapidResult",
+            '204': None,
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1995,15 +1994,6 @@ class ValidationSetApi:
         # process the body parameter
 
 
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
-                ]
-            )
 
         # set the HTTP header `Content-Type`
         if _content_type:
