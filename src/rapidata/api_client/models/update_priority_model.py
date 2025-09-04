@@ -17,22 +17,17 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictInt
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.standing_status import StandingStatus
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetStandingByIdResult(BaseModel):
+class UpdatePriorityModel(BaseModel):
     """
-    GetStandingByIdResult
+    The model to update the campaign priority.
     """ # noqa: E501
-    id: StrictStr
-    name: StrictStr
-    benchmark_id: StrictStr = Field(alias="benchmarkId")
-    status: StandingStatus
-    is_disabled: StrictBool = Field(alias="isDisabled")
-    __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "status", "isDisabled"]
+    priority: StrictInt = Field(description="The new priority value for the campaign.")
+    __properties: ClassVar[List[str]] = ["priority"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -52,7 +47,7 @@ class GetStandingByIdResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetStandingByIdResult from a JSON string"""
+        """Create an instance of UpdatePriorityModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -77,7 +72,7 @@ class GetStandingByIdResult(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetStandingByIdResult from a dict"""
+        """Create an instance of UpdatePriorityModel from a dict"""
         if obj is None:
             return None
 
@@ -85,11 +80,7 @@ class GetStandingByIdResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "id": obj.get("id"),
-            "name": obj.get("name"),
-            "benchmarkId": obj.get("benchmarkId"),
-            "status": obj.get("status"),
-            "isDisabled": obj.get("isDisabled")
+            "priority": obj.get("priority")
         })
         return _obj
 

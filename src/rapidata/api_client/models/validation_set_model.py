@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
@@ -29,11 +29,38 @@ class ValidationSetModel(BaseModel):
     """ # noqa: E501
     id: StrictStr
     name: StrictStr
+    asset_type: List[StrictStr] = Field(alias="assetType")
+    modality: List[StrictStr]
+    prompt_type: List[StrictStr] = Field(alias="promptType")
     is_public: StrictBool = Field(alias="isPublic")
     owner_id: StrictStr = Field(alias="ownerId")
     owner_mail: StrictStr = Field(alias="ownerMail")
     created_at: datetime = Field(alias="createdAt")
-    __properties: ClassVar[List[str]] = ["id", "name", "isPublic", "ownerId", "ownerMail", "createdAt"]
+    __properties: ClassVar[List[str]] = ["id", "name", "assetType", "modality", "promptType", "isPublic", "ownerId", "ownerMail", "createdAt"]
+
+    @field_validator('asset_type')
+    def asset_type_validate_enum(cls, value):
+        """Validates the enum"""
+        for i in value:
+            if i not in set(['None', 'Image', 'Video', 'Audio', 'Text']):
+                raise ValueError("each list item must be one of ('None', 'Image', 'Video', 'Audio', 'Text')")
+        return value
+
+    @field_validator('modality')
+    def modality_validate_enum(cls, value):
+        """Validates the enum"""
+        for i in value:
+            if i not in set(['None', 'BoundingBox', 'Classify', 'Compare', 'FreeText', 'Line', 'Locate', 'NamedEntity', 'Polygon', 'Scrub', 'Transcription']):
+                raise ValueError("each list item must be one of ('None', 'BoundingBox', 'Classify', 'Compare', 'FreeText', 'Line', 'Locate', 'NamedEntity', 'Polygon', 'Scrub', 'Transcription')")
+        return value
+
+    @field_validator('prompt_type')
+    def prompt_type_validate_enum(cls, value):
+        """Validates the enum"""
+        for i in value:
+            if i not in set(['None', 'Text', 'Asset']):
+                raise ValueError("each list item must be one of ('None', 'Text', 'Asset')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -88,6 +115,9 @@ class ValidationSetModel(BaseModel):
         _obj = cls.model_validate({
             "id": obj.get("id"),
             "name": obj.get("name"),
+            "assetType": obj.get("assetType"),
+            "modality": obj.get("modality"),
+            "promptType": obj.get("promptType"),
             "isPublic": obj.get("isPublic"),
             "ownerId": obj.get("ownerId"),
             "ownerMail": obj.get("ownerMail"),
