@@ -388,6 +388,7 @@ class RapidataOrderManager:
         data_type: Literal["media", "text"] = "media",
         random_comparisons_ratio: float = 0.5,
         context: Optional[str] = None,
+        media_context: Optional[str] = None,
         validation_set_id: Optional[str] = None,
         filters: Sequence[RapidataFilter] = [],
         settings: Sequence[RapidataSetting] = [],
@@ -410,6 +411,8 @@ class RapidataOrderManager:
             random_comparisons_ratio (float, optional): The fraction of random comparisons in the ranking process.
                 The rest will focus on pairing similarly ranked datapoints. Defaults to 0.5 and can be left untouched.
             context (str, optional): The context for all the comparison. Defaults to None.\n
+                If provided will be shown in addition to the instruction for all the matchups.
+            media_context (str, optional): The media context for all the comparison. Defaults to None.\n
                 If provided will be shown in addition to the instruction for all the matchups.
             validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.

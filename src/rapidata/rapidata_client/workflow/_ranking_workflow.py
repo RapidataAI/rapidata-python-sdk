@@ -11,6 +11,7 @@ from rapidata.api_client.models.dataset_dataset_id_datapoints_post_request_metad
 )
 from rapidata.api_client import ComparePayload
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
+from rapidata.rapidata_client.datapoints.metadata import MediaAssetMetadata
 from rapidata.api_client.models.rapid_modality import RapidModality
 
 
@@ -26,18 +27,24 @@ class RankingWorkflow(Workflow):
         elo_k_factor: int = 40,
         elo_scaling_factor: int = 400,
         context: str | None = None,
+        media_context: str | None = None,
     ):
         super().__init__(type="CompareWorkflowConfig")
 
-        self.context = (
-            [
+        self.metadata = []
+
+        if context:
+            self.metadata.append(
                 DatasetDatasetIdDatapointsPostRequestMetadataInner(
                     PromptMetadata(context).to_model()
                 )
-            ]
-            if context
-            else None
-        )
+            )
+        if media_context:
+            self.metadata.append(
+                DatasetDatasetIdDatapointsPostRequestMetadataInner(
+                    MediaAssetMetadata(media_context).to_model()
+                )
+            )
 
         self.criteria = criteria
         self.total_comparison_budget = total_comparison_budget
@@ -67,7 +74,7 @@ class RankingWorkflow(Workflow):
             criteria=self.criteria,
             eloConfig=self.elo_config,
             pairMakerConfig=self.pair_maker_config,
-            metadata=self.context,
+            metadata=self.metadata,
         )
 
     def _to_payload(self, datapoint: Datapoint) -> ComparePayload:
@@ -77,7 +84,7 @@ class RankingWorkflow(Workflow):
         )
 
     def __str__(self) -> str:
-        return f"RankingWorkflow(criteria='{self.criteria}', context={self.context})"
+        return f"RankingWorkflow(criteria='{self.criteria}')"
 
     def __repr__(self) -> str:
-        return f"RankingWorkflow(criteria={self.criteria!r}, total_comparison_budget={self.total_comparison_budget!r}, random_comparisons_ratio={self.random_comparisons_ratio!r}, elo_start={self.elo_start!r}, elo_k_factor={self.elo_k_factor!r}, elo_scaling_factor={self.elo_scaling_factor!r}, context={self.context!r})"
+        return f"RankingWorkflow(criteria={self.criteria!r}, total_comparison_budget={self.total_comparison_budget!r}, random_comparisons_ratio={self.random_comparisons_ratio!r}, elo_start={self.elo_start!r}, elo_k_factor={self.elo_k_factor!r}, elo_scaling_factor={self.elo_scaling_factor!r})"
