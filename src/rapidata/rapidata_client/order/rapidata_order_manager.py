@@ -92,6 +92,11 @@ class RapidataOrderManager:
         if media_contexts and len(media_contexts) != len(assets):
             raise ValueError("Number of media contexts must match number of datapoints")
 
+        if media_contexts:
+            for media_context in media_contexts:
+                if not media_context.startswith("http"):
+                    raise ValueError("Media contexts must all be URLs")
+
         if sentences and len(sentences) != len(assets):
             raise ValueError("Number of sentences must match number of datapoints")
 
