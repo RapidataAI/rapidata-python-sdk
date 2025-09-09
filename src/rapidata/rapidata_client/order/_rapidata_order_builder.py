@@ -38,7 +38,7 @@ from rapidata.rapidata_client.referee import Referee
 from rapidata.rapidata_client.referee._naive_referee import NaiveReferee
 from rapidata.rapidata_client.selection._base_selection import RapidataSelection
 from rapidata.rapidata_client.settings import RapidataSetting
-from rapidata.rapidata_client.workflow import Workflow
+from rapidata.rapidata_client.workflow import Workflow, FreeTextWorkflow
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.api.rapidata_api_client import (
     suppress_rapidata_error_logging,
@@ -203,7 +203,9 @@ class RapidataOrderBuilder:
         Returns:
             RapidataOrder: The created RapidataOrder instance.
         """
-        if rapidata_config.order.autoValidationSetCreation:
+        if rapidata_config.order.autoValidationSetCreation and not isinstance(
+            self.__workflow, FreeTextWorkflow
+        ):
             new_validation_set = self._set_validation_set_id()
         else:
             new_validation_set = False
