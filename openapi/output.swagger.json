@@ -1758,56 +1758,6 @@
         }
       }
     },
-    "/identity/temporary": {
-      "post": {
-        "tags": [
-          "Identity"
-        ],
-        "summary": "Registers and logs in a temporary customer.",
-        "requestBody": {
-          "description": "The model to register the temporary customer with.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterTemporaryCustomerModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterTemporaryCustomerModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterTemporaryCustomerModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/RegisterTemporaryCustomerResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RegisterTemporaryCustomerResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RegisterTemporaryCustomerResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/identity/bridge-token": {
       "post": {
         "tags": [
@@ -2607,25 +2557,8 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddValidationRapidResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddValidationRapidResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AddValidationRapidResult"
-                }
-              }
-            }
+          "204": {
+            "description": "No Content"
           }
         }
       }
@@ -3581,40 +3514,14 @@
             }
           },
           {
-            "name": "Page.Index",
+            "name": "model",
             "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "Page.Size",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "States",
-            "in": "query",
-            "description": "An optional list of states to filter the rapids by.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/RapidState"
-              }
-            }
-          },
-          {
-            "name": "SortCriteria",
-            "in": "query",
-            "description": "A list of criteria to sort the results by.",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/SortCriterion"
+            "description": "The body of the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetEvaluationWorkflowResultsModel"
+                }
               }
             }
           }
@@ -4374,6 +4281,50 @@
         }
       }
     },
+    "/campaign/{campaignId}/priority": {
+      "put": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "Updates the priority of a campaign.",
+        "parameters": [
+          {
+            "name": "campaignId",
+            "in": "path",
+            "description": "id of the campaign to update",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "model containing the new priority",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePriorityModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePriorityModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePriorityModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
     "/campaign/boost/status": {
       "get": {
         "tags": [
@@ -4472,6 +4423,59 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/BenchmarkQueryResultPagedResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/benchmark/{benchmarkId}/leaderboards": {
+      "get": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Queries all leaderboards for the current user's benchmarks.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The Id of the benchmark whoms leaderboards will be returned",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "request",
+            "in": "query",
+            "description": "Query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeaderboardQueryResultPagedResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeaderboardQueryResultPagedResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeaderboardQueryResultPagedResult"
                 }
               }
             }
@@ -4732,6 +4736,76 @@
         }
       }
     },
+    "/benchmark/{benchmarkId}/standings": {
+      "get": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Queries all the standings for a benchmark by its ID.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The id of the benchmark, which standings should be queried",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "description": "The tags the benchmark should filter for.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "useWeightedScoring",
+            "in": "query",
+            "description": "Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "includeConfidenceIntervals",
+            "in": "query",
+            "description": "Whether to include the confidence intervals",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandingsByBenchmarkResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandingsByBenchmarkResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandingsByBenchmarkResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/benchmark/{benchmarkId}/participant/{participantId}": {
       "delete": {
         "tags": [
@@ -4962,8 +5036,25 @@
           }
         },
         "responses": {
-          "204": {
-            "description": "No Content"
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBenchmarkPromptResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBenchmarkPromptResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBenchmarkPromptResult"
+                }
+              }
+            }
           }
         }
       }
@@ -5065,11 +5156,12 @@
         "tags": [
           "Leaderboard"
         ],
-        "summary": "Queries all leaderboards of the user.",
+        "summary": "Queries all leaderboards for a specific benchmark.",
         "parameters": [
           {
             "name": "request",
             "in": "query",
+            "description": "Query parameters",
             "content": {
               "application/json": {
                 "schema": {
@@ -9638,8 +9730,7 @@
       "LabelingSelection": {
         "title": "LabelingSelection",
         "required": [
-          "_t",
-          "amount"
+          "_t"
         ],
         "type": "object",
         "properties": {
@@ -9653,6 +9744,11 @@
             "example": "LabelingSelection"
           },
           "amount": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "effortBudget": {
             "type": "integer",
             "format": "int32"
           },
@@ -10406,7 +10502,8 @@
         "enum": [
           "None",
           "Temporary",
-          "Permanent"
+          "Permanent",
+          "Passive"
         ],
         "type": "string"
       },
@@ -11179,60 +11276,6 @@
         },
         "additionalProperties": false
       },
-      "RegisterTemporaryCustomerModel": {
-        "required": [
-          "token"
-        ],
-        "type": "object",
-        "properties": {
-          "token": {
-            "type": "string",
-            "description": "A recaptcha token to verify the user is not a bot."
-          }
-        },
-        "additionalProperties": false,
-        "description": "The model for signing up a new temporary user."
-      },
-      "RegisterTemporaryCustomerResult": {
-        "required": [
-          "access_token",
-          "id_token",
-          "token_type"
-        ],
-        "type": "object",
-        "properties": {
-          "access_token": {
-            "type": "string",
-            "description": "The access token to authenticate the user."
-          },
-          "expires_in": {
-            "type": "integer",
-            "description": "The time in seconds until the access token expires.",
-            "format": "int32",
-            "nullable": true
-          },
-          "refresh_token": {
-            "type": "string",
-            "description": "The refresh token to refresh the access token.",
-            "nullable": true
-          },
-          "id_token": {
-            "type": "string",
-            "description": "The id token to identify the user."
-          },
-          "token_type": {
-            "type": "string",
-            "description": "The type of token. Usually, this is \"Bearer\"."
-          },
-          "scope": {
-            "type": "string",
-            "description": "The scope of access the token has.",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false,
-        "description": "The access parameters of the newly registered temporary customer."
-      },
       "AddValidationRapidModel": {
         "required": [
           "payload"
@@ -11373,18 +11416,6 @@
         "additionalProperties": false,
         "description": "The model for adding a validation rapid."
       },
-      "AddValidationRapidResult": {
-        "required": [
-          "rapidId"
-        ],
-        "type": "object",
-        "properties": {
-          "rapidId": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "AssetType": {
         "type": "array",
         "items": {
@@ -11396,7 +11427,8 @@
             "Text"
           ],
           "type": "string"
-        }
+        },
+        "format": "int32"
       },
       "AttachCategoryTruth": {
         "title": "AttachCategoryTruth",
@@ -12357,7 +12389,8 @@
             "Asset"
           ],
           "type": "string"
-        }
+        },
+        "format": "int32"
       },
       "RapidModality": {
         "type": "array",
@@ -12376,7 +12409,8 @@
             "Transcription"
           ],
           "type": "string"
-        }
+        },
+        "format": "int32"
       },
       "RapidState": {
         "enum": [
@@ -12682,12 +12716,15 @@
       },
       "ValidationSetModel": {
         "required": [
+          "assetType",
           "createdAt",
           "id",
           "isPublic",
+          "modality",
           "name",
           "ownerId",
-          "ownerMail"
+          "ownerMail",
+          "promptType"
         ],
         "type": "object",
         "properties": {
@@ -12696,6 +12733,15 @@
           },
           "name": {
             "type": "string"
+          },
+          "assetType": {
+            "$ref": "#/components/schemas/AssetType"
+          },
+          "modality": {
+            "$ref": "#/components/schemas/RapidModality"
+          },
+          "promptType": {
+            "$ref": "#/components/schemas/PromptType"
           },
           "isPublic": {
             "type": "boolean"
@@ -14452,6 +14498,32 @@
         },
         "additionalProperties": false
       },
+      "GetEvaluationWorkflowResultsModel": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "$ref": "#/components/schemas/PageInfo"
+          },
+          "states": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RapidState"
+            },
+            "description": "An optional list of states to filter the rapids by.",
+            "nullable": true
+          },
+          "sortCriteria": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SortCriterion"
+            },
+            "description": "A list of criteria to sort the results by.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Model for getting the overview of a simple workflow result."
+      },
       "GetResponsesResult": {
         "required": [
           "responses"
@@ -15592,7 +15664,8 @@
             "All"
           ],
           "type": "string"
-        }
+        },
+        "format": "int32"
       },
       "MultiAsset": {
         "title": "MultiAsset",
@@ -16449,6 +16522,21 @@
         "additionalProperties": false,
         "description": "The model to update the manual boost status. or putting it back to autopilot."
       },
+      "UpdatePriorityModel": {
+        "required": [
+          "priority"
+        ],
+        "type": "object",
+        "properties": {
+          "priority": {
+            "type": "integer",
+            "description": "The new priority value for the campaign.",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model to update the campaign priority."
+      },
       "AndFilter": {
         "title": "AndFilter",
         "required": [
@@ -16566,6 +16654,7 @@
           "createdAt",
           "id",
           "isManaged",
+          "isPublic",
           "name",
           "ownerMail"
         ],
@@ -16578,6 +16667,9 @@
             "type": "string"
           },
           "isManaged": {
+            "type": "boolean"
+          },
+          "isPublic": {
             "type": "boolean"
           },
           "createdAt": {
@@ -16767,7 +16859,6 @@
       },
       "CreateBenchmarkParticipantResult": {
         "required": [
-          "datasetId",
           "participantId"
         ],
         "type": "object",
@@ -16776,6 +16867,18 @@
             "type": "string"
           },
           "datasetId": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateBenchmarkPromptResult": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
             "type": "string"
           }
         },
@@ -17039,6 +17142,7 @@
         "required": [
           "createdAt",
           "id",
+          "isPublic",
           "name",
           "ownerMail"
         ],
@@ -17049,6 +17153,9 @@
           },
           "name": {
             "type": "string"
+          },
+          "isPublic": {
+            "type": "boolean"
           },
           "createdAt": {
             "type": "string",
@@ -17164,7 +17271,6 @@
       "GetParticipantByIdResult": {
         "required": [
           "benchmarkId",
-          "datasetId",
           "id",
           "name"
         ],
@@ -17177,9 +17283,6 @@
             "type": "string"
           },
           "benchmarkId": {
-            "type": "string"
-          },
-          "datasetId": {
             "type": "string"
           }
         },
@@ -17290,10 +17393,6 @@
           },
           "benchmarkId": {
             "type": "string"
-          },
-          "datasetId": {
-            "type": "string",
-            "nullable": true
           },
           "status": {
             "$ref": "#/components/schemas/StandingStatus"
@@ -17768,7 +17867,6 @@
       "ParticipantByBenchmark": {
         "required": [
           "benchmarkId",
-          "datasetId",
           "id",
           "name",
           "status"
@@ -17782,9 +17880,6 @@
             "type": "string"
           },
           "benchmarkId": {
-            "type": "string"
-          },
-          "datasetId": {
             "type": "string"
           },
           "status": {
@@ -18272,6 +18367,52 @@
         },
         "additionalProperties": false
       },
+      "StandingByBenchmark": {
+        "required": [
+          "benchmarkId",
+          "id",
+          "isDisabled",
+          "name",
+          "status",
+          "totalMatches",
+          "wins"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "benchmarkId": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/StandingStatus"
+          },
+          "score": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "wins": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalMatches": {
+            "type": "number",
+            "format": "double"
+          },
+          "isDisabled": {
+            "type": "boolean"
+          },
+          "confidenceInterval": {
+            "$ref": "#/components/schemas/ConfidenceInterval"
+          }
+        },
+        "additionalProperties": false
+      },
       "StandingByLeaderboard": {
         "required": [
           "id",
@@ -18292,10 +18433,6 @@
           },
           "leaderboardId": {
             "type": "string"
-          },
-          "datasetId": {
-            "type": "string",
-            "deprecated": true
           },
           "status": {
             "$ref": "#/components/schemas/StandingStatus"
@@ -18364,6 +18501,21 @@
           "Idle"
         ],
         "type": "string"
+      },
+      "StandingsByBenchmarkResult": {
+        "required": [
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StandingByBenchmark"
+            }
+          }
+        },
+        "additionalProperties": false
       },
       "StandingsByLeaderboardResult": {
         "required": [
@@ -18469,6 +18621,9 @@
         "properties": {
           "name": {
             "type": "string"
+          },
+          "isPublic": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false,
