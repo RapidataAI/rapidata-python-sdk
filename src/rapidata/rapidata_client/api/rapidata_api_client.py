@@ -154,7 +154,7 @@ class RapidataApiClient(ApiClient):
 
         # Create a span in the current SDK trace that links to the backend
         with tracer.start_span(
-            f"sdk_request_{method}_{url.replace('/', '_')}",
+            f"{str(method).upper()} {url}",
             links=[link_to_backend],
         ) as sdk_request_span:
             # Set attributes on the SDK span
@@ -171,7 +171,7 @@ class RapidataApiClient(ApiClient):
             # Now create the initial span for the backend trace that will be sent
             # This span will be the starting point for the backend trace
             with tracer.start_span(
-                f"backend_trace_start_{method}_{url.replace('/', '_')}",
+                f"{str(method).upper()} {url}",
                 context=trace.set_span_in_context(
                     trace.NonRecordingSpan(backend_span_context)
                 ),
@@ -194,7 +194,7 @@ class RapidataApiClient(ApiClient):
                     "00-"
                     + format_trace_id(backend_trace_id)
                     + "-"
-                    + format_span_id(backend_span_id)
+                    + format_span_id(backend_initial_span.get_span_context().span_id)
                     + "-"
                     + f"{backend_span_context.trace_flags:02x}"
                 )
