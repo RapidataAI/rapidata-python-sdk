@@ -31,9 +31,9 @@ class RapidataBenchmarkManager:
         self,
         name: str,
         identifiers: Optional[list[str]] = None,
-        prompts: Optional[list[str | None]] = None,
-        prompt_assets: Optional[list[str | None]] = None,
-        tags: Optional[list[list[str] | None]] = None,
+        prompts: Optional[list[str | None] | list[str]] = None,
+        prompt_assets: Optional[list[str | None] | list[str]] = None,
+        tags: Optional[list[list[str] | None] | list[list[str]]] = None,
     ) -> RapidataBenchmark:
         """
         Creates a new benchmark with the given name, identifiers, prompts, and media assets.
