@@ -32,13 +32,15 @@ class Rapid:
     ):
         if not isinstance(asset, (MediaAsset, TextAsset, MultiAsset)):
             raise ValueError("Asset must be a MediaAsset, TextAsset, or MultiAsset")
-        if not isinstance(metadata, list):
+        if not isinstance(metadata, list | None):
             raise ValueError("Metadata must be a list")
-        if not all(isinstance(meta, Metadata) for meta in metadata):
+        if metadata and not all(isinstance(meta, Metadata) for meta in metadata):
             raise ValueError("Metadata must be a list of Metadata objects")
-        if not isinstance(settings, list):
+        if not isinstance(settings, list | None):
             raise ValueError("Settings must be a list")
-        if not all(isinstance(setting, RapidataSetting) for setting in settings):
+        if settings and not all(
+            isinstance(setting, RapidataSetting) for setting in settings
+        ):
             raise ValueError("Settings must be a list of RapidataSetting objects")
 
         self.asset = asset
