@@ -27,6 +27,7 @@ from .settings import (
     PlayVideoUntilTheEnd,
     CustomSetting,
     AllowNeitherBoth,
+    SwapContextInstruction,
 )
 from .country_codes import CountryCodes
 from .filter import (
