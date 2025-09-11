@@ -30,6 +30,17 @@ class Rapid:
         explanation: str | None = None,
         settings: Sequence[RapidataSetting] | None = None,
     ):
+        if not isinstance(asset, (MediaAsset, TextAsset, MultiAsset)):
+            raise ValueError("Asset must be a MediaAsset, TextAsset, or MultiAsset")
+        if not isinstance(metadata, list):
+            raise ValueError("Metadata must be a list")
+        if not all(isinstance(meta, Metadata) for meta in metadata):
+            raise ValueError("Metadata must be a list of Metadata objects")
+        if not isinstance(settings, list):
+            raise ValueError("Settings must be a list")
+        if not all(isinstance(setting, RapidataSetting) for setting in settings):
+            raise ValueError("Settings must be a list of RapidataSetting objects")
+
         self.asset = asset
         self.metadata = metadata
         self.payload = payload
