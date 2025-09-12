@@ -70,7 +70,7 @@ class ValidationSetManager:
                         settings=settings,
                     )
                 )
-            return self._submit(name=order_name, rapids=rapids, dimensions=[])
+            return self._submit(name=order_name, rapids=rapids, dimensions=None)
 
     def create_classification_set(
         self,
