@@ -37,7 +37,7 @@ class Rapid:
         if metadata and not all(isinstance(meta, Metadata) for meta in metadata):
             raise ValueError("Metadata must be a list of Metadata objects")
         if not isinstance(settings, (list, type(None))):
-            raise ValueError("Settings must be a list")
+            raise ValueError("Settings must be a list or None")
         if settings and not all(
             isinstance(setting, RapidataSetting) for setting in settings
         ):
