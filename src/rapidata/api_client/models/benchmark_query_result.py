@@ -30,9 +30,10 @@ class BenchmarkQueryResult(BaseModel):
     id: StrictStr
     name: StrictStr
     is_managed: StrictBool = Field(alias="isManaged")
+    is_public: StrictBool = Field(alias="isPublic")
     created_at: datetime = Field(alias="createdAt")
     owner_mail: StrictStr = Field(alias="ownerMail")
-    __properties: ClassVar[List[str]] = ["id", "name", "isManaged", "createdAt", "ownerMail"]
+    __properties: ClassVar[List[str]] = ["id", "name", "isManaged", "isPublic", "createdAt", "ownerMail"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -88,6 +89,7 @@ class BenchmarkQueryResult(BaseModel):
             "id": obj.get("id"),
             "name": obj.get("name"),
             "isManaged": obj.get("isManaged"),
+            "isPublic": obj.get("isPublic"),
             "createdAt": obj.get("createdAt"),
             "ownerMail": obj.get("ownerMail")
         })

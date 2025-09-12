@@ -30,9 +30,8 @@ class ParticipantByBenchmark(BaseModel):
     id: StrictStr
     name: StrictStr
     benchmark_id: StrictStr = Field(alias="benchmarkId")
-    dataset_id: StrictStr = Field(alias="datasetId")
     status: ParticipantStatus
-    __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "datasetId", "status"]
+    __properties: ClassVar[List[str]] = ["id", "name", "benchmarkId", "status"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -88,7 +87,6 @@ class ParticipantByBenchmark(BaseModel):
             "id": obj.get("id"),
             "name": obj.get("name"),
             "benchmarkId": obj.get("benchmarkId"),
-            "datasetId": obj.get("datasetId"),
             "status": obj.get("status")
         })
         return _obj

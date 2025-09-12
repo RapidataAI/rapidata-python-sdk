@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,7 +27,7 @@ class CreateBenchmarkParticipantResult(BaseModel):
     CreateBenchmarkParticipantResult
     """ # noqa: E501
     participant_id: StrictStr = Field(alias="participantId")
-    dataset_id: StrictStr = Field(alias="datasetId")
+    dataset_id: Optional[StrictStr] = Field(default=None, alias="datasetId")
     __properties: ClassVar[List[str]] = ["participantId", "datasetId"]
 
     model_config = ConfigDict(

@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
@@ -27,7 +27,8 @@ class UpdateBenchmarkModel(BaseModel):
     The model used to update a benchmark.
     """ # noqa: E501
     name: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["name"]
+    is_public: Optional[StrictBool] = Field(default=None, alias="isPublic")
+    __properties: ClassVar[List[str]] = ["name", "isPublic"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -80,7 +81,8 @@ class UpdateBenchmarkModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "name": obj.get("name")
+            "name": obj.get("name"),
+            "isPublic": obj.get("isPublic")
         })
         return _obj
 

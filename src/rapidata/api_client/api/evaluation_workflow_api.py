@@ -16,12 +16,11 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictInt, StrictStr
-from typing import List, Optional
+from pydantic import Field, StrictStr
+from typing import Optional
 from typing_extensions import Annotated
+from rapidata.api_client.models.get_evaluation_workflow_results_model import GetEvaluationWorkflowResultsModel
 from rapidata.api_client.models.get_workflow_results_result_paged_result import GetWorkflowResultsResultPagedResult
-from rapidata.api_client.models.rapid_state import RapidState
-from rapidata.api_client.models.sort_criterion import SortCriterion
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -45,10 +44,7 @@ class EvaluationWorkflowApi:
     def workflow_evaluation_workflow_id_results_get(
         self,
         workflow_id: Annotated[StrictStr, Field(description="The ID of the workflow to get the results for.")],
-        page_index: Optional[StrictInt] = None,
-        page_size: Optional[StrictInt] = None,
-        states: Annotated[Optional[List[RapidState]], Field(description="An optional list of states to filter the rapids by.")] = None,
-        sort_criteria: Annotated[Optional[List[SortCriterion]], Field(description="A list of criteria to sort the results by.")] = None,
+        model: Annotated[Optional[GetEvaluationWorkflowResultsModel], Field(description="The body of the request.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -67,14 +63,8 @@ class EvaluationWorkflowApi:
 
         :param workflow_id: The ID of the workflow to get the results for. (required)
         :type workflow_id: str
-        :param page_index:
-        :type page_index: int
-        :param page_size:
-        :type page_size: int
-        :param states: An optional list of states to filter the rapids by.
-        :type states: List[RapidState]
-        :param sort_criteria: A list of criteria to sort the results by.
-        :type sort_criteria: List[SortCriterion]
+        :param model: The body of the request.
+        :type model: GetEvaluationWorkflowResultsModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -99,10 +89,7 @@ class EvaluationWorkflowApi:
 
         _param = self._workflow_evaluation_workflow_id_results_get_serialize(
             workflow_id=workflow_id,
-            page_index=page_index,
-            page_size=page_size,
-            states=states,
-            sort_criteria=sort_criteria,
+            model=model,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -127,10 +114,7 @@ class EvaluationWorkflowApi:
     def workflow_evaluation_workflow_id_results_get_with_http_info(
         self,
         workflow_id: Annotated[StrictStr, Field(description="The ID of the workflow to get the results for.")],
-        page_index: Optional[StrictInt] = None,
-        page_size: Optional[StrictInt] = None,
-        states: Annotated[Optional[List[RapidState]], Field(description="An optional list of states to filter the rapids by.")] = None,
-        sort_criteria: Annotated[Optional[List[SortCriterion]], Field(description="A list of criteria to sort the results by.")] = None,
+        model: Annotated[Optional[GetEvaluationWorkflowResultsModel], Field(description="The body of the request.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -149,14 +133,8 @@ class EvaluationWorkflowApi:
 
         :param workflow_id: The ID of the workflow to get the results for. (required)
         :type workflow_id: str
-        :param page_index:
-        :type page_index: int
-        :param page_size:
-        :type page_size: int
-        :param states: An optional list of states to filter the rapids by.
-        :type states: List[RapidState]
-        :param sort_criteria: A list of criteria to sort the results by.
-        :type sort_criteria: List[SortCriterion]
+        :param model: The body of the request.
+        :type model: GetEvaluationWorkflowResultsModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -181,10 +159,7 @@ class EvaluationWorkflowApi:
 
         _param = self._workflow_evaluation_workflow_id_results_get_serialize(
             workflow_id=workflow_id,
-            page_index=page_index,
-            page_size=page_size,
-            states=states,
-            sort_criteria=sort_criteria,
+            model=model,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -209,10 +184,7 @@ class EvaluationWorkflowApi:
     def workflow_evaluation_workflow_id_results_get_without_preload_content(
         self,
         workflow_id: Annotated[StrictStr, Field(description="The ID of the workflow to get the results for.")],
-        page_index: Optional[StrictInt] = None,
-        page_size: Optional[StrictInt] = None,
-        states: Annotated[Optional[List[RapidState]], Field(description="An optional list of states to filter the rapids by.")] = None,
-        sort_criteria: Annotated[Optional[List[SortCriterion]], Field(description="A list of criteria to sort the results by.")] = None,
+        model: Annotated[Optional[GetEvaluationWorkflowResultsModel], Field(description="The body of the request.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -231,14 +203,8 @@ class EvaluationWorkflowApi:
 
         :param workflow_id: The ID of the workflow to get the results for. (required)
         :type workflow_id: str
-        :param page_index:
-        :type page_index: int
-        :param page_size:
-        :type page_size: int
-        :param states: An optional list of states to filter the rapids by.
-        :type states: List[RapidState]
-        :param sort_criteria: A list of criteria to sort the results by.
-        :type sort_criteria: List[SortCriterion]
+        :param model: The body of the request.
+        :type model: GetEvaluationWorkflowResultsModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -263,10 +229,7 @@ class EvaluationWorkflowApi:
 
         _param = self._workflow_evaluation_workflow_id_results_get_serialize(
             workflow_id=workflow_id,
-            page_index=page_index,
-            page_size=page_size,
-            states=states,
-            sort_criteria=sort_criteria,
+            model=model,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -286,10 +249,7 @@ class EvaluationWorkflowApi:
     def _workflow_evaluation_workflow_id_results_get_serialize(
         self,
         workflow_id,
-        page_index,
-        page_size,
-        states,
-        sort_criteria,
+        model,
         _request_auth,
         _content_type,
         _headers,
@@ -299,8 +259,6 @@ class EvaluationWorkflowApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
-            'States': 'multi',
-            'SortCriteria': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
@@ -316,21 +274,9 @@ class EvaluationWorkflowApi:
         if workflow_id is not None:
             _path_params['workflowId'] = workflow_id
         # process the query parameters
-        if page_index is not None:
+        if model is not None:
             
-            _query_params.append(('Page.Index', page_index))
-            
-        if page_size is not None:
-            
-            _query_params.append(('Page.Size', page_size))
-            
-        if states is not None:
-            
-            _query_params.append(('States', states))
-            
-        if sort_criteria is not None:
-            
-            _query_params.append(('SortCriteria', sort_criteria))
+            _query_params.append(('model', model))
             
         # process the header parameters
         # process the form parameters

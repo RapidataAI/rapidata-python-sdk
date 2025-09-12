@@ -17,29 +17,22 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.retrieval_mode import RetrievalMode
+from rapidata.api_client.models.page_info import PageInfo
+from rapidata.api_client.models.rapid_state import RapidState
+from rapidata.api_client.models.sort_criterion import SortCriterion
 from typing import Optional, Set
 from typing_extensions import Self
 
-class LabelingSelection(BaseModel):
+class GetEvaluationWorkflowResultsModel(BaseModel):
     """
-    LabelingSelection
+    Model for getting the overview of a simple workflow result.
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for LabelingSelection", alias="_t")
-    amount: Optional[StrictInt] = None
-    effort_budget: Optional[StrictInt] = Field(default=None, alias="effortBudget")
-    retrieval_mode: Optional[RetrievalMode] = Field(default=None, alias="retrievalMode")
-    max_iterations: Optional[StrictInt] = Field(default=None, alias="maxIterations")
-    __properties: ClassVar[List[str]] = ["_t", "amount", "effortBudget", "retrievalMode", "maxIterations"]
-
-    @field_validator('t')
-    def t_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['LabelingSelection']):
-            raise ValueError("must be one of enum values ('LabelingSelection')")
-        return value
+    page: Optional[PageInfo] = None
+    states: Optional[List[RapidState]] = Field(default=None, description="An optional list of states to filter the rapids by.")
+    sort_criteria: Optional[List[SortCriterion]] = Field(default=None, description="A list of criteria to sort the results by.", alias="sortCriteria")
+    __properties: ClassVar[List[str]] = ["page", "states", "sortCriteria"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -59,7 +52,7 @@ class LabelingSelection(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of LabelingSelection from a JSON string"""
+        """Create an instance of GetEvaluationWorkflowResultsModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -80,21 +73,31 @@ class LabelingSelection(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if amount (nullable) is None
+        # override the default output from pydantic by calling `to_dict()` of page
+        if self.page:
+            _dict['page'] = self.page.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in sort_criteria (list)
+        _items = []
+        if self.sort_criteria:
+            for _item_sort_criteria in self.sort_criteria:
+                if _item_sort_criteria:
+                    _items.append(_item_sort_criteria.to_dict())
+            _dict['sortCriteria'] = _items
+        # set to None if states (nullable) is None
         # and model_fields_set contains the field
-        if self.amount is None and "amount" in self.model_fields_set:
-            _dict['amount'] = None
+        if self.states is None and "states" in self.model_fields_set:
+            _dict['states'] = None
 
-        # set to None if max_iterations (nullable) is None
+        # set to None if sort_criteria (nullable) is None
         # and model_fields_set contains the field
-        if self.max_iterations is None and "max_iterations" in self.model_fields_set:
-            _dict['maxIterations'] = None
+        if self.sort_criteria is None and "sort_criteria" in self.model_fields_set:
+            _dict['sortCriteria'] = None
 
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of LabelingSelection from a dict"""
+        """Create an instance of GetEvaluationWorkflowResultsModel from a dict"""
         if obj is None:
             return None
 
@@ -102,11 +105,9 @@ class LabelingSelection(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'LabelingSelection',
-            "amount": obj.get("amount"),
-            "effortBudget": obj.get("effortBudget"),
-            "retrievalMode": obj.get("retrievalMode"),
-            "maxIterations": obj.get("maxIterations")
+            "page": PageInfo.from_dict(obj["page"]) if obj.get("page") is not None else None,
+            "states": obj.get("states"),
+            "sortCriteria": [SortCriterion.from_dict(_item) for _item in obj["sortCriteria"]] if obj.get("sortCriteria") is not None else None
         })
         return _obj
 
