@@ -19,6 +19,7 @@ from .rapidata_client import (
     PlayVideoUntilTheEnd,
     CustomSetting,
     AllowNeitherBoth,
+    SwapContextInstruction,
     CountryFilter,
     LanguageFilter,
     UserScoreFilter,
