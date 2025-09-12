@@ -806,3 +806,9 @@ class RapidataOrderManager:
                 self.get_order_by_id(order.id) for order in order_page_result.items
             ]
             return orders
+
+    def __str__(self) -> str:
+        return "RapidataOrderManager"
+
+    def __repr__(self) -> str:
+        return self.__str__()

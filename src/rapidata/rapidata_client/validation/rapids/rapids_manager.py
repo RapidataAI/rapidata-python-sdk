@@ -392,3 +392,9 @@ class RapidsManager:
         total_coverage = sum(end - start for start, end in merged_ranges)
 
         return total_coverage / total_duration
+
+    def __str__(self) -> str:
+        return "RapidsManager"
+
+    def __repr__(self) -> str:
+        return self.__str__()

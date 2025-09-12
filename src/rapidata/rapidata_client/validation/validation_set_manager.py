@@ -70,7 +70,7 @@ class ValidationSetManager:
                         settings=settings,
                     )
                 )
-            return self._submit(name=order_name, rapids=rapids, dimensions=[])
+            return self._submit(name=order_name, rapids=rapids, dimensions=None)
 
     def create_classification_set(
         self,
@@ -709,3 +709,9 @@ class ValidationSetManager:
                 for validation_set in validation_page_result.items
             ]
             return validation_sets
+
+    def __str__(self) -> str:
+        return "ValidationSetManager"
+
+    def __repr__(self) -> str:
+        return self.__str__()

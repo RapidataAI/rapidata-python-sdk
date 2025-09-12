@@ -34,3 +34,9 @@ class ShufflingSelection(RapidataSelection):
                 for selection in self.selections
             ],
         )
+
+    def __str__(self) -> str:
+        return f"ShufflingSelection(selections={self.selections})"
+
+    def __repr__(self) -> str:
+        return self.__str__()

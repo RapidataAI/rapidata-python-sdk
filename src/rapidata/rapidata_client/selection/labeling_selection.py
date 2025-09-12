@@ -38,3 +38,9 @@ class LabelingSelection(RapidataSelection):
             retrievalMode=self.retrieval_mode.value,
             maxIterations=self.max_iterations,
         )
+
+    def __str__(self) -> str:
+        return f"LabelingSelection(amount={self.amount}, retrieval_mode={self.retrieval_mode}, max_iterations={self.max_iterations})"
+
+    def __repr__(self) -> str:
+        return self.__str__()

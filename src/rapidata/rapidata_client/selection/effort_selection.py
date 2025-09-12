@@ -35,3 +35,9 @@ class EffortSelection(RapidataSelection):
             retrievalMode=self.retrieval_mode.value,
             maxIterations=self.max_iterations,
         )
+
+    def __str__(self) -> str:
+        return f"EffortSelection(effort_budget={self.effort_budget}, retrieval_mode={self.retrieval_mode}, max_iterations={self.max_iterations})"
+
+    def __repr__(self) -> str:
+        return self.__str__()

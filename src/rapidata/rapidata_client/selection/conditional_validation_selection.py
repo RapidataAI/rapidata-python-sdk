@@ -72,3 +72,9 @@ class ConditionalValidationSelection(RapidataSelection):
             ],
             dimensions=self.dimensions,
         )
+
+    def __str__(self) -> str:
+        return f"ConditionalValidationSelection(validation_set_id={self.validation_set_id}, thresholds={self.thresholds}, chances={self.chances}, rapid_counts={self.rapid_counts}, dimensions={self.dimensions})"
+
+    def __repr__(self) -> str:
+        return self.__str__()

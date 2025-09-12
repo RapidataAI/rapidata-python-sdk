@@ -34,3 +34,9 @@ class DemographicSelection(RapidataSelection):
         return DemographicSelectionModel(
             _t="DemographicSelection", keys=self.keys, maxRapids=self.max_rapids
         )
+
+    def __str__(self) -> str:
+        return f"DemographicSelection(keys={self.keys}, max_rapids={self.max_rapids})"
+
+    def __repr__(self) -> str:
+        return self.__str__()

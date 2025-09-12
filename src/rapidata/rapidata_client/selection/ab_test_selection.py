@@ -40,3 +40,9 @@ class AbTestSelection(RapidataSelection):
                 for selection in self.b_selections
             ],
         )
+
+    def __str__(self) -> str:
+        return f"AbTestSelection(a_selections={self.a_selections}, b_selections={self.b_selections})"
+
+    def __repr__(self) -> str:
+        return self.__str__()

@@ -33,3 +33,9 @@ class CappedSelection(RapidataSelection):
             ],
             maxRapids=self.max_rapids,
         )
+
+    def __str__(self) -> str:
+        return f"CappedSelection(selections={self.selections}, max_rapids={self.max_rapids})"
+
+    def __repr__(self) -> str:
+        return self.__str__()

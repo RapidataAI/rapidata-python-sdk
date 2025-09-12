@@ -131,3 +131,9 @@ Your current version is: {__version__}"""
                     )
         except Exception as e:
             logger.debug("Failed to check for updates: %s", e)
+
+    def __str__(self) -> str:
+        return f"RapidataClient(environment={self._openapi_service.environment})"
+
+    def __repr__(self) -> str:
+        return self.__str__()
