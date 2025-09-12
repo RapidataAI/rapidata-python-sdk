@@ -811,4 +811,4 @@ class RapidataOrderManager:
         return "RapidataOrderManager"
 
     def __repr__(self) -> str:
-        return "RapidataOrderManager"
+        return self.__str__()
