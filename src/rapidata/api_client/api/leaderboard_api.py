@@ -2281,7 +2281,7 @@ class LeaderboardApi:
     @validate_call
     def leaderboards_get(
         self,
-        request: Optional[QueryModel] = None,
+        request: Annotated[Optional[QueryModel], Field(description="Query parameters")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2295,10 +2295,10 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> LeaderboardQueryResultPagedResult:
-        """Queries all leaderboards of the user.
+        """Queries all leaderboards for a specific benchmark.
 
 
-        :param request:
+        :param request: Query parameters
         :type request: QueryModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2347,7 +2347,7 @@ class LeaderboardApi:
     @validate_call
     def leaderboards_get_with_http_info(
         self,
-        request: Optional[QueryModel] = None,
+        request: Annotated[Optional[QueryModel], Field(description="Query parameters")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2361,10 +2361,10 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[LeaderboardQueryResultPagedResult]:
-        """Queries all leaderboards of the user.
+        """Queries all leaderboards for a specific benchmark.
 
 
-        :param request:
+        :param request: Query parameters
         :type request: QueryModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2413,7 +2413,7 @@ class LeaderboardApi:
     @validate_call
     def leaderboards_get_without_preload_content(
         self,
-        request: Optional[QueryModel] = None,
+        request: Annotated[Optional[QueryModel], Field(description="Query parameters")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2427,10 +2427,10 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Queries all leaderboards of the user.
+        """Queries all leaderboards for a specific benchmark.
 
 
-        :param request:
+        :param request: Query parameters
         :type request: QueryModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request

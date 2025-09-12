@@ -74,18 +74,21 @@ Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *BenchmarkApi* | [**benchmark_benchmark_id_delete**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_delete) | **DELETE** /benchmark/{benchmarkId} | Deletes a single benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_get) | **GET** /benchmark/{benchmarkId} | Returns a single benchmark by its ID.
+*BenchmarkApi* | [**benchmark_benchmark_id_leaderboards_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_leaderboards_get) | **GET** /benchmark/{benchmarkId}/leaderboards | Queries all leaderboards for the current user&#39;s benchmarks.
 *BenchmarkApi* | [**benchmark_benchmark_id_participants_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_participants_get) | **GET** /benchmark/{benchmarkId}/participants | Query all participants within a benchmark
 *BenchmarkApi* | [**benchmark_benchmark_id_participants_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_participants_post) | **POST** /benchmark/{benchmarkId}/participants | Creates a participant in a benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_patch**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_patch) | **PATCH** /benchmark/{benchmarkId} | Updates a benchmark using patch semantics.
 *BenchmarkApi* | [**benchmark_benchmark_id_prompt_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_prompt_post) | **POST** /benchmark/{benchmarkId}/prompt | Adds a new prompt to a benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_prompts_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_prompts_get) | **GET** /benchmark/{benchmarkId}/prompts | Returns the paged prompts of a benchmark by its ID.
 *BenchmarkApi* | [**benchmark_benchmark_id_samples_identifier_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_samples_identifier_get) | **GET** /benchmark/{benchmarkId}/samples/{identifier} | Returns the paged prompts of a benchmark by its ID.
+*BenchmarkApi* | [**benchmark_benchmark_id_standings_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_standings_get) | **GET** /benchmark/{benchmarkId}/standings | Queries all the standings for a benchmark by its ID.
 *BenchmarkApi* | [**benchmark_benchmark_id_tags_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_tags_get) | **GET** /benchmark/{benchmarkId}/tags | Query all tags within a benchmark
 *BenchmarkApi* | [**benchmark_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_post) | **POST** /benchmark | Creates a benchmark
 *BenchmarkApi* | [**benchmarks_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmarks_get) | **GET** /benchmarks | Queries all benchmarks of the user.
 *CampaignApi* | [**campaign_boost_put**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_put) | **PUT** /campaign/boost | Updates the boost with manual boosts.
 *CampaignApi* | [**campaign_boost_status_get**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_status_get) | **GET** /campaign/boost/status | Gets the status of the boost.
 *CampaignApi* | [**campaign_campaign_id_pause_post**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_pause_post) | **POST** /campaign/{campaignId}/pause | Pauses a campaign.
+*CampaignApi* | [**campaign_campaign_id_priority_put**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_priority_put) | **PUT** /campaign/{campaignId}/priority | Updates the priority of a campaign.
 *CampaignApi* | [**campaign_campaign_id_resume_post**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_resume_post) | **POST** /campaign/{campaignId}/resume | Resumes a campaign.
 *CampaignApi* | [**campaign_monitor_get**](rapidata/api_client/docs/CampaignApi.md#campaign_monitor_get) | **GET** /campaign/monitor | The monitor endpoint is used to monitor the health of the service
 *CampaignApi* | [**campaigns_get**](rapidata/api_client/docs/CampaignApi.md#campaigns_get) | **GET** /campaigns | Queries orders based on a filter, page, and sort criteria.
@@ -124,7 +127,6 @@ Class | Method | HTTP request | Description
 *IdentityApi* | [**identity_bridge_token_post**](rapidata/api_client/docs/IdentityApi.md#identity_bridge_token_post) | **POST** /identity/bridge-token | Creates a pair of read and write keys for a client. The write key is used to store the authentication result. The read key is used to retrieve the authentication result.
 *IdentityApi* | [**identity_google_one_tap_post**](rapidata/api_client/docs/IdentityApi.md#identity_google_one_tap_post) | **POST** /identity/google-one-tap | Signs in a user using a token received from Google One Tap.
 *IdentityApi* | [**identity_referrer_post**](rapidata/api_client/docs/IdentityApi.md#identity_referrer_post) | **POST** /identity/referrer | Sets the referrer for the current customer.
-*IdentityApi* | [**identity_temporary_post**](rapidata/api_client/docs/IdentityApi.md#identity_temporary_post) | **POST** /identity/temporary | Registers and logs in a temporary customer.
 *LeaderboardApi* | [**benchmark_standing_leaderboard_id_participant_id_get**](rapidata/api_client/docs/LeaderboardApi.md#benchmark_standing_leaderboard_id_participant_id_get) | **GET** /benchmark/standing/{leaderboardId}/{participantId} | Gets a standing by leaderboardId and participantId.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_boost_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_boost_post) | **POST** /leaderboard/{leaderboardId}/boost | Boosts a subset of participants within a leaderboard.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_delete**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_delete) | **DELETE** /leaderboard/{leaderboardId} | Deletes a leaderboard by its ID.
@@ -133,7 +135,7 @@ Class | Method | HTTP request | Description
 *LeaderboardApi* | [**leaderboard_leaderboard_id_runs_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_runs_get) | **GET** /leaderboard/{leaderboardId}/runs | Gets the runs related to a leaderboard
 *LeaderboardApi* | [**leaderboard_leaderboard_id_standings_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_standings_get) | **GET** /leaderboard/{leaderboardId}/standings | queries all the participants connected to leaderboard by its ID.
 *LeaderboardApi* | [**leaderboard_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_post) | **POST** /leaderboard | Creates a new leaderboard with the specified name and criteria.
-*LeaderboardApi* | [**leaderboards_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboards_get) | **GET** /leaderboards | Queries all leaderboards of the user.
+*LeaderboardApi* | [**leaderboards_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboards_get) | **GET** /leaderboards | Queries all leaderboards for a specific benchmark.
 *NewsletterApi* | [**newsletter_subscribe_post**](rapidata/api_client/docs/NewsletterApi.md#newsletter_subscribe_post) | **POST** /newsletter/subscribe | Signs a user up to the newsletter.
 *NewsletterApi* | [**newsletter_unsubscribe_post**](rapidata/api_client/docs/NewsletterApi.md#newsletter_unsubscribe_post) | **POST** /newsletter/unsubscribe | Unsubscribes a user from the newsletter.
 *OrderApi* | [**order_complex_post**](rapidata/api_client/docs/OrderApi.md#order_complex_post) | **POST** /order/complex | Creates a new order with a custom pipeline.
@@ -209,7 +211,6 @@ Class | Method | HTTP request | Description
  - [AddValidationRapidModel](rapidata/api_client/docs/AddValidationRapidModel.md)
  - [AddValidationRapidModelPayload](rapidata/api_client/docs/AddValidationRapidModelPayload.md)
  - [AddValidationRapidModelTruth](rapidata/api_client/docs/AddValidationRapidModelTruth.md)
- - [AddValidationRapidResult](rapidata/api_client/docs/AddValidationRapidResult.md)
  - [AgeGroup](rapidata/api_client/docs/AgeGroup.md)
  - [AgeUserFilterModel](rapidata/api_client/docs/AgeUserFilterModel.md)
  - [AggregatorType](rapidata/api_client/docs/AggregatorType.md)
@@ -277,6 +278,7 @@ Class | Method | HTTP request | Description
  - [CreateBenchmarkModel](rapidata/api_client/docs/CreateBenchmarkModel.md)
  - [CreateBenchmarkParticipantModel](rapidata/api_client/docs/CreateBenchmarkParticipantModel.md)
  - [CreateBenchmarkParticipantResult](rapidata/api_client/docs/CreateBenchmarkParticipantResult.md)
+ - [CreateBenchmarkPromptResult](rapidata/api_client/docs/CreateBenchmarkPromptResult.md)
  - [CreateBenchmarkResult](rapidata/api_client/docs/CreateBenchmarkResult.md)
  - [CreateBridgeTokenResult](rapidata/api_client/docs/CreateBridgeTokenResult.md)
  - [CreateClientModel](rapidata/api_client/docs/CreateClientModel.md)
@@ -361,6 +363,7 @@ Class | Method | HTTP request | Description
  - [GetDatapointByIdResult](rapidata/api_client/docs/GetDatapointByIdResult.md)
  - [GetDatasetByIdResult](rapidata/api_client/docs/GetDatasetByIdResult.md)
  - [GetDatasetProgressResult](rapidata/api_client/docs/GetDatasetProgressResult.md)
+ - [GetEvaluationWorkflowResultsModel](rapidata/api_client/docs/GetEvaluationWorkflowResultsModel.md)
  - [GetFailedDatapointsResult](rapidata/api_client/docs/GetFailedDatapointsResult.md)
  - [GetLeaderboardByIdResult](rapidata/api_client/docs/GetLeaderboardByIdResult.md)
  - [GetOrderByIdResult](rapidata/api_client/docs/GetOrderByIdResult.md)
@@ -496,8 +499,6 @@ Class | Method | HTTP request | Description
  - [RapidSkippedModel](rapidata/api_client/docs/RapidSkippedModel.md)
  - [RapidState](rapidata/api_client/docs/RapidState.md)
  - [ReadBridgeTokenKeysResult](rapidata/api_client/docs/ReadBridgeTokenKeysResult.md)
- - [RegisterTemporaryCustomerModel](rapidata/api_client/docs/RegisterTemporaryCustomerModel.md)
- - [RegisterTemporaryCustomerResult](rapidata/api_client/docs/RegisterTemporaryCustomerResult.md)
  - [ReportModel](rapidata/api_client/docs/ReportModel.md)
  - [ResponseCountFilter](rapidata/api_client/docs/ResponseCountFilter.md)
  - [ResponseCountUserFilterModel](rapidata/api_client/docs/ResponseCountUserFilterModel.md)
@@ -530,9 +531,11 @@ Class | Method | HTTP request | Description
  - [SortDirection](rapidata/api_client/docs/SortDirection.md)
  - [SourceUrlMetadata](rapidata/api_client/docs/SourceUrlMetadata.md)
  - [SourceUrlMetadataModel](rapidata/api_client/docs/SourceUrlMetadataModel.md)
+ - [StandingByBenchmark](rapidata/api_client/docs/StandingByBenchmark.md)
  - [StandingByLeaderboard](rapidata/api_client/docs/StandingByLeaderboard.md)
  - [StandingByLeaderboardPagedResult](rapidata/api_client/docs/StandingByLeaderboardPagedResult.md)
  - [StandingStatus](rapidata/api_client/docs/StandingStatus.md)
+ - [StandingsByBenchmarkResult](rapidata/api_client/docs/StandingsByBenchmarkResult.md)
  - [StandingsByLeaderboardResult](rapidata/api_client/docs/StandingsByLeaderboardResult.md)
  - [StaticSelection](rapidata/api_client/docs/StaticSelection.md)
  - [StickyState](rapidata/api_client/docs/StickyState.md)
@@ -572,6 +575,7 @@ Class | Method | HTTP request | Description
  - [UpdateOrderNameModel](rapidata/api_client/docs/UpdateOrderNameModel.md)
  - [UpdateParticipantModel](rapidata/api_client/docs/UpdateParticipantModel.md)
  - [UpdateParticipantNameModel](rapidata/api_client/docs/UpdateParticipantNameModel.md)
+ - [UpdatePriorityModel](rapidata/api_client/docs/UpdatePriorityModel.md)
  - [UpdatePromptTagsModel](rapidata/api_client/docs/UpdatePromptTagsModel.md)
  - [UpdateShouldAlertModel](rapidata/api_client/docs/UpdateShouldAlertModel.md)
  - [UpdateValidationRapidModel](rapidata/api_client/docs/UpdateValidationRapidModel.md)
