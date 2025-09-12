@@ -39,3 +39,9 @@ class RapidataSelections:
     demographic = DemographicSelection
     capped = CappedSelection
     shuffling = ShufflingSelection
+
+    def __str__(self) -> str:
+        return f"RapidataSelections(labeling={self.labeling}, validation={self.validation}, conditional_validation={self.conditional_validation}, demographic={self.demographic}, capped={self.capped}, shuffling={self.shuffling})"
+
+    def __repr__(self) -> str:
+        return self.__str__()

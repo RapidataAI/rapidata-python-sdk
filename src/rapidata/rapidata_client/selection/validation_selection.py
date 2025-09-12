@@ -24,3 +24,9 @@ class ValidationSelection(RapidataSelection):
             validationSetId=self.validation_set_id,
             amount=self.amount,
         )
+
+    def __str__(self) -> str:
+        return f"ValidationSelection(validation_set_id={self.validation_set_id}, amount={self.amount})"
+
+    def __repr__(self) -> str:
+        return self.__str__()

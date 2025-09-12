@@ -29,3 +29,9 @@ class DemographicManager:
         self._openapi_service.rapid_api.rapid_demographic_post(
             model=model, file=[media.to_file()]
         )
+
+    def __str__(self) -> str:
+        return "DemographicManager"
+
+    def __repr__(self) -> str:
+        return self.__str__()

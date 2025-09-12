@@ -15,3 +15,9 @@ class StaticSelection(RapidataSelection):
 
     def __init__(self, rapid_ids: list[str]):
         self.rapid_ids = rapid_ids
+
+    def __str__(self) -> str:
+        return f"StaticSelection(rapid_ids={self.rapid_ids})"
+
+    def __repr__(self) -> str:
+        return self.__str__()
