@@ -36,12 +36,10 @@ class OpenAPIService:
             cert_path = _get_local_certificate()
 
         logger.debug(
-            "Using cert_path: %s environment: %s token: %s client_id: %s client_secret: %s",
+            "Using cert_path: %s environment: %s client_id: %s",
             cert_path,
             environment,
-            token,
             client_id,
-            client_secret,
         )
         logger.debug("Initializing OpenAPIService")
         self.credential_manager = CredentialManager(

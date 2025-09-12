@@ -11,12 +11,9 @@ from rapidata.api_client.models.create_benchmark_participant_model import (
     CreateBenchmarkParticipantModel,
 )
 from rapidata.api_client.models.create_leaderboard_model import CreateLeaderboardModel
-from rapidata.api_client.models.filter import Filter
-from rapidata.api_client.models.filter_operator import FilterOperator
 from rapidata.api_client.models.file_asset_model import FileAssetModel
 from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.page_info import PageInfo
-from rapidata.api_client.models.root_filter import RootFilter
 from rapidata.api_client.models.source_url_metadata_model import SourceUrlMetadataModel
 from rapidata.api_client.models.submit_prompt_model import SubmitPromptModel
 from rapidata.api_client.models.submit_prompt_model_prompt_asset import (
@@ -155,21 +152,11 @@ class RapidataBenchmark:
                 total_pages = None
 
                 while True:
-                    leaderboards_result = (
-                        self.__openapi_service.leaderboard_api.leaderboards_get(
-                            request=QueryModel(
-                                filter=RootFilter(
-                                    filters=[
-                                        Filter(
-                                            field="BenchmarkId",
-                                            operator=FilterOperator.EQ,
-                                            value=self.id,
-                                        )
-                                    ]
-                                ),
-                                page=PageInfo(index=current_page, size=100),
-                            )
-                        )
+                    leaderboards_result = self.__openapi_service.benchmark_api.benchmark_benchmark_id_leaderboards_get(
+                        benchmark_id=self.id,
+                        request=QueryModel(
+                            page=PageInfo(index=current_page, size=100),
+                        ),
                     )
 
                     if leaderboards_result.total_pages is None:
