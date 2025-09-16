@@ -17,25 +17,25 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class OnlinePairMakerConfigModel(BaseModel):
+class ReferenceAssetInput(BaseModel):
     """
-    OnlinePairMakerConfigModel
+    ReferenceAssetInput
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for OnlinePairMaker", alias="_t")
-    random_matches_ratio: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="randomMatchesRatio")
-    total_comparison_budget: Optional[StrictInt] = Field(default=None, alias="totalComparisonBudget")
-    __properties: ClassVar[List[str]] = ["_t", "randomMatchesRatio", "totalComparisonBudget"]
+    t: StrictStr = Field(description="Discriminator value for ReferenceAssetInput", alias="_t")
+    identifier: Optional[StrictStr] = None
+    reference: StrictStr
+    __properties: ClassVar[List[str]] = ["_t", "identifier", "reference"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['OnlinePairMaker']):
-            raise ValueError("must be one of enum values ('OnlinePairMaker')")
+        if value not in set(['ReferenceAssetInput']):
+            raise ValueError("must be one of enum values ('ReferenceAssetInput')")
         return value
 
     model_config = ConfigDict(
@@ -56,7 +56,7 @@ class OnlinePairMakerConfigModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of OnlinePairMakerConfigModel from a JSON string"""
+        """Create an instance of ReferenceAssetInput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -68,8 +68,10 @@ class OnlinePairMakerConfigModel(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * OpenAPI `readOnly` fields are excluded.
         """
         excluded_fields: Set[str] = set([
+            "identifier",
         ])
 
         _dict = self.model_dump(
@@ -81,7 +83,7 @@ class OnlinePairMakerConfigModel(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of OnlinePairMakerConfigModel from a dict"""
+        """Create an instance of ReferenceAssetInput from a dict"""
         if obj is None:
             return None
 
@@ -89,9 +91,9 @@ class OnlinePairMakerConfigModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'OnlinePairMaker',
-            "randomMatchesRatio": obj.get("randomMatchesRatio"),
-            "totalComparisonBudget": obj.get("totalComparisonBudget")
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'ReferenceAssetInput',
+            "identifier": obj.get("identifier"),
+            "reference": obj.get("reference")
         })
         return _obj
 

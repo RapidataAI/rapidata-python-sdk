@@ -28,7 +28,7 @@ class MultiAsset(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for MultiAsset", alias="_t")
     assets: List[AssetMetadataAsset]
-    metadata: Optional[Dict[str, CompareWorkflowConfigMetadataValue]] = None
+    metadata: Optional[Dict[str, FileAssetMetadataValue]] = None
     __properties: ClassVar[List[str]] = ["_t", "assets", "metadata"]
 
     @field_validator('t')
@@ -106,7 +106,7 @@ class MultiAsset(BaseModel):
             "_t": obj.get("_t") if obj.get("_t") is not None else 'MultiAsset',
             "assets": [AssetMetadataAsset.from_dict(_item) for _item in obj["assets"]] if obj.get("assets") is not None else None,
             "metadata": dict(
-                (_k, CompareWorkflowConfigMetadataValue.from_dict(_v))
+                (_k, FileAssetMetadataValue.from_dict(_v))
                 for _k, _v in obj["metadata"].items()
             )
             if obj.get("metadata") is not None
@@ -115,7 +115,7 @@ class MultiAsset(BaseModel):
         return _obj
 
 from rapidata.api_client.models.asset_metadata_asset import AssetMetadataAsset
-from rapidata.api_client.models.compare_workflow_config_metadata_value import CompareWorkflowConfigMetadataValue
+from rapidata.api_client.models.file_asset_metadata_value import FileAssetMetadataValue
 # TODO: Rewrite to not use raise_errors
 MultiAsset.model_rebuild(raise_errors=False)
 

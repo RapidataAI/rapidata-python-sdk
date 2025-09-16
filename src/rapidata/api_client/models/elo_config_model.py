@@ -24,11 +24,11 @@ from typing_extensions import Self
 
 class EloConfigModel(BaseModel):
     """
-    These parameters affect how the ELO algorithms behaves
+    EloConfigModel
     """ # noqa: E501
-    starting_elo: Optional[StrictInt] = Field(default=None, description="The starting ELO score for each datapoint.", alias="startingElo")
-    k_factor: Optional[StrictInt] = Field(default=None, description="The K-factor to use in the ELO calculation. Determines the maximum possible change in a player's Elo rating after a single match. Higher K-Factor values result in larger rating changes.", alias="kFactor")
-    scaling_factor: Optional[StrictInt] = Field(default=None, description="Scaling factor to use in the ELO calculation. Adjusts the sensitivity of the Elo rating system to differences in player ratings. It affects how much the rating changes based on the expected outcome versus the actual outcome.", alias="scalingFactor")
+    starting_elo: Optional[StrictInt] = Field(default=None, alias="startingElo")
+    k_factor: Optional[StrictInt] = Field(default=None, alias="kFactor")
+    scaling_factor: Optional[StrictInt] = Field(default=None, alias="scalingFactor")
     __properties: ClassVar[List[str]] = ["startingElo", "kFactor", "scalingFactor"]
 
     model_config = ConfigDict(

@@ -30,12 +30,12 @@ class CreateOrderModelWorkflow(BaseModel):
     """
     The workflow helps to determine the tasks that need to be completed by the users.
     """
-    # data type: EvaluationWorkflowModel
-    oneof_schema_1_validator: Optional[EvaluationWorkflowModel] = None
-    # data type: SimpleWorkflowModel
-    oneof_schema_2_validator: Optional[SimpleWorkflowModel] = None
     # data type: CompareWorkflowModel
-    oneof_schema_3_validator: Optional[CompareWorkflowModel] = None
+    oneof_schema_1_validator: Optional[CompareWorkflowModel] = None
+    # data type: EvaluationWorkflowModel
+    oneof_schema_2_validator: Optional[EvaluationWorkflowModel] = None
+    # data type: SimpleWorkflowModel
+    oneof_schema_3_validator: Optional[SimpleWorkflowModel] = None
     actual_instance: Optional[Union[CompareWorkflowModel, EvaluationWorkflowModel, SimpleWorkflowModel]] = None
     one_of_schemas: Set[str] = { "CompareWorkflowModel", "EvaluationWorkflowModel", "SimpleWorkflowModel" }
 
@@ -63,6 +63,11 @@ class CreateOrderModelWorkflow(BaseModel):
         instance = CreateOrderModelWorkflow.model_construct()
         error_messages = []
         match = 0
+        # validate data type: CompareWorkflowModel
+        if not isinstance(v, CompareWorkflowModel):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `CompareWorkflowModel`")
+        else:
+            match += 1
         # validate data type: EvaluationWorkflowModel
         if not isinstance(v, EvaluationWorkflowModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `EvaluationWorkflowModel`")
@@ -71,11 +76,6 @@ class CreateOrderModelWorkflow(BaseModel):
         # validate data type: SimpleWorkflowModel
         if not isinstance(v, SimpleWorkflowModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `SimpleWorkflowModel`")
-        else:
-            match += 1
-        # validate data type: CompareWorkflowModel
-        if not isinstance(v, CompareWorkflowModel):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `CompareWorkflowModel`")
         else:
             match += 1
         if match > 1:
@@ -98,6 +98,12 @@ class CreateOrderModelWorkflow(BaseModel):
         error_messages = []
         match = 0
 
+        # deserialize data into CompareWorkflowModel
+        try:
+            instance.actual_instance = CompareWorkflowModel.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
         # deserialize data into EvaluationWorkflowModel
         try:
             instance.actual_instance = EvaluationWorkflowModel.from_json(json_str)
@@ -107,12 +113,6 @@ class CreateOrderModelWorkflow(BaseModel):
         # deserialize data into SimpleWorkflowModel
         try:
             instance.actual_instance = SimpleWorkflowModel.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into CompareWorkflowModel
-        try:
-            instance.actual_instance = CompareWorkflowModel.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))

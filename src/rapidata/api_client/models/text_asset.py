@@ -28,7 +28,7 @@ class TextAsset(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for TextAsset", alias="_t")
     text: StrictStr
-    metadata: Optional[Dict[str, CompareWorkflowConfigMetadataValue]] = None
+    metadata: Optional[Dict[str, FileAssetMetadataValue]] = None
     __properties: ClassVar[List[str]] = ["_t", "text", "metadata"]
 
     @field_validator('t')
@@ -99,7 +99,7 @@ class TextAsset(BaseModel):
             "_t": obj.get("_t") if obj.get("_t") is not None else 'TextAsset',
             "text": obj.get("text"),
             "metadata": dict(
-                (_k, CompareWorkflowConfigMetadataValue.from_dict(_v))
+                (_k, FileAssetMetadataValue.from_dict(_v))
                 for _k, _v in obj["metadata"].items()
             )
             if obj.get("metadata") is not None
@@ -107,7 +107,7 @@ class TextAsset(BaseModel):
         })
         return _obj
 
-from rapidata.api_client.models.compare_workflow_config_metadata_value import CompareWorkflowConfigMetadataValue
+from rapidata.api_client.models.file_asset_metadata_value import FileAssetMetadataValue
 # TODO: Rewrite to not use raise_errors
 TextAsset.model_rebuild(raise_errors=False)
 

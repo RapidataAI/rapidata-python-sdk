@@ -24,11 +24,11 @@ from typing_extensions import Self
 
 class EarlyStoppingRefereeModel(BaseModel):
     """
-    The Early Stopping Referee can currently only be used for classification tasks and will stop once a certain threshold is reached or the maximum number of votes is collected.
+    EarlyStoppingRefereeModel
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for EarlyStoppingReferee", alias="_t")
-    max_votes: StrictInt = Field(description="The upper limit of votes that will be collected for each task.", alias="maxVotes")
-    threshold: Union[StrictFloat, StrictInt] = Field(description="The threshold that needs to be reached to stop collecting votes.")
+    max_votes: StrictInt = Field(alias="maxVotes")
+    threshold: Union[StrictFloat, StrictInt]
     __properties: ClassVar[List[str]] = ["_t", "maxVotes", "threshold"]
 
     @field_validator('t')

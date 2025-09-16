@@ -20,17 +20,17 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.feature_flag import FeatureFlag
-from rapidata.api_client.models.simple_workflow_model_blueprint import SimpleWorkflowModelBlueprint
+from rapidata.api_client.models.validation_set_zip_post_request_blueprint import ValidationSetZipPostRequestBlueprint
 from typing import Optional, Set
 from typing_extensions import Self
 
 class SimpleWorkflowModel(BaseModel):
     """
-    If the SimpleWorkflow is chosen, each datapoint uploaded will correspond to a single task to be solved. This is the most commonly chosen workflow.
+    SimpleWorkflowModel
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for SimpleWorkflow", alias="_t")
-    blueprint: SimpleWorkflowModelBlueprint
-    feature_flags: Optional[List[FeatureFlag]] = Field(default=None, description="The list of feature flags that will be applied to the rapids created by this workflow.", alias="featureFlags")
+    blueprint: ValidationSetZipPostRequestBlueprint
+    feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
     __properties: ClassVar[List[str]] = ["_t", "blueprint", "featureFlags"]
 
     @field_validator('t')
@@ -102,7 +102,7 @@ class SimpleWorkflowModel(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'SimpleWorkflow',
-            "blueprint": SimpleWorkflowModelBlueprint.from_dict(obj["blueprint"]) if obj.get("blueprint") is not None else None,
+            "blueprint": ValidationSetZipPostRequestBlueprint.from_dict(obj["blueprint"]) if obj.get("blueprint") is not None else None,
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
         })
         return _obj

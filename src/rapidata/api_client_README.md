@@ -110,6 +110,7 @@ Class | Method | HTTP request | Description
 *CustomerRapidApi* | [**rapids_flagged_get**](rapidata/api_client/docs/CustomerRapidApi.md#rapids_flagged_get) | **GET** /rapids/flagged | Allows querying all rapids that have been flagged.
 *DatapointApi* | [**datapoint_datapoint_id_delete**](rapidata/api_client/docs/DatapointApi.md#datapoint_datapoint_id_delete) | **DELETE** /datapoint/{datapointId} | Deletes a datapoint by its id.
 *DatapointApi* | [**datapoint_datapoint_id_get**](rapidata/api_client/docs/DatapointApi.md#datapoint_datapoint_id_get) | **GET** /datapoint/{datapointId} | Gets a datapoint by its id.
+*DatasetApi* | [**dataset_asset_upload_post**](rapidata/api_client/docs/DatasetApi.md#dataset_asset_upload_post) | **POST** /dataset/asset/upload | Uploads a single asset to S3 and returns the asset details.
 *DatasetApi* | [**dataset_dataset_id_datapoints_csv_post**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_datapoints_csv_post) | **POST** /dataset/{datasetId}/datapoints/csv | Creates multiple datapoints from a csv.
 *DatasetApi* | [**dataset_dataset_id_datapoints_failed_get**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_datapoints_failed_get) | **GET** /dataset/{datasetId}/datapoints/failed | Gets a list of all datapoints that failed to upload.
 *DatasetApi* | [**dataset_dataset_id_datapoints_files_post**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_datapoints_files_post) | **POST** /dataset/{datasetId}/datapoints/files | Creates a single datapoint by uploading files.
@@ -258,7 +259,6 @@ Class | Method | HTTP request | Description
  - [CompareResult](rapidata/api_client/docs/CompareResult.md)
  - [CompareTruth](rapidata/api_client/docs/CompareTruth.md)
  - [CompareWorkflowConfig](rapidata/api_client/docs/CompareWorkflowConfig.md)
- - [CompareWorkflowConfigMetadataValue](rapidata/api_client/docs/CompareWorkflowConfigMetadataValue.md)
  - [CompareWorkflowConfigModel](rapidata/api_client/docs/CompareWorkflowConfigModel.md)
  - [CompareWorkflowConfigModelPairMakerConfig](rapidata/api_client/docs/CompareWorkflowConfigModelPairMakerConfig.md)
  - [CompareWorkflowConfigPairMakerConfig](rapidata/api_client/docs/CompareWorkflowConfigPairMakerConfig.md)
@@ -330,6 +330,7 @@ Class | Method | HTTP request | Description
  - [EvaluationWorkflowConfig](rapidata/api_client/docs/EvaluationWorkflowConfig.md)
  - [EvaluationWorkflowModel](rapidata/api_client/docs/EvaluationWorkflowModel.md)
  - [EvaluationWorkflowModel1](rapidata/api_client/docs/EvaluationWorkflowModel1.md)
+ - [ExistingAssetInput](rapidata/api_client/docs/ExistingAssetInput.md)
  - [FeatureFlag](rapidata/api_client/docs/FeatureFlag.md)
  - [FeatureFlagModel](rapidata/api_client/docs/FeatureFlagModel.md)
  - [FeedbackModel](rapidata/api_client/docs/FeedbackModel.md)
@@ -341,6 +342,7 @@ Class | Method | HTTP request | Description
  - [FileAssetInput2](rapidata/api_client/docs/FileAssetInput2.md)
  - [FileAssetInput3](rapidata/api_client/docs/FileAssetInput3.md)
  - [FileAssetInputFile](rapidata/api_client/docs/FileAssetInputFile.md)
+ - [FileAssetMetadataValue](rapidata/api_client/docs/FileAssetMetadataValue.md)
  - [FileAssetModel](rapidata/api_client/docs/FileAssetModel.md)
  - [FileAssetModelMetadataValue](rapidata/api_client/docs/FileAssetModelMetadataValue.md)
  - [FileType](rapidata/api_client/docs/FileType.md)
@@ -499,6 +501,7 @@ Class | Method | HTTP request | Description
  - [RapidSkippedModel](rapidata/api_client/docs/RapidSkippedModel.md)
  - [RapidState](rapidata/api_client/docs/RapidState.md)
  - [ReadBridgeTokenKeysResult](rapidata/api_client/docs/ReadBridgeTokenKeysResult.md)
+ - [ReferenceAssetInput](rapidata/api_client/docs/ReferenceAssetInput.md)
  - [ReportModel](rapidata/api_client/docs/ReportModel.md)
  - [ResponseCountFilter](rapidata/api_client/docs/ResponseCountFilter.md)
  - [ResponseCountUserFilterModel](rapidata/api_client/docs/ResponseCountUserFilterModel.md)
@@ -524,7 +527,6 @@ Class | Method | HTTP request | Description
  - [SimpleWorkflowConfigModelBlueprint](rapidata/api_client/docs/SimpleWorkflowConfigModelBlueprint.md)
  - [SimpleWorkflowModel](rapidata/api_client/docs/SimpleWorkflowModel.md)
  - [SimpleWorkflowModel1](rapidata/api_client/docs/SimpleWorkflowModel1.md)
- - [SimpleWorkflowModelBlueprint](rapidata/api_client/docs/SimpleWorkflowModelBlueprint.md)
  - [SkipResult](rapidata/api_client/docs/SkipResult.md)
  - [SkipTruth](rapidata/api_client/docs/SkipTruth.md)
  - [SortCriterion](rapidata/api_client/docs/SortCriterion.md)
@@ -581,6 +583,7 @@ Class | Method | HTTP request | Description
  - [UpdateValidationRapidModel](rapidata/api_client/docs/UpdateValidationRapidModel.md)
  - [UpdateValidationRapidModelTruth](rapidata/api_client/docs/UpdateValidationRapidModelTruth.md)
  - [UpdateValidationSetModel](rapidata/api_client/docs/UpdateValidationSetModel.md)
+ - [UploadAssetResult](rapidata/api_client/docs/UploadAssetResult.md)
  - [UploadCocoResult](rapidata/api_client/docs/UploadCocoResult.md)
  - [UploadFromS3Result](rapidata/api_client/docs/UploadFromS3Result.md)
  - [UrlAssetInput](rapidata/api_client/docs/UrlAssetInput.md)

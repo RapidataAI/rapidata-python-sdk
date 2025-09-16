@@ -17,26 +17,20 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.file_asset_metadata_value import FileAssetMetadataValue
 from typing import Optional, Set
 from typing_extensions import Self
 
-class OnlinePairMakerConfigModel(BaseModel):
+class UploadAssetResult(BaseModel):
     """
-    OnlinePairMakerConfigModel
+    UploadAssetResult
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for OnlinePairMaker", alias="_t")
-    random_matches_ratio: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="randomMatchesRatio")
-    total_comparison_budget: Optional[StrictInt] = Field(default=None, alias="totalComparisonBudget")
-    __properties: ClassVar[List[str]] = ["_t", "randomMatchesRatio", "totalComparisonBudget"]
-
-    @field_validator('t')
-    def t_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['OnlinePairMaker']):
-            raise ValueError("must be one of enum values ('OnlinePairMaker')")
-        return value
+    file_name: StrictStr = Field(alias="fileName")
+    content_type: Optional[StrictStr] = Field(default=None, alias="contentType")
+    metadata: Dict[str, FileAssetMetadataValue]
+    __properties: ClassVar[List[str]] = ["fileName", "contentType", "metadata"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -56,7 +50,7 @@ class OnlinePairMakerConfigModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of OnlinePairMakerConfigModel from a JSON string"""
+        """Create an instance of UploadAssetResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -77,11 +71,23 @@ class OnlinePairMakerConfigModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each value in metadata (dict)
+        _field_dict = {}
+        if self.metadata:
+            for _key_metadata in self.metadata:
+                if self.metadata[_key_metadata]:
+                    _field_dict[_key_metadata] = self.metadata[_key_metadata].to_dict()
+            _dict['metadata'] = _field_dict
+        # set to None if content_type (nullable) is None
+        # and model_fields_set contains the field
+        if self.content_type is None and "content_type" in self.model_fields_set:
+            _dict['contentType'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of OnlinePairMakerConfigModel from a dict"""
+        """Create an instance of UploadAssetResult from a dict"""
         if obj is None:
             return None
 
@@ -89,9 +95,14 @@ class OnlinePairMakerConfigModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'OnlinePairMaker',
-            "randomMatchesRatio": obj.get("randomMatchesRatio"),
-            "totalComparisonBudget": obj.get("totalComparisonBudget")
+            "fileName": obj.get("fileName"),
+            "contentType": obj.get("contentType"),
+            "metadata": dict(
+                (_k, FileAssetMetadataValue.from_dict(_v))
+                for _k, _v in obj["metadata"].items()
+            )
+            if obj.get("metadata") is not None
+            else None
         })
         return _obj
 

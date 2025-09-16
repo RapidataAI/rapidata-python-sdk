@@ -24,10 +24,10 @@ from typing_extensions import Self
 
 class NaiveRefereeModel(BaseModel):
     """
-    The NaiveReferee is used to collect a fixed number of votes.
+    NaiveRefereeModel
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for NaiveReferee", alias="_t")
-    total_votes: StrictInt = Field(description="The number of votes that need to be collected as a minimum.", alias="totalVotes")
+    total_votes: StrictInt = Field(alias="totalVotes")
     __properties: ClassVar[List[str]] = ["_t", "totalVotes"]
 
     @field_validator('t')
