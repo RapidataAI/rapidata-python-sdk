@@ -29,10 +29,10 @@ class CreateOrderModelReferee(BaseModel):
     """
     The referee is used to determine how many votes will be collected.
     """
-    # data type: NaiveRefereeModel
-    oneof_schema_1_validator: Optional[NaiveRefereeModel] = None
     # data type: EarlyStoppingRefereeModel
-    oneof_schema_2_validator: Optional[EarlyStoppingRefereeModel] = None
+    oneof_schema_1_validator: Optional[EarlyStoppingRefereeModel] = None
+    # data type: NaiveRefereeModel
+    oneof_schema_2_validator: Optional[NaiveRefereeModel] = None
     actual_instance: Optional[Union[EarlyStoppingRefereeModel, NaiveRefereeModel]] = None
     one_of_schemas: Set[str] = { "EarlyStoppingRefereeModel", "NaiveRefereeModel" }
 
@@ -60,14 +60,14 @@ class CreateOrderModelReferee(BaseModel):
         instance = CreateOrderModelReferee.model_construct()
         error_messages = []
         match = 0
-        # validate data type: NaiveRefereeModel
-        if not isinstance(v, NaiveRefereeModel):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `NaiveRefereeModel`")
-        else:
-            match += 1
         # validate data type: EarlyStoppingRefereeModel
         if not isinstance(v, EarlyStoppingRefereeModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `EarlyStoppingRefereeModel`")
+        else:
+            match += 1
+        # validate data type: NaiveRefereeModel
+        if not isinstance(v, NaiveRefereeModel):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `NaiveRefereeModel`")
         else:
             match += 1
         if match > 1:
@@ -90,15 +90,15 @@ class CreateOrderModelReferee(BaseModel):
         error_messages = []
         match = 0
 
-        # deserialize data into NaiveRefereeModel
-        try:
-            instance.actual_instance = NaiveRefereeModel.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
         # deserialize data into EarlyStoppingRefereeModel
         try:
             instance.actual_instance = EarlyStoppingRefereeModel.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into NaiveRefereeModel
+        try:
+            instance.actual_instance = NaiveRefereeModel.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))

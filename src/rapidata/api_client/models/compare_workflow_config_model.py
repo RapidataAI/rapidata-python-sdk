@@ -19,11 +19,11 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.compare_workflow_config_metadata_value import CompareWorkflowConfigMetadataValue
 from rapidata.api_client.models.compare_workflow_config_model_pair_maker_config import CompareWorkflowConfigModelPairMakerConfig
 from rapidata.api_client.models.compare_workflow_model1_referee import CompareWorkflowModel1Referee
 from rapidata.api_client.models.elo_config import EloConfig
 from rapidata.api_client.models.feature_flag import FeatureFlag
+from rapidata.api_client.models.file_asset_metadata_value import FileAssetMetadataValue
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -37,7 +37,7 @@ class CompareWorkflowConfigModel(BaseModel):
     referee: CompareWorkflowModel1Referee
     target_country_codes: List[StrictStr] = Field(description="A list of country codes that this workflow is targeting.", alias="targetCountryCodes")
     elo_config: Optional[EloConfig] = Field(default=None, alias="eloConfig")
-    metadata: Dict[str, CompareWorkflowConfigMetadataValue] = Field(description="The metadata is attached to every single rapid and can be used for something like the prompt.")
+    metadata: Dict[str, FileAssetMetadataValue] = Field(description="The metadata is attached to every single rapid and can be used for something like the prompt.")
     feature_flags: List[FeatureFlag] = Field(description="The list of feature flags that will be applied to the rapids created by this workflow.", alias="featureFlags")
     __properties: ClassVar[List[str]] = ["_t", "criteria", "pairMakerConfig", "referee", "targetCountryCodes", "eloConfig", "metadata", "featureFlags"]
 
@@ -129,7 +129,7 @@ class CompareWorkflowConfigModel(BaseModel):
             "targetCountryCodes": obj.get("targetCountryCodes"),
             "eloConfig": EloConfig.from_dict(obj["eloConfig"]) if obj.get("eloConfig") is not None else None,
             "metadata": dict(
-                (_k, CompareWorkflowConfigMetadataValue.from_dict(_v))
+                (_k, FileAssetMetadataValue.from_dict(_v))
                 for _k, _v in obj["metadata"].items()
             )
             if obj.get("metadata") is not None

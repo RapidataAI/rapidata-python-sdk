@@ -25,12 +25,12 @@ from typing_extensions import Self
 
 class EvaluationWorkflowModel(BaseModel):
     """
-    If the EvaluationWorkflow is chosen a validation set will be used as a source for all tasks. It functions similarly to the SimpleWorkflow as there is a 1:1 mapping between validation rapids and tasks.
+    EvaluationWorkflowModel
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for EvaluationWorkflow", alias="_t")
-    validation_set_id: StrictStr = Field(description="The Validation Set id is used to as a source for the tasks that will be sent to the user.", alias="validationSetId")
-    should_accept_incorrect: StrictBool = Field(description="Indicates if the user should get feedback on their answers if they answer wrong. If set to true the user will not notice that he was tested.", alias="shouldAcceptIncorrect")
-    feature_flags: Optional[List[FeatureFlag]] = Field(default=None, description="The list of feature flags that will be applied to the rapids created by this workflow.", alias="featureFlags")
+    validation_set_id: StrictStr = Field(alias="validationSetId")
+    should_accept_incorrect: StrictBool = Field(alias="shouldAcceptIncorrect")
+    feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
     __properties: ClassVar[List[str]] = ["_t", "validationSetId", "shouldAcceptIncorrect", "featureFlags"]
 
     @field_validator('t')

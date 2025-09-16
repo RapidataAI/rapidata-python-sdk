@@ -19,11 +19,11 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.compare_workflow_config_metadata_value import CompareWorkflowConfigMetadataValue
 from rapidata.api_client.models.compare_workflow_config_pair_maker_config import CompareWorkflowConfigPairMakerConfig
 from rapidata.api_client.models.compare_workflow_model1_referee import CompareWorkflowModel1Referee
 from rapidata.api_client.models.elo_config import EloConfig
 from rapidata.api_client.models.feature_flag import FeatureFlag
+from rapidata.api_client.models.file_asset_metadata_value import FileAssetMetadataValue
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -35,7 +35,7 @@ class CompareWorkflowConfig(BaseModel):
     criteria: StrictStr
     referee: CompareWorkflowModel1Referee
     target_country_codes: List[StrictStr] = Field(alias="targetCountryCodes")
-    metadata: Dict[str, CompareWorkflowConfigMetadataValue]
+    metadata: Dict[str, FileAssetMetadataValue]
     elo_config: Optional[EloConfig] = Field(default=None, alias="eloConfig")
     pair_maker_config: Optional[CompareWorkflowConfigPairMakerConfig] = Field(default=None, alias="pairMakerConfig")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
@@ -127,7 +127,7 @@ class CompareWorkflowConfig(BaseModel):
             "referee": CompareWorkflowModel1Referee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
             "targetCountryCodes": obj.get("targetCountryCodes"),
             "metadata": dict(
-                (_k, CompareWorkflowConfigMetadataValue.from_dict(_v))
+                (_k, FileAssetMetadataValue.from_dict(_v))
                 for _k, _v in obj["metadata"].items()
             )
             if obj.get("metadata") is not None

@@ -1,7 +1,7 @@
 from typing import Any
 from rapidata.api_client.models.simple_workflow_model import SimpleWorkflowModel
-from rapidata.api_client.models.simple_workflow_model_blueprint import (
-    SimpleWorkflowModelBlueprint,
+from rapidata.api_client.models.validation_set_zip_post_request_blueprint import (
+    ValidationSetZipPostRequestBlueprint,
 )
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.api_client.models.free_text_rapid_blueprint import FreeTextRapidBlueprint
@@ -52,7 +52,7 @@ class FreeTextWorkflow(Workflow):
 
         return SimpleWorkflowModel(
             _t="SimpleWorkflow",
-            blueprint=SimpleWorkflowModelBlueprint(blueprint),
+            blueprint=ValidationSetZipPostRequestBlueprint(blueprint),
         )
 
     def _to_payload(self, datapoint: Datapoint) -> FreeTextPayload:

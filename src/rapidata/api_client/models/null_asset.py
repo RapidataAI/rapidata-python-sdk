@@ -27,7 +27,7 @@ class NullAsset(BaseModel):
     NullAsset
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for NullAsset", alias="_t")
-    metadata: Optional[Dict[str, CompareWorkflowConfigMetadataValue]] = None
+    metadata: Optional[Dict[str, FileAssetMetadataValue]] = None
     __properties: ClassVar[List[str]] = ["_t", "metadata"]
 
     @field_validator('t')
@@ -97,7 +97,7 @@ class NullAsset(BaseModel):
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'NullAsset',
             "metadata": dict(
-                (_k, CompareWorkflowConfigMetadataValue.from_dict(_v))
+                (_k, FileAssetMetadataValue.from_dict(_v))
                 for _k, _v in obj["metadata"].items()
             )
             if obj.get("metadata") is not None
@@ -105,7 +105,7 @@ class NullAsset(BaseModel):
         })
         return _obj
 
-from rapidata.api_client.models.compare_workflow_config_metadata_value import CompareWorkflowConfigMetadataValue
+from rapidata.api_client.models.file_asset_metadata_value import FileAssetMetadataValue
 # TODO: Rewrite to not use raise_errors
 NullAsset.model_rebuild(raise_errors=False)
 

@@ -17,29 +17,35 @@ import json
 import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
+from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
 from rapidata.api_client.models.file_asset_input3 import FileAssetInput3
+from rapidata.api_client.models.reference_asset_input import ReferenceAssetInput
 from rapidata.api_client.models.text_asset_input import TextAssetInput
 from rapidata.api_client.models.url_asset_input import UrlAssetInput
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-MULTIASSETINPUT3ASSETSINNER_ONE_OF_SCHEMAS = ["FileAssetInput3", "MultiAssetInput3", "TextAssetInput", "UrlAssetInput"]
+MULTIASSETINPUT3ASSETSINNER_ONE_OF_SCHEMAS = ["ExistingAssetInput", "FileAssetInput3", "MultiAssetInput3", "ReferenceAssetInput", "TextAssetInput", "UrlAssetInput"]
 
 class MultiAssetInput3AssetsInner(BaseModel):
     """
     MultiAssetInput3AssetsInner
     """
+    # data type: ExistingAssetInput
+    oneof_schema_1_validator: Optional[ExistingAssetInput] = None
     # data type: FileAssetInput3
-    oneof_schema_1_validator: Optional[FileAssetInput3] = None
+    oneof_schema_2_validator: Optional[FileAssetInput3] = None
     # data type: MultiAssetInput3
-    oneof_schema_2_validator: Optional[MultiAssetInput3] = None
+    oneof_schema_3_validator: Optional[MultiAssetInput3] = None
+    # data type: ReferenceAssetInput
+    oneof_schema_4_validator: Optional[ReferenceAssetInput] = None
     # data type: TextAssetInput
-    oneof_schema_3_validator: Optional[TextAssetInput] = None
+    oneof_schema_5_validator: Optional[TextAssetInput] = None
     # data type: UrlAssetInput
-    oneof_schema_4_validator: Optional[UrlAssetInput] = None
-    actual_instance: Optional[Union[FileAssetInput3, MultiAssetInput3, TextAssetInput, UrlAssetInput]] = None
-    one_of_schemas: Set[str] = { "FileAssetInput3", "MultiAssetInput3", "TextAssetInput", "UrlAssetInput" }
+    oneof_schema_6_validator: Optional[UrlAssetInput] = None
+    actual_instance: Optional[Union[ExistingAssetInput, FileAssetInput3, MultiAssetInput3, ReferenceAssetInput, TextAssetInput, UrlAssetInput]] = None
+    one_of_schemas: Set[str] = { "ExistingAssetInput", "FileAssetInput3", "MultiAssetInput3", "ReferenceAssetInput", "TextAssetInput", "UrlAssetInput" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -65,6 +71,11 @@ class MultiAssetInput3AssetsInner(BaseModel):
         instance = MultiAssetInput3AssetsInner.model_construct()
         error_messages = []
         match = 0
+        # validate data type: ExistingAssetInput
+        if not isinstance(v, ExistingAssetInput):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `ExistingAssetInput`")
+        else:
+            match += 1
         # validate data type: FileAssetInput3
         if not isinstance(v, FileAssetInput3):
             error_messages.append(f"Error! Input type `{type(v)}` is not `FileAssetInput3`")
@@ -73,6 +84,11 @@ class MultiAssetInput3AssetsInner(BaseModel):
         # validate data type: MultiAssetInput3
         if not isinstance(v, MultiAssetInput3):
             error_messages.append(f"Error! Input type `{type(v)}` is not `MultiAssetInput3`")
+        else:
+            match += 1
+        # validate data type: ReferenceAssetInput
+        if not isinstance(v, ReferenceAssetInput):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `ReferenceAssetInput`")
         else:
             match += 1
         # validate data type: TextAssetInput
@@ -87,10 +103,10 @@ class MultiAssetInput3AssetsInner(BaseModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in MultiAssetInput3AssetsInner with oneOf schemas: FileAssetInput3, MultiAssetInput3, TextAssetInput, UrlAssetInput. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in MultiAssetInput3AssetsInner with oneOf schemas: ExistingAssetInput, FileAssetInput3, MultiAssetInput3, ReferenceAssetInput, TextAssetInput, UrlAssetInput. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in MultiAssetInput3AssetsInner with oneOf schemas: FileAssetInput3, MultiAssetInput3, TextAssetInput, UrlAssetInput. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in MultiAssetInput3AssetsInner with oneOf schemas: ExistingAssetInput, FileAssetInput3, MultiAssetInput3, ReferenceAssetInput, TextAssetInput, UrlAssetInput. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -105,6 +121,12 @@ class MultiAssetInput3AssetsInner(BaseModel):
         error_messages = []
         match = 0
 
+        # deserialize data into ExistingAssetInput
+        try:
+            instance.actual_instance = ExistingAssetInput.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
         # deserialize data into FileAssetInput3
         try:
             instance.actual_instance = FileAssetInput3.from_json(json_str)
@@ -114,6 +136,12 @@ class MultiAssetInput3AssetsInner(BaseModel):
         # deserialize data into MultiAssetInput3
         try:
             instance.actual_instance = MultiAssetInput3.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into ReferenceAssetInput
+        try:
+            instance.actual_instance = ReferenceAssetInput.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
@@ -132,10 +160,10 @@ class MultiAssetInput3AssetsInner(BaseModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into MultiAssetInput3AssetsInner with oneOf schemas: FileAssetInput3, MultiAssetInput3, TextAssetInput, UrlAssetInput. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into MultiAssetInput3AssetsInner with oneOf schemas: ExistingAssetInput, FileAssetInput3, MultiAssetInput3, ReferenceAssetInput, TextAssetInput, UrlAssetInput. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into MultiAssetInput3AssetsInner with oneOf schemas: FileAssetInput3, MultiAssetInput3, TextAssetInput, UrlAssetInput. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into MultiAssetInput3AssetsInner with oneOf schemas: ExistingAssetInput, FileAssetInput3, MultiAssetInput3, ReferenceAssetInput, TextAssetInput, UrlAssetInput. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -149,7 +177,7 @@ class MultiAssetInput3AssetsInner(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], FileAssetInput3, MultiAssetInput3, TextAssetInput, UrlAssetInput]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], ExistingAssetInput, FileAssetInput3, MultiAssetInput3, ReferenceAssetInput, TextAssetInput, UrlAssetInput]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

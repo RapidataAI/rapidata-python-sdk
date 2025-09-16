@@ -26,7 +26,7 @@ COMPAREWORKFLOWMODELPAIRMAKERCONFIG_ONE_OF_SCHEMAS = ["OnlinePairMakerConfigMode
 
 class CompareWorkflowModelPairMakerConfig(BaseModel):
     """
-    The PairMaker config determines the pair making algorithm for compare workflows
+    CompareWorkflowModelPairMakerConfig
     """
     # data type: OnlinePairMakerConfigModel
     oneof_schema_1_validator: Optional[OnlinePairMakerConfigModel] = None

@@ -67,7 +67,6 @@ from rapidata.api_client.models.compare_rapid_blueprint import CompareRapidBluep
 from rapidata.api_client.models.compare_result import CompareResult
 from rapidata.api_client.models.compare_truth import CompareTruth
 from rapidata.api_client.models.compare_workflow_config import CompareWorkflowConfig
-from rapidata.api_client.models.compare_workflow_config_metadata_value import CompareWorkflowConfigMetadataValue
 from rapidata.api_client.models.compare_workflow_config_model import CompareWorkflowConfigModel
 from rapidata.api_client.models.compare_workflow_config_model_pair_maker_config import CompareWorkflowConfigModelPairMakerConfig
 from rapidata.api_client.models.compare_workflow_config_pair_maker_config import CompareWorkflowConfigPairMakerConfig
@@ -139,6 +138,7 @@ from rapidata.api_client.models.empty_validation_truth import EmptyValidationTru
 from rapidata.api_client.models.evaluation_workflow_config import EvaluationWorkflowConfig
 from rapidata.api_client.models.evaluation_workflow_model import EvaluationWorkflowModel
 from rapidata.api_client.models.evaluation_workflow_model1 import EvaluationWorkflowModel1
+from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.feature_flag_model import FeatureFlagModel
 from rapidata.api_client.models.feedback_model import FeedbackModel
@@ -150,6 +150,7 @@ from rapidata.api_client.models.file_asset_input1_file import FileAssetInput1Fil
 from rapidata.api_client.models.file_asset_input2 import FileAssetInput2
 from rapidata.api_client.models.file_asset_input3 import FileAssetInput3
 from rapidata.api_client.models.file_asset_input_file import FileAssetInputFile
+from rapidata.api_client.models.file_asset_metadata_value import FileAssetMetadataValue
 from rapidata.api_client.models.file_asset_model import FileAssetModel
 from rapidata.api_client.models.file_asset_model_metadata_value import FileAssetModelMetadataValue
 from rapidata.api_client.models.file_type import FileType
@@ -308,6 +309,7 @@ from rapidata.api_client.models.rapid_result_model_result import RapidResultMode
 from rapidata.api_client.models.rapid_skipped_model import RapidSkippedModel
 from rapidata.api_client.models.rapid_state import RapidState
 from rapidata.api_client.models.read_bridge_token_keys_result import ReadBridgeTokenKeysResult
+from rapidata.api_client.models.reference_asset_input import ReferenceAssetInput
 from rapidata.api_client.models.report_model import ReportModel
 from rapidata.api_client.models.response_count_filter import ResponseCountFilter
 from rapidata.api_client.models.response_count_user_filter_model import ResponseCountUserFilterModel
@@ -333,7 +335,6 @@ from rapidata.api_client.models.simple_workflow_config_model import SimpleWorkfl
 from rapidata.api_client.models.simple_workflow_config_model_blueprint import SimpleWorkflowConfigModelBlueprint
 from rapidata.api_client.models.simple_workflow_model import SimpleWorkflowModel
 from rapidata.api_client.models.simple_workflow_model1 import SimpleWorkflowModel1
-from rapidata.api_client.models.simple_workflow_model_blueprint import SimpleWorkflowModelBlueprint
 from rapidata.api_client.models.skip_result import SkipResult
 from rapidata.api_client.models.skip_truth import SkipTruth
 from rapidata.api_client.models.sort_criterion import SortCriterion
@@ -390,6 +391,7 @@ from rapidata.api_client.models.update_should_alert_model import UpdateShouldAle
 from rapidata.api_client.models.update_validation_rapid_model import UpdateValidationRapidModel
 from rapidata.api_client.models.update_validation_rapid_model_truth import UpdateValidationRapidModelTruth
 from rapidata.api_client.models.update_validation_set_model import UpdateValidationSetModel
+from rapidata.api_client.models.upload_asset_result import UploadAssetResult
 from rapidata.api_client.models.upload_coco_result import UploadCocoResult
 from rapidata.api_client.models.upload_from_s3_result import UploadFromS3Result
 from rapidata.api_client.models.url_asset_input import UrlAssetInput

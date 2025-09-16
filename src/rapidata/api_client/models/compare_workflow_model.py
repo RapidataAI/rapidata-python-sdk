@@ -28,14 +28,14 @@ from typing_extensions import Self
 
 class CompareWorkflowModel(BaseModel):
     """
-    If the SimpleWorkflow is chosen, each datapoint uploaded will correspond to a single task to be solved. This is the most commonly chosen workflow.
+    CompareWorkflowModel
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for CompareWorkflow", alias="_t")
-    criteria: StrictStr = Field(description="The criteria that the datapoints should be compared based on. No default value.")
+    criteria: StrictStr
     pair_maker_config: Optional[CompareWorkflowModelPairMakerConfig] = Field(default=None, alias="pairMakerConfig")
     elo_config: Optional[EloConfigModel] = Field(default=None, alias="eloConfig")
-    metadata: Optional[List[DatasetDatasetIdDatapointsPostRequestMetadataInner]] = Field(default=None, description="The metadata is attached to every single rapid and can be used for something like the prompt.")
-    feature_flags: Optional[List[FeatureFlag]] = Field(default=None, description="The list of feature flags that will be applied to the rapids created by this workflow.", alias="featureFlags")
+    metadata: Optional[List[DatasetDatasetIdDatapointsPostRequestMetadataInner]] = None
+    feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
     __properties: ClassVar[List[str]] = ["_t", "criteria", "pairMakerConfig", "eloConfig", "metadata", "featureFlags"]
 
     @field_validator('t')
