@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.file_asset_metadata_value import FileAssetMetadataValue
 from typing import Optional, Set
 from typing_extensions import Self
@@ -28,9 +28,8 @@ class UploadAssetResult(BaseModel):
     UploadAssetResult
     """ # noqa: E501
     file_name: StrictStr = Field(alias="fileName")
-    content_type: Optional[StrictStr] = Field(default=None, alias="contentType")
     metadata: Dict[str, FileAssetMetadataValue]
-    __properties: ClassVar[List[str]] = ["fileName", "contentType", "metadata"]
+    __properties: ClassVar[List[str]] = ["fileName", "metadata"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -78,11 +77,6 @@ class UploadAssetResult(BaseModel):
                 if self.metadata[_key_metadata]:
                     _field_dict[_key_metadata] = self.metadata[_key_metadata].to_dict()
             _dict['metadata'] = _field_dict
-        # set to None if content_type (nullable) is None
-        # and model_fields_set contains the field
-        if self.content_type is None and "content_type" in self.model_fields_set:
-            _dict['contentType'] = None
-
         return _dict
 
     @classmethod
@@ -96,7 +90,6 @@ class UploadAssetResult(BaseModel):
 
         _obj = cls.model_validate({
             "fileName": obj.get("fileName"),
-            "contentType": obj.get("contentType"),
             "metadata": dict(
                 (_k, FileAssetMetadataValue.from_dict(_v))
                 for _k, _v in obj["metadata"].items()
