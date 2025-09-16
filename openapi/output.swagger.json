@@ -762,7 +762,7 @@
         }
       }
     },
-    "/dataset/asset/upload": {
+    "/dataset/asset/file": {
       "post": {
         "tags": [
           "Dataset"
@@ -790,6 +790,48 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadAssetResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadAssetResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadAssetResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dataset/asset/url": {
+      "post": {
+        "tags": [
+          "Dataset"
+        ],
+        "summary": "Uploads a single asset to S3 and returns the asset details.",
+        "description": "This endpoint allows uploading a single file to S3 storage with the asset creator.\nThe uploaded asset will be stored using the configured S3 settings and a unique filename will be generated.",
+        "parameters": [
+          {
+            "name": "url",
+            "in": "query",
+            "description": "The url of the file to upload to S3.",
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -8975,10 +9017,6 @@
         "properties": {
           "fileName": {
             "type": "string"
-          },
-          "contentType": {
-            "type": "string",
-            "nullable": true
           },
           "metadata": {
             "type": "object",

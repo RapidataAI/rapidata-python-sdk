@@ -110,7 +110,8 @@ Class | Method | HTTP request | Description
 *CustomerRapidApi* | [**rapids_flagged_get**](rapidata/api_client/docs/CustomerRapidApi.md#rapids_flagged_get) | **GET** /rapids/flagged | Allows querying all rapids that have been flagged.
 *DatapointApi* | [**datapoint_datapoint_id_delete**](rapidata/api_client/docs/DatapointApi.md#datapoint_datapoint_id_delete) | **DELETE** /datapoint/{datapointId} | Deletes a datapoint by its id.
 *DatapointApi* | [**datapoint_datapoint_id_get**](rapidata/api_client/docs/DatapointApi.md#datapoint_datapoint_id_get) | **GET** /datapoint/{datapointId} | Gets a datapoint by its id.
-*DatasetApi* | [**dataset_asset_upload_post**](rapidata/api_client/docs/DatasetApi.md#dataset_asset_upload_post) | **POST** /dataset/asset/upload | Uploads a single asset to S3 and returns the asset details.
+*DatasetApi* | [**dataset_asset_file_post**](rapidata/api_client/docs/DatasetApi.md#dataset_asset_file_post) | **POST** /dataset/asset/file | Uploads a single asset to S3 and returns the asset details.
+*DatasetApi* | [**dataset_asset_url_post**](rapidata/api_client/docs/DatasetApi.md#dataset_asset_url_post) | **POST** /dataset/asset/url | Uploads a single asset to S3 and returns the asset details.
 *DatasetApi* | [**dataset_dataset_id_datapoints_csv_post**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_datapoints_csv_post) | **POST** /dataset/{datasetId}/datapoints/csv | Creates multiple datapoints from a csv.
 *DatasetApi* | [**dataset_dataset_id_datapoints_failed_get**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_datapoints_failed_get) | **GET** /dataset/{datasetId}/datapoints/failed | Gets a list of all datapoints that failed to upload.
 *DatasetApi* | [**dataset_dataset_id_datapoints_files_post**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_datapoints_files_post) | **POST** /dataset/{datasetId}/datapoints/files | Creates a single datapoint by uploading files.
