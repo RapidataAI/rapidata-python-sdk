@@ -71,9 +71,8 @@ Further more you can customize to whom, how and in what sequence the tasks are s
 
 - [Filters](../reference/rapidata/rapidata_client/filter/rapidata_filters/) to specify who should work on the order
 - [Settings](../reference/rapidata/rapidata_client/settings/rapidata_settings/) to specify how the order should be shown
-- [Selections](../reference/rapidata/rapidata_client/selection/rapidata_selections/) to specify in what sequence the tasks are shown
 
-These customizations can be added to the order through the `filters`, `settings` and `selections` parameters respectively.
+These customizations can be added to the order through the `filters` and `settings` parameters respectively.
 
 ### Preview the Order
 
@@ -127,10 +126,6 @@ results = order.get_results()
 ```
 
 To better understand the results you can check out the [Understanding the Results](/understanding_the_results/) guide.
-
-## Credits and Billing
-
-When you first create an account on Rapidata, you will receive 100 free credits. Each credit give you 10 responses. After you have used up your free credits, you may purchase more on our [website](https://app.rapidata.ai/pricing).
 
 ## Next Steps
 
