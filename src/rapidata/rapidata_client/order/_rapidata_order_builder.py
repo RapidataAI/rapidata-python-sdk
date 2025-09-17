@@ -203,8 +203,10 @@ class RapidataOrderBuilder:
         Returns:
             RapidataOrder: The created RapidataOrder instance.
         """
-        if rapidata_config.order.autoValidationSetCreation and not isinstance(
-            self.__workflow, FreeTextWorkflow
+        if (
+            rapidata_config.order.autoValidationSetCreation
+            and not isinstance(self.__workflow, FreeTextWorkflow)
+            and not self.__selections
         ):
             new_validation_set = self._set_validation_set_id()
         else:
