@@ -70,7 +70,7 @@ class ValidationSetManager:
                         settings=settings,
                     )
                 )
-            return self._submit(name=order_name, rapids=rapids, dimensions=None)
+            return self._submit(name=order_name, rapids=rapids, dimensions=[])
 
     def create_classification_set(
         self,
@@ -587,7 +587,7 @@ class ValidationSetManager:
         self,
         name: str,
         rapids: list[Rapid],
-        dimensions: list[str] | None,
+        dimensions: list[str],
     ) -> RapidataValidationSet:
         logger.debug("Creating validation set")
         validation_set_id = (
