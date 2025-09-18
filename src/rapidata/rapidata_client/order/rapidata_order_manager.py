@@ -29,7 +29,7 @@ from rapidata.rapidata_client.workflow import (
     RankingWorkflow,
 )
 from rapidata.rapidata_client.datapoints.assets import MediaAsset, TextAsset, MultiAsset
-from rapidata.rapidata_client.datapoints._datapoint import Datapoint
+from rapidata.rapidata_client.datapoints.datapoint import Datapoint
 from rapidata.rapidata_client.filter import RapidataFilter
 from rapidata.rapidata_client.filter.rapidata_filters import RapidataFilters
 from rapidata.rapidata_client.settings import RapidataSettings, RapidataSetting
@@ -70,7 +70,8 @@ class RapidataOrderManager:
         self,
         name: str,
         workflow: Workflow,
-        assets: list[MediaAsset] | list[TextAsset] | list[MultiAsset],
+        datapoints: list[str] | list[list[str]],
+        data_type: Literal["media", "text"] = "media",
         responses_per_datapoint: int = 10,
         contexts: list[str] | None = None,
         media_contexts: list[str] | None = None,
@@ -83,13 +84,13 @@ class RapidataOrderManager:
         private_notes: list[str] | None = None,
     ) -> RapidataOrder:
 
-        if not assets:
+        if not datapoints:
             raise ValueError("No datapoints provided")
 
-        if contexts and len(contexts) != len(assets):
+        if contexts and len(contexts) != len(datapoints):
             raise ValueError("Number of contexts must match number of datapoints")
 
-        if media_contexts and len(media_contexts) != len(assets):
+        if media_contexts and len(media_contexts) != len(datapoints):
             raise ValueError("Number of media contexts must match number of datapoints")
 
         if media_contexts:
@@ -97,10 +98,10 @@ class RapidataOrderManager:
                 if not media_context.startswith("http"):
                     raise ValueError("Media contexts must all be URLs")
 
-        if sentences and len(sentences) != len(assets):
+        if sentences and len(sentences) != len(datapoints):
             raise ValueError("Number of sentences must match number of datapoints")
 
-        if private_notes and len(private_notes) != len(assets):
+        if private_notes and len(private_notes) != len(datapoints):
             raise ValueError("Number of private notes must match number of datapoints")
 
         if sentences and contexts:
@@ -114,11 +115,15 @@ class RapidataOrderManager:
                 max_vote_count=responses_per_datapoint,
             )
 
+        if data_type not in ["media", "text"]:
+            raise ValueError("Data type must be one of 'media' or 'text'")
+
         logger.debug(
-            "Creating order with parameters: name %s, workflow %s, assets %s, responses_per_datapoint %s, contexts %s, media_contexts %s, validation_set_id %s, confidence_threshold %s, filters %s, settings %s, sentences %s, selections %s, private_notes %s",
+            "Creating order with parameters: name %s, workflow %s, datapoints %s, data_type %s, responses_per_datapoint %s, contexts %s, media_contexts %s, validation_set_id %s, confidence_threshold %s, filters %s, settings %s, sentences %s, selections %s, private_notes %s",
             name,
             workflow,
-            assets,
+            datapoints,
+            data_type,
             responses_per_datapoint,
             contexts,
             media_contexts,
@@ -177,8 +182,8 @@ class RapidataOrderManager:
             order_builder._workflow(workflow)
             ._datapoints(
                 datapoints=[
-                    Datapoint(asset=asset, metadata=metadata)
-                    for asset, metadata in zip_longest(assets, multi_metadata)
+                    Datapoint(assets=asset, data_type=data_type, metadata=metadata)
+                    for asset, metadata in zip_longest(datapoints, multi_metadata)
                 ]
             )
             ._referee(referee)
@@ -261,21 +266,18 @@ class RapidataOrderManager:
         with tracer.start_as_current_span(
             "RapidataOrderManager.create_classification_order"
         ):
-            if data_type == "media":
-                assets = [MediaAsset(path=path) for path in datapoints]
-            elif data_type == "text":
-                assets = [TextAsset(text=text) for text in datapoints]
-            else:
-                raise ValueError(
-                    f"Unsupported data type: {data_type}, must be one of 'media' or 'text'"
-                )
+            if not isinstance(datapoints, list) or not all(
+                isinstance(datapoint, str) for datapoint in datapoints
+            ):
+                raise ValueError("Datapoints must be a list of strings")
 
             return self._create_general_order(
                 name=name,
                 workflow=ClassifyWorkflow(
                     instruction=instruction, answer_options=answer_options
                 ),
-                assets=assets,
+                datapoints=datapoints,
+                data_type=data_type,
                 responses_per_datapoint=responses_per_datapoint,
                 contexts=contexts,
                 media_contexts=media_contexts,
@@ -342,7 +344,7 @@ class RapidataOrderManager:
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
         with tracer.start_as_current_span("RapidataOrderManager.create_compare_order"):
-            if any(type(datapoint) != list for datapoint in datapoints):
+            if any(not isinstance(datapoint, list) for datapoint in datapoints):
                 raise ValueError("Each datapoint must be a list of 2 paths/texts")
 
             if any(len(datapoint) != 2 for datapoint in datapoints):
@@ -353,25 +355,11 @@ class RapidataOrderManager:
                     "A_B_naming must be a list of exactly two strings or None"
                 )
 
-            if data_type == "media":
-                assets = [
-                    MultiAsset([MediaAsset(path=path) for path in datapoint])
-                    for datapoint in datapoints
-                ]
-            elif data_type == "text":
-                assets = [
-                    MultiAsset([TextAsset(text=text) for text in datapoint])
-                    for datapoint in datapoints
-                ]
-            else:
-                raise ValueError(
-                    f"Unsupported data type: {data_type}, must be one of 'media' or 'text'"
-                )
-
             return self._create_general_order(
                 name=name,
                 workflow=CompareWorkflow(instruction=instruction, a_b_names=a_b_names),
-                assets=assets,
+                datapoints=datapoints,
+                data_type=data_type,
                 responses_per_datapoint=responses_per_datapoint,
                 contexts=contexts,
                 media_contexts=media_contexts,
