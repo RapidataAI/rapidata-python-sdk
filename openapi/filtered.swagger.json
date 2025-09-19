@@ -4760,6 +4760,28 @@
             }
           },
           {
+            "name": "participantIds",
+            "in": "query",
+            "description": "The ids of the participants that should be filtered for. leave empty to not filter",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "leaderboardIds",
+            "in": "query",
+            "description": "The ids of the leaderboards that should be filtered for. leave empty to not filter",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
             "name": "useWeightedScoring",
             "in": "query",
             "description": "Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)",

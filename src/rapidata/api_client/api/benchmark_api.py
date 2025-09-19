@@ -2546,6 +2546,8 @@ class BenchmarkApi:
         self,
         benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark, which standings should be queried")],
         tags: Annotated[Optional[List[StrictStr]], Field(description="The tags the benchmark should filter for.")] = None,
+        participant_ids: Annotated[Optional[List[StrictStr]], Field(description="The ids of the participants that should be filtered for. leave empty to not filter")] = None,
+        leaderboard_ids: Annotated[Optional[List[StrictStr]], Field(description="The ids of the leaderboards that should be filtered for. leave empty to not filter")] = None,
         use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)")] = None,
         include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include the confidence intervals")] = None,
         _request_timeout: Union[
@@ -2568,6 +2570,10 @@ class BenchmarkApi:
         :type benchmark_id: str
         :param tags: The tags the benchmark should filter for.
         :type tags: List[str]
+        :param participant_ids: The ids of the participants that should be filtered for. leave empty to not filter
+        :type participant_ids: List[str]
+        :param leaderboard_ids: The ids of the leaderboards that should be filtered for. leave empty to not filter
+        :type leaderboard_ids: List[str]
         :param use_weighted_scoring: Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)
         :type use_weighted_scoring: bool
         :param include_confidence_intervals: Whether to include the confidence intervals
@@ -2597,6 +2603,8 @@ class BenchmarkApi:
         _param = self._benchmark_benchmark_id_standings_get_serialize(
             benchmark_id=benchmark_id,
             tags=tags,
+            participant_ids=participant_ids,
+            leaderboard_ids=leaderboard_ids,
             use_weighted_scoring=use_weighted_scoring,
             include_confidence_intervals=include_confidence_intervals,
             _request_auth=_request_auth,
@@ -2624,6 +2632,8 @@ class BenchmarkApi:
         self,
         benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark, which standings should be queried")],
         tags: Annotated[Optional[List[StrictStr]], Field(description="The tags the benchmark should filter for.")] = None,
+        participant_ids: Annotated[Optional[List[StrictStr]], Field(description="The ids of the participants that should be filtered for. leave empty to not filter")] = None,
+        leaderboard_ids: Annotated[Optional[List[StrictStr]], Field(description="The ids of the leaderboards that should be filtered for. leave empty to not filter")] = None,
         use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)")] = None,
         include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include the confidence intervals")] = None,
         _request_timeout: Union[
@@ -2646,6 +2656,10 @@ class BenchmarkApi:
         :type benchmark_id: str
         :param tags: The tags the benchmark should filter for.
         :type tags: List[str]
+        :param participant_ids: The ids of the participants that should be filtered for. leave empty to not filter
+        :type participant_ids: List[str]
+        :param leaderboard_ids: The ids of the leaderboards that should be filtered for. leave empty to not filter
+        :type leaderboard_ids: List[str]
         :param use_weighted_scoring: Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)
         :type use_weighted_scoring: bool
         :param include_confidence_intervals: Whether to include the confidence intervals
@@ -2675,6 +2689,8 @@ class BenchmarkApi:
         _param = self._benchmark_benchmark_id_standings_get_serialize(
             benchmark_id=benchmark_id,
             tags=tags,
+            participant_ids=participant_ids,
+            leaderboard_ids=leaderboard_ids,
             use_weighted_scoring=use_weighted_scoring,
             include_confidence_intervals=include_confidence_intervals,
             _request_auth=_request_auth,
@@ -2702,6 +2718,8 @@ class BenchmarkApi:
         self,
         benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark, which standings should be queried")],
         tags: Annotated[Optional[List[StrictStr]], Field(description="The tags the benchmark should filter for.")] = None,
+        participant_ids: Annotated[Optional[List[StrictStr]], Field(description="The ids of the participants that should be filtered for. leave empty to not filter")] = None,
+        leaderboard_ids: Annotated[Optional[List[StrictStr]], Field(description="The ids of the leaderboards that should be filtered for. leave empty to not filter")] = None,
         use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)")] = None,
         include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include the confidence intervals")] = None,
         _request_timeout: Union[
@@ -2724,6 +2742,10 @@ class BenchmarkApi:
         :type benchmark_id: str
         :param tags: The tags the benchmark should filter for.
         :type tags: List[str]
+        :param participant_ids: The ids of the participants that should be filtered for. leave empty to not filter
+        :type participant_ids: List[str]
+        :param leaderboard_ids: The ids of the leaderboards that should be filtered for. leave empty to not filter
+        :type leaderboard_ids: List[str]
         :param use_weighted_scoring: Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)
         :type use_weighted_scoring: bool
         :param include_confidence_intervals: Whether to include the confidence intervals
@@ -2753,6 +2775,8 @@ class BenchmarkApi:
         _param = self._benchmark_benchmark_id_standings_get_serialize(
             benchmark_id=benchmark_id,
             tags=tags,
+            participant_ids=participant_ids,
+            leaderboard_ids=leaderboard_ids,
             use_weighted_scoring=use_weighted_scoring,
             include_confidence_intervals=include_confidence_intervals,
             _request_auth=_request_auth,
@@ -2775,6 +2799,8 @@ class BenchmarkApi:
         self,
         benchmark_id,
         tags,
+        participant_ids,
+        leaderboard_ids,
         use_weighted_scoring,
         include_confidence_intervals,
         _request_auth,
@@ -2787,6 +2813,8 @@ class BenchmarkApi:
 
         _collection_formats: Dict[str, str] = {
             'tags': 'multi',
+            'participantIds': 'multi',
+            'leaderboardIds': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
@@ -2805,6 +2833,14 @@ class BenchmarkApi:
         if tags is not None:
             
             _query_params.append(('tags', tags))
+            
+        if participant_ids is not None:
+            
+            _query_params.append(('participantIds', participant_ids))
+            
+        if leaderboard_ids is not None:
+            
+            _query_params.append(('leaderboardIds', leaderboard_ids))
             
         if use_weighted_scoring is not None:
             
