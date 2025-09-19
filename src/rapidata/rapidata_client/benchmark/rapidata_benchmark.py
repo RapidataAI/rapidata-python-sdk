@@ -472,9 +472,9 @@ class RapidataBenchmark:
                         "No uploads were successful. The model evaluation will not be completed."
                     )
 
-            self.__openapi_service.participant_api.participants_participant_id_submit_post(
-                participant_id=participant_result.participant_id
-            )
+                self.__openapi_service.participant_api.participants_participant_id_submit_post(
+                    participant_id=participant_result.participant_id
+                )
 
     def view(self) -> None:
         """
