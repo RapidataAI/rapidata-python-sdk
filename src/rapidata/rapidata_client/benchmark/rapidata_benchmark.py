@@ -61,85 +61,80 @@ class RapidataBenchmark:
         )
 
     def __instantiate_prompts(self) -> None:
-        current_page = 1
-        total_pages = None
+        with tracer.start_as_current_span("RapidataBenchmark.__instantiate_prompts"):
+            current_page = 1
+            total_pages = None
 
-        while True:
-            prompts_result = (
-                self.__openapi_service.benchmark_api.benchmark_benchmark_id_prompts_get(
+            while True:
+                prompts_result = self.__openapi_service.benchmark_api.benchmark_benchmark_id_prompts_get(
                     benchmark_id=self.id,
                     request=QueryModel(page=PageInfo(index=current_page, size=100)),
                 )
-            )
 
-            if prompts_result.total_pages is None:
-                raise ValueError(
-                    "An error occurred while fetching prompts: total_pages is None"
-                )
-
-            total_pages = prompts_result.total_pages
-
-            for prompt in prompts_result.items:
-                self.__prompts.append(prompt.prompt)
-                self.__identifiers.append(prompt.identifier)
-                if prompt.prompt_asset is None:
-                    self.__prompt_assets.append(None)
-                else:
-                    assert isinstance(
-                        prompt.prompt_asset.actual_instance, FileAssetModel
+                if prompts_result.total_pages is None:
+                    raise ValueError(
+                        "An error occurred while fetching prompts: total_pages is None"
                     )
-                    source_url = prompt.prompt_asset.actual_instance.metadata[
-                        "sourceUrl"
-                    ].actual_instance
-                    assert isinstance(source_url, SourceUrlMetadataModel)
-                    self.__prompt_assets.append(source_url.url)
 
-                self.__tags.append(prompt.tags)
-            if current_page >= total_pages:
-                break
+                total_pages = prompts_result.total_pages
 
-            current_page += 1
+                for prompt in prompts_result.items:
+                    self.__prompts.append(prompt.prompt)
+                    self.__identifiers.append(prompt.identifier)
+                    if prompt.prompt_asset is None:
+                        self.__prompt_assets.append(None)
+                    else:
+                        assert isinstance(
+                            prompt.prompt_asset.actual_instance, FileAssetModel
+                        )
+                        source_url = prompt.prompt_asset.actual_instance.metadata[
+                            "sourceUrl"
+                        ].actual_instance
+                        assert isinstance(source_url, SourceUrlMetadataModel)
+                        self.__prompt_assets.append(source_url.url)
+
+                    self.__tags.append(prompt.tags)
+                if current_page >= total_pages:
+                    break
+
+                current_page += 1
 
     @property
     def identifiers(self) -> list[str]:
-        with tracer.start_as_current_span("RapidataBenchmark.identifiers"):
-            if not self.__identifiers:
-                self.__instantiate_prompts()
+        if not self.__identifiers:
+            self.__instantiate_prompts()
 
-            return self.__identifiers
+        return self.__identifiers
 
     @property
     def prompts(self) -> list[str | None]:
         """
         Returns the prompts that are registered for the leaderboard.
         """
-        with tracer.start_as_current_span("RapidataBenchmark.prompts"):
-            if not self.__prompts:
-                self.__instantiate_prompts()
+        if not self.__prompts:
+            self.__instantiate_prompts()
 
-            return self.__prompts
+        return self.__prompts
 
     @property
     def prompt_assets(self) -> list[str | None]:
         """
         Returns the prompt assets that are registered for the benchmark.
         """
-        with tracer.start_as_current_span("RapidataBenchmark.prompt_assets"):
-            if not self.__prompt_assets:
-                self.__instantiate_prompts()
+        if not self.__prompt_assets:
+            self.__instantiate_prompts()
 
-            return self.__prompt_assets
+        return self.__prompt_assets
 
     @property
     def tags(self) -> list[list[str]]:
         """
         Returns the tags that are registered for the benchmark.
         """
-        with tracer.start_as_current_span("RapidataBenchmark.tags"):
-            if not self.__tags:
-                self.__instantiate_prompts()
+        if not self.__tags:
+            self.__instantiate_prompts()
 
-            return self.__tags
+        return self.__tags
 
     @property
     def leaderboards(self) -> list[RapidataLeaderboard]:
