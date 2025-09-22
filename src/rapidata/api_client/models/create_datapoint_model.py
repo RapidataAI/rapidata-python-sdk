@@ -17,27 +17,21 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictInt
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.multi_asset_input_assets_inner import MultiAssetInputAssetsInner
+from rapidata.api_client.models.create_datapoint_from_files_model_metadata_inner import CreateDatapointFromFilesModelMetadataInner
+from rapidata.api_client.models.create_datapoint_model_asset import CreateDatapointModelAsset
 from typing import Optional, Set
 from typing_extensions import Self
 
-class PromptAssetMetadataInput(BaseModel):
+class CreateDatapointModel(BaseModel):
     """
-    PromptAssetMetadataInput
+    The body request for creating a new datapoint
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for PromptAssetMetadataInput", alias="_t")
-    asset: MultiAssetInputAssetsInner
-    identifier: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["_t", "asset", "identifier"]
-
-    @field_validator('t')
-    def t_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['PromptAssetMetadataInput']):
-            raise ValueError("must be one of enum values ('PromptAssetMetadataInput')")
-        return value
+    asset: CreateDatapointModelAsset
+    metadata: List[CreateDatapointFromFilesModelMetadataInner] = Field(description="The metadata of the datapoint")
+    sort_index: Optional[StrictInt] = Field(default=None, description="The sort index represents the order of the datapoint in the dataset", alias="sortIndex")
+    __properties: ClassVar[List[str]] = ["asset", "metadata", "sortIndex"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -57,7 +51,7 @@ class PromptAssetMetadataInput(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of PromptAssetMetadataInput from a JSON string"""
+        """Create an instance of CreateDatapointModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -81,11 +75,23 @@ class PromptAssetMetadataInput(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of asset
         if self.asset:
             _dict['asset'] = self.asset.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in metadata (list)
+        _items = []
+        if self.metadata:
+            for _item_metadata in self.metadata:
+                if _item_metadata:
+                    _items.append(_item_metadata.to_dict())
+            _dict['metadata'] = _items
+        # set to None if sort_index (nullable) is None
+        # and model_fields_set contains the field
+        if self.sort_index is None and "sort_index" in self.model_fields_set:
+            _dict['sortIndex'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of PromptAssetMetadataInput from a dict"""
+        """Create an instance of CreateDatapointModel from a dict"""
         if obj is None:
             return None
 
@@ -93,9 +99,9 @@ class PromptAssetMetadataInput(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'PromptAssetMetadataInput',
-            "asset": MultiAssetInputAssetsInner.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
-            "identifier": obj.get("identifier")
+            "asset": CreateDatapointModelAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
+            "metadata": [CreateDatapointFromFilesModelMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
+            "sortIndex": obj.get("sortIndex")
         })
         return _obj
 

@@ -18,7 +18,6 @@ import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
 from rapidata.api_client.models.form_file_wrapper import FormFileWrapper
-from rapidata.api_client.models.local_file_wrapper import LocalFileWrapper
 from rapidata.api_client.models.proxy_file_wrapper import ProxyFileWrapper
 from rapidata.api_client.models.stream_file_wrapper import StreamFileWrapper
 from rapidata.api_client.models.zip_entry_file_wrapper import ZipEntryFileWrapper
@@ -26,7 +25,7 @@ from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-FILEASSETINPUTFILE_ONE_OF_SCHEMAS = ["FormFileWrapper", "LocalFileWrapper", "ProxyFileWrapper", "StreamFileWrapper", "ZipEntryFileWrapper"]
+FILEASSETINPUTFILE_ONE_OF_SCHEMAS = ["FormFileWrapper", "ProxyFileWrapper", "StreamFileWrapper", "ZipEntryFileWrapper"]
 
 class FileAssetInputFile(BaseModel):
     """
@@ -40,10 +39,8 @@ class FileAssetInputFile(BaseModel):
     oneof_schema_3_validator: Optional[StreamFileWrapper] = None
     # data type: ZipEntryFileWrapper
     oneof_schema_4_validator: Optional[ZipEntryFileWrapper] = None
-    # data type: LocalFileWrapper
-    oneof_schema_5_validator: Optional[LocalFileWrapper] = None
-    actual_instance: Optional[Union[FormFileWrapper, LocalFileWrapper, ProxyFileWrapper, StreamFileWrapper, ZipEntryFileWrapper]] = None
-    one_of_schemas: Set[str] = { "FormFileWrapper", "LocalFileWrapper", "ProxyFileWrapper", "StreamFileWrapper", "ZipEntryFileWrapper" }
+    actual_instance: Optional[Union[FormFileWrapper, ProxyFileWrapper, StreamFileWrapper, ZipEntryFileWrapper]] = None
+    one_of_schemas: Set[str] = { "FormFileWrapper", "ProxyFileWrapper", "StreamFileWrapper", "ZipEntryFileWrapper" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -89,17 +86,12 @@ class FileAssetInputFile(BaseModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `ZipEntryFileWrapper`")
         else:
             match += 1
-        # validate data type: LocalFileWrapper
-        if not isinstance(v, LocalFileWrapper):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `LocalFileWrapper`")
-        else:
-            match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in FileAssetInputFile with oneOf schemas: FormFileWrapper, LocalFileWrapper, ProxyFileWrapper, StreamFileWrapper, ZipEntryFileWrapper. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in FileAssetInputFile with oneOf schemas: FormFileWrapper, ProxyFileWrapper, StreamFileWrapper, ZipEntryFileWrapper. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in FileAssetInputFile with oneOf schemas: FormFileWrapper, LocalFileWrapper, ProxyFileWrapper, StreamFileWrapper, ZipEntryFileWrapper. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in FileAssetInputFile with oneOf schemas: FormFileWrapper, ProxyFileWrapper, StreamFileWrapper, ZipEntryFileWrapper. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -138,19 +130,13 @@ class FileAssetInputFile(BaseModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # deserialize data into LocalFileWrapper
-        try:
-            instance.actual_instance = LocalFileWrapper.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into FileAssetInputFile with oneOf schemas: FormFileWrapper, LocalFileWrapper, ProxyFileWrapper, StreamFileWrapper, ZipEntryFileWrapper. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into FileAssetInputFile with oneOf schemas: FormFileWrapper, ProxyFileWrapper, StreamFileWrapper, ZipEntryFileWrapper. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into FileAssetInputFile with oneOf schemas: FormFileWrapper, LocalFileWrapper, ProxyFileWrapper, StreamFileWrapper, ZipEntryFileWrapper. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into FileAssetInputFile with oneOf schemas: FormFileWrapper, ProxyFileWrapper, StreamFileWrapper, ZipEntryFileWrapper. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -164,7 +150,7 @@ class FileAssetInputFile(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], FormFileWrapper, LocalFileWrapper, ProxyFileWrapper, StreamFileWrapper, ZipEntryFileWrapper]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], FormFileWrapper, ProxyFileWrapper, StreamFileWrapper, ZipEntryFileWrapper]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None
