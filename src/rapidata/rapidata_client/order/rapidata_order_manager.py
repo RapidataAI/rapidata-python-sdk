@@ -90,6 +90,14 @@ class RapidataOrderManager:
         if contexts and len(contexts) != len(datapoints):
             raise ValueError("Number of contexts must match number of datapoints")
 
+        if contexts:
+            if any(not isinstance(context, str) for context in contexts) or any(
+                len(context) == 0 for context in contexts
+            ):
+                raise ValueError(
+                    "Contexts must all be strings that are not empty\nProvide list of strings or set contexts to None"
+                )
+
         if media_contexts and len(media_contexts) != len(datapoints):
             raise ValueError("Number of media contexts must match number of datapoints")
 

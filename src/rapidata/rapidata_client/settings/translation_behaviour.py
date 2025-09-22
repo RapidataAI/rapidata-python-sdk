@@ -17,4 +17,4 @@ class TranslationBehaviour(RapidataSetting):
         if not isinstance(value, TranslationBehaviourOptions):
             raise ValueError("The value must be a TranslationBehaviourOptions.")
 
-        super().__init__(key="translation_behaviour", value=value)
+        super().__init__(key="translation_behaviour", value=value.value)
