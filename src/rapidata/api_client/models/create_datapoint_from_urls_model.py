@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.dataset_dataset_id_datapoints_post_request_metadata_inner import DatasetDatasetIdDatapointsPostRequestMetadataInner
+from rapidata.api_client.models.create_datapoint_from_files_model_metadata_inner import CreateDatapointFromFilesModelMetadataInner
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,7 +28,7 @@ class CreateDatapointFromUrlsModel(BaseModel):
     The body request for creating a datapoint from urls.
     """ # noqa: E501
     urls: List[StrictStr] = Field(description="The urls to fetch the assets from. The urls must be publicly accessible. A HEAD request will be made to each url to check if it is accessible.")
-    metadata: Optional[List[DatasetDatasetIdDatapointsPostRequestMetadataInner]] = Field(default=None, description="Additional metadata to attach to the datapoint. Most commonly used to add a prompt to the datapoint using the Rapidata.Shared.Assets.Abstraction.Models.Metadata.Input.PromptMetadataInput.")
+    metadata: Optional[List[CreateDatapointFromFilesModelMetadataInner]] = Field(default=None, description="Additional metadata to attach to the datapoint. Most commonly used to add a prompt to the datapoint using the Rapidata.Shared.Assets.Abstraction.Models.Metadata.Input.PromptMetadataInput.")
     sort_index: Optional[StrictInt] = Field(default=None, description="The index will be used to keep the datapoints in order. Useful if upload is parallelized", alias="sortIndex")
     __properties: ClassVar[List[str]] = ["urls", "metadata", "sortIndex"]
 
@@ -101,7 +101,7 @@ class CreateDatapointFromUrlsModel(BaseModel):
 
         _obj = cls.model_validate({
             "urls": obj.get("urls"),
-            "metadata": [DatasetDatasetIdDatapointsPostRequestMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
+            "metadata": [CreateDatapointFromFilesModelMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
             "sortIndex": obj.get("sortIndex")
         })
         return _obj

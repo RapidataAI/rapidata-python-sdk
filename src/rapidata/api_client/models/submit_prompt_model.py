@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.submit_prompt_model_prompt_asset import SubmitPromptModelPromptAsset
+from rapidata.api_client.models.create_demographic_rapid_model_asset import CreateDemographicRapidModelAsset
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -29,7 +29,7 @@ class SubmitPromptModel(BaseModel):
     """ # noqa: E501
     identifier: StrictStr = Field(description="An identifier associated to the prompt")
     prompt: Optional[StrictStr] = Field(default=None, description="The prompt")
-    prompt_asset: Optional[SubmitPromptModelPromptAsset] = Field(default=None, alias="promptAsset")
+    prompt_asset: Optional[CreateDemographicRapidModelAsset] = Field(default=None, alias="promptAsset")
     tags: Optional[List[StrictStr]] = Field(default=None, description="The tags of a given prompt")
     __properties: ClassVar[List[str]] = ["identifier", "prompt", "promptAsset", "tags"]
 
@@ -104,7 +104,7 @@ class SubmitPromptModel(BaseModel):
         _obj = cls.model_validate({
             "identifier": obj.get("identifier"),
             "prompt": obj.get("prompt"),
-            "promptAsset": SubmitPromptModelPromptAsset.from_dict(obj["promptAsset"]) if obj.get("promptAsset") is not None else None,
+            "promptAsset": CreateDemographicRapidModelAsset.from_dict(obj["promptAsset"]) if obj.get("promptAsset") is not None else None,
             "tags": obj.get("tags")
         })
         return _obj
