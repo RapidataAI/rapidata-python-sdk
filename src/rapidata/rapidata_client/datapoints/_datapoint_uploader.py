@@ -3,6 +3,7 @@ import os
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.api_client.models.multi_asset_input_assets_inner import (
+    MultiAssetInput,
     MultiAssetInputAssetsInner,
 )
 from rapidata.api_client.models.create_datapoint_model import CreateDatapointModel
@@ -12,6 +13,7 @@ from rapidata.api_client.models.create_datapoint_model_asset import (
 from rapidata.api_client.models.create_datapoint_from_files_model_metadata_inner import (
     CreateDatapointFromFilesModelMetadataInner,
 )
+from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
 from rapidata.rapidata_client.datapoints.asset_uploader import AssetUploader
 from rapidata.rapidata_client.datapoints.metadata import (
     PromptMetadata,
@@ -66,7 +68,9 @@ class DatapointUploader:
             datapoint_metadata.append(PrivateTextMetadata(text=datapoint.private_note))
 
         metadata = [
-            CreateDatapointFromFilesModelMetadataInner(metadata.to_model())
+            CreateDatapointFromFilesModelMetadataInner(
+                actual_instance=metadata.to_model()
+            )
             for metadata in datapoint_metadata
         ]
 
@@ -92,18 +96,24 @@ class DatapointUploader:
     ) -> CreateDatapointModelAsset:
         if isinstance(datapoint.assets, list):
             asset = CreateDatapointModelAsset(
-                _t="MultiAssetInput",
-                assets=[
-                    MultiAssetInputAssetsInner(
-                        _t="ExistingAssetInput",
-                        name=self.asset_uploader.upload_asset(asset),
-                    )
-                    for asset in datapoint.assets
-                ],
+                actual_instance=MultiAssetInput(
+                    _t="MultiAssetInput",
+                    assets=[
+                        MultiAssetInputAssetsInner(
+                            actual_instance=ExistingAssetInput(
+                                _t="ExistingAssetInput",
+                                name=self.asset_uploader.upload_asset(asset),
+                            ),
+                        )
+                        for asset in datapoint.assets
+                    ],
+                ),
             )
         else:
             asset = CreateDatapointModelAsset(
-                _t="ExistingAssetInput",
-                name=self.asset_uploader.upload_asset(datapoint.assets),
+                actual_instance=ExistingAssetInput(
+                    _t="ExistingAssetInput",
+                    name=self.asset_uploader.upload_asset(datapoint.assets),
+                ),
             )
         return asset
