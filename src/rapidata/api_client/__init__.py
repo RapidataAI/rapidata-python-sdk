@@ -199,6 +199,7 @@ from rapidata.api_client.models.file_type_metadata import FileTypeMetadata
 from rapidata.api_client.models.file_type_metadata_model import FileTypeMetadataModel
 from rapidata.api_client.models.filter import Filter
 from rapidata.api_client.models.filter_operator import FilterOperator
+from rapidata.api_client.models.fork_benchmark_result import ForkBenchmarkResult
 from rapidata.api_client.models.form_file_wrapper import FormFileWrapper
 from rapidata.api_client.models.free_text_payload import FreeTextPayload
 from rapidata.api_client.models.free_text_rapid_blueprint import FreeTextRapidBlueprint
@@ -425,6 +426,8 @@ from rapidata.api_client.models.update_validation_rapid_model_truth import Updat
 from rapidata.api_client.models.update_validation_set_model import UpdateValidationSetModel
 from rapidata.api_client.models.upload_asset_result import UploadAssetResult
 from rapidata.api_client.models.upload_coco_result import UploadCocoResult
+from rapidata.api_client.models.upload_file_from_url_result import UploadFileFromUrlResult
+from rapidata.api_client.models.upload_file_result import UploadFileResult
 from rapidata.api_client.models.upload_from_s3_result import UploadFromS3Result
 from rapidata.api_client.models.url_asset_input import UrlAssetInput
 from rapidata.api_client.models.user_score_filter import UserScoreFilter

@@ -77,6 +77,7 @@ Class | Method | HTTP request | Description
 *AssetApi* | [**asset_file_post**](rapidata/api_client/docs/AssetApi.md#asset_file_post) | **POST** /asset/file | Uploads a single asset to S3 and returns the asset details.
 *AssetApi* | [**asset_url_post**](rapidata/api_client/docs/AssetApi.md#asset_url_post) | **POST** /asset/url | Uploads a single asset to S3 and returns the asset details.
 *BenchmarkApi* | [**benchmark_benchmark_id_delete**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_delete) | **DELETE** /benchmark/{benchmarkId} | Deletes a single benchmark.
+*BenchmarkApi* | [**benchmark_benchmark_id_fork_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_fork_post) | **POST** /benchmark/{benchmarkId}/fork | Creates a copy of a public benchmark and all of its related entities
 *BenchmarkApi* | [**benchmark_benchmark_id_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_get) | **GET** /benchmark/{benchmarkId} | Returns a single benchmark by its ID.
 *BenchmarkApi* | [**benchmark_benchmark_id_leaderboards_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_leaderboards_get) | **GET** /benchmark/{benchmarkId}/leaderboards | Queries all leaderboards for the current user&#39;s benchmarks.
 *BenchmarkApi* | [**benchmark_benchmark_id_participants_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_participants_get) | **GET** /benchmark/{benchmarkId}/participants | Query all participants within a benchmark
@@ -352,6 +353,7 @@ Class | Method | HTTP request | Description
  - [FileTypeMetadataModel](rapidata/api_client/docs/FileTypeMetadataModel.md)
  - [Filter](rapidata/api_client/docs/Filter.md)
  - [FilterOperator](rapidata/api_client/docs/FilterOperator.md)
+ - [ForkBenchmarkResult](rapidata/api_client/docs/ForkBenchmarkResult.md)
  - [FormFileWrapper](rapidata/api_client/docs/FormFileWrapper.md)
  - [FreeTextPayload](rapidata/api_client/docs/FreeTextPayload.md)
  - [FreeTextRapidBlueprint](rapidata/api_client/docs/FreeTextRapidBlueprint.md)
@@ -578,6 +580,8 @@ Class | Method | HTTP request | Description
  - [UpdateValidationSetModel](rapidata/api_client/docs/UpdateValidationSetModel.md)
  - [UploadAssetResult](rapidata/api_client/docs/UploadAssetResult.md)
  - [UploadCocoResult](rapidata/api_client/docs/UploadCocoResult.md)
+ - [UploadFileFromUrlResult](rapidata/api_client/docs/UploadFileFromUrlResult.md)
+ - [UploadFileResult](rapidata/api_client/docs/UploadFileResult.md)
  - [UploadFromS3Result](rapidata/api_client/docs/UploadFromS3Result.md)
  - [UrlAssetInput](rapidata/api_client/docs/UrlAssetInput.md)
  - [UserScoreFilter](rapidata/api_client/docs/UserScoreFilter.md)

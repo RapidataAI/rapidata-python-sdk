@@ -19,7 +19,8 @@ from typing_extensions import Annotated
 from pydantic import Field, StrictBytes, StrictStr
 from typing import Optional, Tuple, Union
 from typing_extensions import Annotated
-from rapidata.api_client.models.upload_asset_result import UploadAssetResult
+from rapidata.api_client.models.upload_file_from_url_result import UploadFileFromUrlResult
+from rapidata.api_client.models.upload_file_result import UploadFileResult
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -55,7 +56,7 @@ class AssetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> UploadAssetResult:
+    ) -> UploadFileResult:
         """Uploads a single asset to S3 and returns the asset details.
 
         This endpoint allows uploading a single file to S3 storage with the asset creator. The uploaded asset will be stored using the configured S3 settings and a unique filename will be generated.
@@ -93,7 +94,7 @@ class AssetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "UploadAssetResult",
+            '200': "UploadFileResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -122,7 +123,7 @@ class AssetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[UploadAssetResult]:
+    ) -> ApiResponse[UploadFileResult]:
         """Uploads a single asset to S3 and returns the asset details.
 
         This endpoint allows uploading a single file to S3 storage with the asset creator. The uploaded asset will be stored using the configured S3 settings and a unique filename will be generated.
@@ -160,7 +161,7 @@ class AssetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "UploadAssetResult",
+            '200': "UploadFileResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -227,7 +228,7 @@ class AssetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "UploadAssetResult",
+            '200': "UploadFileResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -332,7 +333,7 @@ class AssetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> UploadAssetResult:
+    ) -> UploadFileFromUrlResult:
         """Uploads a single asset to S3 and returns the asset details.
 
         This endpoint allows uploading a single file to S3 storage with the asset creator. The uploaded asset will be stored using the configured S3 settings and a unique filename will be generated.
@@ -370,7 +371,7 @@ class AssetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "UploadAssetResult",
+            '200': "UploadFileFromUrlResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -399,7 +400,7 @@ class AssetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[UploadAssetResult]:
+    ) -> ApiResponse[UploadFileFromUrlResult]:
         """Uploads a single asset to S3 and returns the asset details.
 
         This endpoint allows uploading a single file to S3 storage with the asset creator. The uploaded asset will be stored using the configured S3 settings and a unique filename will be generated.
@@ -437,7 +438,7 @@ class AssetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "UploadAssetResult",
+            '200': "UploadFileFromUrlResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -504,7 +505,7 @@ class AssetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "UploadAssetResult",
+            '200': "UploadFileFromUrlResult",
         }
         response_data = self.api_client.call_api(
             *_param,
