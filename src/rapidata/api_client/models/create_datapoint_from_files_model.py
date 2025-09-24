@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.dataset_dataset_id_datapoints_post_request_metadata_inner import DatasetDatasetIdDatapointsPostRequestMetadataInner
+from rapidata.api_client.models.create_datapoint_from_files_model_metadata_inner import CreateDatapointFromFilesModelMetadataInner
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,7 +27,7 @@ class CreateDatapointFromFilesModel(BaseModel):
     """
     The form request for creating a datapoint from files. Needs to be encoded as a json string in the form request.
     """ # noqa: E501
-    metadata: List[DatasetDatasetIdDatapointsPostRequestMetadataInner] = Field(description="The metadata of the datapoint.")
+    metadata: List[CreateDatapointFromFilesModelMetadataInner] = Field(description="The metadata of the datapoint.")
     sort_index: Optional[StrictInt] = Field(default=None, description="The index will be used to keep the datapoints in order. Useful if upload is parallelized", alias="sortIndex")
     __properties: ClassVar[List[str]] = ["metadata", "sortIndex"]
 
@@ -94,7 +94,7 @@ class CreateDatapointFromFilesModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "metadata": [DatasetDatasetIdDatapointsPostRequestMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
+            "metadata": [CreateDatapointFromFilesModelMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
             "sortIndex": obj.get("sortIndex")
         })
         return _obj

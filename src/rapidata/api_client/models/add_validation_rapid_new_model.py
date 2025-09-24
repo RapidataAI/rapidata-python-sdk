@@ -21,22 +21,24 @@ from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, Stric
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.add_validation_rapid_model_payload import AddValidationRapidModelPayload
 from rapidata.api_client.models.add_validation_rapid_model_truth import AddValidationRapidModelTruth
+from rapidata.api_client.models.add_validation_rapid_new_model_asset import AddValidationRapidNewModelAsset
 from rapidata.api_client.models.create_datapoint_from_files_model_metadata_inner import CreateDatapointFromFilesModelMetadataInner
 from rapidata.api_client.models.feature_flag_model import FeatureFlagModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class AddValidationRapidModel(BaseModel):
+class AddValidationRapidNewModel(BaseModel):
     """
-    The model for adding a validation rapid.
+    The model for adding a validation rapid with asset in JSON body.
     """ # noqa: E501
+    asset: AddValidationRapidNewModelAsset
     payload: AddValidationRapidModelPayload
     metadata: Optional[List[CreateDatapointFromFilesModelMetadataInner]] = Field(default=None, description="Some metadata to attach to the rapid.")
     truth: Optional[AddValidationRapidModelTruth] = None
     random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The probability for an answer to be correct when randomly guessing.", alias="randomCorrectProbability")
     explanation: Optional[StrictStr] = Field(default=None, description="An explanation for the users if they answer the rapid incorrectly.")
     feature_flags: Optional[List[FeatureFlagModel]] = Field(default=None, description="The feature flags to enable for the rapid.", alias="featureFlags")
-    __properties: ClassVar[List[str]] = ["payload", "metadata", "truth", "randomCorrectProbability", "explanation", "featureFlags"]
+    __properties: ClassVar[List[str]] = ["asset", "payload", "metadata", "truth", "randomCorrectProbability", "explanation", "featureFlags"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -56,7 +58,7 @@ class AddValidationRapidModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of AddValidationRapidModel from a JSON string"""
+        """Create an instance of AddValidationRapidNewModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -77,6 +79,9 @@ class AddValidationRapidModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of asset
+        if self.asset:
+            _dict['asset'] = self.asset.to_dict()
         # override the default output from pydantic by calling `to_dict()` of payload
         if self.payload:
             _dict['payload'] = self.payload.to_dict()
@@ -126,7 +131,7 @@ class AddValidationRapidModel(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of AddValidationRapidModel from a dict"""
+        """Create an instance of AddValidationRapidNewModel from a dict"""
         if obj is None:
             return None
 
@@ -134,6 +139,7 @@ class AddValidationRapidModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "asset": AddValidationRapidNewModelAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "payload": AddValidationRapidModelPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
             "metadata": [CreateDatapointFromFilesModelMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
             "truth": AddValidationRapidModelTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None,

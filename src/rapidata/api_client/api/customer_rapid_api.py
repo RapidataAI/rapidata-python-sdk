@@ -16,10 +16,10 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictBytes, StrictFloat, StrictInt, StrictStr
-from typing import List, Optional, Tuple, Union
+from pydantic import Field, StrictFloat, StrictInt, StrictStr
+from typing import Optional, Union
 from typing_extensions import Annotated
-from rapidata.api_client.models.create_demographic_rapid_model import CreateDemographicRapidModel
+from rapidata.api_client.models.create_demographic_rapid_model_new import CreateDemographicRapidModelNew
 from rapidata.api_client.models.create_rapid_result import CreateRapidResult
 from rapidata.api_client.models.get_public_responses_result import GetPublicResponsesResult
 from rapidata.api_client.models.get_rapid_responses_result import GetRapidResponsesResult
@@ -377,10 +377,9 @@ class CustomerRapidApi:
 
 
     @validate_call
-    def rapid_demographic_post(
+    def rapid_demographic_new_post(
         self,
-        model: Optional[CreateDemographicRapidModel] = None,
-        file: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        create_demographic_rapid_model_new: Annotated[Optional[CreateDemographicRapidModelNew], Field(description="The model containing the demographic rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -397,10 +396,8 @@ class CustomerRapidApi:
         """Creates a new Demographic Rapid.
 
 
-        :param model:
-        :type model: CreateDemographicRapidModel
-        :param file:
-        :type file: List[bytearray]
+        :param create_demographic_rapid_model_new: The model containing the demographic rapid.
+        :type create_demographic_rapid_model_new: CreateDemographicRapidModelNew
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -423,9 +420,8 @@ class CustomerRapidApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._rapid_demographic_post_serialize(
-            model=model,
-            file=file,
+        _param = self._rapid_demographic_new_post_serialize(
+            create_demographic_rapid_model_new=create_demographic_rapid_model_new,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -447,10 +443,9 @@ class CustomerRapidApi:
 
 
     @validate_call
-    def rapid_demographic_post_with_http_info(
+    def rapid_demographic_new_post_with_http_info(
         self,
-        model: Optional[CreateDemographicRapidModel] = None,
-        file: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        create_demographic_rapid_model_new: Annotated[Optional[CreateDemographicRapidModelNew], Field(description="The model containing the demographic rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -467,10 +462,8 @@ class CustomerRapidApi:
         """Creates a new Demographic Rapid.
 
 
-        :param model:
-        :type model: CreateDemographicRapidModel
-        :param file:
-        :type file: List[bytearray]
+        :param create_demographic_rapid_model_new: The model containing the demographic rapid.
+        :type create_demographic_rapid_model_new: CreateDemographicRapidModelNew
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -493,9 +486,8 @@ class CustomerRapidApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._rapid_demographic_post_serialize(
-            model=model,
-            file=file,
+        _param = self._rapid_demographic_new_post_serialize(
+            create_demographic_rapid_model_new=create_demographic_rapid_model_new,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -517,10 +509,9 @@ class CustomerRapidApi:
 
 
     @validate_call
-    def rapid_demographic_post_without_preload_content(
+    def rapid_demographic_new_post_without_preload_content(
         self,
-        model: Optional[CreateDemographicRapidModel] = None,
-        file: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
+        create_demographic_rapid_model_new: Annotated[Optional[CreateDemographicRapidModelNew], Field(description="The model containing the demographic rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -537,10 +528,8 @@ class CustomerRapidApi:
         """Creates a new Demographic Rapid.
 
 
-        :param model:
-        :type model: CreateDemographicRapidModel
-        :param file:
-        :type file: List[bytearray]
+        :param create_demographic_rapid_model_new: The model containing the demographic rapid.
+        :type create_demographic_rapid_model_new: CreateDemographicRapidModelNew
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -563,9 +552,8 @@ class CustomerRapidApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._rapid_demographic_post_serialize(
-            model=model,
-            file=file,
+        _param = self._rapid_demographic_new_post_serialize(
+            create_demographic_rapid_model_new=create_demographic_rapid_model_new,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -582,10 +570,9 @@ class CustomerRapidApi:
         return response_data.response
 
 
-    def _rapid_demographic_post_serialize(
+    def _rapid_demographic_new_post_serialize(
         self,
-        model,
-        file,
+        create_demographic_rapid_model_new,
         _request_auth,
         _content_type,
         _headers,
@@ -595,7 +582,6 @@ class CustomerRapidApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
-            'file': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
@@ -611,11 +597,9 @@ class CustomerRapidApi:
         # process the query parameters
         # process the header parameters
         # process the form parameters
-        if model is not None:
-            _form_params.append(('model', model))
-        if file is not None:
-            _files['file'] = file
         # process the body parameter
+        if create_demographic_rapid_model_new is not None:
+            _body_params = create_demographic_rapid_model_new
 
 
         # set the HTTP header `Accept`
@@ -635,7 +619,9 @@ class CustomerRapidApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'multipart/form-data'
+                        'application/json', 
+                        'text/json', 
+                        'application/*+json'
                     ]
                 )
             )
@@ -650,7 +636,7 @@ class CustomerRapidApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/rapid/demographic',
+            resource_path='/rapid/demographic-new',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

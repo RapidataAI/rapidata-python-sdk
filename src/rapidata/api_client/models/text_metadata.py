@@ -27,7 +27,7 @@ class TextMetadata(BaseModel):
     TextMetadata
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for TextMetadata", alias="_t")
-    text: StrictStr
+    text: Optional[StrictStr] = None
     visibilities: Optional[List[StrictStr]] = None
     __properties: ClassVar[List[str]] = ["_t", "text", "visibilities"]
 
@@ -88,6 +88,11 @@ class TextMetadata(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if text (nullable) is None
+        # and model_fields_set contains the field
+        if self.text is None and "text" in self.model_fields_set:
+            _dict['text'] = None
+
         return _dict
 
     @classmethod
