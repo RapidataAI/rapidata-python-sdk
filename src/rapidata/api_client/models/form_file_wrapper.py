@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.file_asset_metadata_value import FileAssetMetadataValue
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -31,7 +32,8 @@ class FormFileWrapper(BaseModel):
     content_length: Optional[StrictInt] = Field(default=None, alias="contentLength")
     content_type: Optional[StrictStr] = Field(default=None, alias="contentType")
     is_in_memory: Optional[StrictBool] = Field(default=None, alias="isInMemory")
-    __properties: ClassVar[List[str]] = ["_t", "name", "contentLength", "contentType", "isInMemory"]
+    metadata: Optional[Dict[str, FileAssetMetadataValue]] = None
+    __properties: ClassVar[List[str]] = ["_t", "name", "contentLength", "contentType", "isInMemory", "metadata"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -87,6 +89,13 @@ class FormFileWrapper(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each value in metadata (dict)
+        _field_dict = {}
+        if self.metadata:
+            for _key_metadata in self.metadata:
+                if self.metadata[_key_metadata]:
+                    _field_dict[_key_metadata] = self.metadata[_key_metadata].to_dict()
+            _dict['metadata'] = _field_dict
         # set to None if content_length (nullable) is None
         # and model_fields_set contains the field
         if self.content_length is None and "content_length" in self.model_fields_set:
@@ -113,7 +122,13 @@ class FormFileWrapper(BaseModel):
             "name": obj.get("name"),
             "contentLength": obj.get("contentLength"),
             "contentType": obj.get("contentType"),
-            "isInMemory": obj.get("isInMemory")
+            "isInMemory": obj.get("isInMemory"),
+            "metadata": dict(
+                (_k, FileAssetMetadataValue.from_dict(_v))
+                for _k, _v in obj["metadata"].items()
+            )
+            if obj.get("metadata") is not None
+            else None
         })
         return _obj
 

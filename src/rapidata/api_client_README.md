@@ -55,14 +55,16 @@ configuration.api_key['bearer'] = os.environ["API_KEY"]
 # Enter a context with an instance of the API client
 with rapidata.api_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = rapidata.api_client.BenchmarkApi(api_client)
-    benchmark_id = 'benchmark_id_example' # str | 
+    api_instance = rapidata.api_client.AssetApi(api_client)
+    file = None # bytearray | The file to upload to S3. (optional)
 
     try:
-        # Deletes a single benchmark.
-        api_instance.benchmark_benchmark_id_delete(benchmark_id)
+        # Uploads a single asset to S3 and returns the asset details.
+        api_response = api_instance.asset_file_post(file=file)
+        print("The response of AssetApi->asset_file_post:\n")
+        pprint(api_response)
     except ApiException as e:
-        print("Exception when calling BenchmarkApi->benchmark_benchmark_id_delete: %s\n" % e)
+        print("Exception when calling AssetApi->asset_file_post: %s\n" % e)
 
 ```
 
@@ -72,7 +74,10 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*AssetApi* | [**asset_file_post**](rapidata/api_client/docs/AssetApi.md#asset_file_post) | **POST** /asset/file | Uploads a single asset to S3 and returns the asset details.
+*AssetApi* | [**asset_url_post**](rapidata/api_client/docs/AssetApi.md#asset_url_post) | **POST** /asset/url | Uploads a single asset to S3 and returns the asset details.
 *BenchmarkApi* | [**benchmark_benchmark_id_delete**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_delete) | **DELETE** /benchmark/{benchmarkId} | Deletes a single benchmark.
+*BenchmarkApi* | [**benchmark_benchmark_id_fork_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_fork_post) | **POST** /benchmark/{benchmarkId}/fork | Creates a copy of a public benchmark and all of its related entities
 *BenchmarkApi* | [**benchmark_benchmark_id_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_get) | **GET** /benchmark/{benchmarkId} | Returns a single benchmark by its ID.
 *BenchmarkApi* | [**benchmark_benchmark_id_leaderboards_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_leaderboards_get) | **GET** /benchmark/{benchmarkId}/leaderboards | Queries all leaderboards for the current user&#39;s benchmarks.
 *BenchmarkApi* | [**benchmark_benchmark_id_participants_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_participants_get) | **GET** /benchmark/{benchmarkId}/participants | Query all participants within a benchmark
@@ -101,7 +106,7 @@ Class | Method | HTTP request | Description
 *CocoApi* | [**coco_post**](rapidata/api_client/docs/CocoApi.md#coco_post) | **POST** /coco | Uploads a CoCo set to the system.
 *CompareWorkflowApi* | [**workflow_compare_workflow_id_results_get**](rapidata/api_client/docs/CompareWorkflowApi.md#workflow_compare_workflow_id_results_get) | **GET** /workflow/compare/{workflowId}/results | Get the result overview for a compare workflow.
 *CustomerRapidApi* | [**rapid_correlation_id_validation_potential_get**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_correlation_id_validation_potential_get) | **GET** /rapid/{correlationId}/validation-potential | Queries rapids that are potentially eligible for validation set creation.
-*CustomerRapidApi* | [**rapid_demographic_post**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_demographic_post) | **POST** /rapid/demographic | Creates a new Demographic Rapid.
+*CustomerRapidApi* | [**rapid_demographic_new_post**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_demographic_new_post) | **POST** /rapid/demographic-new | Creates a new Demographic Rapid.
 *CustomerRapidApi* | [**rapid_global_responses_get**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_global_responses_get) | **GET** /rapid/global-responses | A public endpoint to query the most recent responses globally
 *CustomerRapidApi* | [**rapid_rapid_id_delete**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_rapid_id_delete) | **DELETE** /rapid/{rapidId} | Deletes a rapid.
 *CustomerRapidApi* | [**rapid_rapid_id_responses_get**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_rapid_id_responses_get) | **GET** /rapid/{rapidId}/responses | Gets all responses for a given rapid.
@@ -112,14 +117,11 @@ Class | Method | HTTP request | Description
 *DatapointApi* | [**datapoint_datapoint_id_get**](rapidata/api_client/docs/DatapointApi.md#datapoint_datapoint_id_get) | **GET** /datapoint/{datapointId} | Gets a datapoint by its id.
 *DatasetApi* | [**dataset_asset_file_post**](rapidata/api_client/docs/DatasetApi.md#dataset_asset_file_post) | **POST** /dataset/asset/file | Uploads a single asset to S3 and returns the asset details.
 *DatasetApi* | [**dataset_asset_url_post**](rapidata/api_client/docs/DatasetApi.md#dataset_asset_url_post) | **POST** /dataset/asset/url | Uploads a single asset to S3 and returns the asset details.
+*DatasetApi* | [**dataset_dataset_id_datapoint_post**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_datapoint_post) | **POST** /dataset/{datasetId}/datapoint | Creates a datapoint via the new endpoint.
 *DatasetApi* | [**dataset_dataset_id_datapoints_csv_post**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_datapoints_csv_post) | **POST** /dataset/{datasetId}/datapoints/csv | Creates multiple datapoints from a csv.
 *DatasetApi* | [**dataset_dataset_id_datapoints_failed_get**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_datapoints_failed_get) | **GET** /dataset/{datasetId}/datapoints/failed | Gets a list of all datapoints that failed to upload.
-*DatasetApi* | [**dataset_dataset_id_datapoints_files_post**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_datapoints_files_post) | **POST** /dataset/{datasetId}/datapoints/files | Creates a single datapoint by uploading files.
 *DatasetApi* | [**dataset_dataset_id_datapoints_get**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_datapoints_get) | **GET** /dataset/{datasetId}/datapoints | Gets all datapoints of a dataset.
-*DatasetApi* | [**dataset_dataset_id_datapoints_post**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_datapoints_post) | **POST** /dataset/{datasetId}/datapoints | Creates a new datapoint from multiple possible sources.
 *DatasetApi* | [**dataset_dataset_id_datapoints_s3_post**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_datapoints_s3_post) | **POST** /dataset/{datasetId}/datapoints/s3 | Uploads files from an S3 bucket to a dataset.
-*DatasetApi* | [**dataset_dataset_id_datapoints_texts_post**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_datapoints_texts_post) | **POST** /dataset/{datasetId}/datapoints/texts | Creates a single datapoint from text sources.
-*DatasetApi* | [**dataset_dataset_id_datapoints_urls_post**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_datapoints_urls_post) | **POST** /dataset/{datasetId}/datapoints/urls | Creates a single datapoint where the assets are fetched from the specified urls.
 *DatasetApi* | [**dataset_dataset_id_get**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_get) | **GET** /dataset/{datasetId} | Gets a dataset by its id.
 *DatasetApi* | [**dataset_dataset_id_name_patch**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_name_patch) | **PATCH** /dataset/{datasetId}/name | Updates the name of a dataset.
 *DatasetApi* | [**dataset_dataset_id_progress_get**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_progress_get) | **GET** /dataset/{datasetId}/progress | Gets the upload progress of a dataset.
@@ -288,13 +290,18 @@ Class | Method | HTTP request | Description
  - [CreateComplexOrderResult](rapidata/api_client/docs/CreateComplexOrderResult.md)
  - [CreateCustomerClientResult](rapidata/api_client/docs/CreateCustomerClientResult.md)
  - [CreateDatapointFromFilesModel](rapidata/api_client/docs/CreateDatapointFromFilesModel.md)
+ - [CreateDatapointFromFilesModelMetadataInner](rapidata/api_client/docs/CreateDatapointFromFilesModelMetadataInner.md)
  - [CreateDatapointFromTextSourcesModel](rapidata/api_client/docs/CreateDatapointFromTextSourcesModel.md)
  - [CreateDatapointFromUrlsModel](rapidata/api_client/docs/CreateDatapointFromUrlsModel.md)
+ - [CreateDatapointModel](rapidata/api_client/docs/CreateDatapointModel.md)
+ - [CreateDatapointModelAsset](rapidata/api_client/docs/CreateDatapointModelAsset.md)
  - [CreateDatapointResult](rapidata/api_client/docs/CreateDatapointResult.md)
  - [CreateDatapointsFromS3BucketModel](rapidata/api_client/docs/CreateDatapointsFromS3BucketModel.md)
  - [CreateDatasetArtifactModel](rapidata/api_client/docs/CreateDatasetArtifactModel.md)
  - [CreateDatasetArtifactModelDataset](rapidata/api_client/docs/CreateDatasetArtifactModelDataset.md)
  - [CreateDemographicRapidModel](rapidata/api_client/docs/CreateDemographicRapidModel.md)
+ - [CreateDemographicRapidModelAsset](rapidata/api_client/docs/CreateDemographicRapidModelAsset.md)
+ - [CreateDemographicRapidModelNew](rapidata/api_client/docs/CreateDemographicRapidModelNew.md)
  - [CreateEmptyValidationSetResult](rapidata/api_client/docs/CreateEmptyValidationSetResult.md)
  - [CreateLeaderboardModel](rapidata/api_client/docs/CreateLeaderboardModel.md)
  - [CreateLeaderboardResult](rapidata/api_client/docs/CreateLeaderboardResult.md)
@@ -316,7 +323,6 @@ Class | Method | HTTP request | Description
  - [DatapointModelPagedResult](rapidata/api_client/docs/DatapointModelPagedResult.md)
  - [DatapointState](rapidata/api_client/docs/DatapointState.md)
  - [DatasetArtifactModel](rapidata/api_client/docs/DatasetArtifactModel.md)
- - [DatasetDatasetIdDatapointsPostRequestMetadataInner](rapidata/api_client/docs/DatasetDatasetIdDatapointsPostRequestMetadataInner.md)
  - [DatasetEvaluationStepModel](rapidata/api_client/docs/DatasetEvaluationStepModel.md)
  - [Demographic](rapidata/api_client/docs/Demographic.md)
  - [DemographicFilter](rapidata/api_client/docs/DemographicFilter.md)
@@ -338,10 +344,6 @@ Class | Method | HTTP request | Description
  - [FileArtifactModel](rapidata/api_client/docs/FileArtifactModel.md)
  - [FileAsset](rapidata/api_client/docs/FileAsset.md)
  - [FileAssetInput](rapidata/api_client/docs/FileAssetInput.md)
- - [FileAssetInput1](rapidata/api_client/docs/FileAssetInput1.md)
- - [FileAssetInput1File](rapidata/api_client/docs/FileAssetInput1File.md)
- - [FileAssetInput2](rapidata/api_client/docs/FileAssetInput2.md)
- - [FileAssetInput3](rapidata/api_client/docs/FileAssetInput3.md)
  - [FileAssetInputFile](rapidata/api_client/docs/FileAssetInputFile.md)
  - [FileAssetMetadataValue](rapidata/api_client/docs/FileAssetMetadataValue.md)
  - [FileAssetModel](rapidata/api_client/docs/FileAssetModel.md)
@@ -351,6 +353,7 @@ Class | Method | HTTP request | Description
  - [FileTypeMetadataModel](rapidata/api_client/docs/FileTypeMetadataModel.md)
  - [Filter](rapidata/api_client/docs/Filter.md)
  - [FilterOperator](rapidata/api_client/docs/FilterOperator.md)
+ - [ForkBenchmarkResult](rapidata/api_client/docs/ForkBenchmarkResult.md)
  - [FormFileWrapper](rapidata/api_client/docs/FormFileWrapper.md)
  - [FreeTextPayload](rapidata/api_client/docs/FreeTextPayload.md)
  - [FreeTextRapidBlueprint](rapidata/api_client/docs/FreeTextRapidBlueprint.md)
@@ -412,7 +415,6 @@ Class | Method | HTTP request | Description
  - [LineRapidBlueprint](rapidata/api_client/docs/LineRapidBlueprint.md)
  - [LineResult](rapidata/api_client/docs/LineResult.md)
  - [LineTruth](rapidata/api_client/docs/LineTruth.md)
- - [LocalFileWrapper](rapidata/api_client/docs/LocalFileWrapper.md)
  - [LocateBoxTruth](rapidata/api_client/docs/LocateBoxTruth.md)
  - [LocateCoordinate](rapidata/api_client/docs/LocateCoordinate.md)
  - [LocatePayload](rapidata/api_client/docs/LocatePayload.md)
@@ -423,11 +425,6 @@ Class | Method | HTTP request | Description
  - [LogicOperator](rapidata/api_client/docs/LogicOperator.md)
  - [MultiAsset](rapidata/api_client/docs/MultiAsset.md)
  - [MultiAssetInput](rapidata/api_client/docs/MultiAssetInput.md)
- - [MultiAssetInput1](rapidata/api_client/docs/MultiAssetInput1.md)
- - [MultiAssetInput1AssetsInner](rapidata/api_client/docs/MultiAssetInput1AssetsInner.md)
- - [MultiAssetInput2](rapidata/api_client/docs/MultiAssetInput2.md)
- - [MultiAssetInput3](rapidata/api_client/docs/MultiAssetInput3.md)
- - [MultiAssetInput3AssetsInner](rapidata/api_client/docs/MultiAssetInput3AssetsInner.md)
  - [MultiAssetInputAssetsInner](rapidata/api_client/docs/MultiAssetInputAssetsInner.md)
  - [MultiAssetModel](rapidata/api_client/docs/MultiAssetModel.md)
  - [MultiCompareTruth](rapidata/api_client/docs/MultiCompareTruth.md)
@@ -479,7 +476,6 @@ Class | Method | HTTP request | Description
  - [ProbabilisticAttachCategoryRefereeInfo](rapidata/api_client/docs/ProbabilisticAttachCategoryRefereeInfo.md)
  - [ProblemDetails](rapidata/api_client/docs/ProblemDetails.md)
  - [PromptAssetMetadataInput](rapidata/api_client/docs/PromptAssetMetadataInput.md)
- - [PromptAssetMetadataInputAsset](rapidata/api_client/docs/PromptAssetMetadataInputAsset.md)
  - [PromptByBenchmarkResult](rapidata/api_client/docs/PromptByBenchmarkResult.md)
  - [PromptByBenchmarkResultPagedResult](rapidata/api_client/docs/PromptByBenchmarkResultPagedResult.md)
  - [PromptMetadata](rapidata/api_client/docs/PromptMetadata.md)
@@ -502,7 +498,6 @@ Class | Method | HTTP request | Description
  - [RapidSkippedModel](rapidata/api_client/docs/RapidSkippedModel.md)
  - [RapidState](rapidata/api_client/docs/RapidState.md)
  - [ReadBridgeTokenKeysResult](rapidata/api_client/docs/ReadBridgeTokenKeysResult.md)
- - [ReferenceAssetInput](rapidata/api_client/docs/ReferenceAssetInput.md)
  - [ReportModel](rapidata/api_client/docs/ReportModel.md)
  - [ResponseCountFilter](rapidata/api_client/docs/ResponseCountFilter.md)
  - [ResponseCountUserFilterModel](rapidata/api_client/docs/ResponseCountUserFilterModel.md)
@@ -550,7 +545,6 @@ Class | Method | HTTP request | Description
  - [SubmitOrderModel](rapidata/api_client/docs/SubmitOrderModel.md)
  - [SubmitParticipantResult](rapidata/api_client/docs/SubmitParticipantResult.md)
  - [SubmitPromptModel](rapidata/api_client/docs/SubmitPromptModel.md)
- - [SubmitPromptModelPromptAsset](rapidata/api_client/docs/SubmitPromptModelPromptAsset.md)
  - [TagsByBenchmarkResult](rapidata/api_client/docs/TagsByBenchmarkResult.md)
  - [TextAsset](rapidata/api_client/docs/TextAsset.md)
  - [TextAssetInput](rapidata/api_client/docs/TextAssetInput.md)
@@ -586,6 +580,8 @@ Class | Method | HTTP request | Description
  - [UpdateValidationSetModel](rapidata/api_client/docs/UpdateValidationSetModel.md)
  - [UploadAssetResult](rapidata/api_client/docs/UploadAssetResult.md)
  - [UploadCocoResult](rapidata/api_client/docs/UploadCocoResult.md)
+ - [UploadFileFromUrlResult](rapidata/api_client/docs/UploadFileFromUrlResult.md)
+ - [UploadFileResult](rapidata/api_client/docs/UploadFileResult.md)
  - [UploadFromS3Result](rapidata/api_client/docs/UploadFromS3Result.md)
  - [UrlAssetInput](rapidata/api_client/docs/UrlAssetInput.md)
  - [UserScoreFilter](rapidata/api_client/docs/UserScoreFilter.md)
