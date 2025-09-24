@@ -17,7 +17,7 @@ from rapidata.api_client.models.create_order_model_workflow import (
 )
 from rapidata.api_client.models.sticky_state import StickyState
 
-from rapidata.rapidata_client.datapoints.datapoint import Datapoint
+from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.rapidata_client.exceptions.failed_upload_exception import (
     FailedUploadException,
     _parse_failed_uploads,

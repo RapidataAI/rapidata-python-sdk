@@ -2,6 +2,7 @@ import subprocess
 from importlib.metadata import version, PackageNotFoundError
 
 from rapidata.api_client.api.campaign_api import CampaignApi
+from rapidata.api_client.api.asset_api import AssetApi
 from rapidata.api_client.api.dataset_api import DatasetApi
 from rapidata.api_client.api.benchmark_api import BenchmarkApi
 from rapidata.api_client.api.order_api import OrderApi
@@ -93,6 +94,10 @@ class OpenAPIService:
     @property
     def order_api(self) -> OrderApi:
         return OrderApi(self.api_client)
+
+    @property
+    def asset_api(self) -> AssetApi:
+        return AssetApi(self.api_client)
 
     @property
     def dataset_api(self) -> DatasetApi:

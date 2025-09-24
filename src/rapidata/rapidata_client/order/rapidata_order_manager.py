@@ -29,7 +29,7 @@ from rapidata.rapidata_client.workflow import (
     RankingWorkflow,
 )
 from rapidata.rapidata_client.datapoints.assets import MediaAsset, TextAsset, MultiAsset
-from rapidata.rapidata_client.datapoints.datapoint import Datapoint
+from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.rapidata_client.filter import RapidataFilter
 from rapidata.rapidata_client.filter.rapidata_filters import RapidataFilters
 from rapidata.rapidata_client.settings import RapidataSettings, RapidataSetting
@@ -153,45 +153,25 @@ class RapidataOrderManager:
                 "Warning: Both selections and validation_set_id provided. Ignoring validation_set_id."
             )
 
-        prompts_metadata = (
-            [PromptMetadata(prompt=prompt) for prompt in contexts] if contexts else None
-        )
-        sentence_metadata = (
-            [SelectWordsMetadata(select_words=sentence) for sentence in sentences]
-            if sentences
-            else None
-        )
-
-        if prompts_metadata and sentence_metadata:
-            raise ValueError("You can only use contexts or sentences, not both")
-
-        asset_metadata: Sequence[Metadata] = (
-            [MediaAssetMetadata(url=context) for context in media_contexts]
-            if media_contexts
-            else []
-        )
-        prompt_metadata: Sequence[Metadata] = (
-            prompts_metadata or sentence_metadata or []
-        )
-        private_notes_metadata: Sequence[Metadata] = (
-            [PrivateTextMetadata(text=text) for text in private_notes]
-            if private_notes
-            else []
-        )
-
-        multi_metadata = [
-            [item for item in items if item is not None]
-            for items in zip_longest(
-                prompt_metadata, asset_metadata, private_notes_metadata
-            )
-        ]
-
         order = (
             order_builder._workflow(workflow)
             ._datapoints(
                 datapoints=[
-                    Datapoint(assets=asset, data_type=data_type, metadata=metadata)
-                    for asset, metadata in zip_longest(datapoints, multi_metadata)
+                    Datapoint(
+                        assets=asset,
+                        data_type=data_type,
+                        context=context,
+                        media_context=media_context,
+                        sentence=sentence,
+                        private_note=private_note,
+                    )
+                    for asset, context, media_context, sentence, private_note in zip_longest(
+                        datapoints,
+                        contexts or [],
+                        media_contexts or [],
+                        sentences or [],
+                        private_notes or [],
+                    )
                 ]
             )
             ._referee(referee)
