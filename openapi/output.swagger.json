@@ -111,6 +111,68 @@
         }
       }
     },
+    "/asset/{fileName}/metadata": {
+      "get": {
+        "tags": [
+          "Asset"
+        ],
+        "summary": "Gets the metadata for an asset by file name.",
+        "description": "This endpoint retrieves metadata information for an asset stored in S3.\nThe metadata includes details such as content type, size, creation date, and custom metadata fields.",
+        "parameters": [
+          {
+            "name": "fileName",
+            "in": "path",
+            "description": "The name of the file to retrieve metadata for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAssetMetadataResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAssetMetadataResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAssetMetadataResult"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/datapoint/{datapointId}": {
       "get": {
         "tags": [
@@ -2795,6 +2857,50 @@
                   "style": "form",
                   "explode": true
                 }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/validation-set/{validationSetId}/rapid-new": {
+      "post": {
+        "tags": [
+          "ValidationSet"
+        ],
+        "summary": "Adds a new validation rapid to the validation set using JSON body.",
+        "parameters": [
+          {
+            "name": "validationSetId",
+            "in": "path",
+            "description": "The validation set to add a rapid to.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The validation rapid data including asset, payload, and metadata.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddValidationRapidNewModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddValidationRapidNewModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddValidationRapidNewModel"
               }
             }
           }
@@ -7825,6 +7931,64 @@
         },
         "additionalProperties": false
       },
+      "GetAssetMetadataResult": {
+        "required": [
+          "metadata"
+        ],
+        "type": "object",
+        "properties": {
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AssetMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ClassificationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/CountMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/FileTypeMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageDimensionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/LocationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/SourceUrlMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/StreamsMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TextMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/VideoDurationMetadata"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          }
+        },
+        "additionalProperties": false
+      },
       "GetDatapointByIdResult": {
         "required": [
           "asset",
@@ -8562,6 +8726,33 @@
           }
         },
         "additionalProperties": false
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": {}
       },
       "PromptAssetMetadataInput": {
         "title": "PromptAssetMetadataInput",
@@ -12704,6 +12895,170 @@
         "additionalProperties": false,
         "description": "The model for adding a validation rapid."
       },
+      "AddValidationRapidNewModel": {
+        "required": [
+          "asset",
+          "payload"
+        ],
+        "type": "object",
+        "properties": {
+          "asset": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ExistingAssetInput"
+              },
+              {
+                "$ref": "#/components/schemas/FileAssetInput"
+              },
+              {
+                "$ref": "#/components/schemas/MultiAssetInput"
+              },
+              {
+                "$ref": "#/components/schemas/TextAssetInput"
+              },
+              {
+                "$ref": "#/components/schemas/UrlAssetInput"
+              }
+            ],
+            "description": "The asset to use for the rapid.",
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "payload": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranscriptionPayload"
+              },
+              {
+                "$ref": "#/components/schemas/ScrubPayload"
+              },
+              {
+                "$ref": "#/components/schemas/PolygonPayload"
+              },
+              {
+                "$ref": "#/components/schemas/NamedEntityPayload"
+              },
+              {
+                "$ref": "#/components/schemas/LocatePayload"
+              },
+              {
+                "$ref": "#/components/schemas/LinePayload"
+              },
+              {
+                "$ref": "#/components/schemas/FreeTextPayload"
+              },
+              {
+                "$ref": "#/components/schemas/ComparePayload"
+              },
+              {
+                "$ref": "#/components/schemas/ClassifyPayload"
+              },
+              {
+                "$ref": "#/components/schemas/BoundingBoxPayload"
+              }
+            ],
+            "description": "The payload to use for the rapid.",
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "metadata": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/PrivateTextMetadataInput"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptAssetMetadataInput"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptMetadataInput"
+                },
+                {
+                  "$ref": "#/components/schemas/PublicTextMetadataInput"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadataInput"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            },
+            "description": "Some metadata to attach to the rapid.",
+            "nullable": true
+          },
+          "truth": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranscriptionTruth"
+              },
+              {
+                "$ref": "#/components/schemas/ScrubTruth"
+              },
+              {
+                "$ref": "#/components/schemas/PolygonTruth"
+              },
+              {
+                "$ref": "#/components/schemas/NamedEntityTruth"
+              },
+              {
+                "$ref": "#/components/schemas/LocateBoxTruth"
+              },
+              {
+                "$ref": "#/components/schemas/LineTruth"
+              },
+              {
+                "$ref": "#/components/schemas/EmptyValidationTruth"
+              },
+              {
+                "$ref": "#/components/schemas/CompareTruth"
+              },
+              {
+                "$ref": "#/components/schemas/MultiCompareTruth"
+              },
+              {
+                "$ref": "#/components/schemas/SkipTruth"
+              },
+              {
+                "$ref": "#/components/schemas/AttachCategoryTruth"
+              },
+              {
+                "$ref": "#/components/schemas/BoundingBoxTruth"
+              }
+            ],
+            "description": "The ground truth for the rapid.",
+            "nullable": true,
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "randomCorrectProbability": {
+            "type": "number",
+            "description": "The probability for an answer to be correct when randomly guessing.",
+            "format": "double",
+            "nullable": true
+          },
+          "explanation": {
+            "type": "string",
+            "description": "An explanation for the users if they answer the rapid incorrectly.",
+            "nullable": true
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlagModel"
+            },
+            "description": "The feature flags to enable for the rapid.",
+            "default": null,
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model for adding a validation rapid with asset in JSON body."
+      },
       "AssetType": {
         "type": "array",
         "items": {
@@ -13551,33 +13906,6 @@
           }
         },
         "additionalProperties": false
-      },
-      "ProblemDetails": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string",
-            "nullable": true
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "status": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "detail": {
-            "type": "string",
-            "nullable": true
-          },
-          "instance": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": {}
       },
       "PromptType": {
         "type": "array",

@@ -20,6 +20,8 @@ from rapidata.api_client.models.add_user_response_result import AddUserResponseR
 from rapidata.api_client.models.add_validation_rapid_model import AddValidationRapidModel
 from rapidata.api_client.models.add_validation_rapid_model_payload import AddValidationRapidModelPayload
 from rapidata.api_client.models.add_validation_rapid_model_truth import AddValidationRapidModelTruth
+from rapidata.api_client.models.add_validation_rapid_new_model import AddValidationRapidNewModel
+from rapidata.api_client.models.add_validation_rapid_new_model_asset import AddValidationRapidNewModelAsset
 from rapidata.api_client.models.age_group import AgeGroup
 from rapidata.api_client.models.age_user_filter_model import AgeUserFilterModel
 from rapidata.api_client.models.aggregator_type import AggregatorType
@@ -165,6 +167,7 @@ from rapidata.api_client.models.free_text_rapid_blueprint import FreeTextRapidBl
 from rapidata.api_client.models.free_text_result import FreeTextResult
 from rapidata.api_client.models.gender import Gender
 from rapidata.api_client.models.gender_user_filter_model import GenderUserFilterModel
+from rapidata.api_client.models.get_asset_metadata_result import GetAssetMetadataResult
 from rapidata.api_client.models.get_available_validation_sets_result import GetAvailableValidationSetsResult
 from rapidata.api_client.models.get_benchmark_by_id_result import GetBenchmarkByIdResult
 from rapidata.api_client.models.get_compare_ab_summary_result import GetCompareAbSummaryResult

@@ -56,15 +56,15 @@ configuration.api_key['bearer'] = os.environ["API_KEY"]
 with rapidata.api_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = rapidata.api_client.AssetApi(api_client)
-    file = None # bytearray | The file to upload to S3. (optional)
+    file_name = 'file_name_example' # str | The name of the file to retrieve metadata for.
 
     try:
-        # Uploads a single asset to S3 and returns the asset details.
-        api_response = api_instance.asset_file_post(file=file)
-        print("The response of AssetApi->asset_file_post:\n")
+        # Gets the metadata for an asset by file name.
+        api_response = api_instance.asset_file_name_metadata_get(file_name)
+        print("The response of AssetApi->asset_file_name_metadata_get:\n")
         pprint(api_response)
     except ApiException as e:
-        print("Exception when calling AssetApi->asset_file_post: %s\n" % e)
+        print("Exception when calling AssetApi->asset_file_name_metadata_get: %s\n" % e)
 
 ```
 
@@ -74,6 +74,7 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*AssetApi* | [**asset_file_name_metadata_get**](rapidata/api_client/docs/AssetApi.md#asset_file_name_metadata_get) | **GET** /asset/{fileName}/metadata | Gets the metadata for an asset by file name.
 *AssetApi* | [**asset_file_post**](rapidata/api_client/docs/AssetApi.md#asset_file_post) | **POST** /asset/file | Uploads a single asset to S3 and returns the asset details.
 *AssetApi* | [**asset_url_post**](rapidata/api_client/docs/AssetApi.md#asset_url_post) | **POST** /asset/url | Uploads a single asset to S3 and returns the asset details.
 *BenchmarkApi* | [**benchmark_benchmark_id_delete**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_delete) | **DELETE** /benchmark/{benchmarkId} | Deletes a single benchmark.
@@ -191,6 +192,7 @@ Class | Method | HTTP request | Description
 *ValidationSetApi* | [**validation_set_validation_set_id_export_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_export_get) | **GET** /validation-set/{validationSetId}/export | Exports all rapids of a validation-set to a file.
 *ValidationSetApi* | [**validation_set_validation_set_id_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_get) | **GET** /validation-set/{validationSetId} | Gets a validation set by the id.
 *ValidationSetApi* | [**validation_set_validation_set_id_patch**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_patch) | **PATCH** /validation-set/{validationSetId} | Updates different characteristics of a validation set.
+*ValidationSetApi* | [**validation_set_validation_set_id_rapid_new_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_rapid_new_post) | **POST** /validation-set/{validationSetId}/rapid-new | Adds a new validation rapid to the validation set using JSON body.
 *ValidationSetApi* | [**validation_set_validation_set_id_rapid_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_rapid_post) | **POST** /validation-set/{validationSetId}/rapid | Adds a new validation rapid to the specified validation set using files to create the assets.
 *ValidationSetApi* | [**validation_set_validation_set_id_rapids_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_rapids_get) | **GET** /validation-set/{validationSetId}/rapids | Queries the validation rapids for a specific validation set.
 *ValidationSetApi* | [**validation_set_validation_set_id_update_labeling_hints_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_update_labeling_hints_post) | **POST** /validation-set/{validationSetId}/update-labeling-hints | Refreshes the labeling hints for a validation set.
@@ -215,6 +217,8 @@ Class | Method | HTTP request | Description
  - [AddValidationRapidModel](rapidata/api_client/docs/AddValidationRapidModel.md)
  - [AddValidationRapidModelPayload](rapidata/api_client/docs/AddValidationRapidModelPayload.md)
  - [AddValidationRapidModelTruth](rapidata/api_client/docs/AddValidationRapidModelTruth.md)
+ - [AddValidationRapidNewModel](rapidata/api_client/docs/AddValidationRapidNewModel.md)
+ - [AddValidationRapidNewModelAsset](rapidata/api_client/docs/AddValidationRapidNewModelAsset.md)
  - [AgeGroup](rapidata/api_client/docs/AgeGroup.md)
  - [AgeUserFilterModel](rapidata/api_client/docs/AgeUserFilterModel.md)
  - [AggregatorType](rapidata/api_client/docs/AggregatorType.md)
@@ -360,6 +364,7 @@ Class | Method | HTTP request | Description
  - [FreeTextResult](rapidata/api_client/docs/FreeTextResult.md)
  - [Gender](rapidata/api_client/docs/Gender.md)
  - [GenderUserFilterModel](rapidata/api_client/docs/GenderUserFilterModel.md)
+ - [GetAssetMetadataResult](rapidata/api_client/docs/GetAssetMetadataResult.md)
  - [GetAvailableValidationSetsResult](rapidata/api_client/docs/GetAvailableValidationSetsResult.md)
  - [GetBenchmarkByIdResult](rapidata/api_client/docs/GetBenchmarkByIdResult.md)
  - [GetCompareAbSummaryResult](rapidata/api_client/docs/GetCompareAbSummaryResult.md)
