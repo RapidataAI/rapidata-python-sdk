@@ -19,17 +19,18 @@ from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, f
 from typing import Any, List, Optional
 from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
 from rapidata.api_client.models.file_asset_input import FileAssetInput
+from rapidata.api_client.models.multi_asset_input import MultiAssetInput
 from rapidata.api_client.models.text_asset_input import TextAssetInput
 from rapidata.api_client.models.url_asset_input import UrlAssetInput
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-MULTIASSETINPUTASSETSINNER_ONE_OF_SCHEMAS = ["ExistingAssetInput", "FileAssetInput", "MultiAssetInput", "TextAssetInput", "UrlAssetInput"]
+CREATESAMPLEMODELASSET_ONE_OF_SCHEMAS = ["ExistingAssetInput", "FileAssetInput", "MultiAssetInput", "TextAssetInput", "UrlAssetInput"]
 
-class MultiAssetInputAssetsInner(BaseModel):
+class CreateSampleModelAsset(BaseModel):
     """
-    MultiAssetInputAssetsInner
+    The asset input for the sample.
     """
     # data type: ExistingAssetInput
     oneof_schema_1_validator: Optional[ExistingAssetInput] = None
@@ -65,7 +66,7 @@ class MultiAssetInputAssetsInner(BaseModel):
 
     @field_validator('actual_instance')
     def actual_instance_must_validate_oneof(cls, v):
-        instance = MultiAssetInputAssetsInner.model_construct()
+        instance = CreateSampleModelAsset.model_construct()
         error_messages = []
         match = 0
         # validate data type: ExistingAssetInput
@@ -95,10 +96,10 @@ class MultiAssetInputAssetsInner(BaseModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in MultiAssetInputAssetsInner with oneOf schemas: ExistingAssetInput, FileAssetInput, MultiAssetInput, TextAssetInput, UrlAssetInput. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in CreateSampleModelAsset with oneOf schemas: ExistingAssetInput, FileAssetInput, MultiAssetInput, TextAssetInput, UrlAssetInput. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in MultiAssetInputAssetsInner with oneOf schemas: ExistingAssetInput, FileAssetInput, MultiAssetInput, TextAssetInput, UrlAssetInput. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in CreateSampleModelAsset with oneOf schemas: ExistingAssetInput, FileAssetInput, MultiAssetInput, TextAssetInput, UrlAssetInput. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -146,10 +147,10 @@ class MultiAssetInputAssetsInner(BaseModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into MultiAssetInputAssetsInner with oneOf schemas: ExistingAssetInput, FileAssetInput, MultiAssetInput, TextAssetInput, UrlAssetInput. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into CreateSampleModelAsset with oneOf schemas: ExistingAssetInput, FileAssetInput, MultiAssetInput, TextAssetInput, UrlAssetInput. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into MultiAssetInputAssetsInner with oneOf schemas: ExistingAssetInput, FileAssetInput, MultiAssetInput, TextAssetInput, UrlAssetInput. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into CreateSampleModelAsset with oneOf schemas: ExistingAssetInput, FileAssetInput, MultiAssetInput, TextAssetInput, UrlAssetInput. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -178,7 +179,4 @@ class MultiAssetInputAssetsInner(BaseModel):
         """Returns the string representation of the actual instance"""
         return pprint.pformat(self.model_dump())
 
-from rapidata.api_client.models.multi_asset_input import MultiAssetInput
-# TODO: Rewrite to not use raise_errors
-MultiAssetInputAssetsInner.model_rebuild(raise_errors=False)
 

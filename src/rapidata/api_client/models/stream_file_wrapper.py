@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictBytes, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Tuple, Union
+from rapidata.api_client.models.file_asset_metadata_value import FileAssetMetadataValue
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,12 +28,13 @@ class StreamFileWrapper(BaseModel):
     StreamFileWrapper
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for StreamFileWrapper", alias="_t")
-    stream: Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]
+    stream: Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]
     name: StrictStr
     content_length: Optional[StrictInt] = Field(default=None, alias="contentLength")
     content_type: Optional[StrictStr] = Field(default=None, alias="contentType")
     is_in_memory: Optional[StrictBool] = Field(default=None, alias="isInMemory")
-    __properties: ClassVar[List[str]] = ["_t", "stream", "name", "contentLength", "contentType", "isInMemory"]
+    metadata: Optional[Dict[str, FileAssetMetadataValue]] = None
+    __properties: ClassVar[List[str]] = ["_t", "stream", "name", "contentLength", "contentType", "isInMemory", "metadata"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -72,8 +74,10 @@ class StreamFileWrapper(BaseModel):
           were set at model initialization. Other fields with value `None`
           are ignored.
         * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
         """
         excluded_fields: Set[str] = set([
+            "content_length",
             "is_in_memory",
         ])
 
@@ -82,6 +86,18 @@ class StreamFileWrapper(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each value in metadata (dict)
+        _field_dict = {}
+        if self.metadata:
+            for _key_metadata in self.metadata:
+                if self.metadata[_key_metadata]:
+                    _field_dict[_key_metadata] = self.metadata[_key_metadata].to_dict()
+            _dict['metadata'] = _field_dict
+        # set to None if stream (nullable) is None
+        # and model_fields_set contains the field
+        if self.stream is None and "stream" in self.model_fields_set:
+            _dict['stream'] = None
+
         # set to None if content_length (nullable) is None
         # and model_fields_set contains the field
         if self.content_length is None and "content_length" in self.model_fields_set:
@@ -109,7 +125,13 @@ class StreamFileWrapper(BaseModel):
             "name": obj.get("name"),
             "contentLength": obj.get("contentLength"),
             "contentType": obj.get("contentType"),
-            "isInMemory": obj.get("isInMemory")
+            "isInMemory": obj.get("isInMemory"),
+            "metadata": dict(
+                (_k, FileAssetMetadataValue.from_dict(_v))
+                for _k, _v in obj["metadata"].items()
+            )
+            if obj.get("metadata") is not None
+            else None
         })
         return _obj
 

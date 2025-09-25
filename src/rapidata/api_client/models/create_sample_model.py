@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.create_sample_model_asset import CreateSampleModelAsset
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,7 +28,8 @@ class CreateSampleModel(BaseModel):
     The model used to create a sample to a participant.
     """ # noqa: E501
     identifier: StrictStr = Field(description="The identifier used to correlate samples of different participants.")
-    __properties: ClassVar[List[str]] = ["identifier"]
+    asset: CreateSampleModelAsset
+    __properties: ClassVar[List[str]] = ["identifier", "asset"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -68,6 +70,9 @@ class CreateSampleModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of asset
+        if self.asset:
+            _dict['asset'] = self.asset.to_dict()
         return _dict
 
     @classmethod
@@ -80,7 +85,8 @@ class CreateSampleModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "identifier": obj.get("identifier")
+            "identifier": obj.get("identifier"),
+            "asset": CreateSampleModelAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None
         })
         return _obj
 
