@@ -5443,7 +5443,8 @@
         }
       }
     },
-    "/participant/{participantId}/sample": {
+    "/participant/{participantId}/sample": {},
+    "/participant/{participantId}/sample-new": {
       "post": {
         "tags": [
           "Participant"
@@ -5461,54 +5462,21 @@
           }
         ],
         "requestBody": {
+          "description": "The model for the sample creation",
           "content": {
-            "multipart/form-data": {
+            "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "model": {
-                    "$ref": "#/components/schemas/CreateSampleModel"
-                  },
-                  "files": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "format": "binary"
-                    }
-                  },
-                  "texts": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "description": "If files aren't applicable texts can be used instead"
-                  },
-                  "urls": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "format": "uri"
-                    },
-                    "description": "Exposed assets can be added via urls."
-                  }
-                }
-              },
-              "encoding": {
-                "files": {
-                  "contentType": "text/plain",
-                  "style": "form",
-                  "explode": true
-                },
-                "texts": {
-                  "contentType": "text/plain",
-                  "style": "form",
-                  "explode": true
-                },
-                "urls": {
-                  "contentType": "text/plain",
-                  "style": "form",
-                  "explode": true
-                }
+                "$ref": "#/components/schemas/CreateSampleModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSampleModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSampleModel"
               }
             }
           }
@@ -8078,7 +8046,8 @@
           "contentLength": {
             "type": "integer",
             "format": "int64",
-            "nullable": true
+            "nullable": true,
+            "readOnly": true
           },
           "contentType": {
             "type": "string",
@@ -16917,6 +16886,44 @@
         "additionalProperties": false
       },
       "CreateSampleModel": {
+        "required": [
+          "asset",
+          "identifier"
+        ],
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string",
+            "description": "The identifier used to correlate samples of different participants."
+          },
+          "asset": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ExistingAssetInput"
+              },
+              {
+                "$ref": "#/components/schemas/FileAssetInput"
+              },
+              {
+                "$ref": "#/components/schemas/MultiAssetInput"
+              },
+              {
+                "$ref": "#/components/schemas/TextAssetInput"
+              },
+              {
+                "$ref": "#/components/schemas/UrlAssetInput"
+              }
+            ],
+            "description": "The asset input for the sample.",
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model used to create a sample to a participant."
+      },
+      "CreateSampleModelObsolete": {
         "required": [
           "identifier"
         ],

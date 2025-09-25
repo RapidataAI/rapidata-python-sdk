@@ -19,17 +19,15 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.create_sample_model_asset import CreateSampleModelAsset
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateSampleModel(BaseModel):
+class CreateSampleModelObsolete(BaseModel):
     """
     The model used to create a sample to a participant.
     """ # noqa: E501
     identifier: StrictStr = Field(description="The identifier used to correlate samples of different participants.")
-    asset: CreateSampleModelAsset
-    __properties: ClassVar[List[str]] = ["identifier", "asset"]
+    __properties: ClassVar[List[str]] = ["identifier"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -49,7 +47,7 @@ class CreateSampleModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateSampleModel from a JSON string"""
+        """Create an instance of CreateSampleModelObsolete from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -70,14 +68,11 @@ class CreateSampleModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of asset
-        if self.asset:
-            _dict['asset'] = self.asset.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateSampleModel from a dict"""
+        """Create an instance of CreateSampleModelObsolete from a dict"""
         if obj is None:
             return None
 
@@ -85,8 +80,7 @@ class CreateSampleModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "identifier": obj.get("identifier"),
-            "asset": CreateSampleModelAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None
+            "identifier": obj.get("identifier")
         })
         return _obj
 

@@ -6467,7 +6467,7 @@
                 "type": "object",
                 "properties": {
                   "model": {
-                    "$ref": "#/components/schemas/CreateSampleModel"
+                    "$ref": "#/components/schemas/CreateSampleModelObsolete"
                   },
                   "files": {
                     "type": "array",
@@ -6509,6 +6509,51 @@
                   "style": "form",
                   "explode": true
                 }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "deprecated": true
+      }
+    },
+    "/participant/{participantId}/sample-new": {
+      "post": {
+        "tags": [
+          "Participant"
+        ],
+        "summary": "Adds a sample to a participant.",
+        "parameters": [
+          {
+            "name": "participantId",
+            "in": "path",
+            "description": "The id of the participant to add the sample to",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The model for the sample creation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSampleModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSampleModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSampleModel"
               }
             }
           }
@@ -9122,7 +9167,8 @@
           "contentLength": {
             "type": "integer",
             "format": "int64",
-            "nullable": true
+            "nullable": true,
+            "readOnly": true
           },
           "contentType": {
             "type": "string",
@@ -17961,6 +18007,44 @@
         "additionalProperties": false
       },
       "CreateSampleModel": {
+        "required": [
+          "asset",
+          "identifier"
+        ],
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string",
+            "description": "The identifier used to correlate samples of different participants."
+          },
+          "asset": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ExistingAssetInput"
+              },
+              {
+                "$ref": "#/components/schemas/FileAssetInput"
+              },
+              {
+                "$ref": "#/components/schemas/MultiAssetInput"
+              },
+              {
+                "$ref": "#/components/schemas/TextAssetInput"
+              },
+              {
+                "$ref": "#/components/schemas/UrlAssetInput"
+              }
+            ],
+            "description": "The asset input for the sample.",
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model used to create a sample to a participant."
+      },
+      "CreateSampleModelObsolete": {
         "required": [
           "identifier"
         ],

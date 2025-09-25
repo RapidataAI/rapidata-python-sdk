@@ -74,8 +74,10 @@ class StreamFileWrapper(BaseModel):
           were set at model initialization. Other fields with value `None`
           are ignored.
         * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
         """
         excluded_fields: Set[str] = set([
+            "content_length",
             "is_in_memory",
         ])
 

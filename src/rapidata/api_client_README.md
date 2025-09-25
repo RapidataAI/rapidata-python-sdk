@@ -167,7 +167,7 @@ Class | Method | HTTP request | Description
 *ParticipantApi* | [**participant_participant_id_disable_post**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_disable_post) | **POST** /participant/{participantId}/disable | This endpoint disables a participant in a benchmark. this means that the participant will no longer actively be matched up against other participants and not collect further results. It will still be visible in the leaderboard.
 *ParticipantApi* | [**participant_participant_id_get**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_get) | **GET** /participant/{participantId} | Gets a participant by it&#39;s Id.
 *ParticipantApi* | [**participant_participant_id_patch**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_patch) | **PATCH** /participant/{participantId} | Updates a participant using patch semantics.
-*ParticipantApi* | [**participant_participant_id_sample_post**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_sample_post) | **POST** /participant/{participantId}/sample | Adds a sample to a participant.
+*ParticipantApi* | [**participant_participant_id_sample_new_post**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_sample_new_post) | **POST** /participant/{participantId}/sample-new | Adds a sample to a participant.
 *ParticipantApi* | [**participant_participant_id_samples_get**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_samples_get) | **GET** /participant/{participantId}/samples | Queries all samples of a participant.
 *ParticipantApi* | [**participant_sample_sample_id_delete**](rapidata/api_client/docs/ParticipantApi.md#participant_sample_sample_id_delete) | **DELETE** /participant-sample/{sampleId} | Deletes a sample.
 *ParticipantApi* | [**participants_participant_id_submit_post**](rapidata/api_client/docs/ParticipantApi.md#participants_participant_id_submit_post) | **POST** /participants/{participantId}/submit | Submits a participant to a benchmark.
@@ -315,6 +315,8 @@ Class | Method | HTTP request | Description
  - [CreateOrderResult](rapidata/api_client/docs/CreateOrderResult.md)
  - [CreateRapidResult](rapidata/api_client/docs/CreateRapidResult.md)
  - [CreateSampleModel](rapidata/api_client/docs/CreateSampleModel.md)
+ - [CreateSampleModelAsset](rapidata/api_client/docs/CreateSampleModelAsset.md)
+ - [CreateSampleModelObsolete](rapidata/api_client/docs/CreateSampleModelObsolete.md)
  - [CreateSimplePipelineModel](rapidata/api_client/docs/CreateSimplePipelineModel.md)
  - [CreateSimplePipelineModelArtifactsInner](rapidata/api_client/docs/CreateSimplePipelineModelArtifactsInner.md)
  - [CreateSimplePipelineModelPipelineStepsInner](rapidata/api_client/docs/CreateSimplePipelineModelPipelineStepsInner.md)
