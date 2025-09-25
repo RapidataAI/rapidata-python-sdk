@@ -1,5 +1,4 @@
-from itertools import zip_longest
-import os
+from rapidata.api_client.models.text_asset_input import TextAssetInput
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.api_client.models.multi_asset_input_assets_inner import (
@@ -14,7 +13,7 @@ from rapidata.api_client.models.create_datapoint_from_files_model_metadata_inner
     CreateDatapointFromFilesModelMetadataInner,
 )
 from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
-from rapidata.rapidata_client.datapoints.asset_uploader import AssetUploader
+from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 from rapidata.rapidata_client.datapoints.metadata import (
     PromptMetadata,
     MediaAssetMetadata,
@@ -22,7 +21,6 @@ from rapidata.rapidata_client.datapoints.metadata import (
     SelectWordsMetadata,
     Metadata,
 )
-import re
 
 
 class DatapointUploader:
@@ -77,24 +75,32 @@ class DatapointUploader:
         return metadata
 
     def _handle_text_datapoint(self, datapoint: Datapoint) -> CreateDatapointModelAsset:
-        if isinstance(datapoint.assets, list):
+        if isinstance(datapoint.asset, list):
             asset = CreateDatapointModelAsset(
-                _t="MultiAssetInput",
-                assets=[
-                    MultiAssetInputAssetsInner(_t="TextAssetInput", text=asset)
-                    for asset in datapoint.assets
-                ],
+                actual_instance=MultiAssetInput(
+                    _t="MultiAssetInput",
+                    assets=[
+                        MultiAssetInputAssetsInner(
+                            actual_instance=TextAssetInput(
+                                _t="TextAssetInput", text=asset
+                            )
+                        )
+                        for asset in datapoint.asset
+                    ],
+                ),
             )
         else:
             asset = CreateDatapointModelAsset(
-                _t="TextAssetInput", text=datapoint.assets
+                actual_instance=TextAssetInput(
+                    _t="TextAssetInput", text=datapoint.asset
+                )
             )
         return asset
 
     def _handle_media_datapoint(
         self, datapoint: Datapoint
     ) -> CreateDatapointModelAsset:
-        if isinstance(datapoint.assets, list):
+        if isinstance(datapoint.asset, list):
             asset = CreateDatapointModelAsset(
                 actual_instance=MultiAssetInput(
                     _t="MultiAssetInput",
@@ -105,7 +111,7 @@ class DatapointUploader:
                                 name=self.asset_uploader.upload_asset(asset),
                             ),
                         )
-                        for asset in datapoint.assets
+                        for asset in datapoint.asset
                     ],
                 ),
             )
@@ -113,7 +119,7 @@ class DatapointUploader:
             asset = CreateDatapointModelAsset(
                 actual_instance=ExistingAssetInput(
                     _t="ExistingAssetInput",
-                    name=self.asset_uploader.upload_asset(datapoint.assets),
+                    name=self.asset_uploader.upload_asset(datapoint.asset),
                 ),
             )
         return asset

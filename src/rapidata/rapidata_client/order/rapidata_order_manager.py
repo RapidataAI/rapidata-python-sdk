@@ -146,7 +146,7 @@ class RapidataOrderManager:
             ._datapoints(
                 datapoints=[
                     Datapoint(
-                        assets=asset,
+                        asset=asset,
                         data_type=data_type,
                         context=context,
                         media_context=media_context,

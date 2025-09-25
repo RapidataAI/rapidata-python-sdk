@@ -1,130 +1,28 @@
-from rapidata.rapidata_client.datapoints.assets import MediaAsset, TextAsset, MultiAsset
-from rapidata.rapidata_client.datapoints.metadata import Metadata
-from typing import Any, cast, Sequence
-from rapidata.api_client.models.add_validation_rapid_model import (
-    AddValidationRapidModel,
-)
-from rapidata.api_client.models.add_validation_rapid_model_payload import (
-    AddValidationRapidModelPayload,
-)
-from rapidata.api_client.models.add_validation_rapid_model_truth import (
-    AddValidationRapidModelTruth,
-)
-from rapidata.api_client.models.dataset_dataset_id_datapoints_post_request_metadata_inner import (
-    DatasetDatasetIdDatapointsPostRequestMetadataInner,
-)
-from rapidata.service.openapi_service import OpenAPIService
-
-from rapidata.rapidata_client.config import logger
 from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
+from typing import Literal, Self, Any, Sequence
+from pydantic import BaseModel, model_validator, ConfigDict
 
 
-class Rapid:
-    def __init__(
-        self,
-        asset: MediaAsset | TextAsset | MultiAsset,
-        payload: Any,
-        metadata: Sequence[Metadata] | None = None,
-        truth: Any | None = None,
-        randomCorrectProbability: float | None = None,
-        explanation: str | None = None,
-        settings: Sequence[RapidataSetting] | None = None,
-    ):
-        if not isinstance(asset, (MediaAsset, TextAsset, MultiAsset)):
-            raise ValueError("Asset must be a MediaAsset, TextAsset, or MultiAsset")
-        if not isinstance(metadata, (list, type(None))):
-            raise ValueError("Metadata must be a list or None")
-        if metadata and not all(isinstance(meta, Metadata) for meta in metadata):
-            raise ValueError("Metadata must be a list of Metadata objects")
-        if not isinstance(settings, (list, type(None))):
-            raise ValueError("Settings must be a list or None")
-        if settings and not all(
-            isinstance(setting, RapidataSetting) for setting in settings
-        ):
-            raise ValueError("Settings must be a list of RapidataSetting objects")
+class Rapid(BaseModel):
+    asset: str | list[str]
+    payload: Any
+    data_type: Literal["media", "text"] = "media"
+    truth: Any | None = None
+    context: str | None = None
+    media_context: str | None = None
+    sentence: str | None = None
+    random_correct_probability: float | None = None
+    explanation: str | None = None
+    settings: Sequence[RapidataSetting] | None = None
 
-        self.asset = asset
-        self.metadata = metadata
-        self.payload = payload
-        self.truth = truth
-        self.randomCorrectProbability = randomCorrectProbability
-        self.explanation = explanation
-        self.settings = settings
-        logger.debug(
-            f"Created Rapid with asset: {self.asset}, metadata: {self.metadata}, payload: {self.payload}, truth: {self.truth}, randomCorrectProbability: {self.randomCorrectProbability}, explanation: {self.explanation}"
-        )
+    model_config = ConfigDict(
+        arbitrary_types_allowed=True, populate_by_name=True, extra="allow"
+    )
 
-    def _add_to_validation_set(
-        self, validationSetId: str, openapi_service: OpenAPIService
-    ) -> None:
-        model = self.__to_model()
-        assets = self.__convert_to_assets()
-        if isinstance(assets[0], TextAsset):
-            assert all(isinstance(asset, TextAsset) for asset in assets)
-            texts = cast(list[TextAsset], assets)
-            openapi_service.validation_api.validation_set_validation_set_id_rapid_post(
-                validation_set_id=validationSetId,
-                model=model,
-                texts=[asset.text for asset in texts],
+    @model_validator(mode="after")
+    def check_sentence_and_context(self) -> Self:
+        if isinstance(self.sentence, str) and isinstance(self.context, str):
+            raise ValueError(
+                "Both 'sentence' and 'context' cannot be strings at the same time."
             )
-
-        elif isinstance(assets[0], MediaAsset):
-            assert all(isinstance(asset, MediaAsset) for asset in assets)
-            files = cast(list[MediaAsset], assets)
-            openapi_service.validation_api.validation_set_validation_set_id_rapid_post(
-                validation_set_id=validationSetId,
-                model=model,
-                files=[asset.to_file() for asset in files if asset.is_local()],
-                urls=[asset.path for asset in files if not asset.is_local()],
-            )
-
-        else:
-            raise TypeError("The asset must be a MediaAsset, TextAsset, or MultiAsset")
-
-    def __convert_to_assets(self) -> list[MediaAsset | TextAsset]:
-        assets: list[MediaAsset | TextAsset] = []
-        if isinstance(self.asset, MultiAsset):
-            for asset in self.asset.assets:
-                if isinstance(asset, MediaAsset):
-                    assets.append(asset)
-                elif isinstance(asset, TextAsset):
-                    assets.append(asset)
-                else:
-                    raise TypeError(
-                        "The asset is a multiasset, but not all assets are MediaAssets or TextAssets"
-                    )
-
-        if isinstance(self.asset, TextAsset):
-            assets = [self.asset]
-
-        if isinstance(self.asset, MediaAsset):
-            assets = [self.asset]
-
-        return assets
-
-    def __to_model(self) -> AddValidationRapidModel:
-        return AddValidationRapidModel(
-            payload=AddValidationRapidModelPayload(self.payload),
-            truth=AddValidationRapidModelTruth(self.truth),
-            metadata=(
-                [
-                    DatasetDatasetIdDatapointsPostRequestMetadataInner(meta.to_model())
-                    for meta in self.metadata
-                ]
-                if self.metadata
-                else None
-            ),
-            randomCorrectProbability=self.randomCorrectProbability,
-            explanation=self.explanation,
-            featureFlags=(
-                [setting._to_feature_flag() for setting in self.settings]
-                if self.settings
-                else None
-            ),
-        )
-
-    def __str__(self) -> str:
-        return f"Rapid(asset={self.asset}, metadata={self.metadata}, payload={self.payload}, truth={self.truth}, randomCorrectProbability={self.randomCorrectProbability}, explanation={self.explanation}, settings={self.settings})"
-
-    def __repr__(self) -> str:
-        return self.__str__()
+        return self

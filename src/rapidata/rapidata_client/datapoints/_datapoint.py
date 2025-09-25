@@ -13,13 +13,12 @@ from rapidata.rapidata_client.config import logger
 
 
 class Datapoint(BaseModel):
-    assets: str | list[str]
+    asset: str | list[str]
     data_type: Literal["text", "media"]
     context: str | None = None
     media_context: str | None = None
     sentence: str | None = None
     private_note: str | None = None
-    logger = logger
 
     @model_validator(mode="after")
     def check_sentence_and_context(self) -> Self:
@@ -33,9 +32,7 @@ class Datapoint(BaseModel):
         if self.data_type == "text":
             return AssetType.TEXT
 
-        evaluation_asset = (
-            self.assets[0] if isinstance(self.assets, list) else self.assets
-        )
+        evaluation_asset = self.asset[0] if isinstance(self.asset, list) else self.asset
         if any(evaluation_asset.endswith(ext) for ext in ALLOWED_IMAGE_EXTENSIONS):
             return AssetType.IMAGE
         elif any(evaluation_asset.endswith(ext) for ext in ALLOWED_VIDEO_EXTENSIONS):

@@ -47,7 +47,7 @@ class ValidationSetManager:
 
     def __init__(self, openapi_service: OpenAPIService) -> None:
         self.__openapi_service = openapi_service
-        self.rapid = RapidsManager()
+        self.rapid = RapidsManager(openapi_service)
         logger.debug("ValidationSetManager initialized")
 
     def _create_order_validation_set(
@@ -66,7 +66,8 @@ class ValidationSetManager:
                     Rapid(
                         asset=datapoint.asset,
                         payload=workflow._to_payload(datapoint),
-                        metadata=datapoint.metadata,
+                        context=datapoint.context,
+                        media_context=datapoint.media_context,
                         settings=settings,
                     )
                 )
@@ -143,11 +144,6 @@ class ValidationSetManager:
             logger.debug("Creating classification rapids")
             rapids: list[Rapid] = []
             for i in range(len(datapoints)):
-                rapid_metadata = []
-                if contexts:
-                    rapid_metadata.append(PromptMetadata(contexts[i]))
-                if media_contexts:
-                    rapid_metadata.append(MediaAssetMetadata(media_contexts[i]))
                 rapids.append(
                     self.rapid.classification_rapid(
                         instruction=instruction,
@@ -155,7 +151,10 @@ class ValidationSetManager:
                         datapoint=datapoints[i],
                         truths=truths[i],
                         data_type=data_type,
-                        metadata=rapid_metadata,
+                        context=contexts[i] if contexts != None else None,
+                        media_context=(
+                            media_contexts[i] if media_contexts != None else None
+                        ),
                         explanation=explanations[i] if explanations != None else None,
                     )
                 )
@@ -231,18 +230,16 @@ class ValidationSetManager:
             logger.debug("Creating comparison rapids")
             rapids: list[Rapid] = []
             for i in range(len(datapoints)):
-                rapid_metadata = []
-                if contexts:
-                    rapid_metadata.append(PromptMetadata(contexts[i]))
-                if media_contexts:
-                    rapid_metadata.append(MediaAssetMetadata(media_contexts[i]))
                 rapids.append(
                     self.rapid.compare_rapid(
                         instruction=instruction,
                         truth=truths[i],
                         datapoint=datapoints[i],
                         data_type=data_type,
-                        metadata=rapid_metadata,
+                        context=contexts[i] if contexts != None else None,
+                        media_context=(
+                            media_contexts[i] if media_contexts != None else None
+                        ),
                         explanation=explanation[i] if explanation != None else None,
                     )
                 )
@@ -387,17 +384,15 @@ class ValidationSetManager:
             rapids = []
             rapids: list[Rapid] = []
             for i in range(len(datapoints)):
-                rapid_metadata = []
-                if contexts:
-                    rapid_metadata.append(PromptMetadata(contexts[i]))
-                if media_contexts:
-                    rapid_metadata.append(MediaAssetMetadata(media_contexts[i]))
                 rapids.append(
                     self.rapid.locate_rapid(
                         instruction=instruction,
                         truths=truths[i],
                         datapoint=datapoints[i],
-                        metadata=rapid_metadata,
+                        context=contexts[i] if contexts != None else None,
+                        media_context=(
+                            media_contexts[i] if media_contexts != None else None
+                        ),
                         explanation=explanation[i] if explanation != None else None,
                     )
                 )
@@ -466,17 +461,15 @@ class ValidationSetManager:
             logger.debug("Creating draw rapids")
             rapids: list[Rapid] = []
             for i in range(len(datapoints)):
-                rapid_metadata = []
-                if contexts:
-                    rapid_metadata.append(PromptMetadata(contexts[i]))
-                if media_contexts:
-                    rapid_metadata.append(MediaAssetMetadata(media_contexts[i]))
                 rapids.append(
                     self.rapid.draw_rapid(
                         instruction=instruction,
                         truths=truths[i],
                         datapoint=datapoints[i],
-                        metadata=rapid_metadata,
+                        context=contexts[i] if contexts != None else None,
+                        media_context=(
+                            media_contexts[i] if media_contexts != None else None
+                        ),
                         explanation=explanation[i] if explanation != None else None,
                     )
                 )
@@ -546,17 +539,15 @@ class ValidationSetManager:
             logger.debug("Creating timestamp rapids")
             rapids: list[Rapid] = []
             for i in range(len(datapoints)):
-                rapid_metadata = []
-                if contexts:
-                    rapid_metadata.append(PromptMetadata(contexts[i]))
-                if media_contexts:
-                    rapid_metadata.append(MediaAssetMetadata(media_contexts[i]))
                 rapids.append(
                     self.rapid.timestamp_rapid(
                         instruction=instruction,
                         truths=truths[i],
                         datapoint=datapoints[i],
-                        metadata=rapid_metadata,
+                        context=contexts[i] if contexts != None else None,
+                        media_context=(
+                            media_contexts[i] if media_contexts != None else None
+                        ),
                         explanation=explanation[i] if explanation != None else None,
                     )
                 )

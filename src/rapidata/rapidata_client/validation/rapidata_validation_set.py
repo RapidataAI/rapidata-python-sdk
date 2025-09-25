@@ -8,6 +8,9 @@ from rapidata.api_client.models.update_validation_set_model import (
     UpdateValidationSetModel,
 )
 from rapidata.api_client.models.update_should_alert_model import UpdateShouldAlertModel
+from rapidata.rapidata_client.validation.rapids._validation_rapid_uploader import (
+    ValidationRapidUploader,
+)
 
 
 class RapidataValidationSet:
@@ -28,7 +31,8 @@ class RapidataValidationSet:
         self.validation_set_details_page = (
             f"https://app.{openapi_service.environment}/validation-set/detail/{self.id}"
         )
-        self.__openapi_service = openapi_service
+        self._openapi_service = openapi_service
+        self.validation_rapid_uploader = ValidationRapidUploader(openapi_service)
 
     def add_rapid(self, rapid: Rapid):
         """Add a Rapid to the validation set.
@@ -38,7 +42,12 @@ class RapidataValidationSet:
         """
         with tracer.start_as_current_span("RapidataValidationSet.add_rapid"):
             logger.debug("Adding rapid %s to validation set %s", rapid, self.id)
-            rapid._add_to_validation_set(self.id, self.__openapi_service)
+            self._openapi_service.validation_api.validation_set_validation_set_id_rapid_new_post(
+                validation_set_id=self.id,
+                add_validation_rapid_new_model=self.validation_rapid_uploader.upload_rapid(
+                    rapid
+                ),
+            )
         return self
 
     def update_dimensions(self, dimensions: list[str]):
@@ -51,7 +60,7 @@ class RapidataValidationSet:
             logger.debug(
                 "Updating dimensions for validation set %s to %s", self.id, dimensions
             )
-            self.__openapi_service.validation_api.validation_set_validation_set_id_patch(
+            self._openapi_service.validation_api.validation_set_validation_set_id_patch(
                 self.id, UpdateValidationSetModel(dimensions=dimensions)
             )
             return self
@@ -69,7 +78,7 @@ class RapidataValidationSet:
             logger.debug(
                 "Setting shouldAlert for validation set %s to %s", self.id, should_alert
             )
-            self.__openapi_service.validation_api.validation_set_validation_set_id_patch(
+            self._openapi_service.validation_api.validation_set_validation_set_id_patch(
                 self.id, UpdateValidationSetModel(shouldAlert=should_alert)
             )
             return self
@@ -97,7 +106,7 @@ class RapidataValidationSet:
         """Deletes the validation set"""
         with tracer.start_as_current_span("RapidataValidationSet.delete"):
             logger.info("Deleting ValidationSet '%s'", self)
-            self.__openapi_service.validation_api.validation_set_validation_set_id_delete(
+            self._openapi_service.validation_api.validation_set_validation_set_id_delete(
                 self.id
             )
             logger.debug("ValidationSet '%s' has been deleted.", self)
