@@ -16,10 +16,10 @@ from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.page_info import PageInfo
 from rapidata.api_client.models.source_url_metadata_model import SourceUrlMetadataModel
 from rapidata.api_client.models.submit_prompt_model import SubmitPromptModel
-from rapidata.api_client.models.submit_prompt_model_prompt_asset import (
-    SubmitPromptModelPromptAsset,
+from rapidata.api_client.models.create_demographic_rapid_model_asset import (
+    CreateDemographicRapidModelAsset,
 )
-from rapidata.api_client.models.url_asset_input import UrlAssetInput
+from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
 
 from rapidata.rapidata_client.benchmark._detail_mapper import DetailMapper
 from rapidata.rapidata_client.benchmark.leaderboard.rapidata_leaderboard import (
@@ -28,7 +28,7 @@ from rapidata.rapidata_client.benchmark.leaderboard.rapidata_leaderboard import 
 from rapidata.rapidata_client.benchmark.participant._participant import (
     BenchmarkParticipant,
 )
-from rapidata.rapidata_client.datapoints.assets import MediaAsset
+from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 from rapidata.rapidata_client.filter import RapidataFilter
 from rapidata.rapidata_client.config import logger, managed_print, tracer
 from rapidata.rapidata_client.settings import RapidataSetting
@@ -50,15 +50,16 @@ class RapidataBenchmark:
     def __init__(self, name: str, id: str, openapi_service: OpenAPIService):
         self.name = name
         self.id = id
-        self.__openapi_service = openapi_service
+        self._openapi_service = openapi_service
         self.__prompts: list[str | None] = []
         self.__prompt_assets: list[str | None] = []
         self.__leaderboards: list[RapidataLeaderboard] = []
         self.__identifiers: list[str] = []
         self.__tags: list[list[str]] = []
         self.__benchmark_page: str = (
-            f"https://app.{self.__openapi_service.environment}/mri/benchmarks/{self.id}"
+            f"https://app.{self._openapi_service.environment}/mri/benchmarks/{self.id}"
         )
+        self._asset_uploader = AssetUploader(openapi_service)
 
     def __instantiate_prompts(self) -> None:
         with tracer.start_as_current_span("RapidataBenchmark.__instantiate_prompts"):
@@ -66,7 +67,7 @@ class RapidataBenchmark:
             total_pages = None
 
             while True:
-                prompts_result = self.__openapi_service.benchmark_api.benchmark_benchmark_id_prompts_get(
+                prompts_result = self._openapi_service.benchmark_api.benchmark_benchmark_id_prompts_get(
                     benchmark_id=self.id,
                     request=QueryModel(page=PageInfo(index=current_page, size=100)),
                 )
@@ -147,7 +148,7 @@ class RapidataBenchmark:
                 total_pages = None
 
                 while True:
-                    leaderboards_result = self.__openapi_service.benchmark_api.benchmark_benchmark_id_leaderboards_get(
+                    leaderboards_result = self._openapi_service.benchmark_api.benchmark_benchmark_id_leaderboards_get(
                         benchmark_id=self.id,
                         request=QueryModel(
                             page=PageInfo(index=current_page, size=100),
@@ -173,7 +174,7 @@ class RapidataBenchmark:
                                 leaderboard.min_responses,
                                 self.id,
                                 leaderboard.id,
-                                self.__openapi_service,
+                                self._openapi_service,
                             )
                             for leaderboard in leaderboards_result.items
                         ]
@@ -234,9 +235,6 @@ class RapidataBenchmark:
             if identifier in self.identifiers:
                 raise ValueError("Identifier already exists in the benchmark.")
 
-            if prompt_asset is not None and not re.match(r"^https?://", prompt_asset):
-                raise ValueError("Prompt asset must be a link to the asset.")
-
             if tags is not None and (
                 not isinstance(tags, list)
                 or not all(isinstance(tag, str) for tag in tags)
@@ -258,14 +256,17 @@ class RapidataBenchmark:
             self.__prompts.append(prompt)
             self.__prompt_assets.append(prompt_asset)
 
-            self.__openapi_service.benchmark_api.benchmark_benchmark_id_prompt_post(
+            self._openapi_service.benchmark_api.benchmark_benchmark_id_prompt_post(
                 benchmark_id=self.id,
                 submit_prompt_model=SubmitPromptModel(
                     identifier=identifier,
                     prompt=prompt,
                     promptAsset=(
-                        SubmitPromptModelPromptAsset(
-                            UrlAssetInput(_t="UrlAssetInput", url=prompt_asset)
+                        CreateDemographicRapidModelAsset(
+                            actual_instance=ExistingAssetInput(
+                                _t="ExistingAssetInput",
+                                name=self._asset_uploader.upload_asset(prompt_asset),
+                            )
                         )
                         if prompt_asset is not None
                         else None
@@ -323,32 +324,30 @@ class RapidataBenchmark:
                 settings,
             )
 
-            leaderboard_result = (
-                self.__openapi_service.leaderboard_api.leaderboard_post(
-                    create_leaderboard_model=CreateLeaderboardModel(
-                        benchmarkId=self.id,
-                        name=name,
-                        instruction=instruction,
-                        showPrompt=show_prompt,
-                        showPromptAsset=show_prompt_asset,
-                        isInversed=inverse_ranking,
-                        minResponses=min_responses_per_matchup,
-                        responseBudget=DetailMapper.get_budget(level_of_detail),
-                        validationSetId=validation_set_id,
-                        filters=(
-                            [
-                                AndUserFilterModelFiltersInner(filter._to_model())
-                                for filter in filters
-                            ]
-                            if filters
-                            else None
-                        ),
-                        featureFlags=(
-                            [setting._to_feature_flag() for setting in settings]
-                            if settings
-                            else None
-                        ),
-                    )
+            leaderboard_result = self._openapi_service.leaderboard_api.leaderboard_post(
+                create_leaderboard_model=CreateLeaderboardModel(
+                    benchmarkId=self.id,
+                    name=name,
+                    instruction=instruction,
+                    showPrompt=show_prompt,
+                    showPromptAsset=show_prompt_asset,
+                    isInversed=inverse_ranking,
+                    minResponses=min_responses_per_matchup,
+                    responseBudget=DetailMapper.get_budget(level_of_detail),
+                    validationSetId=validation_set_id,
+                    filters=(
+                        [
+                            AndUserFilterModelFiltersInner(filter._to_model())
+                            for filter in filters
+                        ]
+                        if filters
+                        else None
+                    ),
+                    featureFlags=(
+                        [setting._to_feature_flag() for setting in settings]
+                        if settings
+                        else None
+                    ),
                 )
             )
 
@@ -368,7 +367,7 @@ class RapidataBenchmark:
                 min_responses_per_matchup,
                 self.id,
                 leaderboard_result.id,
-                self.__openapi_service,
+                self._openapi_service,
             )
 
     def evaluate_model(
@@ -416,12 +415,7 @@ class RapidataBenchmark:
                     "All identifiers/prompts must be in the registered identifiers/prompts list. To see the registered identifiers/prompts, use the identifiers/prompts property."
                 )
 
-            # happens before the creation of the participant to ensure all media paths are valid
-            assets: list[MediaAsset] = []
-            for media_path in media:
-                assets.append(MediaAsset(media_path))
-
-            participant_result = self.__openapi_service.benchmark_api.benchmark_benchmark_id_participants_post(
+            participant_result = self._openapi_service.benchmark_api.benchmark_benchmark_id_participants_post(
                 benchmark_id=self.id,
                 create_benchmark_participant_model=CreateBenchmarkParticipantModel(
                     name=name,
@@ -431,20 +425,20 @@ class RapidataBenchmark:
             logger.info(f"Participant created: {participant_result.participant_id}")
 
             participant = BenchmarkParticipant(
-                name, participant_result.participant_id, self.__openapi_service
+                name, participant_result.participant_id, self._openapi_service
             )
 
             with tracer.start_as_current_span("upload_media_for_participant"):
                 logger.info(
-                    f"Uploading {len(assets)} media assets to participant {participant.id}"
+                    f"Uploading {len(media)} media assets to participant {participant.id}"
                 )
 
                 successful_uploads, failed_uploads = participant.upload_media(
-                    assets,
+                    media,
                     identifiers,
                 )
 
-                total_uploads = len(assets)
+                total_uploads = len(media)
                 success_rate = (
                     (len(successful_uploads) / total_uploads * 100)
                     if total_uploads > 0
@@ -455,9 +449,7 @@ class RapidataBenchmark:
                 )
 
                 if failed_uploads:
-                    logger.error(
-                        f"Failed uploads for media: {[asset.path for asset in failed_uploads]}"
-                    )
+                    logger.error(f"Failed uploads for media: {failed_uploads}")
                     logger.warning(
                         "Some uploads failed. The model evaluation may be incomplete."
                     )
@@ -467,7 +459,7 @@ class RapidataBenchmark:
                         "No uploads were successful. The model evaluation will not be completed."
                     )
 
-                self.__openapi_service.participant_api.participants_participant_id_submit_post(
+                self._openapi_service.participant_api.participants_participant_id_submit_post(
                     participant_id=participant_result.participant_id
                 )
 
