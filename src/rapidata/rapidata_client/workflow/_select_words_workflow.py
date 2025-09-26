@@ -8,9 +8,6 @@ from rapidata.api_client.models.transcription_rapid_blueprint import (
 from rapidata.rapidata_client.workflow._base_workflow import Workflow
 from rapidata.api_client import TranscriptionPayload, TranscriptionWord
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
-from rapidata.rapidata_client.datapoints.metadata._select_words_metadata import (
-    SelectWordsMetadata,
-)
 from rapidata.api_client.models.rapid_modality import RapidModality
 
 
@@ -46,25 +43,15 @@ class SelectWordsWorkflow(Workflow):
 
     def _to_payload(self, datapoint: Datapoint) -> TranscriptionPayload:
         assert (
-            datapoint.metadata is not None
-        ), "SelectWordsWorkflow requires a metadata datapoint"
-
-        assert any(
-            isinstance(metadata, SelectWordsMetadata) for metadata in datapoint.metadata
-        ), "SelectWordsWorkflow requires a SelectWordsMetadata datapoint"
-
-        select_words_metadata = next(
-            metadata
-            for metadata in datapoint.metadata
-            if isinstance(metadata, SelectWordsMetadata)
-        )
+            datapoint.sentence is not None
+        ), "SelectWordsWorkflow requires a sentence datapoint"
 
         return TranscriptionPayload(
             _t="TranscriptionPayload",
             title=self._instruction,
             transcription=[
                 TranscriptionWord(word=word, wordIndex=i)
-                for i, word in enumerate(select_words_metadata.select_words.split())
+                for i, word in enumerate(datapoint.sentence.split())
             ],
         )
 
