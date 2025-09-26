@@ -1,4 +1,3 @@
-from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.api_client.models.multi_asset_input_assets_inner import (
@@ -19,7 +18,6 @@ from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 from rapidata.rapidata_client.datapoints.metadata import (
     PromptMetadata,
     MediaAssetMetadata,
-    PrivateTextMetadata,
     SelectWordsMetadata,
     Metadata,
 )
@@ -92,13 +90,17 @@ class ValidationRapidUploader:
     def _handle_text_rapid(self, rapid: Rapid) -> AddValidationRapidNewModelAsset:
         if isinstance(rapid.asset, list):
             asset = AddValidationRapidNewModelAsset(
-                _t="MultiAssetInput",
-                assets=[
-                    MultiAssetInputAssetsInner(
-                        actual_instance=TextAssetInput(_t="TextAssetInput", text=asset)
-                    )
-                    for asset in rapid.asset
-                ],
+                actual_instance=MultiAssetInput(
+                    _t="MultiAssetInput",
+                    assets=[
+                        MultiAssetInputAssetsInner(
+                            actual_instance=TextAssetInput(
+                                _t="TextAssetInput", text=asset
+                            )
+                        )
+                        for asset in rapid.asset
+                    ],
+                ),
             )
         else:
             asset = AddValidationRapidNewModelAsset(
