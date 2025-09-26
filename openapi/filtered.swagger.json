@@ -5859,20 +5859,7 @@
             "example": "AssetMetadata"
           },
           "asset": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/FileAsset"
-              },
-              {
-                "$ref": "#/components/schemas/MultiAsset"
-              },
-              {
-                "$ref": "#/components/schemas/NullAsset"
-              },
-              {
-                "$ref": "#/components/schemas/TextAsset"
-              }
-            ],
+            "type": "object",
             "discriminator": {
               "propertyName": "_t"
             }

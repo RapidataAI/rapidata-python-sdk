@@ -27,7 +27,7 @@ class AssetMetadata(BaseModel):
     AssetMetadata
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for AssetMetadata", alias="_t")
-    asset: AssetMetadataAsset
+    asset: Dict[str, Any]
     visibilities: List[StrictStr]
     __properties: ClassVar[List[str]] = ["_t", "asset", "visibilities"]
 
@@ -85,9 +85,6 @@ class AssetMetadata(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of asset
-        if self.asset:
-            _dict['asset'] = self.asset.to_dict()
         return _dict
 
     @classmethod
@@ -101,12 +98,9 @@ class AssetMetadata(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'AssetMetadata',
-            "asset": AssetMetadataAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
+            "asset": obj.get("asset"),
             "visibilities": obj.get("visibilities")
         })
         return _obj
 
-from rapidata.api_client.models.asset_metadata_asset import AssetMetadataAsset
-# TODO: Rewrite to not use raise_errors
-AssetMetadata.model_rebuild(raise_errors=False)
 

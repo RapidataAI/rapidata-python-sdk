@@ -31,7 +31,6 @@ from rapidata.api_client.models.and_user_filter_model import AndUserFilterModel
 from rapidata.api_client.models.and_user_filter_model_filters_inner import AndUserFilterModelFiltersInner
 from rapidata.api_client.models.are_rapids_active_result import AreRapidsActiveResult
 from rapidata.api_client.models.asset_metadata import AssetMetadata
-from rapidata.api_client.models.asset_metadata_asset import AssetMetadataAsset
 from rapidata.api_client.models.asset_metadata_model import AssetMetadataModel
 from rapidata.api_client.models.attach_category_rapid_blueprint import AttachCategoryRapidBlueprint
 from rapidata.api_client.models.attach_category_result import AttachCategoryResult
@@ -234,6 +233,7 @@ from rapidata.api_client.models.location_metadata import LocationMetadata
 from rapidata.api_client.models.location_metadata_model import LocationMetadataModel
 from rapidata.api_client.models.logic_operator import LogicOperator
 from rapidata.api_client.models.multi_asset import MultiAsset
+from rapidata.api_client.models.multi_asset_assets_inner import MultiAssetAssetsInner
 from rapidata.api_client.models.multi_asset_input import MultiAssetInput
 from rapidata.api_client.models.multi_asset_input_assets_inner import MultiAssetInputAssetsInner
 from rapidata.api_client.models.multi_asset_model import MultiAssetModel

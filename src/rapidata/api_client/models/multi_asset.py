@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.file_asset_metadata_value import FileAssetMetadataValue
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,7 +28,7 @@ class MultiAsset(BaseModel):
     MultiAsset
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for MultiAsset", alias="_t")
-    assets: List[AssetMetadataAsset]
+    assets: List[MultiAssetAssetsInner]
     metadata: Optional[Dict[str, FileAssetMetadataValue]] = None
     __properties: ClassVar[List[str]] = ["_t", "assets", "metadata"]
 
@@ -104,7 +105,7 @@ class MultiAsset(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'MultiAsset',
-            "assets": [AssetMetadataAsset.from_dict(_item) for _item in obj["assets"]] if obj.get("assets") is not None else None,
+            "assets": [MultiAssetAssetsInner.from_dict(_item) for _item in obj["assets"]] if obj.get("assets") is not None else None,
             "metadata": dict(
                 (_k, FileAssetMetadataValue.from_dict(_v))
                 for _k, _v in obj["metadata"].items()
@@ -114,8 +115,7 @@ class MultiAsset(BaseModel):
         })
         return _obj
 
-from rapidata.api_client.models.asset_metadata_asset import AssetMetadataAsset
-from rapidata.api_client.models.file_asset_metadata_value import FileAssetMetadataValue
+from rapidata.api_client.models.multi_asset_assets_inner import MultiAssetAssetsInner
 # TODO: Rewrite to not use raise_errors
 MultiAsset.model_rebuild(raise_errors=False)
 
