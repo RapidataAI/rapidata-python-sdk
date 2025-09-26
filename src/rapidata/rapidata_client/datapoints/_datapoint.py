@@ -24,7 +24,9 @@ class Datapoint(BaseModel):
     @classmethod
     def context_not_empty(cls, v: str | None) -> str | None:
         if v is not None and v == "":
-            raise ValueError("context cannot be an empty string.")
+            raise ValueError(
+                "context cannot be an empty string. If not needed, set to None."
+            )
         return v
 
     @field_validator("sentence")
