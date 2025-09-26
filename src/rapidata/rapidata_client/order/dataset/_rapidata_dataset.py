@@ -32,22 +32,66 @@ class RapidataDataset:
         datapoints: list[Datapoint],
     ) -> tuple[list[Datapoint], list[Datapoint]]:
         """
-        Upload media paths in chunks with managed resources.
+        Process uploads in chunks with a ThreadPoolExecutor.
 
         Args:
-            datapoints: List of Datapoint objects to upload
+            media_paths: List of assets to upload
+            multi_metadata: Optional sequence of sequences of metadata
             chunk_size: Number of items to process in each batch
-            progress_poll_interval: Time in seconds between progress checks
+
         Returns:
-            tuple[list[Datapoint], list[Datapoint]]: Lists of successful and failed datapoints
-
-        Raises:
-            ValueError: If multi_metadata lengths don't match media_paths length
+            tuple[list[str], list[str]]: Lists of successful and failed uploads
         """
+        successful_uploads: list[Datapoint] = []
+        failed_uploads: list[Datapoint] = []
 
-        successful_uploads, failed_uploads = self._process_uploads_in_chunks(
-            datapoints,
-        )
+        with tqdm(
+            total=len(datapoints),
+            desc="Uploading datapoints",
+            disable=rapidata_config.logging.silent_mode,
+        ) as progress_bar:
+
+            def process_upload_with_context(
+                context: otel_context.Context, datapoint: Datapoint, index: int
+            ) -> tuple[list[Datapoint], list[Datapoint]]:
+                """Wrapper function that runs _process_single_upload with the provided context."""
+                token = otel_context.attach(context)
+                try:
+                    return self._process_single_upload(datapoint, index)
+                finally:
+                    otel_context.detach(token)
+
+            # Capture the current OpenTelemetry context before creating threads
+            current_context = otel_context.get_current()
+
+            with ThreadPoolExecutor(
+                max_workers=rapidata_config.upload.maxWorkers
+            ) as executor:
+                # Process uploads in chunks to avoid overwhelming the system
+                for chunk_idx, chunk in enumerate(
+                    chunk_list(datapoints, rapidata_config.upload.chunkSize)
+                ):
+                    futures = [
+                        executor.submit(
+                            process_upload_with_context,
+                            current_context,
+                            datapoint,
+                            chunk_idx * rapidata_config.upload.chunkSize + i,
+                        )
+                        for i, datapoint in enumerate(chunk)
+                    ]
+
+                    # Wait for this chunk to complete before starting the next one
+                    for future in as_completed(futures):
+                        try:
+                            chunk_successful, chunk_failed = future.result()
+                            successful_uploads.extend(chunk_successful)
+                            failed_uploads.extend(chunk_failed)
+                            progress_bar.update(
+                                len(chunk_successful) + len(chunk_failed)
+                            )
+                        except Exception as e:
+                            logger.error("Future execution failed: %s", str(e))
 
         if failed_uploads:
             logger.error(
@@ -114,74 +158,6 @@ class RapidataDataset:
         )
 
         return local_successful, local_failed
-
-    def _process_uploads_in_chunks(
-        self,
-        datapoints: list[Datapoint],
-    ) -> tuple[list[Datapoint], list[Datapoint]]:
-        """
-        Process uploads in chunks with a ThreadPoolExecutor.
-
-        Args:
-            media_paths: List of assets to upload
-            multi_metadata: Optional sequence of sequences of metadata
-            chunk_size: Number of items to process in each batch
-
-        Returns:
-            tuple[list[str], list[str]]: Lists of successful and failed uploads
-        """
-        successful_uploads: list[Datapoint] = []
-        failed_uploads: list[Datapoint] = []
-
-        with tqdm(
-            total=len(datapoints),
-            desc="Uploading datapoints",
-            disable=rapidata_config.logging.silent_mode,
-        ) as progress_bar:
-
-            def process_upload_with_context(
-                context: otel_context.Context, datapoint: Datapoint, index: int
-            ) -> tuple[list[Datapoint], list[Datapoint]]:
-                """Wrapper function that runs _process_single_upload with the provided context."""
-                token = otel_context.attach(context)
-                try:
-                    return self._process_single_upload(datapoint, index)
-                finally:
-                    otel_context.detach(token)
-
-            # Capture the current OpenTelemetry context before creating threads
-            current_context = otel_context.get_current()
-
-            with ThreadPoolExecutor(
-                max_workers=rapidata_config.upload.maxWorkers
-            ) as executor:
-                # Process uploads in chunks to avoid overwhelming the system
-                for chunk_idx, chunk in enumerate(
-                    chunk_list(datapoints, rapidata_config.upload.chunkSize)
-                ):
-                    futures = [
-                        executor.submit(
-                            process_upload_with_context,
-                            current_context,
-                            datapoint,
-                            chunk_idx * rapidata_config.upload.chunkSize + i,
-                        )
-                        for i, datapoint in enumerate(chunk)
-                    ]
-
-                    # Wait for this chunk to complete before starting the next one
-                    for future in as_completed(futures):
-                        try:
-                            chunk_successful, chunk_failed = future.result()
-                            successful_uploads.extend(chunk_successful)
-                            failed_uploads.extend(chunk_failed)
-                            progress_bar.update(
-                                len(chunk_successful) + len(chunk_failed)
-                            )
-                        except Exception as e:
-                            logger.error("Future execution failed: %s", str(e))
-
-        return successful_uploads, failed_uploads
 
     def __str__(self) -> str:
         return f"RapidataDataset(id={self.id})"

@@ -1,9 +1,6 @@
 from typing import Sequence, Optional, Literal
 from itertools import zip_longest
 
-from rapidata.api_client.models.create_datapoint_from_files_model_metadata_inner import (
-    CreateDatapointFromFilesModelMetadataInner,
-)
 from rapidata.rapidata_client.config.tracer import tracer
 from rapidata.rapidata_client.datapoints.metadata._base_metadata import Metadata
 from rapidata.service.openapi_service import OpenAPIService
@@ -72,7 +69,7 @@ class RapidataOrderManager:
         self,
         name: str,
         workflow: Workflow,
-        datapoints: list[str] | list[list[str]],
+        assets: list[str] | list[list[str]],
         data_type: Literal["media", "text"] = "media",
         responses_per_datapoint: int = 10,
         contexts: list[str] | None = None,
@@ -86,19 +83,19 @@ class RapidataOrderManager:
         private_notes: list[str] | None = None,
     ) -> RapidataOrder:
 
-        if not datapoints:
+        if not assets:
             raise ValueError("No datapoints provided")
 
-        if contexts and len(contexts) != len(datapoints):
+        if contexts and len(contexts) != len(assets):
             raise ValueError("Number of contexts must match number of datapoints")
 
-        if media_contexts and len(media_contexts) != len(datapoints):
+        if media_contexts and len(media_contexts) != len(assets):
             raise ValueError("Number of media contexts must match number of datapoints")
 
-        if sentences and len(sentences) != len(datapoints):
+        if sentences and len(sentences) != len(assets):
             raise ValueError("Number of sentences must match number of datapoints")
 
-        if private_notes and len(private_notes) != len(datapoints):
+        if private_notes and len(private_notes) != len(assets):
             raise ValueError("Number of private notes must match number of datapoints")
 
         if sentences and contexts:
@@ -119,7 +116,7 @@ class RapidataOrderManager:
             "Creating order with parameters: name %s, workflow %s, datapoints %s, data_type %s, responses_per_datapoint %s, contexts %s, media_contexts %s, validation_set_id %s, confidence_threshold %s, filters %s, settings %s, sentences %s, selections %s, private_notes %s",
             name,
             workflow,
-            datapoints,
+            assets,
             data_type,
             responses_per_datapoint,
             contexts,
@@ -155,7 +152,7 @@ class RapidataOrderManager:
                         private_note=private_note,
                     )
                     for asset, context, media_context, sentence, private_note in zip_longest(
-                        datapoints,
+                        assets,
                         contexts or [],
                         media_contexts or [],
                         sentences or [],
@@ -253,7 +250,7 @@ class RapidataOrderManager:
                 workflow=ClassifyWorkflow(
                     instruction=instruction, answer_options=answer_options
                 ),
-                datapoints=datapoints,
+                assets=datapoints,
                 data_type=data_type,
                 responses_per_datapoint=responses_per_datapoint,
                 contexts=contexts,
@@ -335,7 +332,7 @@ class RapidataOrderManager:
             return self._create_general_order(
                 name=name,
                 workflow=CompareWorkflow(instruction=instruction, a_b_names=a_b_names),
-                datapoints=datapoints,
+                assets=datapoints,
                 data_type=data_type,
                 responses_per_datapoint=responses_per_datapoint,
                 contexts=contexts,
@@ -413,7 +410,7 @@ class RapidataOrderManager:
                     random_comparisons_ratio=random_comparisons_ratio,
                     metadatas=metadatas,
                 ),
-                datapoints=datapoints,
+                assets=datapoints,
                 data_type=data_type,
                 responses_per_datapoint=responses_per_comparison,
                 validation_set_id=validation_set_id,
@@ -467,7 +464,7 @@ class RapidataOrderManager:
             return self._create_general_order(
                 name=name,
                 workflow=FreeTextWorkflow(instruction=instruction),
-                datapoints=datapoints,
+                assets=datapoints,
                 data_type=data_type,
                 responses_per_datapoint=responses_per_datapoint,
                 contexts=contexts,
@@ -521,7 +518,7 @@ class RapidataOrderManager:
                 workflow=SelectWordsWorkflow(
                     instruction=instruction,
                 ),
-                datapoints=datapoints,
+                assets=datapoints,
                 responses_per_datapoint=responses_per_datapoint,
                 validation_set_id=validation_set_id,
                 filters=filters,
@@ -574,7 +571,7 @@ class RapidataOrderManager:
             return self._create_general_order(
                 name=name,
                 workflow=LocateWorkflow(target=instruction),
-                datapoints=datapoints,
+                assets=datapoints,
                 responses_per_datapoint=responses_per_datapoint,
                 contexts=contexts,
                 media_contexts=media_contexts,
@@ -628,7 +625,7 @@ class RapidataOrderManager:
             return self._create_general_order(
                 name=name,
                 workflow=DrawWorkflow(target=instruction),
-                datapoints=datapoints,
+                assets=datapoints,
                 responses_per_datapoint=responses_per_datapoint,
                 contexts=contexts,
                 media_contexts=media_contexts,
@@ -687,7 +684,7 @@ class RapidataOrderManager:
             return self._create_general_order(
                 name=name,
                 workflow=TimestampWorkflow(instruction=instruction),
-                datapoints=datapoints,
+                assets=datapoints,
                 responses_per_datapoint=responses_per_datapoint,
                 contexts=contexts,
                 media_contexts=media_contexts,
