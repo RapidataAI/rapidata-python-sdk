@@ -29,6 +29,15 @@ class Datapoint(BaseModel):
             )
         return v
 
+    @field_validator("media_context")
+    @classmethod
+    def media_context_not_empty(cls, v: str | None) -> str | None:
+        if v is not None and v == "":
+            raise ValueError(
+                "media_context cannot be an empty string. If not needed, set to None."
+            )
+        return v
+
     @field_validator("sentence")
     @classmethod
     def sentence_has_space(cls, v: str | None) -> str | None:
