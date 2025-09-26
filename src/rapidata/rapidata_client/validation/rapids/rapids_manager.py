@@ -2,7 +2,6 @@ import os
 from rapidata.api_client import (
     AttachCategoryTruth,
     BoundingBoxTruth,
-    BoxShape,
     ClassifyPayload,
     ComparePayload,
     CompareTruth,
@@ -16,11 +15,9 @@ from rapidata.api_client import (
     TranscriptionTruth,
     TranscriptionWord,
 )
-from rapidata.rapidata_client.datapoints.assets import MediaAsset, TextAsset, MultiAsset
-from rapidata.rapidata_client.datapoints.metadata import Metadata
 from rapidata.rapidata_client.validation.rapids.box import Box
 
-from typing import Sequence, Literal
+from typing import Literal
 
 from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 from rapidata.service.openapi_service import OpenAPIService

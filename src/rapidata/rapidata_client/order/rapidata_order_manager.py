@@ -1,7 +1,11 @@
 from typing import Sequence, Optional, Literal
 from itertools import zip_longest
 
+from rapidata.api_client.models.create_datapoint_from_files_model_metadata_inner import (
+    CreateDatapointFromFilesModelMetadataInner,
+)
 from rapidata.rapidata_client.config.tracer import tracer
+from rapidata.rapidata_client.datapoints.metadata._base_metadata import Metadata
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 from rapidata.rapidata_client.order._rapidata_order_builder import RapidataOrderBuilder
@@ -21,13 +25,17 @@ from rapidata.rapidata_client.workflow import (
     TimestampWorkflow,
     RankingWorkflow,
 )
-from rapidata.rapidata_client.datapoints.assets import MediaAsset, TextAsset, MultiAsset
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
+from rapidata.rapidata_client.datapoints.metadata import (
+    PromptMetadata,
+    MediaAssetMetadata,
+)
 from rapidata.rapidata_client.filter import RapidataFilter
 from rapidata.rapidata_client.filter.rapidata_filters import RapidataFilters
 from rapidata.rapidata_client.settings import RapidataSettings, RapidataSetting
 from rapidata.rapidata_client.selection.rapidata_selections import RapidataSelections
 from rapidata.rapidata_client.config import logger, rapidata_config
+from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 
 from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.page_info import PageInfo
@@ -57,6 +65,7 @@ class RapidataOrderManager:
         self.selections = RapidataSelections
         self.__priority: int | None = None
         self.__sticky_state: Literal["None", "Temporary", "Permanent"] | None = None
+        self.__asset_uploader = AssetUploader(openapi_service)
         logger.debug("RapidataOrderManager initialized")
 
     def _create_general_order(
@@ -357,6 +366,7 @@ class RapidataOrderManager:
         data_type: Literal["media", "text"] = "media",
         random_comparisons_ratio: float = 0.5,
         context: Optional[str] = None,
+        media_context: Optional[str] = None,
         validation_set_id: Optional[str] = None,
         filters: Sequence[RapidataFilter] = [],
         settings: Sequence[RapidataSetting] = [],
@@ -380,6 +390,8 @@ class RapidataOrderManager:
                 The rest will focus on pairing similarly ranked datapoints. Defaults to 0.5 and can be left untouched.
             context (str, optional): The context for all the comparison. Defaults to None.\n
                 If provided will be shown in addition to the instruction for all the matchups.
+            media_context (str, optional): The media context for all the comparison. Defaults to None.\n
+                If provided will be shown in addition to the instruction for all the matchups.
             validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
             filters (Sequence[RapidataFilter], optional): The list of filters for the order. Defaults to []. Decides who the tasks should be shown to.
@@ -391,13 +403,23 @@ class RapidataOrderManager:
             if len(datapoints) < 2:
                 raise ValueError("At least two datapoints are required")
 
+            metadatas: list[Metadata] = []
+            if context:
+                metadatas.append(PromptMetadata(context))
+            if media_context:
+                metadatas.append(
+                    MediaAssetMetadata(
+                        self.__asset_uploader.upload_asset(media_context)
+                    )
+                )
+
             return self._create_general_order(
                 name=name,
                 workflow=RankingWorkflow(
                     criteria=instruction,
                     total_comparison_budget=total_comparison_budget,
                     random_comparisons_ratio=random_comparisons_ratio,
-                    context=context,
+                    metadatas=metadatas,
                 ),
                 datapoints=datapoints,
                 data_type=data_type,

@@ -5,13 +5,13 @@ from rapidata.api_client import (
 )
 from rapidata.api_client.models.compare_workflow_model import CompareWorkflowModel
 from rapidata.rapidata_client.workflow._base_workflow import Workflow
-from rapidata.rapidata_client.datapoints.metadata import PromptMetadata
-from rapidata.api_client.models.dataset_dataset_id_datapoints_post_request_metadata_inner import (
-    DatasetDatasetIdDatapointsPostRequestMetadataInner,
-)
 from rapidata.api_client import ComparePayload
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.api_client.models.rapid_modality import RapidModality
+from rapidata.rapidata_client.datapoints.metadata import Metadata
+from rapidata.api_client.models.create_datapoint_from_files_model_metadata_inner import (
+    CreateDatapointFromFilesModelMetadataInner,
+)
 
 
 class RankingWorkflow(Workflow):
@@ -25,19 +25,11 @@ class RankingWorkflow(Workflow):
         elo_start: int = 1200,
         elo_k_factor: int = 40,
         elo_scaling_factor: int = 400,
-        context: str | None = None,
+        metadatas: list[Metadata] = [],
     ):
         super().__init__(type="CompareWorkflowConfig")
 
-        self.context = (
-            [
-                DatasetDatasetIdDatapointsPostRequestMetadataInner(
-                    PromptMetadata(context).to_model()
-                )
-            ]
-            if context
-            else None
-        )
+        self.metadatas = metadatas
 
         self.criteria = criteria
         self.total_comparison_budget = total_comparison_budget
@@ -67,7 +59,10 @@ class RankingWorkflow(Workflow):
             criteria=self.criteria,
             eloConfig=self.elo_config,
             pairMakerConfig=self.pair_maker_config,
-            metadata=self.context,
+            metadata=[
+                CreateDatapointFromFilesModelMetadataInner(metadata.to_model())
+                for metadata in self.metadatas
+            ],
         )
 
     def _to_payload(self, datapoint: Datapoint) -> ComparePayload:
@@ -77,7 +72,9 @@ class RankingWorkflow(Workflow):
         )
 
     def __str__(self) -> str:
-        return f"RankingWorkflow(criteria='{self.criteria}', context={self.context})"
+        return (
+            f"RankingWorkflow(criteria='{self.criteria}', metadatas={self.metadatas})"
+        )
 
     def __repr__(self) -> str:
-        return f"RankingWorkflow(criteria={self.criteria!r}, total_comparison_budget={self.total_comparison_budget!r}, random_comparisons_ratio={self.random_comparisons_ratio!r}, elo_start={self.elo_start!r}, elo_k_factor={self.elo_k_factor!r}, elo_scaling_factor={self.elo_scaling_factor!r}, context={self.context!r})"
+        return f"RankingWorkflow(criteria={self.criteria!r}, total_comparison_budget={self.total_comparison_budget!r}, random_comparisons_ratio={self.random_comparisons_ratio!r}, elo_start={self.elo_start!r}, elo_k_factor={self.elo_k_factor!r}, elo_scaling_factor={self.elo_scaling_factor!r}, metadatas={self.metadatas!r})"

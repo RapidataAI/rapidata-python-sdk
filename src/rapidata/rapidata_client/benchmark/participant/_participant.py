@@ -2,7 +2,6 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import time
 from tqdm import tqdm
 
-from rapidata.rapidata_client.datapoints.assets import MediaAsset
 from rapidata.rapidata_client.config import logger
 from rapidata.api_client.models.create_sample_model import CreateSampleModel
 from rapidata.service.openapi_service import OpenAPIService
@@ -11,7 +10,6 @@ from rapidata.rapidata_client.api.rapidata_api_client import (
     suppress_rapidata_error_logging,
 )
 
-# Add OpenTelemetry context imports for thread propagation
 from opentelemetry import context as otel_context
 from rapidata.api_client.models.create_sample_model_asset import CreateSampleModelAsset
 from rapidata.api_client.models.existing_asset_input import ExistingAssetInput

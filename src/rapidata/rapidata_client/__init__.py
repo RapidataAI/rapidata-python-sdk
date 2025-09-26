@@ -16,7 +16,6 @@ from .datapoints.metadata import (
     PromptMetadata,
     SelectWordsMetadata,
 )
-from .datapoints.assets import MediaAsset, TextAsset, MultiAsset, RapidataDataTypes
 from .settings import (
     RapidataSettings,
     TranslationBehaviourOptions,
