@@ -79,51 +79,17 @@ class DatapointUploader:
         return metadata
 
     def _handle_text_datapoint(self, datapoint: Datapoint) -> CreateDatapointModelAsset:
-        if isinstance(datapoint.asset, list):
-            asset = CreateDatapointModelAsset(
-                actual_instance=MultiAssetInput(
-                    _t="MultiAssetInput",
-                    assets=[
-                        MultiAssetInputAssetsInner(
-                            actual_instance=TextAssetInput(
-                                _t="TextAssetInput", text=asset
-                            )
-                        )
-                        for asset in datapoint.asset
-                    ],
-                ),
-            )
-        else:
-            asset = CreateDatapointModelAsset(
-                actual_instance=TextAssetInput(
-                    _t="TextAssetInput", text=datapoint.asset
-                )
-            )
-        return asset
+        return CreateDatapointModelAsset(
+            actual_instance=self.asset_uploader.get_uploaded_text_input(
+                datapoint.asset
+            ),
+        )
 
     def _handle_media_datapoint(
         self, datapoint: Datapoint
     ) -> CreateDatapointModelAsset:
-        if isinstance(datapoint.asset, list):
-            asset = CreateDatapointModelAsset(
-                actual_instance=MultiAssetInput(
-                    _t="MultiAssetInput",
-                    assets=[
-                        MultiAssetInputAssetsInner(
-                            actual_instance=ExistingAssetInput(
-                                _t="ExistingAssetInput",
-                                name=self.asset_uploader.upload_asset(asset),
-                            ),
-                        )
-                        for asset in datapoint.asset
-                    ],
-                ),
-            )
-        else:
-            asset = CreateDatapointModelAsset(
-                actual_instance=ExistingAssetInput(
-                    _t="ExistingAssetInput",
-                    name=self.asset_uploader.upload_asset(datapoint.asset),
-                ),
-            )
-        return asset
+        return CreateDatapointModelAsset(
+            actual_instance=self.asset_uploader.get_uploaded_asset_input(
+                datapoint.asset
+            ),
+        )

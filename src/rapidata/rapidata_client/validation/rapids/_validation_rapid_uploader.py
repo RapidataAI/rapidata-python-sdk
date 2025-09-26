@@ -91,47 +91,11 @@ class ValidationRapidUploader:
         return metadata
 
     def _handle_text_rapid(self, rapid: Rapid) -> AddValidationRapidNewModelAsset:
-        if isinstance(rapid.asset, list):
-            asset = AddValidationRapidNewModelAsset(
-                actual_instance=MultiAssetInput(
-                    _t="MultiAssetInput",
-                    assets=[
-                        MultiAssetInputAssetsInner(
-                            actual_instance=TextAssetInput(
-                                _t="TextAssetInput", text=asset
-                            )
-                        )
-                        for asset in rapid.asset
-                    ],
-                ),
-            )
-        else:
-            asset = AddValidationRapidNewModelAsset(
-                actual_instance=TextAssetInput(_t="TextAssetInput", text=rapid.asset)
-            )
-        return asset
+        return AddValidationRapidNewModelAsset(
+            actual_instance=self.asset_uploader.get_uploaded_text_input(rapid.asset),
+        )
 
     def _handle_media_rapid(self, rapid: Rapid) -> AddValidationRapidNewModelAsset:
-        if isinstance(rapid.asset, list):
-            asset = AddValidationRapidNewModelAsset(
-                actual_instance=MultiAssetInput(
-                    _t="MultiAssetInput",
-                    assets=[
-                        MultiAssetInputAssetsInner(
-                            actual_instance=ExistingAssetInput(
-                                _t="ExistingAssetInput",
-                                name=self.asset_uploader.upload_asset(asset),
-                            ),
-                        )
-                        for asset in rapid.asset
-                    ],
-                ),
-            )
-        else:
-            asset = AddValidationRapidNewModelAsset(
-                actual_instance=ExistingAssetInput(
-                    _t="ExistingAssetInput",
-                    name=self.asset_uploader.upload_asset(rapid.asset),
-                ),
-            )
-        return asset
+        return AddValidationRapidNewModelAsset(
+            actual_instance=self.asset_uploader.get_uploaded_asset_input(rapid.asset),
+        )
