@@ -602,15 +602,21 @@ class ValidationSetManager:
         with tracer.start_as_current_span("Adding rapids to validation set"):
             logger.debug("Adding rapids to validation set")
             failed_rapids = []
-            for rapid in tqdm(
-                rapids,
+
+            progress_bar = tqdm(
+                total=len(rapids),
                 desc="Uploading validation tasks",
                 disable=rapidata_config.logging.silent_mode,
-            ):
+            )
+
+            for rapid in rapids:
                 try:
                     validation_set.add_rapid(rapid)
+                    progress_bar.update(1)
                 except Exception:
                     failed_rapids.append(rapid.asset)
+
+            progress_bar.close()
 
             if failed_rapids:
                 logger.error(

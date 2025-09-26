@@ -87,9 +87,7 @@ class RapidataDataset:
                             chunk_successful, chunk_failed = future.result()
                             successful_uploads.extend(chunk_successful)
                             failed_uploads.extend(chunk_failed)
-                            progress_bar.update(
-                                len(chunk_successful) + len(chunk_failed)
-                            )
+                            progress_bar.update(len(chunk_successful))
                         except Exception as e:
                             logger.error("Future execution failed: %s", str(e))
 

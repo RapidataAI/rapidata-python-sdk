@@ -130,11 +130,10 @@ class BenchmarkParticipant:
                         successful_id, failed_id = future.result()
                         if successful_id:
                             successful_uploads.append(successful_id)
+                            pbar.update(1)
                         if failed_id:
                             failed_uploads.append(failed_id)
                     except Exception as e:
                         logger.error(f"Future execution failed: {str(e)}")
-
-                    pbar.update(1)
 
         return successful_uploads, failed_uploads
