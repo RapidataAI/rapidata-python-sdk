@@ -394,8 +394,12 @@ class RapidataOrderManager:
 
             metadatas: list[Metadata] = []
             if context:
+                if not isinstance(context, str) or context == "":
+                    raise ValueError("Context must be a non-empty string")
                 metadatas.append(PromptMetadata(context))
             if media_context:
+                if not isinstance(media_context, str) or media_context == "":
+                    raise ValueError("Media context must be a non-empty string")
                 metadatas.append(
                     MediaAssetMetadata(
                         self.__asset_uploader.upload_asset(media_context)
