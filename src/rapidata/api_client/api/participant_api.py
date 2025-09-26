@@ -16,8 +16,8 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictBytes, StrictStr
-from typing import List, Optional, Tuple, Union
+from pydantic import Field, StrictStr
+from typing import Optional
 from typing_extensions import Annotated
 from rapidata.api_client.models.create_sample_model import CreateSampleModel
 from rapidata.api_client.models.get_participant_by_id_result import GetParticipantByIdResult
@@ -1092,13 +1092,10 @@ class ParticipantApi:
 
 
     @validate_call
-    def participant_participant_id_sample_post(
+    def participant_participant_id_sample_new_post(
         self,
         participant_id: Annotated[StrictStr, Field(description="The id of the participant to add the sample to")],
-        model: Optional[CreateSampleModel] = None,
-        files: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
-        texts: Annotated[Optional[List[StrictStr]], Field(description="If files aren't applicable texts can be used instead")] = None,
-        urls: Annotated[Optional[List[StrictStr]], Field(description="Exposed assets can be added via urls.")] = None,
+        create_sample_model: Annotated[Optional[CreateSampleModel], Field(description="The model for the sample creation")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1117,14 +1114,8 @@ class ParticipantApi:
 
         :param participant_id: The id of the participant to add the sample to (required)
         :type participant_id: str
-        :param model:
-        :type model: CreateSampleModel
-        :param files:
-        :type files: List[bytearray]
-        :param texts: If files aren't applicable texts can be used instead
-        :type texts: List[str]
-        :param urls: Exposed assets can be added via urls.
-        :type urls: List[str]
+        :param create_sample_model: The model for the sample creation
+        :type create_sample_model: CreateSampleModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1147,12 +1138,9 @@ class ParticipantApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._participant_participant_id_sample_post_serialize(
+        _param = self._participant_participant_id_sample_new_post_serialize(
             participant_id=participant_id,
-            model=model,
-            files=files,
-            texts=texts,
-            urls=urls,
+            create_sample_model=create_sample_model,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1174,13 +1162,10 @@ class ParticipantApi:
 
 
     @validate_call
-    def participant_participant_id_sample_post_with_http_info(
+    def participant_participant_id_sample_new_post_with_http_info(
         self,
         participant_id: Annotated[StrictStr, Field(description="The id of the participant to add the sample to")],
-        model: Optional[CreateSampleModel] = None,
-        files: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
-        texts: Annotated[Optional[List[StrictStr]], Field(description="If files aren't applicable texts can be used instead")] = None,
-        urls: Annotated[Optional[List[StrictStr]], Field(description="Exposed assets can be added via urls.")] = None,
+        create_sample_model: Annotated[Optional[CreateSampleModel], Field(description="The model for the sample creation")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1199,14 +1184,8 @@ class ParticipantApi:
 
         :param participant_id: The id of the participant to add the sample to (required)
         :type participant_id: str
-        :param model:
-        :type model: CreateSampleModel
-        :param files:
-        :type files: List[bytearray]
-        :param texts: If files aren't applicable texts can be used instead
-        :type texts: List[str]
-        :param urls: Exposed assets can be added via urls.
-        :type urls: List[str]
+        :param create_sample_model: The model for the sample creation
+        :type create_sample_model: CreateSampleModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1229,12 +1208,9 @@ class ParticipantApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._participant_participant_id_sample_post_serialize(
+        _param = self._participant_participant_id_sample_new_post_serialize(
             participant_id=participant_id,
-            model=model,
-            files=files,
-            texts=texts,
-            urls=urls,
+            create_sample_model=create_sample_model,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1256,13 +1232,10 @@ class ParticipantApi:
 
 
     @validate_call
-    def participant_participant_id_sample_post_without_preload_content(
+    def participant_participant_id_sample_new_post_without_preload_content(
         self,
         participant_id: Annotated[StrictStr, Field(description="The id of the participant to add the sample to")],
-        model: Optional[CreateSampleModel] = None,
-        files: Optional[List[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]]] = None,
-        texts: Annotated[Optional[List[StrictStr]], Field(description="If files aren't applicable texts can be used instead")] = None,
-        urls: Annotated[Optional[List[StrictStr]], Field(description="Exposed assets can be added via urls.")] = None,
+        create_sample_model: Annotated[Optional[CreateSampleModel], Field(description="The model for the sample creation")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1281,14 +1254,8 @@ class ParticipantApi:
 
         :param participant_id: The id of the participant to add the sample to (required)
         :type participant_id: str
-        :param model:
-        :type model: CreateSampleModel
-        :param files:
-        :type files: List[bytearray]
-        :param texts: If files aren't applicable texts can be used instead
-        :type texts: List[str]
-        :param urls: Exposed assets can be added via urls.
-        :type urls: List[str]
+        :param create_sample_model: The model for the sample creation
+        :type create_sample_model: CreateSampleModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1311,12 +1278,9 @@ class ParticipantApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._participant_participant_id_sample_post_serialize(
+        _param = self._participant_participant_id_sample_new_post_serialize(
             participant_id=participant_id,
-            model=model,
-            files=files,
-            texts=texts,
-            urls=urls,
+            create_sample_model=create_sample_model,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1333,13 +1297,10 @@ class ParticipantApi:
         return response_data.response
 
 
-    def _participant_participant_id_sample_post_serialize(
+    def _participant_participant_id_sample_new_post_serialize(
         self,
         participant_id,
-        model,
-        files,
-        texts,
-        urls,
+        create_sample_model,
         _request_auth,
         _content_type,
         _headers,
@@ -1349,9 +1310,6 @@ class ParticipantApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
-            'files': 'multi',
-            'texts': 'multi',
-            'urls': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
@@ -1369,15 +1327,9 @@ class ParticipantApi:
         # process the query parameters
         # process the header parameters
         # process the form parameters
-        if model is not None:
-            _form_params.append(('model', model))
-        if files is not None:
-            _files['files'] = files
-        if texts is not None:
-            _form_params.append(('texts', texts))
-        if urls is not None:
-            _form_params.append(('urls', urls))
         # process the body parameter
+        if create_sample_model is not None:
+            _body_params = create_sample_model
 
 
 
@@ -1388,7 +1340,9 @@ class ParticipantApi:
             _default_content_type = (
                 self.api_client.select_header_content_type(
                     [
-                        'multipart/form-data'
+                        'application/json', 
+                        'text/json', 
+                        'application/*+json'
                     ]
                 )
             )
@@ -1403,7 +1357,7 @@ class ParticipantApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/participant/{participantId}/sample',
+            resource_path='/participant/{participantId}/sample-new',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

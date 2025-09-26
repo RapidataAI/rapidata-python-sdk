@@ -20,7 +20,6 @@ from rapidata.api_client.models.sticky_state import StickyState
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.rapidata_client.exceptions.failed_upload_exception import (
     FailedUploadException,
-    _parse_failed_uploads,
 )
 from rapidata.rapidata_client.filter import RapidataFilter
 from rapidata.rapidata_client.config import (
@@ -280,15 +279,6 @@ class RapidataOrderBuilder:
         try:
             self.__openapi_service.order_api.order_order_id_preview_post(self.order_id)
         except Exception:
-            failed_uploads = _parse_failed_uploads(
-                self.__openapi_service.dataset_api.dataset_dataset_id_datapoints_failed_get(
-                    self.__dataset.id
-                )
-            )
-            logger.error(
-                "Internal download error for datapoints: %s\nWARNING: Failed Datapoints in error do not contain metadata.",
-                failed_uploads,
-            )
             raise FailedUploadException(self.__dataset, order, failed_uploads)
         return order
 

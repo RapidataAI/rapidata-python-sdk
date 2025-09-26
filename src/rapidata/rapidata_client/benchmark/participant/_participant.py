@@ -2,7 +2,6 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import time
 from tqdm import tqdm
 
-from rapidata.rapidata_client.datapoints.assets import MediaAsset
 from rapidata.rapidata_client.config import logger
 from rapidata.api_client.models.create_sample_model import CreateSampleModel
 from rapidata.service.openapi_service import OpenAPIService
@@ -11,21 +10,24 @@ from rapidata.rapidata_client.api.rapidata_api_client import (
     suppress_rapidata_error_logging,
 )
 
-# Add OpenTelemetry context imports for thread propagation
 from opentelemetry import context as otel_context
+from rapidata.api_client.models.create_sample_model_asset import CreateSampleModelAsset
+from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
+from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 
 
 class BenchmarkParticipant:
     def __init__(self, name: str, id: str, openapi_service: OpenAPIService):
         self.name = name
         self.id = id
-        self.__openapi_service = openapi_service
+        self._openapi_service = openapi_service
+        self._asset_uploader = AssetUploader(openapi_service)
 
     def _process_single_sample_upload(
         self,
-        asset: MediaAsset,
+        asset: str,
         identifier: str,
-    ) -> tuple[MediaAsset | None, MediaAsset | None]:
+    ) -> tuple[str | None, str | None]:
         """
         Process single sample upload with retry logic and error tracking.
 
@@ -36,22 +38,22 @@ class BenchmarkParticipant:
         Returns:
             tuple[MediaAsset | None, MediaAsset | None]: (successful_asset, failed_asset)
         """
-        if asset.is_local():
-            files = [asset.to_file()]
-            urls = []
-        else:
-            files = []
-            urls = [asset.path]
 
         last_exception = None
         for attempt in range(rapidata_config.upload.maxRetries):
             try:
                 with suppress_rapidata_error_logging():
-                    self.__openapi_service.participant_api.participant_participant_id_sample_post(
+                    self._openapi_service.participant_api.participant_participant_id_sample_new_post(
                         participant_id=self.id,
-                        model=CreateSampleModel(identifier=identifier),
-                        files=files,
-                        urls=urls,
+                        create_sample_model=CreateSampleModel(
+                            identifier=identifier,
+                            asset=CreateSampleModelAsset(
+                                actual_instance=ExistingAssetInput(
+                                    _t="ExistingAssetInput",
+                                    name=self._asset_uploader.upload_asset(asset),
+                                ),
+                            ),
+                        ),
                     )
 
                 return asset, None
@@ -74,14 +76,14 @@ class BenchmarkParticipant:
 
     def upload_media(
         self,
-        assets: list[MediaAsset],
+        assets: list[str],
         identifiers: list[str],
-    ) -> tuple[list[MediaAsset], list[MediaAsset]]:
+    ) -> tuple[list[str], list[str]]:
         """
         Upload samples concurrently with proper error handling and progress tracking.
 
         Args:
-            assets: List of MediaAsset objects to upload
+            assets: List of strings to upload
             identifiers: List of identifiers matching the assets
 
         Returns:
@@ -89,8 +91,8 @@ class BenchmarkParticipant:
         """
 
         def upload_with_context(
-            context: otel_context.Context, asset: MediaAsset, identifier: str
-        ) -> tuple[MediaAsset | None, MediaAsset | None]:
+            context: otel_context.Context, asset: str, identifier: str
+        ) -> tuple[str | None, str | None]:
             """Wrapper function that runs _process_single_sample_upload with the provided context."""
             token = otel_context.attach(context)
             try:
@@ -98,8 +100,8 @@ class BenchmarkParticipant:
             finally:
                 otel_context.detach(token)
 
-        successful_uploads: list[MediaAsset] = []
-        failed_uploads: list[MediaAsset] = []
+        successful_uploads: list[str] = []
+        failed_uploads: list[str] = []
         total_uploads = len(assets)
 
         # Capture the current OpenTelemetry context before creating threads

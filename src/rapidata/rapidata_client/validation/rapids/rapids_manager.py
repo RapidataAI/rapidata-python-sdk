@@ -2,7 +2,6 @@ import os
 from rapidata.api_client import (
     AttachCategoryTruth,
     BoundingBoxTruth,
-    BoxShape,
     ClassifyPayload,
     ComparePayload,
     CompareTruth,
@@ -16,13 +15,12 @@ from rapidata.api_client import (
     TranscriptionTruth,
     TranscriptionWord,
 )
-from rapidata.rapidata_client.datapoints.assets import MediaAsset, TextAsset, MultiAsset
-from rapidata.rapidata_client.datapoints.metadata import Metadata
 from rapidata.rapidata_client.validation.rapids.box import Box
 
-from typing import Sequence, Literal
+from typing import Literal
 
 from rapidata.rapidata_client.validation.rapids.rapids import Rapid
+from rapidata.service.openapi_service import OpenAPIService
 
 
 class RapidsManager:
@@ -30,8 +28,8 @@ class RapidsManager:
     Can be used to build different types of rapids. That can then be added to Validation sets
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, openapi_service: OpenAPIService):
+        self._openapi_service = openapi_service
 
     def classification_rapid(
         self,
@@ -40,7 +38,8 @@ class RapidsManager:
         datapoint: str,
         truths: list[str],
         data_type: Literal["media", "text"] = "media",
-        metadata: Sequence[Metadata] = [],
+        context: str | None = None,
+        media_context: str | None = None,
         explanation: str | None = None,
     ) -> Rapid:
         """Build a classification rapid
@@ -51,18 +50,10 @@ class RapidsManager:
             datapoint (str): The datapoint that the labeler will be labeling.
             truths (list[str]): The correct answers to the question.
             data_type (str, optional): The type of the datapoint. Defaults to "media" (any form of image, video or audio).
-            metadata (Sequence[Metadata], optional): The metadata that is attached to the rapid. Defaults to [].
+            context (str, optional): The context is text that will be shown in addition to the instruction. Defaults to None.
+            media_context (str, optional): The media context is a link to an image / video that will be shown in addition to the instruction (can be combined with context). Defaults to None.
+            explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
         """
-
-        if data_type == "media":
-            asset = MediaAsset(datapoint)
-        elif data_type == "text":
-            asset = TextAsset(datapoint)
-        else:
-            raise ValueError(
-                f"Unsupported data type: {data_type}, must be one of 'media' or 'text'"
-            )
-
         if not isinstance(truths, list):
             raise ValueError("Truths must be a list of strings")
 
@@ -77,12 +68,14 @@ class RapidsManager:
         )
 
         return Rapid(
-            asset=asset,
-            metadata=metadata,
+            asset=datapoint,
+            data_type=data_type,
+            context=context,
+            media_context=media_context,
             explanation=explanation,
             payload=payload,
             truth=model_truth,
-            randomCorrectProbability=len(truths) / len(answer_options),
+            random_correct_probability=len(truths) / len(answer_options),
         )
 
     def compare_rapid(
@@ -91,7 +84,8 @@ class RapidsManager:
         truth: str,
         datapoint: list[str],
         data_type: Literal["media", "text"] = "media",
-        metadata: Sequence[Metadata] = [],
+        context: str | None = None,
+        media_context: str | None = None,
         explanation: str | None = None,
     ) -> Rapid:
         """Build a compare rapid
@@ -101,33 +95,27 @@ class RapidsManager:
             truth (str): The correct answer to the comparison. (has to be one of the assets)
             datapoint (list[str]): The two assets that the labeler will be comparing.
             data_type (str, optional): The type of the datapoint. Defaults to "media" (any form of image, video or audio).
-            metadata (Sequence[Metadata], optional): The metadata that is attached to the rapid. Defaults to [].
+            context (str, optional): The context is text that will be shown in addition to the instruction. Defaults to None.
+            media_context (str, optional): The media context is a link to an image / video that will be shown in addition to the instruction (can be combined with context). Defaults to None.
+            explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
         """
 
-        if data_type == "media":
-            assets = [MediaAsset(image) for image in datapoint]
-        elif data_type == "text":
-            assets = [TextAsset(text) for text in datapoint]
-        else:
-            raise ValueError(f"Unsupported data type: {data_type}")
-
-        asset = MultiAsset(assets)
-
         payload = ComparePayload(_t="ComparePayload", criteria=instruction)
-        # take only last part of truth path
         truth = os.path.basename(truth)
         model_truth = CompareTruth(_t="CompareTruth", winnerId=truth)
 
-        if len(asset) != 2:
+        if len(datapoint) != 2:
             raise ValueError("Compare rapid requires exactly two media paths")
 
         return Rapid(
-            asset=asset,
+            asset=datapoint,
+            data_type=data_type,
             truth=model_truth,
-            metadata=metadata,
+            context=context,
+            media_context=media_context,
             payload=payload,
             explanation=explanation,
-            randomCorrectProbability=1 / len(asset.assets),
+            random_correct_probability=0.5,
         )
 
     def select_words_rapid(
@@ -138,7 +126,6 @@ class RapidsManager:
         sentence: str,
         required_precision: float = 1,
         required_completeness: float = 1,
-        metadata: Sequence[Metadata] = [],
         explanation: str | None = None,
     ) -> Rapid:
         """Build a select words rapid
@@ -150,10 +137,9 @@ class RapidsManager:
             sentence (str): The sentence that the labeler will be selecting words from. (split up by spaces)
             required_precision (float): The required precision for the labeler to get the rapid correct (minimum ratio of the words selected that need to be correct). defaults to 1. (no wrong words can be selected)
             required_completeness (float): The required completeness for the labeler to get the rapid correct (miminum ratio of total correct words selected). defaults to 1. (all correct words need to be selected)
-            metadata (Sequence[Metadata], optional): The metadata that is attached to the rapid. Defaults to [].
+            explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
         """
 
-        asset = MediaAsset(datapoint)
         transcription_words = [
             TranscriptionWord(word=word, wordIndex=i)
             for i, word in enumerate(sentence.split(" "))
@@ -181,10 +167,10 @@ class RapidsManager:
         return Rapid(
             payload=payload,
             truth=model_truth,
-            asset=asset,
-            metadata=metadata,
+            asset=datapoint,
+            sentence=sentence,
             explanation=explanation,
-            randomCorrectProbability=len(correct_transcription_words)
+            random_correct_probability=len(correct_transcription_words)
             / len(transcription_words),
         )
 
@@ -193,7 +179,8 @@ class RapidsManager:
         instruction: str,
         truths: list[Box],
         datapoint: str,
-        metadata: Sequence[Metadata] = [],
+        context: str | None = None,
+        media_context: str | None = None,
         explanation: str | None = None,
     ) -> Rapid:
         """Build a locate rapid
@@ -202,42 +189,30 @@ class RapidsManager:
             instruction (str): The instruction on what the labeler should do.
             truths (list[Box]): The bounding boxes of the object that the labeler ought to be locating.
             datapoint (str): The asset that the labeler will be locating the object in.
-            metadata (Sequence[Metadata], optional): The metadata that is attached to the rapid. Defaults to [].
+            context (str, optional): The context is text that will be shown in addition to the instruction. Defaults to None.
+            media_context (str, optional): The media context is a link to an image / video that will be shown in addition to the instruction (can be combined with context). Defaults to None.
+            explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
         """
 
-        asset = MediaAsset(datapoint)
         payload = LocatePayload(_t="LocatePayload", target=instruction)
-
-        img_dimensions = asset.get_image_dimension()
-
-        if not img_dimensions:
-            raise ValueError("Failed to get image dimensions")
 
         model_truth = LocateBoxTruth(
             _t="LocateBoxTruth",
-            boundingBoxes=[
-                BoxShape(
-                    _t="BoxShape",
-                    xMin=truth.x_min / img_dimensions[0] * 100,
-                    xMax=truth.x_max / img_dimensions[0] * 100,
-                    yMax=truth.y_max / img_dimensions[1] * 100,
-                    yMin=truth.y_min / img_dimensions[1] * 100,
-                )
-                for truth in truths
-            ],
+            boundingBoxes=[truth.to_model() for truth in truths],
         )
 
         coverage = self._calculate_boxes_coverage(
-            truths, img_dimensions[0], img_dimensions[1]
+            truths,
         )
 
         return Rapid(
             payload=payload,
             truth=model_truth,
-            asset=asset,
-            metadata=metadata,
+            asset=datapoint,
+            context=context,
+            media_context=media_context,
             explanation=explanation,
-            randomCorrectProbability=coverage,
+            random_correct_probability=coverage,
         )
 
     def draw_rapid(
@@ -245,7 +220,8 @@ class RapidsManager:
         instruction: str,
         truths: list[Box],
         datapoint: str,
-        metadata: Sequence[Metadata] = [],
+        context: str | None = None,
+        media_context: str | None = None,
         explanation: str | None = None,
     ) -> Rapid:
         """Build a draw rapid
@@ -254,37 +230,33 @@ class RapidsManager:
             instruction (str): The instructions on what the labeler
             truths (list[Box]): The bounding boxes of the object that the labeler ought to be drawing.
             datapoint (str): The asset that the labeler will be drawing the object in.
-            metadata (Sequence[Metadata], optional): The metadata that is attached to the rapid. Defaults to [].
+            context (str, optional): The context is text that will be shown in addition to the instruction. Defaults to None.
+            media_context (str, optional): The media context is a link to an image / video that will be shown in addition to the instruction (can be combined with context). Defaults to None.
+            explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
         """
-
-        asset = MediaAsset(datapoint)
 
         payload = LinePayload(_t="LinePayload", target=instruction)
 
-        img_dimensions = asset.get_image_dimension()
-
-        if not img_dimensions:
-            raise ValueError("Failed to get image dimensions")
-
         model_truth = BoundingBoxTruth(
             _t="BoundingBoxTruth",
-            xMax=truths[0].x_max / img_dimensions[0] * 100,
-            xMin=truths[0].x_min / img_dimensions[0] * 100,
-            yMax=truths[0].y_max / img_dimensions[1] * 100,
-            yMin=truths[0].y_min / img_dimensions[1] * 100,
+            xMax=truths[0].x_max * 100,
+            xMin=truths[0].x_min * 100,
+            yMax=truths[0].y_max * 100,
+            yMin=truths[0].y_min * 100,
         )
 
         coverage = self._calculate_boxes_coverage(
-            truths, img_dimensions[0], img_dimensions[1]
+            truths,
         )
 
         return Rapid(
             payload=payload,
             truth=model_truth,
-            asset=asset,
-            metadata=metadata,
+            asset=datapoint,
+            context=context,
+            media_context=media_context,
             explanation=explanation,
-            randomCorrectProbability=coverage,
+            random_correct_probability=coverage,
         )
 
     def timestamp_rapid(
@@ -292,7 +264,8 @@ class RapidsManager:
         instruction: str,
         truths: list[tuple[int, int]],
         datapoint: str,
-        metadata: Sequence[Metadata] = [],
+        context: str | None = None,
+        media_context: str | None = None,
         explanation: str | None = None,
     ) -> Rapid:
         """Build a timestamp rapid
@@ -302,10 +275,10 @@ class RapidsManager:
             truths (list[tuple[int, int]]): The possible accepted timestamps intervals for the labeler (in miliseconds).
                 The first element of the tuple is the start of the interval and the second element is the end of the interval.
             datapoint (str): The asset that the labeler will be timestamping.
-            metadata (Sequence[Metadata], optional): The metadata that is attached to the rapid. Defaults to [].
+            context (str, optional): The context is text that will be shown in addition to the instruction. Defaults to None.
+            media_context (str, optional): The media context is a link to an image / video that will be shown in addition to the instruction (can be combined with context). Defaults to None.
+            explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
         """
-
-        asset = MediaAsset(datapoint)
 
         for truth in truths:
             if len(truth) != 2:
@@ -327,32 +300,78 @@ class RapidsManager:
         return Rapid(
             payload=payload,
             truth=model_truth,
-            asset=asset,
-            metadata=metadata,
+            asset=datapoint,
+            context=context,
+            media_context=media_context,
             explanation=explanation,
-            randomCorrectProbability=self._calculate_coverage_ratio(
-                asset.get_duration(), truths
-            ),
+            random_correct_probability=0.5,  # TODO: implement coverage ratio
         )
 
-    def _calculate_boxes_coverage(
-        self, boxes: list[Box], image_width: int, image_height: int
-    ) -> float:
+    def _calculate_boxes_coverage(self, boxes: list[Box]) -> float:
+        """
+        Calculate the ratio of area covered by a list of boxes.
+
+        Args:
+            boxes: List of Box objects with coordinates in range [0, 1]
+
+        Returns:
+            float: Coverage ratio between 0.0 and 1.0
+        """
         if not boxes:
             return 0.0
-        # Convert all coordinates to integers for pixel-wise coverage
-        pixels = set()
-        for box in boxes:
-            for x in range(int(box.x_min), int(box.x_max + 1)):
-                for y in range(int(box.y_min), int(box.y_max + 1)):
-                    if 0 <= x < image_width and 0 <= y < image_height:
-                        pixels.add((x, y))
 
-        total_covered = len(pixels)
-        return total_covered / (image_width * image_height)
+        # Convert boxes to intervals for sweep line algorithm
+        events = []
 
+        # Create events for x-coordinates
+        for i, box in enumerate(boxes):
+            events.append((box.x_min, "start", i, box))
+            events.append((box.x_max, "end", i, box))
+
+        # Sort events by x-coordinate
+        events.sort(key=lambda x: (x[0], x[1] == "end"))
+
+        total_area = 0.0
+        active_boxes = set()
+        prev_x = 0.0
+
+        for x, event_type, box_id, box in events:
+            # Calculate area for the previous x-interval
+            if active_boxes and x > prev_x:
+                # Merge y-intervals for active boxes
+                y_intervals = [(boxes[i].y_min, boxes[i].y_max) for i in active_boxes]
+                y_intervals.sort()
+
+                # Merge overlapping y-intervals
+                merged_intervals = []
+                for start, end in y_intervals:
+                    if merged_intervals and start <= merged_intervals[-1][1]:
+                        # Overlapping intervals - merge them
+                        merged_intervals[-1] = (
+                            merged_intervals[-1][0],
+                            max(merged_intervals[-1][1], end),
+                        )
+                    else:
+                        # Non-overlapping interval
+                        merged_intervals.append((start, end))
+
+                # Calculate total y-coverage for this x-interval
+                y_coverage = sum(end - start for start, end in merged_intervals)
+                total_area += (x - prev_x) * y_coverage
+
+            # Update active boxes
+            if event_type == "start":
+                active_boxes.add(box_id)
+            else:
+                active_boxes.discard(box_id)
+
+            prev_x = x
+
+        return total_area
+
+    @staticmethod
     def _calculate_coverage_ratio(
-        self, total_duration: int, subsections: list[tuple[int, int]]
+        total_duration: int, subsections: list[tuple[int, int]]
     ) -> float:
         """
         Calculate the ratio of total_duration that is covered by subsections, handling overlaps.
