@@ -1,6 +1,6 @@
 from typing import Literal
 
-from pydantic import BaseModel, model_validator
+from pydantic import BaseModel, model_validator, field_validator
 from typing_extensions import Self
 from rapidata.rapidata_client.datapoints.assets.constants import (
     ALLOWED_VIDEO_EXTENSIONS,
@@ -19,6 +19,20 @@ class Datapoint(BaseModel):
     media_context: str | None = None
     sentence: str | None = None
     private_note: str | None = None
+
+    @field_validator("context")
+    @classmethod
+    def context_not_empty(cls, v: str | None) -> str | None:
+        if v is not None and v == "":
+            raise ValueError("context cannot be an empty string.")
+        return v
+
+    @field_validator("sentence")
+    @classmethod
+    def sentence_has_space(cls, v: str | None) -> str | None:
+        if v is not None and len(v.split()) <= 1:
+            raise ValueError("sentence must contain at least two words.")
+        return v
 
     @model_validator(mode="after")
     def check_sentence_and_context(self) -> Self:
