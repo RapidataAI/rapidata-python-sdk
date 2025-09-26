@@ -84,11 +84,10 @@ class RapidataDataset:
         for attempt in range(rapidata_config.upload.maxRetries):
             try:
                 with suppress_rapidata_error_logging():
-                    self.openapi_service.dataset_api.dataset_dataset_id_datapoint_post(
+                    self.datapoint_uploader.upload_datapoint(
                         dataset_id=self.id,
-                        create_datapoint_model=self.datapoint_uploader.upload_datapoint(
-                            datapoint, index
-                        ),
+                        datapoint=datapoint,
+                        index=index,
                     )
 
                 local_successful.append(datapoint)

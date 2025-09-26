@@ -35,7 +35,7 @@ class ValidationRapidUploader:
         self.openapi_service = openapi_service
         self.asset_uploader = AssetUploader(openapi_service)
 
-    def upload_rapid(self, rapid: Rapid) -> AddValidationRapidNewModel:
+    def upload_rapid(self, rapid: Rapid, validation_set_id: str) -> None:
         metadata = self._get_metadata(rapid)
 
         uploaded_asset = (
@@ -44,15 +44,18 @@ class ValidationRapidUploader:
             else self._handle_text_rapid(rapid)
         )
 
-        return AddValidationRapidNewModel(
-            asset=uploaded_asset,
-            metadata=metadata,
-            payload=self._get_payload(rapid),
-            truth=AddValidationRapidModelTruth(actual_instance=rapid.truth),
-            featureFlags=(
-                [setting._to_feature_flag() for setting in rapid.settings]
-                if rapid.settings
-                else None
+        self.openapi_service.validation_api.validation_set_validation_set_id_rapid_new_post(
+            validation_set_id=validation_set_id,
+            add_validation_rapid_new_model=AddValidationRapidNewModel(
+                asset=uploaded_asset,
+                metadata=metadata,
+                payload=self._get_payload(rapid),
+                truth=AddValidationRapidModelTruth(actual_instance=rapid.truth),
+                featureFlags=(
+                    [setting._to_feature_flag() for setting in rapid.settings]
+                    if rapid.settings
+                    else None
+                ),
             ),
         )
 

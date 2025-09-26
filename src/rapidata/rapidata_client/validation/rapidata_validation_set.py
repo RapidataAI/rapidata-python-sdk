@@ -42,12 +42,7 @@ class RapidataValidationSet:
         """
         with tracer.start_as_current_span("RapidataValidationSet.add_rapid"):
             logger.debug("Adding rapid %s to validation set %s", rapid, self.id)
-            self._openapi_service.validation_api.validation_set_validation_set_id_rapid_new_post(
-                validation_set_id=self.id,
-                add_validation_rapid_new_model=self.validation_rapid_uploader.upload_rapid(
-                    rapid
-                ),
-            )
+            self.validation_rapid_uploader.upload_rapid(rapid, self.id)
         return self
 
     def update_dimensions(self, dimensions: list[str]):

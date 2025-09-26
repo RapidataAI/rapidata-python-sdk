@@ -9,6 +9,7 @@ from rapidata.api_client.models.create_datapoint_model import CreateDatapointMod
 from rapidata.api_client.models.create_datapoint_model_asset import (
     CreateDatapointModelAsset,
 )
+from rapidata.api_client.models.create_datapoint_result import CreateDatapointResult
 from rapidata.api_client.models.create_datapoint_from_files_model_metadata_inner import (
     CreateDatapointFromFilesModelMetadataInner,
 )
@@ -29,8 +30,8 @@ class DatapointUploader:
         self.asset_uploader = AssetUploader(openapi_service)
 
     def upload_datapoint(
-        self, datapoint: Datapoint, index: int
-    ) -> CreateDatapointModel:
+        self, datapoint: Datapoint, dataset_id: str, index: int
+    ) -> CreateDatapointResult:
         metadata = self._get_metadata(datapoint)
 
         uploaded_asset = (
@@ -38,10 +39,13 @@ class DatapointUploader:
             if datapoint.data_type == "media"
             else self._handle_text_datapoint(datapoint)
         )
-        return CreateDatapointModel(
-            asset=uploaded_asset,
-            metadata=metadata,
-            sortIndex=index,
+        return self.openapi_service.dataset_api.dataset_dataset_id_datapoint_post(
+            dataset_id=dataset_id,
+            create_datapoint_model=CreateDatapointModel(
+                asset=uploaded_asset,
+                metadata=metadata,
+                sortIndex=index,
+            ),
         )
 
     def _get_metadata(
