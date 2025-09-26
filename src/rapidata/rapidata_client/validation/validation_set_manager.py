@@ -68,6 +68,7 @@ class ValidationSetManager:
                         payload=workflow._to_payload(datapoint),
                         context=datapoint.context,
                         media_context=datapoint.media_context,
+                        data_type=datapoint.data_type,
                         settings=settings,
                     )
                 )
@@ -613,7 +614,12 @@ class ValidationSetManager:
                 try:
                     validation_set.add_rapid(rapid)
                     progress_bar.update(1)
-                except Exception:
+                except Exception as e:
+                    logger.error(
+                        "Failed to add rapid %s to validation set.\nError: %s",
+                        rapid.asset,
+                        str(e),
+                    )
                     failed_rapids.append(rapid.asset)
 
             progress_bar.close()
