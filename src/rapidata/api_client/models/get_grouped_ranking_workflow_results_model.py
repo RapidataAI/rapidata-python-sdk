@@ -17,27 +17,20 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.file_asset_metadata_value import FileAssetMetadataValue
+from rapidata.api_client.models.page_info import PageInfo
+from rapidata.api_client.models.sort_criterion import SortCriterion
 from typing import Optional, Set
 from typing_extensions import Self
 
-class TextAsset(BaseModel):
+class GetGroupedRankingWorkflowResultsModel(BaseModel):
     """
-    TextAsset
+    Model for getting the results of a multi compare workflow.
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for TextAsset", alias="_t")
-    text: StrictStr
-    metadata: Optional[Dict[str, FileAssetMetadataValue]] = None
-    __properties: ClassVar[List[str]] = ["_t", "text", "metadata"]
-
-    @field_validator('t')
-    def t_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['TextAsset']):
-            raise ValueError("must be one of enum values ('TextAsset')")
-        return value
+    page: Optional[PageInfo] = None
+    sort_criteria: Optional[List[SortCriterion]] = Field(default=None, description="A list of criteria to sort the results by.", alias="sortCriteria")
+    __properties: ClassVar[List[str]] = ["page", "sortCriteria"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -57,7 +50,7 @@ class TextAsset(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of TextAsset from a JSON string"""
+        """Create an instance of GetGroupedRankingWorkflowResultsModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -78,18 +71,26 @@ class TextAsset(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each value in metadata (dict)
-        _field_dict = {}
-        if self.metadata:
-            for _key_metadata in self.metadata:
-                if self.metadata[_key_metadata]:
-                    _field_dict[_key_metadata] = self.metadata[_key_metadata].to_dict()
-            _dict['metadata'] = _field_dict
+        # override the default output from pydantic by calling `to_dict()` of page
+        if self.page:
+            _dict['page'] = self.page.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in sort_criteria (list)
+        _items = []
+        if self.sort_criteria:
+            for _item_sort_criteria in self.sort_criteria:
+                if _item_sort_criteria:
+                    _items.append(_item_sort_criteria.to_dict())
+            _dict['sortCriteria'] = _items
+        # set to None if sort_criteria (nullable) is None
+        # and model_fields_set contains the field
+        if self.sort_criteria is None and "sort_criteria" in self.model_fields_set:
+            _dict['sortCriteria'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of TextAsset from a dict"""
+        """Create an instance of GetGroupedRankingWorkflowResultsModel from a dict"""
         if obj is None:
             return None
 
@@ -97,14 +98,8 @@ class TextAsset(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'TextAsset',
-            "text": obj.get("text"),
-            "metadata": dict(
-                (_k, FileAssetMetadataValue.from_dict(_v))
-                for _k, _v in obj["metadata"].items()
-            )
-            if obj.get("metadata") is not None
-            else None
+            "page": PageInfo.from_dict(obj["page"]) if obj.get("page") is not None else None,
+            "sortCriteria": [SortCriterion.from_dict(_item) for _item in obj["sortCriteria"]] if obj.get("sortCriteria") is not None else None
         })
         return _obj
 

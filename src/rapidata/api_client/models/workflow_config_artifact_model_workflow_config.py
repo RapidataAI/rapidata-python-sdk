@@ -19,12 +19,13 @@ from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, f
 from typing import Any, List, Optional
 from rapidata.api_client.models.compare_workflow_config import CompareWorkflowConfig
 from rapidata.api_client.models.evaluation_workflow_config import EvaluationWorkflowConfig
+from rapidata.api_client.models.grouped_ranking_workflow_config import GroupedRankingWorkflowConfig
 from rapidata.api_client.models.simple_workflow_config import SimpleWorkflowConfig
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-WORKFLOWCONFIGARTIFACTMODELWORKFLOWCONFIG_ONE_OF_SCHEMAS = ["CompareWorkflowConfig", "EvaluationWorkflowConfig", "SimpleWorkflowConfig"]
+WORKFLOWCONFIGARTIFACTMODELWORKFLOWCONFIG_ONE_OF_SCHEMAS = ["CompareWorkflowConfig", "EvaluationWorkflowConfig", "GroupedRankingWorkflowConfig", "SimpleWorkflowConfig"]
 
 class WorkflowConfigArtifactModelWorkflowConfig(BaseModel):
     """
@@ -34,10 +35,12 @@ class WorkflowConfigArtifactModelWorkflowConfig(BaseModel):
     oneof_schema_1_validator: Optional[CompareWorkflowConfig] = None
     # data type: EvaluationWorkflowConfig
     oneof_schema_2_validator: Optional[EvaluationWorkflowConfig] = None
+    # data type: GroupedRankingWorkflowConfig
+    oneof_schema_3_validator: Optional[GroupedRankingWorkflowConfig] = None
     # data type: SimpleWorkflowConfig
-    oneof_schema_3_validator: Optional[SimpleWorkflowConfig] = None
-    actual_instance: Optional[Union[CompareWorkflowConfig, EvaluationWorkflowConfig, SimpleWorkflowConfig]] = None
-    one_of_schemas: Set[str] = { "CompareWorkflowConfig", "EvaluationWorkflowConfig", "SimpleWorkflowConfig" }
+    oneof_schema_4_validator: Optional[SimpleWorkflowConfig] = None
+    actual_instance: Optional[Union[CompareWorkflowConfig, EvaluationWorkflowConfig, GroupedRankingWorkflowConfig, SimpleWorkflowConfig]] = None
+    one_of_schemas: Set[str] = { "CompareWorkflowConfig", "EvaluationWorkflowConfig", "GroupedRankingWorkflowConfig", "SimpleWorkflowConfig" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -73,6 +76,11 @@ class WorkflowConfigArtifactModelWorkflowConfig(BaseModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `EvaluationWorkflowConfig`")
         else:
             match += 1
+        # validate data type: GroupedRankingWorkflowConfig
+        if not isinstance(v, GroupedRankingWorkflowConfig):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `GroupedRankingWorkflowConfig`")
+        else:
+            match += 1
         # validate data type: SimpleWorkflowConfig
         if not isinstance(v, SimpleWorkflowConfig):
             error_messages.append(f"Error! Input type `{type(v)}` is not `SimpleWorkflowConfig`")
@@ -80,10 +88,10 @@ class WorkflowConfigArtifactModelWorkflowConfig(BaseModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in WorkflowConfigArtifactModelWorkflowConfig with oneOf schemas: CompareWorkflowConfig, EvaluationWorkflowConfig, SimpleWorkflowConfig. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in WorkflowConfigArtifactModelWorkflowConfig with oneOf schemas: CompareWorkflowConfig, EvaluationWorkflowConfig, GroupedRankingWorkflowConfig, SimpleWorkflowConfig. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in WorkflowConfigArtifactModelWorkflowConfig with oneOf schemas: CompareWorkflowConfig, EvaluationWorkflowConfig, SimpleWorkflowConfig. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in WorkflowConfigArtifactModelWorkflowConfig with oneOf schemas: CompareWorkflowConfig, EvaluationWorkflowConfig, GroupedRankingWorkflowConfig, SimpleWorkflowConfig. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -110,6 +118,12 @@ class WorkflowConfigArtifactModelWorkflowConfig(BaseModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
+        # deserialize data into GroupedRankingWorkflowConfig
+        try:
+            instance.actual_instance = GroupedRankingWorkflowConfig.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
         # deserialize data into SimpleWorkflowConfig
         try:
             instance.actual_instance = SimpleWorkflowConfig.from_json(json_str)
@@ -119,10 +133,10 @@ class WorkflowConfigArtifactModelWorkflowConfig(BaseModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into WorkflowConfigArtifactModelWorkflowConfig with oneOf schemas: CompareWorkflowConfig, EvaluationWorkflowConfig, SimpleWorkflowConfig. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into WorkflowConfigArtifactModelWorkflowConfig with oneOf schemas: CompareWorkflowConfig, EvaluationWorkflowConfig, GroupedRankingWorkflowConfig, SimpleWorkflowConfig. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into WorkflowConfigArtifactModelWorkflowConfig with oneOf schemas: CompareWorkflowConfig, EvaluationWorkflowConfig, SimpleWorkflowConfig. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into WorkflowConfigArtifactModelWorkflowConfig with oneOf schemas: CompareWorkflowConfig, EvaluationWorkflowConfig, GroupedRankingWorkflowConfig, SimpleWorkflowConfig. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -136,7 +150,7 @@ class WorkflowConfigArtifactModelWorkflowConfig(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], CompareWorkflowConfig, EvaluationWorkflowConfig, SimpleWorkflowConfig]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], CompareWorkflowConfig, EvaluationWorkflowConfig, GroupedRankingWorkflowConfig, SimpleWorkflowConfig]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

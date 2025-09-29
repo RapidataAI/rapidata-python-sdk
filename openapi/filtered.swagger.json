@@ -3465,6 +3465,59 @@
         }
       }
     },
+    "/workflow/grouped-ranking/{workflowId}/results": {
+      "get": {
+        "tags": [
+          "GroupedRankingWorkflow"
+        ],
+        "summary": "Get the result overview for a multi compare workflow.",
+        "parameters": [
+          {
+            "name": "workflowId",
+            "in": "path",
+            "description": "The ID of the workflow to get the results for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "model",
+            "in": "query",
+            "description": "The model for the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetGroupedRankingWorkflowResultsModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetGroupedRankingWorkflowResultsResultPagedResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetGroupedRankingWorkflowResultsResultPagedResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetGroupedRankingWorkflowResultsResultPagedResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/workflow/simple/{workflowId}/results": {
       "get": {
         "tags": [
@@ -5859,20 +5912,7 @@
             "example": "AssetMetadata"
           },
           "asset": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/FileAsset"
-              },
-              {
-                "$ref": "#/components/schemas/MultiAsset"
-              },
-              {
-                "$ref": "#/components/schemas/NullAsset"
-              },
-              {
-                "$ref": "#/components/schemas/TextAsset"
-              }
-            ],
+            "type": "object",
             "discriminator": {
               "propertyName": "_t"
             }
@@ -6215,6 +6255,12 @@
             "type": "integer",
             "description": "The sort index represents the order of the datapoint in the dataset",
             "format": "int64",
+            "default": null,
+            "nullable": true
+          },
+          "group": {
+            "type": "string",
+            "description": "The group a datapoint belongs to.",
             "default": null,
             "nullable": true
           }
@@ -9525,6 +9571,9 @@
                 "$ref": "#/components/schemas/EvaluationWorkflowModel"
               },
               {
+                "$ref": "#/components/schemas/GroupedRankingWorkflowModel"
+              },
+              {
                 "$ref": "#/components/schemas/SimpleWorkflowModel"
               }
             ],
@@ -10181,6 +10230,78 @@
             "items": {
               "$ref": "#/components/schemas/PublicOrderModel"
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "GroupedRankingWorkflowModel": {
+        "title": "GroupedRankingWorkflow",
+        "required": [
+          "_t",
+          "criteria"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "GroupedRankingWorkflow"
+            ],
+            "type": "string",
+            "description": "Discriminator value for GroupedRankingWorkflow",
+            "default": "GroupedRankingWorkflow",
+            "example": "GroupedRankingWorkflow"
+          },
+          "criteria": {
+            "type": "string"
+          },
+          "pairMakerConfig": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/OnlinePairMakerConfigModel"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "eloConfig": {
+            "$ref": "#/components/schemas/EloConfigModel"
+          },
+          "metadata": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/PrivateTextMetadataInput"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptAssetMetadataInput"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptMetadataInput"
+                },
+                {
+                  "$ref": "#/components/schemas/PublicTextMetadataInput"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadataInput"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            },
+            "nullable": true
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
+          },
+          "maxParallelism": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -15053,6 +15174,90 @@
         "additionalProperties": false,
         "description": "Model for getting the overview of a simple workflow result."
       },
+      "GetGroupedRankingWorkflowResultsModel": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "$ref": "#/components/schemas/PageInfo"
+          },
+          "sortCriteria": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SortCriterion"
+            },
+            "description": "A list of criteria to sort the results by.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Model for getting the results of a multi compare workflow."
+      },
+      "GetGroupedRankingWorkflowResultsResult": {
+        "required": [
+          "id",
+          "name",
+          "pairMakerInformation",
+          "state"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "pairMakerInformation": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/OnlinePairMakerInformation"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetGroupedRankingWorkflowResultsResultPagedResult": {
+        "required": [
+          "items",
+          "page",
+          "pageSize",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetGroupedRankingWorkflowResultsResult"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
       "GetResponsesResult": {
         "required": [
           "responses"
@@ -15107,6 +15312,9 @@
               },
               {
                 "$ref": "#/components/schemas/EvaluationWorkflowModel1"
+              },
+              {
+                "$ref": "#/components/schemas/GroupedRankingWorkflowModel1"
               },
               {
                 "$ref": "#/components/schemas/SimpleWorkflowModel1"
@@ -15262,6 +15470,66 @@
         },
         "additionalProperties": false
       },
+      "GroupedRankingWorkflowModel1": {
+        "title": "GroupedRankingWorkflowModel",
+        "required": [
+          "_t",
+          "criteria",
+          "eloConfig",
+          "id",
+          "name",
+          "referee",
+          "state"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "GroupedRankingWorkflowModel"
+            ],
+            "type": "string",
+            "description": "Discriminator value for GroupedRankingWorkflowModel",
+            "default": "GroupedRankingWorkflowModel",
+            "example": "GroupedRankingWorkflowModel"
+          },
+          "id": {
+            "type": "string"
+          },
+          "referee": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NaiveRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/NeverEndingRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/ProbabilisticAttachCategoryRefereeConfig"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "state": {
+            "type": "string"
+          },
+          "criteria": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "ownerMail": {
+            "type": "string",
+            "nullable": true
+          },
+          "eloConfig": {
+            "$ref": "#/components/schemas/EloConfig"
+          }
+        },
+        "additionalProperties": false
+      },
       "IWorkflowModelPagedResult": {
         "required": [
           "items",
@@ -15292,6 +15560,9 @@
                 },
                 {
                   "$ref": "#/components/schemas/EvaluationWorkflowModel1"
+                },
+                {
+                  "$ref": "#/components/schemas/GroupedRankingWorkflowModel1"
                 },
                 {
                   "$ref": "#/components/schemas/SimpleWorkflowModel1"
@@ -15925,6 +16196,127 @@
         },
         "additionalProperties": false
       },
+      "GroupedRankingWorkflowConfig": {
+        "title": "GroupedRankingWorkflowConfig",
+        "required": [
+          "_t",
+          "criteria",
+          "maxParallelism",
+          "metadata",
+          "referee",
+          "targetCountryCodes"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "GroupedRankingWorkflowConfig"
+            ],
+            "type": "string",
+            "description": "Discriminator value for GroupedRankingWorkflowConfig",
+            "default": "GroupedRankingWorkflowConfig",
+            "example": "GroupedRankingWorkflowConfig"
+          },
+          "criteria": {
+            "type": "string"
+          },
+          "referee": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NaiveRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/NeverEndingRefereeConfig"
+              },
+              {
+                "$ref": "#/components/schemas/ProbabilisticAttachCategoryRefereeConfig"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "targetCountryCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AssetMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ClassificationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/CountMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/FileTypeMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageDimensionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/LocationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/SourceUrlMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/StreamsMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TextMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/VideoDurationMetadata"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          },
+          "maxParallelism": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "eloConfig": {
+            "$ref": "#/components/schemas/EloConfig"
+          },
+          "pairMakerConfig": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/OnlinePairMakerConfig"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
       "OnlinePairMakerConfig": {
         "title": "OnlinePairMakerConfig",
         "required": [
@@ -16192,6 +16584,9 @@
               },
               {
                 "$ref": "#/components/schemas/EvaluationWorkflowConfig"
+              },
+              {
+                "$ref": "#/components/schemas/GroupedRankingWorkflowConfig"
               },
               {
                 "$ref": "#/components/schemas/SimpleWorkflowConfig"

@@ -19,12 +19,13 @@ from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, f
 from typing import Any, List, Optional
 from rapidata.api_client.models.compare_workflow_model1 import CompareWorkflowModel1
 from rapidata.api_client.models.evaluation_workflow_model1 import EvaluationWorkflowModel1
+from rapidata.api_client.models.grouped_ranking_workflow_model1 import GroupedRankingWorkflowModel1
 from rapidata.api_client.models.simple_workflow_model1 import SimpleWorkflowModel1
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-GETWORKFLOWBYIDRESULTWORKFLOW_ONE_OF_SCHEMAS = ["CompareWorkflowModel1", "EvaluationWorkflowModel1", "SimpleWorkflowModel1"]
+GETWORKFLOWBYIDRESULTWORKFLOW_ONE_OF_SCHEMAS = ["CompareWorkflowModel1", "EvaluationWorkflowModel1", "GroupedRankingWorkflowModel1", "SimpleWorkflowModel1"]
 
 class GetWorkflowByIdResultWorkflow(BaseModel):
     """
@@ -34,10 +35,12 @@ class GetWorkflowByIdResultWorkflow(BaseModel):
     oneof_schema_1_validator: Optional[CompareWorkflowModel1] = None
     # data type: EvaluationWorkflowModel1
     oneof_schema_2_validator: Optional[EvaluationWorkflowModel1] = None
+    # data type: GroupedRankingWorkflowModel1
+    oneof_schema_3_validator: Optional[GroupedRankingWorkflowModel1] = None
     # data type: SimpleWorkflowModel1
-    oneof_schema_3_validator: Optional[SimpleWorkflowModel1] = None
-    actual_instance: Optional[Union[CompareWorkflowModel1, EvaluationWorkflowModel1, SimpleWorkflowModel1]] = None
-    one_of_schemas: Set[str] = { "CompareWorkflowModel1", "EvaluationWorkflowModel1", "SimpleWorkflowModel1" }
+    oneof_schema_4_validator: Optional[SimpleWorkflowModel1] = None
+    actual_instance: Optional[Union[CompareWorkflowModel1, EvaluationWorkflowModel1, GroupedRankingWorkflowModel1, SimpleWorkflowModel1]] = None
+    one_of_schemas: Set[str] = { "CompareWorkflowModel1", "EvaluationWorkflowModel1", "GroupedRankingWorkflowModel1", "SimpleWorkflowModel1" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -73,6 +76,11 @@ class GetWorkflowByIdResultWorkflow(BaseModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `EvaluationWorkflowModel1`")
         else:
             match += 1
+        # validate data type: GroupedRankingWorkflowModel1
+        if not isinstance(v, GroupedRankingWorkflowModel1):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `GroupedRankingWorkflowModel1`")
+        else:
+            match += 1
         # validate data type: SimpleWorkflowModel1
         if not isinstance(v, SimpleWorkflowModel1):
             error_messages.append(f"Error! Input type `{type(v)}` is not `SimpleWorkflowModel1`")
@@ -80,10 +88,10 @@ class GetWorkflowByIdResultWorkflow(BaseModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in GetWorkflowByIdResultWorkflow with oneOf schemas: CompareWorkflowModel1, EvaluationWorkflowModel1, SimpleWorkflowModel1. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in GetWorkflowByIdResultWorkflow with oneOf schemas: CompareWorkflowModel1, EvaluationWorkflowModel1, GroupedRankingWorkflowModel1, SimpleWorkflowModel1. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in GetWorkflowByIdResultWorkflow with oneOf schemas: CompareWorkflowModel1, EvaluationWorkflowModel1, SimpleWorkflowModel1. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in GetWorkflowByIdResultWorkflow with oneOf schemas: CompareWorkflowModel1, EvaluationWorkflowModel1, GroupedRankingWorkflowModel1, SimpleWorkflowModel1. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -110,6 +118,12 @@ class GetWorkflowByIdResultWorkflow(BaseModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
+        # deserialize data into GroupedRankingWorkflowModel1
+        try:
+            instance.actual_instance = GroupedRankingWorkflowModel1.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
         # deserialize data into SimpleWorkflowModel1
         try:
             instance.actual_instance = SimpleWorkflowModel1.from_json(json_str)
@@ -119,10 +133,10 @@ class GetWorkflowByIdResultWorkflow(BaseModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into GetWorkflowByIdResultWorkflow with oneOf schemas: CompareWorkflowModel1, EvaluationWorkflowModel1, SimpleWorkflowModel1. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into GetWorkflowByIdResultWorkflow with oneOf schemas: CompareWorkflowModel1, EvaluationWorkflowModel1, GroupedRankingWorkflowModel1, SimpleWorkflowModel1. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into GetWorkflowByIdResultWorkflow with oneOf schemas: CompareWorkflowModel1, EvaluationWorkflowModel1, SimpleWorkflowModel1. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into GetWorkflowByIdResultWorkflow with oneOf schemas: CompareWorkflowModel1, EvaluationWorkflowModel1, GroupedRankingWorkflowModel1, SimpleWorkflowModel1. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -136,7 +150,7 @@ class GetWorkflowByIdResultWorkflow(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], CompareWorkflowModel1, EvaluationWorkflowModel1, SimpleWorkflowModel1]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], CompareWorkflowModel1, EvaluationWorkflowModel1, GroupedRankingWorkflowModel1, SimpleWorkflowModel1]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

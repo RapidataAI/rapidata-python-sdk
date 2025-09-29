@@ -12,6 +12,7 @@ from rapidata.api_client.api.datapoint_api import DatapointApi
 from rapidata.api_client.api.dataset_api import DatasetApi
 from rapidata.api_client.api.evaluation_workflow_api import EvaluationWorkflowApi
 from rapidata.api_client.api.feedback_api import FeedbackApi
+from rapidata.api_client.api.grouped_ranking_workflow_api import GroupedRankingWorkflowApi
 from rapidata.api_client.api.identity_api import IdentityApi
 from rapidata.api_client.api.leaderboard_api import LeaderboardApi
 from rapidata.api_client.api.newsletter_api import NewsletterApi

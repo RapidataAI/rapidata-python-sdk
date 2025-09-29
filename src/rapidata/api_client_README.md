@@ -128,6 +128,7 @@ Class | Method | HTTP request | Description
 *DatasetApi* | [**dataset_dataset_id_progress_get**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_progress_get) | **GET** /dataset/{datasetId}/progress | Gets the upload progress of a dataset.
 *EvaluationWorkflowApi* | [**workflow_evaluation_workflow_id_results_get**](rapidata/api_client/docs/EvaluationWorkflowApi.md#workflow_evaluation_workflow_id_results_get) | **GET** /workflow/evaluation/{workflowId}/results | Get the results for an evaluation workflow.
 *FeedbackApi* | [**feedback_post**](rapidata/api_client/docs/FeedbackApi.md#feedback_post) | **POST** /feedback | Submits feedback about our services.
+*GroupedRankingWorkflowApi* | [**workflow_grouped_ranking_workflow_id_results_get**](rapidata/api_client/docs/GroupedRankingWorkflowApi.md#workflow_grouped_ranking_workflow_id_results_get) | **GET** /workflow/grouped-ranking/{workflowId}/results | Get the result overview for a multi compare workflow.
 *IdentityApi* | [**identity_bridge_token_get**](rapidata/api_client/docs/IdentityApi.md#identity_bridge_token_get) | **GET** /identity/bridge-token | Tries to read the bridge token keys for a given read key. The read key is used to retrieve the authentication result written by the write key.
 *IdentityApi* | [**identity_bridge_token_post**](rapidata/api_client/docs/IdentityApi.md#identity_bridge_token_post) | **POST** /identity/bridge-token | Creates a pair of read and write keys for a client. The write key is used to store the authentication result. The read key is used to retrieve the authentication result.
 *IdentityApi* | [**identity_google_one_tap_post**](rapidata/api_client/docs/IdentityApi.md#identity_google_one_tap_post) | **POST** /identity/google-one-tap | Signs in a user using a token received from Google One Tap.
@@ -228,7 +229,6 @@ Class | Method | HTTP request | Description
  - [AndUserFilterModelFiltersInner](rapidata/api_client/docs/AndUserFilterModelFiltersInner.md)
  - [AreRapidsActiveResult](rapidata/api_client/docs/AreRapidsActiveResult.md)
  - [AssetMetadata](rapidata/api_client/docs/AssetMetadata.md)
- - [AssetMetadataAsset](rapidata/api_client/docs/AssetMetadataAsset.md)
  - [AssetMetadataModel](rapidata/api_client/docs/AssetMetadataModel.md)
  - [AttachCategoryRapidBlueprint](rapidata/api_client/docs/AttachCategoryRapidBlueprint.md)
  - [AttachCategoryResult](rapidata/api_client/docs/AttachCategoryResult.md)
@@ -378,6 +378,9 @@ Class | Method | HTTP request | Description
  - [GetDatasetProgressResult](rapidata/api_client/docs/GetDatasetProgressResult.md)
  - [GetEvaluationWorkflowResultsModel](rapidata/api_client/docs/GetEvaluationWorkflowResultsModel.md)
  - [GetFailedDatapointsResult](rapidata/api_client/docs/GetFailedDatapointsResult.md)
+ - [GetGroupedRankingWorkflowResultsModel](rapidata/api_client/docs/GetGroupedRankingWorkflowResultsModel.md)
+ - [GetGroupedRankingWorkflowResultsResult](rapidata/api_client/docs/GetGroupedRankingWorkflowResultsResult.md)
+ - [GetGroupedRankingWorkflowResultsResultPagedResult](rapidata/api_client/docs/GetGroupedRankingWorkflowResultsResultPagedResult.md)
  - [GetLeaderboardByIdResult](rapidata/api_client/docs/GetLeaderboardByIdResult.md)
  - [GetOrderByIdResult](rapidata/api_client/docs/GetOrderByIdResult.md)
  - [GetParticipantByIdResult](rapidata/api_client/docs/GetParticipantByIdResult.md)
@@ -403,6 +406,9 @@ Class | Method | HTTP request | Description
  - [GetWorkflowResultsResult](rapidata/api_client/docs/GetWorkflowResultsResult.md)
  - [GetWorkflowResultsResultPagedResult](rapidata/api_client/docs/GetWorkflowResultsResultPagedResult.md)
  - [GoogleOneTapLoginModel](rapidata/api_client/docs/GoogleOneTapLoginModel.md)
+ - [GroupedRankingWorkflowConfig](rapidata/api_client/docs/GroupedRankingWorkflowConfig.md)
+ - [GroupedRankingWorkflowModel](rapidata/api_client/docs/GroupedRankingWorkflowModel.md)
+ - [GroupedRankingWorkflowModel1](rapidata/api_client/docs/GroupedRankingWorkflowModel1.md)
  - [IWorkflowModelPagedResult](rapidata/api_client/docs/IWorkflowModelPagedResult.md)
  - [ImageDimensionMetadata](rapidata/api_client/docs/ImageDimensionMetadata.md)
  - [ImageDimensionMetadataModel](rapidata/api_client/docs/ImageDimensionMetadataModel.md)
@@ -431,6 +437,7 @@ Class | Method | HTTP request | Description
  - [LocationMetadataModel](rapidata/api_client/docs/LocationMetadataModel.md)
  - [LogicOperator](rapidata/api_client/docs/LogicOperator.md)
  - [MultiAsset](rapidata/api_client/docs/MultiAsset.md)
+ - [MultiAssetAssetsInner](rapidata/api_client/docs/MultiAssetAssetsInner.md)
  - [MultiAssetInput](rapidata/api_client/docs/MultiAssetInput.md)
  - [MultiAssetInputAssetsInner](rapidata/api_client/docs/MultiAssetInputAssetsInner.md)
  - [MultiAssetModel](rapidata/api_client/docs/MultiAssetModel.md)
