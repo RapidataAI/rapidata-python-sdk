@@ -19,6 +19,7 @@ class Datapoint(BaseModel):
     media_context: str | None = None
     sentence: str | None = None
     private_note: str | None = None
+    group: str | None = None
 
     @field_validator("context")
     @classmethod
