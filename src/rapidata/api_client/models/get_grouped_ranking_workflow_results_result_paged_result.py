@@ -17,27 +17,22 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictInt
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.file_asset_metadata_value import FileAssetMetadataValue
+from rapidata.api_client.models.get_grouped_ranking_workflow_results_result import GetGroupedRankingWorkflowResultsResult
 from typing import Optional, Set
 from typing_extensions import Self
 
-class TextAsset(BaseModel):
+class GetGroupedRankingWorkflowResultsResultPagedResult(BaseModel):
     """
-    TextAsset
+    GetGroupedRankingWorkflowResultsResultPagedResult
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for TextAsset", alias="_t")
-    text: StrictStr
-    metadata: Optional[Dict[str, FileAssetMetadataValue]] = None
-    __properties: ClassVar[List[str]] = ["_t", "text", "metadata"]
-
-    @field_validator('t')
-    def t_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['TextAsset']):
-            raise ValueError("must be one of enum values ('TextAsset')")
-        return value
+    total: StrictInt
+    page: StrictInt
+    page_size: StrictInt = Field(alias="pageSize")
+    items: List[GetGroupedRankingWorkflowResultsResult]
+    total_pages: Optional[StrictInt] = Field(default=None, alias="totalPages")
+    __properties: ClassVar[List[str]] = ["total", "page", "pageSize", "items", "totalPages"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -57,7 +52,7 @@ class TextAsset(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of TextAsset from a JSON string"""
+        """Create an instance of GetGroupedRankingWorkflowResultsResultPagedResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,8 +64,10 @@ class TextAsset(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * OpenAPI `readOnly` fields are excluded.
         """
         excluded_fields: Set[str] = set([
+            "total_pages",
         ])
 
         _dict = self.model_dump(
@@ -78,18 +75,18 @@ class TextAsset(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each value in metadata (dict)
-        _field_dict = {}
-        if self.metadata:
-            for _key_metadata in self.metadata:
-                if self.metadata[_key_metadata]:
-                    _field_dict[_key_metadata] = self.metadata[_key_metadata].to_dict()
-            _dict['metadata'] = _field_dict
+        # override the default output from pydantic by calling `to_dict()` of each item in items (list)
+        _items = []
+        if self.items:
+            for _item_items in self.items:
+                if _item_items:
+                    _items.append(_item_items.to_dict())
+            _dict['items'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of TextAsset from a dict"""
+        """Create an instance of GetGroupedRankingWorkflowResultsResultPagedResult from a dict"""
         if obj is None:
             return None
 
@@ -97,14 +94,11 @@ class TextAsset(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'TextAsset',
-            "text": obj.get("text"),
-            "metadata": dict(
-                (_k, FileAssetMetadataValue.from_dict(_v))
-                for _k, _v in obj["metadata"].items()
-            )
-            if obj.get("metadata") is not None
-            else None
+            "total": obj.get("total"),
+            "page": obj.get("page"),
+            "pageSize": obj.get("pageSize"),
+            "items": [GetGroupedRankingWorkflowResultsResult.from_dict(_item) for _item in obj["items"]] if obj.get("items") is not None else None,
+            "totalPages": obj.get("totalPages")
         })
         return _obj
 

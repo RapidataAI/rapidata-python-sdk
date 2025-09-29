@@ -19,24 +19,30 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.file_asset_metadata_value import FileAssetMetadataValue
+from rapidata.api_client.models.compare_workflow_model1_referee import CompareWorkflowModel1Referee
+from rapidata.api_client.models.elo_config import EloConfig
 from typing import Optional, Set
 from typing_extensions import Self
 
-class TextAsset(BaseModel):
+class GroupedRankingWorkflowModel1(BaseModel):
     """
-    TextAsset
+    GroupedRankingWorkflowModel1
     """ # noqa: E501
-    t: StrictStr = Field(description="Discriminator value for TextAsset", alias="_t")
-    text: StrictStr
-    metadata: Optional[Dict[str, FileAssetMetadataValue]] = None
-    __properties: ClassVar[List[str]] = ["_t", "text", "metadata"]
+    t: StrictStr = Field(description="Discriminator value for GroupedRankingWorkflowModel", alias="_t")
+    id: StrictStr
+    referee: CompareWorkflowModel1Referee
+    state: StrictStr
+    criteria: StrictStr
+    name: StrictStr
+    owner_mail: Optional[StrictStr] = Field(default=None, alias="ownerMail")
+    elo_config: EloConfig = Field(alias="eloConfig")
+    __properties: ClassVar[List[str]] = ["_t", "id", "referee", "state", "criteria", "name", "ownerMail", "eloConfig"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['TextAsset']):
-            raise ValueError("must be one of enum values ('TextAsset')")
+        if value not in set(['GroupedRankingWorkflowModel']):
+            raise ValueError("must be one of enum values ('GroupedRankingWorkflowModel')")
         return value
 
     model_config = ConfigDict(
@@ -57,7 +63,7 @@ class TextAsset(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of TextAsset from a JSON string"""
+        """Create an instance of GroupedRankingWorkflowModel1 from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -78,18 +84,22 @@ class TextAsset(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each value in metadata (dict)
-        _field_dict = {}
-        if self.metadata:
-            for _key_metadata in self.metadata:
-                if self.metadata[_key_metadata]:
-                    _field_dict[_key_metadata] = self.metadata[_key_metadata].to_dict()
-            _dict['metadata'] = _field_dict
+        # override the default output from pydantic by calling `to_dict()` of referee
+        if self.referee:
+            _dict['referee'] = self.referee.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of elo_config
+        if self.elo_config:
+            _dict['eloConfig'] = self.elo_config.to_dict()
+        # set to None if owner_mail (nullable) is None
+        # and model_fields_set contains the field
+        if self.owner_mail is None and "owner_mail" in self.model_fields_set:
+            _dict['ownerMail'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of TextAsset from a dict"""
+        """Create an instance of GroupedRankingWorkflowModel1 from a dict"""
         if obj is None:
             return None
 
@@ -97,14 +107,14 @@ class TextAsset(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_t": obj.get("_t") if obj.get("_t") is not None else 'TextAsset',
-            "text": obj.get("text"),
-            "metadata": dict(
-                (_k, FileAssetMetadataValue.from_dict(_v))
-                for _k, _v in obj["metadata"].items()
-            )
-            if obj.get("metadata") is not None
-            else None
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'GroupedRankingWorkflowModel',
+            "id": obj.get("id"),
+            "referee": CompareWorkflowModel1Referee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
+            "state": obj.get("state"),
+            "criteria": obj.get("criteria"),
+            "name": obj.get("name"),
+            "ownerMail": obj.get("ownerMail"),
+            "eloConfig": EloConfig.from_dict(obj["eloConfig"]) if obj.get("eloConfig") is not None else None
         })
         return _obj
 
