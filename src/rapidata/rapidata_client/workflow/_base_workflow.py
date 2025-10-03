@@ -50,6 +50,9 @@ class Workflow(ABC):
     ) -> SimpleWorkflowModel | CompareWorkflowModel | EvaluationWorkflowModel:
         pass
 
+    def _format_datapoints(self, datapoints: list[Datapoint]) -> list[Datapoint]:
+        return datapoints
+
     def __str__(self) -> str:
         return self._type
 

@@ -61,7 +61,7 @@ class ValidationSetManager:
             "ValidationSetManager._create_order_validation_set"
         ):
             rapids: list[Rapid] = []
-            for datapoint in datapoints:
+            for datapoint in workflow._format_datapoints(datapoints):
                 rapids.append(
                     Rapid(
                         asset=datapoint.asset,
