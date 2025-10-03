@@ -8,10 +8,6 @@
     ],
     "python.testing.unittestEnabled": true,
     "python.testing.pytestEnabled": false,
-    "python.analysis.typeCheckingMode": "basic",
-    "python.analysis.extraPaths": [
-        "./src"
-    ],
     "python.autoComplete.extraPaths": [
         "./src"
     ],

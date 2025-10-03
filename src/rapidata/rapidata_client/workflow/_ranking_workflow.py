@@ -8,10 +8,17 @@ from rapidata.rapidata_client.workflow._base_workflow import Workflow
 from rapidata.api_client import ComparePayload
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.api_client.models.rapid_modality import RapidModality
-from rapidata.rapidata_client.datapoints.metadata import Metadata
+from rapidata.rapidata_client.datapoints.metadata import (
+    MediaAssetMetadata,
+    PromptMetadata,
+)
 from rapidata.api_client.models.create_datapoint_from_files_model_metadata_inner import (
     CreateDatapointFromFilesModelMetadataInner,
 )
+from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
+import itertools
+import random
+from typing import cast
 
 
 class RankingWorkflow(Workflow):
@@ -25,11 +32,25 @@ class RankingWorkflow(Workflow):
         elo_start: int = 1200,
         elo_k_factor: int = 40,
         elo_scaling_factor: int = 400,
-        metadatas: list[Metadata] = [],
+        media_context: str | None = None,
+        context: str | None = None,
+        file_uploader: AssetUploader | None = None,
     ):
         super().__init__(type="CompareWorkflowConfig")
 
-        self.metadatas = metadatas
+        self.media_context = media_context
+        self.context = context
+
+        self.metadatas = []
+        if media_context:
+            assert (
+                file_uploader is not None
+            ), "File uploader is required if media_context is provided"
+            self.metadatas.append(
+                MediaAssetMetadata(file_uploader.upload_asset(media_context))
+            )
+        if context:
+            self.metadatas.append(PromptMetadata(context))
 
         self.criteria = criteria
         self.total_comparison_budget = total_comparison_budget
@@ -70,6 +91,24 @@ class RankingWorkflow(Workflow):
             _t="ComparePayload",
             criteria=self.criteria,
         )
+
+    def _format_datapoints(self, datapoints: list[Datapoint]) -> list[Datapoint]:
+        if len(datapoints) < 3:
+            raise ValueError("RankingWorkflow requires at least three datapoints")
+        desired_length = len(datapoints)
+        assets = [datapoint.asset for datapoint in datapoints]
+        pairs = list(map(list, itertools.combinations(assets, 2)))
+        sampled_pairs = random.sample(pairs, desired_length)
+        formatted_datapoints = [
+            Datapoint(
+                asset=cast(list[str], pair),
+                data_type=datapoints[0].data_type,
+                context=self.context,
+                media_context=self.media_context,
+            )
+            for pair in sampled_pairs
+        ]
+        return formatted_datapoints
 
     def __str__(self) -> str:
         return (
