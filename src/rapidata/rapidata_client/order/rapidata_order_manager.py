@@ -352,32 +352,15 @@ class RapidataOrderManager:
             if len(datapoints) < 2:
                 raise ValueError("At least two datapoints are required")
 
-            metadatas: list[Metadata] = []
-            if context:
-                if not isinstance(context, str) or context == "":
-                    raise ValueError("Context must be a non-empty string")
-                metadatas.append(PromptMetadata(context))
-            if media_context:
-                if not isinstance(media_context, str) or media_context == "":
-                    raise ValueError("Media context must be a non-empty string")
-                metadatas.append(
-                    MediaAssetMetadata(
-                        self.__asset_uploader.upload_asset(media_context)
-                    )
-                )
-
-            datapoints_instances = DatapointsValidator.map_datapoints(
-                datapoints=datapoints,
-                data_type=data_type,
-            )
-
             return self._create_general_order(
                 name=name,
                 workflow=RankingWorkflow(
                     instruction=instruction,
                     total_comparison_budget=total_comparison_budget,
                     random_comparisons_ratio=random_comparisons_ratio,
-                    metadatas=metadatas,
+                    context=context,
+                    media_context=media_context,
+                    file_uploader=self.__asset_uploader,
                 ),
                 datapoints=datapoints_instances,
                 responses_per_datapoint=responses_per_comparison,
