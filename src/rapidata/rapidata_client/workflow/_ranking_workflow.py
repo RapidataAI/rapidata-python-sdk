@@ -93,8 +93,8 @@ class RankingWorkflow(Workflow):
         )
 
     def _format_datapoints(self, datapoints: list[Datapoint]) -> list[Datapoint]:
-        if len(datapoints) < 2:
-            raise ValueError("RankingWorkflow requires at least two datapoints")
+        if len(datapoints) < 3:
+            raise ValueError("RankingWorkflow requires at least three datapoints")
         desired_length = len(datapoints)
         assets = [datapoint.asset for datapoint in datapoints]
         pairs = list(map(list, itertools.combinations(assets, 2)))
