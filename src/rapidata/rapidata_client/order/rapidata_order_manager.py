@@ -1,4 +1,4 @@
-from typing import Sequence, Optional, Literal
+from typing import Sequence, Optional, Literal, get_args
 from itertools import zip_longest
 
 from rapidata.rapidata_client.config.tracer import tracer
@@ -41,7 +41,7 @@ from rapidata.api_client.models.filter import Filter
 from rapidata.api_client.models.filter_operator import FilterOperator
 from rapidata.api_client.models.sort_criterion import SortCriterion
 from rapidata.api_client.models.sort_direction import SortDirection
-
+from rapidata.rapidata_client.order._rapidata_order_builder import StickyStateLiteral
 
 from tqdm import tqdm
 
@@ -61,7 +61,7 @@ class RapidataOrderManager:
         self.settings = RapidataSettings
         self.selections = RapidataSelections
         self.__priority: int | None = None
-        self.__sticky_state: Literal["None", "Temporary", "Permanent"] | None = None
+        self.__sticky_state: StickyStateLiteral | None = None
         self.__asset_uploader = AssetUploader(openapi_service)
         logger.debug("RapidataOrderManager initialized")
 
@@ -172,21 +172,21 @@ class RapidataOrderManager:
         logger.debug("Order created: %s", order)
         return order
 
-    def _set_priority(self, priority: int):
-        if not isinstance(priority, int):
-            raise TypeError("Priority must be an integer")
+    def _set_priority(self, priority: int | None):
+        if priority is not None and not isinstance(priority, int):
+            raise TypeError("Priority must be an integer or None")
 
-        if priority < 0:
-            raise ValueError("Priority must be greater than 0")
+        if priority is not None and priority < 0:
+            raise ValueError("Priority must be greater than 0 or None")
 
         self.__priority = priority
 
-    def _set_sticky_state(
-        self, sticky_state: Literal["None", "Temporary", "Permanent"]
-    ):
-        if sticky_state not in ["None", "Temporary", "Permanent"]:
+    def _set_sticky_state(self, sticky_state: StickyStateLiteral | None):
+        sticky_state_valid_values = get_args(StickyStateLiteral)
+
+        if sticky_state is not None and sticky_state not in sticky_state_valid_values:
             raise ValueError(
-                "Sticky state must be one of 'None', 'Temporary', 'Permanent'"
+                f"Sticky state must be one of {sticky_state_valid_values} or None"
             )
 
         self.__sticky_state = sticky_state

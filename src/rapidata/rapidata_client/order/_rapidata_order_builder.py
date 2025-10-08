@@ -1,4 +1,4 @@
-from typing import Literal, Optional, Sequence
+from typing import Literal, Optional, Sequence, get_args
 import random
 import urllib.parse
 import webbrowser
@@ -43,6 +43,8 @@ from rapidata.rapidata_client.api.rapidata_api_client import (
     suppress_rapidata_error_logging,
 )
 
+StickyStateLiteral = Literal["Temporary", "Permanent", "Passive"]
+
 
 class RapidataOrderBuilder:
     """Builder object for creating Rapidata orders.
@@ -71,9 +73,7 @@ class RapidataOrderBuilder:
         self.__selections: list[RapidataSelection] = []
         self.__priority: int | None = None
         self.__datapoints: list[Datapoint] = []
-        self.__sticky_state_value: Literal["None", "Temporary", "Permanent"] | None = (
-            None
-        )
+        self.__sticky_state_value: StickyStateLiteral | None = None
         self.__validation_set_manager: ValidationSetManager = ValidationSetManager(
             self.__openapi_service
         )
@@ -453,18 +453,16 @@ class RapidataOrderBuilder:
         return self
 
     def _sticky_state(
-        self, sticky_state: Literal["None", "Temporary", "Permanent"] | None = None
+        self, sticky_state: StickyStateLiteral | None = None
     ) -> "RapidataOrderBuilder":
         """
         Set the sticky state for the order.
         """
-        if sticky_state is not None and sticky_state not in [
-            "None",
-            "Temporary",
-            "Permanent",
-        ]:
-            raise TypeError(
-                "Sticky state must be of type Literal['None', 'Temporary', 'Permanent']."
+        sticky_state_valid_values = get_args(StickyStateLiteral)
+
+        if sticky_state is not None and sticky_state not in sticky_state_valid_values:
+            raise ValueError(
+                f"Sticky state must be one of {sticky_state_valid_values} or None"
             )
 
         self.__sticky_state_value = sticky_state
