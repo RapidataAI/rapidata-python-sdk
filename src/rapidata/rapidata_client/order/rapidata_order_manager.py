@@ -352,6 +352,11 @@ class RapidataOrderManager:
             if len(datapoints) < 2:
                 raise ValueError("At least two datapoints are required")
 
+            datapoints_instances = DatapointsValidator.map_datapoints(
+                datapoints=datapoints,
+                data_type=data_type,
+            )
+
             return self._create_general_order(
                 name=name,
                 workflow=RankingWorkflow(
