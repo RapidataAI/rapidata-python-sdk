@@ -460,8 +460,10 @@ class RapidataOrderBuilder:
         """
         sticky_state_valid_values = get_args(StickyStateLiteral)
 
-        if sticky_state not in sticky_state_valid_values:
-            raise ValueError(f"Sticky state must be one of {sticky_state_valid_values}")
+        if sticky_state is not None and sticky_state not in sticky_state_valid_values:
+            raise ValueError(
+                f"Sticky state must be one of {sticky_state_valid_values} or None"
+            )
 
         self.__sticky_state_value = sticky_state
         return self
