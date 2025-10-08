@@ -35,6 +35,9 @@ class ClassifyWorkflow(Workflow):
         self._instruction = instruction
         self._answer_options = answer_options
 
+    def _get_instruction(self) -> str:
+        return self._instruction
+
     def _to_dict(self) -> dict[str, Any]:
         return {
             **super()._to_dict(),

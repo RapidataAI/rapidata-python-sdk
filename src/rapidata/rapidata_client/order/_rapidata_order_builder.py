@@ -147,6 +147,7 @@ class RapidataOrderBuilder:
                         self.__openapi_service.validation_api.validation_set_recommended_get(
                             asset_type=[self.__datapoints[0].get_asset_type()],
                             modality=[self.__workflow.modality],
+                            instruction=self.__workflow._get_instruction(),
                             prompt_type=[
                                 t.value for t in self.__datapoints[0].get_prompt_type()
                             ],

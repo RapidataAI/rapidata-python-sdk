@@ -16,6 +16,9 @@ class DrawWorkflow(Workflow):
         super().__init__(type="SimpleWorkflowConfig")
         self._target = target
 
+    def _get_instruction(self) -> str:
+        return self._target
+
     def _to_model(self) -> SimpleWorkflowModel:
         blueprint = LineRapidBlueprint(_t="LineBlueprint", target=self._target)
 
