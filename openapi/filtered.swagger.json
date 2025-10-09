@@ -93,17 +93,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/UploadFileFromUrlResult"
+                  "$ref": "#/components/schemas/UploadFileResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UploadFileFromUrlResult"
+                  "$ref": "#/components/schemas/UploadFileResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UploadFileFromUrlResult"
+                  "$ref": "#/components/schemas/UploadFileResult"
                 }
               }
             }
@@ -809,6 +809,49 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/OrderModelPagedResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/aggregated-overview": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Retrieves the orders aggregated by customer, with total amounts and most recent order informations.",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AggregatedOrdersModelPagedResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AggregatedOrdersModelPagedResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AggregatedOrdersModelPagedResult"
                 }
               }
             }
@@ -1957,6 +2000,38 @@
         }
       }
     },
+    "/identity/survey": {
+      "post": {
+        "tags": [
+          "Survey"
+        ],
+        "summary": "Sends a survey.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendSurveyModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendSurveyModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendSurveyModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/connect/userinfo": {
       "get": {
         "tags": [
@@ -2453,83 +2528,7 @@
         }
       }
     },
-    "/validation-set/{validationSetId}/rapid": {
-      "post": {
-        "tags": [
-          "ValidationSet"
-        ],
-        "summary": "Adds a new validation rapid to the specified validation set using files to create the assets.",
-        "parameters": [
-          {
-            "name": "validationSetId",
-            "in": "path",
-            "description": "The ID of the validation set to add the rapid to.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "model": {
-                    "$ref": "#/components/schemas/AddValidationRapidModel"
-                  },
-                  "files": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "format": "binary"
-                    }
-                  },
-                  "texts": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "description": "The texts to use for the rapid."
-                  },
-                  "urls": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "format": "uri"
-                    },
-                    "description": "The urls to use for the rapid"
-                  }
-                }
-              },
-              "encoding": {
-                "files": {
-                  "contentType": "text/plain",
-                  "style": "form",
-                  "explode": true
-                },
-                "texts": {
-                  "contentType": "text/plain",
-                  "style": "form",
-                  "explode": true
-                },
-                "urls": {
-                  "contentType": "text/plain",
-                  "style": "form",
-                  "explode": true
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        }
-      }
-    },
+    "/validation-set/{validationSetId}/rapid": {},
     "/validation-set/{validationSetId}/rapid-new": {
       "post": {
         "tags": [
@@ -4249,12 +4248,12 @@
         }
       }
     },
-    "/campaign/{campaignId}/priority": {
-      "put": {
+    "/campaign/{campaignId}": {
+      "patch": {
         "tags": [
           "Campaign"
         ],
-        "summary": "Updates the priority of a campaign.",
+        "summary": "Updates a campaign.",
         "parameters": [
           {
             "name": "campaignId",
@@ -4267,21 +4266,21 @@
           }
         ],
         "requestBody": {
-          "description": "model containing the new priority",
+          "description": "model containing the updates",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdatePriorityModel"
+                "$ref": "#/components/schemas/UpdateCampaignModel"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdatePriorityModel"
+                "$ref": "#/components/schemas/UpdateCampaignModel"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdatePriorityModel"
+                "$ref": "#/components/schemas/UpdateCampaignModel"
               }
             }
           }
@@ -4293,6 +4292,7 @@
         }
       }
     },
+    "/campaign/{campaignId}/priority": {},
     "/campaign/boost/status": {
       "get": {
         "tags": [
@@ -8647,18 +8647,6 @@
         },
         "additionalProperties": false
       },
-      "UploadFileFromUrlResult": {
-        "required": [
-          "fileName"
-        ],
-        "type": "object",
-        "properties": {
-          "fileName": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "UploadFileResult": {
         "required": [
           "fileName"
@@ -8993,6 +8981,76 @@
         },
         "additionalProperties": false
       },
+      "AggregatedOrdersModel": {
+        "required": [
+          "amount",
+          "customerMail",
+          "last7Days",
+          "lastOrderDate",
+          "lastOrderId",
+          "lastOrderName"
+        ],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "last7Days": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lastOrderDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastOrderName": {
+            "type": "string"
+          },
+          "lastOrderId": {
+            "type": "string"
+          },
+          "customerMail": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AggregatedOrdersModelPagedResult": {
+        "required": [
+          "items",
+          "page",
+          "pageSize",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AggregatedOrdersModel"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
       "AggregatorType": {
         "enum": [
           "NonCommittal",
@@ -9006,7 +9064,9 @@
           "Transcription",
           "SinglePointLocate",
           "FreeText",
-          "Scrub"
+          "Scrub",
+          "Ranking",
+          "MultiRanking"
         ],
         "type": "string"
       },
@@ -10215,6 +10275,10 @@
           },
           "isPublic": {
             "type": "boolean"
+          },
+          "failureMessage": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -10676,6 +10740,10 @@
           },
           "isPublic": {
             "type": "boolean"
+          },
+          "failureMessage": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -11800,6 +11868,23 @@
           }
         },
         "additionalProperties": false
+      },
+      "SendSurveyModel": {
+        "required": [
+          "fields"
+        ],
+        "type": "object",
+        "properties": {
+          "fields": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "The fields of the survey"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model user for submitting a survey"
       },
       "AddValidationRapidModel": {
         "required": [
@@ -14895,6 +14980,7 @@
           "criteria",
           "eloConfig",
           "id",
+          "metadata",
           "name",
           "pairMakerInformation",
           "referee",
@@ -14938,6 +15024,55 @@
             ],
             "discriminator": {
               "propertyName": "_t"
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AssetMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ClassificationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/CountMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/FileTypeMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageDimensionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/LocationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/SourceUrlMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/StreamsMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TextMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/VideoDurationMetadata"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
             }
           },
           "state": {
@@ -15817,8 +15952,7 @@
           "_t",
           "criteria",
           "metadata",
-          "referee",
-          "targetCountryCodes"
+          "referee"
         ],
         "type": "object",
         "properties": {
@@ -15848,12 +15982,6 @@
             ],
             "discriminator": {
               "propertyName": "_t"
-            }
-          },
-          "targetCountryCodes": {
-            "type": "array",
-            "items": {
-              "type": "string"
             }
           },
           "metadata": {
@@ -15905,6 +16033,14 @@
               }
             }
           },
+          "targetCountryCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true,
+            "deprecated": true
+          },
           "eloConfig": {
             "$ref": "#/components/schemas/EloConfig"
           },
@@ -15935,8 +16071,7 @@
           "featureFlags",
           "metadata",
           "pairMakerConfig",
-          "referee",
-          "targetCountryCodes"
+          "referee"
         ],
         "type": "object",
         "properties": {
@@ -15980,15 +16115,17 @@
               "propertyName": "_t"
             }
           },
+          "eloConfig": {
+            "$ref": "#/components/schemas/EloConfig"
+          },
           "targetCountryCodes": {
             "type": "array",
             "items": {
               "type": "string"
             },
-            "description": "A list of country codes that this workflow is targeting."
-          },
-          "eloConfig": {
-            "$ref": "#/components/schemas/EloConfig"
+            "description": "DO NOT USES!!!!",
+            "nullable": true,
+            "deprecated": true
           },
           "metadata": {
             "type": "object",
@@ -16656,8 +16793,24 @@
         ],
         "type": "string"
       },
+      "BoostingProfile": {
+        "type": "object",
+        "properties": {
+          "requiresGlobalBoost": {
+            "type": "boolean"
+          },
+          "languageBoosts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
       "CampaignQueryResult": {
         "required": [
+          "boostingProfile",
           "createdAt",
           "id",
           "name",
@@ -16682,6 +16835,13 @@
           "priority": {
             "type": "integer",
             "format": "int32"
+          },
+          "boostingProfile": {
+            "$ref": "#/components/schemas/BoostingProfile"
+          },
+          "requiresBooster": {
+            "type": "boolean",
+            "readOnly": true
           },
           "createdAt": {
             "type": "string",
@@ -16755,6 +16915,24 @@
         "additionalProperties": false,
         "description": "The model to update the manual boost status. or putting it back to autopilot."
       },
+      "Int32Option": {
+        "title": "Option`1",
+        "type": "integer",
+        "additionalProperties": false
+      },
+      "UpdateCampaignModel": {
+        "type": "object",
+        "properties": {
+          "priority": {
+            "type": "integer"
+          },
+          "requiresBooster": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model to update campaign properties."
+      },
       "UpdatePriorityModel": {
         "required": [
           "priority"
@@ -16819,6 +16997,9 @@
                   "$ref": "#/components/schemas/ResponseCountFilter"
                 },
                 {
+                  "$ref": "#/components/schemas/UserActionRestrictionFilter"
+                },
+                {
                   "$ref": "#/components/schemas/UserScoreFilter"
                 },
                 {
@@ -16865,6 +17046,9 @@
                 },
                 {
                   "$ref": "#/components/schemas/ResponseCountFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/UserActionRestrictionFilter"
                 },
                 {
                   "$ref": "#/components/schemas/UserScoreFilter"
@@ -17488,6 +17672,9 @@
                   "$ref": "#/components/schemas/ResponseCountFilter"
                 },
                 {
+                  "$ref": "#/components/schemas/UserActionRestrictionFilter"
+                },
+                {
                   "$ref": "#/components/schemas/UserScoreFilter"
                 },
                 {
@@ -17643,11 +17830,6 @@
         },
         "additionalProperties": false
       },
-      "Int32Option": {
-        "title": "Option`1",
-        "type": "integer",
-        "additionalProperties": false
-      },
       "LanguageFilter": {
         "title": "LanguageFilter",
         "required": [
@@ -17757,6 +17939,9 @@
                 },
                 {
                   "$ref": "#/components/schemas/ResponseCountFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/UserActionRestrictionFilter"
                 },
                 {
                   "$ref": "#/components/schemas/UserScoreFilter"
@@ -17884,6 +18069,9 @@
                 "$ref": "#/components/schemas/ResponseCountFilter"
               },
               {
+                "$ref": "#/components/schemas/UserActionRestrictionFilter"
+              },
+              {
                 "$ref": "#/components/schemas/UserScoreFilter"
               },
               {
@@ -17929,6 +18117,9 @@
                 },
                 {
                   "$ref": "#/components/schemas/ResponseCountFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/UserActionRestrictionFilter"
                 },
                 {
                   "$ref": "#/components/schemas/UserScoreFilter"
@@ -17995,6 +18186,9 @@
                   "$ref": "#/components/schemas/ResponseCountFilter"
                 },
                 {
+                  "$ref": "#/components/schemas/UserActionRestrictionFilter"
+                },
+                {
                   "$ref": "#/components/schemas/UserScoreFilter"
                 },
                 {
@@ -18041,6 +18235,9 @@
                 },
                 {
                   "$ref": "#/components/schemas/ResponseCountFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/UserActionRestrictionFilter"
                 },
                 {
                   "$ref": "#/components/schemas/UserScoreFilter"
@@ -18931,6 +19128,44 @@
         },
         "additionalProperties": false,
         "description": "The model for updating prompt tags."
+      },
+      "UserActionRestriction": {
+        "enum": [
+          "Listen",
+          "UseKeyboard"
+        ],
+        "type": "string"
+      },
+      "UserActionRestrictionFilter": {
+        "title": "UserActionRestrictionFilter",
+        "required": [
+          "_t",
+          "requiredActions"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "UserActionRestrictionFilter"
+            ],
+            "type": "string",
+            "description": "Discriminator value for UserActionRestrictionFilter",
+            "default": "UserActionRestrictionFilter",
+            "example": "UserActionRestrictionFilter"
+          },
+          "requiredActions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserActionRestriction"
+            }
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
       },
       "UserScoreFilter": {
         "title": "UserScoreFilter",

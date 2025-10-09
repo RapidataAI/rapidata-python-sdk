@@ -17,26 +17,27 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.order_state import OrderState
+from rapidata.api_client.models.user_action_restriction import UserActionRestriction
 from typing import Optional, Set
 from typing_extensions import Self
 
-class OrderModel(BaseModel):
+class UserActionRestrictionFilter(BaseModel):
     """
-    OrderModel
+    UserActionRestrictionFilter
     """ # noqa: E501
-    id: StrictStr
-    pipeline_id: StrictStr = Field(alias="pipelineId")
-    order_date: Optional[datetime] = Field(default=None, alias="orderDate")
-    customer_mail: StrictStr = Field(alias="customerMail")
-    state: OrderState
-    order_name: StrictStr = Field(alias="orderName")
-    is_public: StrictBool = Field(alias="isPublic")
-    failure_message: Optional[StrictStr] = Field(default=None, alias="failureMessage")
-    __properties: ClassVar[List[str]] = ["id", "pipelineId", "orderDate", "customerMail", "state", "orderName", "isPublic", "failureMessage"]
+    t: StrictStr = Field(description="Discriminator value for UserActionRestrictionFilter", alias="_t")
+    required_actions: List[UserActionRestriction] = Field(alias="requiredActions")
+    execution_order: Optional[StrictInt] = Field(default=None, alias="executionOrder")
+    __properties: ClassVar[List[str]] = ["_t", "requiredActions", "executionOrder"]
+
+    @field_validator('t')
+    def t_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['UserActionRestrictionFilter']):
+            raise ValueError("must be one of enum values ('UserActionRestrictionFilter')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -56,7 +57,7 @@ class OrderModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of OrderModel from a JSON string"""
+        """Create an instance of UserActionRestrictionFilter from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -68,8 +69,10 @@ class OrderModel(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * OpenAPI `readOnly` fields are excluded.
         """
         excluded_fields: Set[str] = set([
+            "execution_order",
         ])
 
         _dict = self.model_dump(
@@ -77,21 +80,11 @@ class OrderModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if order_date (nullable) is None
-        # and model_fields_set contains the field
-        if self.order_date is None and "order_date" in self.model_fields_set:
-            _dict['orderDate'] = None
-
-        # set to None if failure_message (nullable) is None
-        # and model_fields_set contains the field
-        if self.failure_message is None and "failure_message" in self.model_fields_set:
-            _dict['failureMessage'] = None
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of OrderModel from a dict"""
+        """Create an instance of UserActionRestrictionFilter from a dict"""
         if obj is None:
             return None
 
@@ -99,14 +92,9 @@ class OrderModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "id": obj.get("id"),
-            "pipelineId": obj.get("pipelineId"),
-            "orderDate": obj.get("orderDate"),
-            "customerMail": obj.get("customerMail"),
-            "state": obj.get("state"),
-            "orderName": obj.get("orderName"),
-            "isPublic": obj.get("isPublic"),
-            "failureMessage": obj.get("failureMessage")
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'UserActionRestrictionFilter',
+            "requiredActions": obj.get("requiredActions"),
+            "executionOrder": obj.get("executionOrder")
         })
         return _obj
 
