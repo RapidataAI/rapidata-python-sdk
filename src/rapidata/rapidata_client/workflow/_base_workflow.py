@@ -45,6 +45,10 @@ class Workflow(ABC):
         pass
 
     @abstractmethod
+    def _get_instruction(self) -> str:
+        pass
+
+    @abstractmethod
     def _to_model(
         self,
     ) -> SimpleWorkflowModel | CompareWorkflowModel | EvaluationWorkflowModel:

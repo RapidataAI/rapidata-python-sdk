@@ -73,6 +73,9 @@ class RankingWorkflow(Workflow):
             scalingFactor=elo_scaling_factor,
         )
 
+    def _get_instruction(self) -> str:
+        return self.criteria
+
     def _to_model(self) -> CompareWorkflowModel:
 
         return CompareWorkflowModel(

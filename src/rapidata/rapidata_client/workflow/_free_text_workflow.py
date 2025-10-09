@@ -33,6 +33,9 @@ class FreeTextWorkflow(Workflow):
         self._instruction = instruction
         self._validation_system_prompt = validation_system_prompt
 
+    def _get_instruction(self) -> str:
+        return self._instruction
+
     def _to_dict(self) -> dict[str, Any]:
         return {
             **super()._to_dict(),

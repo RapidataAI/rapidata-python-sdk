@@ -22,6 +22,9 @@ class EvaluationWorkflow(Workflow):
         self.validation_set_id = validation_set_id
         self.should_accept_incorrect = should_accept_incorrect
 
+    def _get_instruction(self) -> str:
+        return ""
+
     def _to_model(self):
         return EvaluationWorkflowModel(
             _t="EvaluationWorkflow",
