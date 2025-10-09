@@ -18,32 +18,20 @@ from enum import Enum
 from typing_extensions import Self
 
 
-class AggregatorType(str, Enum):
+class UserActionRestriction(str, Enum):
     """
-    AggregatorType
+    UserActionRestriction
     """
 
     """
     allowed enum values
     """
-    NONCOMMITTAL = 'NonCommittal'
-    MAJORITYVOTE = 'MajorityVote'
-    SIMPLEMATCHUP = 'SimpleMatchup'
-    LOCATECLUSTER = 'LocateCluster'
-    CLASSIFICATION = 'Classification'
-    LOCATE = 'Locate'
-    BOUNDINGBOX = 'BoundingBox'
-    LINE = 'Line'
-    TRANSCRIPTION = 'Transcription'
-    SINGLEPOINTLOCATE = 'SinglePointLocate'
-    FREETEXT = 'FreeText'
-    SCRUB = 'Scrub'
-    RANKING = 'Ranking'
-    MULTIRANKING = 'MultiRanking'
+    LISTEN = 'Listen'
+    USEKEYBOARD = 'UseKeyboard'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of AggregatorType from a JSON string"""
+        """Create an instance of UserActionRestriction from a JSON string"""
         return cls(json.loads(json_str))
 
 

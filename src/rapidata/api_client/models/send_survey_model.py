@@ -17,26 +17,17 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.order_state import OrderState
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class OrderModel(BaseModel):
+class SendSurveyModel(BaseModel):
     """
-    OrderModel
+    The model user for submitting a survey
     """ # noqa: E501
-    id: StrictStr
-    pipeline_id: StrictStr = Field(alias="pipelineId")
-    order_date: Optional[datetime] = Field(default=None, alias="orderDate")
-    customer_mail: StrictStr = Field(alias="customerMail")
-    state: OrderState
-    order_name: StrictStr = Field(alias="orderName")
-    is_public: StrictBool = Field(alias="isPublic")
-    failure_message: Optional[StrictStr] = Field(default=None, alias="failureMessage")
-    __properties: ClassVar[List[str]] = ["id", "pipelineId", "orderDate", "customerMail", "state", "orderName", "isPublic", "failureMessage"]
+    fields: Dict[str, StrictStr] = Field(description="The fields of the survey")
+    __properties: ClassVar[List[str]] = ["fields"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -56,7 +47,7 @@ class OrderModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of OrderModel from a JSON string"""
+        """Create an instance of SendSurveyModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -77,21 +68,11 @@ class OrderModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if order_date (nullable) is None
-        # and model_fields_set contains the field
-        if self.order_date is None and "order_date" in self.model_fields_set:
-            _dict['orderDate'] = None
-
-        # set to None if failure_message (nullable) is None
-        # and model_fields_set contains the field
-        if self.failure_message is None and "failure_message" in self.model_fields_set:
-            _dict['failureMessage'] = None
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of OrderModel from a dict"""
+        """Create an instance of SendSurveyModel from a dict"""
         if obj is None:
             return None
 
@@ -99,14 +80,7 @@ class OrderModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "id": obj.get("id"),
-            "pipelineId": obj.get("pipelineId"),
-            "orderDate": obj.get("orderDate"),
-            "customerMail": obj.get("customerMail"),
-            "state": obj.get("state"),
-            "orderName": obj.get("orderName"),
-            "isPublic": obj.get("isPublic"),
-            "failureMessage": obj.get("failureMessage")
+            "fields": obj.get("fields")
         })
         return _obj
 
