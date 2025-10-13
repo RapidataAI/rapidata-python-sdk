@@ -3,7 +3,8 @@ from rapidata.rapidata_client.filter._base_filter import RapidataFilter
 from rapidata.api_client.models.language_user_filter_model import (
     LanguageUserFilterModel,
 )
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
+from rapidata.rapidata_client.config import logger
 
 
 class LanguageFilter(RapidataFilter, BaseModel):
@@ -23,8 +24,24 @@ class LanguageFilter(RapidataFilter, BaseModel):
 
     language_codes: list[str]
 
+    @field_validator("language_codes")
+    @classmethod
+    def validate_language_codes(cls, codes: list[str]) -> list[str]:
+        validated = []
+        for code in codes:
+            if len(code) != 2:
+                raise ValueError(
+                    f"Language codes must be length 2. Invalid code: '{code}'"
+                )
+            if code != code.lower():
+                logger.warning(
+                    f"Language code '{code}' should be lowercase. It will be lowercased automatically."
+                )
+            validated.append(code.lower())
+        return validated
+
     def _to_model(self):
         return LanguageUserFilterModel(
             _t="LanguageFilter",
-            languages=[code.lower() for code in self.language_codes],
+            languages=self.language_codes,
         )

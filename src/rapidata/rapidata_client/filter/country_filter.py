@@ -1,6 +1,7 @@
 from rapidata.rapidata_client.filter._base_filter import RapidataFilter
 from rapidata.api_client.models.country_user_filter_model import CountryUserFilterModel
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
+from rapidata.rapidata_client.config import logger
 
 
 class CountryFilter(RapidataFilter, BaseModel):
@@ -14,7 +15,21 @@ class CountryFilter(RapidataFilter, BaseModel):
 
     country_codes: list[str]
 
+    @field_validator("country_codes")
+    @classmethod
+    def validate_country_codes(cls, codes: list[str]) -> list[str]:
+        validated = []
+        for code in codes:
+            if len(code) != 2:
+                raise ValueError(
+                    f"Country codes must be length 2. Invalid code: '{code}'"
+                )
+            if code != code.upper():
+                logger.warning(
+                    f"Country code '{code}' should be uppercase. It will be uppercased automatically."
+                )
+            validated.append(code.upper())
+        return validated
+
     def _to_model(self):
-        return CountryUserFilterModel(
-            _t="CountryFilter", countries=[code.upper() for code in self.country_codes]
-        )
+        return CountryUserFilterModel(_t="CountryFilter", countries=self.country_codes)
