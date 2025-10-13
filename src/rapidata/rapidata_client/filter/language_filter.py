@@ -1,4 +1,3 @@
-from typing import Any
 from rapidata.rapidata_client.filter._base_filter import RapidataFilter
 from rapidata.api_client.models.language_user_filter_model import (
     LanguageUserFilterModel,

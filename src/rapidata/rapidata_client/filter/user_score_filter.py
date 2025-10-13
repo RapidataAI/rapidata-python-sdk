@@ -1,3 +1,4 @@
+from pydantic_core.core_schema import FieldValidationInfo
 from rapidata.rapidata_client.filter._base_filter import RapidataFilter
 from rapidata.api_client.models.user_score_user_filter_model import (
     UserScoreUserFilterModel,
@@ -28,7 +29,7 @@ class UserScoreFilter(RapidataFilter, BaseModel):
 
     @field_validator("lower_bound", "upper_bound")
     @classmethod
-    def validate_bounds(cls, v: float, info) -> float:
+    def validate_bounds(cls, v: float, info: FieldValidationInfo) -> float:
         if v < 0 or v > 1:
             raise ValueError(f"{info.field_name} must be between 0 and 1")
         return v
