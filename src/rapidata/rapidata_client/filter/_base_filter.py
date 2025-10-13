@@ -19,15 +19,15 @@ class RapidataFilter:
         # If self is already an OrFilter, extend its filters list
         if isinstance(self, OrFilter):
             if isinstance(other, OrFilter):
-                return OrFilter(self.filters + other.filters)
+                return OrFilter(filters=self.filters + other.filters)
             else:
-                return OrFilter(self.filters + [other])
+                return OrFilter(filters=self.filters + [other])
         # If other is an OrFilter, prepend self to its filters
         elif isinstance(other, OrFilter):
-            return OrFilter([self] + other.filters)
+            return OrFilter(filters=[self] + other.filters)
         # Neither is an OrFilter, create a new one
         else:
-            return OrFilter([self, other])
+            return OrFilter(filters=[self, other])
 
     def __and__(self, other):
         """Enable the & operator to create AndFilter combinations."""
@@ -39,15 +39,15 @@ class RapidataFilter:
         # If self is already an AndFilter, extend its filters list
         if isinstance(self, AndFilter):
             if isinstance(other, AndFilter):
-                return AndFilter(self.filters + other.filters)
+                return AndFilter(filters=self.filters + other.filters)
             else:
-                return AndFilter(self.filters + [other])
+                return AndFilter(filters=self.filters + [other])
         # If other is an AndFilter, prepend self to its filters
         elif isinstance(other, AndFilter):
-            return AndFilter([self] + other.filters)
+            return AndFilter(filters=[self] + other.filters)
         # Neither is an AndFilter, create a new one
         else:
-            return AndFilter([self, other])
+            return AndFilter(filters=[self, other])
 
     def __invert__(self):
         """Enable the ~ operator to create NotFilter negations."""
@@ -58,10 +58,4 @@ class RapidataFilter:
             return self.filter
         # Create a new NotFilter
         else:
-            return NotFilter(self)
-
-    def __str__(self) -> str:
-        return f"{self.__class__.__name__}()"
-
-    def __repr__(self) -> str:
-        return f"{self.__class__.__name__}()"
+            return NotFilter(filter=self)

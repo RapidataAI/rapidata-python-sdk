@@ -31,7 +31,6 @@ from .rapidata_client import (
     AgeGroup,
     GenderFilter,
     Gender,
-    CountryCodes,
     Box,
     Datapoint,
     PromptMetadata,

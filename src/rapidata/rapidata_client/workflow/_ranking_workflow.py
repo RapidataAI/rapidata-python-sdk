@@ -47,10 +47,12 @@ class RankingWorkflow(Workflow):
                 file_uploader is not None
             ), "File uploader is required if media_context is provided"
             self.metadatas.append(
-                MediaAssetMetadata(file_uploader.upload_asset(media_context))
+                MediaAssetMetadata(
+                    internal_file_name=file_uploader.upload_asset(media_context)
+                )
             )
         if context:
-            self.metadatas.append(PromptMetadata(context))
+            self.metadatas.append(PromptMetadata(prompt=context))
 
         self.criteria = criteria
         self.total_comparison_budget = total_comparison_budget

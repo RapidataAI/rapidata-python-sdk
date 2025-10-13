@@ -1,12 +1,12 @@
-from typing import Any
 from rapidata.rapidata_client.filter._base_filter import RapidataFilter
 from rapidata.api_client.models.or_user_filter_model import OrUserFilterModel
 from rapidata.api_client.models.and_user_filter_model_filters_inner import (
     AndUserFilterModelFiltersInner,
 )
+from pydantic import BaseModel, ConfigDict
 
 
-class OrFilter(RapidataFilter):
+class OrFilter(RapidataFilter, BaseModel):
     """A filter that combines multiple filters with a logical OR operation.
     This class implements a logical OR operation on a list of filters, where the condition is met if any of the filters' conditions are met.
 
@@ -23,11 +23,9 @@ class OrFilter(RapidataFilter):
         This will match users who either have their phone set to English OR are located in the United States.
     """
 
-    def __init__(self, filters: list[RapidataFilter]):
-        if not all(isinstance(filter, RapidataFilter) for filter in filters):
-            raise ValueError("Filters must be a RapidataFilter object")
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
-        self.filters = filters
+    filters: list[RapidataFilter]
 
     def _to_model(self):
         return OrUserFilterModel(
@@ -37,9 +35,3 @@ class OrFilter(RapidataFilter):
                 for filter in self.filters
             ],
         )
-
-    def __str__(self) -> str:
-        return f"OrFilter(filters={self.filters})"
-
-    def __repr__(self) -> str:
-        return f"OrFilter(filters={self.filters!r})"
