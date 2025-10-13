@@ -2,16 +2,15 @@ from rapidata.api_client.models.public_text_metadata_input import (
     PublicTextMetadataInput,
 )
 from rapidata.rapidata_client.datapoints.metadata._base_metadata import Metadata
+from pydantic import BaseModel
 
 
-class PublicTextMetadata(Metadata):
+class PublicTextMetadata(Metadata, BaseModel):
 
-    def __init__(self, text: str, identifier: str = "public_text"):
-        super().__init__()
-        self._identifier = identifier
-        self._text = text
+    text: str
+    identifier: str = "public_text"
 
     def to_model(self):
         return PublicTextMetadataInput(
-            _t="PublicTextMetadataInput", identifier=self._identifier, text=self._text
+            _t="PublicTextMetadataInput", identifier=self.identifier, text=self.text
         )

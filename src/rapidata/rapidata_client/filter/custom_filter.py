@@ -1,9 +1,9 @@
-from typing import Any
 from rapidata.rapidata_client.filter._base_filter import RapidataFilter
 from rapidata.api_client.models.custom_user_filter_model import CustomUserFilterModel
+from pydantic import BaseModel
 
 
-class CustomFilter(RapidataFilter):
+class CustomFilter(RapidataFilter, BaseModel):
     """CustomFilter Class
 
     Can be used to filter who to target based on custom filters.
@@ -17,9 +17,8 @@ class CustomFilter(RapidataFilter):
         values (list[str]): List of values to filter by.
     """
 
-    def __init__(self, identifier: str, values: list[str]):
-        self.identifier = identifier
-        self.values = values
+    identifier: str
+    values: list[str]
 
     def _to_model(self):
         return CustomUserFilterModel(
@@ -27,9 +26,3 @@ class CustomFilter(RapidataFilter):
             identifier=self.identifier,
             values=self.values,
         )
-
-    def __str__(self) -> str:
-        return f"CustomFilter(identifier={self.identifier}, values={self.values})"
-
-    def __repr__(self) -> str:
-        return f"CustomFilter(identifier={self.identifier!r}, values={self.values!r})"

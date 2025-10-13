@@ -1,11 +1,11 @@
-from typing import Any
 from rapidata.rapidata_client.filter._base_filter import RapidataFilter
 from rapidata.api_client.models.user_score_user_filter_model import (
     UserScoreUserFilterModel,
 )
+from pydantic import BaseModel, field_validator, model_validator
 
 
-class UserScoreFilter(RapidataFilter):
+class UserScoreFilter(RapidataFilter, BaseModel):
     """UserScoreFilter Class
 
     Can be used to filter who to target based on their user score.
@@ -22,22 +22,22 @@ class UserScoreFilter(RapidataFilter):
         This will only show the order to users that have a UserScore of >=0.5 and <=0.9
     """
 
-    def __init__(
-        self,
-        lower_bound: float = 0.0,
-        upper_bound: float = 1.0,
-        dimension: str | None = None,
-    ):
-        if lower_bound < 0 or lower_bound > 1:
-            raise ValueError("The lower bound must be between 0 and 1.")
-        if upper_bound < 0 or upper_bound > 1:
-            raise ValueError("The upper bound must be between 0 and 1.")
-        if lower_bound >= upper_bound:
-            raise ValueError("The lower bound must be less than the upper bound.")
+    lower_bound: float = 0.0
+    upper_bound: float = 1.0
+    dimension: str | None = None
 
-        self.upper_bound = upper_bound
-        self.lower_bound = lower_bound
-        self.dimension = dimension
+    @field_validator("lower_bound", "upper_bound")
+    @classmethod
+    def validate_bounds(cls, v: float, info) -> float:
+        if v < 0 or v > 1:
+            raise ValueError(f"{info.field_name} must be between 0 and 1")
+        return v
+
+    @model_validator(mode="after")
+    def validate_bounds_relationship(self) -> "UserScoreFilter":
+        if self.lower_bound >= self.upper_bound:
+            raise ValueError("lower_bound must be less than upper_bound")
+        return self
 
     def _to_model(self):
         return UserScoreUserFilterModel(
@@ -46,9 +46,3 @@ class UserScoreFilter(RapidataFilter):
             lowerbound=self.lower_bound,
             dimension=self.dimension,
         )
-
-    def __str__(self) -> str:
-        return f"UserScoreFilter(lower_bound={self.lower_bound}, upper_bound={self.upper_bound}, dimension={self.dimension})"
-
-    def __repr__(self) -> str:
-        return f"UserScoreFilter(lower_bound={self.lower_bound!r}, upper_bound={self.upper_bound!r}, dimension={self.dimension!r})"
