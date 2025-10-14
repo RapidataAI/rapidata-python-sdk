@@ -28,6 +28,9 @@ class NotFilter(RapidataFilter, BaseModel):
 
     filter: RapidataFilter
 
+    def __init__(self, filter: RapidataFilter):
+        super().__init__(filter=filter)
+
     def _to_model(self):
         return NotUserFilterModel(
             _t="NotFilter",

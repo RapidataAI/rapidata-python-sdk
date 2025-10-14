@@ -27,6 +27,13 @@ class UserScoreFilter(RapidataFilter, BaseModel):
     upper_bound: float = 1.0
     dimension: str | None = None
 
+    def __init__(
+        self, lower_bound: float, upper_bound: float, dimension: str | None = None
+    ):
+        super().__init__(
+            lower_bound=lower_bound, upper_bound=upper_bound, dimension=dimension
+        )
+
     @field_validator("lower_bound", "upper_bound")
     @classmethod
     def validate_bounds(cls, v: float, info: FieldValidationInfo) -> float:

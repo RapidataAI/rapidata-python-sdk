@@ -20,6 +20,9 @@ class CustomFilter(RapidataFilter, BaseModel):
     identifier: str
     values: list[str]
 
+    def __init__(self, identifier: str, values: list[str]):
+        super().__init__(identifier=identifier, values=values)
+
     def _to_model(self):
         return CustomUserFilterModel(
             _t="CustomFilter",

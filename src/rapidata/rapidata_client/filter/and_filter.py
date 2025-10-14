@@ -28,6 +28,9 @@ class AndFilter(RapidataFilter, BaseModel):
 
     filters: list[RapidataFilter]
 
+    def __init__(self, filters: list[RapidataFilter]):
+        super().__init__(filters=filters)
+
     def _to_model(self):
         return AndUserFilterModel(
             _t="AndFilter",

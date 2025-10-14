@@ -18,6 +18,9 @@ class CampaignFilter(RapidataFilter, BaseModel):
 
     campaign_ids: list[str]
 
+    def __init__(self, campaign_ids: list[str]):
+        super().__init__(campaign_ids=campaign_ids)
+
     def _to_model(self):
         return CampaignUserFilterModel(
             _t="CampaignFilter",

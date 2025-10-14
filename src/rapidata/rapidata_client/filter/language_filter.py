@@ -23,6 +23,9 @@ class LanguageFilter(RapidataFilter, BaseModel):
 
     language_codes: list[str]
 
+    def __init__(self, language_codes: list[str]):
+        super().__init__(language_codes=language_codes)
+
     @field_validator("language_codes")
     @classmethod
     def validate_language_codes(cls, codes: list[str]) -> list[str]:

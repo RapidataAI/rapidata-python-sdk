@@ -41,6 +41,13 @@ class ResponseCountFilter(RapidataFilter, BaseModel):
     dimension: str
     operator: ComparisonOperator
 
+    def __init__(
+        self, response_count: int, dimension: str, operator: ComparisonOperator
+    ):
+        super().__init__(
+            response_count=response_count, dimension=dimension, operator=operator
+        )
+
     def _to_model(self):
         return ResponseCountUserFilterModel(
             _t="ResponseCountFilter",

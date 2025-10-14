@@ -15,6 +15,9 @@ class CountryFilter(RapidataFilter, BaseModel):
 
     country_codes: list[str]
 
+    def __init__(self, country_codes: list[str]):
+        super().__init__(country_codes=country_codes)
+
     @field_validator("country_codes")
     @classmethod
     def validate_country_codes(cls, codes: list[str]) -> list[str]:

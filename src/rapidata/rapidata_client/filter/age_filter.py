@@ -16,6 +16,9 @@ class AgeFilter(RapidataFilter, BaseModel):
 
     age_groups: list[AgeGroup]
 
+    def __init__(self, age_groups: list[AgeGroup]):
+        super().__init__(age_groups=age_groups)
+
     def _to_model(self):
         return AgeUserFilterModel(
             _t="AgeFilter",

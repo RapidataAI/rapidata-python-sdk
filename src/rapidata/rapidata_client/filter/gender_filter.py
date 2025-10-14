@@ -17,6 +17,9 @@ class GenderFilter(RapidataFilter, BaseModel):
 
     genders: list[Gender]
 
+    def __init__(self, genders: list[Gender]):
+        super().__init__(genders=genders)
+
     def _to_model(self):
         return GenderUserFilterModel(
             _t="GenderFilter",
