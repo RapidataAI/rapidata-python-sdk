@@ -1,5 +1,5 @@
 from typing import Protocol, runtime_checkable, Any
-from opentelemetry import trace
+from opentelemetry import trace, context
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
@@ -15,6 +15,7 @@ class TracerProtocol(Protocol):
 
     def start_span(self, name: str, *args, **kwargs) -> Any: ...
     def start_as_current_span(self, name: str, *args, **kwargs) -> Any: ...
+    def create_root_context(self, name: str) -> None: ...
 
 
 class NoOpSpan:
@@ -49,8 +50,11 @@ class NoOpTracer:
     def start_span(self, name: str, *args, **kwargs) -> NoOpSpan:
         return NoOpSpan()
 
-    def start_as_current_span(self, name: str, *args, **kwargs) -> NoOpSpan:
-        return NoOpSpan()
+    def start_as_current_span(self, name: str, *args, **kwargs):
+        yield NoOpSpan()
+
+    def create_root_context(self, name: str) -> None:
+        pass
 
     def __getattr__(self, name: str) -> Any:
         """Delegate to no-op behavior."""
@@ -66,9 +70,11 @@ class RapidataTracer:
         self._tracer_provider = None
         self._real_tracer = None
         self._no_op_tracer = NoOpTracer()
-        self._enabled = True  # Default to enabled
+        self._enabled = True
+        self._root_span = None
+        self._root_context = None
+        self._context_token = None
 
-        # Register this tracer to receive configuration updates
         register_config_handler(self._handle_config_update)
 
     def _handle_config_update(self, config: LoggingConfig) -> None:
@@ -79,12 +85,11 @@ class RapidataTracer:
         """Update the tracer based on the new configuration."""
         self._enabled = config.enable_otlp
 
-        # Initialize OTLP tracing only once and only if not disabled
         if not self._otlp_initialized and config.enable_otlp:
             try:
                 resource = Resource.create(
                     {
-                        "service.name": "Rapidata.Python.SDK",
+                        "service.name": "Rapidata.Python2.SDK",
                         "service.version": __version__,
                     }
                 )
@@ -106,14 +111,30 @@ class RapidataTracer:
                 logger.warning(f"Failed to initialize tracing: {e}")
                 self._enabled = False
 
+    def create_root_context(self, name: str) -> None:
+        """Create a root span and set it as the active context for all future spans."""
+        if self._enabled and self._real_tracer:
+            # End previous root span if it exists
+            if self._root_span:
+                self._root_span.end()
+            if self._context_token:
+                context.detach(self._context_token)
+
+            # Create new root span
+            self._root_span = self._real_tracer.start_span(name)
+            self._root_context = trace.set_span_in_context(self._root_span)
+            # Attach it so all subsequent spans are children
+            self._context_token = context.attach(self._root_context)
+            logger.debug(f"Created root context: {name}")
+
     def start_span(self, name: str, *args, **kwargs) -> Any:
-        """Start a span, or return a no-op span if tracing is disabled."""
+        """Start a span (will automatically be a child of root if root context exists)."""
         if self._enabled and self._real_tracer:
             return self._real_tracer.start_span(name, *args, **kwargs)
         return self._no_op_tracer.start_span(name, *args, **kwargs)
 
-    def start_as_current_span(self, name: str, *args, **kwargs) -> Any:
-        """Start a span as current, or return a no-op span if tracing is disabled."""
+    def start_as_current_span(self, name: str, *args, **kwargs):
+        """Start a span as current (will automatically be a child of root if root context exists)."""
         if self._enabled and self._real_tracer:
             return self._real_tracer.start_as_current_span(name, *args, **kwargs)
         return self._no_op_tracer.start_as_current_span(name, *args, **kwargs)

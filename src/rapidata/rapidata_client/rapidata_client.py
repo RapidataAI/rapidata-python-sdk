@@ -56,6 +56,8 @@ class RapidataClient:
             demographic (DemographicManager): The DemographicManager instance.
             mri (RapidataBenchmarkManager): The RapidataBenchmarkManager instance.
         """
+        tracer.create_root_context("RapidataClient.session")
+
         with tracer.start_as_current_span("RapidataClient.__init__"):
             logger.debug("Checking version")
             self._check_version()
