@@ -6,6 +6,8 @@ Model Ranking Insights (MRI) provides a powerful way to compare and rank differe
 
 ![MRI Process Flow](../media/mri_dark.svg)
 
+Each evaluation aspect is a benchmark and the overall leaderboard consist of one or more benchmarks. This allows convenient extensisilibty because when you would like to evaluate the models under a new criteria, it is as easy as adding a new benchmark to the leaderboard.
+
 ## How to use MRI
 
 ### 1. Benchmark Creation
