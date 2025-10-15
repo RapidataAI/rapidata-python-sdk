@@ -1,7 +1,4 @@
-from contextlib import contextmanager
 from typing import Protocol, runtime_checkable, Any
-from opentelemetry import trace, context
-from opentelemetry.trace import SpanContext, TraceFlags
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
@@ -17,7 +14,7 @@ class TracerProtocol(Protocol):
 
     def start_span(self, name: str, *args, **kwargs) -> Any: ...
     def start_as_current_span(self, name: str, *args, **kwargs) -> Any: ...
-    def create_root_context(self, name: str) -> None: ...
+    def set_session_id(self, session_id: str) -> None: ...
 
 
 class NoOpSpan:
@@ -52,15 +49,32 @@ class NoOpTracer:
     def start_span(self, name: str, *args, **kwargs) -> NoOpSpan:
         return NoOpSpan()
 
-    def start_as_current_span(self, name: str, *args, **kwargs):
-        yield NoOpSpan()
+    def start_as_current_span(self, name: str, *args, **kwargs) -> NoOpSpan:
+        return NoOpSpan()
 
-    def create_root_context(self, name: str) -> None:
+    def set_session_id(self, session_id: str) -> None:
         pass
 
     def __getattr__(self, name: str) -> Any:
         """Delegate to no-op behavior."""
         return lambda *args, **kwargs: NoOpSpan()
+
+
+class SpanContextManagerWrapper:
+    """Wrapper for span context managers to add session_id on enter."""
+
+    def __init__(self, context_manager: Any, session_id: str | None):
+        self._context_manager = context_manager
+        self.session_id = session_id
+
+    def __enter__(self):
+        span = self._context_manager.__enter__()
+        if self.session_id and hasattr(span, "set_attribute"):
+            span.set_attribute("SDK.session.id", self.session_id)
+        return span
+
+    def __exit__(self, *args):
+        return self._context_manager.__exit__(*args)
 
 
 class RapidataTracer:
@@ -72,11 +86,10 @@ class RapidataTracer:
         self._tracer_provider = None
         self._real_tracer = None
         self._no_op_tracer = NoOpTracer()
-        self._enabled = True
-        self._root_span = None
-        self._root_context = None
-        self._context_token = None
+        self._enabled = True  # Default to enabled
+        self.session_id: str | None = None
 
+        # Register this tracer to receive configuration updates
         register_config_handler(self._handle_config_update)
 
     def _handle_config_update(self, config: LoggingConfig) -> None:
@@ -87,11 +100,12 @@ class RapidataTracer:
         """Update the tracer based on the new configuration."""
         self._enabled = config.enable_otlp
 
+        # Initialize OTLP tracing only once and only if not disabled
         if not self._otlp_initialized and config.enable_otlp:
             try:
                 resource = Resource.create(
                     {
-                        "service.name": "Rapidata.Python2.SDK",
+                        "service.name": "Rapidata.Python.SDK",
                         "service.version": __version__,
                     }
                 )
@@ -113,66 +127,30 @@ class RapidataTracer:
                 logger.warning(f"Failed to initialize tracing: {e}")
                 self._enabled = False
 
-    def create_root_context(self, name: str) -> None:
-        """Create a root span and set it as the active context for all future spans."""
-        if self._enabled and self._real_tracer:
-            # End previous root span if it exists
-            if self._root_span:
-                self._root_span.end()
-            if self._context_token:
-                context.detach(self._context_token)
-
-            # Create new root span
-            self._root_span = self._real_tracer.start_span(name)
-            self._root_context = trace.set_span_in_context(self._root_span)
-            # Attach it so all subsequent spans are children
-            self._context_token = context.attach(self._root_context)
-            logger.debug(f"Created root context: {name}")
+    def _add_session_id_to_span(self, span: Any) -> Any:
+        """Add session_id attribute to a span if session_id is set."""
+        if self.session_id and hasattr(span, "set_attribute"):
+            span.set_attribute("SDK.session.id", self.session_id)
+        return span
 
     def start_span(self, name: str, *args, **kwargs) -> Any:
-        """Start a span (will automatically be a child of root if root context exists)."""
+        """Start a span, or return a no-op span if tracing is disabled."""
         if self._enabled and self._real_tracer:
-            return self._real_tracer.start_span(name, *args, **kwargs)
+            span = self._real_tracer.start_span(name, *args, **kwargs)
+            return self._add_session_id_to_span(span)
         return self._no_op_tracer.start_span(name, *args, **kwargs)
 
-    @contextmanager
-    def start_as_current_span(self, name: str, *args, **kwargs):
-        """Start a span as current (will automatically be a child of root if root context exists)."""
+    def start_as_current_span(self, name: str, *args, **kwargs) -> Any:
+        """Start a span as current, or return a no-op span if tracing is disabled."""
         if self._enabled and self._real_tracer:
-            with self._real_tracer.start_as_current_span(name, *args, **kwargs) as span:
-                try:
-                    yield span
-                finally:
-                    # After the span ends, recreate root with same trace ID
-                    if self._root_span:
-                        # Get the trace ID from the current root span
-                        trace_id = self._root_span.get_span_context().trace_id
+            context_manager = self._real_tracer.start_as_current_span(
+                name, *args, **kwargs
+            )
+            return SpanContextManagerWrapper(context_manager, self.session_id)
+        return self._no_op_tracer.start_as_current_span(name, *args, **kwargs)
 
-                        # End the old root span
-                        self._root_span.end()
-
-                        # Detach the old context
-                        if self._context_token:
-                            context.detach(self._context_token)
-
-                        # Create new root span with same trace ID
-                        self._root_span = self._real_tracer.start_span(
-                            name="root_span",  # or whatever name you want
-                            context=trace.set_span_in_context(
-                                trace.NonRecordingSpan(
-                                    SpanContext(
-                                        trace_id=trace_id,
-                                        span_id=0,  # This will be generated
-                                        is_remote=False,
-                                        trace_flags=TraceFlags(0x01),
-                                    )
-                                )
-                            ),
-                        )
-                        self._root_context = trace.set_span_in_context(self._root_span)
-                        self._context_token = context.attach(self._root_context)
-        else:
-            yield from self._no_op_tracer.start_as_current_span(name, *args, **kwargs)
+    def set_session_id(self, session_id: str) -> None:
+        self.session_id = session_id
 
     def __getattr__(self, name: str) -> Any:
         """Delegate attribute access to the appropriate tracer."""
