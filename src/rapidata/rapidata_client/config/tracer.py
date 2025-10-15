@@ -1,5 +1,7 @@
+from contextlib import contextmanager
 from typing import Protocol, runtime_checkable, Any
 from opentelemetry import trace, context
+from opentelemetry.trace import SpanContext, TraceFlags
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
@@ -133,11 +135,44 @@ class RapidataTracer:
             return self._real_tracer.start_span(name, *args, **kwargs)
         return self._no_op_tracer.start_span(name, *args, **kwargs)
 
+    @contextmanager
     def start_as_current_span(self, name: str, *args, **kwargs):
         """Start a span as current (will automatically be a child of root if root context exists)."""
         if self._enabled and self._real_tracer:
-            return self._real_tracer.start_as_current_span(name, *args, **kwargs)
-        return self._no_op_tracer.start_as_current_span(name, *args, **kwargs)
+            with self._real_tracer.start_as_current_span(name, *args, **kwargs) as span:
+                try:
+                    yield span
+                finally:
+                    # After the span ends, recreate root with same trace ID
+                    if self._root_span:
+                        # Get the trace ID from the current root span
+                        trace_id = self._root_span.get_span_context().trace_id
+
+                        # End the old root span
+                        self._root_span.end()
+
+                        # Detach the old context
+                        if self._context_token:
+                            context.detach(self._context_token)
+
+                        # Create new root span with same trace ID
+                        self._root_span = self._real_tracer.start_span(
+                            name="root_span",  # or whatever name you want
+                            context=trace.set_span_in_context(
+                                trace.NonRecordingSpan(
+                                    SpanContext(
+                                        trace_id=trace_id,
+                                        span_id=0,  # This will be generated
+                                        is_remote=False,
+                                        trace_flags=TraceFlags(0x01),
+                                    )
+                                )
+                            ),
+                        )
+                        self._root_context = trace.set_span_in_context(self._root_span)
+                        self._context_token = context.attach(self._root_context)
+        else:
+            yield from self._no_op_tracer.start_as_current_span(name, *args, **kwargs)
 
     def __getattr__(self, name: str) -> Any:
         """Delegate attribute access to the appropriate tracer."""
