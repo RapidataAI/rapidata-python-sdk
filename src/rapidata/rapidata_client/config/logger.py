@@ -58,7 +58,7 @@ class RapidataLogger:
                 logger_provider = LoggerProvider(
                     resource=Resource.create(
                         {
-                            "service.name": "Rapidata.Python2.SDK",
+                            "service.name": "Rapidata.Python.SDK",
                             "service.version": __version__,
                         }
                     ),
