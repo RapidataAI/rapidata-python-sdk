@@ -3,7 +3,8 @@ from typing import Any
 import requests
 from packaging import version
 from rapidata import __version__
-
+import uuid
+import random
 from rapidata.service.openapi_service import OpenAPIService
 
 from rapidata.rapidata_client.order.rapidata_order_manager import RapidataOrderManager
@@ -56,6 +57,10 @@ class RapidataClient:
             demographic (DemographicManager): The DemographicManager instance.
             mri (RapidataBenchmarkManager): The RapidataBenchmarkManager instance.
         """
+        tracer.set_session_id(
+            uuid.UUID(int=random.Random().getrandbits(128), version=4).hex
+        )
+
         with tracer.start_as_current_span("RapidataClient.__init__"):
             logger.debug("Checking version")
             self._check_version()

@@ -1,5 +1,4 @@
 from typing import Protocol, runtime_checkable, Any
-from opentelemetry import trace
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
@@ -15,6 +14,7 @@ class TracerProtocol(Protocol):
 
     def start_span(self, name: str, *args, **kwargs) -> Any: ...
     def start_as_current_span(self, name: str, *args, **kwargs) -> Any: ...
+    def set_session_id(self, session_id: str) -> None: ...
 
 
 class NoOpSpan:
@@ -52,9 +52,29 @@ class NoOpTracer:
     def start_as_current_span(self, name: str, *args, **kwargs) -> NoOpSpan:
         return NoOpSpan()
 
+    def set_session_id(self, session_id: str) -> None:
+        pass
+
     def __getattr__(self, name: str) -> Any:
         """Delegate to no-op behavior."""
         return lambda *args, **kwargs: NoOpSpan()
+
+
+class SpanContextManagerWrapper:
+    """Wrapper for span context managers to add session_id on enter."""
+
+    def __init__(self, context_manager: Any, session_id: str | None):
+        self._context_manager = context_manager
+        self.session_id = session_id
+
+    def __enter__(self):
+        span = self._context_manager.__enter__()
+        if self.session_id and hasattr(span, "set_attribute"):
+            span.set_attribute("SDK.session.id", self.session_id)
+        return span
+
+    def __exit__(self, *args):
+        return self._context_manager.__exit__(*args)
 
 
 class RapidataTracer:
@@ -67,6 +87,7 @@ class RapidataTracer:
         self._real_tracer = None
         self._no_op_tracer = NoOpTracer()
         self._enabled = True  # Default to enabled
+        self.session_id: str | None = None
 
         # Register this tracer to receive configuration updates
         register_config_handler(self._handle_config_update)
@@ -106,17 +127,30 @@ class RapidataTracer:
                 logger.warning(f"Failed to initialize tracing: {e}")
                 self._enabled = False
 
+    def _add_session_id_to_span(self, span: Any) -> Any:
+        """Add session_id attribute to a span if session_id is set."""
+        if self.session_id and hasattr(span, "set_attribute"):
+            span.set_attribute("SDK.session.id", self.session_id)
+        return span
+
     def start_span(self, name: str, *args, **kwargs) -> Any:
         """Start a span, or return a no-op span if tracing is disabled."""
         if self._enabled and self._real_tracer:
-            return self._real_tracer.start_span(name, *args, **kwargs)
+            span = self._real_tracer.start_span(name, *args, **kwargs)
+            return self._add_session_id_to_span(span)
         return self._no_op_tracer.start_span(name, *args, **kwargs)
 
     def start_as_current_span(self, name: str, *args, **kwargs) -> Any:
         """Start a span as current, or return a no-op span if tracing is disabled."""
         if self._enabled and self._real_tracer:
-            return self._real_tracer.start_as_current_span(name, *args, **kwargs)
+            context_manager = self._real_tracer.start_as_current_span(
+                name, *args, **kwargs
+            )
+            return SpanContextManagerWrapper(context_manager, self.session_id)
         return self._no_op_tracer.start_as_current_span(name, *args, **kwargs)
+
+    def set_session_id(self, session_id: str) -> None:
+        self.session_id = session_id
 
     def __getattr__(self, name: str) -> Any:
         """Delegate attribute access to the appropriate tracer."""
