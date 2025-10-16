@@ -101,7 +101,6 @@ class RapidsManager:
         """
 
         payload = ComparePayload(_t="ComparePayload", criteria=instruction)
-        truth = os.path.basename(truth)
         model_truth = CompareTruth(_t="CompareTruth", winnerId=truth)
 
         if len(datapoint) != 2:
