@@ -21,6 +21,7 @@ from typing import Literal
 
 from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 from rapidata.service.openapi_service import OpenAPIService
+from pathlib import Path
 
 
 class RapidsManager:
@@ -100,8 +101,8 @@ class RapidsManager:
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
         """
 
+        truth = Path(truth).as_posix()
         payload = ComparePayload(_t="ComparePayload", criteria=instruction)
-        truth = os.path.basename(truth)
         model_truth = CompareTruth(_t="CompareTruth", winnerId=truth)
 
         if len(datapoint) != 2:
