@@ -321,8 +321,10 @@ class RapidataOrderManager:
             if any(not isinstance(datapoint, list) for datapoint in datapoints):
                 raise ValueError("Each datapoint must be a list of 2 paths/texts")
 
-            if any(len(datapoint) != 2 for datapoint in datapoints):
-                raise ValueError("Each datapoint must contain exactly two options")
+            if any(len(set(datapoint)) != 2 for datapoint in datapoints):
+                raise ValueError(
+                    "Each datapoint must contain exactly two unique options"
+                )
 
             if a_b_names is not None and len(a_b_names) != 2:
                 raise ValueError(
@@ -391,6 +393,9 @@ class RapidataOrderManager:
         with tracer.start_as_current_span("RapidataOrderManager.create_ranking_order"):
             if len(datapoints) < 2:
                 raise ValueError("At least two datapoints are required")
+
+            if len(set(datapoints)) != len(datapoints):
+                raise ValueError("Datapoints must be unique")
 
             return self._create_general_order(
                 name=name,
