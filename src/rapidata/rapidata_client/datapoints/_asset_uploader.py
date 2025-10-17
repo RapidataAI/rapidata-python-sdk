@@ -9,7 +9,6 @@ from rapidata.api_client.models.text_asset_input import TextAssetInput
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.config import logger
 from rapidata.rapidata_client.config import tracer
-from pathlib import Path
 
 
 class AssetUploader:
@@ -29,7 +28,7 @@ class AssetUploader:
                 if not os.path.exists(asset):
                     raise FileNotFoundError(f"File not found: {asset}")
                 response = self.openapi_service.asset_api.asset_file_post(
-                    file=(Path(asset).as_posix(), open(asset, "rb").read()),
+                    file=asset,
                 )
             return response.file_name
 

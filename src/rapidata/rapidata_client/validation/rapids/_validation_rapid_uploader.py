@@ -51,8 +51,6 @@ class ValidationRapidUploader:
                 metadata=metadata,
                 payload=self._get_payload(rapid),
                 truth=AddValidationRapidModelTruth(actual_instance=rapid.truth),
-                randomCorrectProbability=rapid.random_correct_probability,
-                explanation=rapid.explanation,
                 featureFlags=(
                     [setting._to_feature_flag() for setting in rapid.settings]
                     if rapid.settings
