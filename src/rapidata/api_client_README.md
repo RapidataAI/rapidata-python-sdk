@@ -93,8 +93,8 @@ Class | Method | HTTP request | Description
 *BenchmarkApi* | [**benchmarks_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmarks_get) | **GET** /benchmarks | Queries all benchmarks of the user.
 *CampaignApi* | [**campaign_boost_put**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_put) | **PUT** /campaign/boost | Updates the boost with manual boosts.
 *CampaignApi* | [**campaign_boost_status_get**](rapidata/api_client/docs/CampaignApi.md#campaign_boost_status_get) | **GET** /campaign/boost/status | Gets the status of the boost.
+*CampaignApi* | [**campaign_campaign_id_patch**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_patch) | **PATCH** /campaign/{campaignId} | Updates a campaign.
 *CampaignApi* | [**campaign_campaign_id_pause_post**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_pause_post) | **POST** /campaign/{campaignId}/pause | Pauses a campaign.
-*CampaignApi* | [**campaign_campaign_id_priority_put**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_priority_put) | **PUT** /campaign/{campaignId}/priority | Updates the priority of a campaign.
 *CampaignApi* | [**campaign_campaign_id_resume_post**](rapidata/api_client/docs/CampaignApi.md#campaign_campaign_id_resume_post) | **POST** /campaign/{campaignId}/resume | Resumes a campaign.
 *CampaignApi* | [**campaign_monitor_get**](rapidata/api_client/docs/CampaignApi.md#campaign_monitor_get) | **GET** /campaign/monitor | The monitor endpoint is used to monitor the health of the service
 *CampaignApi* | [**campaigns_get**](rapidata/api_client/docs/CampaignApi.md#campaigns_get) | **GET** /campaigns | Queries orders based on a filter, page, and sort criteria.
@@ -162,6 +162,7 @@ Class | Method | HTTP request | Description
 *OrderApi* | [**order_order_id_unlock_post**](rapidata/api_client/docs/OrderApi.md#order_order_id_unlock_post) | **POST** /order/{orderId}/unlock | Unlocks a newly cloned order.
 *OrderApi* | [**order_post**](rapidata/api_client/docs/OrderApi.md#order_post) | **POST** /order | Used to create a new order.
 *OrderApi* | [**order_unsupported_post**](rapidata/api_client/docs/OrderApi.md#order_unsupported_post) | **POST** /order/unsupported | Notifies the admins that a user wants to create an order with an unsupported label type or data type.
+*OrderApi* | [**orders_aggregated_overview_get**](rapidata/api_client/docs/OrderApi.md#orders_aggregated_overview_get) | **GET** /orders/aggregated-overview | Retrieves the orders aggregated by customer, with total amounts and most recent order informations.
 *OrderApi* | [**orders_get**](rapidata/api_client/docs/OrderApi.md#orders_get) | **GET** /orders | Queries orders based on a filter, page, and sort criteria.
 *OrderApi* | [**orders_public_get**](rapidata/api_client/docs/OrderApi.md#orders_public_get) | **GET** /orders/public | Retrieves orders that are public and can be cloned by any user.
 *ParticipantApi* | [**participant_participant_id_delete**](rapidata/api_client/docs/ParticipantApi.md#participant_participant_id_delete) | **DELETE** /participant/{participantId} | Deletes a participant on a benchmark.
@@ -181,6 +182,7 @@ Class | Method | HTTP request | Description
 *RapidataIdentityAPIApi* | [**root_get**](rapidata/api_client/docs/RapidataIdentityAPIApi.md#root_get) | **GET** / | 
 *SampleApi* | [**benchmark_sample_sample_id_get**](rapidata/api_client/docs/SampleApi.md#benchmark_sample_sample_id_get) | **GET** /benchmark-sample/{sampleId} | Gets a sample by its Id.
 *SimpleWorkflowApi* | [**workflow_simple_workflow_id_results_get**](rapidata/api_client/docs/SimpleWorkflowApi.md#workflow_simple_workflow_id_results_get) | **GET** /workflow/simple/{workflowId}/results | Get the result overview for a simple workflow.
+*SurveyApi* | [**identity_survey_post**](rapidata/api_client/docs/SurveyApi.md#identity_survey_post) | **POST** /identity/survey | Sends a survey.
 *UserInfoApi* | [**connect_userinfo_get**](rapidata/api_client/docs/UserInfoApi.md#connect_userinfo_get) | **GET** /connect/userinfo | Retrieves information about the authenticated user.
 *UserRapidApi* | [**rapid_rapid_bag_is_valid_get**](rapidata/api_client/docs/UserRapidApi.md#rapid_rapid_bag_is_valid_get) | **GET** /rapid/rapid-bag/is-valid | Validates that the rapids associated with the current user are active.
 *UserRapidApi* | [**rapid_rapid_id_report_post**](rapidata/api_client/docs/UserRapidApi.md#rapid_rapid_id_report_post) | **POST** /rapid/{rapidId}/report | Used to report an issue with a rapid.
@@ -194,7 +196,6 @@ Class | Method | HTTP request | Description
 *ValidationSetApi* | [**validation_set_validation_set_id_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_get) | **GET** /validation-set/{validationSetId} | Gets a validation set by the id.
 *ValidationSetApi* | [**validation_set_validation_set_id_patch**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_patch) | **PATCH** /validation-set/{validationSetId} | Updates different characteristics of a validation set.
 *ValidationSetApi* | [**validation_set_validation_set_id_rapid_new_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_rapid_new_post) | **POST** /validation-set/{validationSetId}/rapid-new | Adds a new validation rapid to the validation set using JSON body.
-*ValidationSetApi* | [**validation_set_validation_set_id_rapid_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_rapid_post) | **POST** /validation-set/{validationSetId}/rapid | Adds a new validation rapid to the specified validation set using files to create the assets.
 *ValidationSetApi* | [**validation_set_validation_set_id_rapids_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_rapids_get) | **GET** /validation-set/{validationSetId}/rapids | Queries the validation rapids for a specific validation set.
 *ValidationSetApi* | [**validation_set_validation_set_id_update_labeling_hints_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_update_labeling_hints_post) | **POST** /validation-set/{validationSetId}/update-labeling-hints | Refreshes the labeling hints for a validation set.
 *ValidationSetApi* | [**validation_set_validation_set_id_visibility_patch**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_visibility_patch) | **PATCH** /validation-set/{validationSetId}/visibility | Updates the visibility of a validation set.
@@ -222,6 +223,8 @@ Class | Method | HTTP request | Description
  - [AddValidationRapidNewModelAsset](rapidata/api_client/docs/AddValidationRapidNewModelAsset.md)
  - [AgeGroup](rapidata/api_client/docs/AgeGroup.md)
  - [AgeUserFilterModel](rapidata/api_client/docs/AgeUserFilterModel.md)
+ - [AggregatedOrdersModel](rapidata/api_client/docs/AggregatedOrdersModel.md)
+ - [AggregatedOrdersModelPagedResult](rapidata/api_client/docs/AggregatedOrdersModelPagedResult.md)
  - [AggregatorType](rapidata/api_client/docs/AggregatorType.md)
  - [AndFilter](rapidata/api_client/docs/AndFilter.md)
  - [AndFilterFiltersInner](rapidata/api_client/docs/AndFilterFiltersInner.md)
@@ -239,6 +242,7 @@ Class | Method | HTTP request | Description
  - [BoostMode](rapidata/api_client/docs/BoostMode.md)
  - [BoostQueryResult](rapidata/api_client/docs/BoostQueryResult.md)
  - [BoostStatus](rapidata/api_client/docs/BoostStatus.md)
+ - [BoostingProfile](rapidata/api_client/docs/BoostingProfile.md)
  - [BoundingBoxPayload](rapidata/api_client/docs/BoundingBoxPayload.md)
  - [BoundingBoxRapidBlueprint](rapidata/api_client/docs/BoundingBoxRapidBlueprint.md)
  - [BoundingBoxResult](rapidata/api_client/docs/BoundingBoxResult.md)
@@ -530,6 +534,7 @@ Class | Method | HTTP request | Description
  - [ScrubResult](rapidata/api_client/docs/ScrubResult.md)
  - [ScrubTruth](rapidata/api_client/docs/ScrubTruth.md)
  - [SendCompletionMailStepModel](rapidata/api_client/docs/SendCompletionMailStepModel.md)
+ - [SendSurveyModel](rapidata/api_client/docs/SendSurveyModel.md)
  - [Shape](rapidata/api_client/docs/Shape.md)
  - [ShufflingSelection](rapidata/api_client/docs/ShufflingSelection.md)
  - [SimpleWorkflowConfig](rapidata/api_client/docs/SimpleWorkflowConfig.md)
@@ -578,6 +583,7 @@ Class | Method | HTTP request | Description
  - [UnlockOrderResult](rapidata/api_client/docs/UnlockOrderResult.md)
  - [UpdateBenchmarkModel](rapidata/api_client/docs/UpdateBenchmarkModel.md)
  - [UpdateBenchmarkNameModel](rapidata/api_client/docs/UpdateBenchmarkNameModel.md)
+ - [UpdateCampaignModel](rapidata/api_client/docs/UpdateCampaignModel.md)
  - [UpdateDatasetNameModel](rapidata/api_client/docs/UpdateDatasetNameModel.md)
  - [UpdateDimensionsModel](rapidata/api_client/docs/UpdateDimensionsModel.md)
  - [UpdateLeaderboardModel](rapidata/api_client/docs/UpdateLeaderboardModel.md)
@@ -594,10 +600,11 @@ Class | Method | HTTP request | Description
  - [UpdateValidationSetModel](rapidata/api_client/docs/UpdateValidationSetModel.md)
  - [UploadAssetResult](rapidata/api_client/docs/UploadAssetResult.md)
  - [UploadCocoResult](rapidata/api_client/docs/UploadCocoResult.md)
- - [UploadFileFromUrlResult](rapidata/api_client/docs/UploadFileFromUrlResult.md)
  - [UploadFileResult](rapidata/api_client/docs/UploadFileResult.md)
  - [UploadFromS3Result](rapidata/api_client/docs/UploadFromS3Result.md)
  - [UrlAssetInput](rapidata/api_client/docs/UrlAssetInput.md)
+ - [UserActionRestriction](rapidata/api_client/docs/UserActionRestriction.md)
+ - [UserActionRestrictionFilter](rapidata/api_client/docs/UserActionRestrictionFilter.md)
  - [UserScoreFilter](rapidata/api_client/docs/UserScoreFilter.md)
  - [UserScoreUserFilterModel](rapidata/api_client/docs/UserScoreUserFilterModel.md)
  - [UserState](rapidata/api_client/docs/UserState.md)
