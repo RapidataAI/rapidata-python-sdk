@@ -39,6 +39,7 @@ from rapidata.api_client.api.prompt_api import PromptApi
 from rapidata.api_client.api.rapidata_identity_api_api import RapidataIdentityAPIApi
 from rapidata.api_client.api.sample_api import SampleApi
 from rapidata.api_client.api.simple_workflow_api import SimpleWorkflowApi
+from rapidata.api_client.api.survey_api import SurveyApi
 from rapidata.api_client.api.user_info_api import UserInfoApi
 from rapidata.api_client.api.user_rapid_api import UserRapidApi
 from rapidata.api_client.api.validation_set_api import ValidationSetApi
@@ -66,6 +67,8 @@ from rapidata.api_client.models.add_validation_rapid_new_model import AddValidat
 from rapidata.api_client.models.add_validation_rapid_new_model_asset import AddValidationRapidNewModelAsset
 from rapidata.api_client.models.age_group import AgeGroup
 from rapidata.api_client.models.age_user_filter_model import AgeUserFilterModel
+from rapidata.api_client.models.aggregated_orders_model import AggregatedOrdersModel
+from rapidata.api_client.models.aggregated_orders_model_paged_result import AggregatedOrdersModelPagedResult
 from rapidata.api_client.models.aggregator_type import AggregatorType
 from rapidata.api_client.models.and_filter import AndFilter
 from rapidata.api_client.models.and_filter_filters_inner import AndFilterFiltersInner
@@ -83,6 +86,7 @@ from rapidata.api_client.models.boost_leaderboard_model import BoostLeaderboardM
 from rapidata.api_client.models.boost_mode import BoostMode
 from rapidata.api_client.models.boost_query_result import BoostQueryResult
 from rapidata.api_client.models.boost_status import BoostStatus
+from rapidata.api_client.models.boosting_profile import BoostingProfile
 from rapidata.api_client.models.bounding_box_payload import BoundingBoxPayload
 from rapidata.api_client.models.bounding_box_rapid_blueprint import BoundingBoxRapidBlueprint
 from rapidata.api_client.models.bounding_box_result import BoundingBoxResult
@@ -374,6 +378,7 @@ from rapidata.api_client.models.scrub_rapid_blueprint import ScrubRapidBlueprint
 from rapidata.api_client.models.scrub_result import ScrubResult
 from rapidata.api_client.models.scrub_truth import ScrubTruth
 from rapidata.api_client.models.send_completion_mail_step_model import SendCompletionMailStepModel
+from rapidata.api_client.models.send_survey_model import SendSurveyModel
 from rapidata.api_client.models.shape import Shape
 from rapidata.api_client.models.shuffling_selection import ShufflingSelection
 from rapidata.api_client.models.simple_workflow_config import SimpleWorkflowConfig
@@ -422,6 +427,7 @@ from rapidata.api_client.models.translated_string import TranslatedString
 from rapidata.api_client.models.unlock_order_result import UnlockOrderResult
 from rapidata.api_client.models.update_benchmark_model import UpdateBenchmarkModel
 from rapidata.api_client.models.update_benchmark_name_model import UpdateBenchmarkNameModel
+from rapidata.api_client.models.update_campaign_model import UpdateCampaignModel
 from rapidata.api_client.models.update_dataset_name_model import UpdateDatasetNameModel
 from rapidata.api_client.models.update_dimensions_model import UpdateDimensionsModel
 from rapidata.api_client.models.update_leaderboard_model import UpdateLeaderboardModel
@@ -438,10 +444,11 @@ from rapidata.api_client.models.update_validation_rapid_model_truth import Updat
 from rapidata.api_client.models.update_validation_set_model import UpdateValidationSetModel
 from rapidata.api_client.models.upload_asset_result import UploadAssetResult
 from rapidata.api_client.models.upload_coco_result import UploadCocoResult
-from rapidata.api_client.models.upload_file_from_url_result import UploadFileFromUrlResult
 from rapidata.api_client.models.upload_file_result import UploadFileResult
 from rapidata.api_client.models.upload_from_s3_result import UploadFromS3Result
 from rapidata.api_client.models.url_asset_input import UrlAssetInput
+from rapidata.api_client.models.user_action_restriction import UserActionRestriction
+from rapidata.api_client.models.user_action_restriction_filter import UserActionRestrictionFilter
 from rapidata.api_client.models.user_score_filter import UserScoreFilter
 from rapidata.api_client.models.user_score_user_filter_model import UserScoreUserFilterModel
 from rapidata.api_client.models.user_state import UserState

@@ -18,8 +18,9 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.boosting_profile import BoostingProfile
 from rapidata.api_client.models.campaign_status import CampaignStatus
 from typing import Optional, Set
 from typing_extensions import Self
@@ -33,8 +34,10 @@ class CampaignQueryResult(BaseModel):
     name: StrictStr
     status: CampaignStatus
     priority: StrictInt
+    boosting_profile: BoostingProfile = Field(alias="boostingProfile")
+    requires_booster: Optional[StrictBool] = Field(default=None, alias="requiresBooster")
     created_at: datetime = Field(alias="createdAt")
-    __properties: ClassVar[List[str]] = ["id", "ownerMail", "name", "status", "priority", "createdAt"]
+    __properties: ClassVar[List[str]] = ["id", "ownerMail", "name", "status", "priority", "boostingProfile", "requiresBooster", "createdAt"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -66,8 +69,10 @@ class CampaignQueryResult(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * OpenAPI `readOnly` fields are excluded.
         """
         excluded_fields: Set[str] = set([
+            "requires_booster",
         ])
 
         _dict = self.model_dump(
@@ -75,6 +80,9 @@ class CampaignQueryResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of boosting_profile
+        if self.boosting_profile:
+            _dict['boostingProfile'] = self.boosting_profile.to_dict()
         return _dict
 
     @classmethod
@@ -92,6 +100,8 @@ class CampaignQueryResult(BaseModel):
             "name": obj.get("name"),
             "status": obj.get("status"),
             "priority": obj.get("priority"),
+            "boostingProfile": BoostingProfile.from_dict(obj["boostingProfile"]) if obj.get("boostingProfile") is not None else None,
+            "requiresBooster": obj.get("requiresBooster"),
             "createdAt": obj.get("createdAt")
         })
         return _obj
