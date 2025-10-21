@@ -19,7 +19,7 @@ import json
 
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -34,7 +34,8 @@ class GetOrderByIdResult(BaseModel):
     pipeline_id: StrictStr = Field(alias="pipelineId")
     is_locked: StrictBool = Field(alias="isLocked")
     is_public: StrictBool = Field(alias="isPublic")
-    __properties: ClassVar[List[str]] = ["orderName", "customerMail", "orderDate", "state", "pipelineId", "isLocked", "isPublic"]
+    failure_message: Optional[StrictStr] = Field(default=None, alias="failureMessage")
+    __properties: ClassVar[List[str]] = ["orderName", "customerMail", "orderDate", "state", "pipelineId", "isLocked", "isPublic", "failureMessage"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -75,6 +76,11 @@ class GetOrderByIdResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if failure_message (nullable) is None
+        # and model_fields_set contains the field
+        if self.failure_message is None and "failure_message" in self.model_fields_set:
+            _dict['failureMessage'] = None
+
         return _dict
 
     @classmethod
@@ -93,7 +99,8 @@ class GetOrderByIdResult(BaseModel):
             "state": obj.get("state"),
             "pipelineId": obj.get("pipelineId"),
             "isLocked": obj.get("isLocked"),
-            "isPublic": obj.get("isPublic")
+            "isPublic": obj.get("isPublic"),
+            "failureMessage": obj.get("failureMessage")
         })
         return _obj
 

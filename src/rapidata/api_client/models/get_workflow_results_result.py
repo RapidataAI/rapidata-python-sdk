@@ -20,6 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.datapoint_asset import DatapointAsset
+from rapidata.api_client.models.file_asset_model_metadata_value import FileAssetModelMetadataValue
 from rapidata.api_client.models.get_validation_rapids_result_payload import GetValidationRapidsResultPayload
 from rapidata.api_client.models.rapid_response import RapidResponse
 from rapidata.api_client.models.rapid_state import RapidState
@@ -35,7 +36,8 @@ class GetWorkflowResultsResult(BaseModel):
     asset: DatapointAsset
     responses: List[RapidResponse]
     state: RapidState
-    __properties: ClassVar[List[str]] = ["rapidId", "payload", "asset", "responses", "state"]
+    metadata: Dict[str, FileAssetModelMetadataValue]
+    __properties: ClassVar[List[str]] = ["rapidId", "payload", "asset", "responses", "state", "metadata"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -89,6 +91,13 @@ class GetWorkflowResultsResult(BaseModel):
                 if _item_responses:
                     _items.append(_item_responses.to_dict())
             _dict['responses'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each value in metadata (dict)
+        _field_dict = {}
+        if self.metadata:
+            for _key_metadata in self.metadata:
+                if self.metadata[_key_metadata]:
+                    _field_dict[_key_metadata] = self.metadata[_key_metadata].to_dict()
+            _dict['metadata'] = _field_dict
         return _dict
 
     @classmethod
@@ -105,7 +114,13 @@ class GetWorkflowResultsResult(BaseModel):
             "payload": GetValidationRapidsResultPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
             "asset": DatapointAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "responses": [RapidResponse.from_dict(_item) for _item in obj["responses"]] if obj.get("responses") is not None else None,
-            "state": obj.get("state")
+            "state": obj.get("state"),
+            "metadata": dict(
+                (_k, FileAssetModelMetadataValue.from_dict(_v))
+                for _k, _v in obj["metadata"].items()
+            )
+            if obj.get("metadata") is not None
+            else None
         })
         return _obj
 

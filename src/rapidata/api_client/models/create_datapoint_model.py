@@ -19,8 +19,8 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.create_datapoint_from_files_model_metadata_inner import CreateDatapointFromFilesModelMetadataInner
 from rapidata.api_client.models.create_datapoint_model_asset import CreateDatapointModelAsset
+from rapidata.api_client.models.create_datapoint_model_metadata_inner import CreateDatapointModelMetadataInner
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -29,7 +29,7 @@ class CreateDatapointModel(BaseModel):
     The body request for creating a new datapoint
     """ # noqa: E501
     asset: CreateDatapointModelAsset
-    metadata: List[CreateDatapointFromFilesModelMetadataInner] = Field(description="The metadata of the datapoint")
+    metadata: List[CreateDatapointModelMetadataInner] = Field(description="The metadata of the datapoint")
     sort_index: Optional[StrictInt] = Field(default=None, description="The sort index represents the order of the datapoint in the dataset", alias="sortIndex")
     group: Optional[StrictStr] = Field(default=None, description="The group a datapoint belongs to.")
     __properties: ClassVar[List[str]] = ["asset", "metadata", "sortIndex", "group"]
@@ -106,7 +106,7 @@ class CreateDatapointModel(BaseModel):
 
         _obj = cls.model_validate({
             "asset": CreateDatapointModelAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
-            "metadata": [CreateDatapointFromFilesModelMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
+            "metadata": [CreateDatapointModelMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
             "sortIndex": obj.get("sortIndex"),
             "group": obj.get("group")
         })

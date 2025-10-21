@@ -20,7 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.classify_payload import ClassifyPayload
-from rapidata.api_client.models.create_demographic_rapid_model_asset import CreateDemographicRapidModelAsset
+from rapidata.api_client.models.create_demographic_rapid_model_new_asset import CreateDemographicRapidModelNewAsset
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from typing import Optional, Set
 from typing_extensions import Self
@@ -32,7 +32,7 @@ class CreateDemographicRapidModelNew(BaseModel):
     key: StrictStr = Field(description="The identifier of the demographic classification.")
     payload: ClassifyPayload
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, description="Optional feature flags to apply to the rapid.", alias="featureFlags")
-    asset: Optional[CreateDemographicRapidModelAsset] = None
+    asset: Optional[CreateDemographicRapidModelNewAsset] = None
     __properties: ClassVar[List[str]] = ["key", "payload", "featureFlags", "asset"]
 
     model_config = ConfigDict(
@@ -112,7 +112,7 @@ class CreateDemographicRapidModelNew(BaseModel):
             "key": obj.get("key"),
             "payload": ClassifyPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
-            "asset": CreateDemographicRapidModelAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None
+            "asset": CreateDemographicRapidModelNewAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None
         })
         return _obj
 
