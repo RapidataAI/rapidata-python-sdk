@@ -20,10 +20,10 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.compare_workflow_config_model_pair_maker_config import CompareWorkflowConfigModelPairMakerConfig
+from rapidata.api_client.models.compare_workflow_model1_metadata_value import CompareWorkflowModel1MetadataValue
 from rapidata.api_client.models.compare_workflow_model1_referee import CompareWorkflowModel1Referee
 from rapidata.api_client.models.elo_config import EloConfig
 from rapidata.api_client.models.feature_flag import FeatureFlag
-from rapidata.api_client.models.file_asset_metadata_value import FileAssetMetadataValue
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -35,11 +35,11 @@ class CompareWorkflowConfigModel(BaseModel):
     criteria: StrictStr = Field(description="The criteria to add to each compare rapid.")
     pair_maker_config: CompareWorkflowConfigModelPairMakerConfig = Field(alias="pairMakerConfig")
     referee: CompareWorkflowModel1Referee
-    target_country_codes: List[StrictStr] = Field(description="A list of country codes that this workflow is targeting.", alias="targetCountryCodes")
     elo_config: Optional[EloConfig] = Field(default=None, alias="eloConfig")
-    metadata: Dict[str, FileAssetMetadataValue] = Field(description="The metadata is attached to every single rapid and can be used for something like the prompt.")
+    target_country_codes: Optional[List[StrictStr]] = Field(default=None, description="DO NOT USES!!!!", alias="targetCountryCodes")
+    metadata: Dict[str, CompareWorkflowModel1MetadataValue] = Field(description="The metadata is attached to every single rapid and can be used for something like the prompt.")
     feature_flags: List[FeatureFlag] = Field(description="The list of feature flags that will be applied to the rapids created by this workflow.", alias="featureFlags")
-    __properties: ClassVar[List[str]] = ["_t", "criteria", "pairMakerConfig", "referee", "targetCountryCodes", "eloConfig", "metadata", "featureFlags"]
+    __properties: ClassVar[List[str]] = ["_t", "criteria", "pairMakerConfig", "referee", "eloConfig", "targetCountryCodes", "metadata", "featureFlags"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -110,6 +110,11 @@ class CompareWorkflowConfigModel(BaseModel):
                 if _item_feature_flags:
                     _items.append(_item_feature_flags.to_dict())
             _dict['featureFlags'] = _items
+        # set to None if target_country_codes (nullable) is None
+        # and model_fields_set contains the field
+        if self.target_country_codes is None and "target_country_codes" in self.model_fields_set:
+            _dict['targetCountryCodes'] = None
+
         return _dict
 
     @classmethod
@@ -126,10 +131,10 @@ class CompareWorkflowConfigModel(BaseModel):
             "criteria": obj.get("criteria"),
             "pairMakerConfig": CompareWorkflowConfigModelPairMakerConfig.from_dict(obj["pairMakerConfig"]) if obj.get("pairMakerConfig") is not None else None,
             "referee": CompareWorkflowModel1Referee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
-            "targetCountryCodes": obj.get("targetCountryCodes"),
             "eloConfig": EloConfig.from_dict(obj["eloConfig"]) if obj.get("eloConfig") is not None else None,
+            "targetCountryCodes": obj.get("targetCountryCodes"),
             "metadata": dict(
-                (_k, FileAssetMetadataValue.from_dict(_v))
+                (_k, CompareWorkflowModel1MetadataValue.from_dict(_v))
                 for _k, _v in obj["metadata"].items()
             )
             if obj.get("metadata") is not None

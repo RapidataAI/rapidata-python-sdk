@@ -21,7 +21,7 @@ from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.compare_workflow_model1_referee import CompareWorkflowModel1Referee
 from rapidata.api_client.models.feature_flag import FeatureFlag
-from rapidata.api_client.models.validation_set_zip_post_request_blueprint import ValidationSetZipPostRequestBlueprint
+from rapidata.api_client.models.simple_workflow_model_blueprint import SimpleWorkflowModelBlueprint
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -31,7 +31,7 @@ class SimpleWorkflowConfig(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for SimpleWorkflowConfig", alias="_t")
     referee: CompareWorkflowModel1Referee
-    blueprint: ValidationSetZipPostRequestBlueprint
+    blueprint: SimpleWorkflowModelBlueprint
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
     __properties: ClassVar[List[str]] = ["_t", "referee", "blueprint", "featureFlags"]
 
@@ -108,7 +108,7 @@ class SimpleWorkflowConfig(BaseModel):
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'SimpleWorkflowConfig',
             "referee": CompareWorkflowModel1Referee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
-            "blueprint": ValidationSetZipPostRequestBlueprint.from_dict(obj["blueprint"]) if obj.get("blueprint") is not None else None,
+            "blueprint": SimpleWorkflowModelBlueprint.from_dict(obj["blueprint"]) if obj.get("blueprint") is not None else None,
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
         })
         return _obj
