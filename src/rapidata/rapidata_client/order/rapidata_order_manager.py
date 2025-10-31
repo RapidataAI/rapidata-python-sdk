@@ -138,6 +138,11 @@ class RapidataOrderManager:
     def _set_sticky_state(
         self, sticky_state: Literal["None", "Temporary", "Permanent"]
     ):
+        """
+        permanent -> user sticks to that campaign until its over
+        temporary -> user sticks to that campaign until its over or the filters disqualify him
+        passive -> user is only allowed to have one sticky campaign, but still needs to compete against non sticky campaigns
+        """
         if sticky_state not in ["None", "Temporary", "Permanent"]:
             raise ValueError(
                 "Sticky state must be one of 'None', 'Temporary', 'Permanent'"
