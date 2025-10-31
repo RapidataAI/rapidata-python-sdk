@@ -17,6 +17,7 @@ from .rapidata_client import (
     FreeTextMinimumCharacters,
     NoShuffle,
     PlayVideoUntilTheEnd,
+    MuteVideo,
     CustomSetting,
     AllowNeitherBoth,
     SwapContextInstruction,

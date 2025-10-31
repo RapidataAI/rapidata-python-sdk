@@ -27,6 +27,7 @@ from .settings import (
     CustomSetting,
     AllowNeitherBoth,
     SwapContextInstruction,
+    MuteVideo,
 )
 from .filter import (
     CountryFilter,
