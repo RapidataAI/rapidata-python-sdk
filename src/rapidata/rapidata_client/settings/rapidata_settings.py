@@ -45,7 +45,7 @@ class RapidataSettings:
     mute_video = MuteVideo
 
     def __str__(self) -> str:
-        return f"RapidataSettings(alert_on_fast_response={self.alert_on_fast_response}, translation_behaviour={self.translation_behaviour}, free_text_minimum_characters={self.free_text_minimum_characters}, no_shuffle={self.no_shuffle}, play_video_until_the_end={self.play_video_until_the_end}, allow_neither_both={self.allow_neither_both}, swap_context_instruction={self.swap_context_instruction})"
+        return f"RapidataSettings(alert_on_fast_response={self.alert_on_fast_response}, translation_behaviour={self.translation_behaviour}, free_text_minimum_characters={self.free_text_minimum_characters}, no_shuffle={self.no_shuffle}, play_video_until_the_end={self.play_video_until_the_end}, allow_neither_both={self.allow_neither_both}, swap_context_instruction={self.swap_context_instruction}, mute_video={self.mute_video})"
 
     def __repr__(self) -> str:
         return self.__str__()

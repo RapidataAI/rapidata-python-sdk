@@ -12,4 +12,6 @@ class AllowNeitherBoth(RapidataSetting):
     """
 
     def __init__(self, value: bool = True):
+        if not isinstance(value, bool):
+            raise ValueError("The value must be a boolean.")
         super().__init__(key="compare_unsure", value=value)
