@@ -377,7 +377,7 @@ class CustomerRapidApi:
 
 
     @validate_call
-    def rapid_demographic_new_post(
+    def rapid_demographic_post(
         self,
         create_demographic_rapid_model_new: Annotated[Optional[CreateDemographicRapidModelNew], Field(description="The model containing the demographic rapid.")] = None,
         _request_timeout: Union[
@@ -393,7 +393,7 @@ class CustomerRapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> CreateRapidResult:
-        """Creates a new Demographic Rapid.
+        """Creates a new Demographic Rapid with JSON body.
 
 
         :param create_demographic_rapid_model_new: The model containing the demographic rapid.
@@ -420,7 +420,7 @@ class CustomerRapidApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._rapid_demographic_new_post_serialize(
+        _param = self._rapid_demographic_post_serialize(
             create_demographic_rapid_model_new=create_demographic_rapid_model_new,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -443,7 +443,7 @@ class CustomerRapidApi:
 
 
     @validate_call
-    def rapid_demographic_new_post_with_http_info(
+    def rapid_demographic_post_with_http_info(
         self,
         create_demographic_rapid_model_new: Annotated[Optional[CreateDemographicRapidModelNew], Field(description="The model containing the demographic rapid.")] = None,
         _request_timeout: Union[
@@ -459,7 +459,7 @@ class CustomerRapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[CreateRapidResult]:
-        """Creates a new Demographic Rapid.
+        """Creates a new Demographic Rapid with JSON body.
 
 
         :param create_demographic_rapid_model_new: The model containing the demographic rapid.
@@ -486,7 +486,7 @@ class CustomerRapidApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._rapid_demographic_new_post_serialize(
+        _param = self._rapid_demographic_post_serialize(
             create_demographic_rapid_model_new=create_demographic_rapid_model_new,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -509,7 +509,7 @@ class CustomerRapidApi:
 
 
     @validate_call
-    def rapid_demographic_new_post_without_preload_content(
+    def rapid_demographic_post_without_preload_content(
         self,
         create_demographic_rapid_model_new: Annotated[Optional[CreateDemographicRapidModelNew], Field(description="The model containing the demographic rapid.")] = None,
         _request_timeout: Union[
@@ -525,7 +525,7 @@ class CustomerRapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Creates a new Demographic Rapid.
+        """Creates a new Demographic Rapid with JSON body.
 
 
         :param create_demographic_rapid_model_new: The model containing the demographic rapid.
@@ -552,7 +552,7 @@ class CustomerRapidApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._rapid_demographic_new_post_serialize(
+        _param = self._rapid_demographic_post_serialize(
             create_demographic_rapid_model_new=create_demographic_rapid_model_new,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -570,7 +570,7 @@ class CustomerRapidApi:
         return response_data.response
 
 
-    def _rapid_demographic_new_post_serialize(
+    def _rapid_demographic_post_serialize(
         self,
         create_demographic_rapid_model_new,
         _request_auth,
@@ -636,7 +636,7 @@ class CustomerRapidApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/rapid/demographic-new',
+            resource_path='/rapid/demographic',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

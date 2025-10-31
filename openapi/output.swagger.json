@@ -17,162 +17,6 @@
     }
   ],
   "paths": {
-    "/asset/file": {
-      "post": {
-        "tags": [
-          "Asset"
-        ],
-        "summary": "Uploads a single asset to S3 and returns the asset details.",
-        "description": "This endpoint allows uploading a single file to S3 storage with the asset creator.\nThe uploaded asset will be stored using the configured S3 settings and a unique filename will be generated.",
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "file": {
-                    "type": "string",
-                    "description": "The file to upload to S3.",
-                    "format": "binary"
-                  }
-                }
-              },
-              "encoding": {
-                "file": {
-                  "style": "form"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/UploadFileResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UploadFileResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UploadFileResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/asset/url": {
-      "post": {
-        "tags": [
-          "Asset"
-        ],
-        "summary": "Uploads a single asset to S3 and returns the asset details.",
-        "description": "This endpoint allows uploading a single file to S3 storage with the asset creator.\nThe uploaded asset will be stored using the configured S3 settings and a unique filename will be generated.",
-        "parameters": [
-          {
-            "name": "url",
-            "in": "query",
-            "description": "The url of the file to upload to S3.",
-            "schema": {
-              "type": "string",
-              "format": "uri"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/UploadFileFromUrlResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UploadFileFromUrlResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UploadFileFromUrlResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/asset/{fileName}/metadata": {
-      "get": {
-        "tags": [
-          "Asset"
-        ],
-        "summary": "Gets the metadata for an asset by file name.",
-        "description": "This endpoint retrieves metadata information for an asset stored in S3.\nThe metadata includes details such as content type, size, creation date, and custom metadata fields.",
-        "parameters": [
-          {
-            "name": "fileName",
-            "in": "path",
-            "description": "The name of the file to retrieve metadata for.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetAssetMetadataResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetAssetMetadataResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetAssetMetadataResult"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/datapoint/{datapointId}": {
       "get": {
         "tags": [
@@ -328,158 +172,6 @@
             }
           }
         }
-      },
-      "post": {
-        "tags": [
-          "Dataset"
-        ],
-        "summary": "Creates a new datapoint from multiple possible sources.",
-        "description": "Multiple files, texts, and urls can be provided.\nIf multiple files are provided, a multi-asset datapoint will be created,\nmeaning that all sources provided will be stored as sub-assets of the datapoint.\n            \nIf multiple datapoints are desired, one should not pass in multiple files, texts, or urls,\ninstead, one should call this endpoint multiple times with the desired file, text, or url per datapoint.\n            \nThe request must be a multipart form request, where each parameter is sent as a separate part.\nThe files, texts, and urls can be mixed and matched as needed, however, at least one of them must be provided,\nand one should make sure that mixing them makes sense for the dataset.",
-        "parameters": [
-          {
-            "name": "datasetId",
-            "in": "path",
-            "description": "The id of the dataset",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "promptAsset": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "format": "binary"
-                    }
-                  },
-                  "file": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "format": "binary"
-                    }
-                  },
-                  "text": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "description": "The texts to upload. The length limit is set at 256 characters per text."
-                  },
-                  "url": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "description": "Creates an asset from a url. The url needs to point to a publicly accessible resource.\nThe server will download the resource and store it as an asset in the background.\n<remarks>\n    Additionally, to the urls having to be publicly accessible, they need to support HTTP HEAD requests.\n</remarks>"
-                  },
-                  "metadata": {
-                    "type": "array",
-                    "items": {
-                      "oneOf": [
-                        {
-                          "$ref": "#/components/schemas/PrivateTextMetadataInput"
-                        },
-                        {
-                          "$ref": "#/components/schemas/PromptAssetMetadataInput"
-                        },
-                        {
-                          "$ref": "#/components/schemas/PromptMetadataInput"
-                        },
-                        {
-                          "$ref": "#/components/schemas/PublicTextMetadataInput"
-                        },
-                        {
-                          "$ref": "#/components/schemas/TranscriptionMetadataInput"
-                        }
-                      ],
-                      "discriminator": {
-                        "propertyName": "_t"
-                      }
-                    },
-                    "description": "Optional metadata to attach to the datapoint."
-                  },
-                  "sortIndex": {
-                    "type": "integer",
-                    "description": "The index will be used to keep the datapoints in order. Useful if upload is parallelized",
-                    "format": "int64"
-                  },
-                  "group": {
-                    "type": "string",
-                    "description": "The group the datapoint belongs to."
-                  }
-                }
-              },
-              "encoding": {
-                "promptAsset": {
-                  "contentType": "text/plain",
-                  "style": "form",
-                  "explode": true
-                },
-                "file": {
-                  "contentType": "text/plain",
-                  "style": "form",
-                  "explode": true
-                },
-                "text": {
-                  "contentType": "text/plain",
-                  "style": "form",
-                  "explode": true
-                },
-                "url": {
-                  "contentType": "text/plain",
-                  "style": "form",
-                  "explode": true
-                },
-                "metadata": {
-                  "contentType": "application/json",
-                  "style": "form",
-                  "explode": true
-                },
-                "sortIndex": {
-                  "contentType": "int64",
-                  "style": "form",
-                  "explode": true
-                },
-                "group": {
-                  "contentType": "text/plain",
-                  "style": "form",
-                  "explode": true
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateDatapointResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateDatapointResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateDatapointResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
       }
     },
     "/dataset/{datasetId}/progress": {
@@ -570,12 +262,12 @@
         "tags": [
           "Dataset"
         ],
-        "summary": "Creates a datapoint via the new endpoint.",
+        "summary": "Creates a datapoint with JSON body.",
         "parameters": [
           {
             "name": "datasetId",
             "in": "path",
-            "description": "",
+            "description": "The id of the dataset to create the datapoint in.",
             "required": true,
             "schema": {
               "type": "string"
@@ -583,7 +275,7 @@
           }
         ],
         "requestBody": {
-          "description": "",
+          "description": "The datapoint model containing asset, metadata, and sort index.",
           "content": {
             "application/json": {
               "schema": {
@@ -619,328 +311,6 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CreateDatapointResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/dataset/{datasetId}/datapoints/files": {
-      "post": {
-        "tags": [
-          "Dataset"
-        ],
-        "summary": "Creates a single datapoint by uploading files.",
-        "description": "If multiple files are uploaded, a multi asset datapoint will be created.",
-        "parameters": [
-          {
-            "name": "datasetId",
-            "in": "path",
-            "description": "The id of the dataset to create the datapoint in.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "files": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "format": "binary"
-                    }
-                  },
-                  "model": {
-                    "$ref": "#/components/schemas/CreateDatapointFromFilesModel"
-                  }
-                }
-              },
-              "encoding": {
-                "files": {
-                  "style": "form"
-                },
-                "model": {
-                  "style": "form"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateDatapointResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateDatapointResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateDatapointResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
-    "/dataset/{datasetId}/datapoints/texts": {
-      "post": {
-        "tags": [
-          "Dataset"
-        ],
-        "summary": "Creates a single datapoint from text sources.",
-        "description": "If multiple text sources are uploaded, a multi asset datapoint will be created.",
-        "parameters": [
-          {
-            "name": "datasetId",
-            "in": "path",
-            "description": "The id of the dataset to create the datapoint in.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The body of the request.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateDatapointFromTextSourcesModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateDatapointFromTextSourcesModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateDatapointFromTextSourcesModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateDatapointResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateDatapointResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateDatapointResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
-    "/dataset/{datasetId}/datapoints/urls": {
-      "post": {
-        "tags": [
-          "Dataset"
-        ],
-        "summary": "Creates a single datapoint where the assets are fetched from the specified urls.",
-        "description": "Passing in multiple urls will create a single datapoint with a MultiAsset.\nEach url will be fetched and stored as a sub-asset of the MultiAsset.\n<para />\nIf any of the urls are not accessible, the request will fail.",
-        "parameters": [
-          {
-            "name": "datasetId",
-            "in": "path",
-            "description": "The id of the dataset to create the datapoint in.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The body of the request.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateDatapointFromUrlsModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateDatapointFromUrlsModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateDatapointFromUrlsModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateDatapointResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateDatapointResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateDatapointResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
-    "/dataset/{datasetId}/datapoints/s3": {
-      "post": {
-        "tags": [
-          "Dataset"
-        ],
-        "summary": "Uploads files from an S3 bucket to a dataset.",
-        "description": "A new datapoint will be created for each file in the bucket.",
-        "parameters": [
-          {
-            "name": "datasetId",
-            "in": "path",
-            "description": "The id of the dataset to upload the files to.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The body of the request.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateDatapointsFromS3BucketModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateDatapointsFromS3BucketModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateDatapointsFromS3BucketModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/UploadFromS3Result"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UploadFromS3Result"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UploadFromS3Result"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/dataset/{datasetId}/datapoints/csv": {
-      "post": {
-        "tags": [
-          "Dataset"
-        ],
-        "summary": "Creates multiple datapoints from a csv.",
-        "parameters": [
-          {
-            "name": "datasetId",
-            "in": "path",
-            "description": "The id of the dataset to import the datapoints to.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "file": {
-                    "type": "string",
-                    "description": "The csv file to import.",
-                    "format": "binary"
-                  }
-                }
-              },
-              "encoding": {
-                "file": {
-                  "style": "form"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ImportFromFileResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ImportFromFileResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ImportFromFileResult"
                 }
               }
             }
@@ -988,100 +358,6 @@
         "responses": {
           "204": {
             "description": "No Content"
-          }
-        }
-      }
-    },
-    "/dataset/asset/file": {
-      "post": {
-        "tags": [
-          "Dataset"
-        ],
-        "summary": "Uploads a single asset to S3 and returns the asset details.",
-        "description": "This endpoint allows uploading a single file to S3 storage with the asset creator.\nThe uploaded asset will be stored using the configured S3 settings and a unique filename will be generated.",
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "file": {
-                    "type": "string",
-                    "description": "The file to upload to S3.",
-                    "format": "binary"
-                  }
-                }
-              },
-              "encoding": {
-                "file": {
-                  "style": "form"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/UploadAssetResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UploadAssetResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UploadAssetResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/dataset/asset/url": {
-      "post": {
-        "tags": [
-          "Dataset"
-        ],
-        "summary": "Uploads a single asset to S3 and returns the asset details.",
-        "description": "This endpoint allows uploading a single file to S3 storage with the asset creator.\nThe uploaded asset will be stored using the configured S3 settings and a unique filename will be generated.",
-        "parameters": [
-          {
-            "name": "url",
-            "in": "query",
-            "description": "The url of the file to upload to S3.",
-            "schema": {
-              "type": "string",
-              "format": "uri"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/UploadAssetResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UploadAssetResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UploadAssetResult"
-                }
-              }
-            }
           }
         }
       }
@@ -1156,6 +432,49 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/OrderModelPagedResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/aggregated-overview": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Retrieves the orders aggregated by customer, with total amounts and most recent order informations.",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AggregatedOrdersModelPagedResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AggregatedOrdersModelPagedResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AggregatedOrdersModelPagedResult"
                 }
               }
             }
@@ -2304,6 +1623,38 @@
         }
       }
     },
+    "/identity/survey": {
+      "post": {
+        "tags": [
+          "Survey"
+        ],
+        "summary": "Sends a survey.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendSurveyModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendSurveyModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendSurveyModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/connect/userinfo": {
       "get": {
         "tags": [
@@ -2313,122 +1664,6 @@
         "responses": {
           "200": {
             "description": "OK"
-          }
-        }
-      }
-    },
-    "/coco": {
-      "post": {
-        "tags": [
-          "Coco"
-        ],
-        "summary": "Uploads a CoCo set to the system.",
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "Name": {
-                    "type": "string"
-                  },
-                  "Title": {
-                    "type": "string"
-                  }
-                }
-              },
-              "encoding": {
-                "Name": {
-                  "style": "form"
-                },
-                "Title": {
-                  "style": "form"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/UploadCocoResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UploadCocoResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UploadCocoResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/coco/{cocoSetId}/submit": {
-      "post": {
-        "tags": [
-          "Coco"
-        ],
-        "summary": "Creates a new validation set based on a previously uploaded CoCo set.",
-        "parameters": [
-          {
-            "name": "cocoSetId",
-            "in": "path",
-            "description": "The ID of the CoCo set to use for validation.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The model containing the information needed to create the validation set.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SubmitCocoModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SubmitCocoModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/SubmitCocoModel"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/SubmitCocoResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SubmitCocoResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SubmitCocoResult"
-                }
-              }
-            }
           }
         }
       }
@@ -2805,12 +2040,12 @@
         "tags": [
           "ValidationSet"
         ],
-        "summary": "Adds a new validation rapid to the specified validation set using files to create the assets.",
+        "summary": "Adds a new validation rapid to the validation set using JSON body.",
         "parameters": [
           {
             "name": "validationSetId",
             "in": "path",
-            "description": "The ID of the validation set to add the rapid to.",
+            "description": "The validation set to add a rapid to.",
             "required": true,
             "schema": {
               "type": "string"
@@ -2818,54 +2053,21 @@
           }
         ],
         "requestBody": {
+          "description": "The validation rapid data including asset, payload, and metadata.",
           "content": {
-            "multipart/form-data": {
+            "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "model": {
-                    "$ref": "#/components/schemas/AddValidationRapidModel"
-                  },
-                  "files": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "format": "binary"
-                    }
-                  },
-                  "texts": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "description": "The texts to use for the rapid."
-                  },
-                  "urls": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "format": "uri"
-                    },
-                    "description": "The urls to use for the rapid"
-                  }
-                }
-              },
-              "encoding": {
-                "files": {
-                  "contentType": "text/plain",
-                  "style": "form",
-                  "explode": true
-                },
-                "texts": {
-                  "contentType": "text/plain",
-                  "style": "form",
-                  "explode": true
-                },
-                "urls": {
-                  "contentType": "text/plain",
-                  "style": "form",
-                  "explode": true
-                }
+                "$ref": "#/components/schemas/AddValidationRapidNewModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddValidationRapidNewModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddValidationRapidNewModel"
               }
             }
           }
@@ -2918,90 +2120,8 @@
           "204": {
             "description": "No Content"
           }
-        }
-      }
-    },
-    "/validation-set/zip": {
-      "post": {
-        "tags": [
-          "ValidationSet"
-        ],
-        "summary": "Imports a validation set from a zip file.",
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "Blueprint": {
-                    "oneOf": [
-                      {
-                        "$ref": "#/components/schemas/TranscriptionRapidBlueprint"
-                      },
-                      {
-                        "$ref": "#/components/schemas/ScrubRapidBlueprint"
-                      },
-                      {
-                        "$ref": "#/components/schemas/PolygonRapidBlueprint"
-                      },
-                      {
-                        "$ref": "#/components/schemas/NamedEntityRapidBlueprint"
-                      },
-                      {
-                        "$ref": "#/components/schemas/LocateRapidBlueprint"
-                      },
-                      {
-                        "$ref": "#/components/schemas/LineRapidBlueprint"
-                      },
-                      {
-                        "$ref": "#/components/schemas/FreeTextRapidBlueprint"
-                      },
-                      {
-                        "$ref": "#/components/schemas/CompareRapidBlueprint"
-                      },
-                      {
-                        "$ref": "#/components/schemas/AttachCategoryRapidBlueprint"
-                      },
-                      {
-                        "$ref": "#/components/schemas/BoundingBoxRapidBlueprint"
-                      }
-                    ],
-                    "discriminator": {
-                      "propertyName": "_t"
-                    }
-                  }
-                }
-              },
-              "encoding": {
-                "Blueprint": {
-                  "style": "form"
-                }
-              }
-            }
-          }
         },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ImportValidationSetFromFileResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ImportValidationSetFromFileResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ImportValidationSetFromFileResult"
-                }
-              }
-            }
-          }
-        }
+        "deprecated": true
       }
     },
     "/validation-set/{validationSetId}/update-labeling-hints": {
@@ -3058,55 +2178,6 @@
         "responses": {
           "204": {
             "description": "No Content"
-          }
-        }
-      }
-    },
-    "/validation-set/zip/compare": {
-      "post": {
-        "tags": [
-          "ValidationSet"
-        ],
-        "summary": "Imports a compare validation set from a zip file.",
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "Criteria": {
-                    "type": "string"
-                  }
-                }
-              },
-              "encoding": {
-                "Criteria": {
-                  "style": "form"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ImportValidationSetFromFileResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ImportValidationSetFromFileResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ImportValidationSetFromFileResult"
-                }
-              }
-            }
           }
         }
       }
@@ -3365,67 +2436,7 @@
         "tags": [
           "CustomerRapid"
         ],
-        "summary": "Creates a new Demographic Rapid.",
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "model": {
-                    "$ref": "#/components/schemas/CreateDemographicRapidModel"
-                  },
-                  "file": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "format": "binary"
-                    }
-                  }
-                }
-              },
-              "encoding": {
-                "model": {
-                  "style": "form"
-                },
-                "file": {
-                  "style": "form"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateRapidResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateRapidResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateRapidResult"
-                }
-              }
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
-    "/rapid/demographic-new": {
-      "post": {
-        "tags": [
-          "CustomerRapid"
-        ],
-        "summary": "Creates a new Demographic Rapid.",
+        "summary": "Creates a new Demographic Rapid with JSON body.",
         "requestBody": {
           "description": "The model containing the demographic rapid.",
           "content": {
@@ -3468,6 +2479,57 @@
             }
           }
         }
+      }
+    },
+    "/rapid/demographic-new": {
+      "post": {
+        "tags": [
+          "CustomerRapid"
+        ],
+        "summary": "Creates a new Demographic Rapid with JSON body.",
+        "requestBody": {
+          "description": "The model containing the demographic rapid.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDemographicRapidModelNew"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDemographicRapidModelNew"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDemographicRapidModelNew"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateRapidResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateRapidResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateRapidResult"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": true
       }
     },
     "/rapid/validation/{rapidId}": {
@@ -4743,6 +3805,50 @@
         }
       }
     },
+    "/campaign/{campaignId}": {
+      "patch": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "Updates a campaign.",
+        "parameters": [
+          {
+            "name": "campaignId",
+            "in": "path",
+            "description": "id of the campaign to update",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "model containing the updates",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCampaignModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCampaignModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCampaignModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
     "/campaign/{campaignId}/priority": {
       "put": {
         "tags": [
@@ -4784,7 +3890,8 @@
           "204": {
             "description": "No Content"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/campaign/boost/status": {
@@ -6523,54 +5630,21 @@
           }
         ],
         "requestBody": {
+          "description": "The model for the sample creation",
           "content": {
-            "multipart/form-data": {
+            "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "model": {
-                    "$ref": "#/components/schemas/CreateSampleModelObsolete"
-                  },
-                  "files": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "format": "binary"
-                    }
-                  },
-                  "texts": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "description": "If files aren't applicable texts can be used instead"
-                  },
-                  "urls": {
-                    "type": "array",
-                    "items": {
-                      "type": "string",
-                      "format": "uri"
-                    },
-                    "description": "Exposed assets can be added via urls."
-                  }
-                }
-              },
-              "encoding": {
-                "files": {
-                  "contentType": "text/plain",
-                  "style": "form",
-                  "explode": true
-                },
-                "texts": {
-                  "contentType": "text/plain",
-                  "style": "form",
-                  "explode": true
-                },
-                "urls": {
-                  "contentType": "text/plain",
-                  "style": "form",
-                  "explode": true
-                }
+                "$ref": "#/components/schemas/CreateSampleModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSampleModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSampleModel"
               }
             }
           }
@@ -6579,8 +5653,7 @@
           "200": {
             "description": "OK"
           }
-        },
-        "deprecated": true
+        }
       }
     },
     "/participant/{participantId}/sample-new": {
@@ -6624,7 +5697,8 @@
           "200": {
             "description": "OK"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/participant/{participantId}": {
@@ -7023,36 +6097,6 @@
   },
   "components": {
     "schemas": {
-      "AssetMetadata": {
-        "title": "AssetMetadata",
-        "required": [
-          "_t",
-          "asset",
-          "visibilities"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "AssetMetadata"
-            ],
-            "type": "string",
-            "description": "Discriminator value for AssetMetadata",
-            "default": "AssetMetadata",
-            "example": "AssetMetadata"
-          },
-          "asset": {
-            "type": "object",
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          },
-          "visibilities": {
-            "$ref": "#/components/schemas/MetadataVisibilities"
-          }
-        },
-        "additionalProperties": false
-      },
       "AssetMetadataModel": {
         "title": "AssetModel",
         "required": [
@@ -7079,32 +6123,6 @@
         },
         "additionalProperties": false
       },
-      "ClassificationMetadata": {
-        "title": "ClassificationMetadata",
-        "required": [
-          "_t",
-          "classification"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "ClassificationMetadata"
-            ],
-            "type": "string",
-            "description": "Discriminator value for ClassificationMetadata",
-            "default": "ClassificationMetadata",
-            "example": "ClassificationMetadata"
-          },
-          "classification": {
-            "type": "string"
-          },
-          "visibilities": {
-            "$ref": "#/components/schemas/MetadataVisibilities"
-          }
-        },
-        "additionalProperties": false
-      },
       "ClassificationMetadataModel": {
         "title": "ClassificationMetadata",
         "required": [
@@ -7124,33 +6142,6 @@
           },
           "classification": {
             "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "CountMetadata": {
-        "title": "CountMetadata",
-        "required": [
-          "_t",
-          "count"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "CountMetadata"
-            ],
-            "type": "string",
-            "description": "Discriminator value for CountMetadata",
-            "default": "CountMetadata",
-            "example": "CountMetadata"
-          },
-          "count": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "visibilities": {
-            "$ref": "#/components/schemas/MetadataVisibilities"
           }
         },
         "additionalProperties": false
@@ -7179,152 +6170,6 @@
         },
         "additionalProperties": false
       },
-      "CreateDatapointFromFilesModel": {
-        "required": [
-          "metadata"
-        ],
-        "type": "object",
-        "properties": {
-          "metadata": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/PrivateTextMetadataInput"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptAssetMetadataInput"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptMetadataInput"
-                },
-                {
-                  "$ref": "#/components/schemas/PublicTextMetadataInput"
-                },
-                {
-                  "$ref": "#/components/schemas/TranscriptionMetadataInput"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            },
-            "description": "The metadata of the datapoint."
-          },
-          "sortIndex": {
-            "type": "integer",
-            "description": "The index will be used to keep the datapoints in order. Useful if upload is parallelized",
-            "format": "int64",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false,
-        "description": "The form request for creating a datapoint from files.\nNeeds to be encoded as a json string in the form request."
-      },
-      "CreateDatapointFromTextSourcesModel": {
-        "required": [
-          "textSources"
-        ],
-        "type": "object",
-        "properties": {
-          "textSources": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "The text sources to upload."
-          },
-          "sortIndex": {
-            "type": "integer",
-            "description": "The index will be used to keep the datapoints in order. Useful if upload is parallelized",
-            "format": "int64",
-            "nullable": true
-          },
-          "metadata": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/PrivateTextMetadataInput"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptAssetMetadataInput"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptMetadataInput"
-                },
-                {
-                  "$ref": "#/components/schemas/PublicTextMetadataInput"
-                },
-                {
-                  "$ref": "#/components/schemas/TranscriptionMetadataInput"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            },
-            "description": "Additional metadata to attach to the datapoint.\nMost commonly used to add a prompt to the datapoint using the Rapidata.Shared.Assets.Abstraction.Models.Metadata.Input.PromptMetadataInput.",
-            "default": null,
-            "nullable": true
-          }
-        },
-        "additionalProperties": false,
-        "description": "The body request for uploading text sources to a dataset."
-      },
-      "CreateDatapointFromUrlsModel": {
-        "required": [
-          "urls"
-        ],
-        "type": "object",
-        "properties": {
-          "urls": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "uri"
-            },
-            "description": "The urls to fetch the assets from.\nThe urls must be publicly accessible.\nA HEAD request will be made to each url to check if it is accessible."
-          },
-          "metadata": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/PrivateTextMetadataInput"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptAssetMetadataInput"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptMetadataInput"
-                },
-                {
-                  "$ref": "#/components/schemas/PublicTextMetadataInput"
-                },
-                {
-                  "$ref": "#/components/schemas/TranscriptionMetadataInput"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            },
-            "description": "Additional metadata to attach to the datapoint.\nMost commonly used to add a prompt to the datapoint using the Rapidata.Shared.Assets.Abstraction.Models.Metadata.Input.PromptMetadataInput.",
-            "default": null,
-            "nullable": true
-          },
-          "sortIndex": {
-            "type": "integer",
-            "description": "The index will be used to keep the datapoints in order. Useful if upload is parallelized",
-            "format": "int64",
-            "default": null,
-            "nullable": true
-          }
-        },
-        "additionalProperties": false,
-        "description": "The body request for creating a datapoint from urls."
-      },
       "CreateDatapointModel": {
         "required": [
           "asset",
@@ -7338,16 +6183,10 @@
                 "$ref": "#/components/schemas/ExistingAssetInput"
               },
               {
-                "$ref": "#/components/schemas/FileAssetInput"
-              },
-              {
                 "$ref": "#/components/schemas/MultiAssetInput"
               },
               {
                 "$ref": "#/components/schemas/TextAssetInput"
-              },
-              {
-                "$ref": "#/components/schemas/UrlAssetInput"
               }
             ],
             "description": "The asset within the datapoint",
@@ -7409,50 +6248,6 @@
           }
         },
         "additionalProperties": false
-      },
-      "CreateDatapointsFromS3BucketModel": {
-        "required": [
-          "bucketName",
-          "sourcePrefix"
-        ],
-        "type": "object",
-        "properties": {
-          "bucketName": {
-            "type": "string",
-            "description": "The name of the S3 bucket to upload the files from."
-          },
-          "region": {
-            "type": "string",
-            "description": "The region of the S3 bucket.",
-            "nullable": true
-          },
-          "sourcePrefix": {
-            "type": "string",
-            "description": "The prefix of the files to upload."
-          },
-          "accessKey": {
-            "type": "string",
-            "description": "The access key to use for the S3 bucket.",
-            "nullable": true
-          },
-          "secretKey": {
-            "type": "string",
-            "description": "The secret key to use for the S3 bucket.",
-            "nullable": true
-          },
-          "useCustomAwsCredentials": {
-            "type": "boolean",
-            "description": "Whether to use custom AWS credentials.",
-            "nullable": true
-          },
-          "clearDataset": {
-            "type": "boolean",
-            "description": "Whether to clear the dataset before uploading the files.",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false,
-        "description": "The model for creating datapoints from files in a S3 bucket."
       },
       "Datapoint": {
         "required": [
@@ -7648,121 +6443,6 @@
         },
         "additionalProperties": false
       },
-      "FileAsset": {
-        "title": "FileAsset",
-        "required": [
-          "_t",
-          "fileName"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "FileAsset"
-            ],
-            "type": "string",
-            "description": "Discriminator value for FileAsset",
-            "default": "FileAsset",
-            "example": "FileAsset"
-          },
-          "fileName": {
-            "type": "string"
-          },
-          "metadata": {
-            "type": "object",
-            "additionalProperties": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/AssetMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/ClassificationMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/CountMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/FileTypeMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/ImageDimensionMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/LocationMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/SourceUrlMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/StreamsMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/TextMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/TranscriptionMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/VideoDurationMetadata"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
-          }
-        },
-        "additionalProperties": false
-      },
-      "FileAssetInput": {
-        "title": "FileAssetInput",
-        "required": [
-          "_t",
-          "file"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "FileAssetInput"
-            ],
-            "type": "string",
-            "description": "Discriminator value for FileAssetInput",
-            "default": "FileAssetInput",
-            "example": "FileAssetInput"
-          },
-          "file": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/FormFileWrapper"
-              },
-              {
-                "$ref": "#/components/schemas/ProxyFileWrapper"
-              },
-              {
-                "$ref": "#/components/schemas/StreamFileWrapper"
-              },
-              {
-                "$ref": "#/components/schemas/ZipEntryFileWrapper"
-              }
-            ],
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          },
-          "identifier": {
-            "type": "string",
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false
-      },
       "FileAssetModel": {
         "title": "FileAsset",
         "required": [
@@ -7855,32 +6535,6 @@
         ],
         "type": "string"
       },
-      "FileTypeMetadata": {
-        "title": "FileTypeMetadata",
-        "required": [
-          "_t",
-          "fileType"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "FileTypeMetadata"
-            ],
-            "type": "string",
-            "description": "Discriminator value for FileTypeMetadata",
-            "default": "FileTypeMetadata",
-            "example": "FileTypeMetadata"
-          },
-          "fileType": {
-            "$ref": "#/components/schemas/FileType"
-          },
-          "visibilities": {
-            "$ref": "#/components/schemas/MetadataVisibilities"
-          }
-        },
-        "additionalProperties": false
-      },
       "FileTypeMetadataModel": {
         "title": "FileTypeMetadata",
         "required": [
@@ -7943,151 +6597,6 @@
           "In"
         ],
         "type": "string"
-      },
-      "FormFileWrapper": {
-        "title": "FormFileWrapper",
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "FormFileWrapper"
-            ],
-            "type": "string",
-            "description": "Discriminator value for FormFileWrapper",
-            "default": "FormFileWrapper",
-            "example": "FormFileWrapper"
-          },
-          "name": {
-            "type": "string",
-            "readOnly": true
-          },
-          "contentLength": {
-            "type": "integer",
-            "format": "int64",
-            "nullable": true,
-            "readOnly": true
-          },
-          "contentType": {
-            "type": "string",
-            "nullable": true,
-            "readOnly": true
-          },
-          "isInMemory": {
-            "type": "boolean",
-            "readOnly": true
-          },
-          "metadata": {
-            "type": "object",
-            "additionalProperties": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/AssetMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/ClassificationMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/CountMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/FileTypeMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/ImageDimensionMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/LocationMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/SourceUrlMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/StreamsMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/TextMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/TranscriptionMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/VideoDurationMetadata"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
-          }
-        },
-        "additionalProperties": false
-      },
-      "GetAssetMetadataResult": {
-        "required": [
-          "metadata"
-        ],
-        "type": "object",
-        "properties": {
-          "metadata": {
-            "type": "object",
-            "additionalProperties": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/AssetMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/ClassificationMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/CountMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/FileTypeMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/ImageDimensionMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/LocationMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/SourceUrlMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/StreamsMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/TextMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/TranscriptionMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/VideoDurationMetadata"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
-          }
-        },
-        "additionalProperties": false
       },
       "GetDatapointByIdResult": {
         "required": [
@@ -8194,36 +6703,6 @@
         },
         "additionalProperties": false
       },
-      "ImageDimensionMetadata": {
-        "title": "ImageDimensionMetadata",
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "ImageDimensionMetadata"
-            ],
-            "type": "string",
-            "description": "Discriminator value for ImageDimensionMetadata",
-            "default": "ImageDimensionMetadata",
-            "example": "ImageDimensionMetadata"
-          },
-          "height": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "width": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "visibilities": {
-            "$ref": "#/components/schemas/MetadataVisibilities"
-          }
-        },
-        "additionalProperties": false
-      },
       "ImageDimensionMetadataModel": {
         "title": "ImageDimensionMetadata",
         "required": [
@@ -8247,50 +6726,6 @@
           "width": {
             "type": "integer",
             "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "ImportFromFileResult": {
-        "required": [
-          "datasetId"
-        ],
-        "type": "object",
-        "properties": {
-          "datasetId": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "LocationMetadata": {
-        "title": "LocationMetadata",
-        "required": [
-          "_t",
-          "x",
-          "y"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "LocationMetadata"
-            ],
-            "type": "string",
-            "description": "Discriminator value for LocationMetadata",
-            "default": "LocationMetadata",
-            "example": "LocationMetadata"
-          },
-          "x": {
-            "type": "number",
-            "format": "float"
-          },
-          "y": {
-            "type": "number",
-            "format": "float"
-          },
-          "visibilities": {
-            "$ref": "#/components/schemas/MetadataVisibilities"
           }
         },
         "additionalProperties": false
@@ -8332,112 +6767,6 @@
         ],
         "type": "string"
       },
-      "MetadataVisibilities": {
-        "type": "array",
-        "items": {
-          "enum": [
-            "None",
-            "Users",
-            "Customers",
-            "Admins",
-            "Dashboard",
-            "All"
-          ],
-          "type": "string"
-        },
-        "format": "int32"
-      },
-      "MultiAsset": {
-        "title": "MultiAsset",
-        "required": [
-          "_t",
-          "assets"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "MultiAsset"
-            ],
-            "type": "string",
-            "description": "Discriminator value for MultiAsset",
-            "default": "MultiAsset",
-            "example": "MultiAsset"
-          },
-          "assets": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/FileAsset"
-                },
-                {
-                  "$ref": "#/components/schemas/MultiAsset"
-                },
-                {
-                  "$ref": "#/components/schemas/NullAsset"
-                },
-                {
-                  "$ref": "#/components/schemas/TextAsset"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
-          },
-          "metadata": {
-            "type": "object",
-            "additionalProperties": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/AssetMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/ClassificationMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/CountMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/FileTypeMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/ImageDimensionMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/LocationMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/SourceUrlMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/StreamsMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/TextMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/TranscriptionMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/VideoDurationMetadata"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
-          }
-        },
-        "additionalProperties": false
-      },
       "MultiAssetInput": {
         "title": "MultiAssetInput",
         "required": [
@@ -8463,16 +6792,10 @@
                   "$ref": "#/components/schemas/ExistingAssetInput"
                 },
                 {
-                  "$ref": "#/components/schemas/FileAssetInput"
-                },
-                {
                   "$ref": "#/components/schemas/MultiAssetInput"
                 },
                 {
                   "$ref": "#/components/schemas/TextAssetInput"
-                },
-                {
-                  "$ref": "#/components/schemas/UrlAssetInput"
                 }
               ],
               "discriminator": {
@@ -8589,74 +6912,6 @@
         },
         "additionalProperties": false
       },
-      "NullAsset": {
-        "title": "NullAsset",
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "NullAsset"
-            ],
-            "type": "string",
-            "description": "Discriminator value for NullAsset",
-            "default": "NullAsset",
-            "example": "NullAsset"
-          },
-          "metadata": {
-            "type": "object",
-            "additionalProperties": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/AssetMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/ClassificationMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/CountMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/FileTypeMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/ImageDimensionMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/LocationMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/SourceUrlMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/StreamsMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/TextMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/TranscriptionMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/VideoDurationMetadata"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
-          }
-        },
-        "additionalProperties": false
-      },
       "NullAssetModel": {
         "title": "NullAsset",
         "required": [
@@ -8736,32 +6991,6 @@
         },
         "additionalProperties": false
       },
-      "OriginalFilenameMetadata": {
-        "title": "OriginalFilenameMetadata",
-        "required": [
-          "_t",
-          "originalFilename"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "OriginalFilenameMetadata"
-            ],
-            "type": "string",
-            "description": "Discriminator value for OriginalFilenameMetadata",
-            "default": "OriginalFilenameMetadata",
-            "example": "OriginalFilenameMetadata"
-          },
-          "originalFilename": {
-            "type": "string"
-          },
-          "visibilities": {
-            "$ref": "#/components/schemas/MetadataVisibilities"
-          }
-        },
-        "additionalProperties": false
-      },
       "OriginalFilenameMetadataModel": {
         "title": "OriginalFilenameMetadata",
         "required": [
@@ -8827,33 +7056,6 @@
         },
         "additionalProperties": false
       },
-      "ProblemDetails": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string",
-            "nullable": true
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "status": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "detail": {
-            "type": "string",
-            "nullable": true
-          },
-          "instance": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": {}
-      },
       "PromptAssetMetadataInput": {
         "title": "PromptAssetMetadataInput",
         "required": [
@@ -8877,16 +7079,10 @@
                 "$ref": "#/components/schemas/ExistingAssetInput"
               },
               {
-                "$ref": "#/components/schemas/FileAssetInput"
-              },
-              {
                 "$ref": "#/components/schemas/MultiAssetInput"
               },
               {
                 "$ref": "#/components/schemas/TextAssetInput"
-              },
-              {
-                "$ref": "#/components/schemas/UrlAssetInput"
               }
             ],
             "discriminator": {
@@ -8895,32 +7091,6 @@
           },
           "identifier": {
             "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "PromptMetadata": {
-        "title": "PromptMetadata",
-        "required": [
-          "_t",
-          "prompt"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "PromptMetadata"
-            ],
-            "type": "string",
-            "description": "Discriminator value for PromptMetadata",
-            "default": "PromptMetadata",
-            "example": "PromptMetadata"
-          },
-          "prompt": {
-            "type": "string"
-          },
-          "visibilities": {
-            "$ref": "#/components/schemas/MetadataVisibilities"
           }
         },
         "additionalProperties": false
@@ -8970,90 +7140,6 @@
           },
           "prompt": {
             "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "ProxyFileWrapper": {
-        "title": "ProxyFileWrapper",
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "ProxyFileWrapper"
-            ],
-            "type": "string",
-            "description": "Discriminator value for ProxyFileWrapper",
-            "default": "ProxyFileWrapper",
-            "example": "ProxyFileWrapper"
-          },
-          "name": {
-            "type": "string"
-          },
-          "contentLength": {
-            "type": "integer",
-            "format": "int64",
-            "nullable": true
-          },
-          "contentType": {
-            "type": "string",
-            "nullable": true
-          },
-          "isInMemory": {
-            "type": "boolean",
-            "readOnly": true
-          },
-          "metadata": {
-            "type": "object",
-            "additionalProperties": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/AssetMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/ClassificationMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/CountMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/FileTypeMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/ImageDimensionMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/LocationMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/SourceUrlMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/StreamsMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/TextMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/TranscriptionMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/VideoDurationMetadata"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
           }
         },
         "additionalProperties": false
@@ -9143,32 +7229,6 @@
         ],
         "type": "string"
       },
-      "SourceUrlMetadata": {
-        "title": "SourceUrlMetadata",
-        "required": [
-          "_t",
-          "url"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "SourceUrlMetadata"
-            ],
-            "type": "string",
-            "description": "Discriminator value for SourceUrlMetadata",
-            "default": "SourceUrlMetadata",
-            "example": "SourceUrlMetadata"
-          },
-          "url": {
-            "type": "string"
-          },
-          "visibilities": {
-            "$ref": "#/components/schemas/MetadataVisibilities"
-          }
-        },
-        "additionalProperties": false
-      },
       "SourceUrlMetadataModel": {
         "title": "SourceUrlMetadataModel",
         "required": [
@@ -9188,130 +7248,6 @@
           },
           "url": {
             "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "StreamFileWrapper": {
-        "title": "StreamFileWrapper",
-        "required": [
-          "_t",
-          "name",
-          "stream"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "StreamFileWrapper"
-            ],
-            "type": "string",
-            "description": "Discriminator value for StreamFileWrapper",
-            "default": "StreamFileWrapper",
-            "example": "StreamFileWrapper"
-          },
-          "stream": {
-            "type": "string",
-            "format": "binary",
-            "nullable": true,
-            "writeOnly": true
-          },
-          "name": {
-            "type": "string"
-          },
-          "contentLength": {
-            "type": "integer",
-            "format": "int64",
-            "nullable": true,
-            "readOnly": true
-          },
-          "contentType": {
-            "type": "string",
-            "nullable": true
-          },
-          "isInMemory": {
-            "type": "boolean",
-            "readOnly": true
-          },
-          "metadata": {
-            "type": "object",
-            "additionalProperties": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/AssetMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/ClassificationMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/CountMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/FileTypeMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/ImageDimensionMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/LocationMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/SourceUrlMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/StreamsMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/TextMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/TranscriptionMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/VideoDurationMetadata"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
-          }
-        },
-        "additionalProperties": false
-      },
-      "StreamsMetadata": {
-        "title": "StreamsMetadata",
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "StreamsMetadata"
-            ],
-            "type": "string",
-            "description": "Discriminator value for StreamsMetadata",
-            "default": "StreamsMetadata",
-            "example": "StreamsMetadata"
-          },
-          "hasAudio": {
-            "type": "boolean"
-          },
-          "hasVideo": {
-            "type": "boolean"
-          },
-          "hasSubtitles": {
-            "type": "boolean"
-          },
-          "visibilities": {
-            "$ref": "#/components/schemas/MetadataVisibilities"
           }
         },
         "additionalProperties": false
@@ -9343,78 +7279,6 @@
           },
           "hasSubtitles": {
             "type": "boolean"
-          }
-        },
-        "additionalProperties": false
-      },
-      "TextAsset": {
-        "title": "TextAsset",
-        "required": [
-          "_t",
-          "text"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "TextAsset"
-            ],
-            "type": "string",
-            "description": "Discriminator value for TextAsset",
-            "default": "TextAsset",
-            "example": "TextAsset"
-          },
-          "text": {
-            "type": "string"
-          },
-          "metadata": {
-            "type": "object",
-            "additionalProperties": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/AssetMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/ClassificationMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/CountMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/FileTypeMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/ImageDimensionMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/LocationMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/SourceUrlMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/StreamsMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/TextMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/TranscriptionMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/VideoDurationMetadata"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
           }
         },
         "additionalProperties": false
@@ -9529,32 +7393,6 @@
         },
         "additionalProperties": false
       },
-      "TextMetadata": {
-        "title": "TextMetadata",
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "TextMetadata"
-            ],
-            "type": "string",
-            "description": "Discriminator value for TextMetadata",
-            "default": "TextMetadata",
-            "example": "TextMetadata"
-          },
-          "text": {
-            "type": "string",
-            "nullable": true
-          },
-          "visibilities": {
-            "$ref": "#/components/schemas/MetadataVisibilities"
-          }
-        },
-        "additionalProperties": false
-      },
       "TextMetadataModel": {
         "title": "TextMetadata",
         "required": [
@@ -9574,33 +7412,6 @@
           "text": {
             "type": "string",
             "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "TranscriptionMetadata": {
-        "title": "TranscriptionMetadata",
-        "required": [
-          "_t",
-          "transcription",
-          "visibilities"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "TranscriptionMetadata"
-            ],
-            "type": "string",
-            "description": "Discriminator value for TranscriptionMetadata",
-            "default": "TranscriptionMetadata",
-            "example": "TranscriptionMetadata"
-          },
-          "transcription": {
-            "type": "string"
-          },
-          "visibilities": {
-            "$ref": "#/components/schemas/MetadataVisibilities"
           }
         },
         "additionalProperties": false
@@ -9715,157 +7526,6 @@
         "additionalProperties": false,
         "description": "The body request for updating the name of a dataset."
       },
-      "UploadAssetResult": {
-        "required": [
-          "fileName",
-          "metadata"
-        ],
-        "type": "object",
-        "properties": {
-          "fileName": {
-            "type": "string"
-          },
-          "metadata": {
-            "type": "object",
-            "additionalProperties": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/AssetMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/ClassificationMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/CountMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/FileTypeMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/ImageDimensionMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/LocationMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/SourceUrlMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/StreamsMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/TextMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/TranscriptionMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/VideoDurationMetadata"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            }
-          }
-        },
-        "additionalProperties": false
-      },
-      "UploadFileFromUrlResult": {
-        "required": [
-          "fileName"
-        ],
-        "type": "object",
-        "properties": {
-          "fileName": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "UploadFileResult": {
-        "required": [
-          "fileName"
-        ],
-        "type": "object",
-        "properties": {
-          "fileName": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "UploadFromS3Result": {
-        "type": "object",
-        "properties": {
-          "estimatedCount": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "UrlAssetInput": {
-        "title": "UrlAssetInput",
-        "required": [
-          "_t",
-          "url"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "UrlAssetInput"
-            ],
-            "type": "string",
-            "description": "Discriminator value for UrlAssetInput",
-            "default": "UrlAssetInput",
-            "example": "UrlAssetInput"
-          },
-          "url": {
-            "type": "string",
-            "format": "uri"
-          },
-          "identifier": {
-            "type": "string",
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "VideoDurationMetadata": {
-        "title": "VideoDurationMetadata",
-        "required": [
-          "_t",
-          "duration"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "VideoDurationMetadata"
-            ],
-            "type": "string",
-            "description": "Discriminator value for VideoDurationMetadata",
-            "default": "VideoDurationMetadata",
-            "example": "VideoDurationMetadata"
-          },
-          "duration": {
-            "type": "string",
-            "format": "date-span"
-          },
-          "visibilities": {
-            "$ref": "#/components/schemas/MetadataVisibilities"
-          }
-        },
-        "additionalProperties": false
-      },
       "VideoDurationMetadataModel": {
         "title": "VideoDurationMetadata",
         "required": [
@@ -9886,103 +7546,6 @@
           "duration": {
             "type": "string",
             "format": "date-span"
-          }
-        },
-        "additionalProperties": false
-      },
-      "ZipEntryFileWrapper": {
-        "title": "ZipEntryFileWrapper",
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "ZipEntryFileWrapper"
-            ],
-            "type": "string",
-            "description": "Discriminator value for ZipEntryFileWrapper",
-            "default": "ZipEntryFileWrapper",
-            "example": "ZipEntryFileWrapper"
-          },
-          "name": {
-            "type": "string",
-            "readOnly": true
-          },
-          "contentLength": {
-            "type": "integer",
-            "format": "int64",
-            "nullable": true,
-            "readOnly": true
-          },
-          "contentType": {
-            "type": "string",
-            "nullable": true,
-            "readOnly": true
-          },
-          "isInMemory": {
-            "type": "boolean",
-            "readOnly": true
-          },
-          "metadata": {
-            "type": "object",
-            "additionalProperties": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/AssetMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/ClassificationMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/CountMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/FileTypeMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/ImageDimensionMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/LocationMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/SourceUrlMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/StreamsMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/TextMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/TranscriptionMetadata"
-                },
-                {
-                  "$ref": "#/components/schemas/VideoDurationMetadata"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
-            },
-            "readOnly": true
-          },
-          "creatorId": {
-            "type": "string",
-            "format": "uuid",
-            "nullable": true
-          },
-          "creatorMail": {
-            "type": "string",
-            "nullable": true
           }
         },
         "additionalProperties": false
@@ -10123,6 +7686,76 @@
         },
         "additionalProperties": false
       },
+      "AggregatedOrdersModel": {
+        "required": [
+          "amount",
+          "customerMail",
+          "last7Days",
+          "lastOrderDate",
+          "lastOrderId",
+          "lastOrderName"
+        ],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "last7Days": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lastOrderDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastOrderName": {
+            "type": "string"
+          },
+          "lastOrderId": {
+            "type": "string"
+          },
+          "customerMail": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AggregatedOrdersModelPagedResult": {
+        "required": [
+          "items",
+          "page",
+          "pageSize",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AggregatedOrdersModel"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
       "AggregatorType": {
         "enum": [
           "NonCommittal",
@@ -10136,7 +7769,9 @@
           "Transcription",
           "SinglePointLocate",
           "FreeText",
-          "Scrub"
+          "Scrub",
+          "Ranking",
+          "MultiRanking"
         ],
         "type": "string"
       },
@@ -11345,6 +8980,10 @@
           },
           "isPublic": {
             "type": "boolean"
+          },
+          "failureMessage": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -11806,6 +9445,10 @@
           },
           "isPublic": {
             "type": "boolean"
+          },
+          "failureMessage": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -12931,145 +10574,22 @@
         },
         "additionalProperties": false
       },
-      "AddValidationRapidModel": {
+      "SendSurveyModel": {
         "required": [
-          "payload"
+          "fields"
         ],
         "type": "object",
         "properties": {
-          "payload": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/TranscriptionPayload"
-              },
-              {
-                "$ref": "#/components/schemas/ScrubPayload"
-              },
-              {
-                "$ref": "#/components/schemas/PolygonPayload"
-              },
-              {
-                "$ref": "#/components/schemas/NamedEntityPayload"
-              },
-              {
-                "$ref": "#/components/schemas/LocatePayload"
-              },
-              {
-                "$ref": "#/components/schemas/LinePayload"
-              },
-              {
-                "$ref": "#/components/schemas/FreeTextPayload"
-              },
-              {
-                "$ref": "#/components/schemas/ComparePayload"
-              },
-              {
-                "$ref": "#/components/schemas/ClassifyPayload"
-              },
-              {
-                "$ref": "#/components/schemas/BoundingBoxPayload"
-              }
-            ],
-            "description": "The payload to use for the rapid.",
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          },
-          "metadata": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/PrivateTextMetadataInput"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptAssetMetadataInput"
-                },
-                {
-                  "$ref": "#/components/schemas/PromptMetadataInput"
-                },
-                {
-                  "$ref": "#/components/schemas/PublicTextMetadataInput"
-                },
-                {
-                  "$ref": "#/components/schemas/TranscriptionMetadataInput"
-                }
-              ],
-              "discriminator": {
-                "propertyName": "_t"
-              }
+          "fields": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
             },
-            "description": "Some metadata to attach to the rapid.",
-            "nullable": true
-          },
-          "truth": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/TranscriptionTruth"
-              },
-              {
-                "$ref": "#/components/schemas/ScrubTruth"
-              },
-              {
-                "$ref": "#/components/schemas/PolygonTruth"
-              },
-              {
-                "$ref": "#/components/schemas/NamedEntityTruth"
-              },
-              {
-                "$ref": "#/components/schemas/LocateBoxTruth"
-              },
-              {
-                "$ref": "#/components/schemas/LineTruth"
-              },
-              {
-                "$ref": "#/components/schemas/EmptyValidationTruth"
-              },
-              {
-                "$ref": "#/components/schemas/CompareTruth"
-              },
-              {
-                "$ref": "#/components/schemas/MultiCompareTruth"
-              },
-              {
-                "$ref": "#/components/schemas/SkipTruth"
-              },
-              {
-                "$ref": "#/components/schemas/AttachCategoryTruth"
-              },
-              {
-                "$ref": "#/components/schemas/BoundingBoxTruth"
-              }
-            ],
-            "description": "The ground truth for the rapid.",
-            "nullable": true,
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          },
-          "randomCorrectProbability": {
-            "type": "number",
-            "description": "The probability for an answer to be correct when randomly guessing.",
-            "format": "double",
-            "nullable": true
-          },
-          "explanation": {
-            "type": "string",
-            "description": "An explanation for the users if they answer the rapid incorrectly.",
-            "nullable": true
-          },
-          "featureFlags": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FeatureFlagModel"
-            },
-            "description": "The feature flags to enable for the rapid.",
-            "default": null,
-            "nullable": true
+            "description": "The fields of the survey"
           }
         },
         "additionalProperties": false,
-        "description": "The model for adding a validation rapid."
+        "description": "The model user for submitting a survey"
       },
       "AddValidationRapidNewModel": {
         "required": [
@@ -13084,16 +10604,10 @@
                 "$ref": "#/components/schemas/ExistingAssetInput"
               },
               {
-                "$ref": "#/components/schemas/FileAssetInput"
-              },
-              {
                 "$ref": "#/components/schemas/MultiAssetInput"
               },
               {
                 "$ref": "#/components/schemas/TextAssetInput"
-              },
-              {
-                "$ref": "#/components/schemas/UrlAssetInput"
               }
             ],
             "description": "The asset to use for the rapid.",
@@ -13820,18 +11334,6 @@
         },
         "additionalProperties": false
       },
-      "ImportValidationSetFromFileResult": {
-        "required": [
-          "validationSetId"
-        ],
-        "type": "object",
-        "properties": {
-          "validationSetId": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "LinePayload": {
         "title": "LinePayload",
         "required": [
@@ -14083,6 +11585,33 @@
         },
         "additionalProperties": false
       },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": {}
+      },
       "PromptType": {
         "type": "array",
         "items": {
@@ -14222,40 +11751,6 @@
         "type": "string",
         "additionalProperties": false
       },
-      "SubmitCocoModel": {
-        "required": [
-          "categories",
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "The name of the validation set."
-          },
-          "categories": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "A subset of the categories from the CoCo set to use in the rapids."
-          }
-        },
-        "additionalProperties": false,
-        "description": "The model for submitting a CoCo set."
-      },
-      "SubmitCocoResult": {
-        "required": [
-          "validationSetId"
-        ],
-        "type": "object",
-        "properties": {
-          "validationSetId": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "TranscriptionPayload": {
         "title": "TranscriptionPayload",
         "required": [
@@ -14392,30 +11887,6 @@
         },
         "additionalProperties": false,
         "description": "Allows for specific updates to a validation set without needing to provide all properties."
-      },
-      "UploadCocoResult": {
-        "required": [
-          "categories",
-          "cocoSetId",
-          "dataCount"
-        ],
-        "type": "object",
-        "properties": {
-          "dataCount": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "categories": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "cocoSetId": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
       },
       "ValidationSetModel": {
         "required": [
@@ -14710,58 +12181,6 @@
         },
         "additionalProperties": false
       },
-      "CreateDemographicRapidModel": {
-        "required": [
-          "key",
-          "payload"
-        ],
-        "type": "object",
-        "properties": {
-          "key": {
-            "type": "string",
-            "description": "The identifier of the demographic classification."
-          },
-          "payload": {
-            "$ref": "#/components/schemas/ClassifyPayload"
-          },
-          "featureFlags": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FeatureFlag"
-            },
-            "description": "Optional feature flags to apply to the rapid.",
-            "default": null,
-            "nullable": true
-          },
-          "asset": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/ExistingAssetInput"
-              },
-              {
-                "$ref": "#/components/schemas/FileAssetInput"
-              },
-              {
-                "$ref": "#/components/schemas/MultiAssetInput"
-              },
-              {
-                "$ref": "#/components/schemas/TextAssetInput"
-              },
-              {
-                "$ref": "#/components/schemas/UrlAssetInput"
-              }
-            ],
-            "description": "",
-            "default": null,
-            "nullable": true,
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          }
-        },
-        "additionalProperties": false,
-        "description": "The model for creating a demographic rapid."
-      },
       "CreateDemographicRapidModelNew": {
         "required": [
           "key",
@@ -14791,16 +12210,10 @@
                 "$ref": "#/components/schemas/ExistingAssetInput"
               },
               {
-                "$ref": "#/components/schemas/FileAssetInput"
-              },
-              {
                 "$ref": "#/components/schemas/MultiAssetInput"
               },
               {
                 "$ref": "#/components/schemas/TextAssetInput"
-              },
-              {
-                "$ref": "#/components/schemas/UrlAssetInput"
               }
             ],
             "description": "",
@@ -16018,6 +13431,62 @@
         "additionalProperties": false,
         "description": "The model for updating a validation rapid."
       },
+      "AssetMetadata": {
+        "title": "AssetMetadata",
+        "required": [
+          "_t",
+          "asset",
+          "visibilities"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "AssetMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for AssetMetadata",
+            "default": "AssetMetadata",
+            "example": "AssetMetadata"
+          },
+          "asset": {
+            "type": "object",
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClassificationMetadata": {
+        "title": "ClassificationMetadata",
+        "required": [
+          "_t",
+          "classification"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "ClassificationMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for ClassificationMetadata",
+            "default": "ClassificationMetadata",
+            "example": "ClassificationMetadata"
+          },
+          "classification": {
+            "type": "string"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        },
+        "additionalProperties": false
+      },
       "CompareWorkflowModel1": {
         "title": "CompareWorkflowModel",
         "required": [
@@ -16025,6 +13494,7 @@
           "criteria",
           "eloConfig",
           "id",
+          "metadata",
           "name",
           "pairMakerInformation",
           "referee",
@@ -16070,6 +13540,55 @@
               "propertyName": "_t"
             }
           },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AssetMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ClassificationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/CountMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/FileTypeMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageDimensionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/LocationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/SourceUrlMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/StreamsMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TextMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/VideoDurationMetadata"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          },
           "state": {
             "type": "string"
           },
@@ -16085,6 +13604,33 @@
           },
           "eloConfig": {
             "$ref": "#/components/schemas/EloConfig"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CountMetadata": {
+        "title": "CountMetadata",
+        "required": [
+          "_t",
+          "count"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "CountMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for CountMetadata",
+            "default": "CountMetadata",
+            "example": "CountMetadata"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
           }
         },
         "additionalProperties": false
@@ -16159,6 +13705,104 @@
           "ownerMail": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "FileAsset": {
+        "title": "FileAsset",
+        "required": [
+          "_t",
+          "fileName"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "FileAsset"
+            ],
+            "type": "string",
+            "description": "Discriminator value for FileAsset",
+            "default": "FileAsset",
+            "example": "FileAsset"
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AssetMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ClassificationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/CountMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/FileTypeMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageDimensionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/LocationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/SourceUrlMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/StreamsMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TextMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/VideoDurationMetadata"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "FileTypeMetadata": {
+        "title": "FileTypeMetadata",
+        "required": [
+          "_t",
+          "fileType"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "FileTypeMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for FileTypeMetadata",
+            "default": "FileTypeMetadata",
+            "example": "FileTypeMetadata"
+          },
+          "fileType": {
+            "$ref": "#/components/schemas/FileType"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
           }
         },
         "additionalProperties": false
@@ -16487,6 +14131,7 @@
       "GetWorkflowResultsResult": {
         "required": [
           "asset",
+          "metadata",
           "payload",
           "rapidId",
           "responses",
@@ -16561,6 +14206,61 @@
           },
           "state": {
             "$ref": "#/components/schemas/RapidState"
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AssetMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/ClassificationMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/CountMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/DemographicMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/FileTypeMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageDimensionMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/LocationMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/OriginalFilenameMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/SourceUrlMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/StreamsMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/TextMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/TranslatedPromptMetadataModel"
+                },
+                {
+                  "$ref": "#/components/schemas/VideoDurationMetadataModel"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
           }
         },
         "additionalProperties": false
@@ -16711,6 +14411,174 @@
         },
         "additionalProperties": false
       },
+      "ImageDimensionMetadata": {
+        "title": "ImageDimensionMetadata",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "ImageDimensionMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for ImageDimensionMetadata",
+            "default": "ImageDimensionMetadata",
+            "example": "ImageDimensionMetadata"
+          },
+          "height": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "width": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LocationMetadata": {
+        "title": "LocationMetadata",
+        "required": [
+          "_t",
+          "x",
+          "y"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "LocationMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for LocationMetadata",
+            "default": "LocationMetadata",
+            "example": "LocationMetadata"
+          },
+          "x": {
+            "type": "number",
+            "format": "float"
+          },
+          "y": {
+            "type": "number",
+            "format": "float"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MetadataVisibilities": {
+        "type": "array",
+        "items": {
+          "enum": [
+            "None",
+            "Users",
+            "Customers",
+            "Admins",
+            "Dashboard",
+            "All"
+          ],
+          "type": "string"
+        },
+        "format": "int32"
+      },
+      "MultiAsset": {
+        "title": "MultiAsset",
+        "required": [
+          "_t",
+          "assets"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "MultiAsset"
+            ],
+            "type": "string",
+            "description": "Discriminator value for MultiAsset",
+            "default": "MultiAsset",
+            "example": "MultiAsset"
+          },
+          "assets": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/FileAsset"
+                },
+                {
+                  "$ref": "#/components/schemas/MultiAsset"
+                },
+                {
+                  "$ref": "#/components/schemas/NullAsset"
+                },
+                {
+                  "$ref": "#/components/schemas/TextAsset"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AssetMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ClassificationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/CountMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/FileTypeMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageDimensionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/LocationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/SourceUrlMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/StreamsMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TextMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/VideoDurationMetadata"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          }
+        },
+        "additionalProperties": false
+      },
       "NaiveRefereeConfig": {
         "title": "NaiveRefereeConfig",
         "required": [
@@ -16753,6 +14621,74 @@
         },
         "additionalProperties": false
       },
+      "NullAsset": {
+        "title": "NullAsset",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "NullAsset"
+            ],
+            "type": "string",
+            "description": "Discriminator value for NullAsset",
+            "default": "NullAsset",
+            "example": "NullAsset"
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AssetMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ClassificationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/CountMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/FileTypeMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageDimensionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/LocationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/SourceUrlMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/StreamsMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TextMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/VideoDurationMetadata"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          }
+        },
+        "additionalProperties": false
+      },
       "OnlinePairMakerInformation": {
         "title": "OnlinePairMakerInformation",
         "required": [
@@ -16784,6 +14720,32 @@
         },
         "additionalProperties": false
       },
+      "OriginalFilenameMetadata": {
+        "title": "OriginalFilenameMetadata",
+        "required": [
+          "_t",
+          "originalFilename"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "OriginalFilenameMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for OriginalFilenameMetadata",
+            "default": "OriginalFilenameMetadata",
+            "example": "OriginalFilenameMetadata"
+          },
+          "originalFilename": {
+            "type": "string"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        },
+        "additionalProperties": false
+      },
       "ProbabilisticAttachCategoryRefereeConfig": {
         "title": "ProbabilisticAttachCategoryRefereeConfig",
         "required": [
@@ -16809,6 +14771,32 @@
           "maxVotes": {
             "type": "integer",
             "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PromptMetadata": {
+        "title": "PromptMetadata",
+        "required": [
+          "_t",
+          "prompt"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "PromptMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for PromptMetadata",
+            "default": "PromptMetadata",
+            "example": "PromptMetadata"
+          },
+          "prompt": {
+            "type": "string"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
           }
         },
         "additionalProperties": false
@@ -16903,6 +14891,215 @@
         },
         "additionalProperties": false
       },
+      "SourceUrlMetadata": {
+        "title": "SourceUrlMetadata",
+        "required": [
+          "_t",
+          "url"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "SourceUrlMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for SourceUrlMetadata",
+            "default": "SourceUrlMetadata",
+            "example": "SourceUrlMetadata"
+          },
+          "url": {
+            "type": "string"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        },
+        "additionalProperties": false
+      },
+      "StreamsMetadata": {
+        "title": "StreamsMetadata",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "StreamsMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for StreamsMetadata",
+            "default": "StreamsMetadata",
+            "example": "StreamsMetadata"
+          },
+          "hasAudio": {
+            "type": "boolean"
+          },
+          "hasVideo": {
+            "type": "boolean"
+          },
+          "hasSubtitles": {
+            "type": "boolean"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TextAsset": {
+        "title": "TextAsset",
+        "required": [
+          "_t",
+          "text"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "TextAsset"
+            ],
+            "type": "string",
+            "description": "Discriminator value for TextAsset",
+            "default": "TextAsset",
+            "example": "TextAsset"
+          },
+          "text": {
+            "type": "string"
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AssetMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ClassificationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/CountMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/FileTypeMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageDimensionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/LocationMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/OriginalFilenameMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/PromptMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/SourceUrlMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/StreamsMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TextMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/TranscriptionMetadata"
+                },
+                {
+                  "$ref": "#/components/schemas/VideoDurationMetadata"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "TextMetadata": {
+        "title": "TextMetadata",
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "TextMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for TextMetadata",
+            "default": "TextMetadata",
+            "example": "TextMetadata"
+          },
+          "text": {
+            "type": "string",
+            "nullable": true
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TranscriptionMetadata": {
+        "title": "TranscriptionMetadata",
+        "required": [
+          "_t",
+          "transcription",
+          "visibilities"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "TranscriptionMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for TranscriptionMetadata",
+            "default": "TranscriptionMetadata",
+            "example": "TranscriptionMetadata"
+          },
+          "transcription": {
+            "type": "string"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        },
+        "additionalProperties": false
+      },
+      "VideoDurationMetadata": {
+        "title": "VideoDurationMetadata",
+        "required": [
+          "_t",
+          "duration"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "VideoDurationMetadata"
+            ],
+            "type": "string",
+            "description": "Discriminator value for VideoDurationMetadata",
+            "default": "VideoDurationMetadata",
+            "example": "VideoDurationMetadata"
+          },
+          "duration": {
+            "type": "string",
+            "format": "date-span"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        },
+        "additionalProperties": false
+      },
       "WorkflowState": {
         "enum": [
           "Created",
@@ -16947,8 +15144,7 @@
           "_t",
           "criteria",
           "metadata",
-          "referee",
-          "targetCountryCodes"
+          "referee"
         ],
         "type": "object",
         "properties": {
@@ -16978,12 +15174,6 @@
             ],
             "discriminator": {
               "propertyName": "_t"
-            }
-          },
-          "targetCountryCodes": {
-            "type": "array",
-            "items": {
-              "type": "string"
             }
           },
           "metadata": {
@@ -17035,6 +15225,14 @@
               }
             }
           },
+          "targetCountryCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true,
+            "deprecated": true
+          },
           "eloConfig": {
             "$ref": "#/components/schemas/EloConfig"
           },
@@ -17065,8 +15263,7 @@
           "featureFlags",
           "metadata",
           "pairMakerConfig",
-          "referee",
-          "targetCountryCodes"
+          "referee"
         ],
         "type": "object",
         "properties": {
@@ -17110,15 +15307,17 @@
               "propertyName": "_t"
             }
           },
+          "eloConfig": {
+            "$ref": "#/components/schemas/EloConfig"
+          },
           "targetCountryCodes": {
             "type": "array",
             "items": {
               "type": "string"
             },
-            "description": "A list of country codes that this workflow is targeting."
-          },
-          "eloConfig": {
-            "$ref": "#/components/schemas/EloConfig"
+            "description": "DO NOT USES!!!!",
+            "nullable": true,
+            "deprecated": true
           },
           "metadata": {
             "type": "object",
@@ -17786,8 +15985,24 @@
         ],
         "type": "string"
       },
+      "BoostingProfile": {
+        "type": "object",
+        "properties": {
+          "requiresGlobalBoost": {
+            "type": "boolean"
+          },
+          "languageBoosts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
       "CampaignQueryResult": {
         "required": [
+          "boostingProfile",
           "createdAt",
           "id",
           "name",
@@ -17812,6 +16027,13 @@
           "priority": {
             "type": "integer",
             "format": "int32"
+          },
+          "boostingProfile": {
+            "$ref": "#/components/schemas/BoostingProfile"
+          },
+          "requiresBooster": {
+            "type": "boolean",
+            "readOnly": true
           },
           "createdAt": {
             "type": "string",
@@ -17885,6 +16107,24 @@
         "additionalProperties": false,
         "description": "The model to update the manual boost status. or putting it back to autopilot."
       },
+      "Int32Option": {
+        "title": "Option`1",
+        "type": "integer",
+        "additionalProperties": false
+      },
+      "UpdateCampaignModel": {
+        "type": "object",
+        "properties": {
+          "priority": {
+            "type": "integer"
+          },
+          "requiresBooster": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The model to update campaign properties."
+      },
       "UpdatePriorityModel": {
         "required": [
           "priority"
@@ -17949,6 +16189,9 @@
                   "$ref": "#/components/schemas/ResponseCountFilter"
                 },
                 {
+                  "$ref": "#/components/schemas/UserActionRestrictionFilter"
+                },
+                {
                   "$ref": "#/components/schemas/UserScoreFilter"
                 },
                 {
@@ -17995,6 +16238,9 @@
                 },
                 {
                   "$ref": "#/components/schemas/ResponseCountFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/UserActionRestrictionFilter"
                 },
                 {
                   "$ref": "#/components/schemas/UserScoreFilter"
@@ -18427,36 +16673,16 @@
                 "$ref": "#/components/schemas/ExistingAssetInput"
               },
               {
-                "$ref": "#/components/schemas/FileAssetInput"
-              },
-              {
                 "$ref": "#/components/schemas/MultiAssetInput"
               },
               {
                 "$ref": "#/components/schemas/TextAssetInput"
-              },
-              {
-                "$ref": "#/components/schemas/UrlAssetInput"
               }
             ],
             "description": "The asset input for the sample.",
             "discriminator": {
               "propertyName": "_t"
             }
-          }
-        },
-        "additionalProperties": false,
-        "description": "The model used to create a sample to a participant."
-      },
-      "CreateSampleModelObsolete": {
-        "required": [
-          "identifier"
-        ],
-        "type": "object",
-        "properties": {
-          "identifier": {
-            "type": "string",
-            "description": "The identifier used to correlate samples of different participants."
           }
         },
         "additionalProperties": false,
@@ -18618,6 +16844,9 @@
                   "$ref": "#/components/schemas/ResponseCountFilter"
                 },
                 {
+                  "$ref": "#/components/schemas/UserActionRestrictionFilter"
+                },
+                {
                   "$ref": "#/components/schemas/UserScoreFilter"
                 },
                 {
@@ -18773,11 +17002,6 @@
         },
         "additionalProperties": false
       },
-      "Int32Option": {
-        "title": "Option`1",
-        "type": "integer",
-        "additionalProperties": false
-      },
       "LanguageFilter": {
         "title": "LanguageFilter",
         "required": [
@@ -18887,6 +17111,9 @@
                 },
                 {
                   "$ref": "#/components/schemas/ResponseCountFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/UserActionRestrictionFilter"
                 },
                 {
                   "$ref": "#/components/schemas/UserScoreFilter"
@@ -19014,6 +17241,9 @@
                 "$ref": "#/components/schemas/ResponseCountFilter"
               },
               {
+                "$ref": "#/components/schemas/UserActionRestrictionFilter"
+              },
+              {
                 "$ref": "#/components/schemas/UserScoreFilter"
               },
               {
@@ -19059,6 +17289,9 @@
                 },
                 {
                   "$ref": "#/components/schemas/ResponseCountFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/UserActionRestrictionFilter"
                 },
                 {
                   "$ref": "#/components/schemas/UserScoreFilter"
@@ -19125,6 +17358,9 @@
                   "$ref": "#/components/schemas/ResponseCountFilter"
                 },
                 {
+                  "$ref": "#/components/schemas/UserActionRestrictionFilter"
+                },
+                {
                   "$ref": "#/components/schemas/UserScoreFilter"
                 },
                 {
@@ -19171,6 +17407,9 @@
                 },
                 {
                   "$ref": "#/components/schemas/ResponseCountFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/UserActionRestrictionFilter"
                 },
                 {
                   "$ref": "#/components/schemas/UserScoreFilter"
@@ -19896,16 +18135,10 @@
                 "$ref": "#/components/schemas/ExistingAssetInput"
               },
               {
-                "$ref": "#/components/schemas/FileAssetInput"
-              },
-              {
                 "$ref": "#/components/schemas/MultiAssetInput"
               },
               {
                 "$ref": "#/components/schemas/TextAssetInput"
-              },
-              {
-                "$ref": "#/components/schemas/UrlAssetInput"
               }
             ],
             "description": "",
@@ -20061,6 +18294,44 @@
         },
         "additionalProperties": false,
         "description": "The model for updating prompt tags."
+      },
+      "UserActionRestriction": {
+        "enum": [
+          "Listen",
+          "UseKeyboard"
+        ],
+        "type": "string"
+      },
+      "UserActionRestrictionFilter": {
+        "title": "UserActionRestrictionFilter",
+        "required": [
+          "_t",
+          "requiredActions"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "UserActionRestrictionFilter"
+            ],
+            "type": "string",
+            "description": "Discriminator value for UserActionRestrictionFilter",
+            "default": "UserActionRestrictionFilter",
+            "example": "UserActionRestrictionFilter"
+          },
+          "requiredActions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserActionRestriction"
+            }
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
       },
       "UserScoreFilter": {
         "title": "UserScoreFilter",

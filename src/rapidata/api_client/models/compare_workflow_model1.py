@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.compare_workflow_model1_metadata_value import CompareWorkflowModel1MetadataValue
 from rapidata.api_client.models.compare_workflow_model1_pair_maker_information import CompareWorkflowModel1PairMakerInformation
 from rapidata.api_client.models.compare_workflow_model1_referee import CompareWorkflowModel1Referee
 from rapidata.api_client.models.elo_config import EloConfig
@@ -33,12 +34,13 @@ class CompareWorkflowModel1(BaseModel):
     id: StrictStr
     referee: CompareWorkflowModel1Referee
     pair_maker_information: CompareWorkflowModel1PairMakerInformation = Field(alias="pairMakerInformation")
+    metadata: Dict[str, CompareWorkflowModel1MetadataValue]
     state: StrictStr
     criteria: StrictStr
     name: StrictStr
     owner_mail: Optional[StrictStr] = Field(default=None, alias="ownerMail")
     elo_config: EloConfig = Field(alias="eloConfig")
-    __properties: ClassVar[List[str]] = ["_t", "id", "referee", "pairMakerInformation", "state", "criteria", "name", "ownerMail", "eloConfig"]
+    __properties: ClassVar[List[str]] = ["_t", "id", "referee", "pairMakerInformation", "metadata", "state", "criteria", "name", "ownerMail", "eloConfig"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -92,6 +94,13 @@ class CompareWorkflowModel1(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of pair_maker_information
         if self.pair_maker_information:
             _dict['pairMakerInformation'] = self.pair_maker_information.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each value in metadata (dict)
+        _field_dict = {}
+        if self.metadata:
+            for _key_metadata in self.metadata:
+                if self.metadata[_key_metadata]:
+                    _field_dict[_key_metadata] = self.metadata[_key_metadata].to_dict()
+            _dict['metadata'] = _field_dict
         # override the default output from pydantic by calling `to_dict()` of elo_config
         if self.elo_config:
             _dict['eloConfig'] = self.elo_config.to_dict()
@@ -116,6 +125,12 @@ class CompareWorkflowModel1(BaseModel):
             "id": obj.get("id"),
             "referee": CompareWorkflowModel1Referee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
             "pairMakerInformation": CompareWorkflowModel1PairMakerInformation.from_dict(obj["pairMakerInformation"]) if obj.get("pairMakerInformation") is not None else None,
+            "metadata": dict(
+                (_k, CompareWorkflowModel1MetadataValue.from_dict(_v))
+                for _k, _v in obj["metadata"].items()
+            )
+            if obj.get("metadata") is not None
+            else None,
             "state": obj.get("state"),
             "criteria": obj.get("criteria"),
             "name": obj.get("name"),

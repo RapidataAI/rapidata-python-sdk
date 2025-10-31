@@ -20,10 +20,10 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.compare_workflow_config_pair_maker_config import CompareWorkflowConfigPairMakerConfig
+from rapidata.api_client.models.compare_workflow_model1_metadata_value import CompareWorkflowModel1MetadataValue
 from rapidata.api_client.models.compare_workflow_model1_referee import CompareWorkflowModel1Referee
 from rapidata.api_client.models.elo_config import EloConfig
 from rapidata.api_client.models.feature_flag import FeatureFlag
-from rapidata.api_client.models.file_asset_metadata_value import FileAssetMetadataValue
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -34,12 +34,12 @@ class CompareWorkflowConfig(BaseModel):
     t: StrictStr = Field(description="Discriminator value for CompareWorkflowConfig", alias="_t")
     criteria: StrictStr
     referee: CompareWorkflowModel1Referee
-    target_country_codes: List[StrictStr] = Field(alias="targetCountryCodes")
-    metadata: Dict[str, FileAssetMetadataValue]
+    metadata: Dict[str, CompareWorkflowModel1MetadataValue]
+    target_country_codes: Optional[List[StrictStr]] = Field(default=None, alias="targetCountryCodes")
     elo_config: Optional[EloConfig] = Field(default=None, alias="eloConfig")
     pair_maker_config: Optional[CompareWorkflowConfigPairMakerConfig] = Field(default=None, alias="pairMakerConfig")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
-    __properties: ClassVar[List[str]] = ["_t", "criteria", "referee", "targetCountryCodes", "metadata", "eloConfig", "pairMakerConfig", "featureFlags"]
+    __properties: ClassVar[List[str]] = ["_t", "criteria", "referee", "metadata", "targetCountryCodes", "eloConfig", "pairMakerConfig", "featureFlags"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -110,6 +110,11 @@ class CompareWorkflowConfig(BaseModel):
                 if _item_feature_flags:
                     _items.append(_item_feature_flags.to_dict())
             _dict['featureFlags'] = _items
+        # set to None if target_country_codes (nullable) is None
+        # and model_fields_set contains the field
+        if self.target_country_codes is None and "target_country_codes" in self.model_fields_set:
+            _dict['targetCountryCodes'] = None
+
         return _dict
 
     @classmethod
@@ -125,13 +130,13 @@ class CompareWorkflowConfig(BaseModel):
             "_t": obj.get("_t") if obj.get("_t") is not None else 'CompareWorkflowConfig',
             "criteria": obj.get("criteria"),
             "referee": CompareWorkflowModel1Referee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
-            "targetCountryCodes": obj.get("targetCountryCodes"),
             "metadata": dict(
-                (_k, FileAssetMetadataValue.from_dict(_v))
+                (_k, CompareWorkflowModel1MetadataValue.from_dict(_v))
                 for _k, _v in obj["metadata"].items()
             )
             if obj.get("metadata") is not None
             else None,
+            "targetCountryCodes": obj.get("targetCountryCodes"),
             "eloConfig": EloConfig.from_dict(obj["eloConfig"]) if obj.get("eloConfig") is not None else None,
             "pairMakerConfig": CompareWorkflowConfigPairMakerConfig.from_dict(obj["pairMakerConfig"]) if obj.get("pairMakerConfig") is not None else None,
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
