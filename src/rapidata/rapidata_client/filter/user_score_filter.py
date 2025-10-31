@@ -23,12 +23,15 @@ class UserScoreFilter(RapidataFilter, BaseModel):
         This will only show the order to users that have a UserScore of >=0.5 and <=0.9
     """
 
-    lower_bound: float = 0.0
-    upper_bound: float = 1.0
+    lower_bound: float
+    upper_bound: float
     dimension: str | None = None
 
     def __init__(
-        self, lower_bound: float, upper_bound: float, dimension: str | None = None
+        self,
+        lower_bound: float = 0.0,
+        upper_bound: float = 1.0,
+        dimension: str | None = None,
     ):
         super().__init__(
             lower_bound=lower_bound, upper_bound=upper_bound, dimension=dimension
