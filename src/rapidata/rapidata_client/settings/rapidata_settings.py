@@ -6,6 +6,7 @@ from rapidata.rapidata_client.settings import (
     PlayVideoUntilTheEnd,
     AllowNeitherBoth,
     SwapContextInstruction,
+    MuteVideo,
 )
 
 
@@ -23,6 +24,7 @@ class RapidataSettings:
         play_video_until_the_end (PlayVideoUntilTheEnd): Allows users to only answer once the video has finished playing.
         allow_neither_both (AllowNeitherBoth): Only for compare tasks. If true, the users will be able to select neither or both instead of exclusively one of the options.
         swap_context_instruction (SwapContextInstruction): Swap the place of the context and instruction.
+        mute_video (MuteVideo): Mute the video.
 
     Example:
         ```python
@@ -40,6 +42,7 @@ class RapidataSettings:
     play_video_until_the_end = PlayVideoUntilTheEnd
     allow_neither_both = AllowNeitherBoth
     swap_context_instruction = SwapContextInstruction
+    mute_video = MuteVideo
 
     def __str__(self) -> str:
         return f"RapidataSettings(alert_on_fast_response={self.alert_on_fast_response}, translation_behaviour={self.translation_behaviour}, free_text_minimum_characters={self.free_text_minimum_characters}, no_shuffle={self.no_shuffle}, play_video_until_the_end={self.play_video_until_the_end}, allow_neither_both={self.allow_neither_both}, swap_context_instruction={self.swap_context_instruction})"
