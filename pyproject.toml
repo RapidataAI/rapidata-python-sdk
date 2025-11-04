@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "rapidata"
-version = "2.42.7"
+version = "2.42.8"
 description = "Rapidata package containing the Rapidata Python Client to interact with the Rapidata Web API in an easy way."
 authors = ["Rapidata AG <info@rapidata.ai>"]
 license = "Apache-2.0"
