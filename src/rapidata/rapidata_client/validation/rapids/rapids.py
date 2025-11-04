@@ -1,5 +1,5 @@
 from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
-from typing import Literal, Self, Any, Sequence
+from typing import Literal, Any, Sequence
 from pydantic import BaseModel, model_validator, ConfigDict
 
 
@@ -20,7 +20,7 @@ class Rapid(BaseModel):
     )
 
     @model_validator(mode="after")
-    def check_sentence_and_context(self) -> Self:
+    def check_sentence_and_context(self) -> "Rapid":
         if isinstance(self.sentence, str) and isinstance(self.context, str):
             raise ValueError(
                 "Both 'sentence' and 'context' cannot be strings at the same time."

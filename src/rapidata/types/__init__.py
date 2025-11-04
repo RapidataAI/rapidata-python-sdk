@@ -92,7 +92,6 @@ from rapidata.rapidata_client.exceptions.failed_upload_exception import (
 )
 
 # Utility Types
-from rapidata.rapidata_client.country_codes.country_codes import CountryCodes
 from rapidata.rapidata_client.demographic.demographic_manager import DemographicManager
 
 # API Client Types

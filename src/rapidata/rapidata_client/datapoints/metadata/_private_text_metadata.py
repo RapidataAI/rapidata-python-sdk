@@ -2,16 +2,15 @@ from rapidata.api_client.models.private_text_metadata_input import (
     PrivateTextMetadataInput,
 )
 from rapidata.rapidata_client.datapoints.metadata._base_metadata import Metadata
+from pydantic import BaseModel
 
 
-class PrivateTextMetadata(Metadata):
+class PrivateTextMetadata(Metadata, BaseModel):
 
-    def __init__(self, text: str, identifier: str = "private_text"):
-        super().__init__()
-        self._identifier = identifier
-        self._text = text
+    text: str
+    identifier: str = "private_text"
 
     def to_model(self):
         return PrivateTextMetadataInput(
-            _t="PrivateTextMetadataInput", identifier=self._identifier, text=self._text
+            _t="PrivateTextMetadataInput", identifier=self.identifier, text=self.text
         )

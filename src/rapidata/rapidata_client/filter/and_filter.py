@@ -4,9 +4,10 @@ from rapidata.api_client.models.and_user_filter_model import AndUserFilterModel
 from rapidata.api_client.models.and_user_filter_model_filters_inner import (
     AndUserFilterModelFiltersInner,
 )
+from pydantic import BaseModel, ConfigDict
 
 
-class AndFilter(RapidataFilter):
+class AndFilter(RapidataFilter, BaseModel):
     """A filter that combines multiple filters with a logical AND operation.
     This class implements a logical AND operation on a list of filters, where the condition is met if all of the filters' conditions are met.
 
@@ -23,11 +24,12 @@ class AndFilter(RapidataFilter):
         This will match users who have their phone set to English AND are located in the United States.
     """
 
-    def __init__(self, filters: list[RapidataFilter]):
-        if not all(isinstance(filter, RapidataFilter) for filter in filters):
-            raise ValueError("Filters must be a RapidataFilter object")
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
-        self.filters = filters
+    filters: list[RapidataFilter]
+
+    def __init__(self, filters: list[RapidataFilter]):
+        super().__init__(filters=filters)
 
     def _to_model(self):
         return AndUserFilterModel(
@@ -37,9 +39,3 @@ class AndFilter(RapidataFilter):
                 for filter in self.filters
             ],
         )
-
-    def __str__(self) -> str:
-        return f"AndFilter(filters={self.filters})"
-
-    def __repr__(self) -> str:
-        return f"AndFilter(filters={self.filters!r})"

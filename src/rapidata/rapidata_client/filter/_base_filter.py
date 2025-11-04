@@ -58,10 +58,4 @@ class RapidataFilter:
             return self.filter
         # Create a new NotFilter
         else:
-            return NotFilter(self)
-
-    def __str__(self) -> str:
-        return f"{self.__class__.__name__}()"
-
-    def __repr__(self) -> str:
-        return f"{self.__class__.__name__}()"
+            return NotFilter(filter=self)

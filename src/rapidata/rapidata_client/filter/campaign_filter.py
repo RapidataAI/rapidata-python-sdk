@@ -1,11 +1,11 @@
-from typing import Any
 from rapidata.rapidata_client.filter._base_filter import RapidataFilter
 from rapidata.api_client.models.campaign_user_filter_model import (
     CampaignUserFilterModel,
 )
+from pydantic import BaseModel
 
 
-class CampaignFilter(RapidataFilter):
+class CampaignFilter(RapidataFilter, BaseModel):
     """CampaignFilter Class
 
     Can be used to filter who to target based on campaign IDs.
@@ -16,17 +16,13 @@ class CampaignFilter(RapidataFilter):
         campaign_ids (list[str]): List of campaign IDs to filter by.
     """
 
+    campaign_ids: list[str]
+
     def __init__(self, campaign_ids: list[str]):
-        self.campaign_ids = campaign_ids
+        super().__init__(campaign_ids=campaign_ids)
 
     def _to_model(self):
         return CampaignUserFilterModel(
             _t="CampaignFilter",
             campaignIds=self.campaign_ids,
         )
-
-    def __str__(self) -> str:
-        return f"CampaignFilter(campaign_ids={self.campaign_ids})"
-
-    def __repr__(self) -> str:
-        return f"CampaignFilter(campaign_ids={self.campaign_ids!r})"

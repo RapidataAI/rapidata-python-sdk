@@ -1,11 +1,12 @@
-from typing import Any
 from rapidata.rapidata_client.filter._base_filter import RapidataFilter
 from rapidata.api_client.models.language_user_filter_model import (
     LanguageUserFilterModel,
 )
+from pydantic import BaseModel, field_validator
+from rapidata.rapidata_client.config import logger
 
 
-class LanguageFilter(RapidataFilter):
+class LanguageFilter(RapidataFilter, BaseModel):
     """LanguageFilter Class
 
     Can be used to filter who to target based on language codes.
@@ -20,25 +21,29 @@ class LanguageFilter(RapidataFilter):
         This will limit the order to be shown to only people who have their phone set to english or german
     """
 
+    language_codes: list[str]
+
     def __init__(self, language_codes: list[str]):
-        if not isinstance(language_codes, list):
-            raise ValueError("Language codes must be a list")
+        super().__init__(language_codes=language_codes)
 
-        # check that all characters in the language codes are lowercase
-        if not all([code.islower() for code in language_codes]):
-            raise ValueError("Language codes must be lowercase")
-
-        for code in language_codes:
-            if not len(code) == 2:
-                raise ValueError("Language codes must be two characters long")
-
-        self.languages = language_codes
+    @field_validator("language_codes")
+    @classmethod
+    def validate_language_codes(cls, codes: list[str]) -> list[str]:
+        validated = []
+        for code in codes:
+            if len(code) != 2:
+                raise ValueError(
+                    f"Language codes must be length 2. Invalid code: '{code}'"
+                )
+            if code != code.lower():
+                logger.warning(
+                    f"Language code '{code}' should be lowercase. It will be lowercased automatically."
+                )
+            validated.append(code.lower())
+        return validated
 
     def _to_model(self):
-        return LanguageUserFilterModel(_t="LanguageFilter", languages=self.languages)
-
-    def __str__(self):
-        return f"LanguageFilter({self.languages})"
-
-    def __repr__(self):
-        return f"LanguageFilter({self.languages})"
+        return LanguageUserFilterModel(
+            _t="LanguageFilter",
+            languages=self.language_codes,
+        )

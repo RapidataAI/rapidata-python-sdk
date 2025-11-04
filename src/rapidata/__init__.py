@@ -1,4 +1,4 @@
-__version__ = "2.42.1"
+__version__ = "2.42.7"
 
 from .rapidata_client import (
     RapidataClient,
@@ -17,6 +17,7 @@ from .rapidata_client import (
     FreeTextMinimumCharacters,
     NoShuffle,
     PlayVideoUntilTheEnd,
+    MuteVideo,
     CustomSetting,
     AllowNeitherBoth,
     SwapContextInstruction,
@@ -31,7 +32,6 @@ from .rapidata_client import (
     AgeGroup,
     GenderFilter,
     Gender,
-    CountryCodes,
     Box,
     Datapoint,
     PromptMetadata,

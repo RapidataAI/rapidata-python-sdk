@@ -47,10 +47,12 @@ class RankingWorkflow(Workflow):
                 file_uploader is not None
             ), "File uploader is required if media_context is provided"
             self.metadatas.append(
-                MediaAssetMetadata(file_uploader.upload_asset(media_context))
+                MediaAssetMetadata(
+                    internal_file_name=file_uploader.upload_asset(media_context)
+                )
             )
         if context:
-            self.metadatas.append(PromptMetadata(context))
+            self.metadatas.append(PromptMetadata(prompt=context))
 
         self.instruction = instruction
         self.total_comparison_budget = total_comparison_budget
@@ -72,6 +74,9 @@ class RankingWorkflow(Workflow):
             kFactor=elo_k_factor,
             scalingFactor=elo_scaling_factor,
         )
+
+    def _get_instruction(self) -> str:
+        return self.criteria
 
     def _to_model(self) -> CompareWorkflowModel:
 

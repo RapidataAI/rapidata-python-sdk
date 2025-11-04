@@ -1,4 +1,5 @@
 from typing import Sequence, Optional, Literal, cast, Iterable
+from typing import Sequence, Optional, Literal, get_args
 from itertools import zip_longest
 
 from rapidata.rapidata_client.config.tracer import tracer
@@ -46,6 +47,7 @@ from rapidata.rapidata_client.datapoints._datapoints_validator import (
     DatapointsValidator,
 )
 
+from rapidata.rapidata_client.order._rapidata_order_builder import StickyStateLiteral
 
 from tqdm import tqdm
 
@@ -65,7 +67,7 @@ class RapidataOrderManager:
         self.settings = RapidataSettings
         self.selections = RapidataSelections
         self.__priority: int | None = None
-        self.__sticky_state: Literal["None", "Temporary", "Permanent"] | None = None
+        self.__sticky_state: StickyStateLiteral | None = None
         self.__asset_uploader = AssetUploader(openapi_service)
         logger.debug("RapidataOrderManager initialized")
 
@@ -126,26 +128,21 @@ class RapidataOrderManager:
         logger.debug("Order created: %s", order)
         return order
 
-    def _set_priority(self, priority: int):
-        if not isinstance(priority, int):
-            raise TypeError("Priority must be an integer")
+    def _set_priority(self, priority: int | None):
+        if priority is not None and not isinstance(priority, int):
+            raise TypeError("Priority must be an integer or None")
 
-        if priority < 0:
-            raise ValueError("Priority must be greater than 0")
+        if priority is not None and priority < 0:
+            raise ValueError("Priority must be greater than 0 or None")
 
         self.__priority = priority
 
-    def _set_sticky_state(
-        self, sticky_state: Literal["None", "Temporary", "Permanent"]
-    ):
-        """
-        permanent -> user sticks to that campaign until its over
-        temporary -> user sticks to that campaign until its over or the filters disqualify him
-        passive -> user is only allowed to have one sticky campaign, but still needs to compete against non sticky campaigns
-        """
-        if sticky_state not in ["None", "Temporary", "Permanent"]:
+    def _set_sticky_state(self, sticky_state: StickyStateLiteral | None):
+        sticky_state_valid_values = get_args(StickyStateLiteral)
+
+        if sticky_state is not None and sticky_state not in sticky_state_valid_values:
             raise ValueError(
-                "Sticky state must be one of 'None', 'Temporary', 'Permanent'"
+                f"Sticky state must be one of {sticky_state_valid_values} or None"
             )
 
         self.__sticky_state = sticky_state
@@ -283,8 +280,10 @@ class RapidataOrderManager:
             if any(not isinstance(datapoint, list) for datapoint in datapoints):
                 raise ValueError("Each datapoint must be a list of 2 paths/texts")
 
-            if any(len(datapoint) != 2 for datapoint in datapoints):
-                raise ValueError("Each datapoint must contain exactly two options")
+            if any(len(set(datapoint)) != 2 for datapoint in datapoints):
+                raise ValueError(
+                    "Each datapoint must contain exactly two unique options"
+                )
 
             if a_b_names is not None and len(a_b_names) != 2:
                 raise ValueError(

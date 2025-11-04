@@ -4,9 +4,10 @@ from rapidata.api_client.models.response_count_user_filter_model import (
     ResponseCountUserFilterModel,
 )
 from rapidata.api_client.models.comparison_operator import ComparisonOperator
+from pydantic import BaseModel, ConfigDict
 
 
-class ResponseCountFilter(RapidataFilter):
+class ResponseCountFilter(RapidataFilter, BaseModel):
     """ResponseCountFilter Class
     Can be used to filter users based on the number of responses they have given on validation tasks with the specified dimension.
 
@@ -34,13 +35,18 @@ class ResponseCountFilter(RapidataFilter):
         This will filter users who have a response count greater than 10 for the "electrical" dimension.
     """
 
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    response_count: int
+    dimension: str
+    operator: ComparisonOperator
+
     def __init__(
         self, response_count: int, dimension: str, operator: ComparisonOperator
     ):
-
-        self.response_count = response_count
-        self.dimension = dimension
-        self.operator = operator
+        super().__init__(
+            response_count=response_count, dimension=dimension, operator=operator
+        )
 
     def _to_model(self):
         return ResponseCountUserFilterModel(
@@ -49,9 +55,3 @@ class ResponseCountFilter(RapidataFilter):
             dimension=self.dimension,
             operator=self.operator,
         )
-
-    def __str__(self) -> str:
-        return f"ResponseCountFilter(response_count={self.response_count}, dimension={self.dimension}, operator={self.operator})"
-
-    def __repr__(self) -> str:
-        return f"ResponseCountFilter(response_count={self.response_count!r}, dimension={self.dimension!r}, operator={self.operator!r})"

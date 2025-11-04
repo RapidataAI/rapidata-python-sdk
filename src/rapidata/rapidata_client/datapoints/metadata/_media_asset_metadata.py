@@ -6,13 +6,11 @@ from rapidata.api_client.models.multi_asset_input_assets_inner import (
     ExistingAssetInput,
     MultiAssetInputAssetsInner,
 )
+from pydantic import BaseModel
 
 
-class MediaAssetMetadata(Metadata):
-
-    def __init__(self, internal_file_name: str):
-        super().__init__()
-        self._internal_file_name = internal_file_name
+class MediaAssetMetadata(Metadata, BaseModel):
+    internal_file_name: str
 
     def to_model(self):
         return PromptAssetMetadataInput(
@@ -20,7 +18,7 @@ class MediaAssetMetadata(Metadata):
             asset=MultiAssetInputAssetsInner(
                 actual_instance=ExistingAssetInput(
                     _t="ExistingAssetInput",
-                    name=self._internal_file_name,
+                    name=self.internal_file_name,
                 ),
             ),
         )
