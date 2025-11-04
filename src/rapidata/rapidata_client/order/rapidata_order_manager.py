@@ -1,6 +1,4 @@
-from typing import Sequence, Optional, Literal, cast, Iterable
 from typing import Sequence, Optional, Literal, get_args
-from itertools import zip_longest
 
 from rapidata.rapidata_client.config.tracer import tracer
 from rapidata.rapidata_client.datapoints.metadata._base_metadata import Metadata
@@ -25,15 +23,11 @@ from rapidata.rapidata_client.workflow import (
     MultiRankingWorkflow,
 )
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
-from rapidata.rapidata_client.datapoints.metadata import (
-    PromptMetadata,
-    MediaAssetMetadata,
-)
 from rapidata.rapidata_client.filter import RapidataFilter
 from rapidata.rapidata_client.filter.rapidata_filters import RapidataFilters
 from rapidata.rapidata_client.settings import RapidataSettings, RapidataSetting
 from rapidata.rapidata_client.selection.rapidata_selections import RapidataSelections
-from rapidata.rapidata_client.config import logger, rapidata_config
+from rapidata.rapidata_client.config import logger
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 
 from rapidata.api_client.models.query_model import QueryModel
@@ -48,8 +42,6 @@ from rapidata.rapidata_client.datapoints._datapoints_validator import (
 )
 
 from rapidata.rapidata_client.order._rapidata_order_builder import StickyStateLiteral
-
-from tqdm import tqdm
 
 
 class RapidataOrderManager:

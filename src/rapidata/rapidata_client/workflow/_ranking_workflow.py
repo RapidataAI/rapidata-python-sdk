@@ -76,7 +76,7 @@ class RankingWorkflow(Workflow):
         )
 
     def _get_instruction(self) -> str:
-        return self.criteria
+        return self.instruction
 
     def _to_model(self) -> CompareWorkflowModel:
 

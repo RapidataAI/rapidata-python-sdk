@@ -67,6 +67,9 @@ class MultiRankingWorkflow(Workflow):
             ],
         )
 
+    def _get_instruction(self) -> str:
+        return self.instruction
+
     def _to_payload(self, datapoint: Datapoint) -> ComparePayload:
         return ComparePayload(
             _t="ComparePayload",
