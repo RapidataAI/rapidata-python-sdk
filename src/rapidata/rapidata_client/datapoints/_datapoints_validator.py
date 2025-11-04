@@ -21,8 +21,12 @@ class DatapointsValidator:
             raise ValueError("Number of sentences must match number of datapoints")
         if private_notes and len(private_notes) != len(datapoints):
             raise ValueError("Number of private notes must match number of datapoints")
-        if groups and len(groups) != len(datapoints):
-            raise ValueError("Number of groups must match number of datapoints")
+        if groups and (
+            len(groups) != len(datapoints) or len(groups) != len(set(groups))
+        ):
+            raise ValueError(
+                "Number of groups must match number of datapoints and must be unique."
+            )
 
     @staticmethod
     def map_datapoints(

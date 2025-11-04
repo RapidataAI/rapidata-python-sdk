@@ -343,9 +343,6 @@ class RapidataOrderManager:
             filters (Sequence[RapidataFilter], optional): The list of filters for the ranking. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the ranking. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the ranking. Defaults to []. Decides in what order the tasks should be shown.
-            private_notes (list[str], optional): The list of private notes for the ranking. Defaults to None.\n
-                If provided has to be the same length as datapoints.\n
-                This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
         with tracer.start_as_current_span("RapidataOrderManager.create_ranking_order"):
             if contexts and len(contexts) != len(datapoints):
@@ -356,6 +353,20 @@ class RapidataOrderManager:
                 raise ValueError(
                     "Number of media contexts must match the number of sets that will be ranked"
                 )
+            if not isinstance(datapoints, list) or not all(
+                isinstance(dp, list) for dp in datapoints
+            ):
+                raise ValueError(
+                    "Datapoints must be a list of lists. Outer list is the independent rankings, inner list is the datapoints for each ranking."
+                )
+            if not all(len(set(dp)) == len(dp) for dp in datapoints):
+                raise ValueError("Each inner list must contain unique datapoints.")
+
+            if not all(len(inner_list) >= 2 for inner_list in datapoints):
+                raise ValueError(
+                    "Each ranking must contain at least two unique datapoints."
+                )
+
             datapoints_instances = []
             for i, datapoint in enumerate(datapoints):
                 for d in datapoint:
