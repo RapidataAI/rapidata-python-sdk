@@ -1,4 +1,4 @@
-import re
+import pandas as pd
 import urllib.parse
 import webbrowser
 from colorama import Fore
@@ -478,6 +478,33 @@ class RapidataBenchmark:
                 + f"Please open this URL in your browser: '{encoded_url}'"
                 + Fore.RESET
             )
+
+    def get_overall_standings(self, tags: Optional[list[str]] = None) -> pd.DataFrame:
+        """
+        Returns an aggregated elo table of all leaderboards in the benchmark.
+        """
+        with tracer.start_as_current_span("get_overall_standings"):
+            participants = self._openapi_service.benchmark_api.benchmark_benchmark_id_standings_get(
+                benchmark_id=self.id,
+                tags=tags,
+            )
+
+            standings = []
+            for participant in participants.items:
+                standings.append(
+                    {
+                        "name": participant.name,
+                        "wins": participant.wins,
+                        "total_matches": participant.total_matches,
+                        "score": (
+                            round(participant.score, 2)
+                            if participant.score is not None
+                            else None
+                        ),
+                    }
+                )
+
+            return pd.DataFrame(standings)
 
     def __str__(self) -> str:
         return f"RapidataBenchmark(name={self.name}, id={self.id})"
