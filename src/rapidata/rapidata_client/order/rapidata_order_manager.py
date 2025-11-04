@@ -305,76 +305,6 @@ class RapidataOrderManager:
         self,
         name: str,
         instruction: str,
-        datapoints: list[str],
-        total_comparison_budget: int,
-        responses_per_comparison: int = 1,
-        data_type: Literal["media", "text"] = "media",
-        random_comparisons_ratio: float = 0.5,
-        context: Optional[str] = None,
-        media_context: Optional[str] = None,
-        validation_set_id: Optional[str] = None,
-        filters: Sequence[RapidataFilter] = [],
-        settings: Sequence[RapidataSetting] = [],
-        selections: Sequence[RapidataSelection] = [],
-    ) -> RapidataOrder:
-        """
-        Create a ranking order.
-
-        With this order you can rank a list of datapoints (image, text, video, audio) based on the instruction.
-        The annotators will be shown two datapoints at a time. The ranking happens in terms of an elo system based on the matchup results.
-
-        Args:
-            name (str): The name of the order.
-            instruction (str): The question asked from People when They see two datapoints.
-            datapoints (list[str]): A list of datapoints that will participate in the ranking.
-            total_comparison_budget (int): The total number of (pairwise-)comparisons that can be made.
-            responses_per_comparison (int, optional): The number of responses collected per comparison. Defaults to 1.
-            data_type (str, optional): The data type of the datapoints. Defaults to "media" (any form of image, video or audio). \n
-                Other option: "text".
-            random_comparisons_ratio (float, optional): The fraction of random comparisons in the ranking process.
-                The rest will focus on pairing similarly ranked datapoints. Defaults to 0.5 and can be left untouched.
-            context (str, optional): The context for all the comparison. Defaults to None.\n
-                If provided will be shown in addition to the instruction for all the matchups.
-            media_context (str, optional): The media context for all the comparison. Defaults to None.\n
-                If provided will be shown in addition to the instruction for all the matchups.
-            validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
-                If provided, one validation task will be shown infront of the datapoints that will be labeled.
-            filters (Sequence[RapidataFilter], optional): The list of filters for the order. Defaults to []. Decides who the tasks should be shown to.
-            settings (Sequence[RapidataSetting], optional): The list of settings for the order. Defaults to []. Decides how the tasks should be shown.
-            selections (Sequence[RapidataSelection], optional): The list of selections for the order. Defaults to []. Decides in what order the tasks should be shown.
-        """
-
-        with tracer.start_as_current_span("RapidataOrderManager.create_ranking_order"):
-            if len(datapoints) < 2:
-                raise ValueError("At least two datapoints are required")
-
-            datapoints_instances = DatapointsValidator.map_datapoints(
-                datapoints=datapoints,
-                data_type=data_type,
-            )
-
-            return self._create_general_order(
-                name=name,
-                workflow=RankingWorkflow(
-                    instruction=instruction,
-                    total_comparison_budget=total_comparison_budget,
-                    random_comparisons_ratio=random_comparisons_ratio,
-                    context=context,
-                    media_context=media_context,
-                    file_uploader=self.__asset_uploader,
-                ),
-                datapoints=datapoints_instances,
-                responses_per_datapoint=responses_per_comparison,
-                validation_set_id=validation_set_id,
-                filters=filters,
-                selections=selections,
-                settings=settings,
-            )
-
-    def create_multi_ranking_order(
-        self,
-        name: str,
-        instruction: str,
         datapoints: list[list[str]],
         comparison_budget_per_ranking: int,
         responses_per_comparison: int = 1,
@@ -388,11 +318,36 @@ class RapidataOrderManager:
         selections: Sequence[RapidataSelection] = [],
     ) -> RapidataOrder:
         """
-        Create a multi-ranking order.
+        Create a ranking order.
+
+        With this order you can have a multiple lists of datapoints (image, text, video, audio) be ranked based on the instruction.
+        Each list will be ranked independently, based on comparison matchups.
+
+        Args:
+            name (str): The name of the order.
+            instruction (str): The instruction for the ranking. Will be shown with each matchup.
+            datapoints (list[list[str]]): The outer list is determines the independent rankings, the inner list is the datapoints for each ranking.
+            comparison_budget_per_ranking (int): The number of comparisons that will be collected per ranking (outer list of datapoints).
+            responses_per_comparison (int, optional): The number of responses that will be collected per comparison. Defaults to 1.
+            data_type (str, optional): The data type of the datapoints. Defaults to "media" (any form of image, video or audio). \n
+                Other option: "text".
+            random_comparisons_ratio (float, optional): The ratio of random comparisons to the total number of comparisons. Defaults to 0.5.
+            contexts (list[str], optional): The list of contexts for the ranking. Defaults to None.\n
+                If provided has to be the same length as the outer list of datapoints and will be shown in addition to the instruction. (Therefore will be different for each ranking)
+                Will be matched up with the datapoints using the list index.
+            media_contexts (list[str], optional): The list of media contexts for the ranking i.e links to the images / videos. Defaults to None.\n
+                If provided has to be the same length as the outer list of datapoints and will be shown in addition to the instruction. (Therefore will be different for each ranking)
+                Will be matched up with the datapoints using the list index.
+            validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
+                If provided, one validation task will be shown infront of the datapoints that will be labeled.
+            filters (Sequence[RapidataFilter], optional): The list of filters for the ranking. Defaults to []. Decides who the tasks should be shown to.
+            settings (Sequence[RapidataSetting], optional): The list of settings for the ranking. Defaults to []. Decides how the tasks should be shown.
+            selections (Sequence[RapidataSelection], optional): The list of selections for the ranking. Defaults to []. Decides in what order the tasks should be shown.
+            private_notes (list[str], optional): The list of private notes for the ranking. Defaults to None.\n
+                If provided has to be the same length as datapoints.\n
+                This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
-        with tracer.start_as_current_span(
-            "RapidataOrderManager.create_multi_ranking_order"
-        ):
+        with tracer.start_as_current_span("RapidataOrderManager.create_ranking_order"):
             if contexts and len(contexts) != len(datapoints):
                 raise ValueError(
                     "Number of contexts must match the number of sets that will be ranked"
