@@ -53,7 +53,7 @@ class DatapointsValidator:
                 group=group,
             )
             for asset, context, media_context, sentence, private_note, group in cast(
-                "Iterable[tuple[str | list[str], str | None, str | None, str | None, str | None, str | None]]",  # because itterator only supports 5 arguments with specific type casting
+                "Iterable[tuple[str | list[str], str | None, str | None, str | None, str | None, str | None]]",  # because iterator only supports 5 arguments with specific type casting
                 zip_longest(
                     datapoints,
                     contexts or [],

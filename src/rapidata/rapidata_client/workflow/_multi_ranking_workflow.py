@@ -14,9 +14,6 @@ from rapidata.api_client import ComparePayload
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.api_client.models.rapid_modality import RapidModality
 from rapidata.rapidata_client.datapoints.metadata import Metadata
-from rapidata.api_client.models.grouped_ranking_workflow_model import (
-    GroupedRankingWorkflowModel,
-)
 
 
 class MultiRankingWorkflow(Workflow):
@@ -77,7 +74,7 @@ class MultiRankingWorkflow(Workflow):
         )
 
     def __str__(self) -> str:
-        return f"RankingWorkflow(instruction='{self.instruction}', metadatas={self.metadatas})"
+        return f"MultiRankingWorkflow(instruction='{self.instruction}', metadatas={self.metadatas})"
 
     def __repr__(self) -> str:
-        return f"RankingWorkflow(instruction={self.instruction!r}, comparison_budget_per_ranking={self.comparison_budget_per_ranking!r}, random_comparisons_ratio={self.random_comparisons_ratio!r}, elo_start={self.elo_start!r}, elo_k_factor={self.elo_k_factor!r}, elo_scaling_factor={self.elo_scaling_factor!r}, metadatas={self.metadatas!r})"
+        return f"MultiRankingWorkflow(instruction={self.instruction!r}, comparison_budget_per_ranking={self.comparison_budget_per_ranking!r}, random_comparisons_ratio={self.random_comparisons_ratio!r}, elo_start={self.elo_start!r}, elo_k_factor={self.elo_k_factor!r}, elo_scaling_factor={self.elo_scaling_factor!r}, metadatas={self.metadatas!r})"
