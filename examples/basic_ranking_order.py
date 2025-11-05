@@ -12,7 +12,7 @@ DATAPOINTS = [
     "https://assets.rapidata.ai/c13b8feb-fb97-4646-8dfc-97f05d37a637.webp",
     "https://assets.rapidata.ai/586dc517-c987-4d06-8a6f-553508b86356.webp",
     "https://assets.rapidata.ai/f4884ecd-cacb-4387-ab18-3b6e7dcdf10c.webp",
-    "https://assets.rapidata.ai/79076f76-a432-4ef9-9007-6d09a218417a.webp"
+    "https://assets.rapidata.ai/79076f76-a432-4ef9-9007-6d09a218417a.webp",
 ]
 
 if __name__ == "__main__":
@@ -21,9 +21,9 @@ if __name__ == "__main__":
     order = rapi.order.create_ranking_order(
         name="Example Ranking Order",
         instruction="Which rabbit looks cooler?",
-        datapoints=DATAPOINTS,
-        total_comparison_budget=50, #Make 50 comparisons, each comparison containing 2 datapoints
-        random_comparisons_ratio=0.5 #First half of the comparisons are random, the second half are close matchups
+        datapoints=[DATAPOINTS],
+        comparison_budget_per_ranking=50,  # Make 50 comparisons, each comparison containing 2 datapoints
+        random_comparisons_ratio=0.5,  # First half of the comparisons are random, the second half are close matchups
     ).run()
 
     order.display_progress_bar()

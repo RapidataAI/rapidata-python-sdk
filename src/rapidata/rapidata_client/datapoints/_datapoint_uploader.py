@@ -45,6 +45,7 @@ class DatapointUploader:
                 asset=uploaded_asset,
                 metadata=metadata,
                 sortIndex=index,
+                group=datapoint.group,
             ),
         )
 

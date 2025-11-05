@@ -37,7 +37,11 @@ from rapidata.rapidata_client.referee import Referee
 from rapidata.rapidata_client.referee._naive_referee import NaiveReferee
 from rapidata.rapidata_client.selection._base_selection import RapidataSelection
 from rapidata.rapidata_client.settings import RapidataSetting
-from rapidata.rapidata_client.workflow import Workflow, FreeTextWorkflow
+from rapidata.rapidata_client.workflow import (
+    Workflow,
+    FreeTextWorkflow,
+    MultiRankingWorkflow,
+)
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.api.rapidata_api_client import (
     suppress_rapidata_error_logging,
@@ -63,7 +67,7 @@ class RapidataOrderBuilder:
     ):
         self._name = name
         self.order_id: str | None = None
-        self.__openapi_service = openapi_service
+        self._openapi_service = openapi_service
         self.__dataset: Optional[RapidataDataset] = None
         self.__workflow: Workflow | None = None
         self.__referee: Referee | None = None
@@ -75,7 +79,7 @@ class RapidataOrderBuilder:
         self.__datapoints: list[Datapoint] = []
         self.__sticky_state_value: StickyStateLiteral | None = None
         self.__validation_set_manager: ValidationSetManager = ValidationSetManager(
-            self.__openapi_service
+            self._openapi_service
         )
 
     def _to_model(self) -> CreateOrderModel:
@@ -144,7 +148,7 @@ class RapidataOrderBuilder:
             with suppress_rapidata_error_logging():
                 self.__validation_set_id = (
                     (
-                        self.__openapi_service.validation_api.validation_set_recommended_get(
+                        self._openapi_service.validation_api.validation_set_recommended_get(
                             asset_type=[self.__datapoints[0].get_asset_type()],
                             modality=[self.__workflow.modality],
                             instruction=self.__workflow._get_instruction(),
@@ -205,7 +209,9 @@ class RapidataOrderBuilder:
         """
         if (
             rapidata_config.order.autoValidationSetCreation
-            and not isinstance(self.__workflow, FreeTextWorkflow)
+            and not isinstance(
+                self.__workflow, (FreeTextWorkflow, MultiRankingWorkflow)
+            )
             and not self.__selections
         ):
             new_validation_set = self._set_validation_set_id()
@@ -215,7 +221,7 @@ class RapidataOrderBuilder:
         order_model = self._to_model()
         logger.debug("Creating order with model: %s", order_model)
 
-        result = self.__openapi_service.order_api.order_post(
+        result = self._openapi_service.order_api.order_post(
             create_order_model=order_model
         )
 
@@ -230,7 +236,7 @@ class RapidataOrderBuilder:
                 + f"A new validation set was created. Please annotate {required_amount} datapoint{('s' if required_amount != 1 else '')} so the order runs correctly."
                 + Fore.RESET
             )
-            link = f"https://app.{self.__openapi_service.environment}/validation-set/detail/{self.__validation_set_id}/annotate?orderId={self.order_id}&required={required_amount}"
+            link = f"https://app.{self._openapi_service.environment}/validation-set/detail/{self.__validation_set_id}/annotate?orderId={self.order_id}&required={required_amount}"
             could_open_browser = webbrowser.open(link)
             if not could_open_browser:
                 encoded_url = urllib.parse.quote(link, safe="%/:=&?~#+!$,;'@()*[]")
@@ -245,7 +251,7 @@ class RapidataOrderBuilder:
             managed_print()
 
         self.__dataset = (
-            RapidataDataset(result.dataset_id, self.__openapi_service)
+            RapidataDataset(result.dataset_id, self._openapi_service)
             if result.dataset_id
             else None
         )
@@ -256,7 +262,7 @@ class RapidataOrderBuilder:
 
         order = RapidataOrder(
             order_id=self.order_id,
-            openapi_service=self.__openapi_service,
+            openapi_service=self._openapi_service,
             name=self._name,
         )
 
@@ -278,7 +284,7 @@ class RapidataOrderBuilder:
         logger.debug("Datapoints added to the order.")
         logger.debug("Setting order to preview")
         try:
-            self.__openapi_service.order_api.order_order_id_preview_post(self.order_id)
+            self._openapi_service.order_api.order_order_id_preview_post(self.order_id)
         except Exception:
             raise FailedUploadException(self.__dataset, order, failed_uploads)
         return order

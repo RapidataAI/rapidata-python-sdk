@@ -4,7 +4,9 @@ from typing import Any
 from rapidata.api_client.models.simple_workflow_model import SimpleWorkflowModel
 from rapidata.api_client.models.evaluation_workflow_model import EvaluationWorkflowModel
 from rapidata.api_client.models.compare_workflow_model import CompareWorkflowModel
-from rapidata.rapidata_client.referee._base_referee import Referee
+from rapidata.api_client.models.grouped_ranking_workflow_model import (
+    GroupedRankingWorkflowModel,
+)
 from rapidata.api_client import (
     ClassifyPayload,
     ComparePayload,
@@ -51,7 +53,12 @@ class Workflow(ABC):
     @abstractmethod
     def _to_model(
         self,
-    ) -> SimpleWorkflowModel | CompareWorkflowModel | EvaluationWorkflowModel:
+    ) -> (
+        SimpleWorkflowModel
+        | CompareWorkflowModel
+        | EvaluationWorkflowModel
+        | GroupedRankingWorkflowModel
+    ):
         pass
 
     def _format_datapoints(self, datapoints: list[Datapoint]) -> list[Datapoint]:

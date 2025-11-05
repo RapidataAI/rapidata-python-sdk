@@ -26,7 +26,7 @@ class RankingWorkflow(Workflow):
 
     def __init__(
         self,
-        criteria: str,
+        instruction: str,
         total_comparison_budget: int,
         random_comparisons_ratio,
         elo_start: int = 1200,
@@ -54,7 +54,7 @@ class RankingWorkflow(Workflow):
         if context:
             self.metadatas.append(PromptMetadata(prompt=context))
 
-        self.criteria = criteria
+        self.instruction = instruction
         self.total_comparison_budget = total_comparison_budget
         self.random_comparisons_ratio = random_comparisons_ratio
         self.elo_start = elo_start
@@ -76,13 +76,13 @@ class RankingWorkflow(Workflow):
         )
 
     def _get_instruction(self) -> str:
-        return self.criteria
+        return self.instruction
 
     def _to_model(self) -> CompareWorkflowModel:
 
         return CompareWorkflowModel(
             _t="CompareWorkflow",
-            criteria=self.criteria,
+            criteria=self.instruction,
             eloConfig=self.elo_config,
             pairMakerConfig=self.pair_maker_config,
             metadata=[
@@ -94,7 +94,7 @@ class RankingWorkflow(Workflow):
     def _to_payload(self, datapoint: Datapoint) -> ComparePayload:
         return ComparePayload(
             _t="ComparePayload",
-            criteria=self.criteria,
+            criteria=self.instruction,
         )
 
     def _format_datapoints(self, datapoints: list[Datapoint]) -> list[Datapoint]:
@@ -116,9 +116,7 @@ class RankingWorkflow(Workflow):
         return formatted_datapoints
 
     def __str__(self) -> str:
-        return (
-            f"RankingWorkflow(criteria='{self.criteria}', metadatas={self.metadatas})"
-        )
+        return f"RankingWorkflow(instruction='{self.instruction}', metadatas={self.metadatas})"
 
     def __repr__(self) -> str:
-        return f"RankingWorkflow(criteria={self.criteria!r}, total_comparison_budget={self.total_comparison_budget!r}, random_comparisons_ratio={self.random_comparisons_ratio!r}, elo_start={self.elo_start!r}, elo_k_factor={self.elo_k_factor!r}, elo_scaling_factor={self.elo_scaling_factor!r}, metadatas={self.metadatas!r})"
+        return f"RankingWorkflow(instruction={self.instruction!r}, total_comparison_budget={self.total_comparison_budget!r}, random_comparisons_ratio={self.random_comparisons_ratio!r}, elo_start={self.elo_start!r}, elo_k_factor={self.elo_k_factor!r}, elo_scaling_factor={self.elo_scaling_factor!r}, metadatas={self.metadatas!r})"

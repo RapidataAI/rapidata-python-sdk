@@ -1,5 +1,4 @@
 from typing import Sequence, Optional, Literal, get_args
-from itertools import zip_longest
 
 from rapidata.rapidata_client.config.tracer import tracer
 from rapidata.rapidata_client.datapoints.metadata._base_metadata import Metadata
@@ -21,17 +20,14 @@ from rapidata.rapidata_client.workflow import (
     DrawWorkflow,
     TimestampWorkflow,
     RankingWorkflow,
+    MultiRankingWorkflow,
 )
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
-from rapidata.rapidata_client.datapoints.metadata import (
-    PromptMetadata,
-    MediaAssetMetadata,
-)
 from rapidata.rapidata_client.filter import RapidataFilter
 from rapidata.rapidata_client.filter.rapidata_filters import RapidataFilters
 from rapidata.rapidata_client.settings import RapidataSettings, RapidataSetting
 from rapidata.rapidata_client.selection.rapidata_selections import RapidataSelections
-from rapidata.rapidata_client.config import logger, rapidata_config
+from rapidata.rapidata_client.config import logger
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 
 from rapidata.api_client.models.query_model import QueryModel
@@ -41,9 +37,11 @@ from rapidata.api_client.models.filter import Filter
 from rapidata.api_client.models.filter_operator import FilterOperator
 from rapidata.api_client.models.sort_criterion import SortCriterion
 from rapidata.api_client.models.sort_direction import SortDirection
-from rapidata.rapidata_client.order._rapidata_order_builder import StickyStateLiteral
+from rapidata.rapidata_client.datapoints._datapoints_validator import (
+    DatapointsValidator,
+)
 
-from tqdm import tqdm
+from rapidata.rapidata_client.order._rapidata_order_builder import StickyStateLiteral
 
 
 class RapidataOrderManager:
@@ -69,38 +67,14 @@ class RapidataOrderManager:
         self,
         name: str,
         workflow: Workflow,
-        assets: list[str] | list[list[str]],
-        data_type: Literal["media", "text"] = "media",
+        datapoints: list[Datapoint],
         responses_per_datapoint: int = 10,
-        contexts: list[str] | None = None,
-        media_contexts: list[str] | None = None,
         validation_set_id: str | None = None,
         confidence_threshold: float | None = None,
         filters: Sequence[RapidataFilter] = [],
         settings: Sequence[RapidataSetting] = [],
-        sentences: list[str] | None = None,
         selections: Sequence[RapidataSelection] = [],
-        private_notes: list[str] | None = None,
     ) -> RapidataOrder:
-
-        if not assets:
-            raise ValueError("No datapoints provided")
-
-        if contexts and len(contexts) != len(assets):
-            raise ValueError("Number of contexts must match number of datapoints")
-
-        if media_contexts and len(media_contexts) != len(assets):
-            raise ValueError("Number of media contexts must match number of datapoints")
-
-        if sentences and len(sentences) != len(assets):
-            raise ValueError("Number of sentences must match number of datapoints")
-
-        if private_notes and len(private_notes) != len(assets):
-            raise ValueError("Number of private notes must match number of datapoints")
-
-        if sentences and contexts:
-            raise ValueError("You can only use contexts or sentences, not both")
-
         if not confidence_threshold:
             referee = NaiveReferee(responses=responses_per_datapoint)
         else:
@@ -109,25 +83,17 @@ class RapidataOrderManager:
                 max_vote_count=responses_per_datapoint,
             )
 
-        if data_type not in ["media", "text"]:
-            raise ValueError("Data type must be one of 'media' or 'text'")
-
         logger.debug(
-            "Creating order with parameters: name %s, workflow %s, datapoints %s, data_type %s, responses_per_datapoint %s, contexts %s, media_contexts %s, validation_set_id %s, confidence_threshold %s, filters %s, settings %s, sentences %s, selections %s, private_notes %s",
+            "Creating order with parameters: name %s, workflow %s, datapoints %s, responses_per_datapoint %s, validation_set_id %s, confidence_threshold %s, filters %s, settings %s, selections %s",
             name,
             workflow,
-            assets,
-            data_type,
+            datapoints,
             responses_per_datapoint,
-            contexts,
-            media_contexts,
             validation_set_id,
             confidence_threshold,
             filters,
             settings,
-            sentences,
             selections,
-            private_notes,
         )
 
         order_builder = RapidataOrderBuilder(
@@ -141,25 +107,7 @@ class RapidataOrderManager:
 
         order = (
             order_builder._workflow(workflow)
-            ._datapoints(
-                datapoints=[
-                    Datapoint(
-                        asset=asset,
-                        data_type=data_type,
-                        context=context,
-                        media_context=media_context,
-                        sentence=sentence,
-                        private_note=private_note,
-                    )
-                    for asset, context, media_context, sentence, private_note in zip_longest(
-                        assets,
-                        contexts or [],
-                        media_contexts or [],
-                        sentences or [],
-                        private_notes or [],
-                    )
-                ]
-            )
+            ._datapoints(datapoints=datapoints)
             ._referee(referee)
             ._filters(filters)
             ._selections(selections)
@@ -245,22 +193,25 @@ class RapidataOrderManager:
             ):
                 raise ValueError("Datapoints must be a list of strings")
 
+            datapoints_instances = DatapointsValidator.map_datapoints(
+                datapoints=datapoints,
+                contexts=contexts,
+                media_contexts=media_contexts,
+                private_notes=private_notes,
+                data_type=data_type,
+            )
             return self._create_general_order(
                 name=name,
                 workflow=ClassifyWorkflow(
                     instruction=instruction, answer_options=answer_options
                 ),
-                assets=datapoints,
-                data_type=data_type,
+                datapoints=datapoints_instances,
                 responses_per_datapoint=responses_per_datapoint,
-                contexts=contexts,
-                media_contexts=media_contexts,
                 validation_set_id=validation_set_id,
                 confidence_threshold=confidence_threshold,
                 filters=filters,
                 selections=selections,
                 settings=settings,
-                private_notes=private_notes,
             )
 
     def create_compare_order(
@@ -331,33 +282,36 @@ class RapidataOrderManager:
                     "A_B_naming must be a list of exactly two strings or None"
                 )
 
+            datapoints_instances = DatapointsValidator.map_datapoints(
+                datapoints=datapoints,
+                contexts=contexts,
+                media_contexts=media_contexts,
+                private_notes=private_notes,
+                data_type=data_type,
+            )
             return self._create_general_order(
                 name=name,
                 workflow=CompareWorkflow(instruction=instruction, a_b_names=a_b_names),
-                assets=datapoints,
-                data_type=data_type,
+                datapoints=datapoints_instances,
                 responses_per_datapoint=responses_per_datapoint,
-                contexts=contexts,
-                media_contexts=media_contexts,
                 validation_set_id=validation_set_id,
                 confidence_threshold=confidence_threshold,
                 filters=filters,
                 selections=selections,
                 settings=settings,
-                private_notes=private_notes,
             )
 
     def create_ranking_order(
         self,
         name: str,
         instruction: str,
-        datapoints: list[str],
-        total_comparison_budget: int,
+        datapoints: list[list[str]],
+        comparison_budget_per_ranking: int,
         responses_per_comparison: int = 1,
         data_type: Literal["media", "text"] = "media",
         random_comparisons_ratio: float = 0.5,
-        context: Optional[str] = None,
-        media_context: Optional[str] = None,
+        contexts: Optional[list[str]] = None,
+        media_contexts: Optional[list[str]] = None,
         validation_set_id: Optional[str] = None,
         filters: Sequence[RapidataFilter] = [],
         settings: Sequence[RapidataSetting] = [],
@@ -366,49 +320,74 @@ class RapidataOrderManager:
         """
         Create a ranking order.
 
-        With this order you can rank a list of datapoints (image, text, video, audio) based on the instruction.
-        The annotators will be shown two datapoints at a time. The ranking happens in terms of an elo system based on the matchup results.
+        With this order you can have a multiple lists of datapoints (image, text, video, audio) be ranked based on the instruction.
+        Each list will be ranked independently, based on comparison matchups.
 
         Args:
             name (str): The name of the order.
-            instruction (str): The question asked from People when They see two datapoints.
-            datapoints (list[str]): A list of datapoints that will participate in the ranking.
-            total_comparison_budget (int): The total number of (pairwise-)comparisons that can be made.
-            responses_per_comparison (int, optional): The number of responses collected per comparison. Defaults to 1.
+            instruction (str): The instruction for the ranking. Will be shown with each matchup.
+            datapoints (list[list[str]]): The outer list is determines the independent rankings, the inner list is the datapoints for each ranking.
+            comparison_budget_per_ranking (int): The number of comparisons that will be collected per ranking (outer list of datapoints).
+            responses_per_comparison (int, optional): The number of responses that will be collected per comparison. Defaults to 1.
             data_type (str, optional): The data type of the datapoints. Defaults to "media" (any form of image, video or audio). \n
                 Other option: "text".
-            random_comparisons_ratio (float, optional): The fraction of random comparisons in the ranking process.
-                The rest will focus on pairing similarly ranked datapoints. Defaults to 0.5 and can be left untouched.
-            context (str, optional): The context for all the comparison. Defaults to None.\n
-                If provided will be shown in addition to the instruction for all the matchups.
-            media_context (str, optional): The media context for all the comparison. Defaults to None.\n
-                If provided will be shown in addition to the instruction for all the matchups.
+            random_comparisons_ratio (float, optional): The ratio of random comparisons to the total number of comparisons. Defaults to 0.5.
+            contexts (list[str], optional): The list of contexts for the ranking. Defaults to None.\n
+                If provided has to be the same length as the outer list of datapoints and will be shown in addition to the instruction. (Therefore will be different for each ranking)
+                Will be matched up with the datapoints using the list index.
+            media_contexts (list[str], optional): The list of media contexts for the ranking i.e links to the images / videos. Defaults to None.\n
+                If provided has to be the same length as the outer list of datapoints and will be shown in addition to the instruction. (Therefore will be different for each ranking)
+                Will be matched up with the datapoints using the list index.
             validation_set_id (str, optional): The ID of the validation set. Defaults to None.\n
                 If provided, one validation task will be shown infront of the datapoints that will be labeled.
-            filters (Sequence[RapidataFilter], optional): The list of filters for the order. Defaults to []. Decides who the tasks should be shown to.
-            settings (Sequence[RapidataSetting], optional): The list of settings for the order. Defaults to []. Decides how the tasks should be shown.
-            selections (Sequence[RapidataSelection], optional): The list of selections for the order. Defaults to []. Decides in what order the tasks should be shown.
+            filters (Sequence[RapidataFilter], optional): The list of filters for the ranking. Defaults to []. Decides who the tasks should be shown to.
+            settings (Sequence[RapidataSetting], optional): The list of settings for the ranking. Defaults to []. Decides how the tasks should be shown.
+            selections (Sequence[RapidataSelection], optional): The list of selections for the ranking. Defaults to []. Decides in what order the tasks should be shown.
         """
-
         with tracer.start_as_current_span("RapidataOrderManager.create_ranking_order"):
-            if len(datapoints) < 2:
-                raise ValueError("At least two datapoints are required")
+            if contexts and len(contexts) != len(datapoints):
+                raise ValueError(
+                    "Number of contexts must match the number of sets that will be ranked"
+                )
+            if media_contexts and len(media_contexts) != len(datapoints):
+                raise ValueError(
+                    "Number of media contexts must match the number of sets that will be ranked"
+                )
+            if not isinstance(datapoints, list) or not all(
+                isinstance(dp, list) for dp in datapoints
+            ):
+                raise ValueError(
+                    "Datapoints must be a list of lists. Outer list is the independent rankings, inner list is the datapoints for each ranking."
+                )
+            if not all(len(set(dp)) == len(dp) for dp in datapoints):
+                raise ValueError("Each inner list must contain unique datapoints.")
 
-            if len(set(datapoints)) != len(datapoints):
-                raise ValueError("Datapoints must be unique")
+            if not all(len(inner_list) >= 2 for inner_list in datapoints):
+                raise ValueError(
+                    "Each ranking must contain at least two unique datapoints."
+                )
+
+            datapoints_instances = []
+            for i, datapoint in enumerate(datapoints):
+                for d in datapoint:
+                    datapoints_instances.append(
+                        Datapoint(
+                            asset=d,
+                            data_type=data_type,
+                            context=contexts[i] if contexts else None,
+                            media_context=media_contexts[i] if media_contexts else None,
+                            group=str(i),
+                        )
+                    )
 
             return self._create_general_order(
                 name=name,
-                workflow=RankingWorkflow(
-                    criteria=instruction,
-                    total_comparison_budget=total_comparison_budget,
+                workflow=MultiRankingWorkflow(
+                    instruction=instruction,
+                    comparison_budget_per_ranking=comparison_budget_per_ranking,
                     random_comparisons_ratio=random_comparisons_ratio,
-                    context=context,
-                    media_context=media_context,
-                    file_uploader=self.__asset_uploader,
                 ),
-                assets=datapoints,
-                data_type=data_type,
+                datapoints=datapoints_instances,
                 responses_per_datapoint=responses_per_comparison,
                 validation_set_id=validation_set_id,
                 filters=filters,
@@ -458,18 +437,21 @@ class RapidataOrderManager:
         with tracer.start_as_current_span(
             "RapidataOrderManager.create_free_text_order"
         ):
+            datapoints_instances = DatapointsValidator.map_datapoints(
+                datapoints=datapoints,
+                contexts=contexts,
+                media_contexts=media_contexts,
+                private_notes=private_notes,
+                data_type=data_type,
+            )
             return self._create_general_order(
                 name=name,
                 workflow=FreeTextWorkflow(instruction=instruction),
-                assets=datapoints,
-                data_type=data_type,
+                datapoints=datapoints_instances,
                 responses_per_datapoint=responses_per_datapoint,
-                contexts=contexts,
-                media_contexts=media_contexts,
                 filters=filters,
                 selections=selections,
                 settings=settings,
-                private_notes=private_notes,
             )
 
     def create_select_words_order(
@@ -510,19 +492,22 @@ class RapidataOrderManager:
         with tracer.start_as_current_span(
             "RapidataOrderManager.create_select_words_order"
         ):
+            datapoints_instances = DatapointsValidator.map_datapoints(
+                datapoints=datapoints,
+                sentences=sentences,
+                private_notes=private_notes,
+            )
             return self._create_general_order(
                 name=name,
                 workflow=SelectWordsWorkflow(
                     instruction=instruction,
                 ),
-                assets=datapoints,
+                datapoints=datapoints_instances,
                 responses_per_datapoint=responses_per_datapoint,
                 validation_set_id=validation_set_id,
                 filters=filters,
                 selections=selections,
                 settings=settings,
-                sentences=sentences,
-                private_notes=private_notes,
             )
 
     def create_locate_order(
@@ -564,19 +549,21 @@ class RapidataOrderManager:
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
         with tracer.start_as_current_span("RapidataOrderManager.create_locate_order"):
-
+            datapoints_instances = DatapointsValidator.map_datapoints(
+                datapoints=datapoints,
+                contexts=contexts,
+                media_contexts=media_contexts,
+                private_notes=private_notes,
+            )
             return self._create_general_order(
                 name=name,
                 workflow=LocateWorkflow(target=instruction),
-                assets=datapoints,
+                datapoints=datapoints_instances,
                 responses_per_datapoint=responses_per_datapoint,
-                contexts=contexts,
-                media_contexts=media_contexts,
                 validation_set_id=validation_set_id,
                 filters=filters,
                 selections=selections,
                 settings=settings,
-                private_notes=private_notes,
             )
 
     def create_draw_order(
@@ -618,19 +605,21 @@ class RapidataOrderManager:
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
         with tracer.start_as_current_span("RapidataOrderManager.create_draw_order"):
-
+            datapoints_instances = DatapointsValidator.map_datapoints(
+                datapoints=datapoints,
+                contexts=contexts,
+                media_contexts=media_contexts,
+                private_notes=private_notes,
+            )
             return self._create_general_order(
                 name=name,
                 workflow=DrawWorkflow(target=instruction),
-                assets=datapoints,
+                datapoints=datapoints_instances,
                 responses_per_datapoint=responses_per_datapoint,
-                contexts=contexts,
-                media_contexts=media_contexts,
                 validation_set_id=validation_set_id,
                 filters=filters,
                 selections=selections,
                 settings=settings,
-                private_notes=private_notes,
             )
 
     def create_timestamp_order(
@@ -678,18 +667,21 @@ class RapidataOrderManager:
         with tracer.start_as_current_span(
             "RapidataOrderManager.create_timestamp_order"
         ):
+            datapoints_instances = DatapointsValidator.map_datapoints(
+                datapoints=datapoints,
+                contexts=contexts,
+                media_contexts=media_contexts,
+                private_notes=private_notes,
+            )
             return self._create_general_order(
                 name=name,
                 workflow=TimestampWorkflow(instruction=instruction),
-                assets=datapoints,
+                datapoints=datapoints_instances,
                 responses_per_datapoint=responses_per_datapoint,
-                contexts=contexts,
-                media_contexts=media_contexts,
                 validation_set_id=validation_set_id,
                 filters=filters,
                 selections=selections,
                 settings=settings,
-                private_notes=private_notes,
             )
 
     def get_order_by_id(self, order_id: str) -> RapidataOrder:
