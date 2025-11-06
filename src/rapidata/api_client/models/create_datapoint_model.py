@@ -35,7 +35,8 @@ class CreateDatapointModel(BaseModel):
     context_asset: Optional[CreateDatapointModelContextAsset] = Field(default=None, alias="contextAsset")
     sort_index: Optional[StrictInt] = Field(default=None, description="The sort index represents the order of the datapoint in the dataset", alias="sortIndex")
     group: Optional[StrictStr] = Field(default=None, description="The group a datapoint belongs to.")
-    __properties: ClassVar[List[str]] = ["asset", "metadata", "context", "contextAsset", "sortIndex", "group"]
+    transcription: Optional[StrictStr] = Field(default=None, description="For audio or video assets, an optional transcription of the content.")
+    __properties: ClassVar[List[str]] = ["asset", "metadata", "context", "contextAsset", "sortIndex", "group", "transcription"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -109,6 +110,11 @@ class CreateDatapointModel(BaseModel):
         if self.group is None and "group" in self.model_fields_set:
             _dict['group'] = None
 
+        # set to None if transcription (nullable) is None
+        # and model_fields_set contains the field
+        if self.transcription is None and "transcription" in self.model_fields_set:
+            _dict['transcription'] = None
+
         return _dict
 
     @classmethod
@@ -126,7 +132,8 @@ class CreateDatapointModel(BaseModel):
             "context": obj.get("context"),
             "contextAsset": CreateDatapointModelContextAsset.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
             "sortIndex": obj.get("sortIndex"),
-            "group": obj.get("group")
+            "group": obj.get("group"),
+            "transcription": obj.get("transcription")
         })
         return _obj
 

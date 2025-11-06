@@ -6167,6 +6167,12 @@
             "description": "The group a datapoint belongs to.",
             "default": null,
             "nullable": true
+          },
+          "transcription": {
+            "type": "string",
+            "description": "For audio or video assets, an optional transcription of the content.",
+            "default": null,
+            "nullable": true
           }
         },
         "additionalProperties": false,
