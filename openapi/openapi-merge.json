@@ -26,6 +26,9 @@
     },
     {
       "inputFile": "./spec/leaderboard.json"
+    },
+    {
+      "inputFile": "./spec/asset.json"
     }
   ],
   "output": "./output.swagger.json"
