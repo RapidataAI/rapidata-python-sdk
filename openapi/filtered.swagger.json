@@ -5307,8 +5307,7 @@
       },
       "CreateDatapointModel": {
         "required": [
-          "asset",
-          "metadata"
+          "asset"
         ],
         "type": "object",
         "properties": {
@@ -5349,6 +5348,8 @@
               }
             },
             "description": "The metadata of the datapoint",
+            "default": null,
+            "nullable": true,
             "deprecated": true
           },
           "context": {

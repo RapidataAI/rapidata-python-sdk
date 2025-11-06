@@ -30,7 +30,7 @@ class CreateDatapointModel(BaseModel):
     The body request for creating a new datapoint
     """ # noqa: E501
     asset: CreateDatapointModelAsset
-    metadata: List[CreateDatapointModelMetadataInner] = Field(description="The metadata of the datapoint")
+    metadata: Optional[List[CreateDatapointModelMetadataInner]] = Field(default=None, description="The metadata of the datapoint")
     context: Optional[StrictStr] = Field(default=None, description="An additional context to show the users when solving the rapid.")
     context_asset: Optional[CreateDatapointModelContextAsset] = Field(default=None, alias="contextAsset")
     sort_index: Optional[StrictInt] = Field(default=None, description="The sort index represents the order of the datapoint in the dataset", alias="sortIndex")
@@ -90,6 +90,11 @@ class CreateDatapointModel(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of context_asset
         if self.context_asset:
             _dict['contextAsset'] = self.context_asset.to_dict()
+        # set to None if metadata (nullable) is None
+        # and model_fields_set contains the field
+        if self.metadata is None and "metadata" in self.model_fields_set:
+            _dict['metadata'] = None
+
         # set to None if context (nullable) is None
         # and model_fields_set contains the field
         if self.context is None and "context" in self.model_fields_set:
