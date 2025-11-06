@@ -28,7 +28,7 @@ class MultiAsset(BaseModel):
     MultiAsset
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for MultiAsset", alias="_t")
-    assets: List[MultiAssetAssetsInner]
+    assets: List[GroupedRankingWorkflowConfigContextAssetsValue]
     metadata: Optional[Dict[str, FileAssetMetadataValue]] = None
     __properties: ClassVar[List[str]] = ["_t", "assets", "metadata"]
 
@@ -105,7 +105,7 @@ class MultiAsset(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'MultiAsset',
-            "assets": [MultiAssetAssetsInner.from_dict(_item) for _item in obj["assets"]] if obj.get("assets") is not None else None,
+            "assets": [GroupedRankingWorkflowConfigContextAssetsValue.from_dict(_item) for _item in obj["assets"]] if obj.get("assets") is not None else None,
             "metadata": dict(
                 (_k, FileAssetMetadataValue.from_dict(_v))
                 for _k, _v in obj["metadata"].items()
@@ -115,7 +115,7 @@ class MultiAsset(BaseModel):
         })
         return _obj
 
-from rapidata.api_client.models.multi_asset_assets_inner import MultiAssetAssetsInner
+from rapidata.api_client.models.grouped_ranking_workflow_config_context_assets_value import GroupedRankingWorkflowConfigContextAssetsValue
 # TODO: Rewrite to not use raise_errors
 MultiAsset.model_rebuild(raise_errors=False)
 
