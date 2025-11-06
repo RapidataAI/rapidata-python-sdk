@@ -3,13 +3,14 @@ from rapidata.api_client.models.attach_category_rapid_blueprint import (
     AttachCategoryRapidBlueprint,
 )
 from rapidata.api_client.models.simple_workflow_model import SimpleWorkflowModel
-from rapidata.api_client.models.validation_set_zip_post_request_blueprint import (
-    ValidationSetZipPostRequestBlueprint,
+from rapidata.api_client.models.simple_workflow_model_blueprint import (
+    SimpleWorkflowModelBlueprint,
 )
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.api_client import ClassifyPayload
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.api_client.models.rapid_modality import RapidModality
+from rapidata.api_client.models.classify_payload_category import ClassifyPayloadCategory
 
 
 class ClassifyWorkflow(Workflow):
@@ -57,13 +58,16 @@ class ClassifyWorkflow(Workflow):
 
         return SimpleWorkflowModel(
             _t="SimpleWorkflow",
-            blueprint=ValidationSetZipPostRequestBlueprint(blueprint),
+            blueprint=SimpleWorkflowModelBlueprint(blueprint),
         )
 
     def _to_payload(self, datapoint: Datapoint) -> ClassifyPayload:
         return ClassifyPayload(
             _t="ClassifyPayload",
-            possibleCategories=self._answer_options,
+            categories=[
+                ClassifyPayloadCategory(label=option, value=option)
+                for option in self._answer_options
+            ],
             title=self._instruction,
         )
 

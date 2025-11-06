@@ -43,7 +43,7 @@ class BenchmarkParticipant:
         for attempt in range(rapidata_config.upload.maxRetries):
             try:
                 with suppress_rapidata_error_logging():
-                    self._openapi_service.participant_api.participant_participant_id_sample_new_post(
+                    self._openapi_service.participant_api.participant_participant_id_sample_post(
                         participant_id=self.id,
                         create_sample_model=CreateSampleModel(
                             identifier=identifier,

@@ -1,6 +1,6 @@
 from rapidata.api_client.models.simple_workflow_model import SimpleWorkflowModel
-from rapidata.api_client.models.validation_set_zip_post_request_blueprint import (
-    ValidationSetZipPostRequestBlueprint,
+from rapidata.api_client.models.simple_workflow_model_blueprint import (
+    SimpleWorkflowModelBlueprint,
 )
 from rapidata.api_client.models.transcription_rapid_blueprint import (
     TranscriptionRapidBlueprint,
@@ -41,7 +41,7 @@ class SelectWordsWorkflow(Workflow):
 
         return SimpleWorkflowModel(
             _t="SimpleWorkflow",
-            blueprint=ValidationSetZipPostRequestBlueprint(blueprint),
+            blueprint=SimpleWorkflowModelBlueprint(blueprint),
         )
 
     def _to_payload(self, datapoint: Datapoint) -> TranscriptionPayload:

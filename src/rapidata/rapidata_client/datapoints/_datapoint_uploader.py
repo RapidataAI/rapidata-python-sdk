@@ -10,8 +10,8 @@ from rapidata.api_client.models.create_datapoint_model_asset import (
     CreateDatapointModelAsset,
 )
 from rapidata.api_client.models.create_datapoint_result import CreateDatapointResult
-from rapidata.api_client.models.create_datapoint_from_files_model_metadata_inner import (
-    CreateDatapointFromFilesModelMetadataInner,
+from rapidata.api_client.models.create_datapoint_model_metadata_inner import (
+    CreateDatapointModelMetadataInner,
 )
 from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
@@ -51,7 +51,7 @@ class DatapointUploader:
 
     def _get_metadata(
         self, datapoint: Datapoint
-    ) -> list[CreateDatapointFromFilesModelMetadataInner]:
+    ) -> list[CreateDatapointModelMetadataInner]:
         datapoint_metadata: list[Metadata] = []
         if datapoint.context:
             datapoint_metadata.append(PromptMetadata(prompt=datapoint.context))
@@ -71,9 +71,7 @@ class DatapointUploader:
             datapoint_metadata.append(PrivateTextMetadata(text=datapoint.private_note))
 
         metadata = [
-            CreateDatapointFromFilesModelMetadataInner(
-                actual_instance=metadata.to_model()
-            )
+            CreateDatapointModelMetadataInner(actual_instance=metadata.to_model())
             for metadata in datapoint_metadata
         ]
 
