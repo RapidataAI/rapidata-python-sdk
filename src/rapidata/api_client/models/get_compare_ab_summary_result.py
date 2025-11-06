@@ -26,9 +26,8 @@ class GetCompareAbSummaryResult(BaseModel):
     """
     GetCompareAbSummaryResult
     """ # noqa: E501
-    winner_counts: Dict[str, Union[StrictFloat, StrictInt]] = Field(alias="winnerCounts")
     win_counter: Dict[str, Union[StrictFloat, StrictInt]] = Field(alias="winCounter")
-    __properties: ClassVar[List[str]] = ["winnerCounts", "winCounter"]
+    __properties: ClassVar[List[str]] = ["winCounter"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -81,7 +80,6 @@ class GetCompareAbSummaryResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "winnerCounts": obj.get("winnerCounts"),
             "winCounter": obj.get("winCounter")
         })
         return _obj

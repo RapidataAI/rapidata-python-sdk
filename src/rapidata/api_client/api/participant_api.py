@@ -21,8 +21,8 @@ from typing import Optional
 from typing_extensions import Annotated
 from rapidata.api_client.models.create_sample_model import CreateSampleModel
 from rapidata.api_client.models.get_participant_by_id_result import GetParticipantByIdResult
+from rapidata.api_client.models.paged_result_sample_by_participant import PagedResultSampleByParticipant
 from rapidata.api_client.models.query_model import QueryModel
-from rapidata.api_client.models.sample_by_participant_paged_result import SampleByParticipantPagedResult
 from rapidata.api_client.models.submit_participant_result import SubmitParticipantResult
 from rapidata.api_client.models.update_participant_model import UpdateParticipantModel
 
@@ -1092,7 +1092,7 @@ class ParticipantApi:
 
 
     @validate_call
-    def participant_participant_id_sample_new_post(
+    def participant_participant_id_sample_post(
         self,
         participant_id: Annotated[StrictStr, Field(description="The id of the participant to add the sample to")],
         create_sample_model: Annotated[Optional[CreateSampleModel], Field(description="The model for the sample creation")] = None,
@@ -1138,7 +1138,7 @@ class ParticipantApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._participant_participant_id_sample_new_post_serialize(
+        _param = self._participant_participant_id_sample_post_serialize(
             participant_id=participant_id,
             create_sample_model=create_sample_model,
             _request_auth=_request_auth,
@@ -1162,7 +1162,7 @@ class ParticipantApi:
 
 
     @validate_call
-    def participant_participant_id_sample_new_post_with_http_info(
+    def participant_participant_id_sample_post_with_http_info(
         self,
         participant_id: Annotated[StrictStr, Field(description="The id of the participant to add the sample to")],
         create_sample_model: Annotated[Optional[CreateSampleModel], Field(description="The model for the sample creation")] = None,
@@ -1208,7 +1208,7 @@ class ParticipantApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._participant_participant_id_sample_new_post_serialize(
+        _param = self._participant_participant_id_sample_post_serialize(
             participant_id=participant_id,
             create_sample_model=create_sample_model,
             _request_auth=_request_auth,
@@ -1232,7 +1232,7 @@ class ParticipantApi:
 
 
     @validate_call
-    def participant_participant_id_sample_new_post_without_preload_content(
+    def participant_participant_id_sample_post_without_preload_content(
         self,
         participant_id: Annotated[StrictStr, Field(description="The id of the participant to add the sample to")],
         create_sample_model: Annotated[Optional[CreateSampleModel], Field(description="The model for the sample creation")] = None,
@@ -1278,7 +1278,7 @@ class ParticipantApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._participant_participant_id_sample_new_post_serialize(
+        _param = self._participant_participant_id_sample_post_serialize(
             participant_id=participant_id,
             create_sample_model=create_sample_model,
             _request_auth=_request_auth,
@@ -1297,7 +1297,7 @@ class ParticipantApi:
         return response_data.response
 
 
-    def _participant_participant_id_sample_new_post_serialize(
+    def _participant_participant_id_sample_post_serialize(
         self,
         participant_id,
         create_sample_model,
@@ -1357,7 +1357,7 @@ class ParticipantApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/participant/{participantId}/sample-new',
+            resource_path='/participant/{participantId}/sample',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1390,7 +1390,7 @@ class ParticipantApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> SampleByParticipantPagedResult:
+    ) -> PagedResultSampleByParticipant:
         """Queries all samples of a participant.
 
 
@@ -1430,7 +1430,7 @@ class ParticipantApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "SampleByParticipantPagedResult",
+            '200': "PagedResultSampleByParticipant",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1460,7 +1460,7 @@ class ParticipantApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[SampleByParticipantPagedResult]:
+    ) -> ApiResponse[PagedResultSampleByParticipant]:
         """Queries all samples of a participant.
 
 
@@ -1500,7 +1500,7 @@ class ParticipantApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "SampleByParticipantPagedResult",
+            '200': "PagedResultSampleByParticipant",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1570,7 +1570,7 @@ class ParticipantApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "SampleByParticipantPagedResult",
+            '200': "PagedResultSampleByParticipant",
         }
         response_data = self.api_client.call_api(
             *_param,

@@ -17,63 +17,48 @@ import json
 import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
-from rapidata.api_client.models.asset_metadata_model import AssetMetadataModel
 from rapidata.api_client.models.classification_metadata_model import ClassificationMetadataModel
 from rapidata.api_client.models.count_metadata_model import CountMetadataModel
-from rapidata.api_client.models.demographic_metadata_model import DemographicMetadataModel
 from rapidata.api_client.models.file_type_metadata_model import FileTypeMetadataModel
 from rapidata.api_client.models.image_dimension_metadata_model import ImageDimensionMetadataModel
 from rapidata.api_client.models.location_metadata_model import LocationMetadataModel
 from rapidata.api_client.models.original_filename_metadata_model import OriginalFilenameMetadataModel
-from rapidata.api_client.models.prompt_metadata_model import PromptMetadataModel
 from rapidata.api_client.models.source_url_metadata_model import SourceUrlMetadataModel
 from rapidata.api_client.models.streams_metadata_model import StreamsMetadataModel
 from rapidata.api_client.models.text_metadata_model import TextMetadataModel
-from rapidata.api_client.models.transcription_metadata_model import TranscriptionMetadataModel
-from rapidata.api_client.models.translated_prompt_metadata_model import TranslatedPromptMetadataModel
 from rapidata.api_client.models.video_duration_metadata_model import VideoDurationMetadataModel
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-FILEASSETMODELMETADATAVALUE_ONE_OF_SCHEMAS = ["AssetMetadataModel", "ClassificationMetadataModel", "CountMetadataModel", "DemographicMetadataModel", "FileTypeMetadataModel", "ImageDimensionMetadataModel", "LocationMetadataModel", "OriginalFilenameMetadataModel", "PromptMetadataModel", "SourceUrlMetadataModel", "StreamsMetadataModel", "TextMetadataModel", "TranscriptionMetadataModel", "TranslatedPromptMetadataModel", "VideoDurationMetadataModel"]
+FILEASSETMODELMETADATAVALUE_ONE_OF_SCHEMAS = ["ClassificationMetadataModel", "CountMetadataModel", "FileTypeMetadataModel", "ImageDimensionMetadataModel", "LocationMetadataModel", "OriginalFilenameMetadataModel", "SourceUrlMetadataModel", "StreamsMetadataModel", "TextMetadataModel", "VideoDurationMetadataModel"]
 
 class FileAssetModelMetadataValue(BaseModel):
     """
     FileAssetModelMetadataValue
     """
-    # data type: AssetMetadataModel
-    oneof_schema_1_validator: Optional[AssetMetadataModel] = None
     # data type: ClassificationMetadataModel
-    oneof_schema_2_validator: Optional[ClassificationMetadataModel] = None
+    oneof_schema_1_validator: Optional[ClassificationMetadataModel] = None
     # data type: CountMetadataModel
-    oneof_schema_3_validator: Optional[CountMetadataModel] = None
-    # data type: DemographicMetadataModel
-    oneof_schema_4_validator: Optional[DemographicMetadataModel] = None
+    oneof_schema_2_validator: Optional[CountMetadataModel] = None
     # data type: FileTypeMetadataModel
-    oneof_schema_5_validator: Optional[FileTypeMetadataModel] = None
+    oneof_schema_3_validator: Optional[FileTypeMetadataModel] = None
     # data type: ImageDimensionMetadataModel
-    oneof_schema_6_validator: Optional[ImageDimensionMetadataModel] = None
+    oneof_schema_4_validator: Optional[ImageDimensionMetadataModel] = None
     # data type: LocationMetadataModel
-    oneof_schema_7_validator: Optional[LocationMetadataModel] = None
+    oneof_schema_5_validator: Optional[LocationMetadataModel] = None
     # data type: OriginalFilenameMetadataModel
-    oneof_schema_8_validator: Optional[OriginalFilenameMetadataModel] = None
-    # data type: PromptMetadataModel
-    oneof_schema_9_validator: Optional[PromptMetadataModel] = None
+    oneof_schema_6_validator: Optional[OriginalFilenameMetadataModel] = None
     # data type: SourceUrlMetadataModel
-    oneof_schema_10_validator: Optional[SourceUrlMetadataModel] = None
+    oneof_schema_7_validator: Optional[SourceUrlMetadataModel] = None
     # data type: StreamsMetadataModel
-    oneof_schema_11_validator: Optional[StreamsMetadataModel] = None
+    oneof_schema_8_validator: Optional[StreamsMetadataModel] = None
     # data type: TextMetadataModel
-    oneof_schema_12_validator: Optional[TextMetadataModel] = None
-    # data type: TranscriptionMetadataModel
-    oneof_schema_13_validator: Optional[TranscriptionMetadataModel] = None
-    # data type: TranslatedPromptMetadataModel
-    oneof_schema_14_validator: Optional[TranslatedPromptMetadataModel] = None
+    oneof_schema_9_validator: Optional[TextMetadataModel] = None
     # data type: VideoDurationMetadataModel
-    oneof_schema_15_validator: Optional[VideoDurationMetadataModel] = None
-    actual_instance: Optional[Union[AssetMetadataModel, ClassificationMetadataModel, CountMetadataModel, DemographicMetadataModel, FileTypeMetadataModel, ImageDimensionMetadataModel, LocationMetadataModel, OriginalFilenameMetadataModel, PromptMetadataModel, SourceUrlMetadataModel, StreamsMetadataModel, TextMetadataModel, TranscriptionMetadataModel, TranslatedPromptMetadataModel, VideoDurationMetadataModel]] = None
-    one_of_schemas: Set[str] = { "AssetMetadataModel", "ClassificationMetadataModel", "CountMetadataModel", "DemographicMetadataModel", "FileTypeMetadataModel", "ImageDimensionMetadataModel", "LocationMetadataModel", "OriginalFilenameMetadataModel", "PromptMetadataModel", "SourceUrlMetadataModel", "StreamsMetadataModel", "TextMetadataModel", "TranscriptionMetadataModel", "TranslatedPromptMetadataModel", "VideoDurationMetadataModel" }
+    oneof_schema_10_validator: Optional[VideoDurationMetadataModel] = None
+    actual_instance: Optional[Union[ClassificationMetadataModel, CountMetadataModel, FileTypeMetadataModel, ImageDimensionMetadataModel, LocationMetadataModel, OriginalFilenameMetadataModel, SourceUrlMetadataModel, StreamsMetadataModel, TextMetadataModel, VideoDurationMetadataModel]] = None
+    one_of_schemas: Set[str] = { "ClassificationMetadataModel", "CountMetadataModel", "FileTypeMetadataModel", "ImageDimensionMetadataModel", "LocationMetadataModel", "OriginalFilenameMetadataModel", "SourceUrlMetadataModel", "StreamsMetadataModel", "TextMetadataModel", "VideoDurationMetadataModel" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -99,11 +84,6 @@ class FileAssetModelMetadataValue(BaseModel):
         instance = FileAssetModelMetadataValue.model_construct()
         error_messages = []
         match = 0
-        # validate data type: AssetMetadataModel
-        if not isinstance(v, AssetMetadataModel):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `AssetMetadataModel`")
-        else:
-            match += 1
         # validate data type: ClassificationMetadataModel
         if not isinstance(v, ClassificationMetadataModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `ClassificationMetadataModel`")
@@ -112,11 +92,6 @@ class FileAssetModelMetadataValue(BaseModel):
         # validate data type: CountMetadataModel
         if not isinstance(v, CountMetadataModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `CountMetadataModel`")
-        else:
-            match += 1
-        # validate data type: DemographicMetadataModel
-        if not isinstance(v, DemographicMetadataModel):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `DemographicMetadataModel`")
         else:
             match += 1
         # validate data type: FileTypeMetadataModel
@@ -139,11 +114,6 @@ class FileAssetModelMetadataValue(BaseModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `OriginalFilenameMetadataModel`")
         else:
             match += 1
-        # validate data type: PromptMetadataModel
-        if not isinstance(v, PromptMetadataModel):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `PromptMetadataModel`")
-        else:
-            match += 1
         # validate data type: SourceUrlMetadataModel
         if not isinstance(v, SourceUrlMetadataModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `SourceUrlMetadataModel`")
@@ -159,16 +129,6 @@ class FileAssetModelMetadataValue(BaseModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `TextMetadataModel`")
         else:
             match += 1
-        # validate data type: TranscriptionMetadataModel
-        if not isinstance(v, TranscriptionMetadataModel):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `TranscriptionMetadataModel`")
-        else:
-            match += 1
-        # validate data type: TranslatedPromptMetadataModel
-        if not isinstance(v, TranslatedPromptMetadataModel):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `TranslatedPromptMetadataModel`")
-        else:
-            match += 1
         # validate data type: VideoDurationMetadataModel
         if not isinstance(v, VideoDurationMetadataModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `VideoDurationMetadataModel`")
@@ -176,10 +136,10 @@ class FileAssetModelMetadataValue(BaseModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in FileAssetModelMetadataValue with oneOf schemas: AssetMetadataModel, ClassificationMetadataModel, CountMetadataModel, DemographicMetadataModel, FileTypeMetadataModel, ImageDimensionMetadataModel, LocationMetadataModel, OriginalFilenameMetadataModel, PromptMetadataModel, SourceUrlMetadataModel, StreamsMetadataModel, TextMetadataModel, TranscriptionMetadataModel, TranslatedPromptMetadataModel, VideoDurationMetadataModel. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in FileAssetModelMetadataValue with oneOf schemas: ClassificationMetadataModel, CountMetadataModel, FileTypeMetadataModel, ImageDimensionMetadataModel, LocationMetadataModel, OriginalFilenameMetadataModel, SourceUrlMetadataModel, StreamsMetadataModel, TextMetadataModel, VideoDurationMetadataModel. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in FileAssetModelMetadataValue with oneOf schemas: AssetMetadataModel, ClassificationMetadataModel, CountMetadataModel, DemographicMetadataModel, FileTypeMetadataModel, ImageDimensionMetadataModel, LocationMetadataModel, OriginalFilenameMetadataModel, PromptMetadataModel, SourceUrlMetadataModel, StreamsMetadataModel, TextMetadataModel, TranscriptionMetadataModel, TranslatedPromptMetadataModel, VideoDurationMetadataModel. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in FileAssetModelMetadataValue with oneOf schemas: ClassificationMetadataModel, CountMetadataModel, FileTypeMetadataModel, ImageDimensionMetadataModel, LocationMetadataModel, OriginalFilenameMetadataModel, SourceUrlMetadataModel, StreamsMetadataModel, TextMetadataModel, VideoDurationMetadataModel. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -194,12 +154,6 @@ class FileAssetModelMetadataValue(BaseModel):
         error_messages = []
         match = 0
 
-        # deserialize data into AssetMetadataModel
-        try:
-            instance.actual_instance = AssetMetadataModel.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
         # deserialize data into ClassificationMetadataModel
         try:
             instance.actual_instance = ClassificationMetadataModel.from_json(json_str)
@@ -209,12 +163,6 @@ class FileAssetModelMetadataValue(BaseModel):
         # deserialize data into CountMetadataModel
         try:
             instance.actual_instance = CountMetadataModel.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into DemographicMetadataModel
-        try:
-            instance.actual_instance = DemographicMetadataModel.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
@@ -242,12 +190,6 @@ class FileAssetModelMetadataValue(BaseModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # deserialize data into PromptMetadataModel
-        try:
-            instance.actual_instance = PromptMetadataModel.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
         # deserialize data into SourceUrlMetadataModel
         try:
             instance.actual_instance = SourceUrlMetadataModel.from_json(json_str)
@@ -266,18 +208,6 @@ class FileAssetModelMetadataValue(BaseModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # deserialize data into TranscriptionMetadataModel
-        try:
-            instance.actual_instance = TranscriptionMetadataModel.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into TranslatedPromptMetadataModel
-        try:
-            instance.actual_instance = TranslatedPromptMetadataModel.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
         # deserialize data into VideoDurationMetadataModel
         try:
             instance.actual_instance = VideoDurationMetadataModel.from_json(json_str)
@@ -287,10 +217,10 @@ class FileAssetModelMetadataValue(BaseModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into FileAssetModelMetadataValue with oneOf schemas: AssetMetadataModel, ClassificationMetadataModel, CountMetadataModel, DemographicMetadataModel, FileTypeMetadataModel, ImageDimensionMetadataModel, LocationMetadataModel, OriginalFilenameMetadataModel, PromptMetadataModel, SourceUrlMetadataModel, StreamsMetadataModel, TextMetadataModel, TranscriptionMetadataModel, TranslatedPromptMetadataModel, VideoDurationMetadataModel. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into FileAssetModelMetadataValue with oneOf schemas: ClassificationMetadataModel, CountMetadataModel, FileTypeMetadataModel, ImageDimensionMetadataModel, LocationMetadataModel, OriginalFilenameMetadataModel, SourceUrlMetadataModel, StreamsMetadataModel, TextMetadataModel, VideoDurationMetadataModel. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into FileAssetModelMetadataValue with oneOf schemas: AssetMetadataModel, ClassificationMetadataModel, CountMetadataModel, DemographicMetadataModel, FileTypeMetadataModel, ImageDimensionMetadataModel, LocationMetadataModel, OriginalFilenameMetadataModel, PromptMetadataModel, SourceUrlMetadataModel, StreamsMetadataModel, TextMetadataModel, TranscriptionMetadataModel, TranslatedPromptMetadataModel, VideoDurationMetadataModel. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into FileAssetModelMetadataValue with oneOf schemas: ClassificationMetadataModel, CountMetadataModel, FileTypeMetadataModel, ImageDimensionMetadataModel, LocationMetadataModel, OriginalFilenameMetadataModel, SourceUrlMetadataModel, StreamsMetadataModel, TextMetadataModel, VideoDurationMetadataModel. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -304,7 +234,7 @@ class FileAssetModelMetadataValue(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], AssetMetadataModel, ClassificationMetadataModel, CountMetadataModel, DemographicMetadataModel, FileTypeMetadataModel, ImageDimensionMetadataModel, LocationMetadataModel, OriginalFilenameMetadataModel, PromptMetadataModel, SourceUrlMetadataModel, StreamsMetadataModel, TextMetadataModel, TranscriptionMetadataModel, TranslatedPromptMetadataModel, VideoDurationMetadataModel]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], ClassificationMetadataModel, CountMetadataModel, FileTypeMetadataModel, ImageDimensionMetadataModel, LocationMetadataModel, OriginalFilenameMetadataModel, SourceUrlMetadataModel, StreamsMetadataModel, TextMetadataModel, VideoDurationMetadataModel]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

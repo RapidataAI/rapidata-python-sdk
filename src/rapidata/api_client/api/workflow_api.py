@@ -23,7 +23,7 @@ from rapidata.api_client.models.get_compare_ab_summary_result import GetCompareA
 from rapidata.api_client.models.get_responses_result import GetResponsesResult
 from rapidata.api_client.models.get_workflow_by_id_result import GetWorkflowByIdResult
 from rapidata.api_client.models.get_workflow_progress_result import GetWorkflowProgressResult
-from rapidata.api_client.models.i_workflow_model_paged_result import IWorkflowModelPagedResult
+from rapidata.api_client.models.paged_result_i_workflow_model import PagedResultIWorkflowModel
 from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.sort_direction import SortDirection
 
@@ -1410,7 +1410,7 @@ class WorkflowApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> IWorkflowModelPagedResult:
+    ) -> PagedResultIWorkflowModel:
         """Queries workflows based on the provided filter, page, and sort criteria.
 
 
@@ -1447,7 +1447,7 @@ class WorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "IWorkflowModelPagedResult",
+            '200': "PagedResultIWorkflowModel",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1476,7 +1476,7 @@ class WorkflowApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[IWorkflowModelPagedResult]:
+    ) -> ApiResponse[PagedResultIWorkflowModel]:
         """Queries workflows based on the provided filter, page, and sort criteria.
 
 
@@ -1513,7 +1513,7 @@ class WorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "IWorkflowModelPagedResult",
+            '200': "PagedResultIWorkflowModel",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1579,7 +1579,7 @@ class WorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "IWorkflowModelPagedResult",
+            '200': "PagedResultIWorkflowModel",
         }
         response_data = self.api_client.call_api(
             *_param,

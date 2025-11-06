@@ -35,7 +35,8 @@ class OrderModel(BaseModel):
     state: OrderState
     order_name: StrictStr = Field(alias="orderName")
     is_public: StrictBool = Field(alias="isPublic")
-    __properties: ClassVar[List[str]] = ["id", "pipelineId", "orderDate", "customerMail", "state", "orderName", "isPublic"]
+    failure_message: Optional[StrictStr] = Field(default=None, alias="failureMessage")
+    __properties: ClassVar[List[str]] = ["id", "pipelineId", "orderDate", "customerMail", "state", "orderName", "isPublic", "failureMessage"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -81,6 +82,11 @@ class OrderModel(BaseModel):
         if self.order_date is None and "order_date" in self.model_fields_set:
             _dict['orderDate'] = None
 
+        # set to None if failure_message (nullable) is None
+        # and model_fields_set contains the field
+        if self.failure_message is None and "failure_message" in self.model_fields_set:
+            _dict['failureMessage'] = None
+
         return _dict
 
     @classmethod
@@ -99,7 +105,8 @@ class OrderModel(BaseModel):
             "customerMail": obj.get("customerMail"),
             "state": obj.get("state"),
             "orderName": obj.get("orderName"),
-            "isPublic": obj.get("isPublic")
+            "isPublic": obj.get("isPublic"),
+            "failureMessage": obj.get("failureMessage")
         })
         return _obj
 

@@ -28,7 +28,7 @@ class ConditionalValidationSelection(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for ConditionalValidationSelection", alias="_t")
     validation_set_id: StrictStr = Field(alias="validationSetId")
-    validation_chances: List[ValidationChance] = Field(alias="validationChances")
+    validation_chances: List[ConditionalValidationSelectionValidationChance] = Field(alias="validationChances")
     dimensions: Optional[List[StrictStr]] = None
     __properties: ClassVar[List[str]] = ["_t", "validationSetId", "validationChances", "dimensions"]
 
@@ -99,12 +99,12 @@ class ConditionalValidationSelection(BaseModel):
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'ConditionalValidationSelection',
             "validationSetId": obj.get("validationSetId"),
-            "validationChances": [ValidationChance.from_dict(_item) for _item in obj["validationChances"]] if obj.get("validationChances") is not None else None,
+            "validationChances": [ConditionalValidationSelectionValidationChance.from_dict(_item) for _item in obj["validationChances"]] if obj.get("validationChances") is not None else None,
             "dimensions": obj.get("dimensions")
         })
         return _obj
 
-from rapidata.api_client.models.validation_chance import ValidationChance
+from rapidata.api_client.models.conditional_validation_selection_validation_chance import ConditionalValidationSelectionValidationChance
 # TODO: Rewrite to not use raise_errors
 ConditionalValidationSelection.model_rebuild(raise_errors=False)
 

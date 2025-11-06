@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.line import Line
+from rapidata.api_client.models.line_result_line import LineResultLine
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,7 +28,7 @@ class LineResult(BaseModel):
     LineResult
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for LineResult", alias="_t")
-    lines: List[Line]
+    lines: List[LineResultLine]
     rapid_id: StrictStr = Field(alias="rapidId")
     __properties: ClassVar[List[str]] = ["_t", "lines", "rapidId"]
 
@@ -98,7 +98,7 @@ class LineResult(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'LineResult',
-            "lines": [Line.from_dict(_item) for _item in obj["lines"]] if obj.get("lines") is not None else None,
+            "lines": [LineResultLine.from_dict(_item) for _item in obj["lines"]] if obj.get("lines") is not None else None,
             "rapidId": obj.get("rapidId")
         })
         return _obj

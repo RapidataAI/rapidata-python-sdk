@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.gender import Gender
+from rapidata.api_client.models.gender_user_filter_model_gender import GenderUserFilterModelGender
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,7 +28,7 @@ class GenderUserFilterModel(BaseModel):
     GenderUserFilterModel
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for GenderFilter", alias="_t")
-    genders: List[Gender]
+    genders: List[GenderUserFilterModelGender]
     __properties: ClassVar[List[str]] = ["_t", "genders"]
 
     @field_validator('t')

@@ -38,6 +38,8 @@ class AggregatorType(str, Enum):
     SINGLEPOINTLOCATE = 'SinglePointLocate'
     FREETEXT = 'FreeText'
     SCRUB = 'Scrub'
+    RANKING = 'Ranking'
+    MULTIRANKING = 'MultiRanking'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

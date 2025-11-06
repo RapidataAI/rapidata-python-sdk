@@ -19,7 +19,6 @@ from typing_extensions import Annotated
 from pydantic import Field, StrictBool, StrictStr
 from typing import List, Optional
 from typing_extensions import Annotated
-from rapidata.api_client.models.benchmark_query_result_paged_result import BenchmarkQueryResultPagedResult
 from rapidata.api_client.models.create_benchmark_model import CreateBenchmarkModel
 from rapidata.api_client.models.create_benchmark_participant_model import CreateBenchmarkParticipantModel
 from rapidata.api_client.models.create_benchmark_participant_result import CreateBenchmarkParticipantResult
@@ -27,11 +26,12 @@ from rapidata.api_client.models.create_benchmark_prompt_result import CreateBenc
 from rapidata.api_client.models.create_benchmark_result import CreateBenchmarkResult
 from rapidata.api_client.models.fork_benchmark_result import ForkBenchmarkResult
 from rapidata.api_client.models.get_benchmark_by_id_result import GetBenchmarkByIdResult
-from rapidata.api_client.models.leaderboard_query_result_paged_result import LeaderboardQueryResultPagedResult
-from rapidata.api_client.models.participant_by_benchmark_paged_result import ParticipantByBenchmarkPagedResult
-from rapidata.api_client.models.prompt_by_benchmark_result_paged_result import PromptByBenchmarkResultPagedResult
+from rapidata.api_client.models.paged_result_benchmark_query_result import PagedResultBenchmarkQueryResult
+from rapidata.api_client.models.paged_result_leaderboard_query_result import PagedResultLeaderboardQueryResult
+from rapidata.api_client.models.paged_result_participant_by_benchmark import PagedResultParticipantByBenchmark
+from rapidata.api_client.models.paged_result_prompt_by_benchmark_result import PagedResultPromptByBenchmarkResult
+from rapidata.api_client.models.paged_result_sample_by_identifier import PagedResultSampleByIdentifier
 from rapidata.api_client.models.query_model import QueryModel
-from rapidata.api_client.models.sample_by_identifier_paged_result import SampleByIdentifierPagedResult
 from rapidata.api_client.models.standings_by_benchmark_result import StandingsByBenchmarkResult
 from rapidata.api_client.models.submit_prompt_model import SubmitPromptModel
 from rapidata.api_client.models.tags_by_benchmark_result import TagsByBenchmarkResult
@@ -846,7 +846,7 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> LeaderboardQueryResultPagedResult:
+    ) -> PagedResultLeaderboardQueryResult:
         """Queries all leaderboards for the current user's benchmarks.
 
 
@@ -886,7 +886,7 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "LeaderboardQueryResultPagedResult",
+            '200': "PagedResultLeaderboardQueryResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -916,7 +916,7 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[LeaderboardQueryResultPagedResult]:
+    ) -> ApiResponse[PagedResultLeaderboardQueryResult]:
         """Queries all leaderboards for the current user's benchmarks.
 
 
@@ -956,7 +956,7 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "LeaderboardQueryResultPagedResult",
+            '200': "PagedResultLeaderboardQueryResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1026,7 +1026,7 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "LeaderboardQueryResultPagedResult",
+            '200': "PagedResultLeaderboardQueryResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1123,7 +1123,7 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ParticipantByBenchmarkPagedResult:
+    ) -> PagedResultParticipantByBenchmark:
         """Query all participants within a benchmark
 
 
@@ -1160,7 +1160,7 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ParticipantByBenchmarkPagedResult",
+            '200': "PagedResultParticipantByBenchmark",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1189,7 +1189,7 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[ParticipantByBenchmarkPagedResult]:
+    ) -> ApiResponse[PagedResultParticipantByBenchmark]:
         """Query all participants within a benchmark
 
 
@@ -1226,7 +1226,7 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ParticipantByBenchmarkPagedResult",
+            '200': "PagedResultParticipantByBenchmark",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1292,7 +1292,7 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ParticipantByBenchmarkPagedResult",
+            '200': "PagedResultParticipantByBenchmark",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2249,7 +2249,7 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PromptByBenchmarkResultPagedResult:
+    ) -> PagedResultPromptByBenchmarkResult:
         """Returns the paged prompts of a benchmark by its ID.
 
 
@@ -2289,7 +2289,7 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PromptByBenchmarkResultPagedResult",
+            '200': "PagedResultPromptByBenchmarkResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2319,7 +2319,7 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PromptByBenchmarkResultPagedResult]:
+    ) -> ApiResponse[PagedResultPromptByBenchmarkResult]:
         """Returns the paged prompts of a benchmark by its ID.
 
 
@@ -2359,7 +2359,7 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PromptByBenchmarkResultPagedResult",
+            '200': "PagedResultPromptByBenchmarkResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2429,7 +2429,7 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PromptByBenchmarkResultPagedResult",
+            '200': "PagedResultPromptByBenchmarkResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2528,7 +2528,7 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> SampleByIdentifierPagedResult:
+    ) -> PagedResultSampleByIdentifier:
         """Returns the paged prompts of a benchmark by its ID.
 
 
@@ -2571,7 +2571,7 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "SampleByIdentifierPagedResult",
+            '200': "PagedResultSampleByIdentifier",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2602,7 +2602,7 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[SampleByIdentifierPagedResult]:
+    ) -> ApiResponse[PagedResultSampleByIdentifier]:
         """Returns the paged prompts of a benchmark by its ID.
 
 
@@ -2645,7 +2645,7 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "SampleByIdentifierPagedResult",
+            '200': "PagedResultSampleByIdentifier",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2719,7 +2719,7 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "SampleByIdentifierPagedResult",
+            '200': "PagedResultSampleByIdentifier",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3705,7 +3705,7 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> BenchmarkQueryResultPagedResult:
+    ) -> PagedResultBenchmarkQueryResult:
         """Queries all benchmarks of the user.
 
 
@@ -3742,7 +3742,7 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "BenchmarkQueryResultPagedResult",
+            '200': "PagedResultBenchmarkQueryResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3771,7 +3771,7 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[BenchmarkQueryResultPagedResult]:
+    ) -> ApiResponse[PagedResultBenchmarkQueryResult]:
         """Queries all benchmarks of the user.
 
 
@@ -3808,7 +3808,7 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "BenchmarkQueryResultPagedResult",
+            '200': "PagedResultBenchmarkQueryResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -3874,7 +3874,7 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "BenchmarkQueryResultPagedResult",
+            '200': "PagedResultBenchmarkQueryResult",
         }
         response_data = self.api_client.call_api(
             *_param,

@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.age_group import AgeGroup
+from rapidata.api_client.models.age_user_filter_model_age_group import AgeUserFilterModelAgeGroup
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,7 +28,7 @@ class AgeUserFilterModel(BaseModel):
     AgeUserFilterModel
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for AgeFilter", alias="_t")
-    age_groups: List[AgeGroup] = Field(alias="ageGroups")
+    age_groups: List[AgeUserFilterModelAgeGroup] = Field(alias="ageGroups")
     __properties: ClassVar[List[str]] = ["_t", "ageGroups"]
 
     @field_validator('t')

@@ -17,18 +17,18 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
 class UpdateCampaignModel(BaseModel):
     """
-    The model containing the new configuration for a campaign.
+    The model to update campaign properties.
     """ # noqa: E501
-    priority: Optional[StrictInt] = Field(default=None, description="A value above 0 indicating how much the campaign should be prioritized. The higher the value the more weight it will be given during campaign selection.")
-    feature_flags: Optional[Dict[str, StrictStr]] = Field(default=None, description="The feature flags to assign this campaign.", alias="featureFlags")
-    __properties: ClassVar[List[str]] = ["priority", "featureFlags"]
+    priority: Optional[StrictInt] = None
+    requires_booster: Optional[StrictBool] = Field(default=None, alias="requiresBooster")
+    __properties: ClassVar[List[str]] = ["priority", "requiresBooster"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -69,16 +69,6 @@ class UpdateCampaignModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if priority (nullable) is None
-        # and model_fields_set contains the field
-        if self.priority is None and "priority" in self.model_fields_set:
-            _dict['priority'] = None
-
-        # set to None if feature_flags (nullable) is None
-        # and model_fields_set contains the field
-        if self.feature_flags is None and "feature_flags" in self.model_fields_set:
-            _dict['featureFlags'] = None
-
         return _dict
 
     @classmethod
@@ -92,7 +82,7 @@ class UpdateCampaignModel(BaseModel):
 
         _obj = cls.model_validate({
             "priority": obj.get("priority"),
-            "featureFlags": obj.get("featureFlags")
+            "requiresBooster": obj.get("requiresBooster")
         })
         return _obj
 
