@@ -1,30 +1,18 @@
 from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 from rapidata.service.openapi_service import OpenAPIService
-from rapidata.api_client.models.multi_asset_input_assets_inner import (
-    MultiAssetInput,
-    MultiAssetInputAssetsInner,
-)
 from rapidata.api_client.models.add_validation_rapid_model import (
     AddValidationRapidModel,
 )
 from rapidata.api_client.models.add_validation_rapid_model_truth import (
     AddValidationRapidModelTruth,
 )
-from rapidata.api_client.models.create_datapoint_model_metadata_inner import (
-    CreateDatapointModelMetadataInner,
-)
-from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
-from rapidata.rapidata_client.datapoints.metadata import (
-    PromptMetadata,
-    MediaAssetMetadata,
-    SelectWordsMetadata,
-    Metadata,
-)
 from rapidata.api_client.models.add_validation_rapid_model_asset import (
     AddValidationRapidModelAsset,
 )
-from rapidata.api_client.models.text_asset_input import TextAssetInput
+from rapidata.api_client.models.add_validation_rapid_model_context_asset import (
+    AddValidationRapidModelContextAsset,
+)
 from rapidata.api_client.models.add_validation_rapid_model_payload import (
     AddValidationRapidModelPayload,
 )
@@ -36,8 +24,6 @@ class ValidationRapidUploader:
         self.asset_uploader = AssetUploader(openapi_service)
 
     def upload_rapid(self, rapid: Rapid, validation_set_id: str) -> None:
-        metadata = self._get_metadata(rapid)
-
         uploaded_asset = (
             self._handle_media_rapid(rapid)
             if rapid.data_type == "media"
@@ -48,7 +34,16 @@ class ValidationRapidUploader:
             validation_set_id=validation_set_id,
             add_validation_rapid_model=AddValidationRapidModel(
                 asset=uploaded_asset,
-                metadata=metadata,
+                context=rapid.context,
+                contextAsset=(
+                    AddValidationRapidModelContextAsset(
+                        actual_instance=self.asset_uploader.get_uploaded_asset_input(
+                            rapid.media_context
+                        ),
+                    )
+                    if rapid.media_context
+                    else None
+                ),
                 payload=self._get_payload(rapid),
                 truth=AddValidationRapidModelTruth(actual_instance=rapid.truth),
                 randomCorrectProbability=rapid.random_correct_probability,
@@ -65,28 +60,6 @@ class ValidationRapidUploader:
         if isinstance(rapid.payload, dict):
             return AddValidationRapidModelPayload(actual_instance=rapid.payload)
         return AddValidationRapidModelPayload(actual_instance=rapid.payload.to_dict())
-
-    def _get_metadata(self, rapid: Rapid) -> list[CreateDatapointModelMetadataInner]:
-        rapid_metadata: list[Metadata] = []
-        if rapid.context:
-            rapid_metadata.append(PromptMetadata(prompt=rapid.context))
-        if rapid.sentence:
-            rapid_metadata.append(SelectWordsMetadata(select_words=rapid.sentence))
-        if rapid.media_context:
-            rapid_metadata.append(
-                MediaAssetMetadata(
-                    internal_file_name=self.asset_uploader.upload_asset(
-                        rapid.media_context
-                    )
-                )
-            )
-
-        metadata = [
-            CreateDatapointModelMetadataInner(actual_instance=metadata.to_model())
-            for metadata in rapid_metadata
-        ]
-
-        return metadata
 
     def _handle_text_rapid(self, rapid: Rapid) -> AddValidationRapidModelAsset:
         return AddValidationRapidModelAsset(
