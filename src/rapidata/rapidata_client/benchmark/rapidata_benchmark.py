@@ -16,11 +16,10 @@ from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.page_info import PageInfo
 from rapidata.api_client.models.source_url_metadata_model import SourceUrlMetadataModel
 from rapidata.api_client.models.submit_prompt_model import SubmitPromptModel
-from rapidata.api_client.models.create_demographic_rapid_model_asset import (
-    CreateDemographicRapidModelAsset,
-)
 from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
-
+from rapidata.api_client.models.create_datapoint_model_context_asset import (
+    CreateDatapointModelContextAsset,
+)
 from rapidata.rapidata_client.benchmark._detail_mapper import DetailMapper
 from rapidata.rapidata_client.benchmark.leaderboard.rapidata_leaderboard import (
     RapidataLeaderboard,
@@ -262,7 +261,7 @@ class RapidataBenchmark:
                     identifier=identifier,
                     prompt=prompt,
                     promptAsset=(
-                        CreateDemographicRapidModelAsset(
+                        CreateDatapointModelContextAsset(
                             actual_instance=ExistingAssetInput(
                                 _t="ExistingAssetInput",
                                 name=self._asset_uploader.upload_asset(prompt_asset),

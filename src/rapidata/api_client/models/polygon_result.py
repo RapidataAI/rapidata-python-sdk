@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.shape import Shape
+from rapidata.api_client.models.polygon_result_shape import PolygonResultShape
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,7 +28,7 @@ class PolygonResult(BaseModel):
     PolygonResult
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for PolygonResult", alias="_t")
-    shapes: List[Shape]
+    shapes: List[PolygonResultShape]
     rapid_id: StrictStr = Field(alias="rapidId")
     __properties: ClassVar[List[str]] = ["_t", "shapes", "rapidId"]
 
@@ -98,7 +98,7 @@ class PolygonResult(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'PolygonResult',
-            "shapes": [Shape.from_dict(_item) for _item in obj["shapes"]] if obj.get("shapes") is not None else None,
+            "shapes": [PolygonResultShape.from_dict(_item) for _item in obj["shapes"]] if obj.get("shapes") is not None else None,
             "rapidId": obj.get("rapidId")
         })
         return _obj

@@ -28,7 +28,7 @@ class MultiAssetModel(BaseModel):
     MultiAssetModel
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for MultiAsset", alias="_t")
-    assets: List[DatapointAsset]
+    assets: List[DatapointModelAsset]
     metadata: Dict[str, FileAssetModelMetadataValue]
     identifier: StrictStr
     __properties: ClassVar[List[str]] = ["_t", "assets", "metadata", "identifier"]
@@ -106,7 +106,7 @@ class MultiAssetModel(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'MultiAsset',
-            "assets": [DatapointAsset.from_dict(_item) for _item in obj["assets"]] if obj.get("assets") is not None else None,
+            "assets": [DatapointModelAsset.from_dict(_item) for _item in obj["assets"]] if obj.get("assets") is not None else None,
             "metadata": dict(
                 (_k, FileAssetModelMetadataValue.from_dict(_v))
                 for _k, _v in obj["metadata"].items()
@@ -117,7 +117,7 @@ class MultiAssetModel(BaseModel):
         })
         return _obj
 
-from rapidata.api_client.models.datapoint_asset import DatapointAsset
+from rapidata.api_client.models.datapoint_model_asset import DatapointModelAsset
 # TODO: Rewrite to not use raise_errors
 MultiAssetModel.model_rebuild(raise_errors=False)
 

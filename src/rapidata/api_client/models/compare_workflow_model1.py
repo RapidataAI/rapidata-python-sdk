@@ -22,6 +22,7 @@ from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.compare_workflow_model1_pair_maker_information import CompareWorkflowModel1PairMakerInformation
 from rapidata.api_client.models.compare_workflow_model1_referee import CompareWorkflowModel1Referee
 from rapidata.api_client.models.elo_config import EloConfig
+from rapidata.api_client.models.get_validation_rapids_result_asset import GetValidationRapidsResultAsset
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -36,9 +37,11 @@ class CompareWorkflowModel1(BaseModel):
     state: StrictStr
     criteria: StrictStr
     name: StrictStr
-    owner_mail: Optional[StrictStr] = Field(default=None, alias="ownerMail")
     elo_config: EloConfig = Field(alias="eloConfig")
-    __properties: ClassVar[List[str]] = ["_t", "id", "referee", "pairMakerInformation", "state", "criteria", "name", "ownerMail", "eloConfig"]
+    context: Optional[StrictStr] = None
+    context_asset: Optional[GetValidationRapidsResultAsset] = Field(default=None, alias="contextAsset")
+    owner_mail: Optional[StrictStr] = Field(default=None, alias="ownerMail")
+    __properties: ClassVar[List[str]] = ["_t", "id", "referee", "pairMakerInformation", "state", "criteria", "name", "eloConfig", "context", "contextAsset", "ownerMail"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -95,6 +98,19 @@ class CompareWorkflowModel1(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of elo_config
         if self.elo_config:
             _dict['eloConfig'] = self.elo_config.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of context_asset
+        if self.context_asset:
+            _dict['contextAsset'] = self.context_asset.to_dict()
+        # set to None if context (nullable) is None
+        # and model_fields_set contains the field
+        if self.context is None and "context" in self.model_fields_set:
+            _dict['context'] = None
+
+        # set to None if context_asset (nullable) is None
+        # and model_fields_set contains the field
+        if self.context_asset is None and "context_asset" in self.model_fields_set:
+            _dict['contextAsset'] = None
+
         # set to None if owner_mail (nullable) is None
         # and model_fields_set contains the field
         if self.owner_mail is None and "owner_mail" in self.model_fields_set:
@@ -119,8 +135,10 @@ class CompareWorkflowModel1(BaseModel):
             "state": obj.get("state"),
             "criteria": obj.get("criteria"),
             "name": obj.get("name"),
-            "ownerMail": obj.get("ownerMail"),
-            "eloConfig": EloConfig.from_dict(obj["eloConfig"]) if obj.get("eloConfig") is not None else None
+            "eloConfig": EloConfig.from_dict(obj["eloConfig"]) if obj.get("eloConfig") is not None else None,
+            "context": obj.get("context"),
+            "contextAsset": GetValidationRapidsResultAsset.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
+            "ownerMail": obj.get("ownerMail")
         })
         return _obj
 

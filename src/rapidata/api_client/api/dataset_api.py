@@ -16,21 +16,17 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictBytes, StrictStr
-from typing import Optional, Tuple, Union
+from pydantic import Field, StrictStr
+from typing import Optional
 from typing_extensions import Annotated
 from rapidata.api_client.models.create_datapoint_model import CreateDatapointModel
 from rapidata.api_client.models.create_datapoint_result import CreateDatapointResult
-from rapidata.api_client.models.create_datapoints_from_s3_bucket_model import CreateDatapointsFromS3BucketModel
-from rapidata.api_client.models.datapoint_model_paged_result import DatapointModelPagedResult
 from rapidata.api_client.models.get_dataset_by_id_result import GetDatasetByIdResult
 from rapidata.api_client.models.get_dataset_progress_result import GetDatasetProgressResult
 from rapidata.api_client.models.get_failed_datapoints_result import GetFailedDatapointsResult
-from rapidata.api_client.models.import_from_file_result import ImportFromFileResult
+from rapidata.api_client.models.paged_result_datapoint_model import PagedResultDatapointModel
 from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.update_dataset_name_model import UpdateDatasetNameModel
-from rapidata.api_client.models.upload_asset_result import UploadAssetResult
-from rapidata.api_client.models.upload_from_s3_result import UploadFromS3Result
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -51,553 +47,10 @@ class DatasetApi:
 
 
     @validate_call
-    def dataset_asset_file_post(
-        self,
-        file: Annotated[Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]], Field(description="The file to upload to S3.")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> UploadAssetResult:
-        """Uploads a single asset to S3 and returns the asset details.
-
-        This endpoint allows uploading a single file to S3 storage with the asset creator. The uploaded asset will be stored using the configured S3 settings and a unique filename will be generated.
-
-        :param file: The file to upload to S3.
-        :type file: bytearray
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._dataset_asset_file_post_serialize(
-            file=file,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "UploadAssetResult",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def dataset_asset_file_post_with_http_info(
-        self,
-        file: Annotated[Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]], Field(description="The file to upload to S3.")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[UploadAssetResult]:
-        """Uploads a single asset to S3 and returns the asset details.
-
-        This endpoint allows uploading a single file to S3 storage with the asset creator. The uploaded asset will be stored using the configured S3 settings and a unique filename will be generated.
-
-        :param file: The file to upload to S3.
-        :type file: bytearray
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._dataset_asset_file_post_serialize(
-            file=file,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "UploadAssetResult",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def dataset_asset_file_post_without_preload_content(
-        self,
-        file: Annotated[Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]], Field(description="The file to upload to S3.")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Uploads a single asset to S3 and returns the asset details.
-
-        This endpoint allows uploading a single file to S3 storage with the asset creator. The uploaded asset will be stored using the configured S3 settings and a unique filename will be generated.
-
-        :param file: The file to upload to S3.
-        :type file: bytearray
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._dataset_asset_file_post_serialize(
-            file=file,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "UploadAssetResult",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _dataset_asset_file_post_serialize(
-        self,
-        file,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        if file is not None:
-            _files['file'] = file
-        # process the body parameter
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
-                ]
-            )
-
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'multipart/form-data'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
-
-        # authentication setting
-        _auth_settings: List[str] = [
-            'bearer', 
-            'oauth2'
-        ]
-
-        return self.api_client.param_serialize(
-            method='POST',
-            resource_path='/dataset/asset/file',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    def dataset_asset_url_post(
-        self,
-        url: Annotated[Optional[StrictStr], Field(description="The url of the file to upload to S3.")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> UploadAssetResult:
-        """Uploads a single asset to S3 and returns the asset details.
-
-        This endpoint allows uploading a single file to S3 storage with the asset creator. The uploaded asset will be stored using the configured S3 settings and a unique filename will be generated.
-
-        :param url: The url of the file to upload to S3.
-        :type url: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._dataset_asset_url_post_serialize(
-            url=url,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "UploadAssetResult",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def dataset_asset_url_post_with_http_info(
-        self,
-        url: Annotated[Optional[StrictStr], Field(description="The url of the file to upload to S3.")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[UploadAssetResult]:
-        """Uploads a single asset to S3 and returns the asset details.
-
-        This endpoint allows uploading a single file to S3 storage with the asset creator. The uploaded asset will be stored using the configured S3 settings and a unique filename will be generated.
-
-        :param url: The url of the file to upload to S3.
-        :type url: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._dataset_asset_url_post_serialize(
-            url=url,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "UploadAssetResult",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def dataset_asset_url_post_without_preload_content(
-        self,
-        url: Annotated[Optional[StrictStr], Field(description="The url of the file to upload to S3.")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Uploads a single asset to S3 and returns the asset details.
-
-        This endpoint allows uploading a single file to S3 storage with the asset creator. The uploaded asset will be stored using the configured S3 settings and a unique filename will be generated.
-
-        :param url: The url of the file to upload to S3.
-        :type url: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._dataset_asset_url_post_serialize(
-            url=url,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "UploadAssetResult",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _dataset_asset_url_post_serialize(
-        self,
-        url,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        # process the query parameters
-        if url is not None:
-            
-            _query_params.append(('url', url))
-            
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
-                ]
-            )
-
-
-        # authentication setting
-        _auth_settings: List[str] = [
-            'bearer', 
-            'oauth2'
-        ]
-
-        return self.api_client.param_serialize(
-            method='POST',
-            resource_path='/dataset/asset/url',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
     def dataset_dataset_id_datapoint_post(
         self,
-        dataset_id: StrictStr,
-        create_datapoint_model: Optional[CreateDatapointModel] = None,
+        dataset_id: Annotated[StrictStr, Field(description="The id of the dataset to create the datapoint in.")],
+        create_datapoint_model: Annotated[Optional[CreateDatapointModel], Field(description="The datapoint model containing asset, metadata, and sort index.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -611,12 +64,12 @@ class DatasetApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> CreateDatapointResult:
-        """Creates a datapoint via the new endpoint.
+        """Creates a datapoint with JSON body.
 
 
-        :param dataset_id:  (required)
+        :param dataset_id: The id of the dataset to create the datapoint in. (required)
         :type dataset_id: str
-        :param create_datapoint_model: 
+        :param create_datapoint_model: The datapoint model containing asset, metadata, and sort index.
         :type create_datapoint_model: CreateDatapointModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -666,8 +119,8 @@ class DatasetApi:
     @validate_call
     def dataset_dataset_id_datapoint_post_with_http_info(
         self,
-        dataset_id: StrictStr,
-        create_datapoint_model: Optional[CreateDatapointModel] = None,
+        dataset_id: Annotated[StrictStr, Field(description="The id of the dataset to create the datapoint in.")],
+        create_datapoint_model: Annotated[Optional[CreateDatapointModel], Field(description="The datapoint model containing asset, metadata, and sort index.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -681,12 +134,12 @@ class DatasetApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[CreateDatapointResult]:
-        """Creates a datapoint via the new endpoint.
+        """Creates a datapoint with JSON body.
 
 
-        :param dataset_id:  (required)
+        :param dataset_id: The id of the dataset to create the datapoint in. (required)
         :type dataset_id: str
-        :param create_datapoint_model: 
+        :param create_datapoint_model: The datapoint model containing asset, metadata, and sort index.
         :type create_datapoint_model: CreateDatapointModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -736,8 +189,8 @@ class DatasetApi:
     @validate_call
     def dataset_dataset_id_datapoint_post_without_preload_content(
         self,
-        dataset_id: StrictStr,
-        create_datapoint_model: Optional[CreateDatapointModel] = None,
+        dataset_id: Annotated[StrictStr, Field(description="The id of the dataset to create the datapoint in.")],
+        create_datapoint_model: Annotated[Optional[CreateDatapointModel], Field(description="The datapoint model containing asset, metadata, and sort index.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -751,12 +204,12 @@ class DatasetApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Creates a datapoint via the new endpoint.
+        """Creates a datapoint with JSON body.
 
 
-        :param dataset_id:  (required)
+        :param dataset_id: The id of the dataset to create the datapoint in. (required)
         :type dataset_id: str
-        :param create_datapoint_model: 
+        :param create_datapoint_model: The datapoint model containing asset, metadata, and sort index.
         :type create_datapoint_model: CreateDatapointModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -869,295 +322,6 @@ class DatasetApi:
         return self.api_client.param_serialize(
             method='POST',
             resource_path='/dataset/{datasetId}/datapoint',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    def dataset_dataset_id_datapoints_csv_post(
-        self,
-        dataset_id: Annotated[StrictStr, Field(description="The id of the dataset to import the datapoints to.")],
-        file: Annotated[Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]], Field(description="The csv file to import.")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ImportFromFileResult:
-        """Creates multiple datapoints from a csv.
-
-
-        :param dataset_id: The id of the dataset to import the datapoints to. (required)
-        :type dataset_id: str
-        :param file: The csv file to import.
-        :type file: bytearray
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._dataset_dataset_id_datapoints_csv_post_serialize(
-            dataset_id=dataset_id,
-            file=file,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ImportFromFileResult",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def dataset_dataset_id_datapoints_csv_post_with_http_info(
-        self,
-        dataset_id: Annotated[StrictStr, Field(description="The id of the dataset to import the datapoints to.")],
-        file: Annotated[Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]], Field(description="The csv file to import.")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[ImportFromFileResult]:
-        """Creates multiple datapoints from a csv.
-
-
-        :param dataset_id: The id of the dataset to import the datapoints to. (required)
-        :type dataset_id: str
-        :param file: The csv file to import.
-        :type file: bytearray
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._dataset_dataset_id_datapoints_csv_post_serialize(
-            dataset_id=dataset_id,
-            file=file,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ImportFromFileResult",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def dataset_dataset_id_datapoints_csv_post_without_preload_content(
-        self,
-        dataset_id: Annotated[StrictStr, Field(description="The id of the dataset to import the datapoints to.")],
-        file: Annotated[Optional[Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]]], Field(description="The csv file to import.")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Creates multiple datapoints from a csv.
-
-
-        :param dataset_id: The id of the dataset to import the datapoints to. (required)
-        :type dataset_id: str
-        :param file: The csv file to import.
-        :type file: bytearray
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._dataset_dataset_id_datapoints_csv_post_serialize(
-            dataset_id=dataset_id,
-            file=file,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ImportFromFileResult",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _dataset_dataset_id_datapoints_csv_post_serialize(
-        self,
-        dataset_id,
-        file,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if dataset_id is not None:
-            _path_params['datasetId'] = dataset_id
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        if file is not None:
-            _files['file'] = file
-        # process the body parameter
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
-                ]
-            )
-
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'multipart/form-data'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
-
-        # authentication setting
-        _auth_settings: List[str] = [
-            'bearer', 
-            'oauth2'
-        ]
-
-        return self.api_client.param_serialize(
-            method='POST',
-            resource_path='/dataset/{datasetId}/datapoints/csv',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1454,7 +618,7 @@ class DatasetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> DatapointModelPagedResult:
+    ) -> PagedResultDatapointModel:
         """Gets all datapoints of a dataset.
 
 
@@ -1494,7 +658,7 @@ class DatasetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "DatapointModelPagedResult",
+            '200': "PagedResultDatapointModel",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1524,7 +688,7 @@ class DatasetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[DatapointModelPagedResult]:
+    ) -> ApiResponse[PagedResultDatapointModel]:
         """Gets all datapoints of a dataset.
 
 
@@ -1564,7 +728,7 @@ class DatasetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "DatapointModelPagedResult",
+            '200': "PagedResultDatapointModel",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1634,7 +798,7 @@ class DatasetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "DatapointModelPagedResult",
+            '200': "PagedResultDatapointModel",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1700,300 +864,6 @@ class DatasetApi:
         return self.api_client.param_serialize(
             method='GET',
             resource_path='/dataset/{datasetId}/datapoints',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    def dataset_dataset_id_datapoints_s3_post(
-        self,
-        dataset_id: Annotated[StrictStr, Field(description="The id of the dataset to upload the files to.")],
-        create_datapoints_from_s3_bucket_model: Annotated[Optional[CreateDatapointsFromS3BucketModel], Field(description="The body of the request.")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> UploadFromS3Result:
-        """Uploads files from an S3 bucket to a dataset.
-
-        A new datapoint will be created for each file in the bucket.
-
-        :param dataset_id: The id of the dataset to upload the files to. (required)
-        :type dataset_id: str
-        :param create_datapoints_from_s3_bucket_model: The body of the request.
-        :type create_datapoints_from_s3_bucket_model: CreateDatapointsFromS3BucketModel
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._dataset_dataset_id_datapoints_s3_post_serialize(
-            dataset_id=dataset_id,
-            create_datapoints_from_s3_bucket_model=create_datapoints_from_s3_bucket_model,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "UploadFromS3Result",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def dataset_dataset_id_datapoints_s3_post_with_http_info(
-        self,
-        dataset_id: Annotated[StrictStr, Field(description="The id of the dataset to upload the files to.")],
-        create_datapoints_from_s3_bucket_model: Annotated[Optional[CreateDatapointsFromS3BucketModel], Field(description="The body of the request.")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[UploadFromS3Result]:
-        """Uploads files from an S3 bucket to a dataset.
-
-        A new datapoint will be created for each file in the bucket.
-
-        :param dataset_id: The id of the dataset to upload the files to. (required)
-        :type dataset_id: str
-        :param create_datapoints_from_s3_bucket_model: The body of the request.
-        :type create_datapoints_from_s3_bucket_model: CreateDatapointsFromS3BucketModel
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._dataset_dataset_id_datapoints_s3_post_serialize(
-            dataset_id=dataset_id,
-            create_datapoints_from_s3_bucket_model=create_datapoints_from_s3_bucket_model,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "UploadFromS3Result",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def dataset_dataset_id_datapoints_s3_post_without_preload_content(
-        self,
-        dataset_id: Annotated[StrictStr, Field(description="The id of the dataset to upload the files to.")],
-        create_datapoints_from_s3_bucket_model: Annotated[Optional[CreateDatapointsFromS3BucketModel], Field(description="The body of the request.")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Uploads files from an S3 bucket to a dataset.
-
-        A new datapoint will be created for each file in the bucket.
-
-        :param dataset_id: The id of the dataset to upload the files to. (required)
-        :type dataset_id: str
-        :param create_datapoints_from_s3_bucket_model: The body of the request.
-        :type create_datapoints_from_s3_bucket_model: CreateDatapointsFromS3BucketModel
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._dataset_dataset_id_datapoints_s3_post_serialize(
-            dataset_id=dataset_id,
-            create_datapoints_from_s3_bucket_model=create_datapoints_from_s3_bucket_model,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "UploadFromS3Result",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _dataset_dataset_id_datapoints_s3_post_serialize(
-        self,
-        dataset_id,
-        create_datapoints_from_s3_bucket_model,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if dataset_id is not None:
-            _path_params['datasetId'] = dataset_id
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-        if create_datapoints_from_s3_bucket_model is not None:
-            _body_params = create_datapoints_from_s3_bucket_model
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'text/plain', 
-                    'application/json', 
-                    'text/json'
-                ]
-            )
-
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json', 
-                        'text/json', 
-                        'application/*+json'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
-
-        # authentication setting
-        _auth_settings: List[str] = [
-            'bearer', 
-            'oauth2'
-        ]
-
-        return self.api_client.param_serialize(
-            method='POST',
-            resource_path='/dataset/{datasetId}/datapoints/s3',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

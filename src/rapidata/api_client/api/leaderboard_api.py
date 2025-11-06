@@ -24,9 +24,9 @@ from rapidata.api_client.models.create_leaderboard_model import CreateLeaderboar
 from rapidata.api_client.models.create_leaderboard_result import CreateLeaderboardResult
 from rapidata.api_client.models.get_leaderboard_by_id_result import GetLeaderboardByIdResult
 from rapidata.api_client.models.get_standing_by_id_result import GetStandingByIdResult
-from rapidata.api_client.models.leaderboard_query_result_paged_result import LeaderboardQueryResultPagedResult
+from rapidata.api_client.models.paged_result_leaderboard_query_result import PagedResultLeaderboardQueryResult
+from rapidata.api_client.models.paged_result_runs_by_leaderboard_result import PagedResultRunsByLeaderboardResult
 from rapidata.api_client.models.query_model import QueryModel
-from rapidata.api_client.models.runs_by_leaderboard_result_paged_result import RunsByLeaderboardResultPagedResult
 from rapidata.api_client.models.standings_by_leaderboard_result import StandingsByLeaderboardResult
 from rapidata.api_client.models.submit_participant_result import SubmitParticipantResult
 from rapidata.api_client.models.update_leaderboard_model import UpdateLeaderboardModel
@@ -1428,7 +1428,7 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RunsByLeaderboardResultPagedResult:
+    ) -> PagedResultRunsByLeaderboardResult:
         """Gets the runs related to a leaderboard
 
 
@@ -1468,7 +1468,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "RunsByLeaderboardResultPagedResult",
+            '200': "PagedResultRunsByLeaderboardResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1498,7 +1498,7 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[RunsByLeaderboardResultPagedResult]:
+    ) -> ApiResponse[PagedResultRunsByLeaderboardResult]:
         """Gets the runs related to a leaderboard
 
 
@@ -1538,7 +1538,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "RunsByLeaderboardResultPagedResult",
+            '200': "PagedResultRunsByLeaderboardResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1608,7 +1608,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "RunsByLeaderboardResultPagedResult",
+            '200': "PagedResultRunsByLeaderboardResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2294,7 +2294,7 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> LeaderboardQueryResultPagedResult:
+    ) -> PagedResultLeaderboardQueryResult:
         """Queries all leaderboards for a specific benchmark.
 
 
@@ -2331,7 +2331,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "LeaderboardQueryResultPagedResult",
+            '200': "PagedResultLeaderboardQueryResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2360,7 +2360,7 @@ class LeaderboardApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[LeaderboardQueryResultPagedResult]:
+    ) -> ApiResponse[PagedResultLeaderboardQueryResult]:
         """Queries all leaderboards for a specific benchmark.
 
 
@@ -2397,7 +2397,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "LeaderboardQueryResultPagedResult",
+            '200': "PagedResultLeaderboardQueryResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2463,7 +2463,7 @@ class LeaderboardApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "LeaderboardQueryResultPagedResult",
+            '200': "PagedResultLeaderboardQueryResult",
         }
         response_data = self.api_client.call_api(
             *_param,

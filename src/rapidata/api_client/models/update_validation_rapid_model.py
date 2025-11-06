@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from rapidata.api_client.models.update_validation_rapid_model_context_asset import UpdateValidationRapidModelContextAsset
 from rapidata.api_client.models.update_validation_rapid_model_truth import UpdateValidationRapidModelTruth
 from typing import Optional, Set
 from typing_extensions import Self
@@ -30,8 +31,10 @@ class UpdateValidationRapidModel(BaseModel):
     truth: UpdateValidationRapidModelTruth
     explanation: Optional[StrictStr] = Field(default=None, description="The optional explanation that will be shown to the user when answering wrong.")
     prompt: Optional[StrictStr] = Field(default=None, description="The optional prompt that will be shown to the user.")
+    context: Optional[StrictStr] = Field(default=None, description="An optional text context that will be shown to the user.")
+    context_asset: Optional[UpdateValidationRapidModelContextAsset] = Field(default=None, alias="contextAsset")
     random_correct_probability: Union[StrictFloat, StrictInt] = Field(description="The probability that if the user answers at random that he'll be correct.", alias="randomCorrectProbability")
-    __properties: ClassVar[List[str]] = ["truth", "explanation", "prompt", "randomCorrectProbability"]
+    __properties: ClassVar[List[str]] = ["truth", "explanation", "prompt", "context", "contextAsset", "randomCorrectProbability"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -75,6 +78,9 @@ class UpdateValidationRapidModel(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of truth
         if self.truth:
             _dict['truth'] = self.truth.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of context_asset
+        if self.context_asset:
+            _dict['contextAsset'] = self.context_asset.to_dict()
         # set to None if explanation (nullable) is None
         # and model_fields_set contains the field
         if self.explanation is None and "explanation" in self.model_fields_set:
@@ -84,6 +90,16 @@ class UpdateValidationRapidModel(BaseModel):
         # and model_fields_set contains the field
         if self.prompt is None and "prompt" in self.model_fields_set:
             _dict['prompt'] = None
+
+        # set to None if context (nullable) is None
+        # and model_fields_set contains the field
+        if self.context is None and "context" in self.model_fields_set:
+            _dict['context'] = None
+
+        # set to None if context_asset (nullable) is None
+        # and model_fields_set contains the field
+        if self.context_asset is None and "context_asset" in self.model_fields_set:
+            _dict['contextAsset'] = None
 
         return _dict
 
@@ -100,6 +116,8 @@ class UpdateValidationRapidModel(BaseModel):
             "truth": UpdateValidationRapidModelTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
             "explanation": obj.get("explanation"),
             "prompt": obj.get("prompt"),
+            "context": obj.get("context"),
+            "contextAsset": UpdateValidationRapidModelContextAsset.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
             "randomCorrectProbability": obj.get("randomCorrectProbability")
         })
         return _obj

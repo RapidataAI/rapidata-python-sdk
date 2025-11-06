@@ -35,7 +35,7 @@ SIMPLEWORKFLOWMODELBLUEPRINT_ONE_OF_SCHEMAS = ["AttachCategoryRapidBlueprint", "
 
 class SimpleWorkflowModelBlueprint(BaseModel):
     """
-    The blueprint is used to create the tasks that will be shown to the users. They contain the common information across all tasks. For example, the tasks question.
+    SimpleWorkflowModelBlueprint
     """
     # data type: TranscriptionRapidBlueprint
     oneof_schema_1_validator: Optional[TranscriptionRapidBlueprint] = None

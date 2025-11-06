@@ -18,7 +18,8 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.attach_category_rapid_blueprint_category import AttachCategoryRapidBlueprintCategory
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,9 +28,10 @@ class AttachCategoryRapidBlueprint(BaseModel):
     AttachCategoryRapidBlueprint
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for ClassifyBlueprint", alias="_t")
-    possible_categories: List[StrictStr] = Field(alias="possibleCategories")
+    possible_categories: Optional[List[StrictStr]] = Field(default=None, alias="possibleCategories")
+    categories: Optional[List[AttachCategoryRapidBlueprintCategory]] = None
     title: StrictStr
-    __properties: ClassVar[List[str]] = ["_t", "possibleCategories", "title"]
+    __properties: ClassVar[List[str]] = ["_t", "possibleCategories", "categories", "title"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -77,6 +79,13 @@ class AttachCategoryRapidBlueprint(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in categories (list)
+        _items = []
+        if self.categories:
+            for _item_categories in self.categories:
+                if _item_categories:
+                    _items.append(_item_categories.to_dict())
+            _dict['categories'] = _items
         return _dict
 
     @classmethod
@@ -91,6 +100,7 @@ class AttachCategoryRapidBlueprint(BaseModel):
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'ClassifyBlueprint',
             "possibleCategories": obj.get("possibleCategories"),
+            "categories": [AttachCategoryRapidBlueprintCategory.from_dict(_item) for _item in obj["categories"]] if obj.get("categories") is not None else None,
             "title": obj.get("title")
         })
         return _obj

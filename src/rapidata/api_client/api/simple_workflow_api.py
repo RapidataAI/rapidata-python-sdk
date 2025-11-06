@@ -20,7 +20,7 @@ from pydantic import Field, StrictStr
 from typing import Optional
 from typing_extensions import Annotated
 from rapidata.api_client.models.get_simple_workflow_results_model import GetSimpleWorkflowResultsModel
-from rapidata.api_client.models.get_workflow_results_result_paged_result import GetWorkflowResultsResultPagedResult
+from rapidata.api_client.models.paged_result_get_workflow_results_result import PagedResultGetWorkflowResultsResult
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -57,7 +57,7 @@ class SimpleWorkflowApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetWorkflowResultsResultPagedResult:
+    ) -> PagedResultGetWorkflowResultsResult:
         """Get the result overview for a simple workflow.
 
 
@@ -97,7 +97,7 @@ class SimpleWorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetWorkflowResultsResultPagedResult",
+            '200': "PagedResultGetWorkflowResultsResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -127,7 +127,7 @@ class SimpleWorkflowApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetWorkflowResultsResultPagedResult]:
+    ) -> ApiResponse[PagedResultGetWorkflowResultsResult]:
         """Get the result overview for a simple workflow.
 
 
@@ -167,7 +167,7 @@ class SimpleWorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetWorkflowResultsResultPagedResult",
+            '200': "PagedResultGetWorkflowResultsResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -237,7 +237,7 @@ class SimpleWorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetWorkflowResultsResultPagedResult",
+            '200': "PagedResultGetWorkflowResultsResult",
         }
         response_data = self.api_client.call_api(
             *_param,

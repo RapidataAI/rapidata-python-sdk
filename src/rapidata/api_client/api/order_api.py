@@ -28,7 +28,8 @@ from rapidata.api_client.models.create_order_result import CreateOrderResult
 from rapidata.api_client.models.create_unsupported_order_model import CreateUnsupportedOrderModel
 from rapidata.api_client.models.get_order_by_id_result import GetOrderByIdResult
 from rapidata.api_client.models.get_public_orders_result import GetPublicOrdersResult
-from rapidata.api_client.models.order_model_paged_result import OrderModelPagedResult
+from rapidata.api_client.models.paged_result_aggregated_orders_model import PagedResultAggregatedOrdersModel
+from rapidata.api_client.models.paged_result_order_model import PagedResultOrderModel
 from rapidata.api_client.models.preview_order_model import PreviewOrderModel
 from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.submit_order_model import SubmitOrderModel
@@ -4865,6 +4866,269 @@ class OrderApi:
 
 
     @validate_call
+    def orders_aggregated_overview_get(
+        self,
+        request: Optional[QueryModel] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> PagedResultAggregatedOrdersModel:
+        """Retrieves the orders aggregated by customer, with total amounts and most recent order informations.
+
+
+        :param request:
+        :type request: QueryModel
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._orders_aggregated_overview_get_serialize(
+            request=request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "PagedResultAggregatedOrdersModel",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def orders_aggregated_overview_get_with_http_info(
+        self,
+        request: Optional[QueryModel] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[PagedResultAggregatedOrdersModel]:
+        """Retrieves the orders aggregated by customer, with total amounts and most recent order informations.
+
+
+        :param request:
+        :type request: QueryModel
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._orders_aggregated_overview_get_serialize(
+            request=request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "PagedResultAggregatedOrdersModel",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def orders_aggregated_overview_get_without_preload_content(
+        self,
+        request: Optional[QueryModel] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Retrieves the orders aggregated by customer, with total amounts and most recent order informations.
+
+
+        :param request:
+        :type request: QueryModel
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._orders_aggregated_overview_get_serialize(
+            request=request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "PagedResultAggregatedOrdersModel",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _orders_aggregated_overview_get_serialize(
+        self,
+        request,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        # process the query parameters
+        if request is not None:
+            
+            _query_params.append(('request', request))
+            
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'text/plain', 
+                    'application/json', 
+                    'text/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'bearer', 
+            'oauth2'
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/orders/aggregated-overview',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
     def orders_get(
         self,
         request: Annotated[Optional[QueryModel], Field(description="The parameters for filtering, paging, and sorting")] = None,
@@ -4880,7 +5144,7 @@ class OrderApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> OrderModelPagedResult:
+    ) -> PagedResultOrderModel:
         """Queries orders based on a filter, page, and sort criteria.
 
 
@@ -4917,7 +5181,7 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "OrderModelPagedResult",
+            '200': "PagedResultOrderModel",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -4946,7 +5210,7 @@ class OrderApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[OrderModelPagedResult]:
+    ) -> ApiResponse[PagedResultOrderModel]:
         """Queries orders based on a filter, page, and sort criteria.
 
 
@@ -4983,7 +5247,7 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "OrderModelPagedResult",
+            '200': "PagedResultOrderModel",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -5049,7 +5313,7 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "OrderModelPagedResult",
+            '200': "PagedResultOrderModel",
         }
         response_data = self.api_client.call_api(
             *_param,

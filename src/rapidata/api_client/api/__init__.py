@@ -5,7 +5,6 @@ from rapidata.api_client.api.asset_api import AssetApi
 from rapidata.api_client.api.benchmark_api import BenchmarkApi
 from rapidata.api_client.api.campaign_api import CampaignApi
 from rapidata.api_client.api.client_api import ClientApi
-from rapidata.api_client.api.coco_api import CocoApi
 from rapidata.api_client.api.compare_workflow_api import CompareWorkflowApi
 from rapidata.api_client.api.customer_rapid_api import CustomerRapidApi
 from rapidata.api_client.api.datapoint_api import DatapointApi
@@ -23,6 +22,7 @@ from rapidata.api_client.api.prompt_api import PromptApi
 from rapidata.api_client.api.rapidata_identity_api_api import RapidataIdentityAPIApi
 from rapidata.api_client.api.sample_api import SampleApi
 from rapidata.api_client.api.simple_workflow_api import SimpleWorkflowApi
+from rapidata.api_client.api.survey_api import SurveyApi
 from rapidata.api_client.api.user_info_api import UserInfoApi
 from rapidata.api_client.api.user_rapid_api import UserRapidApi
 from rapidata.api_client.api.validation_set_api import ValidationSetApi

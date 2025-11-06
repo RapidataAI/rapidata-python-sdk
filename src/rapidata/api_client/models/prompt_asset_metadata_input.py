@@ -18,19 +18,18 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.multi_asset_input_assets_inner import MultiAssetInputAssetsInner
+from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.prompt_asset_metadata_input_asset import PromptAssetMetadataInputAsset
 from typing import Optional, Set
 from typing_extensions import Self
 
 class PromptAssetMetadataInput(BaseModel):
     """
-    PromptAssetMetadataInput
+    Input model for prompt asset metadata.
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for PromptAssetMetadataInput", alias="_t")
-    asset: MultiAssetInputAssetsInner
-    identifier: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["_t", "asset", "identifier"]
+    asset: PromptAssetMetadataInputAsset
+    __properties: ClassVar[List[str]] = ["_t", "asset"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -94,8 +93,7 @@ class PromptAssetMetadataInput(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'PromptAssetMetadataInput',
-            "asset": MultiAssetInputAssetsInner.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
-            "identifier": obj.get("identifier")
+            "asset": PromptAssetMetadataInputAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None
         })
         return _obj
 

@@ -6,8 +6,8 @@ from rapidata.api_client import (
 from rapidata.api_client.models.grouped_ranking_workflow_model import (
     GroupedRankingWorkflowModel,
 )
-from rapidata.api_client.models.create_datapoint_from_files_model_metadata_inner import (
-    CreateDatapointFromFilesModelMetadataInner,
+from rapidata.api_client.models.compare_workflow_model_metadata_inner import (
+    CompareWorkflowModelMetadataInner,
 )
 from rapidata.rapidata_client.workflow._base_workflow import Workflow
 from rapidata.api_client import ComparePayload
@@ -62,7 +62,7 @@ class MultiRankingWorkflow(Workflow):
             eloConfig=self.elo_config,
             pairMakerConfig=self.pair_maker_config,
             metadata=[
-                CreateDatapointFromFilesModelMetadataInner(metadata.to_model())
+                CompareWorkflowModelMetadataInner(metadata.to_model())
                 for metadata in self.metadatas
             ],
         )

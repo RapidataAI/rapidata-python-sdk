@@ -21,6 +21,7 @@ from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.classify_payload import ClassifyPayload
 from rapidata.api_client.models.create_demographic_rapid_model_asset import CreateDemographicRapidModelAsset
+from rapidata.api_client.models.create_demographic_rapid_model_context_asset import CreateDemographicRapidModelContextAsset
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from typing import Optional, Set
 from typing_extensions import Self
@@ -33,7 +34,9 @@ class CreateDemographicRapidModel(BaseModel):
     payload: ClassifyPayload
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, description="Optional feature flags to apply to the rapid.", alias="featureFlags")
     asset: Optional[CreateDemographicRapidModelAsset] = None
-    __properties: ClassVar[List[str]] = ["key", "payload", "featureFlags", "asset"]
+    context: Optional[StrictStr] = Field(default=None, description="An optional text context to show to the user.")
+    context_asset: Optional[CreateDemographicRapidModelContextAsset] = Field(default=None, alias="contextAsset")
+    __properties: ClassVar[List[str]] = ["key", "payload", "featureFlags", "asset", "context", "contextAsset"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -87,6 +90,9 @@ class CreateDemographicRapidModel(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of asset
         if self.asset:
             _dict['asset'] = self.asset.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of context_asset
+        if self.context_asset:
+            _dict['contextAsset'] = self.context_asset.to_dict()
         # set to None if feature_flags (nullable) is None
         # and model_fields_set contains the field
         if self.feature_flags is None and "feature_flags" in self.model_fields_set:
@@ -96,6 +102,16 @@ class CreateDemographicRapidModel(BaseModel):
         # and model_fields_set contains the field
         if self.asset is None and "asset" in self.model_fields_set:
             _dict['asset'] = None
+
+        # set to None if context (nullable) is None
+        # and model_fields_set contains the field
+        if self.context is None and "context" in self.model_fields_set:
+            _dict['context'] = None
+
+        # set to None if context_asset (nullable) is None
+        # and model_fields_set contains the field
+        if self.context_asset is None and "context_asset" in self.model_fields_set:
+            _dict['contextAsset'] = None
 
         return _dict
 
@@ -112,7 +128,9 @@ class CreateDemographicRapidModel(BaseModel):
             "key": obj.get("key"),
             "payload": ClassifyPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
-            "asset": CreateDemographicRapidModelAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None
+            "asset": CreateDemographicRapidModelAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
+            "context": obj.get("context"),
+            "contextAsset": CreateDemographicRapidModelContextAsset.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None
         })
         return _obj
 

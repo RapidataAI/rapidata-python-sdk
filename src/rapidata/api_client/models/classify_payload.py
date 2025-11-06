@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.classify_payload_category import ClassifyPayloadCategory
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,9 +28,9 @@ class ClassifyPayload(BaseModel):
     ClassifyPayload
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for ClassifyPayload", alias="_t")
-    possible_categories: List[StrictStr] = Field(alias="possibleCategories")
+    categories: List[ClassifyPayloadCategory]
     title: StrictStr
-    __properties: ClassVar[List[str]] = ["_t", "possibleCategories", "title"]
+    __properties: ClassVar[List[str]] = ["_t", "categories", "title"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -77,6 +78,13 @@ class ClassifyPayload(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in categories (list)
+        _items = []
+        if self.categories:
+            for _item_categories in self.categories:
+                if _item_categories:
+                    _items.append(_item_categories.to_dict())
+            _dict['categories'] = _items
         return _dict
 
     @classmethod
@@ -90,7 +98,7 @@ class ClassifyPayload(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'ClassifyPayload',
-            "possibleCategories": obj.get("possibleCategories"),
+            "categories": [ClassifyPayloadCategory.from_dict(_item) for _item in obj["categories"]] if obj.get("categories") is not None else None,
             "title": obj.get("title")
         })
         return _obj

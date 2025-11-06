@@ -16,7 +16,7 @@ from rapidata.api_client import (
     TranscriptionWord,
 )
 from rapidata.rapidata_client.validation.rapids.box import Box
-
+from rapidata.api_client.models.classify_payload_category import ClassifyPayloadCategory
 from typing import Literal
 
 from rapidata.rapidata_client.validation.rapids.rapids import Rapid
@@ -61,7 +61,12 @@ class RapidsManager:
             raise ValueError("Truths must be part of the answer options")
 
         payload = ClassifyPayload(
-            _t="ClassifyPayload", possibleCategories=answer_options, title=instruction
+            _t="ClassifyPayload",
+            categories=[
+                ClassifyPayloadCategory(label=option, value=option)
+                for option in answer_options
+            ],
+            title=instruction,
         )
         model_truth = AttachCategoryTruth(
             correctCategories=truths, _t="AttachCategoryTruth"

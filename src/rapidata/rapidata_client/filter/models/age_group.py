@@ -1,4 +1,6 @@
-from rapidata.api_client.models.age_group import AgeGroup as BackendAgeGroupModel
+from rapidata.api_client.models.age_user_filter_model_age_group import (
+    AgeUserFilterModelAgeGroup,
+)
 from enum import Enum
 
 
@@ -15,12 +17,12 @@ class AgeGroup(Enum):
         BETWEEN_50_64 (AgeGroup): Represents the age group of users between 50 and 64.
         OVER_65 (AgeGroup): Represents the age group of users over 65."""
 
-    UNDER_18 = BackendAgeGroupModel.ENUM_0_MINUS_17
-    BETWEEN_18_29 = BackendAgeGroupModel.ENUM_18_MINUS_29
-    BETWEEN_30_39 = BackendAgeGroupModel.ENUM_30_MINUS_39
-    BETWEEN_40_49 = BackendAgeGroupModel.ENUM_40_MINUS_49
-    BETWEEN_50_64 = BackendAgeGroupModel.ENUM_50_MINUS_64
-    OVER_65 = BackendAgeGroupModel.ENUM_65_PLUS
+    UNDER_18 = AgeUserFilterModelAgeGroup.ENUM_0_MINUS_17
+    BETWEEN_18_29 = AgeUserFilterModelAgeGroup.ENUM_18_MINUS_29
+    BETWEEN_30_39 = AgeUserFilterModelAgeGroup.ENUM_30_MINUS_39
+    BETWEEN_40_49 = AgeUserFilterModelAgeGroup.ENUM_40_MINUS_49
+    BETWEEN_50_64 = AgeUserFilterModelAgeGroup.ENUM_50_MINUS_64
+    OVER_65 = AgeUserFilterModelAgeGroup.ENUM_65_PLUS
 
-    def _to_backend_model(self) -> BackendAgeGroupModel:
-        return BackendAgeGroupModel(self.value)
+    def _to_backend_model(self) -> AgeUserFilterModelAgeGroup:
+        return AgeUserFilterModelAgeGroup(self.value)

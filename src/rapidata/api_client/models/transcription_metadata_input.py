@@ -18,18 +18,17 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
 class TranscriptionMetadataInput(BaseModel):
     """
-    TranscriptionMetadataInput
+    Input model for transcription metadata.
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for TranscriptionMetadataInput", alias="_t")
-    transcription: StrictStr
-    identifier: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["_t", "transcription", "identifier"]
+    transcription: StrictStr = Field(description="The transcription text.")
+    __properties: ClassVar[List[str]] = ["_t", "transcription"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -90,8 +89,7 @@ class TranscriptionMetadataInput(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'TranscriptionMetadataInput',
-            "transcription": obj.get("transcription"),
-            "identifier": obj.get("identifier")
+            "transcription": obj.get("transcription")
         })
         return _obj
 

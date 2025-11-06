@@ -18,8 +18,9 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.datapoint_asset import DatapointAsset
+from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.datapoint_model_asset import DatapointModelAsset
+from rapidata.api_client.models.get_validation_rapids_result_asset import GetValidationRapidsResultAsset
 from rapidata.api_client.models.get_validation_rapids_result_payload import GetValidationRapidsResultPayload
 from rapidata.api_client.models.rapid_response import RapidResponse
 from rapidata.api_client.models.rapid_state import RapidState
@@ -32,10 +33,12 @@ class GetWorkflowResultsResult(BaseModel):
     """ # noqa: E501
     rapid_id: StrictStr = Field(alias="rapidId")
     payload: GetValidationRapidsResultPayload
-    asset: DatapointAsset
+    asset: DatapointModelAsset
     responses: List[RapidResponse]
     state: RapidState
-    __properties: ClassVar[List[str]] = ["rapidId", "payload", "asset", "responses", "state"]
+    context: Optional[StrictStr] = None
+    context_asset: Optional[GetValidationRapidsResultAsset] = Field(default=None, alias="contextAsset")
+    __properties: ClassVar[List[str]] = ["rapidId", "payload", "asset", "responses", "state", "context", "contextAsset"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -89,6 +92,19 @@ class GetWorkflowResultsResult(BaseModel):
                 if _item_responses:
                     _items.append(_item_responses.to_dict())
             _dict['responses'] = _items
+        # override the default output from pydantic by calling `to_dict()` of context_asset
+        if self.context_asset:
+            _dict['contextAsset'] = self.context_asset.to_dict()
+        # set to None if context (nullable) is None
+        # and model_fields_set contains the field
+        if self.context is None and "context" in self.model_fields_set:
+            _dict['context'] = None
+
+        # set to None if context_asset (nullable) is None
+        # and model_fields_set contains the field
+        if self.context_asset is None and "context_asset" in self.model_fields_set:
+            _dict['contextAsset'] = None
+
         return _dict
 
     @classmethod
@@ -103,9 +119,11 @@ class GetWorkflowResultsResult(BaseModel):
         _obj = cls.model_validate({
             "rapidId": obj.get("rapidId"),
             "payload": GetValidationRapidsResultPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
-            "asset": DatapointAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
+            "asset": DatapointModelAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "responses": [RapidResponse.from_dict(_item) for _item in obj["responses"]] if obj.get("responses") is not None else None,
-            "state": obj.get("state")
+            "state": obj.get("state"),
+            "context": obj.get("context"),
+            "contextAsset": GetValidationRapidsResultAsset.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None
         })
         return _obj
 
