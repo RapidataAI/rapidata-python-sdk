@@ -1,47 +1,49 @@
-from typing import Sequence, Optional, Literal, get_args
+from typing import Literal, Optional, Sequence, get_args
 
-from rapidata.rapidata_client.config.tracer import tracer
-from rapidata.rapidata_client.datapoints.metadata._base_metadata import Metadata
-from rapidata.service.openapi_service import OpenAPIService
-from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
-from rapidata.rapidata_client.order._rapidata_order_builder import RapidataOrderBuilder
-from rapidata.rapidata_client.referee._naive_referee import NaiveReferee
-from rapidata.rapidata_client.referee._early_stopping_referee import (
-    EarlyStoppingReferee,
-)
-from rapidata.rapidata_client.selection._base_selection import RapidataSelection
-from rapidata.rapidata_client.workflow import (
-    Workflow,
-    ClassifyWorkflow,
-    CompareWorkflow,
-    FreeTextWorkflow,
-    SelectWordsWorkflow,
-    LocateWorkflow,
-    DrawWorkflow,
-    TimestampWorkflow,
-    RankingWorkflow,
-    MultiRankingWorkflow,
-)
-from rapidata.rapidata_client.datapoints._datapoint import Datapoint
-from rapidata.rapidata_client.filter import RapidataFilter
-from rapidata.rapidata_client.filter.rapidata_filters import RapidataFilters
-from rapidata.rapidata_client.settings import RapidataSettings, RapidataSetting
-from rapidata.rapidata_client.selection.rapidata_selections import RapidataSelections
 from rapidata.rapidata_client.config import logger
+from rapidata.rapidata_client.config.tracer import tracer
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
-
-from rapidata.api_client.models.query_model import QueryModel
-from rapidata.api_client.models.page_info import PageInfo
-from rapidata.api_client.models.root_filter import RootFilter
-from rapidata.api_client.models.filter import Filter
-from rapidata.api_client.models.filter_operator import FilterOperator
-from rapidata.api_client.models.sort_criterion import SortCriterion
-from rapidata.api_client.models.sort_direction import SortDirection
+from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.rapidata_client.datapoints._datapoints_validator import (
     DatapointsValidator,
 )
-
-from rapidata.rapidata_client.order._rapidata_order_builder import StickyStateLiteral
+from rapidata.rapidata_client.filter import RapidataFilter
+from rapidata.rapidata_client.filter.rapidata_filters import RapidataFilters
+from rapidata.rapidata_client.order._rapidata_order_builder import (
+    RapidataOrderBuilder,
+    StickyStateLiteral,
+)
+from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
+from rapidata.rapidata_client.referee._early_stopping_referee import (
+    EarlyStoppingReferee,
+)
+from rapidata.rapidata_client.referee._naive_referee import NaiveReferee
+from rapidata.rapidata_client.selection._base_selection import RapidataSelection
+from rapidata.rapidata_client.selection.rapidata_selections import RapidataSelections
+from rapidata.rapidata_client.settings import RapidataSetting, RapidataSettings
+from rapidata.rapidata_client.workflow import (
+    ClassifyWorkflow,
+    CompareWorkflow,
+    DrawWorkflow,
+    FreeTextWorkflow,
+    LocateWorkflow,
+    MultiRankingWorkflow,
+    SelectWordsWorkflow,
+    TimestampWorkflow,
+    Workflow,
+)
+from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
+from rapidata.api_client.models.filter import Filter
+from rapidata.api_client.models.filter_operator import FilterOperator
+from rapidata.api_client.models.multi_asset_input_assets_inner import (
+    MultiAssetInputAssetsInner,
+)
+from rapidata.api_client.models.page_info import PageInfo
+from rapidata.api_client.models.query_model import QueryModel
+from rapidata.api_client.models.root_filter import RootFilter
+from rapidata.api_client.models.sort_criterion import SortCriterion
+from rapidata.api_client.models.sort_direction import SortDirection
+from rapidata.service.openapi_service import OpenAPIService
 
 
 class RapidataOrderManager:
@@ -60,7 +62,7 @@ class RapidataOrderManager:
         self.selections = RapidataSelections
         self.__priority: int | None = None
         self.__sticky_state: StickyStateLiteral | None = None
-        self.__asset_uploader = AssetUploader(openapi_service)
+        self._asset_uploader = AssetUploader(openapi_service)
         logger.debug("RapidataOrderManager initialized")
 
     def _create_general_order(
@@ -380,12 +382,34 @@ class RapidataOrderManager:
                         )
                     )
 
+            contexts_dict = (
+                {str(i): context for i, context in enumerate(contexts)}
+                if contexts
+                else None
+            )
+
+            media_contexts_dict = (
+                {
+                    str(i): MultiAssetInputAssetsInner(
+                        actual_instance=ExistingAssetInput(
+                            _t="ExistingAssetInput",
+                            name=self._asset_uploader.upload_asset(media_context),
+                        ),
+                    )
+                    for i, media_context in enumerate(media_contexts)
+                }
+                if media_contexts
+                else None
+            )
+
             return self._create_general_order(
                 name=name,
                 workflow=MultiRankingWorkflow(
                     instruction=instruction,
                     comparison_budget_per_ranking=comparison_budget_per_ranking,
                     random_comparisons_ratio=random_comparisons_ratio,
+                    contexts=contexts_dict,
+                    media_contexts=media_contexts_dict,
                 ),
                 datapoints=datapoints_instances,
                 responses_per_datapoint=responses_per_comparison,
