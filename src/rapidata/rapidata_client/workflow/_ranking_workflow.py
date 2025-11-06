@@ -12,8 +12,8 @@ from rapidata.rapidata_client.datapoints.metadata import (
     MediaAssetMetadata,
     PromptMetadata,
 )
-from rapidata.api_client.models.create_datapoint_from_files_model_metadata_inner import (
-    CreateDatapointFromFilesModelMetadataInner,
+from rapidata.api_client.models.compare_workflow_model_metadata_inner import (
+    CompareWorkflowModelMetadataInner,
 )
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 import itertools
@@ -86,7 +86,7 @@ class RankingWorkflow(Workflow):
             eloConfig=self.elo_config,
             pairMakerConfig=self.pair_maker_config,
             metadata=[
-                CreateDatapointFromFilesModelMetadataInner(metadata.to_model())
+                CompareWorkflowModelMetadataInner(metadata.to_model())
                 for metadata in self.metadatas
             ],
         )

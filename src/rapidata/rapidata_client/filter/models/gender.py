@@ -1,5 +1,7 @@
 from enum import Enum
-from rapidata.api_client.models.gender import Gender as BackendGenderModel
+from rapidata.api_client.models.gender_user_filter_model_gender import (
+    GenderUserFilterModelGender,
+)
 
 
 class Gender(Enum):
@@ -13,9 +15,9 @@ class Gender(Enum):
         OTHER (Gender): Represents any other gender.
     """
 
-    MALE = BackendGenderModel.MALE
-    FEMALE = BackendGenderModel.FEMALE
-    OTHER = BackendGenderModel.OTHER
+    MALE = GenderUserFilterModelGender.MALE
+    FEMALE = GenderUserFilterModelGender.FEMALE
+    OTHER = GenderUserFilterModelGender.OTHER
 
-    def _to_backend_model(self) -> BackendGenderModel:
-        return BackendGenderModel(self.value)
+    def _to_backend_model(self) -> GenderUserFilterModelGender:
+        return GenderUserFilterModelGender(self.value)

@@ -4,9 +4,10 @@ from rapidata.api_client.models.create_demographic_rapid_model_asset import (
 )
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.api_client.models.classify_payload import ClassifyPayload
+from rapidata.api_client.models.classify_payload_category import ClassifyPayloadCategory
 from rapidata.rapidata_client.config import logger
-from rapidata.api_client.models.create_demographic_rapid_model_new import (
-    CreateDemographicRapidModelNew,
+from rapidata.api_client.models.create_demographic_rapid_model import (
+    CreateDemographicRapidModel,
 )
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 
@@ -21,11 +22,14 @@ class DemographicManager:
         self, instruction: str, answer_options: list[str], datapoint: str, key: str
     ):
 
-        model = CreateDemographicRapidModelNew(
+        model = CreateDemographicRapidModel(
             key=key,
             payload=ClassifyPayload(
                 _t="ClassifyPayload",
-                possibleCategories=answer_options,
+                categories=[
+                    ClassifyPayloadCategory(label=option, value=option)
+                    for option in answer_options
+                ],
                 title=instruction,
             ),
             asset=CreateDemographicRapidModelAsset(
@@ -36,8 +40,8 @@ class DemographicManager:
             ),
         )
 
-        result = self._openapi_service.rapid_api.rapid_demographic_new_post(
-            create_demographic_rapid_model_new=model
+        result = self._openapi_service.rapid_api.rapid_demographic_post(
+            create_demographic_rapid_model=model
         )
         logger.info(f"Demographic Rapid created: {result.rapid_id}")
         return result.rapid_id

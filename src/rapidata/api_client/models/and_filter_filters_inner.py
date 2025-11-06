@@ -23,13 +23,14 @@ from rapidata.api_client.models.demographic_filter import DemographicFilter
 from rapidata.api_client.models.language_filter import LanguageFilter
 from rapidata.api_client.models.new_user_filter import NewUserFilter
 from rapidata.api_client.models.response_count_filter import ResponseCountFilter
+from rapidata.api_client.models.user_action_restriction_filter import UserActionRestrictionFilter
 from rapidata.api_client.models.user_score_filter import UserScoreFilter
 from rapidata.api_client.models.user_state_filter import UserStateFilter
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-ANDFILTERFILTERSINNER_ONE_OF_SCHEMAS = ["AndFilter", "CampaignFilter", "CountryFilter", "DemographicFilter", "LanguageFilter", "NewUserFilter", "NotFilter", "OrFilter", "ResponseCountFilter", "UserScoreFilter", "UserStateFilter"]
+ANDFILTERFILTERSINNER_ONE_OF_SCHEMAS = ["AndFilter", "CampaignFilter", "CountryFilter", "DemographicFilter", "LanguageFilter", "NewUserFilter", "NotFilter", "OrFilter", "ResponseCountFilter", "UserActionRestrictionFilter", "UserScoreFilter", "UserStateFilter"]
 
 class AndFilterFiltersInner(BaseModel):
     """
@@ -53,12 +54,14 @@ class AndFilterFiltersInner(BaseModel):
     oneof_schema_8_validator: Optional[OrFilter] = None
     # data type: ResponseCountFilter
     oneof_schema_9_validator: Optional[ResponseCountFilter] = None
+    # data type: UserActionRestrictionFilter
+    oneof_schema_10_validator: Optional[UserActionRestrictionFilter] = None
     # data type: UserScoreFilter
-    oneof_schema_10_validator: Optional[UserScoreFilter] = None
+    oneof_schema_11_validator: Optional[UserScoreFilter] = None
     # data type: UserStateFilter
-    oneof_schema_11_validator: Optional[UserStateFilter] = None
-    actual_instance: Optional[Union[AndFilter, CampaignFilter, CountryFilter, DemographicFilter, LanguageFilter, NewUserFilter, NotFilter, OrFilter, ResponseCountFilter, UserScoreFilter, UserStateFilter]] = None
-    one_of_schemas: Set[str] = { "AndFilter", "CampaignFilter", "CountryFilter", "DemographicFilter", "LanguageFilter", "NewUserFilter", "NotFilter", "OrFilter", "ResponseCountFilter", "UserScoreFilter", "UserStateFilter" }
+    oneof_schema_12_validator: Optional[UserStateFilter] = None
+    actual_instance: Optional[Union[AndFilter, CampaignFilter, CountryFilter, DemographicFilter, LanguageFilter, NewUserFilter, NotFilter, OrFilter, ResponseCountFilter, UserActionRestrictionFilter, UserScoreFilter, UserStateFilter]] = None
+    one_of_schemas: Set[str] = { "AndFilter", "CampaignFilter", "CountryFilter", "DemographicFilter", "LanguageFilter", "NewUserFilter", "NotFilter", "OrFilter", "ResponseCountFilter", "UserActionRestrictionFilter", "UserScoreFilter", "UserStateFilter" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -129,6 +132,11 @@ class AndFilterFiltersInner(BaseModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `ResponseCountFilter`")
         else:
             match += 1
+        # validate data type: UserActionRestrictionFilter
+        if not isinstance(v, UserActionRestrictionFilter):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `UserActionRestrictionFilter`")
+        else:
+            match += 1
         # validate data type: UserScoreFilter
         if not isinstance(v, UserScoreFilter):
             error_messages.append(f"Error! Input type `{type(v)}` is not `UserScoreFilter`")
@@ -141,10 +149,10 @@ class AndFilterFiltersInner(BaseModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in AndFilterFiltersInner with oneOf schemas: AndFilter, CampaignFilter, CountryFilter, DemographicFilter, LanguageFilter, NewUserFilter, NotFilter, OrFilter, ResponseCountFilter, UserScoreFilter, UserStateFilter. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in AndFilterFiltersInner with oneOf schemas: AndFilter, CampaignFilter, CountryFilter, DemographicFilter, LanguageFilter, NewUserFilter, NotFilter, OrFilter, ResponseCountFilter, UserActionRestrictionFilter, UserScoreFilter, UserStateFilter. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in AndFilterFiltersInner with oneOf schemas: AndFilter, CampaignFilter, CountryFilter, DemographicFilter, LanguageFilter, NewUserFilter, NotFilter, OrFilter, ResponseCountFilter, UserScoreFilter, UserStateFilter. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in AndFilterFiltersInner with oneOf schemas: AndFilter, CampaignFilter, CountryFilter, DemographicFilter, LanguageFilter, NewUserFilter, NotFilter, OrFilter, ResponseCountFilter, UserActionRestrictionFilter, UserScoreFilter, UserStateFilter. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -213,6 +221,12 @@ class AndFilterFiltersInner(BaseModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
+        # deserialize data into UserActionRestrictionFilter
+        try:
+            instance.actual_instance = UserActionRestrictionFilter.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
         # deserialize data into UserScoreFilter
         try:
             instance.actual_instance = UserScoreFilter.from_json(json_str)
@@ -228,10 +242,10 @@ class AndFilterFiltersInner(BaseModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into AndFilterFiltersInner with oneOf schemas: AndFilter, CampaignFilter, CountryFilter, DemographicFilter, LanguageFilter, NewUserFilter, NotFilter, OrFilter, ResponseCountFilter, UserScoreFilter, UserStateFilter. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into AndFilterFiltersInner with oneOf schemas: AndFilter, CampaignFilter, CountryFilter, DemographicFilter, LanguageFilter, NewUserFilter, NotFilter, OrFilter, ResponseCountFilter, UserActionRestrictionFilter, UserScoreFilter, UserStateFilter. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into AndFilterFiltersInner with oneOf schemas: AndFilter, CampaignFilter, CountryFilter, DemographicFilter, LanguageFilter, NewUserFilter, NotFilter, OrFilter, ResponseCountFilter, UserScoreFilter, UserStateFilter. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into AndFilterFiltersInner with oneOf schemas: AndFilter, CampaignFilter, CountryFilter, DemographicFilter, LanguageFilter, NewUserFilter, NotFilter, OrFilter, ResponseCountFilter, UserActionRestrictionFilter, UserScoreFilter, UserStateFilter. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -245,7 +259,7 @@ class AndFilterFiltersInner(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], AndFilter, CampaignFilter, CountryFilter, DemographicFilter, LanguageFilter, NewUserFilter, NotFilter, OrFilter, ResponseCountFilter, UserScoreFilter, UserStateFilter]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], AndFilter, CampaignFilter, CountryFilter, DemographicFilter, LanguageFilter, NewUserFilter, NotFilter, OrFilter, ResponseCountFilter, UserActionRestrictionFilter, UserScoreFilter, UserStateFilter]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

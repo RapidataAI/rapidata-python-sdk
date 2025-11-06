@@ -19,8 +19,9 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.compare_workflow_model_context_asset import CompareWorkflowModelContextAsset
+from rapidata.api_client.models.compare_workflow_model_metadata_inner import CompareWorkflowModelMetadataInner
 from rapidata.api_client.models.compare_workflow_model_pair_maker_config import CompareWorkflowModelPairMakerConfig
-from rapidata.api_client.models.create_datapoint_from_files_model_metadata_inner import CreateDatapointFromFilesModelMetadataInner
 from rapidata.api_client.models.elo_config_model import EloConfigModel
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from typing import Optional, Set
@@ -34,10 +35,12 @@ class GroupedRankingWorkflowModel(BaseModel):
     criteria: StrictStr
     pair_maker_config: Optional[CompareWorkflowModelPairMakerConfig] = Field(default=None, alias="pairMakerConfig")
     elo_config: Optional[EloConfigModel] = Field(default=None, alias="eloConfig")
-    metadata: Optional[List[CreateDatapointFromFilesModelMetadataInner]] = None
+    context: Optional[StrictStr] = None
+    context_asset: Optional[CompareWorkflowModelContextAsset] = Field(default=None, alias="contextAsset")
+    metadata: Optional[List[CompareWorkflowModelMetadataInner]] = None
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
     max_parallelism: Optional[StrictInt] = Field(default=None, alias="maxParallelism")
-    __properties: ClassVar[List[str]] = ["_t", "criteria", "pairMakerConfig", "eloConfig", "metadata", "featureFlags", "maxParallelism"]
+    __properties: ClassVar[List[str]] = ["_t", "criteria", "pairMakerConfig", "eloConfig", "context", "contextAsset", "metadata", "featureFlags", "maxParallelism"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -91,6 +94,9 @@ class GroupedRankingWorkflowModel(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of elo_config
         if self.elo_config:
             _dict['eloConfig'] = self.elo_config.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of context_asset
+        if self.context_asset:
+            _dict['contextAsset'] = self.context_asset.to_dict()
         # override the default output from pydantic by calling `to_dict()` of each item in metadata (list)
         _items = []
         if self.metadata:
@@ -105,6 +111,16 @@ class GroupedRankingWorkflowModel(BaseModel):
                 if _item_feature_flags:
                     _items.append(_item_feature_flags.to_dict())
             _dict['featureFlags'] = _items
+        # set to None if context (nullable) is None
+        # and model_fields_set contains the field
+        if self.context is None and "context" in self.model_fields_set:
+            _dict['context'] = None
+
+        # set to None if context_asset (nullable) is None
+        # and model_fields_set contains the field
+        if self.context_asset is None and "context_asset" in self.model_fields_set:
+            _dict['contextAsset'] = None
+
         # set to None if metadata (nullable) is None
         # and model_fields_set contains the field
         if self.metadata is None and "metadata" in self.model_fields_set:
@@ -126,7 +142,9 @@ class GroupedRankingWorkflowModel(BaseModel):
             "criteria": obj.get("criteria"),
             "pairMakerConfig": CompareWorkflowModelPairMakerConfig.from_dict(obj["pairMakerConfig"]) if obj.get("pairMakerConfig") is not None else None,
             "eloConfig": EloConfigModel.from_dict(obj["eloConfig"]) if obj.get("eloConfig") is not None else None,
-            "metadata": [CreateDatapointFromFilesModelMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
+            "context": obj.get("context"),
+            "contextAsset": CompareWorkflowModelContextAsset.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
+            "metadata": [CompareWorkflowModelMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "maxParallelism": obj.get("maxParallelism")
         })

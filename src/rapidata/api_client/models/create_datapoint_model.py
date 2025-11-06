@@ -19,8 +19,9 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.create_datapoint_from_files_model_metadata_inner import CreateDatapointFromFilesModelMetadataInner
 from rapidata.api_client.models.create_datapoint_model_asset import CreateDatapointModelAsset
+from rapidata.api_client.models.create_datapoint_model_context_asset import CreateDatapointModelContextAsset
+from rapidata.api_client.models.create_datapoint_model_metadata_inner import CreateDatapointModelMetadataInner
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -29,10 +30,12 @@ class CreateDatapointModel(BaseModel):
     The body request for creating a new datapoint
     """ # noqa: E501
     asset: CreateDatapointModelAsset
-    metadata: List[CreateDatapointFromFilesModelMetadataInner] = Field(description="The metadata of the datapoint")
+    metadata: List[CreateDatapointModelMetadataInner] = Field(description="The metadata of the datapoint")
+    context: Optional[StrictStr] = Field(default=None, description="An additional context to show the users when solving the rapid.")
+    context_asset: Optional[CreateDatapointModelContextAsset] = Field(default=None, alias="contextAsset")
     sort_index: Optional[StrictInt] = Field(default=None, description="The sort index represents the order of the datapoint in the dataset", alias="sortIndex")
     group: Optional[StrictStr] = Field(default=None, description="The group a datapoint belongs to.")
-    __properties: ClassVar[List[str]] = ["asset", "metadata", "sortIndex", "group"]
+    __properties: ClassVar[List[str]] = ["asset", "metadata", "context", "contextAsset", "sortIndex", "group"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -83,6 +86,19 @@ class CreateDatapointModel(BaseModel):
                 if _item_metadata:
                     _items.append(_item_metadata.to_dict())
             _dict['metadata'] = _items
+        # override the default output from pydantic by calling `to_dict()` of context_asset
+        if self.context_asset:
+            _dict['contextAsset'] = self.context_asset.to_dict()
+        # set to None if context (nullable) is None
+        # and model_fields_set contains the field
+        if self.context is None and "context" in self.model_fields_set:
+            _dict['context'] = None
+
+        # set to None if context_asset (nullable) is None
+        # and model_fields_set contains the field
+        if self.context_asset is None and "context_asset" in self.model_fields_set:
+            _dict['contextAsset'] = None
+
         # set to None if sort_index (nullable) is None
         # and model_fields_set contains the field
         if self.sort_index is None and "sort_index" in self.model_fields_set:
@@ -106,7 +122,9 @@ class CreateDatapointModel(BaseModel):
 
         _obj = cls.model_validate({
             "asset": CreateDatapointModelAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
-            "metadata": [CreateDatapointFromFilesModelMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
+            "metadata": [CreateDatapointModelMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
+            "context": obj.get("context"),
+            "contextAsset": CreateDatapointModelContextAsset.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
             "sortIndex": obj.get("sortIndex"),
             "group": obj.get("group")
         })

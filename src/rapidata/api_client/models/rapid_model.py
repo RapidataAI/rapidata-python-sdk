@@ -20,8 +20,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
-from rapidata.api_client.models.datapoint_asset import DatapointAsset
-from rapidata.api_client.models.file_asset_model_metadata_value import FileAssetModelMetadataValue
+from rapidata.api_client.models.datapoint_model_asset import DatapointModelAsset
 from rapidata.api_client.models.get_validation_rapids_result_payload import GetValidationRapidsResultPayload
 from rapidata.api_client.models.get_validation_rapids_result_truth import GetValidationRapidsResultTruth
 from rapidata.api_client.models.rapid_model_referee import RapidModelReferee
@@ -36,8 +35,7 @@ class RapidModel(BaseModel):
     id: StrictStr
     payload: GetValidationRapidsResultPayload
     referee: RapidModelReferee
-    asset: DatapointAsset
-    metadata: Dict[str, FileAssetModelMetadataValue]
+    asset: DatapointModelAsset
     state: RapidState
     has_responses: StrictBool = Field(alias="hasResponses")
     should_accept_incorrect: StrictBool = Field(alias="shouldAcceptIncorrect")
@@ -46,7 +44,7 @@ class RapidModel(BaseModel):
     random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="randomCorrectProbability")
     key: Optional[StrictStr] = None
     completed_at: Optional[datetime] = Field(default=None, alias="completedAt")
-    __properties: ClassVar[List[str]] = ["id", "payload", "referee", "asset", "metadata", "state", "hasResponses", "shouldAcceptIncorrect", "truth", "explanation", "randomCorrectProbability", "key", "completedAt"]
+    __properties: ClassVar[List[str]] = ["id", "payload", "referee", "asset", "state", "hasResponses", "shouldAcceptIncorrect", "truth", "explanation", "randomCorrectProbability", "key", "completedAt"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -96,13 +94,6 @@ class RapidModel(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of asset
         if self.asset:
             _dict['asset'] = self.asset.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each value in metadata (dict)
-        _field_dict = {}
-        if self.metadata:
-            for _key_metadata in self.metadata:
-                if self.metadata[_key_metadata]:
-                    _field_dict[_key_metadata] = self.metadata[_key_metadata].to_dict()
-            _dict['metadata'] = _field_dict
         # override the default output from pydantic by calling `to_dict()` of truth
         if self.truth:
             _dict['truth'] = self.truth.to_dict()
@@ -146,13 +137,7 @@ class RapidModel(BaseModel):
             "id": obj.get("id"),
             "payload": GetValidationRapidsResultPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
             "referee": RapidModelReferee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
-            "asset": DatapointAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
-            "metadata": dict(
-                (_k, FileAssetModelMetadataValue.from_dict(_v))
-                for _k, _v in obj["metadata"].items()
-            )
-            if obj.get("metadata") is not None
-            else None,
+            "asset": DatapointModelAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "state": obj.get("state"),
             "hasResponses": obj.get("hasResponses"),
             "shouldAcceptIncorrect": obj.get("shouldAcceptIncorrect"),

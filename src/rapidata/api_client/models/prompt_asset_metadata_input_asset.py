@@ -18,34 +18,26 @@ import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
 from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
-from rapidata.api_client.models.file_asset_input2 import FileAssetInput2
-from rapidata.api_client.models.reference_asset_input import ReferenceAssetInput
+from rapidata.api_client.models.multi_asset_input import MultiAssetInput
 from rapidata.api_client.models.text_asset_input import TextAssetInput
-from rapidata.api_client.models.url_asset_input import UrlAssetInput
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-PROMPTASSETMETADATAINPUTASSET_ONE_OF_SCHEMAS = ["ExistingAssetInput", "FileAssetInput2", "MultiAssetInput2", "ReferenceAssetInput", "TextAssetInput", "UrlAssetInput"]
+PROMPTASSETMETADATAINPUTASSET_ONE_OF_SCHEMAS = ["ExistingAssetInput", "MultiAssetInput", "TextAssetInput"]
 
 class PromptAssetMetadataInputAsset(BaseModel):
     """
-    PromptAssetMetadataInputAsset
+    The asset associated with the prompt.
     """
     # data type: ExistingAssetInput
     oneof_schema_1_validator: Optional[ExistingAssetInput] = None
-    # data type: FileAssetInput2
-    oneof_schema_2_validator: Optional[FileAssetInput2] = None
-    # data type: MultiAssetInput2
-    oneof_schema_3_validator: Optional[MultiAssetInput2] = None
-    # data type: ReferenceAssetInput
-    oneof_schema_4_validator: Optional[ReferenceAssetInput] = None
+    # data type: MultiAssetInput
+    oneof_schema_2_validator: Optional[MultiAssetInput] = None
     # data type: TextAssetInput
-    oneof_schema_5_validator: Optional[TextAssetInput] = None
-    # data type: UrlAssetInput
-    oneof_schema_6_validator: Optional[UrlAssetInput] = None
-    actual_instance: Optional[Union[ExistingAssetInput, FileAssetInput2, MultiAssetInput2, ReferenceAssetInput, TextAssetInput, UrlAssetInput]] = None
-    one_of_schemas: Set[str] = { "ExistingAssetInput", "FileAssetInput2", "MultiAssetInput2", "ReferenceAssetInput", "TextAssetInput", "UrlAssetInput" }
+    oneof_schema_3_validator: Optional[TextAssetInput] = None
+    actual_instance: Optional[Union[ExistingAssetInput, MultiAssetInput, TextAssetInput]] = None
+    one_of_schemas: Set[str] = { "ExistingAssetInput", "MultiAssetInput", "TextAssetInput" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -76,19 +68,9 @@ class PromptAssetMetadataInputAsset(BaseModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `ExistingAssetInput`")
         else:
             match += 1
-        # validate data type: FileAssetInput2
-        if not isinstance(v, FileAssetInput2):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `FileAssetInput2`")
-        else:
-            match += 1
-        # validate data type: MultiAssetInput2
-        if not isinstance(v, MultiAssetInput2):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `MultiAssetInput2`")
-        else:
-            match += 1
-        # validate data type: ReferenceAssetInput
-        if not isinstance(v, ReferenceAssetInput):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `ReferenceAssetInput`")
+        # validate data type: MultiAssetInput
+        if not isinstance(v, MultiAssetInput):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `MultiAssetInput`")
         else:
             match += 1
         # validate data type: TextAssetInput
@@ -96,17 +78,12 @@ class PromptAssetMetadataInputAsset(BaseModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `TextAssetInput`")
         else:
             match += 1
-        # validate data type: UrlAssetInput
-        if not isinstance(v, UrlAssetInput):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `UrlAssetInput`")
-        else:
-            match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in PromptAssetMetadataInputAsset with oneOf schemas: ExistingAssetInput, FileAssetInput2, MultiAssetInput2, ReferenceAssetInput, TextAssetInput, UrlAssetInput. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in PromptAssetMetadataInputAsset with oneOf schemas: ExistingAssetInput, MultiAssetInput, TextAssetInput. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in PromptAssetMetadataInputAsset with oneOf schemas: ExistingAssetInput, FileAssetInput2, MultiAssetInput2, ReferenceAssetInput, TextAssetInput, UrlAssetInput. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in PromptAssetMetadataInputAsset with oneOf schemas: ExistingAssetInput, MultiAssetInput, TextAssetInput. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -127,21 +104,9 @@ class PromptAssetMetadataInputAsset(BaseModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # deserialize data into FileAssetInput2
+        # deserialize data into MultiAssetInput
         try:
-            instance.actual_instance = FileAssetInput2.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into MultiAssetInput2
-        try:
-            instance.actual_instance = MultiAssetInput2.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into ReferenceAssetInput
-        try:
-            instance.actual_instance = ReferenceAssetInput.from_json(json_str)
+            instance.actual_instance = MultiAssetInput.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
@@ -151,19 +116,13 @@ class PromptAssetMetadataInputAsset(BaseModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # deserialize data into UrlAssetInput
-        try:
-            instance.actual_instance = UrlAssetInput.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into PromptAssetMetadataInputAsset with oneOf schemas: ExistingAssetInput, FileAssetInput2, MultiAssetInput2, ReferenceAssetInput, TextAssetInput, UrlAssetInput. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into PromptAssetMetadataInputAsset with oneOf schemas: ExistingAssetInput, MultiAssetInput, TextAssetInput. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into PromptAssetMetadataInputAsset with oneOf schemas: ExistingAssetInput, FileAssetInput2, MultiAssetInput2, ReferenceAssetInput, TextAssetInput, UrlAssetInput. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into PromptAssetMetadataInputAsset with oneOf schemas: ExistingAssetInput, MultiAssetInput, TextAssetInput. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -177,7 +136,7 @@ class PromptAssetMetadataInputAsset(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], ExistingAssetInput, FileAssetInput2, MultiAssetInput2, ReferenceAssetInput, TextAssetInput, UrlAssetInput]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], ExistingAssetInput, MultiAssetInput, TextAssetInput]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None
@@ -192,7 +151,4 @@ class PromptAssetMetadataInputAsset(BaseModel):
         """Returns the string representation of the actual instance"""
         return pprint.pformat(self.model_dump())
 
-from rapidata.api_client.models.multi_asset_input2 import MultiAssetInput2
-# TODO: Rewrite to not use raise_errors
-PromptAssetMetadataInputAsset.model_rebuild(raise_errors=False)
 

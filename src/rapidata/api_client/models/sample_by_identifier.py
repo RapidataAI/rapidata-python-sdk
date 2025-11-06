@@ -20,7 +20,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.datapoint_asset import DatapointAsset
+from rapidata.api_client.models.datapoint_model_asset import DatapointModelAsset
 from rapidata.api_client.models.get_validation_rapids_result_asset import GetValidationRapidsResultAsset
 from typing import Optional, Set
 from typing_extensions import Self
@@ -33,7 +33,7 @@ class SampleByIdentifier(BaseModel):
     identifier: StrictStr
     participant_id: StrictStr = Field(alias="participantId")
     participant_name: StrictStr = Field(alias="participantName")
-    asset: DatapointAsset
+    asset: DatapointModelAsset
     prompt: Optional[StrictStr] = None
     prompt_asset: Optional[GetValidationRapidsResultAsset] = Field(default=None, alias="promptAsset")
     tags: List[StrictStr]
@@ -113,7 +113,7 @@ class SampleByIdentifier(BaseModel):
             "identifier": obj.get("identifier"),
             "participantId": obj.get("participantId"),
             "participantName": obj.get("participantName"),
-            "asset": DatapointAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
+            "asset": DatapointModelAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "prompt": obj.get("prompt"),
             "promptAsset": GetValidationRapidsResultAsset.from_dict(obj["promptAsset"]) if obj.get("promptAsset") is not None else None,
             "tags": obj.get("tags"),

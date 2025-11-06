@@ -19,14 +19,14 @@ from typing_extensions import Annotated
 from pydantic import Field, StrictFloat, StrictInt, StrictStr
 from typing import Optional, Union
 from typing_extensions import Annotated
-from rapidata.api_client.models.create_demographic_rapid_model_new import CreateDemographicRapidModelNew
+from rapidata.api_client.models.create_demographic_rapid_model import CreateDemographicRapidModel
 from rapidata.api_client.models.create_rapid_result import CreateRapidResult
 from rapidata.api_client.models.get_public_responses_result import GetPublicResponsesResult
 from rapidata.api_client.models.get_rapid_responses_result import GetRapidResponsesResult
-from rapidata.api_client.models.potential_validation_rapid_paged_result import PotentialValidationRapidPagedResult
+from rapidata.api_client.models.paged_result_potential_validation_rapid import PagedResultPotentialValidationRapid
+from rapidata.api_client.models.paged_result_rapid_model import PagedResultRapidModel
 from rapidata.api_client.models.query_model import QueryModel
-from rapidata.api_client.models.query_validation_model import QueryValidationModel
-from rapidata.api_client.models.rapid_model_paged_result import RapidModelPagedResult
+from rapidata.api_client.models.query_validation_rapid_eligibility_model_query_validation_model import QueryValidationRapidEligibilityModelQueryValidationModel
 from rapidata.api_client.models.update_validation_rapid_model import UpdateValidationRapidModel
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
@@ -51,7 +51,7 @@ class CustomerRapidApi:
     def rapid_correlation_id_validation_potential_get(
         self,
         correlation_id: Annotated[StrictStr, Field(description="The correlation id of the rapids to query, usually a workflow id.")],
-        request: Annotated[QueryValidationModel, Field(description="The query model containing the paging, filtering, and sorting information.")],
+        request: Annotated[QueryValidationRapidEligibilityModelQueryValidationModel, Field(description="The query model containing the paging, filtering, and sorting information.")],
         min_responses: Annotated[Optional[StrictInt], Field(description="The minimum number of responses a rapid should have to be considered eligible.")] = None,
         min_confidence: Annotated[Optional[Union[StrictFloat, StrictInt]], Field(description="The minimum confidence a rapid should have to be considered eligible.")] = None,
         target_group_id: Annotated[Optional[StrictStr], Field(description="A specific subgroup of rapids to target.")] = None,
@@ -67,14 +67,14 @@ class CustomerRapidApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PotentialValidationRapidPagedResult:
+    ) -> PagedResultPotentialValidationRapid:
         """Queries rapids that are potentially eligible for validation set creation.
 
 
         :param correlation_id: The correlation id of the rapids to query, usually a workflow id. (required)
         :type correlation_id: str
         :param request: The query model containing the paging, filtering, and sorting information. (required)
-        :type request: QueryValidationModel
+        :type request: QueryValidationRapidEligibilityModelQueryValidationModel
         :param min_responses: The minimum number of responses a rapid should have to be considered eligible.
         :type min_responses: int
         :param min_confidence: The minimum confidence a rapid should have to be considered eligible.
@@ -116,7 +116,7 @@ class CustomerRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PotentialValidationRapidPagedResult",
+            '200': "PagedResultPotentialValidationRapid",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -133,7 +133,7 @@ class CustomerRapidApi:
     def rapid_correlation_id_validation_potential_get_with_http_info(
         self,
         correlation_id: Annotated[StrictStr, Field(description="The correlation id of the rapids to query, usually a workflow id.")],
-        request: Annotated[QueryValidationModel, Field(description="The query model containing the paging, filtering, and sorting information.")],
+        request: Annotated[QueryValidationRapidEligibilityModelQueryValidationModel, Field(description="The query model containing the paging, filtering, and sorting information.")],
         min_responses: Annotated[Optional[StrictInt], Field(description="The minimum number of responses a rapid should have to be considered eligible.")] = None,
         min_confidence: Annotated[Optional[Union[StrictFloat, StrictInt]], Field(description="The minimum confidence a rapid should have to be considered eligible.")] = None,
         target_group_id: Annotated[Optional[StrictStr], Field(description="A specific subgroup of rapids to target.")] = None,
@@ -149,14 +149,14 @@ class CustomerRapidApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PotentialValidationRapidPagedResult]:
+    ) -> ApiResponse[PagedResultPotentialValidationRapid]:
         """Queries rapids that are potentially eligible for validation set creation.
 
 
         :param correlation_id: The correlation id of the rapids to query, usually a workflow id. (required)
         :type correlation_id: str
         :param request: The query model containing the paging, filtering, and sorting information. (required)
-        :type request: QueryValidationModel
+        :type request: QueryValidationRapidEligibilityModelQueryValidationModel
         :param min_responses: The minimum number of responses a rapid should have to be considered eligible.
         :type min_responses: int
         :param min_confidence: The minimum confidence a rapid should have to be considered eligible.
@@ -198,7 +198,7 @@ class CustomerRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PotentialValidationRapidPagedResult",
+            '200': "PagedResultPotentialValidationRapid",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -215,7 +215,7 @@ class CustomerRapidApi:
     def rapid_correlation_id_validation_potential_get_without_preload_content(
         self,
         correlation_id: Annotated[StrictStr, Field(description="The correlation id of the rapids to query, usually a workflow id.")],
-        request: Annotated[QueryValidationModel, Field(description="The query model containing the paging, filtering, and sorting information.")],
+        request: Annotated[QueryValidationRapidEligibilityModelQueryValidationModel, Field(description="The query model containing the paging, filtering, and sorting information.")],
         min_responses: Annotated[Optional[StrictInt], Field(description="The minimum number of responses a rapid should have to be considered eligible.")] = None,
         min_confidence: Annotated[Optional[Union[StrictFloat, StrictInt]], Field(description="The minimum confidence a rapid should have to be considered eligible.")] = None,
         target_group_id: Annotated[Optional[StrictStr], Field(description="A specific subgroup of rapids to target.")] = None,
@@ -238,7 +238,7 @@ class CustomerRapidApi:
         :param correlation_id: The correlation id of the rapids to query, usually a workflow id. (required)
         :type correlation_id: str
         :param request: The query model containing the paging, filtering, and sorting information. (required)
-        :type request: QueryValidationModel
+        :type request: QueryValidationRapidEligibilityModelQueryValidationModel
         :param min_responses: The minimum number of responses a rapid should have to be considered eligible.
         :type min_responses: int
         :param min_confidence: The minimum confidence a rapid should have to be considered eligible.
@@ -280,7 +280,7 @@ class CustomerRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PotentialValidationRapidPagedResult",
+            '200': "PagedResultPotentialValidationRapid",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -377,9 +377,9 @@ class CustomerRapidApi:
 
 
     @validate_call
-    def rapid_demographic_new_post(
+    def rapid_demographic_post(
         self,
-        create_demographic_rapid_model_new: Annotated[Optional[CreateDemographicRapidModelNew], Field(description="The model containing the demographic rapid.")] = None,
+        create_demographic_rapid_model: Annotated[Optional[CreateDemographicRapidModel], Field(description="The model containing the demographic rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -393,11 +393,11 @@ class CustomerRapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> CreateRapidResult:
-        """Creates a new Demographic Rapid.
+        """Creates a new Demographic Rapid with JSON body.
 
 
-        :param create_demographic_rapid_model_new: The model containing the demographic rapid.
-        :type create_demographic_rapid_model_new: CreateDemographicRapidModelNew
+        :param create_demographic_rapid_model: The model containing the demographic rapid.
+        :type create_demographic_rapid_model: CreateDemographicRapidModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -420,8 +420,8 @@ class CustomerRapidApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._rapid_demographic_new_post_serialize(
-            create_demographic_rapid_model_new=create_demographic_rapid_model_new,
+        _param = self._rapid_demographic_post_serialize(
+            create_demographic_rapid_model=create_demographic_rapid_model,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -443,9 +443,9 @@ class CustomerRapidApi:
 
 
     @validate_call
-    def rapid_demographic_new_post_with_http_info(
+    def rapid_demographic_post_with_http_info(
         self,
-        create_demographic_rapid_model_new: Annotated[Optional[CreateDemographicRapidModelNew], Field(description="The model containing the demographic rapid.")] = None,
+        create_demographic_rapid_model: Annotated[Optional[CreateDemographicRapidModel], Field(description="The model containing the demographic rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -459,11 +459,11 @@ class CustomerRapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[CreateRapidResult]:
-        """Creates a new Demographic Rapid.
+        """Creates a new Demographic Rapid with JSON body.
 
 
-        :param create_demographic_rapid_model_new: The model containing the demographic rapid.
-        :type create_demographic_rapid_model_new: CreateDemographicRapidModelNew
+        :param create_demographic_rapid_model: The model containing the demographic rapid.
+        :type create_demographic_rapid_model: CreateDemographicRapidModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -486,8 +486,8 @@ class CustomerRapidApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._rapid_demographic_new_post_serialize(
-            create_demographic_rapid_model_new=create_demographic_rapid_model_new,
+        _param = self._rapid_demographic_post_serialize(
+            create_demographic_rapid_model=create_demographic_rapid_model,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -509,9 +509,9 @@ class CustomerRapidApi:
 
 
     @validate_call
-    def rapid_demographic_new_post_without_preload_content(
+    def rapid_demographic_post_without_preload_content(
         self,
-        create_demographic_rapid_model_new: Annotated[Optional[CreateDemographicRapidModelNew], Field(description="The model containing the demographic rapid.")] = None,
+        create_demographic_rapid_model: Annotated[Optional[CreateDemographicRapidModel], Field(description="The model containing the demographic rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -525,11 +525,11 @@ class CustomerRapidApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Creates a new Demographic Rapid.
+        """Creates a new Demographic Rapid with JSON body.
 
 
-        :param create_demographic_rapid_model_new: The model containing the demographic rapid.
-        :type create_demographic_rapid_model_new: CreateDemographicRapidModelNew
+        :param create_demographic_rapid_model: The model containing the demographic rapid.
+        :type create_demographic_rapid_model: CreateDemographicRapidModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -552,8 +552,8 @@ class CustomerRapidApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._rapid_demographic_new_post_serialize(
-            create_demographic_rapid_model_new=create_demographic_rapid_model_new,
+        _param = self._rapid_demographic_post_serialize(
+            create_demographic_rapid_model=create_demographic_rapid_model,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -570,9 +570,9 @@ class CustomerRapidApi:
         return response_data.response
 
 
-    def _rapid_demographic_new_post_serialize(
+    def _rapid_demographic_post_serialize(
         self,
-        create_demographic_rapid_model_new,
+        create_demographic_rapid_model,
         _request_auth,
         _content_type,
         _headers,
@@ -598,8 +598,8 @@ class CustomerRapidApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if create_demographic_rapid_model_new is not None:
-            _body_params = create_demographic_rapid_model_new
+        if create_demographic_rapid_model is not None:
+            _body_params = create_demographic_rapid_model
 
 
         # set the HTTP header `Accept`
@@ -636,7 +636,7 @@ class CustomerRapidApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/rapid/demographic-new',
+            resource_path='/rapid/demographic',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1961,7 +1961,7 @@ class CustomerRapidApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RapidModelPagedResult:
+    ) -> PagedResultRapidModel:
         """Allows querying all rapids that have been flagged.
 
 
@@ -1998,7 +1998,7 @@ class CustomerRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "RapidModelPagedResult",
+            '200': "PagedResultRapidModel",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2027,7 +2027,7 @@ class CustomerRapidApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[RapidModelPagedResult]:
+    ) -> ApiResponse[PagedResultRapidModel]:
         """Allows querying all rapids that have been flagged.
 
 
@@ -2064,7 +2064,7 @@ class CustomerRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "RapidModelPagedResult",
+            '200': "PagedResultRapidModel",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -2130,7 +2130,7 @@ class CustomerRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "RapidModelPagedResult",
+            '200': "PagedResultRapidModel",
         }
         response_data = self.api_client.call_api(
             *_param,

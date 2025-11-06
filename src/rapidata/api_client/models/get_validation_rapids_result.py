@@ -19,7 +19,6 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
-from rapidata.api_client.models.file_asset_model_metadata_value import FileAssetModelMetadataValue
 from rapidata.api_client.models.get_validation_rapids_result_asset import GetValidationRapidsResultAsset
 from rapidata.api_client.models.get_validation_rapids_result_payload import GetValidationRapidsResultPayload
 from rapidata.api_client.models.get_validation_rapids_result_truth import GetValidationRapidsResultTruth
@@ -36,13 +35,14 @@ class GetValidationRapidsResult(BaseModel):
     asset: Optional[GetValidationRapidsResultAsset] = None
     truth: Optional[GetValidationRapidsResultTruth] = None
     payload: GetValidationRapidsResultPayload
-    metadata: Dict[str, FileAssetModelMetadataValue]
+    context: Optional[StrictStr] = None
+    context_asset: Optional[GetValidationRapidsResultAsset] = Field(default=None, alias="contextAsset")
     correct_validation_count: StrictInt = Field(alias="correctValidationCount")
     invalid_validation_count: StrictInt = Field(alias="invalidValidationCount")
     explanation: Optional[StrictStr] = None
     random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="randomCorrectProbability")
     state: RapidState
-    __properties: ClassVar[List[str]] = ["id", "type", "asset", "truth", "payload", "metadata", "correctValidationCount", "invalidValidationCount", "explanation", "randomCorrectProbability", "state"]
+    __properties: ClassVar[List[str]] = ["id", "type", "asset", "truth", "payload", "context", "contextAsset", "correctValidationCount", "invalidValidationCount", "explanation", "randomCorrectProbability", "state"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -92,13 +92,9 @@ class GetValidationRapidsResult(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of payload
         if self.payload:
             _dict['payload'] = self.payload.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each value in metadata (dict)
-        _field_dict = {}
-        if self.metadata:
-            for _key_metadata in self.metadata:
-                if self.metadata[_key_metadata]:
-                    _field_dict[_key_metadata] = self.metadata[_key_metadata].to_dict()
-            _dict['metadata'] = _field_dict
+        # override the default output from pydantic by calling `to_dict()` of context_asset
+        if self.context_asset:
+            _dict['contextAsset'] = self.context_asset.to_dict()
         # set to None if asset (nullable) is None
         # and model_fields_set contains the field
         if self.asset is None and "asset" in self.model_fields_set:
@@ -108,6 +104,16 @@ class GetValidationRapidsResult(BaseModel):
         # and model_fields_set contains the field
         if self.truth is None and "truth" in self.model_fields_set:
             _dict['truth'] = None
+
+        # set to None if context (nullable) is None
+        # and model_fields_set contains the field
+        if self.context is None and "context" in self.model_fields_set:
+            _dict['context'] = None
+
+        # set to None if context_asset (nullable) is None
+        # and model_fields_set contains the field
+        if self.context_asset is None and "context_asset" in self.model_fields_set:
+            _dict['contextAsset'] = None
 
         # set to None if explanation (nullable) is None
         # and model_fields_set contains the field
@@ -136,12 +142,8 @@ class GetValidationRapidsResult(BaseModel):
             "asset": GetValidationRapidsResultAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "truth": GetValidationRapidsResultTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
             "payload": GetValidationRapidsResultPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
-            "metadata": dict(
-                (_k, FileAssetModelMetadataValue.from_dict(_v))
-                for _k, _v in obj["metadata"].items()
-            )
-            if obj.get("metadata") is not None
-            else None,
+            "context": obj.get("context"),
+            "contextAsset": GetValidationRapidsResultAsset.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
             "correctValidationCount": obj.get("correctValidationCount"),
             "invalidValidationCount": obj.get("invalidValidationCount"),
             "explanation": obj.get("explanation"),

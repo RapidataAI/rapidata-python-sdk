@@ -1,7 +1,7 @@
 from rapidata.rapidata_client.config.logger import logger
 from rapidata.rapidata_client.selection._base_selection import RapidataSelection
-from rapidata.api_client.models.conditional_validation_rapid_selection_config import (
-    ValidationChance,
+from rapidata.api_client.models.conditional_validation_selection_validation_chance import (
+    ConditionalValidationSelectionValidationChance,
 )
 from rapidata.api_client.models.conditional_validation_selection import (
     ConditionalValidationSelection as ConditionalValidationSelectionModel,
@@ -63,7 +63,7 @@ class ConditionalValidationSelection(RapidataSelection):
             _t="ConditionalValidationSelection",
             validationSetId=self.validation_set_id,
             validationChances=[
-                ValidationChance(
+                ConditionalValidationSelectionValidationChance(
                     userScoreThreshold=threshold, chance=chance, rapidCount=rapid_count
                 )
                 for threshold, chance, rapid_count in zip(

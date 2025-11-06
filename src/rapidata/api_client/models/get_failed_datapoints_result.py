@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.datapoint import Datapoint
+from rapidata.api_client.models.get_failed_datapoints_result_datapoint import GetFailedDatapointsResultDatapoint
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,7 +27,7 @@ class GetFailedDatapointsResult(BaseModel):
     """
     GetFailedDatapointsResult
     """ # noqa: E501
-    datapoints: List[Datapoint]
+    datapoints: List[GetFailedDatapointsResultDatapoint]
     __properties: ClassVar[List[str]] = ["datapoints"]
 
     model_config = ConfigDict(
@@ -88,7 +88,7 @@ class GetFailedDatapointsResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "datapoints": [Datapoint.from_dict(_item) for _item in obj["datapoints"]] if obj.get("datapoints") is not None else None
+            "datapoints": [GetFailedDatapointsResultDatapoint.from_dict(_item) for _item in obj["datapoints"]] if obj.get("datapoints") is not None else None
         })
         return _obj
 
