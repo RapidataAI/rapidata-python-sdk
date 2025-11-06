@@ -21,9 +21,9 @@ from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, Stric
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.add_validation_rapid_model_asset import AddValidationRapidModelAsset
 from rapidata.api_client.models.add_validation_rapid_model_context_asset import AddValidationRapidModelContextAsset
+from rapidata.api_client.models.add_validation_rapid_model_metadata_inner import AddValidationRapidModelMetadataInner
 from rapidata.api_client.models.add_validation_rapid_model_payload import AddValidationRapidModelPayload
 from rapidata.api_client.models.add_validation_rapid_model_truth import AddValidationRapidModelTruth
-from rapidata.api_client.models.create_datapoint_model_metadata_inner import CreateDatapointModelMetadataInner
 from rapidata.api_client.models.feature_flag_model import FeatureFlagModel
 from typing import Optional, Set
 from typing_extensions import Self
@@ -34,14 +34,14 @@ class AddValidationRapidModel(BaseModel):
     """ # noqa: E501
     asset: AddValidationRapidModelAsset
     payload: AddValidationRapidModelPayload
-    metadata: Optional[List[CreateDatapointModelMetadataInner]] = Field(default=None, description="Some metadata to attach to the rapid.")
-    context: Optional[StrictStr] = Field(default=None, description="An optional textual context that provides additional information to the user about the rapid.")
-    context_asset: Optional[AddValidationRapidModelContextAsset] = Field(default=None, alias="contextAsset")
     truth: Optional[AddValidationRapidModelTruth] = None
     random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The probability for an answer to be correct when randomly guessing.", alias="randomCorrectProbability")
     explanation: Optional[StrictStr] = Field(default=None, description="An explanation for the users if they answer the rapid incorrectly.")
+    context: Optional[StrictStr] = Field(default=None, description="An optional textual context that provides additional information to the user about the rapid.")
+    context_asset: Optional[AddValidationRapidModelContextAsset] = Field(default=None, alias="contextAsset")
+    metadata: Optional[List[AddValidationRapidModelMetadataInner]] = Field(default=None, description="Some metadata to attach to the rapid.")
     feature_flags: Optional[List[FeatureFlagModel]] = Field(default=None, description="The feature flags to enable for the rapid.", alias="featureFlags")
-    __properties: ClassVar[List[str]] = ["asset", "payload", "metadata", "context", "contextAsset", "truth", "randomCorrectProbability", "explanation", "featureFlags"]
+    __properties: ClassVar[List[str]] = ["asset", "payload", "truth", "randomCorrectProbability", "explanation", "context", "contextAsset", "metadata", "featureFlags"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -88,6 +88,12 @@ class AddValidationRapidModel(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of payload
         if self.payload:
             _dict['payload'] = self.payload.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of truth
+        if self.truth:
+            _dict['truth'] = self.truth.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of context_asset
+        if self.context_asset:
+            _dict['contextAsset'] = self.context_asset.to_dict()
         # override the default output from pydantic by calling `to_dict()` of each item in metadata (list)
         _items = []
         if self.metadata:
@@ -95,12 +101,6 @@ class AddValidationRapidModel(BaseModel):
                 if _item_metadata:
                     _items.append(_item_metadata.to_dict())
             _dict['metadata'] = _items
-        # override the default output from pydantic by calling `to_dict()` of context_asset
-        if self.context_asset:
-            _dict['contextAsset'] = self.context_asset.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of truth
-        if self.truth:
-            _dict['truth'] = self.truth.to_dict()
         # override the default output from pydantic by calling `to_dict()` of each item in feature_flags (list)
         _items = []
         if self.feature_flags:
@@ -108,21 +108,6 @@ class AddValidationRapidModel(BaseModel):
                 if _item_feature_flags:
                     _items.append(_item_feature_flags.to_dict())
             _dict['featureFlags'] = _items
-        # set to None if metadata (nullable) is None
-        # and model_fields_set contains the field
-        if self.metadata is None and "metadata" in self.model_fields_set:
-            _dict['metadata'] = None
-
-        # set to None if context (nullable) is None
-        # and model_fields_set contains the field
-        if self.context is None and "context" in self.model_fields_set:
-            _dict['context'] = None
-
-        # set to None if context_asset (nullable) is None
-        # and model_fields_set contains the field
-        if self.context_asset is None and "context_asset" in self.model_fields_set:
-            _dict['contextAsset'] = None
-
         # set to None if truth (nullable) is None
         # and model_fields_set contains the field
         if self.truth is None and "truth" in self.model_fields_set:
@@ -137,6 +122,21 @@ class AddValidationRapidModel(BaseModel):
         # and model_fields_set contains the field
         if self.explanation is None and "explanation" in self.model_fields_set:
             _dict['explanation'] = None
+
+        # set to None if context (nullable) is None
+        # and model_fields_set contains the field
+        if self.context is None and "context" in self.model_fields_set:
+            _dict['context'] = None
+
+        # set to None if context_asset (nullable) is None
+        # and model_fields_set contains the field
+        if self.context_asset is None and "context_asset" in self.model_fields_set:
+            _dict['contextAsset'] = None
+
+        # set to None if metadata (nullable) is None
+        # and model_fields_set contains the field
+        if self.metadata is None and "metadata" in self.model_fields_set:
+            _dict['metadata'] = None
 
         # set to None if feature_flags (nullable) is None
         # and model_fields_set contains the field
@@ -157,12 +157,12 @@ class AddValidationRapidModel(BaseModel):
         _obj = cls.model_validate({
             "asset": AddValidationRapidModelAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "payload": AddValidationRapidModelPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
-            "metadata": [CreateDatapointModelMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
-            "context": obj.get("context"),
-            "contextAsset": AddValidationRapidModelContextAsset.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
             "truth": AddValidationRapidModelTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
             "randomCorrectProbability": obj.get("randomCorrectProbability"),
             "explanation": obj.get("explanation"),
+            "context": obj.get("context"),
+            "contextAsset": AddValidationRapidModelContextAsset.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
+            "metadata": [AddValidationRapidModelMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
             "featureFlags": [FeatureFlagModel.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
         })
         return _obj

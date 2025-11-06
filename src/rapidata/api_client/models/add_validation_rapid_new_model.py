@@ -20,9 +20,9 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.add_validation_rapid_model_asset import AddValidationRapidModelAsset
+from rapidata.api_client.models.add_validation_rapid_model_metadata_inner import AddValidationRapidModelMetadataInner
 from rapidata.api_client.models.add_validation_rapid_model_payload import AddValidationRapidModelPayload
-from rapidata.api_client.models.add_validation_rapid_model_truth import AddValidationRapidModelTruth
-from rapidata.api_client.models.create_datapoint_model_metadata_inner import CreateDatapointModelMetadataInner
+from rapidata.api_client.models.add_validation_rapid_new_model_truth import AddValidationRapidNewModelTruth
 from rapidata.api_client.models.feature_flag_model import FeatureFlagModel
 from typing import Optional, Set
 from typing_extensions import Self
@@ -33,8 +33,8 @@ class AddValidationRapidNewModel(BaseModel):
     """ # noqa: E501
     asset: AddValidationRapidModelAsset
     payload: AddValidationRapidModelPayload
-    metadata: Optional[List[CreateDatapointModelMetadataInner]] = Field(default=None, description="Some metadata to attach to the rapid.")
-    truth: Optional[AddValidationRapidModelTruth] = None
+    metadata: Optional[List[AddValidationRapidModelMetadataInner]] = Field(default=None, description="Some metadata to attach to the rapid.")
+    truth: Optional[AddValidationRapidNewModelTruth] = None
     random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The probability for an answer to be correct when randomly guessing.", alias="randomCorrectProbability")
     explanation: Optional[StrictStr] = Field(default=None, description="An explanation for the users if they answer the rapid incorrectly.")
     feature_flags: Optional[List[FeatureFlagModel]] = Field(default=None, description="The feature flags to enable for the rapid.", alias="featureFlags")
@@ -141,8 +141,8 @@ class AddValidationRapidNewModel(BaseModel):
         _obj = cls.model_validate({
             "asset": AddValidationRapidModelAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "payload": AddValidationRapidModelPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
-            "metadata": [CreateDatapointModelMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
-            "truth": AddValidationRapidModelTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
+            "metadata": [AddValidationRapidModelMetadataInner.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
+            "truth": AddValidationRapidNewModelTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
             "randomCorrectProbability": obj.get("randomCorrectProbability"),
             "explanation": obj.get("explanation"),
             "featureFlags": [FeatureFlagModel.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
