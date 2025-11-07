@@ -25,9 +25,16 @@ class RapidataValidationSet:
         name (str): The name of the validation set.
     """
 
-    def __init__(self, validation_set_id, name: str, openapi_service: OpenAPIService):
+    def __init__(
+        self,
+        validation_set_id,
+        name: str,
+        dimensions: list[str],
+        openapi_service: OpenAPIService,
+    ):
         self.id = validation_set_id
         self.name = name
+        self.dimensions = dimensions
         self.validation_set_details_page = (
             f"https://app.{openapi_service.environment}/validation-set/detail/{self.id}"
         )
@@ -58,6 +65,7 @@ class RapidataValidationSet:
             self._openapi_service.validation_api.validation_set_validation_set_id_patch(
                 self.id, UpdateValidationSetModel(dimensions=dimensions)
             )
+            self.dimensions = dimensions
             return self
 
     def update_should_alert(self, should_alert: bool):
@@ -75,6 +83,25 @@ class RapidataValidationSet:
             )
             self._openapi_service.validation_api.validation_set_validation_set_id_patch(
                 self.id, UpdateValidationSetModel(shouldAlert=should_alert)
+            )
+            return self
+
+    def update_can_be_flagged(self, can_be_flagged: bool):
+        """Update if tasks in the validation set can be flagged for bad accuracy.
+
+        Args:
+            can_be_flagged (bool): Specifies whether tasks in the validation set can be flagged for bad accuracy. Defaults to True if not specifically overridden by this method.
+        """
+        with tracer.start_as_current_span(
+            "RapidataValidationSet.update_can_be_flagged"
+        ):
+            logger.debug(
+                "Setting canBeFlagged for validation set %s to %s",
+                self.id,
+                can_be_flagged,
+            )
+            self._openapi_service.validation_api.validation_set_validation_set_id_patch(
+                self.id, UpdateValidationSetModel(isFlagOverruled=(not can_be_flagged))
             )
             return self
 
