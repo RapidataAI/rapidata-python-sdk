@@ -11895,6 +11895,9 @@
           },
           "isPublic": {
             "type": "boolean"
+          },
+          "isFlagOverruled": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false,
