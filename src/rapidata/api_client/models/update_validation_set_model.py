@@ -30,7 +30,8 @@ class UpdateValidationSetModel(BaseModel):
     dimensions: Optional[List[StrictStr]] = None
     should_alert: Optional[StrictBool] = Field(default=None, alias="shouldAlert")
     is_public: Optional[StrictBool] = Field(default=None, alias="isPublic")
-    __properties: ClassVar[List[str]] = ["name", "dimensions", "shouldAlert", "isPublic"]
+    is_flag_overruled: Optional[StrictBool] = Field(default=None, alias="isFlagOverruled")
+    __properties: ClassVar[List[str]] = ["name", "dimensions", "shouldAlert", "isPublic", "isFlagOverruled"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -86,7 +87,8 @@ class UpdateValidationSetModel(BaseModel):
             "name": obj.get("name"),
             "dimensions": obj.get("dimensions"),
             "shouldAlert": obj.get("shouldAlert"),
-            "isPublic": obj.get("isPublic")
+            "isPublic": obj.get("isPublic"),
+            "isFlagOverruled": obj.get("isFlagOverruled")
         })
         return _obj
 
