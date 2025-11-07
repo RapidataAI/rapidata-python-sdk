@@ -3,6 +3,9 @@ from rapidata.api_client.models.attach_category_rapid_blueprint import (
     AttachCategoryRapidBlueprint,
 )
 from rapidata.api_client.models.simple_workflow_model import SimpleWorkflowModel
+from rapidata.api_client.models.attach_category_rapid_blueprint_category import (
+    AttachCategoryRapidBlueprintCategory,
+)
 from rapidata.api_client.models.simple_workflow_model_blueprint import (
     SimpleWorkflowModelBlueprint,
 )
@@ -53,7 +56,10 @@ class ClassifyWorkflow(Workflow):
         blueprint = AttachCategoryRapidBlueprint(
             _t="ClassifyBlueprint",
             title=self._instruction,
-            possibleCategories=self._answer_options,
+            categories=[
+                AttachCategoryRapidBlueprintCategory(label=option, value=option)
+                for option in self._answer_options
+            ],
         )
 
         return SimpleWorkflowModel(
