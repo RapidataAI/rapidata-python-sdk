@@ -31,8 +31,9 @@ class GetValidationSetByIdResult(BaseModel):
     name: StrictStr
     is_public: StrictBool = Field(alias="isPublic")
     owner_mail: StrictStr = Field(alias="ownerMail")
+    dimensions: List[StrictStr]
     created_at: datetime = Field(alias="createdAt")
-    __properties: ClassVar[List[str]] = ["id", "name", "isPublic", "ownerMail", "createdAt"]
+    __properties: ClassVar[List[str]] = ["id", "name", "isPublic", "ownerMail", "dimensions", "createdAt"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -89,6 +90,7 @@ class GetValidationSetByIdResult(BaseModel):
             "name": obj.get("name"),
             "isPublic": obj.get("isPublic"),
             "ownerMail": obj.get("ownerMail"),
+            "dimensions": obj.get("dimensions"),
             "createdAt": obj.get("createdAt")
         })
         return _obj
