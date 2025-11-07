@@ -51,10 +51,10 @@ class CustomerRapidApi:
     def rapid_correlation_id_validation_potential_get(
         self,
         correlation_id: Annotated[StrictStr, Field(description="The correlation id of the rapids to query, usually a workflow id.")],
-        request: Annotated[QueryValidationRapidEligibilityModelQueryValidationModel, Field(description="The query model containing the paging, filtering, and sorting information.")],
         min_responses: Annotated[Optional[StrictInt], Field(description="The minimum number of responses a rapid should have to be considered eligible.")] = None,
         min_confidence: Annotated[Optional[Union[StrictFloat, StrictInt]], Field(description="The minimum confidence a rapid should have to be considered eligible.")] = None,
         target_group_id: Annotated[Optional[StrictStr], Field(description="A specific subgroup of rapids to target.")] = None,
+        request: Optional[QueryValidationRapidEligibilityModelQueryValidationModel] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -73,14 +73,14 @@ class CustomerRapidApi:
 
         :param correlation_id: The correlation id of the rapids to query, usually a workflow id. (required)
         :type correlation_id: str
-        :param request: The query model containing the paging, filtering, and sorting information. (required)
-        :type request: QueryValidationRapidEligibilityModelQueryValidationModel
         :param min_responses: The minimum number of responses a rapid should have to be considered eligible.
         :type min_responses: int
         :param min_confidence: The minimum confidence a rapid should have to be considered eligible.
         :type min_confidence: float
         :param target_group_id: A specific subgroup of rapids to target.
         :type target_group_id: str
+        :param request: 
+        :type request: QueryValidationRapidEligibilityModelQueryValidationModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -105,10 +105,10 @@ class CustomerRapidApi:
 
         _param = self._rapid_correlation_id_validation_potential_get_serialize(
             correlation_id=correlation_id,
-            request=request,
             min_responses=min_responses,
             min_confidence=min_confidence,
             target_group_id=target_group_id,
+            request=request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -133,10 +133,10 @@ class CustomerRapidApi:
     def rapid_correlation_id_validation_potential_get_with_http_info(
         self,
         correlation_id: Annotated[StrictStr, Field(description="The correlation id of the rapids to query, usually a workflow id.")],
-        request: Annotated[QueryValidationRapidEligibilityModelQueryValidationModel, Field(description="The query model containing the paging, filtering, and sorting information.")],
         min_responses: Annotated[Optional[StrictInt], Field(description="The minimum number of responses a rapid should have to be considered eligible.")] = None,
         min_confidence: Annotated[Optional[Union[StrictFloat, StrictInt]], Field(description="The minimum confidence a rapid should have to be considered eligible.")] = None,
         target_group_id: Annotated[Optional[StrictStr], Field(description="A specific subgroup of rapids to target.")] = None,
+        request: Optional[QueryValidationRapidEligibilityModelQueryValidationModel] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -155,14 +155,14 @@ class CustomerRapidApi:
 
         :param correlation_id: The correlation id of the rapids to query, usually a workflow id. (required)
         :type correlation_id: str
-        :param request: The query model containing the paging, filtering, and sorting information. (required)
-        :type request: QueryValidationRapidEligibilityModelQueryValidationModel
         :param min_responses: The minimum number of responses a rapid should have to be considered eligible.
         :type min_responses: int
         :param min_confidence: The minimum confidence a rapid should have to be considered eligible.
         :type min_confidence: float
         :param target_group_id: A specific subgroup of rapids to target.
         :type target_group_id: str
+        :param request: 
+        :type request: QueryValidationRapidEligibilityModelQueryValidationModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -187,10 +187,10 @@ class CustomerRapidApi:
 
         _param = self._rapid_correlation_id_validation_potential_get_serialize(
             correlation_id=correlation_id,
-            request=request,
             min_responses=min_responses,
             min_confidence=min_confidence,
             target_group_id=target_group_id,
+            request=request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -215,10 +215,10 @@ class CustomerRapidApi:
     def rapid_correlation_id_validation_potential_get_without_preload_content(
         self,
         correlation_id: Annotated[StrictStr, Field(description="The correlation id of the rapids to query, usually a workflow id.")],
-        request: Annotated[QueryValidationRapidEligibilityModelQueryValidationModel, Field(description="The query model containing the paging, filtering, and sorting information.")],
         min_responses: Annotated[Optional[StrictInt], Field(description="The minimum number of responses a rapid should have to be considered eligible.")] = None,
         min_confidence: Annotated[Optional[Union[StrictFloat, StrictInt]], Field(description="The minimum confidence a rapid should have to be considered eligible.")] = None,
         target_group_id: Annotated[Optional[StrictStr], Field(description="A specific subgroup of rapids to target.")] = None,
+        request: Optional[QueryValidationRapidEligibilityModelQueryValidationModel] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -237,14 +237,14 @@ class CustomerRapidApi:
 
         :param correlation_id: The correlation id of the rapids to query, usually a workflow id. (required)
         :type correlation_id: str
-        :param request: The query model containing the paging, filtering, and sorting information. (required)
-        :type request: QueryValidationRapidEligibilityModelQueryValidationModel
         :param min_responses: The minimum number of responses a rapid should have to be considered eligible.
         :type min_responses: int
         :param min_confidence: The minimum confidence a rapid should have to be considered eligible.
         :type min_confidence: float
         :param target_group_id: A specific subgroup of rapids to target.
         :type target_group_id: str
+        :param request: 
+        :type request: QueryValidationRapidEligibilityModelQueryValidationModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -269,10 +269,10 @@ class CustomerRapidApi:
 
         _param = self._rapid_correlation_id_validation_potential_get_serialize(
             correlation_id=correlation_id,
-            request=request,
             min_responses=min_responses,
             min_confidence=min_confidence,
             target_group_id=target_group_id,
+            request=request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -292,10 +292,10 @@ class CustomerRapidApi:
     def _rapid_correlation_id_validation_potential_get_serialize(
         self,
         correlation_id,
-        request,
         min_responses,
         min_confidence,
         target_group_id,
+        request,
         _request_auth,
         _content_type,
         _headers,
@@ -320,10 +320,6 @@ class CustomerRapidApi:
         if correlation_id is not None:
             _path_params['CorrelationId'] = correlation_id
         # process the query parameters
-        if request is not None:
-            
-            _query_params.append(('Request', request))
-            
         if min_responses is not None:
             
             _query_params.append(('MinResponses', min_responses))
@@ -335,6 +331,10 @@ class CustomerRapidApi:
         if target_group_id is not None:
             
             _query_params.append(('TargetGroupId', target_group_id))
+            
+        if request is not None:
+            
+            _query_params.append(('request', request))
             
         # process the header parameters
         # process the form parameters

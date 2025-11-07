@@ -2590,15 +2590,6 @@
             }
           },
           {
-            "name": "Request",
-            "in": "query",
-            "description": "The query model containing the paging, filtering, and sorting information.",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/QueryValidationRapidEligibilityModel.QueryValidationModel"
-            }
-          },
-          {
             "name": "MinResponses",
             "in": "query",
             "description": "The minimum number of responses a rapid should have to be considered eligible.",
@@ -2622,6 +2613,18 @@
             "description": "A specific subgroup of rapids to target.",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "request",
+            "in": "query",
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryValidationRapidEligibilityModel.QueryValidationModel"
+                }
+              }
             }
           }
         ],
@@ -11235,6 +11238,7 @@
       "GetValidationSetByIdResult": {
         "required": [
           "createdAt",
+          "dimensions",
           "id",
           "isPublic",
           "name",
@@ -11253,6 +11257,12 @@
           },
           "ownerMail": {
             "type": "string"
+          },
+          "dimensions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "createdAt": {
             "type": "string",
