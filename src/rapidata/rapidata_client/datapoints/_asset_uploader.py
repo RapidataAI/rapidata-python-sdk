@@ -9,16 +9,32 @@ from rapidata.api_client.models.text_asset_input import TextAssetInput
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.config import logger
 from rapidata.rapidata_client.config import tracer
+from rapidata.rapidata_client.config import rapidata_config
 
 
 class AssetUploader:
     def __init__(self, openapi_service: OpenAPIService):
         self.openapi_service = openapi_service
+        self._upload_cache: dict[str, str] = {}
+
+    def _get_cache_key(self, asset: str) -> str:
+        """Generate cache key for an asset."""
+        if re.match(r"^https?://", asset):
+            return asset
+        else:
+            stat = os.stat(asset)
+            # Combine path, size, and modification time
+            return f"{asset}:{stat.st_size}:{stat.st_mtime_ns}"
 
     def upload_asset(self, asset: str) -> str:
         with tracer.start_as_current_span("AssetUploader.upload_asset"):
             logger.debug("Uploading asset: %s", asset)
             assert isinstance(asset, str), "Asset must be a string"
+            
+            asset_key = self._get_cache_key(asset)
+            if asset_key in self._upload_cache:
+                logger.debug("Asset found in cache")
+                return self._upload_cache[asset_key]
 
             if re.match(r"^https?://", asset):
                 response = self.openapi_service.asset_api.asset_url_post(
@@ -30,6 +46,10 @@ class AssetUploader:
                 response = self.openapi_service.asset_api.asset_file_post(
                     file=asset,
                 )
+            logger.info(f"Asset uploaded: {response.file_name}")
+            if rapidata_config.upload.cache_uploads:
+                self._upload_cache[asset_key] = response.file_name
+            logger.debug("Asset added to cache")
             return response.file_name
 
     def get_uploaded_text_input(
