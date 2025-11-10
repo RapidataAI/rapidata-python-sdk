@@ -668,11 +668,11 @@ class ValidationSetManager:
             managed_print()
             managed_print(
                 Fore.YELLOW
-                + f"A new validation set was created. Please annotate {required_amount} datapoint{('s' if required_amount != 1 else '')} so the order runs correctly."
+                + f"A new validation set was created. Please annotate {required_amount} datapoint{('s' if required_amount != 1 else '')} before the order can run."
                 + Fore.RESET
             )
 
-            link = f"https://app.{self._openapi_service.environment}/validation-set/detail/{validation_set.id}/annotate?orderId={"order"}&required={required_amount}"
+            link = f"https://app.{self._openapi_service.environment}/validation-set/detail/{validation_set.id}/annotate?maxSize={len(datapoints)}&required={required_amount}"
             could_open_browser = webbrowser.open(link)
             if not could_open_browser:
                 encoded_url = urllib.parse.quote(link, safe="%/:=&?~#+!$,;'@()*[]")
