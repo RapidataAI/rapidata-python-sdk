@@ -10,18 +10,22 @@ from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.config import logger
 from rapidata.rapidata_client.config import tracer
 from rapidata.rapidata_client.config import rapidata_config
+from cachetools import LRUCache
 
 
 class AssetUploader:
-    def __init__(self, openapi_service: OpenAPIService):
+    def __init__(self, openapi_service: OpenAPIService, max_cache_size: int = 100_000):
         self.openapi_service = openapi_service
-        self._upload_cache: dict[str, str] = {}
+        self._upload_cache = LRUCache(maxsize=max_cache_size)
 
     def _get_cache_key(self, asset: str) -> str:
         """Generate cache key for an asset."""
         if re.match(r"^https?://", asset):
             return asset
         else:
+            if not os.path.exists(asset):
+                raise FileNotFoundError(f"File not found: {asset}")
+            
             stat = os.stat(asset)
             # Combine path, size, and modification time
             return f"{asset}:{stat.st_size}:{stat.st_mtime_ns}"
@@ -41,13 +45,11 @@ class AssetUploader:
                     url=asset,
                 )
             else:
-                if not os.path.exists(asset):
-                    raise FileNotFoundError(f"File not found: {asset}")
                 response = self.openapi_service.asset_api.asset_file_post(
                     file=asset,
                 )
-            logger.info(f"Asset uploaded: {response.file_name}")
-            if rapidata_config.upload.cache_uploads:
+            logger.info("Asset uploaded: %s", response.file_name)
+            if rapidata_config.upload.cacheUploads:
                 self._upload_cache[asset_key] = response.file_name
             logger.debug("Asset added to cache")
             return response.file_name
