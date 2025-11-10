@@ -51,7 +51,7 @@ class AssetUploader:
             logger.info("Asset uploaded: %s", response.file_name)
             if rapidata_config.upload.cacheUploads:
                 self._upload_cache[asset_key] = response.file_name
-            logger.debug("Asset added to cache")
+                logger.debug("Asset added to cache")
             return response.file_name
 
     def get_uploaded_text_input(
