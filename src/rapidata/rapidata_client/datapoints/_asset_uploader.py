@@ -14,9 +14,10 @@ from cachetools import LRUCache
 
 
 class AssetUploader:
-    def __init__(self, openapi_service: OpenAPIService, max_cache_size: int = 100_000):
+    _shared_upload_cache: LRUCache = LRUCache(maxsize=100_000)
+
+    def __init__(self, openapi_service: OpenAPIService):
         self.openapi_service = openapi_service
-        self._upload_cache = LRUCache(maxsize=max_cache_size)
 
     def _get_cache_key(self, asset: str) -> str:
         """Generate cache key for an asset."""
@@ -36,9 +37,9 @@ class AssetUploader:
             assert isinstance(asset, str), "Asset must be a string"
             
             asset_key = self._get_cache_key(asset)
-            if asset_key in self._upload_cache:
+            if asset_key in self._shared_upload_cache:
                 logger.debug("Asset found in cache")
-                return self._upload_cache[asset_key]
+                return self._shared_upload_cache[asset_key]
 
             if re.match(r"^https?://", asset):
                 response = self.openapi_service.asset_api.asset_url_post(
@@ -50,7 +51,7 @@ class AssetUploader:
                 )
             logger.info("Asset uploaded: %s", response.file_name)
             if rapidata_config.upload.cacheUploads:
-                self._upload_cache[asset_key] = response.file_name
+                self._shared_upload_cache[asset_key] = response.file_name
                 logger.debug("Asset added to cache")
             return response.file_name
 
