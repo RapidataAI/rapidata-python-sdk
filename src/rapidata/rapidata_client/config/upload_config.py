@@ -13,3 +13,4 @@ class UploadConfig(BaseModel):
     maxWorkers: int = Field(default=10)
     maxRetries: int = Field(default=3)
     chunkSize: int = Field(default=50)
+    cacheUploads: bool = Field(default=True)
