@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "rapidata"
-version = "2.43.2"
+version = "2.43.3"
 description = "Rapidata package containing the Rapidata Python Client to interact with the Rapidata Web API in an easy way."
 authors = ["Rapidata AG <info@rapidata.ai>"]
 license = "Apache-2.0"
@@ -25,6 +25,7 @@ packaging = ">=16.0.0"
 opentelemetry-api = ">=1.27.0"
 opentelemetry-sdk = ">=1.27.0"
 opentelemetry-exporter-otlp = ">=1.27.0"
+cachetools = "^6.2.1"
 
 [tool.poetry.group.dev.dependencies]
 python-dotenv = "^1.0.1"
