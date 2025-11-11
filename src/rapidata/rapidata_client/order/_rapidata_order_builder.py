@@ -208,12 +208,13 @@ class RapidataOrderBuilder:
 
         new_dimension = str(uuid.uuid4())
         logger.debug("New dimension created: %s", new_dimension)
+        rng = random.Random(42)
         validation_set = self.__validation_set_manager._create_order_validation_set(
             workflow=self.__workflow,
             name=self._name,
-            datapoints=random.sample(
+            datapoints=rng.sample(
                 self.__datapoints, len(self.__datapoints)
-            ),  # shuffle the datapoints
+            ),  # shuffle the datapoints with a specific seed
             required_amount=required_amount,
             settings=self.__settings,
             dimensions=[new_dimension],
