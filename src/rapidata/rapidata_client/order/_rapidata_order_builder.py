@@ -136,9 +136,6 @@ class RapidataOrderBuilder:
     def _set_validation_set_id(self) -> None:
         """
         Get the validation set ID for the order.
-
-        Returns:
-            bool: True if a new validation set was created, False otherwise.
         """
         assert self.__workflow is not None
         if self.__validation_set_id:
@@ -171,6 +168,7 @@ class RapidataOrderBuilder:
                     raise ValueError(
                         "Recommended validation set has insufficient labeled rapids."
                     )
+                self.__validation_set_id = validation_set_id
                 dimensions = self.__validation_set_manager.get_validation_set_by_id(
                     validation_set_id
                 ).dimensions
@@ -246,7 +244,7 @@ class RapidataOrderBuilder:
             UserScoreFilter(
                 lower_bound=0.3,
                 upper_bound=1,
-                dimension=str(new_dimension),
+                dimension=new_dimension,
             )
         )
 

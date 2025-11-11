@@ -727,7 +727,7 @@ rapidata_config.order.autoValidationSetCreation = False"""
                         validation_set.add_rapid(rapids[rapid_index])
                         rapid_index += 1
 
-                    time.sleep(1)
+                    time.sleep(2)
 
                 progress_bar.close()
 
