@@ -69,7 +69,6 @@ class RapidataOrderBuilder:
         openapi_service: OpenAPIService,
     ):
         self._name = name
-        self.order_id: str | None = None
         self._openapi_service = openapi_service
         self.__dataset: Optional[RapidataDataset] = None
         self.__workflow: Workflow | None = None
@@ -276,48 +275,31 @@ class RapidataOrderBuilder:
             create_order_model=order_model
         )
 
-        self.order_id = str(result.order_id)
-        logger.debug("Order created with ID: %s", self.order_id)
-
-        self.__dataset = (
-            RapidataDataset(result.dataset_id, self._openapi_service)
-            if result.dataset_id
-            else None
-        )
-        if self.__dataset:
-            logger.debug("Dataset created with ID: %s", self.__dataset.id)
-        else:
-            logger.warning("No dataset created for this order.")
-
         order = RapidataOrder(
-            order_id=self.order_id,
+            order_id=str(result.order_id),
             openapi_service=self._openapi_service,
             name=self._name,
         )
         logger.debug("Order created: %s", order)
-    
-        self.__dataset = (
-            RapidataDataset(result.dataset_id, self._openapi_service)
-            if result.dataset_id
-            else None
-        )
 
-        if self.__dataset:
-            logger.debug("Dataset created with ID: %s", self.__dataset.id)
-            logger.debug("Adding datapoints to the order.")
-            with tracer.start_as_current_span("add_datapoints"):
-                _, failed_uploads = self.__dataset.add_datapoints(self.__datapoints)
-
-                if failed_uploads:
-                    raise FailedUploadException(self.__dataset, order, failed_uploads)
-        else:
-            logger.error("No Dataset was created for order %s", self.order_id)
+        if not result.dataset_id:
+            logger.error("No Dataset was created for order %s", order.id)
             return order
 
+        self.__dataset = RapidataDataset(result.dataset_id, self._openapi_service)        
+        
+        logger.debug("Dataset created with ID: %s", self.__dataset.id)
+        logger.debug("Adding datapoints to the order.")
+        with tracer.start_as_current_span("add_datapoints"):
+            _, failed_uploads = self.__dataset.add_datapoints(self.__datapoints)
+
+            if failed_uploads:
+                raise FailedUploadException(self.__dataset, order, failed_uploads)
+                    
         logger.debug("Datapoints added to the order.")
         logger.debug("Setting order to preview")
         try:
-            self._openapi_service.order_api.order_order_id_preview_post(self.order_id)
+            self._openapi_service.order_api.order_order_id_preview_post(order.id)
         except Exception:
             raise FailedUploadException(self.__dataset, order, failed_uploads)
         return order
