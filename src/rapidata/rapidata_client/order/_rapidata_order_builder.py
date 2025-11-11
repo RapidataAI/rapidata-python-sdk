@@ -250,36 +250,30 @@ class RapidataOrderBuilder:
             )
             managed_print()
 
-        self.__dataset = (
-            RapidataDataset(result.dataset_id, self._openapi_service)
-            if result.dataset_id
-            else None
-        )
-        if self.__dataset:
-            logger.debug("Dataset created with ID: %s", self.__dataset.id)
-        else:
-            logger.warning("No dataset created for this order.")
-
         order = RapidataOrder(
             order_id=self.order_id,
             openapi_service=self._openapi_service,
             name=self._name,
         )
-
         logger.debug("Order created: %s", order)
-        logger.debug("Adding datapoints to the order.")
+    
+        self.__dataset = (
+            RapidataDataset(result.dataset_id, self._openapi_service)
+            if result.dataset_id
+            else None
+        )
 
         if self.__dataset:
+            logger.debug("Dataset created with ID: %s", self.__dataset.id)
+            logger.debug("Adding datapoints to the order.")
             with tracer.start_as_current_span("add_datapoints"):
                 _, failed_uploads = self.__dataset.add_datapoints(self.__datapoints)
 
                 if failed_uploads:
                     raise FailedUploadException(self.__dataset, order, failed_uploads)
-
         else:
-            raise RuntimeError(
-                f"No dataset created for this order. order_id: {self.order_id}"
-            )
+            logger.error("No Dataset was created for order %s", self.order_id)
+            return order
 
         logger.debug("Datapoints added to the order.")
         logger.debug("Setting order to preview")
