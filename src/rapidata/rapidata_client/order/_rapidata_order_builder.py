@@ -146,6 +146,8 @@ class RapidataOrderBuilder:
                 "Using specified validation set with ID: %s", self.__validation_set_id
             )
             return
+        
+        required_amount = min(int(len(self.__datapoints) * 0.01) or 3, 15)
 
         try:
             with suppress_rapidata_error_logging():
@@ -163,6 +165,12 @@ class RapidataOrderBuilder:
                     .validation_sets[0]
                     .id
                 )
+                if self.__validation_set_manager._get_total_and_labeled_rapids_count(
+                    validation_set_id
+                )[1] < required_amount:
+                    raise ValueError(
+                        "Recommended validation set has insufficient labeled rapids."
+                    )
                 dimensions = self.__validation_set_manager.get_validation_set_by_id(
                     validation_set_id
                 ).dimensions
@@ -197,7 +205,6 @@ class RapidataOrderBuilder:
 
         managed_print()
         managed_print(f"No recommended validation set found, new one will be created.")
-        required_amount = min(int(len(self.__datapoints) * 0.01) or 3, 15)
 
         new_dimension = str(uuid.uuid4())
         logger.debug("New dimension created: %s", new_dimension)

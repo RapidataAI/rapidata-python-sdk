@@ -707,13 +707,18 @@ class ValidationSetManager:
                     if labeled_rapids >= required_amount:
                         break
 
-                    if rapid_index >= len(rapids) and labeled_rapids < required_amount:
+                    if total_rapids < required_amount and rapid_index >= len(rapids):
                         managed_print(
                             Fore.RED
-                            + f"Warning: All {len(rapids)} rapids uploaded but only {labeled_rapids}/{required_amount} annotated."
+                            + f"""Warning: An order can only be started with at least {required_amount} annotated validation tasks. But only {labeled_rapids}/{required_amount} were annotated.
+Either add clearer examples or turn off the 'autoValidationSetCreation' with:
+
+from rapidata import rapidata_config
+rapidata_config.order.autoValidationSetCreation = False"""
                             + Fore.RESET
                         )
-                        break
+                        raise RuntimeError(
+                            f"Not enough rapids annotated. Required: {required_amount}, Annotated: {labeled_rapids}")
 
                     if (
                         rapid_index < len(rapids)
