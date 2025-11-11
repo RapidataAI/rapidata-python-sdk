@@ -1,6 +1,6 @@
 from typing import Literal, Optional, Sequence, get_args, cast
 import random
-import uuid
+import secrets
 
 from rapidata.api_client.models.ab_test_selection_a_inner import AbTestSelectionAInner
 from rapidata.api_client.models.and_user_filter_model_filters_inner import (
@@ -131,6 +131,11 @@ class RapidataOrderBuilder:
                 else None
             ),
         )
+    
+    def _generate_id(self, length=9):
+        """Optimal balance: fast comparisons + low collision risk"""
+        alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+        return ''.join(secrets.choice(alphabet) for _ in range(length))
 
     def _set_validation_set_id(self) -> None:
         """
@@ -203,7 +208,7 @@ class RapidataOrderBuilder:
         managed_print()
         managed_print(f"No recommended validation set found, new one will be created.")
 
-        new_dimension = str(uuid.uuid4())
+        new_dimension = self._generate_id()
         logger.debug("New dimension created: %s", new_dimension)
         rng = random.Random(42)
         validation_set = self.__validation_set_manager._create_order_validation_set(
