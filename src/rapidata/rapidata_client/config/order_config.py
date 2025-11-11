@@ -11,4 +11,4 @@ class OrderConfig(BaseModel):
     """
 
     autoValidationSetCreation: bool = Field(default=True)
-    minOrderDatapointsForValidation: int = Field(default=10)
+    minOrderDatapointsForValidation: int = Field(default=20)
