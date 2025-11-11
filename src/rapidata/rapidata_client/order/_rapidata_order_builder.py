@@ -1,9 +1,7 @@
-from typing import Literal, Optional, Sequence, get_args
+from typing import Literal, Optional, Sequence, get_args, cast
 import random
-import urllib.parse
-import webbrowser
+import secrets
 
-from colorama import Fore
 from rapidata.api_client.models.ab_test_selection_a_inner import AbTestSelectionAInner
 from rapidata.api_client.models.and_user_filter_model_filters_inner import (
     AndUserFilterModelFiltersInner,
@@ -21,7 +19,7 @@ from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.rapidata_client.exceptions.failed_upload_exception import (
     FailedUploadException,
 )
-from rapidata.rapidata_client.filter import RapidataFilter
+from rapidata.rapidata_client.filter import RapidataFilter, UserScoreFilter
 from rapidata.rapidata_client.config import (
     logger,
     managed_print,
@@ -41,6 +39,11 @@ from rapidata.rapidata_client.workflow import (
     Workflow,
     FreeTextWorkflow,
     MultiRankingWorkflow,
+)
+from rapidata.rapidata_client.selection import (
+    ConditionalValidationSelection,
+    LabelingSelection,
+    CappedSelection,
 )
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.api.rapidata_api_client import (
@@ -66,7 +69,6 @@ class RapidataOrderBuilder:
         openapi_service: OpenAPIService,
     ):
         self._name = name
-        self.order_id: str | None = None
         self._openapi_service = openapi_service
         self.__dataset: Optional[RapidataDataset] = None
         self.__workflow: Workflow | None = None
@@ -74,7 +76,7 @@ class RapidataOrderBuilder:
         self.__validation_set_id: str | None = None
         self.__settings: Sequence[RapidataSetting] | None = None
         self.__user_filters: list[RapidataFilter] = []
-        self.__selections: list[RapidataSelection] = []
+        self.__selections: Sequence[RapidataSelection] = []
         self.__priority: int | None = None
         self.__datapoints: list[Datapoint] = []
         self.__sticky_state_value: StickyStateLiteral | None = None
@@ -129,24 +131,28 @@ class RapidataOrderBuilder:
                 else None
             ),
         )
+    
+    def _generate_id(self, length=9):
+        """Optimal balance: fast comparisons + low collision risk"""
+        alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+        return ''.join(secrets.choice(alphabet) for _ in range(length))
 
-    def _set_validation_set_id(self) -> bool:
+    def _set_validation_set_id(self) -> None:
         """
         Get the validation set ID for the order.
-
-        Returns:
-            bool: True if a new validation set was created, False otherwise.
         """
         assert self.__workflow is not None
         if self.__validation_set_id:
             logger.debug(
                 "Using specified validation set with ID: %s", self.__validation_set_id
             )
-            return False
+            return
+        
+        required_amount = min(int(len(self.__datapoints) * 0.01) or 3, 15)
 
         try:
             with suppress_rapidata_error_logging():
-                self.__validation_set_id = (
+                validation_set_id = (
                     (
                         self._openapi_service.validation_api.validation_set_recommended_get(
                             asset_type=[self.__datapoints[0].get_asset_type()],
@@ -160,10 +166,31 @@ class RapidataOrderBuilder:
                     .validation_sets[0]
                     .id
                 )
+                if self.__validation_set_manager._get_total_and_labeled_rapids_count(
+                    validation_set_id
+                )[1] < required_amount:
+                    raise ValueError(
+                        "Recommended validation set has insufficient labeled rapids."
+                    )
+                self.__validation_set_id = validation_set_id
+                dimensions = self.__validation_set_manager.get_validation_set_by_id(
+                    validation_set_id
+                ).dimensions
+
+                user_score_filters = [
+                    UserScoreFilter(
+                        lower_bound=0.3,
+                        upper_bound=1,
+                        dimension=dimension,
+                    )
+                    for dimension in dimensions
+                ]
+                self.__user_filters.extend(user_score_filters)
+
             logger.debug(
                 "Using recommended validation set with ID: %s", self.__validation_set_id
             )
-            return False
+            return
         except Exception as e:
             logger.debug("No recommended validation set found, error: %s", e)
 
@@ -174,27 +201,56 @@ class RapidataOrderBuilder:
             logger.debug(
                 "No recommended validation set found, dataset too small to create one."
             )
-            return False
+            return
 
         logger.info("No recommended validation set found, creating new one.")
 
         managed_print()
         managed_print(f"No recommended validation set found, new one will be created.")
+
+        new_dimension = self._generate_id()
+        logger.debug("New dimension created: %s", new_dimension)
+        rng = random.Random(42)
         validation_set = self.__validation_set_manager._create_order_validation_set(
             workflow=self.__workflow,
-            order_name=self._name,
-            datapoints=random.sample(
-                self.__datapoints,
-                min(
-                    rapidata_config.order.autoValidationSetSize, len(self.__datapoints)
-                ),
-            ),
+            name=self._name,
+            datapoints=rng.sample(
+                self.__datapoints, len(self.__datapoints)
+            ),  # shuffle the datapoints with a specific seed
+            required_amount=required_amount,
             settings=self.__settings,
+            dimensions=[new_dimension],
         )
 
+        validation_set.update_should_alert(False)
+        validation_set.update_can_be_flagged(False)
+
         logger.debug("New validation set created for order: %s", validation_set)
-        self.__validation_set_id = validation_set.id
-        return True
+
+        self.__selections = [
+            CappedSelection(
+                selections=[
+                    ConditionalValidationSelection(
+                        validation_set_id=validation_set.id,
+                        dimensions=[new_dimension],
+                        thresholds=[0, 0.5, 0.7],
+                        chances=[1, 1, 0.2],
+                        rapid_counts=[10, 1, 1],
+                    ),
+                    LabelingSelection(amount=1),
+                ],
+                max_rapids=3,
+            )
+        ]
+
+        self.__validation_set_id = None
+        self.__user_filters.append(
+            UserScoreFilter(
+                lower_bound=0.3,
+                upper_bound=1,
+                dimension=new_dimension,
+            )
+        )
 
     def _create(self) -> RapidataOrder:
         """
@@ -213,10 +269,9 @@ class RapidataOrderBuilder:
                 self.__workflow, (FreeTextWorkflow, MultiRankingWorkflow)
             )
             and not self.__selections
+            and rapidata_config.enableBetaFeatures
         ):
-            new_validation_set = self._set_validation_set_id()
-        else:
-            new_validation_set = False
+            self._set_validation_set_id()
 
         order_model = self._to_model()
         logger.debug("Creating order with model: %s", order_model)
@@ -225,60 +280,31 @@ class RapidataOrderBuilder:
             create_order_model=order_model
         )
 
-        self.order_id = str(result.order_id)
-        logger.debug("Order created with ID: %s", self.order_id)
-
-        if rapidata_config.order.autoValidationSetCreation and new_validation_set:
-            required_amount = min(int(len(self.__datapoints) * 0.01) or 1, 10)
-            managed_print()
-            managed_print(
-                Fore.YELLOW
-                + f"A new validation set was created. Please annotate {required_amount} datapoint{('s' if required_amount != 1 else '')} so the order runs correctly."
-                + Fore.RESET
-            )
-            link = f"https://app.{self._openapi_service.environment}/validation-set/detail/{self.__validation_set_id}/annotate?orderId={self.order_id}&required={required_amount}"
-            could_open_browser = webbrowser.open(link)
-            if not could_open_browser:
-                encoded_url = urllib.parse.quote(link, safe="%/:=&?~#+!$,;'@()*[]")
-                managed_print(
-                    Fore.RED
-                    + f"Please open this URL in your browser: '{encoded_url}'"
-                    + Fore.RESET
-                )
-            managed_print(
-                "If you want to avoid the automatic validation set creation in the future, set `rapidata_config.order.autoValidationSetCreation = False`."
-            )
-            managed_print()
-
         order = RapidataOrder(
-            order_id=self.order_id,
+            order_id=str(result.order_id),
             openapi_service=self._openapi_service,
             name=self._name,
         )
         logger.debug("Order created: %s", order)
-    
-        self.__dataset = (
-            RapidataDataset(result.dataset_id, self._openapi_service)
-            if result.dataset_id
-            else None
-        )
 
-        if self.__dataset:
-            logger.debug("Dataset created with ID: %s", self.__dataset.id)
-            logger.debug("Adding datapoints to the order.")
-            with tracer.start_as_current_span("add_datapoints"):
-                _, failed_uploads = self.__dataset.add_datapoints(self.__datapoints)
-
-                if failed_uploads:
-                    raise FailedUploadException(self.__dataset, order, failed_uploads)
-        else:
-            logger.error("No Dataset was created for order %s", self.order_id)
+        if not result.dataset_id:
+            logger.error("No Dataset was created for order %s", order.id)
             return order
 
+        self.__dataset = RapidataDataset(result.dataset_id, self._openapi_service)        
+        
+        logger.debug("Dataset created with ID: %s", self.__dataset.id)
+        logger.debug("Adding datapoints to the order.")
+        with tracer.start_as_current_span("add_datapoints"):
+            _, failed_uploads = self.__dataset.add_datapoints(self.__datapoints)
+
+            if failed_uploads:
+                raise FailedUploadException(self.__dataset, order, failed_uploads)
+                    
         logger.debug("Datapoints added to the order.")
         logger.debug("Setting order to preview")
         try:
-            self._openapi_service.order_api.order_order_id_preview_post(self.order_id)
+            self._openapi_service.order_api.order_order_id_preview_post(order.id)
         except Exception:
             raise FailedUploadException(self.__dataset, order, failed_uploads)
         return order

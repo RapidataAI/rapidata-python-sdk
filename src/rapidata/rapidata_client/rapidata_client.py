@@ -93,6 +93,8 @@ class RapidataClient:
 
             logger.debug("Initializing RapidataBenchmarkManager")
             self.mri = RapidataBenchmarkManager(openapi_service=self._openapi_service)
+            
+        self._check_beta_features() # can't be in the trace for some reason
 
     def reset_credentials(self):
         """Reset the credentials saved in the configuration file for the current environment."""
@@ -100,21 +102,22 @@ class RapidataClient:
 
     def _check_beta_features(self):
         """Enable beta features for the client."""
-        result: dict[str, Any] = json.loads(
-            self._openapi_service.api_client.call_api(
-                "GET",
-                f"https://auth.{self._openapi_service.environment}/connect/userinfo",
+        with tracer.start_as_current_span("RapidataClient.check_beta_features"):
+            result: dict[str, Any] = json.loads(
+                self._openapi_service.api_client.call_api(
+                    "GET",
+                    f"https://auth.{self._openapi_service.environment}/connect/userinfo",
+                )
+                .read()
+                .decode("utf-8")
             )
-            .read()
-            .decode("utf-8")
-        )
-        logger.debug("Userinfo: %s", result)
-        if result.get("role") != ["Admin"]:
-            logger.debug("User is not an admin, not enabling beta features")
-            return
+            logger.debug("Userinfo: %s", result)
+            if "Admin" not in result.get("role", []):
+                logger.debug("User is not an admin, not enabling beta features")
+                return
 
-        logger.debug("User is an admin, enabling beta features")
-        rapidata_config.enableBetaFeatures = True
+            logger.debug("User is an admin, enabling beta features")
+            rapidata_config.enableBetaFeatures = True
 
     def _check_version(self):
         try:

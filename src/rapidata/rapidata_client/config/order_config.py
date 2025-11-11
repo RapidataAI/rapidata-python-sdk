@@ -11,5 +11,4 @@ class OrderConfig(BaseModel):
     """
 
     autoValidationSetCreation: bool = Field(default=True)
-    minOrderDatapointsForValidation: int = Field(default=50)
-    autoValidationSetSize: int = Field(default=20)
+    minOrderDatapointsForValidation: int = Field(default=20)
