@@ -285,11 +285,12 @@ class RapidataOrderBuilder:
         order_model = self._to_model()
         logger.debug("Creating order with model: %s", order_model)
 
+        self.__temporary_sticky_enabled = False
+        logger.debug("Disabling temporary sticky after order creation.")
+        
         result = self._openapi_service.order_api.order_post(
             create_order_model=order_model
         )
-        self.__temporary_sticky_enabled = False
-        logger.debug("Disabling temporary sticky after order creation.")
 
         order = RapidataOrder(
             order_id=str(result.order_id),
