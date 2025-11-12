@@ -731,6 +731,8 @@ rapidata_config.order.autoValidationSetCreation = False"""
 
                 progress_bar.close()
 
+            validation_set.update_dimensions(dimensions)
+
             return validation_set
 
     def get_validation_set_by_id(self, validation_set_id: str) -> RapidataValidationSet:
