@@ -80,6 +80,7 @@ class RapidataOrderBuilder:
         self.__priority: int | None = None
         self.__datapoints: list[Datapoint] = []
         self.__sticky_state_value: StickyStateLiteral | None = None
+        self.__temporary_sticky_enabled: bool = False
         self.__validation_set_manager: ValidationSetManager = ValidationSetManager(
             self._openapi_service
         )
@@ -100,6 +101,11 @@ class RapidataOrderBuilder:
         if self.__referee is None:
             managed_print("No referee provided, using default NaiveReferee.")
             self.__referee = NaiveReferee()
+        
+        sticky_state = self.__sticky_state_value
+        if not sticky_state and self.__temporary_sticky_enabled:
+            sticky_state = "Temporary"
+            logger.debug("Setting sticky state to Temporary due to temporary sticky enabled.")
 
         return CreateOrderModel(
             _t="CreateOrderModel",
@@ -126,8 +132,8 @@ class RapidataOrderBuilder:
             ),
             priority=self.__priority,
             stickyState=(
-                StickyState(self.__sticky_state_value)
-                if self.__sticky_state_value
+                StickyState(sticky_state)
+                if sticky_state
                 else None
             ),
         )
@@ -273,6 +279,8 @@ class RapidataOrderBuilder:
             and rapidata_config.enableBetaFeatures
         ):
             self._set_validation_set_id()
+            self.__temporary_sticky_enabled = True
+            logger.debug("Temporary sticky enabled for order creation.")
 
         order_model = self._to_model()
         logger.debug("Creating order with model: %s", order_model)
@@ -280,6 +288,8 @@ class RapidataOrderBuilder:
         result = self._openapi_service.order_api.order_post(
             create_order_model=order_model
         )
+        self.__temporary_sticky_enabled = False
+        logger.debug("Disabling temporary sticky after order creation.")
 
         order = RapidataOrder(
             order_id=str(result.order_id),
