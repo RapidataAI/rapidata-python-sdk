@@ -37,8 +37,8 @@ from rapidata.rapidata_client.selection._base_selection import RapidataSelection
 from rapidata.rapidata_client.settings import RapidataSetting
 from rapidata.rapidata_client.workflow import (
     Workflow,
-    FreeTextWorkflow,
-    MultiRankingWorkflow,
+    CompareWorkflow,
+    ClassifyWorkflow,
 )
 from rapidata.rapidata_client.selection import (
     ConditionalValidationSelection,
@@ -265,8 +265,8 @@ class RapidataOrderBuilder:
         """
         if (
             rapidata_config.order.autoValidationSetCreation
-            and not isinstance(
-                self.__workflow, (FreeTextWorkflow, MultiRankingWorkflow)
+            and isinstance(
+                self.__workflow, (CompareWorkflow, ClassifyWorkflow)
             )
             and not self.__selections
             and rapidata_config.enableBetaFeatures
