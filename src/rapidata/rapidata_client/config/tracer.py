@@ -1,4 +1,7 @@
 from typing import Protocol, runtime_checkable, Any
+import platform
+import sys
+import os
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
@@ -6,6 +9,19 @@ from opentelemetry.sdk.resources import Resource
 from rapidata import __version__
 from .logging_config import LoggingConfig, register_config_handler
 from rapidata.rapidata_client.config import logger
+
+
+def get_system_attributes() -> dict[str, str | int | float]:
+    """Gather system telemetry for traces."""
+    attrs = {
+        "system.os": platform.system(),
+        "system.os.version": platform.release(),
+        "system.arch": platform.machine(),
+        "python.version": f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}",
+        "process.cpu_count": os.cpu_count() or 0,
+    }
+
+    return attrs
 
 
 @runtime_checkable
@@ -103,12 +119,13 @@ class RapidataTracer:
         # Initialize OTLP tracing only once and only if not disabled
         if not self._otlp_initialized and config.enable_otlp:
             try:
-                resource = Resource.create(
-                    {
-                        "service.name": "Rapidata.Python.SDK",
-                        "service.version": __version__,
-                    }
-                )
+                resource_attributes = {
+                    "service.name": "Rapidata.Python.SDK",
+                    "service.version": __version__,
+                    **get_system_attributes(),
+                }
+
+                resource = Resource.create(resource_attributes)
 
                 self._tracer_provider = TracerProvider(resource=resource)
 
