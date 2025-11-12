@@ -16055,12 +16055,14 @@
           "responseBudget": {
             "type": "integer",
             "description": "Total amount of responses that get collected per run",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "minResponses": {
             "type": "integer",
             "description": "The minimum amount of responses that need to be collected per comparison.",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "isInversed": {
             "type": "boolean",
