@@ -311,7 +311,7 @@ class RapidataBenchmark:
                     "Level of detail must be a string and one of: 'low', 'medium', 'high', 'very high'"
                 )
 
-            if min_responses_per_matchup is None or (
+            if min_responses_per_matchup is not None and (
                 not isinstance(min_responses_per_matchup, int)
                 or min_responses_per_matchup < 3
             ):
