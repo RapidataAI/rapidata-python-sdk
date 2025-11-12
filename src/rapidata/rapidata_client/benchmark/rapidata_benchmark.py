@@ -281,11 +281,11 @@ class RapidataBenchmark:
         show_prompt: bool = False,
         show_prompt_asset: bool = False,
         inverse_ranking: bool = False,
-        level_of_detail: Literal["low", "medium", "high", "very high"] = "low",
-        min_responses_per_matchup: int = 3,
+        level_of_detail: Literal["low", "medium", "high", "very high"] | None = None,
+        min_responses_per_matchup: int | None = None,
         validation_set_id: str | None = None,
-        filters: Sequence[RapidataFilter] = [],
-        settings: Sequence[RapidataSetting] = [],
+        filters: Sequence[RapidataFilter] | None = None,
+        settings: Sequence[RapidataSetting] | None = None,
     ) -> RapidataLeaderboard:
         """
         Creates a new leaderboard for the benchmark.
@@ -303,11 +303,21 @@ class RapidataBenchmark:
             settings: The settings that should be applied to the leaderboard. Will determine the behavior of the tasks on the leaderboard. (default: [])
         """
         with tracer.start_as_current_span("create_leaderboard"):
-            if not isinstance(min_responses_per_matchup, int):
-                raise ValueError("Min responses per matchup must be an integer")
+            if level_of_detail is not None and (
+                not isinstance(level_of_detail, str)
+                or level_of_detail not in ["low", "medium", "high", "very high"]
+            ):
+                raise ValueError(
+                    "Level of detail must be a string and one of: 'low', 'medium', 'high', 'very high'"
+                )
 
-            if min_responses_per_matchup < 3:
-                raise ValueError("Min responses per matchup must be at least 3")
+            if min_responses_per_matchup is not None and (
+                not isinstance(min_responses_per_matchup, int)
+                or min_responses_per_matchup < 3
+            ):
+                raise ValueError(
+                    "Min responses per matchup must be an integer and at least 3"
+                )
 
             logger.info(
                 "Creating leaderboard %s with instruction %s, show_prompt %s, show_prompt_asset %s, inverse_ranking %s, level_of_detail %s, min_responses_per_matchup %s, validation_set_id %s, filters %s, settings %s",
@@ -332,7 +342,11 @@ class RapidataBenchmark:
                     showPromptAsset=show_prompt_asset,
                     isInversed=inverse_ranking,
                     minResponses=min_responses_per_matchup,
-                    responseBudget=DetailMapper.get_budget(level_of_detail),
+                    responseBudget=(
+                        DetailMapper.get_budget(level_of_detail)
+                        if level_of_detail is not None
+                        else None
+                    ),
                     validationSetId=validation_set_id,
                     filters=(
                         [
@@ -363,7 +377,7 @@ class RapidataBenchmark:
                 show_prompt_asset,
                 inverse_ranking,
                 leaderboard_result.response_budget,
-                min_responses_per_matchup,
+                leaderboard_result.min_responses,
                 self.id,
                 leaderboard_result.id,
                 self._openapi_service,
