@@ -18,7 +18,7 @@ def get_system_attributes() -> dict[str, str | int | None]:
         "system.os.version": platform.release(),
         "system.arch": platform.machine(),
         "python.version": f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}",
-        "process.cpu_count": os.cpu_count() or None,
+        "process.cpu_count": os.cpu_count(),
     }
 
     return attrs
