@@ -112,6 +112,12 @@ class RapidataOrderBuilder:
                 "Setting sticky state to Temporary due to temporary sticky enabled."
             )
 
+        validation_set_id = (
+            self.__validation_set.id
+            if (self.__validation_set and not self.__selections)
+            else None
+        )
+
         return CreateOrderModel(
             _t="CreateOrderModel",
             orderName=self._name,
@@ -121,7 +127,7 @@ class RapidataOrderBuilder:
                 for user_filter in self.__user_filters
             ],
             referee=CreateOrderModelReferee(self.__referee._to_model()),
-            validationSetId=self.__validation_set.id if self.__validation_set else None,
+            validationSetId=validation_set_id,
             featureFlags=(
                 [setting._to_feature_flag() for setting in self.__settings]
                 if self.__settings is not None

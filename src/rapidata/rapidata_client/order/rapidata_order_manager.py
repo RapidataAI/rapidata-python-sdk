@@ -73,10 +73,17 @@ class RapidataOrderManager:
         responses_per_datapoint: int = 10,
         validation_set_id: str | None = None,
         confidence_threshold: float | None = None,
-        filters: Sequence[RapidataFilter] = [],
-        settings: Sequence[RapidataSetting] = [],
-        selections: Sequence[RapidataSelection] = [],
+        filters: Sequence[RapidataFilter] | None = None,
+        settings: Sequence[RapidataSetting] | None = None,
+        selections: Sequence[RapidataSelection] | None = None,
     ) -> RapidataOrder:
+        if filters is None:
+            filters = []
+        if settings is None:
+            settings = []
+        if selections is None:
+            selections = []
+
         if not confidence_threshold:
             referee = NaiveReferee(responses=responses_per_datapoint)
         else:
@@ -153,9 +160,9 @@ class RapidataOrderManager:
         media_contexts: list[str] | None = None,
         validation_set_id: str | None = None,
         confidence_threshold: float | None = None,
-        filters: Sequence[RapidataFilter] = [],
-        settings: Sequence[RapidataSetting] = [],
-        selections: Sequence[RapidataSelection] = [],
+        filters: Sequence[RapidataFilter] | None = None,
+        settings: Sequence[RapidataSetting] | None = None,
+        selections: Sequence[RapidataSelection] | None = None,
         private_notes: list[str] | None = None,
     ) -> RapidataOrder:
         """Create a classification order.
@@ -228,9 +235,9 @@ class RapidataOrderManager:
         a_b_names: list[str] | None = None,
         validation_set_id: str | None = None,
         confidence_threshold: float | None = None,
-        filters: Sequence[RapidataFilter] = [],
-        settings: Sequence[RapidataSetting] = [],
-        selections: Sequence[RapidataSelection] = [],
+        filters: Sequence[RapidataFilter] | None = None,
+        settings: Sequence[RapidataSetting] | None = None,
+        selections: Sequence[RapidataSelection] | None = None,
         private_notes: list[str] | None = None,
     ) -> RapidataOrder:
         """Create a compare order.
@@ -315,9 +322,9 @@ class RapidataOrderManager:
         contexts: Optional[list[str]] = None,
         media_contexts: Optional[list[str]] = None,
         validation_set_id: Optional[str] = None,
-        filters: Sequence[RapidataFilter] = [],
-        settings: Sequence[RapidataSetting] = [],
-        selections: Sequence[RapidataSelection] = [],
+        filters: Sequence[RapidataFilter] | None = None,
+        settings: Sequence[RapidataSetting] | None = None,
+        selections: Sequence[RapidataSelection] | None = None,
     ) -> RapidataOrder:
         """
         Create a ranking order.
@@ -428,9 +435,9 @@ class RapidataOrderManager:
         responses_per_datapoint: int = 10,
         contexts: list[str] | None = None,
         media_contexts: list[str] | None = None,
-        filters: Sequence[RapidataFilter] = [],
-        settings: Sequence[RapidataSetting] = [],
-        selections: Sequence[RapidataSelection] = [],
+        filters: Sequence[RapidataFilter] | None = None,
+        settings: Sequence[RapidataSetting] | None = None,
+        selections: Sequence[RapidataSelection] | None = None,
         private_notes: list[str] | None = None,
     ) -> RapidataOrder:
         """Create a free text order.
@@ -486,9 +493,9 @@ class RapidataOrderManager:
         sentences: list[str],
         responses_per_datapoint: int = 10,
         validation_set_id: str | None = None,
-        filters: Sequence[RapidataFilter] = [],
-        settings: Sequence[RapidataSetting] = [],
-        selections: Sequence[RapidataSelection] = [],
+        filters: Sequence[RapidataFilter] | None = None,
+        settings: Sequence[RapidataSetting] | None = None,
+        selections: Sequence[RapidataSelection] | None = None,
         private_notes: list[str] | None = None,
     ) -> RapidataOrder:
         """Create a select words order.
@@ -543,9 +550,9 @@ class RapidataOrderManager:
         contexts: list[str] | None = None,
         media_contexts: list[str] | None = None,
         validation_set_id: str | None = None,
-        filters: Sequence[RapidataFilter] = [],
-        settings: Sequence[RapidataSetting] = [],
-        selections: Sequence[RapidataSelection] = [],
+        filters: Sequence[RapidataFilter] | None = None,
+        settings: Sequence[RapidataSetting] | None = None,
+        selections: Sequence[RapidataSelection] | None = None,
         private_notes: list[str] | None = None,
     ) -> RapidataOrder:
         """Create a locate order.
@@ -655,9 +662,9 @@ class RapidataOrderManager:
         contexts: list[str] | None = None,
         media_contexts: list[str] | None = None,
         validation_set_id: str | None = None,
-        filters: Sequence[RapidataFilter] = [],
-        settings: Sequence[RapidataSetting] = [],
-        selections: Sequence[RapidataSelection] = [],
+        filters: Sequence[RapidataFilter] | None = None,
+        settings: Sequence[RapidataSetting] | None = None,
+        selections: Sequence[RapidataSelection] | None = None,
         private_notes: list[str] | None = None,
     ) -> RapidataOrder:
         """Create a timestamp order.
