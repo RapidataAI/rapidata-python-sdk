@@ -21,10 +21,11 @@ def get_system_attributes() -> dict[str, str | int | None]:
             "python.version": f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}",
             "process.cpu_count": os.cpu_count(),
         }
+        logger.debug(f"System attributes: {attrs}")
+        return attrs
     except Exception:
+        logger.debug("Failed to get system attributes, returning empty dict")
         return {}
-
-    return attrs
 
 
 @runtime_checkable
