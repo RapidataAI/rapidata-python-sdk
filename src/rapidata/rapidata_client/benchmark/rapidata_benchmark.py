@@ -303,11 +303,21 @@ class RapidataBenchmark:
             settings: The settings that should be applied to the leaderboard. Will determine the behavior of the tasks on the leaderboard. (default: [])
         """
         with tracer.start_as_current_span("create_leaderboard"):
-            if not isinstance(min_responses_per_matchup, int):
-                raise ValueError("Min responses per matchup must be an integer")
+            if level_of_detail is not None and (
+                not isinstance(level_of_detail, str)
+                or level_of_detail not in ["low", "medium", "high", "very high"]
+            ):
+                raise ValueError(
+                    "Level of detail must be a string and one of: 'low', 'medium', 'high', 'very high'"
+                )
 
-            if min_responses_per_matchup < 3:
-                raise ValueError("Min responses per matchup must be at least 3")
+            if min_responses_per_matchup is None or (
+                not isinstance(min_responses_per_matchup, int)
+                or min_responses_per_matchup < 3
+            ):
+                raise ValueError(
+                    "Min responses per matchup must be an integer and at least 3"
+                )
 
             logger.info(
                 "Creating leaderboard %s with instruction %s, show_prompt %s, show_prompt_asset %s, inverse_ranking %s, level_of_detail %s, min_responses_per_matchup %s, validation_set_id %s, filters %s, settings %s",
