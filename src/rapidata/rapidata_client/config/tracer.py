@@ -11,14 +11,14 @@ from .logging_config import LoggingConfig, register_config_handler
 from rapidata.rapidata_client.config import logger
 
 
-def get_system_attributes() -> dict[str, str | int | float]:
+def get_system_attributes() -> dict[str, str | int | None]:
     """Gather system telemetry for traces."""
     attrs = {
         "system.os": platform.system(),
         "system.os.version": platform.release(),
         "system.arch": platform.machine(),
         "python.version": f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}",
-        "process.cpu_count": os.cpu_count() or 0,
+        "process.cpu_count": os.cpu_count() or None,
     }
 
     return attrs
