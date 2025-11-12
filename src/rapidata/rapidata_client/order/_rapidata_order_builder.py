@@ -224,6 +224,7 @@ class RapidataOrderBuilder:
 
         validation_set.update_should_alert(False)
         validation_set.update_can_be_flagged(False)
+        validation_set.update_dimensions([new_dimension])
 
         logger.debug("New validation set created for order: %s", validation_set)
 

@@ -135,7 +135,7 @@ class RapidataValidationSet:
             managed_print(f"ValidationSet '{self}' has been deleted.")
 
     def __str__(self):
-        return f"name: '{self.name}' id: {self.id}"
+        return f"name: '{self.name}' id: {self.id} dimensions: {self.dimensions}"
 
     def __repr__(self):
-        return f"name: '{self.name}' id: {self.id}"
+        return f"name: '{self.name}' id: {self.id} dimensions: {self.dimensions}"
