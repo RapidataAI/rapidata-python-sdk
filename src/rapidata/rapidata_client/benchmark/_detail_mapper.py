@@ -4,7 +4,7 @@ from typing import Literal
 class DetailMapper:
     @staticmethod
     def get_budget(
-        level_of_detail: Literal["low", "medium", "high", "very high"]
+        level_of_detail: Literal["low", "medium", "high", "very high"],
     ) -> int:
         if level_of_detail == "low":
             return 2_000

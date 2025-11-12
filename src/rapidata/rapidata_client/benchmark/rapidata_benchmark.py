@@ -281,11 +281,11 @@ class RapidataBenchmark:
         show_prompt: bool = False,
         show_prompt_asset: bool = False,
         inverse_ranking: bool = False,
-        level_of_detail: Literal["low", "medium", "high", "very high"] = "low",
-        min_responses_per_matchup: int = 3,
+        level_of_detail: Literal["low", "medium", "high", "very high"] | None = None,
+        min_responses_per_matchup: int | None = None,
         validation_set_id: str | None = None,
-        filters: Sequence[RapidataFilter] = [],
-        settings: Sequence[RapidataSetting] = [],
+        filters: Sequence[RapidataFilter] | None = None,
+        settings: Sequence[RapidataSetting] | None = None,
     ) -> RapidataLeaderboard:
         """
         Creates a new leaderboard for the benchmark.
@@ -332,7 +332,11 @@ class RapidataBenchmark:
                     showPromptAsset=show_prompt_asset,
                     isInversed=inverse_ranking,
                     minResponses=min_responses_per_matchup,
-                    responseBudget=DetailMapper.get_budget(level_of_detail),
+                    responseBudget=(
+                        DetailMapper.get_budget(level_of_detail)
+                        if level_of_detail is not None
+                        else None
+                    ),
                     validationSetId=validation_set_id,
                     filters=(
                         [
@@ -363,7 +367,7 @@ class RapidataBenchmark:
                 show_prompt_asset,
                 inverse_ranking,
                 leaderboard_result.response_budget,
-                min_responses_per_matchup,
+                leaderboard_result.min_responses,
                 self.id,
                 leaderboard_result.id,
                 self._openapi_service,
