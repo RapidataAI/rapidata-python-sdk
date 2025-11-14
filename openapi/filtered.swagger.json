@@ -1210,17 +1210,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ClientsQueryResultPagedResult"
+                  "$ref": "#/components/schemas/PagedResult.ClientsQueryResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ClientsQueryResultPagedResult"
+                  "$ref": "#/components/schemas/PagedResult.ClientsQueryResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ClientsQueryResultPagedResult"
+                  "$ref": "#/components/schemas/PagedResult.ClientsQueryResult"
                 }
               }
             }
@@ -9220,41 +9220,6 @@
         },
         "additionalProperties": false
       },
-      "ClientsQueryResultPagedResult": {
-        "required": [
-          "items",
-          "page",
-          "pageSize",
-          "total"
-        ],
-        "type": "object",
-        "properties": {
-          "total": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ClientsQueryResult"
-            }
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false
-      },
       "CreateBridgeTokenResult": {
         "required": [
           "readKey",
@@ -9561,6 +9526,41 @@
           },
           "message": {
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PagedResult.ClientsQueryResult": {
+        "required": [
+          "items",
+          "page",
+          "pageSize",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientsQueryResult"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
           }
         },
         "additionalProperties": false
