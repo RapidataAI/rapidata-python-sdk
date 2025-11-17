@@ -1,4 +1,5 @@
 # Standard library imports
+from errno import EKEYEXPIRED
 import json
 import urllib.parse
 import webbrowser
@@ -189,9 +190,12 @@ class RapidataOrder:
                 last_exception = e
                 sleep(self._retry_delay * 2)
         if not progress:
-            raise Exception(
-                f"Failed to get progress:\n{last_exception}"
-            ) from last_exception
+            if last_exception:
+                raise Exception(
+                    f"Failed to get progress:\n{last_exception}"
+                ) from last_exception
+            else:
+                raise Exception("Failed to get progress. Please try again later.")
         return progress
 
     def get_results(self, preliminary_results: bool = False) -> RapidataResults:
