@@ -176,6 +176,7 @@ class RapidataOrder:
         Gets the workflow progress.
         """
         progress = None
+        last_exception = None
         for _ in range(self._max_retries // 2):
             try:
                 with suppress_rapidata_error_logging():
@@ -184,10 +185,13 @@ class RapidataOrder:
                         workflow_id
                     )
                 break
-            except Exception:
+            except Exception as e:
+                last_exception = e
                 sleep(self._retry_delay * 2)
         if not progress:
-            raise Exception("Failed to get progress. Please try again later.")
+            raise Exception(
+                f"Failed to get progress:\n{last_exception}"
+            ) from last_exception
         return progress
 
     def get_results(self, preliminary_results: bool = False) -> RapidataResults:
