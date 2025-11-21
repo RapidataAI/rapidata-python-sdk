@@ -106,12 +106,9 @@ class RapidataOrder:
                 if attempt < max_retries - 1:
                     sleep(retry_delay)
 
-        try:
-            failure_message = self._get_order_failure_message()
-            if failure_message:
-                raise Exception(failure_message) from last_exception
-        except Exception:
-            pass
+        failure_message = self._get_order_failure_message()
+        if failure_message:
+            raise Exception(failure_message) from last_exception
 
         raise Exception(
             f"Operation failed after {max_retries} retries: {str(last_exception)}"
