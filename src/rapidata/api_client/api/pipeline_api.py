@@ -21,7 +21,7 @@ from typing import Optional, Tuple, Union
 from typing_extensions import Annotated
 from rapidata.api_client.models.get_pipeline_by_id_result import GetPipelineByIdResult
 from rapidata.api_client.models.preliminary_download_model import PreliminaryDownloadModel
-from rapidata.api_client.models.preliminary_download_result import PreliminaryDownloadResult
+from rapidata.api_client.models.start_preliminary_download_result import StartPreliminaryDownloadResult
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -319,7 +319,7 @@ class PipelineApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PreliminaryDownloadResult:
+    ) -> StartPreliminaryDownloadResult:
         """Initiates a preliminary download of the pipeline.
 
 
@@ -359,7 +359,7 @@ class PipelineApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PreliminaryDownloadResult",
+            '200': "StartPreliminaryDownloadResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -389,7 +389,7 @@ class PipelineApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PreliminaryDownloadResult]:
+    ) -> ApiResponse[StartPreliminaryDownloadResult]:
         """Initiates a preliminary download of the pipeline.
 
 
@@ -429,7 +429,7 @@ class PipelineApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PreliminaryDownloadResult",
+            '200': "StartPreliminaryDownloadResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -499,7 +499,7 @@ class PipelineApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PreliminaryDownloadResult",
+            '200': "StartPreliminaryDownloadResult",
         }
         response_data = self.api_client.call_api(
             *_param,

@@ -20,7 +20,8 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
-from rapidata.api_client.models.datapoint_model_asset import DatapointModelAsset
+from rapidata.api_client.models.feature_flag import FeatureFlag
+from rapidata.api_client.models.get_datapoint_by_id_result_asset import GetDatapointByIdResultAsset
 from rapidata.api_client.models.get_validation_rapids_result_payload import GetValidationRapidsResultPayload
 from rapidata.api_client.models.get_validation_rapids_result_truth import GetValidationRapidsResultTruth
 from rapidata.api_client.models.rapid_model_referee import RapidModelReferee
@@ -35,7 +36,7 @@ class RapidModel(BaseModel):
     id: StrictStr
     payload: GetValidationRapidsResultPayload
     referee: RapidModelReferee
-    asset: DatapointModelAsset
+    asset: GetDatapointByIdResultAsset
     state: RapidState
     has_responses: StrictBool = Field(alias="hasResponses")
     should_accept_incorrect: StrictBool = Field(alias="shouldAcceptIncorrect")
@@ -44,7 +45,8 @@ class RapidModel(BaseModel):
     random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="randomCorrectProbability")
     key: Optional[StrictStr] = None
     completed_at: Optional[datetime] = Field(default=None, alias="completedAt")
-    __properties: ClassVar[List[str]] = ["id", "payload", "referee", "asset", "state", "hasResponses", "shouldAcceptIncorrect", "truth", "explanation", "randomCorrectProbability", "key", "completedAt"]
+    feature_flags: List[FeatureFlag] = Field(alias="featureFlags")
+    __properties: ClassVar[List[str]] = ["id", "payload", "referee", "asset", "state", "hasResponses", "shouldAcceptIncorrect", "truth", "explanation", "randomCorrectProbability", "key", "completedAt", "featureFlags"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -97,6 +99,13 @@ class RapidModel(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of truth
         if self.truth:
             _dict['truth'] = self.truth.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in feature_flags (list)
+        _items = []
+        if self.feature_flags:
+            for _item_feature_flags in self.feature_flags:
+                if _item_feature_flags:
+                    _items.append(_item_feature_flags.to_dict())
+            _dict['featureFlags'] = _items
         # set to None if truth (nullable) is None
         # and model_fields_set contains the field
         if self.truth is None and "truth" in self.model_fields_set:
@@ -137,7 +146,7 @@ class RapidModel(BaseModel):
             "id": obj.get("id"),
             "payload": GetValidationRapidsResultPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
             "referee": RapidModelReferee.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
-            "asset": DatapointModelAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
+            "asset": GetDatapointByIdResultAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "state": obj.get("state"),
             "hasResponses": obj.get("hasResponses"),
             "shouldAcceptIncorrect": obj.get("shouldAcceptIncorrect"),
@@ -145,7 +154,8 @@ class RapidModel(BaseModel):
             "explanation": obj.get("explanation"),
             "randomCorrectProbability": obj.get("randomCorrectProbability"),
             "key": obj.get("key"),
-            "completedAt": obj.get("completedAt")
+            "completedAt": obj.get("completedAt"),
+            "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
         })
         return _obj
 

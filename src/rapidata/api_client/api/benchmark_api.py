@@ -27,7 +27,7 @@ from rapidata.api_client.models.create_benchmark_result import CreateBenchmarkRe
 from rapidata.api_client.models.fork_benchmark_result import ForkBenchmarkResult
 from rapidata.api_client.models.get_benchmark_by_id_result import GetBenchmarkByIdResult
 from rapidata.api_client.models.paged_result_benchmark_query_result import PagedResultBenchmarkQueryResult
-from rapidata.api_client.models.paged_result_leaderboard_query_result import PagedResultLeaderboardQueryResult
+from rapidata.api_client.models.paged_result_leaderboards_query_result import PagedResultLeaderboardsQueryResult
 from rapidata.api_client.models.paged_result_participant_by_benchmark import PagedResultParticipantByBenchmark
 from rapidata.api_client.models.paged_result_prompt_by_benchmark_result import PagedResultPromptByBenchmarkResult
 from rapidata.api_client.models.paged_result_sample_by_identifier import PagedResultSampleByIdentifier
@@ -846,7 +846,7 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PagedResultLeaderboardQueryResult:
+    ) -> PagedResultLeaderboardsQueryResult:
         """Queries all leaderboards for the current user's benchmarks.
 
 
@@ -886,7 +886,7 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultLeaderboardQueryResult",
+            '200': "PagedResultLeaderboardsQueryResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -916,7 +916,7 @@ class BenchmarkApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PagedResultLeaderboardQueryResult]:
+    ) -> ApiResponse[PagedResultLeaderboardsQueryResult]:
         """Queries all leaderboards for the current user's benchmarks.
 
 
@@ -956,7 +956,7 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultLeaderboardQueryResult",
+            '200': "PagedResultLeaderboardsQueryResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1026,7 +1026,7 @@ class BenchmarkApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultLeaderboardQueryResult",
+            '200': "PagedResultLeaderboardsQueryResult",
         }
         response_data = self.api_client.call_api(
             *_param,

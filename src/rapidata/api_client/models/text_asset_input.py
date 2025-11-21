@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.existing_asset_input_metadata_value import ExistingAssetInputMetadataValue
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,8 +29,9 @@ class TextAssetInput(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(description="Discriminator value for TextAssetInput", alias="_t")
     text: StrictStr
+    metadata: Optional[Dict[str, ExistingAssetInputMetadataValue]] = None
     identifier: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["_t", "text", "identifier"]
+    __properties: ClassVar[List[str]] = ["_t", "text", "metadata", "identifier"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -79,6 +81,18 @@ class TextAssetInput(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each value in metadata (dict)
+        _field_dict = {}
+        if self.metadata:
+            for _key_metadata in self.metadata:
+                if self.metadata[_key_metadata]:
+                    _field_dict[_key_metadata] = self.metadata[_key_metadata].to_dict()
+            _dict['metadata'] = _field_dict
+        # set to None if metadata (nullable) is None
+        # and model_fields_set contains the field
+        if self.metadata is None and "metadata" in self.model_fields_set:
+            _dict['metadata'] = None
+
         return _dict
 
     @classmethod
@@ -93,6 +107,12 @@ class TextAssetInput(BaseModel):
         _obj = cls.model_validate({
             "_t": obj.get("_t") if obj.get("_t") is not None else 'TextAssetInput',
             "text": obj.get("text"),
+            "metadata": dict(
+                (_k, ExistingAssetInputMetadataValue.from_dict(_v))
+                for _k, _v in obj["metadata"].items()
+            )
+            if obj.get("metadata") is not None
+            else None,
             "identifier": obj.get("identifier")
         })
         return _obj

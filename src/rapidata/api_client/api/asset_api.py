@@ -19,7 +19,7 @@ from typing_extensions import Annotated
 from pydantic import Field, StrictBytes, StrictStr
 from typing import Optional, Tuple, Union
 from typing_extensions import Annotated
-from rapidata.api_client.models.inquire_file_metadata_result import InquireFileMetadataResult
+from rapidata.api_client.models.get_file_metadata_result import GetFileMetadataResult
 from rapidata.api_client.models.upload_file_result import UploadFileResult
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
@@ -56,7 +56,7 @@ class AssetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> InquireFileMetadataResult:
+    ) -> GetFileMetadataResult:
         """Gets the metadata for an asset by file name.
 
         This endpoint retrieves metadata information for an asset stored in S3. The metadata includes details such as content type, size, creation date, and custom metadata fields.
@@ -94,7 +94,7 @@ class AssetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "InquireFileMetadataResult",
+            '200': "GetFileMetadataResult",
             '404': "ProblemDetails",
         }
         response_data = self.api_client.call_api(
@@ -124,7 +124,7 @@ class AssetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[InquireFileMetadataResult]:
+    ) -> ApiResponse[GetFileMetadataResult]:
         """Gets the metadata for an asset by file name.
 
         This endpoint retrieves metadata information for an asset stored in S3. The metadata includes details such as content type, size, creation date, and custom metadata fields.
@@ -162,7 +162,7 @@ class AssetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "InquireFileMetadataResult",
+            '200': "GetFileMetadataResult",
             '404': "ProblemDetails",
         }
         response_data = self.api_client.call_api(
@@ -230,7 +230,7 @@ class AssetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "InquireFileMetadataResult",
+            '200': "GetFileMetadataResult",
             '404': "ProblemDetails",
         }
         response_data = self.api_client.call_api(

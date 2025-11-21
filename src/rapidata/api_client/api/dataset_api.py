@@ -24,7 +24,7 @@ from rapidata.api_client.models.create_datapoint_result import CreateDatapointRe
 from rapidata.api_client.models.get_dataset_by_id_result import GetDatasetByIdResult
 from rapidata.api_client.models.get_dataset_progress_result import GetDatasetProgressResult
 from rapidata.api_client.models.get_failed_datapoints_result import GetFailedDatapointsResult
-from rapidata.api_client.models.paged_result_datapoint_model import PagedResultDatapointModel
+from rapidata.api_client.models.paged_result_query_datapoints_by_dataset_id_result import PagedResultQueryDatapointsByDatasetIdResult
 from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.update_dataset_name_model import UpdateDatasetNameModel
 
@@ -618,7 +618,7 @@ class DatasetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PagedResultDatapointModel:
+    ) -> PagedResultQueryDatapointsByDatasetIdResult:
         """Gets all datapoints of a dataset.
 
 
@@ -658,7 +658,7 @@ class DatasetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultDatapointModel",
+            '200': "PagedResultQueryDatapointsByDatasetIdResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -688,7 +688,7 @@ class DatasetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PagedResultDatapointModel]:
+    ) -> ApiResponse[PagedResultQueryDatapointsByDatasetIdResult]:
         """Gets all datapoints of a dataset.
 
 
@@ -728,7 +728,7 @@ class DatasetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultDatapointModel",
+            '200': "PagedResultQueryDatapointsByDatasetIdResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -798,7 +798,7 @@ class DatasetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultDatapointModel",
+            '200': "PagedResultQueryDatapointsByDatasetIdResult",
         }
         response_data = self.api_client.call_api(
             *_param,

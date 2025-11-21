@@ -156,17 +156,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagedResult.DatapointModel"
+                  "$ref": "#/components/schemas/PagedResult.QueryDatapointsByDatasetIdResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagedResult.DatapointModel"
+                  "$ref": "#/components/schemas/PagedResult.QueryDatapointsByDatasetIdResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagedResult.DatapointModel"
+                  "$ref": "#/components/schemas/PagedResult.QueryDatapointsByDatasetIdResult"
                 }
               }
             }
@@ -1210,17 +1210,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ClientsQueryResultPagedResult"
+                  "$ref": "#/components/schemas/PagedResult.ClientsQueryResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ClientsQueryResultPagedResult"
+                  "$ref": "#/components/schemas/PagedResult.ClientsQueryResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ClientsQueryResultPagedResult"
+                  "$ref": "#/components/schemas/PagedResult.ClientsQueryResult"
                 }
               }
             }
@@ -2080,38 +2080,14 @@
       }
     },
     "/validation-set/{validationSetId}/rapid-new": {},
-    "/validation-set/{validationSetId}/update-labeling-hints": {
-      "post": {
-        "tags": [
-          "ValidationSet"
-        ],
-        "summary": "Refreshes the labeling hints for a validation set.",
-        "description": "This will sample the rapids in the validation set and update the labeling hints based on the sampled rapids.",
-        "parameters": [
-          {
-            "name": "validationSetId",
-            "in": "path",
-            "description": "The id of the validation set to update the labeling hints for.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        }
-      }
-    },
+    "/validation-set/{validationSetId}/update-labeling-hints": {},
     "/validation-set/{validationSetId}/visibility": {
       "patch": {
         "tags": [
           "ValidationSet"
         ],
         "summary": "Updates the visibility of a validation set.",
-        "description": "Public validation sets are used to automatically add a validation set to an order if no validation set is specified.\nIf the validation set is made public, the labeling hints will be updated automatically.",
+        "description": "Public validation sets are used to automatically add a validation set to an order if no validation set is specified.",
         "parameters": [
           {
             "name": "validationSetId",
@@ -2251,17 +2227,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetRapidResponsesResult"
+                  "$ref": "#/components/schemas/GetResponsesForRapidResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetRapidResponsesResult"
+                  "$ref": "#/components/schemas/GetResponsesForRapidResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetRapidResponsesResult"
+                  "$ref": "#/components/schemas/GetResponsesForRapidResult"
                 }
               }
             }
@@ -2502,17 +2478,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagedResult.PotentialValidationRapid"
+                  "$ref": "#/components/schemas/PagedResult.QueryValidationRapidEligibilityResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagedResult.PotentialValidationRapid"
+                  "$ref": "#/components/schemas/PagedResult.QueryValidationRapidEligibilityResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagedResult.PotentialValidationRapid"
+                  "$ref": "#/components/schemas/PagedResult.QueryValidationRapidEligibilityResult"
                 }
               }
             }
@@ -3289,17 +3265,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/PreliminaryDownloadResult"
+                  "$ref": "#/components/schemas/StartPreliminaryDownloadResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PreliminaryDownloadResult"
+                  "$ref": "#/components/schemas/StartPreliminaryDownloadResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PreliminaryDownloadResult"
+                  "$ref": "#/components/schemas/StartPreliminaryDownloadResult"
                 }
               }
             }
@@ -3517,17 +3493,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/BoostQueryResult"
+                  "$ref": "#/components/schemas/GetBoostResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BoostQueryResult"
+                  "$ref": "#/components/schemas/GetBoostResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BoostQueryResult"
+                  "$ref": "#/components/schemas/GetBoostResult"
                 }
               }
             }
@@ -3645,17 +3621,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagedResult.LeaderboardQueryResult"
+                  "$ref": "#/components/schemas/PagedResult.LeaderboardsQueryResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagedResult.LeaderboardQueryResult"
+                  "$ref": "#/components/schemas/PagedResult.LeaderboardsQueryResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagedResult.LeaderboardQueryResult"
+                  "$ref": "#/components/schemas/PagedResult.LeaderboardsQueryResult"
                 }
               }
             }
@@ -4295,17 +4271,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagedResult.LeaderboardQueryResult"
+                  "$ref": "#/components/schemas/PagedResult.LeaderboardsQueryResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagedResult.LeaderboardQueryResult"
+                  "$ref": "#/components/schemas/PagedResult.LeaderboardsQueryResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagedResult.LeaderboardQueryResult"
+                  "$ref": "#/components/schemas/PagedResult.LeaderboardsQueryResult"
                 }
               }
             }
@@ -5220,17 +5196,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/InquireFileMetadataResult"
+                  "$ref": "#/components/schemas/GetFileMetadataResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/InquireFileMetadataResult"
+                  "$ref": "#/components/schemas/GetFileMetadataResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/InquireFileMetadataResult"
+                  "$ref": "#/components/schemas/GetFileMetadataResult"
                 }
               }
             }
@@ -5415,42 +5391,6 @@
         },
         "additionalProperties": false
       },
-      "DatapointModel": {
-        "required": [
-          "asset",
-          "datasetId",
-          "id"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "datasetId": {
-            "type": "string"
-          },
-          "asset": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/FileAssetModel"
-              },
-              {
-                "$ref": "#/components/schemas/MultiAssetModel"
-              },
-              {
-                "$ref": "#/components/schemas/NullAssetModel"
-              },
-              {
-                "$ref": "#/components/schemas/TextAssetModel"
-              }
-            ],
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          }
-        },
-        "additionalProperties": false
-      },
       "DatapointState": {
         "enum": [
           "Ready",
@@ -5476,12 +5416,26 @@
             "default": "ExistingAssetInput",
             "example": "ExistingAssetInput"
           },
+          "name": {
+            "type": "string"
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/TextMetadataInput"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            },
+            "nullable": true
+          },
           "identifier": {
             "type": "string",
             "readOnly": true
-          },
-          "name": {
-            "type": "string"
           }
         },
         "additionalProperties": false
@@ -5841,6 +5795,21 @@
         ],
         "type": "string"
       },
+      "MetadataVisibilities": {
+        "type": "array",
+        "items": {
+          "enum": [
+            "None",
+            "Users",
+            "Customers",
+            "Admins",
+            "Dashboard",
+            "All"
+          ],
+          "type": "string"
+        },
+        "format": "int32"
+      },
       "MultiAssetInput": {
         "title": "MultiAssetInput",
         "required": [
@@ -5876,6 +5845,20 @@
                 "propertyName": "_t"
               }
             }
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/TextMetadataInput"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            },
+            "nullable": true
           },
           "identifier": {
             "type": "string",
@@ -6073,7 +6056,7 @@
         },
         "additionalProperties": false
       },
-      "PagedResult.DatapointModel": {
+      "PagedResult.QueryDatapointsByDatasetIdResult": {
         "required": [
           "items",
           "page",
@@ -6097,7 +6080,7 @@
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/DatapointModel"
+              "$ref": "#/components/schemas/QueryDatapointsByDatasetIdResult"
             }
           },
           "totalPages": {
@@ -6170,6 +6153,42 @@
         },
         "additionalProperties": false,
         "description": "Input model for prompt metadata."
+      },
+      "QueryDatapointsByDatasetIdResult": {
+        "required": [
+          "asset",
+          "datasetId",
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "datasetId": {
+            "type": "string"
+          },
+          "asset": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/FileAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/MultiAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/NullAssetModel"
+              },
+              {
+                "$ref": "#/components/schemas/TextAssetModel"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          }
+        },
+        "additionalProperties": false
       },
       "QueryModel": {
         "type": "object",
@@ -6303,6 +6322,20 @@
           "text": {
             "type": "string"
           },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/TextMetadataInput"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            },
+            "nullable": true
+          },
           "identifier": {
             "type": "string",
             "readOnly": true
@@ -6374,6 +6407,33 @@
           },
           "identifier": {
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TextMetadataInput": {
+        "title": "TextMetadataInput",
+        "required": [
+          "_t",
+          "visibilities"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "TextMetadataInput"
+            ],
+            "type": "string",
+            "description": "Discriminator value for TextMetadataInput",
+            "default": "TextMetadataInput",
+            "example": "TextMetadataInput"
+          },
+          "text": {
+            "type": "string",
+            "nullable": true
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
           }
         },
         "additionalProperties": false
@@ -6929,13 +6989,13 @@
       },
       "CloneOrderResult": {
         "required": [
-          "datasetId",
           "orderId"
         ],
         "type": "object",
         "properties": {
           "datasetId": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "orderId": {
             "type": "string"
@@ -9220,41 +9280,6 @@
         },
         "additionalProperties": false
       },
-      "ClientsQueryResultPagedResult": {
-        "required": [
-          "items",
-          "page",
-          "pageSize",
-          "total"
-        ],
-        "type": "object",
-        "properties": {
-          "total": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ClientsQueryResult"
-            }
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false
-      },
       "CreateBridgeTokenResult": {
         "required": [
           "readKey",
@@ -9561,6 +9586,41 @@
           },
           "message": {
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PagedResult.ClientsQueryResult": {
+        "required": [
+          "items",
+          "page",
+          "pageSize",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientsQueryResult"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
           }
         },
         "additionalProperties": false
@@ -11153,6 +11213,13 @@
           "promptType": {
             "$ref": "#/components/schemas/PromptType"
           },
+          "dimensions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
           "isPublic": {
             "type": "boolean"
           },
@@ -11472,13 +11539,45 @@
           "responses": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/PublicRapidResponse"
+              "$ref": "#/components/schemas/GetPublicResponsesResult.Response"
             }
           }
         },
         "additionalProperties": false
       },
-      "GetRapidResponsesResult": {
+      "GetPublicResponsesResult.Response": {
+        "required": [
+          "country",
+          "id",
+          "userId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "age": {
+            "type": "string",
+            "nullable": true
+          },
+          "occupation": {
+            "type": "string",
+            "nullable": true
+          },
+          "gender": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetResponsesForRapidResult": {
         "required": [
           "asset",
           "rapidId",
@@ -11512,11 +11611,92 @@
           "responses": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/RapidResponse"
+              "$ref": "#/components/schemas/GetResponsesForRapidResult.Response"
             }
           },
           "state": {
             "$ref": "#/components/schemas/RapidState"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetResponsesForRapidResult.Response": {
+        "required": [
+          "country",
+          "demographicInformation",
+          "id",
+          "result",
+          "userId",
+          "userScore",
+          "userScores"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "result": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranscriptionResult"
+              },
+              {
+                "$ref": "#/components/schemas/ScrubResult"
+              },
+              {
+                "$ref": "#/components/schemas/PolygonResult"
+              },
+              {
+                "$ref": "#/components/schemas/NamedEntityResult"
+              },
+              {
+                "$ref": "#/components/schemas/LocateResult"
+              },
+              {
+                "$ref": "#/components/schemas/LineResult"
+              },
+              {
+                "$ref": "#/components/schemas/FreeTextResult"
+              },
+              {
+                "$ref": "#/components/schemas/CompareResult"
+              },
+              {
+                "$ref": "#/components/schemas/SkipResult"
+              },
+              {
+                "$ref": "#/components/schemas/AttachCategoryResult"
+              },
+              {
+                "$ref": "#/components/schemas/BoundingBoxResult"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "userScore": {
+            "type": "number",
+            "format": "double"
+          },
+          "userScores": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          "demographicInformation": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
           }
         },
         "additionalProperties": false
@@ -11752,7 +11932,7 @@
         },
         "additionalProperties": false
       },
-      "PagedResult.PotentialValidationRapid": {
+      "PagedResult.QueryValidationRapidEligibilityResult": {
         "required": [
           "items",
           "page",
@@ -11776,7 +11956,7 @@
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/PotentialValidationRapid"
+              "$ref": "#/components/schemas/QueryValidationRapidEligibilityResult"
             }
           },
           "totalPages": {
@@ -11907,7 +12087,49 @@
         },
         "additionalProperties": false
       },
-      "PotentialValidationRapid": {
+      "ProbabilisticAttachCategoryRefereeInfo": {
+        "title": "ProbabilisticAttachCategoryRefereeInfo",
+        "required": [
+          "_t",
+          "maxVotes",
+          "threshold"
+        ],
+        "type": "object",
+        "properties": {
+          "_t": {
+            "enum": [
+              "ProbabilisticAttachCategoryRefereeInfo"
+            ],
+            "type": "string",
+            "description": "Discriminator value for ProbabilisticAttachCategoryRefereeInfo",
+            "default": "ProbabilisticAttachCategoryRefereeInfo",
+            "example": "ProbabilisticAttachCategoryRefereeInfo"
+          },
+          "threshold": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxVotes": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "QueryValidationRapidEligibilityModel.QueryValidationModel": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "$ref": "#/components/schemas/PageInfo"
+          },
+          "filter": {
+            "$ref": "#/components/schemas/RootFilter"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The Query Model specific to the validation rapid eligibility query."
+      },
+      "QueryValidationRapidEligibilityResult": {
         "required": [
           "confidence",
           "payload",
@@ -12011,80 +12233,6 @@
         },
         "additionalProperties": false
       },
-      "ProbabilisticAttachCategoryRefereeInfo": {
-        "title": "ProbabilisticAttachCategoryRefereeInfo",
-        "required": [
-          "_t",
-          "maxVotes",
-          "threshold"
-        ],
-        "type": "object",
-        "properties": {
-          "_t": {
-            "enum": [
-              "ProbabilisticAttachCategoryRefereeInfo"
-            ],
-            "type": "string",
-            "description": "Discriminator value for ProbabilisticAttachCategoryRefereeInfo",
-            "default": "ProbabilisticAttachCategoryRefereeInfo",
-            "example": "ProbabilisticAttachCategoryRefereeInfo"
-          },
-          "threshold": {
-            "type": "number",
-            "format": "double"
-          },
-          "maxVotes": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "PublicRapidResponse": {
-        "required": [
-          "country",
-          "id",
-          "userId"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "userId": {
-            "type": "string"
-          },
-          "country": {
-            "type": "string"
-          },
-          "age": {
-            "type": "string",
-            "nullable": true
-          },
-          "occupation": {
-            "type": "string",
-            "nullable": true
-          },
-          "gender": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "QueryValidationRapidEligibilityModel.QueryValidationModel": {
-        "type": "object",
-        "properties": {
-          "page": {
-            "$ref": "#/components/schemas/PageInfo"
-          },
-          "filter": {
-            "$ref": "#/components/schemas/RootFilter"
-          }
-        },
-        "additionalProperties": false,
-        "description": "The Query Model specific to the validation rapid eligibility query."
-      },
       "RapidIssue": {
         "enum": [
           "Other",
@@ -12103,6 +12251,7 @@
       "RapidModel": {
         "required": [
           "asset",
+          "featureFlags",
           "hasResponses",
           "id",
           "payload",
@@ -12257,86 +12406,11 @@
             "type": "string",
             "format": "date-time",
             "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "RapidResponse": {
-        "required": [
-          "country",
-          "demographicInformation",
-          "id",
-          "result",
-          "userId",
-          "userScore",
-          "userScores"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
           },
-          "userId": {
-            "type": "string"
-          },
-          "country": {
-            "type": "string"
-          },
-          "result": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/TranscriptionResult"
-              },
-              {
-                "$ref": "#/components/schemas/ScrubResult"
-              },
-              {
-                "$ref": "#/components/schemas/PolygonResult"
-              },
-              {
-                "$ref": "#/components/schemas/NamedEntityResult"
-              },
-              {
-                "$ref": "#/components/schemas/LocateResult"
-              },
-              {
-                "$ref": "#/components/schemas/LineResult"
-              },
-              {
-                "$ref": "#/components/schemas/FreeTextResult"
-              },
-              {
-                "$ref": "#/components/schemas/CompareResult"
-              },
-              {
-                "$ref": "#/components/schemas/SkipResult"
-              },
-              {
-                "$ref": "#/components/schemas/AttachCategoryResult"
-              },
-              {
-                "$ref": "#/components/schemas/BoundingBoxResult"
-              }
-            ],
-            "discriminator": {
-              "propertyName": "_t"
-            }
-          },
-          "userScore": {
-            "type": "number",
-            "format": "double"
-          },
-          "userScores": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "number",
-              "format": "double"
-            }
-          },
-          "demographicInformation": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
+          "featureFlags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeatureFlag"
             }
           }
         },
@@ -12973,7 +13047,88 @@
           "responses": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/RapidResponse"
+              "$ref": "#/components/schemas/GetResponsesResult.Response"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetResponsesResult.Response": {
+        "required": [
+          "country",
+          "demographicInformation",
+          "id",
+          "result",
+          "userId",
+          "userScore",
+          "userScores"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "result": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranscriptionResult"
+              },
+              {
+                "$ref": "#/components/schemas/ScrubResult"
+              },
+              {
+                "$ref": "#/components/schemas/PolygonResult"
+              },
+              {
+                "$ref": "#/components/schemas/NamedEntityResult"
+              },
+              {
+                "$ref": "#/components/schemas/LocateResult"
+              },
+              {
+                "$ref": "#/components/schemas/LineResult"
+              },
+              {
+                "$ref": "#/components/schemas/FreeTextResult"
+              },
+              {
+                "$ref": "#/components/schemas/CompareResult"
+              },
+              {
+                "$ref": "#/components/schemas/SkipResult"
+              },
+              {
+                "$ref": "#/components/schemas/AttachCategoryResult"
+              },
+              {
+                "$ref": "#/components/schemas/BoundingBoxResult"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "userScore": {
+            "type": "number",
+            "format": "double"
+          },
+          "userScores": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          "demographicInformation": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
             }
           }
         },
@@ -13132,7 +13287,7 @@
           "responses": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/RapidResponse"
+              "$ref": "#/components/schemas/GetWorkflowResultsResult.Response"
             }
           },
           "state": {
@@ -13160,6 +13315,87 @@
             "nullable": true,
             "discriminator": {
               "propertyName": "_t"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetWorkflowResultsResult.Response": {
+        "required": [
+          "country",
+          "demographicInformation",
+          "id",
+          "result",
+          "userId",
+          "userScore",
+          "userScores"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "result": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TranscriptionResult"
+              },
+              {
+                "$ref": "#/components/schemas/ScrubResult"
+              },
+              {
+                "$ref": "#/components/schemas/PolygonResult"
+              },
+              {
+                "$ref": "#/components/schemas/NamedEntityResult"
+              },
+              {
+                "$ref": "#/components/schemas/LocateResult"
+              },
+              {
+                "$ref": "#/components/schemas/LineResult"
+              },
+              {
+                "$ref": "#/components/schemas/FreeTextResult"
+              },
+              {
+                "$ref": "#/components/schemas/CompareResult"
+              },
+              {
+                "$ref": "#/components/schemas/SkipResult"
+              },
+              {
+                "$ref": "#/components/schemas/AttachCategoryResult"
+              },
+              {
+                "$ref": "#/components/schemas/BoundingBoxResult"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "_t"
+            }
+          },
+          "userScore": {
+            "type": "number",
+            "format": "double"
+          },
+          "userScores": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          "demographicInformation": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
             }
           }
         },
@@ -14144,21 +14380,6 @@
         },
         "additionalProperties": false
       },
-      "MetadataVisibilities": {
-        "type": "array",
-        "items": {
-          "enum": [
-            "None",
-            "Users",
-            "Customers",
-            "Admins",
-            "Dashboard",
-            "All"
-          ],
-          "type": "string"
-        },
-        "format": "int32"
-      },
       "MultiAsset": {
         "title": "MultiAsset",
         "required": [
@@ -14365,18 +14586,6 @@
         "additionalProperties": false,
         "description": "The model for creating a preliminary download."
       },
-      "PreliminaryDownloadResult": {
-        "required": [
-          "downloadId"
-        ],
-        "type": "object",
-        "properties": {
-          "downloadId": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "SimpleWorkflowConfig": {
         "title": "SimpleWorkflowConfig",
         "required": [
@@ -14479,6 +14688,18 @@
           },
           "visibilities": {
             "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        },
+        "additionalProperties": false
+      },
+      "StartPreliminaryDownloadResult": {
+        "required": [
+          "downloadId"
+        ],
+        "type": "object",
+        "properties": {
+          "downloadId": {
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -14700,60 +14921,6 @@
         },
         "additionalProperties": false
       },
-      "BoostQueryResult": {
-        "required": [
-          "activeCampaigns",
-          "inactiveCampaigns",
-          "mode",
-          "status",
-          "unknownCampaigns"
-        ],
-        "type": "object",
-        "properties": {
-          "status": {
-            "$ref": "#/components/schemas/BoostQueryResult.BoostStatus"
-          },
-          "mode": {
-            "$ref": "#/components/schemas/BoostQueryResult.BoostMode"
-          },
-          "activeCampaigns": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "inactiveCampaigns": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "unknownCampaigns": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        },
-        "additionalProperties": false
-      },
-      "BoostQueryResult.BoostMode": {
-        "enum": [
-          "Automatic",
-          "Manual"
-        ],
-        "type": "string"
-      },
-      "BoostQueryResult.BoostStatus": {
-        "enum": [
-          "Active",
-          "Inactive",
-          "Partial",
-          "Unknown"
-        ],
-        "type": "string"
-      },
       "BoostingProfile": {
         "type": "object",
         "properties": {
@@ -14840,6 +15007,60 @@
         },
         "additionalProperties": false,
         "description": "The model to update the manual boost status. or putting it back to autopilot."
+      },
+      "GetBoostResult": {
+        "required": [
+          "activeCampaigns",
+          "inactiveCampaigns",
+          "mode",
+          "status",
+          "unknownCampaigns"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/GetBoostResult.BoostStatus"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/GetBoostResult.BoostMode"
+          },
+          "activeCampaigns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "inactiveCampaigns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "unknownCampaigns": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetBoostResult.BoostMode": {
+        "enum": [
+          "Automatic",
+          "Manual"
+        ],
+        "type": "string"
+      },
+      "GetBoostResult.BoostStatus": {
+        "enum": [
+          "Active",
+          "Inactive",
+          "Partial",
+          "Unknown"
+        ],
+        "type": "string"
       },
       "Option.Int32": {
         "title": "Option`1",
@@ -15768,7 +15989,7 @@
         },
         "additionalProperties": false
       },
-      "LeaderboardQueryResult": {
+      "LeaderboardsQueryResult": {
         "required": [
           "featureFlags",
           "filters",
@@ -16163,7 +16384,7 @@
         },
         "additionalProperties": false
       },
-      "PagedResult.LeaderboardQueryResult": {
+      "PagedResult.LeaderboardsQueryResult": {
         "required": [
           "items",
           "page",
@@ -16187,7 +16408,7 @@
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/LeaderboardQueryResult"
+              "$ref": "#/components/schemas/LeaderboardsQueryResult"
             }
           },
           "totalPages": {
@@ -17180,7 +17401,7 @@
         },
         "additionalProperties": false
       },
-      "InquireFileMetadataResult": {
+      "GetFileMetadataResult": {
         "required": [
           "metadata"
         ],

@@ -20,10 +20,10 @@ from pydantic import Field, StrictStr
 from typing import Optional
 from typing_extensions import Annotated
 from rapidata.api_client.models.client_model import ClientModel
-from rapidata.api_client.models.clients_query_result_paged_result import ClientsQueryResultPagedResult
 from rapidata.api_client.models.create_client_model import CreateClientModel
 from rapidata.api_client.models.create_customer_client_result import CreateCustomerClientResult
 from rapidata.api_client.models.dynamic_client_registration_request import DynamicClientRegistrationRequest
+from rapidata.api_client.models.paged_result_clients_query_result import PagedResultClientsQueryResult
 from rapidata.api_client.models.query_model import QueryModel
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
@@ -1128,7 +1128,7 @@ class ClientApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ClientsQueryResultPagedResult:
+    ) -> PagedResultClientsQueryResult:
         """Queries the clients for the current customer.
 
         A client allows a customer to authenticate with the APIs without using their own credentials. This is useful for creating service accounts or other automated processes, as when using the Rapidata Python SDK.
@@ -1166,7 +1166,7 @@ class ClientApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ClientsQueryResultPagedResult",
+            '200': "PagedResultClientsQueryResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1195,7 +1195,7 @@ class ClientApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[ClientsQueryResultPagedResult]:
+    ) -> ApiResponse[PagedResultClientsQueryResult]:
         """Queries the clients for the current customer.
 
         A client allows a customer to authenticate with the APIs without using their own credentials. This is useful for creating service accounts or other automated processes, as when using the Rapidata Python SDK.
@@ -1233,7 +1233,7 @@ class ClientApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ClientsQueryResultPagedResult",
+            '200': "PagedResultClientsQueryResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1300,7 +1300,7 @@ class ClientApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "ClientsQueryResultPagedResult",
+            '200': "PagedResultClientsQueryResult",
         }
         response_data = self.api_client.call_api(
             *_param,

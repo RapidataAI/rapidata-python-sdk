@@ -17,20 +17,24 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.get_datapoint_by_id_result_asset import GetDatapointByIdResultAsset
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Union
+from rapidata.api_client.models.get_responses_for_rapid_result_response_result import GetResponsesForRapidResultResponseResult
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetCompareWorkflowResultsResult(BaseModel):
+class GetResponsesResultResponse(BaseModel):
     """
-    GetCompareWorkflowResultsResult
+    GetResponsesResultResponse
     """ # noqa: E501
-    workflow_datapoint_id: StrictStr = Field(alias="workflowDatapointId")
-    asset: GetDatapointByIdResultAsset
-    elo: StrictInt
-    __properties: ClassVar[List[str]] = ["workflowDatapointId", "asset", "elo"]
+    id: StrictStr
+    user_id: StrictStr = Field(alias="userId")
+    country: StrictStr
+    result: GetResponsesForRapidResultResponseResult
+    user_score: Union[StrictFloat, StrictInt] = Field(alias="userScore")
+    user_scores: Dict[str, Union[StrictFloat, StrictInt]] = Field(alias="userScores")
+    demographic_information: Dict[str, StrictStr] = Field(alias="demographicInformation")
+    __properties: ClassVar[List[str]] = ["id", "userId", "country", "result", "userScore", "userScores", "demographicInformation"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -50,7 +54,7 @@ class GetCompareWorkflowResultsResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetCompareWorkflowResultsResult from a JSON string"""
+        """Create an instance of GetResponsesResultResponse from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -71,14 +75,14 @@ class GetCompareWorkflowResultsResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of asset
-        if self.asset:
-            _dict['asset'] = self.asset.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of result
+        if self.result:
+            _dict['result'] = self.result.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetCompareWorkflowResultsResult from a dict"""
+        """Create an instance of GetResponsesResultResponse from a dict"""
         if obj is None:
             return None
 
@@ -86,9 +90,13 @@ class GetCompareWorkflowResultsResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "workflowDatapointId": obj.get("workflowDatapointId"),
-            "asset": GetDatapointByIdResultAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
-            "elo": obj.get("elo")
+            "id": obj.get("id"),
+            "userId": obj.get("userId"),
+            "country": obj.get("country"),
+            "result": GetResponsesForRapidResultResponseResult.from_dict(obj["result"]) if obj.get("result") is not None else None,
+            "userScore": obj.get("userScore"),
+            "userScores": obj.get("userScores"),
+            "demographicInformation": obj.get("demographicInformation")
         })
         return _obj
 
