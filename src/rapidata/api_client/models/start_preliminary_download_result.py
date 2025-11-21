@@ -17,20 +17,17 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.get_datapoint_by_id_result_asset import GetDatapointByIdResultAsset
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetCompareWorkflowResultsResult(BaseModel):
+class StartPreliminaryDownloadResult(BaseModel):
     """
-    GetCompareWorkflowResultsResult
+    StartPreliminaryDownloadResult
     """ # noqa: E501
-    workflow_datapoint_id: StrictStr = Field(alias="workflowDatapointId")
-    asset: GetDatapointByIdResultAsset
-    elo: StrictInt
-    __properties: ClassVar[List[str]] = ["workflowDatapointId", "asset", "elo"]
+    download_id: StrictStr = Field(alias="downloadId")
+    __properties: ClassVar[List[str]] = ["downloadId"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -50,7 +47,7 @@ class GetCompareWorkflowResultsResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetCompareWorkflowResultsResult from a JSON string"""
+        """Create an instance of StartPreliminaryDownloadResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -71,14 +68,11 @@ class GetCompareWorkflowResultsResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of asset
-        if self.asset:
-            _dict['asset'] = self.asset.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetCompareWorkflowResultsResult from a dict"""
+        """Create an instance of StartPreliminaryDownloadResult from a dict"""
         if obj is None:
             return None
 
@@ -86,9 +80,7 @@ class GetCompareWorkflowResultsResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "workflowDatapointId": obj.get("workflowDatapointId"),
-            "asset": GetDatapointByIdResultAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
-            "elo": obj.get("elo")
+            "downloadId": obj.get("downloadId")
         })
         return _obj
 

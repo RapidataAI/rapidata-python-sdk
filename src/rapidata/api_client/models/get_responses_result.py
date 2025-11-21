@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.rapid_response import RapidResponse
+from rapidata.api_client.models.get_responses_result_response import GetResponsesResultResponse
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,7 +27,7 @@ class GetResponsesResult(BaseModel):
     """
     GetResponsesResult
     """ # noqa: E501
-    responses: List[RapidResponse]
+    responses: List[GetResponsesResultResponse]
     __properties: ClassVar[List[str]] = ["responses"]
 
     model_config = ConfigDict(
@@ -88,7 +88,7 @@ class GetResponsesResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "responses": [RapidResponse.from_dict(_item) for _item in obj["responses"]] if obj.get("responses") is not None else None
+            "responses": [GetResponsesResultResponse.from_dict(_item) for _item in obj["responses"]] if obj.get("responses") is not None else None
         })
         return _obj
 

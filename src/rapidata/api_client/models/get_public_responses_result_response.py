@@ -17,20 +17,22 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.get_datapoint_by_id_result_asset import GetDatapointByIdResultAsset
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetCompareWorkflowResultsResult(BaseModel):
+class GetPublicResponsesResultResponse(BaseModel):
     """
-    GetCompareWorkflowResultsResult
+    GetPublicResponsesResultResponse
     """ # noqa: E501
-    workflow_datapoint_id: StrictStr = Field(alias="workflowDatapointId")
-    asset: GetDatapointByIdResultAsset
-    elo: StrictInt
-    __properties: ClassVar[List[str]] = ["workflowDatapointId", "asset", "elo"]
+    id: StrictStr
+    user_id: StrictStr = Field(alias="userId")
+    country: StrictStr
+    age: Optional[StrictStr] = None
+    occupation: Optional[StrictStr] = None
+    gender: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = ["id", "userId", "country", "age", "occupation", "gender"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -50,7 +52,7 @@ class GetCompareWorkflowResultsResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetCompareWorkflowResultsResult from a JSON string"""
+        """Create an instance of GetPublicResponsesResultResponse from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -71,14 +73,26 @@ class GetCompareWorkflowResultsResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of asset
-        if self.asset:
-            _dict['asset'] = self.asset.to_dict()
+        # set to None if age (nullable) is None
+        # and model_fields_set contains the field
+        if self.age is None and "age" in self.model_fields_set:
+            _dict['age'] = None
+
+        # set to None if occupation (nullable) is None
+        # and model_fields_set contains the field
+        if self.occupation is None and "occupation" in self.model_fields_set:
+            _dict['occupation'] = None
+
+        # set to None if gender (nullable) is None
+        # and model_fields_set contains the field
+        if self.gender is None and "gender" in self.model_fields_set:
+            _dict['gender'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetCompareWorkflowResultsResult from a dict"""
+        """Create an instance of GetPublicResponsesResultResponse from a dict"""
         if obj is None:
             return None
 
@@ -86,9 +100,12 @@ class GetCompareWorkflowResultsResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "workflowDatapointId": obj.get("workflowDatapointId"),
-            "asset": GetDatapointByIdResultAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
-            "elo": obj.get("elo")
+            "id": obj.get("id"),
+            "userId": obj.get("userId"),
+            "country": obj.get("country"),
+            "age": obj.get("age"),
+            "occupation": obj.get("occupation"),
+            "gender": obj.get("gender")
         })
         return _obj
 

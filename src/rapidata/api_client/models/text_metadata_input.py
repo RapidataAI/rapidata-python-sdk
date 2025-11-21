@@ -17,20 +17,34 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.get_datapoint_by_id_result_asset import GetDatapointByIdResultAsset
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetCompareWorkflowResultsResult(BaseModel):
+class TextMetadataInput(BaseModel):
     """
-    GetCompareWorkflowResultsResult
+    TextMetadataInput
     """ # noqa: E501
-    workflow_datapoint_id: StrictStr = Field(alias="workflowDatapointId")
-    asset: GetDatapointByIdResultAsset
-    elo: StrictInt
-    __properties: ClassVar[List[str]] = ["workflowDatapointId", "asset", "elo"]
+    t: StrictStr = Field(description="Discriminator value for TextMetadataInput", alias="_t")
+    text: Optional[StrictStr] = None
+    visibilities: List[StrictStr]
+    __properties: ClassVar[List[str]] = ["_t", "text", "visibilities"]
+
+    @field_validator('t')
+    def t_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['TextMetadataInput']):
+            raise ValueError("must be one of enum values ('TextMetadataInput')")
+        return value
+
+    @field_validator('visibilities')
+    def visibilities_validate_enum(cls, value):
+        """Validates the enum"""
+        for i in value:
+            if i not in set(['None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All']):
+                raise ValueError("each list item must be one of ('None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -50,7 +64,7 @@ class GetCompareWorkflowResultsResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetCompareWorkflowResultsResult from a JSON string"""
+        """Create an instance of TextMetadataInput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -71,14 +85,16 @@ class GetCompareWorkflowResultsResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of asset
-        if self.asset:
-            _dict['asset'] = self.asset.to_dict()
+        # set to None if text (nullable) is None
+        # and model_fields_set contains the field
+        if self.text is None and "text" in self.model_fields_set:
+            _dict['text'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetCompareWorkflowResultsResult from a dict"""
+        """Create an instance of TextMetadataInput from a dict"""
         if obj is None:
             return None
 
@@ -86,9 +102,9 @@ class GetCompareWorkflowResultsResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "workflowDatapointId": obj.get("workflowDatapointId"),
-            "asset": GetDatapointByIdResultAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
-            "elo": obj.get("elo")
+            "_t": obj.get("_t") if obj.get("_t") is not None else 'TextMetadataInput',
+            "text": obj.get("text"),
+            "visibilities": obj.get("visibilities")
         })
         return _obj
 

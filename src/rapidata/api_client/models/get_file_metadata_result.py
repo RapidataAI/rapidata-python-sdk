@@ -17,20 +17,18 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.get_datapoint_by_id_result_asset import GetDatapointByIdResultAsset
+from rapidata.api_client.models.file_asset_metadata_value import FileAssetMetadataValue
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetCompareWorkflowResultsResult(BaseModel):
+class GetFileMetadataResult(BaseModel):
     """
-    GetCompareWorkflowResultsResult
+    GetFileMetadataResult
     """ # noqa: E501
-    workflow_datapoint_id: StrictStr = Field(alias="workflowDatapointId")
-    asset: GetDatapointByIdResultAsset
-    elo: StrictInt
-    __properties: ClassVar[List[str]] = ["workflowDatapointId", "asset", "elo"]
+    metadata: Dict[str, FileAssetMetadataValue]
+    __properties: ClassVar[List[str]] = ["metadata"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -50,7 +48,7 @@ class GetCompareWorkflowResultsResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetCompareWorkflowResultsResult from a JSON string"""
+        """Create an instance of GetFileMetadataResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -71,14 +69,18 @@ class GetCompareWorkflowResultsResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of asset
-        if self.asset:
-            _dict['asset'] = self.asset.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each value in metadata (dict)
+        _field_dict = {}
+        if self.metadata:
+            for _key_metadata in self.metadata:
+                if self.metadata[_key_metadata]:
+                    _field_dict[_key_metadata] = self.metadata[_key_metadata].to_dict()
+            _dict['metadata'] = _field_dict
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetCompareWorkflowResultsResult from a dict"""
+        """Create an instance of GetFileMetadataResult from a dict"""
         if obj is None:
             return None
 
@@ -86,9 +88,12 @@ class GetCompareWorkflowResultsResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "workflowDatapointId": obj.get("workflowDatapointId"),
-            "asset": GetDatapointByIdResultAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
-            "elo": obj.get("elo")
+            "metadata": dict(
+                (_k, FileAssetMetadataValue.from_dict(_v))
+                for _k, _v in obj["metadata"].items()
+            )
+            if obj.get("metadata") is not None
+            else None
         })
         return _obj
 

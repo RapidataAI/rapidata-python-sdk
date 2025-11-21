@@ -19,7 +19,7 @@ import json
 
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -32,11 +32,12 @@ class ValidationSetModel(BaseModel):
     asset_type: List[StrictStr] = Field(alias="assetType")
     modality: List[StrictStr]
     prompt_type: List[StrictStr] = Field(alias="promptType")
+    dimensions: Optional[List[StrictStr]] = None
     is_public: StrictBool = Field(alias="isPublic")
     owner_id: StrictStr = Field(alias="ownerId")
     owner_mail: StrictStr = Field(alias="ownerMail")
     created_at: datetime = Field(alias="createdAt")
-    __properties: ClassVar[List[str]] = ["id", "name", "assetType", "modality", "promptType", "isPublic", "ownerId", "ownerMail", "createdAt"]
+    __properties: ClassVar[List[str]] = ["id", "name", "assetType", "modality", "promptType", "dimensions", "isPublic", "ownerId", "ownerMail", "createdAt"]
 
     @field_validator('asset_type')
     def asset_type_validate_enum(cls, value):
@@ -101,6 +102,11 @@ class ValidationSetModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if dimensions (nullable) is None
+        # and model_fields_set contains the field
+        if self.dimensions is None and "dimensions" in self.model_fields_set:
+            _dict['dimensions'] = None
+
         return _dict
 
     @classmethod
@@ -118,6 +124,7 @@ class ValidationSetModel(BaseModel):
             "assetType": obj.get("assetType"),
             "modality": obj.get("modality"),
             "promptType": obj.get("promptType"),
+            "dimensions": obj.get("dimensions"),
             "isPublic": obj.get("isPublic"),
             "ownerId": obj.get("ownerId"),
             "ownerMail": obj.get("ownerMail"),

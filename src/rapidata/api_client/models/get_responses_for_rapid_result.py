@@ -18,27 +18,22 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.get_datapoint_by_id_result_asset import GetDatapointByIdResultAsset
-from rapidata.api_client.models.get_validation_rapids_result_asset import GetValidationRapidsResultAsset
-from rapidata.api_client.models.get_validation_rapids_result_payload import GetValidationRapidsResultPayload
-from rapidata.api_client.models.get_workflow_results_result_response import GetWorkflowResultsResultResponse
+from rapidata.api_client.models.get_responses_for_rapid_result_response import GetResponsesForRapidResultResponse
 from rapidata.api_client.models.rapid_state import RapidState
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetWorkflowResultsResult(BaseModel):
+class GetResponsesForRapidResult(BaseModel):
     """
-    GetWorkflowResultsResult
+    GetResponsesForRapidResult
     """ # noqa: E501
     rapid_id: StrictStr = Field(alias="rapidId")
-    payload: GetValidationRapidsResultPayload
     asset: GetDatapointByIdResultAsset
-    responses: List[GetWorkflowResultsResultResponse]
+    responses: List[GetResponsesForRapidResultResponse]
     state: RapidState
-    context: Optional[StrictStr] = None
-    context_asset: Optional[GetValidationRapidsResultAsset] = Field(default=None, alias="contextAsset")
-    __properties: ClassVar[List[str]] = ["rapidId", "payload", "asset", "responses", "state", "context", "contextAsset"]
+    __properties: ClassVar[List[str]] = ["rapidId", "asset", "responses", "state"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -58,7 +53,7 @@ class GetWorkflowResultsResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetWorkflowResultsResult from a JSON string"""
+        """Create an instance of GetResponsesForRapidResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -79,9 +74,6 @@ class GetWorkflowResultsResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of payload
-        if self.payload:
-            _dict['payload'] = self.payload.to_dict()
         # override the default output from pydantic by calling `to_dict()` of asset
         if self.asset:
             _dict['asset'] = self.asset.to_dict()
@@ -92,24 +84,11 @@ class GetWorkflowResultsResult(BaseModel):
                 if _item_responses:
                     _items.append(_item_responses.to_dict())
             _dict['responses'] = _items
-        # override the default output from pydantic by calling `to_dict()` of context_asset
-        if self.context_asset:
-            _dict['contextAsset'] = self.context_asset.to_dict()
-        # set to None if context (nullable) is None
-        # and model_fields_set contains the field
-        if self.context is None and "context" in self.model_fields_set:
-            _dict['context'] = None
-
-        # set to None if context_asset (nullable) is None
-        # and model_fields_set contains the field
-        if self.context_asset is None and "context_asset" in self.model_fields_set:
-            _dict['contextAsset'] = None
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetWorkflowResultsResult from a dict"""
+        """Create an instance of GetResponsesForRapidResult from a dict"""
         if obj is None:
             return None
 
@@ -118,12 +97,9 @@ class GetWorkflowResultsResult(BaseModel):
 
         _obj = cls.model_validate({
             "rapidId": obj.get("rapidId"),
-            "payload": GetValidationRapidsResultPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
             "asset": GetDatapointByIdResultAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
-            "responses": [GetWorkflowResultsResultResponse.from_dict(_item) for _item in obj["responses"]] if obj.get("responses") is not None else None,
-            "state": obj.get("state"),
-            "context": obj.get("context"),
-            "contextAsset": GetValidationRapidsResultAsset.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None
+            "responses": [GetResponsesForRapidResultResponse.from_dict(_item) for _item in obj["responses"]] if obj.get("responses") is not None else None,
+            "state": obj.get("state")
         })
         return _obj
 

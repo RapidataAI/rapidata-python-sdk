@@ -22,8 +22,8 @@ from typing_extensions import Annotated
 from rapidata.api_client.models.create_demographic_rapid_model import CreateDemographicRapidModel
 from rapidata.api_client.models.create_rapid_result import CreateRapidResult
 from rapidata.api_client.models.get_public_responses_result import GetPublicResponsesResult
-from rapidata.api_client.models.get_rapid_responses_result import GetRapidResponsesResult
-from rapidata.api_client.models.paged_result_potential_validation_rapid import PagedResultPotentialValidationRapid
+from rapidata.api_client.models.get_responses_for_rapid_result import GetResponsesForRapidResult
+from rapidata.api_client.models.paged_result_query_validation_rapid_eligibility_result import PagedResultQueryValidationRapidEligibilityResult
 from rapidata.api_client.models.paged_result_rapid_model import PagedResultRapidModel
 from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.query_validation_rapid_eligibility_model_query_validation_model import QueryValidationRapidEligibilityModelQueryValidationModel
@@ -67,7 +67,7 @@ class CustomerRapidApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PagedResultPotentialValidationRapid:
+    ) -> PagedResultQueryValidationRapidEligibilityResult:
         """Queries rapids that are potentially eligible for validation set creation.
 
 
@@ -116,7 +116,7 @@ class CustomerRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultPotentialValidationRapid",
+            '200': "PagedResultQueryValidationRapidEligibilityResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -149,7 +149,7 @@ class CustomerRapidApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PagedResultPotentialValidationRapid]:
+    ) -> ApiResponse[PagedResultQueryValidationRapidEligibilityResult]:
         """Queries rapids that are potentially eligible for validation set creation.
 
 
@@ -198,7 +198,7 @@ class CustomerRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultPotentialValidationRapid",
+            '200': "PagedResultQueryValidationRapidEligibilityResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -280,7 +280,7 @@ class CustomerRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultPotentialValidationRapid",
+            '200': "PagedResultQueryValidationRapidEligibilityResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1166,7 +1166,7 @@ class CustomerRapidApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> GetRapidResponsesResult:
+    ) -> GetResponsesForRapidResult:
         """Gets all responses for a given rapid.
 
 
@@ -1203,7 +1203,7 @@ class CustomerRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetRapidResponsesResult",
+            '200': "GetResponsesForRapidResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1232,7 +1232,7 @@ class CustomerRapidApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[GetRapidResponsesResult]:
+    ) -> ApiResponse[GetResponsesForRapidResult]:
         """Gets all responses for a given rapid.
 
 
@@ -1269,7 +1269,7 @@ class CustomerRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetRapidResponsesResult",
+            '200': "GetResponsesForRapidResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1335,7 +1335,7 @@ class CustomerRapidApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "GetRapidResponsesResult",
+            '200': "GetResponsesForRapidResult",
         }
         response_data = self.api_client.call_api(
             *_param,

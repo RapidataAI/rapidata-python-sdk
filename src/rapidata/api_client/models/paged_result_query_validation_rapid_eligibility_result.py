@@ -17,20 +17,22 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.get_datapoint_by_id_result_asset import GetDatapointByIdResultAsset
+from pydantic import BaseModel, ConfigDict, Field, StrictInt
+from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.query_validation_rapid_eligibility_result import QueryValidationRapidEligibilityResult
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetCompareWorkflowResultsResult(BaseModel):
+class PagedResultQueryValidationRapidEligibilityResult(BaseModel):
     """
-    GetCompareWorkflowResultsResult
+    PagedResultQueryValidationRapidEligibilityResult
     """ # noqa: E501
-    workflow_datapoint_id: StrictStr = Field(alias="workflowDatapointId")
-    asset: GetDatapointByIdResultAsset
-    elo: StrictInt
-    __properties: ClassVar[List[str]] = ["workflowDatapointId", "asset", "elo"]
+    total: StrictInt
+    page: StrictInt
+    page_size: StrictInt = Field(alias="pageSize")
+    items: List[QueryValidationRapidEligibilityResult]
+    total_pages: Optional[StrictInt] = Field(default=None, alias="totalPages")
+    __properties: ClassVar[List[str]] = ["total", "page", "pageSize", "items", "totalPages"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -50,7 +52,7 @@ class GetCompareWorkflowResultsResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetCompareWorkflowResultsResult from a JSON string"""
+        """Create an instance of PagedResultQueryValidationRapidEligibilityResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -62,8 +64,10 @@ class GetCompareWorkflowResultsResult(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * OpenAPI `readOnly` fields are excluded.
         """
         excluded_fields: Set[str] = set([
+            "total_pages",
         ])
 
         _dict = self.model_dump(
@@ -71,14 +75,18 @@ class GetCompareWorkflowResultsResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of asset
-        if self.asset:
-            _dict['asset'] = self.asset.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in items (list)
+        _items = []
+        if self.items:
+            for _item_items in self.items:
+                if _item_items:
+                    _items.append(_item_items.to_dict())
+            _dict['items'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetCompareWorkflowResultsResult from a dict"""
+        """Create an instance of PagedResultQueryValidationRapidEligibilityResult from a dict"""
         if obj is None:
             return None
 
@@ -86,9 +94,11 @@ class GetCompareWorkflowResultsResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "workflowDatapointId": obj.get("workflowDatapointId"),
-            "asset": GetDatapointByIdResultAsset.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
-            "elo": obj.get("elo")
+            "total": obj.get("total"),
+            "page": obj.get("page"),
+            "pageSize": obj.get("pageSize"),
+            "items": [QueryValidationRapidEligibilityResult.from_dict(_item) for _item in obj["items"]] if obj.get("items") is not None else None,
+            "totalPages": obj.get("totalPages")
         })
         return _obj
 

@@ -19,8 +19,8 @@ from typing_extensions import Annotated
 from pydantic import Field, StrictStr
 from typing import Optional
 from typing_extensions import Annotated
-from rapidata.api_client.models.boost_query_result import BoostQueryResult
 from rapidata.api_client.models.change_boost_model import ChangeBoostModel
+from rapidata.api_client.models.get_boost_result import GetBoostResult
 from rapidata.api_client.models.paged_result_campaign_query_result import PagedResultCampaignQueryResult
 from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.update_campaign_model import UpdateCampaignModel
@@ -325,7 +325,7 @@ class CampaignApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> BoostQueryResult:
+    ) -> GetBoostResult:
         """Gets the status of the boost.
 
 
@@ -359,7 +359,7 @@ class CampaignApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "BoostQueryResult",
+            '200': "GetBoostResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -387,7 +387,7 @@ class CampaignApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[BoostQueryResult]:
+    ) -> ApiResponse[GetBoostResult]:
         """Gets the status of the boost.
 
 
@@ -421,7 +421,7 @@ class CampaignApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "BoostQueryResult",
+            '200': "GetBoostResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -483,7 +483,7 @@ class CampaignApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "BoostQueryResult",
+            '200': "GetBoostResult",
         }
         response_data = self.api_client.call_api(
             *_param,
