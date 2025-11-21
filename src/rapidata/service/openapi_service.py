@@ -148,6 +148,12 @@ class OpenAPIService:
         except PackageNotFoundError:
             return None
 
+    def __repr__(self) -> str:
+        return self.__str__()
+
+    def __str__(self) -> str:
+        return f"OpenAPIService(environment={self.environment})"
+
 
 def _get_local_certificate() -> str | None:
     result = subprocess.run(["mkcert", "-CAROOT"], capture_output=True)

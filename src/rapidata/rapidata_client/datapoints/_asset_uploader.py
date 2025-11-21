@@ -20,22 +20,22 @@ class AssetUploader:
         self.openapi_service = openapi_service
 
     def _get_cache_key(self, asset: str) -> str:
-        """Generate cache key for an asset."""
+        """Generate cache key for an asset, including environment."""
+        env = self.openapi_service.environment
         if re.match(r"^https?://", asset):
-            return asset
+            return f"{env}@{asset}"
         else:
             if not os.path.exists(asset):
                 raise FileNotFoundError(f"File not found: {asset}")
-            
+
             stat = os.stat(asset)
-            # Combine path, size, and modification time
-            return f"{asset}:{stat.st_size}:{stat.st_mtime_ns}"
+            return f"{env}@{asset}:{stat.st_size}:{stat.st_mtime_ns}"
 
     def upload_asset(self, asset: str) -> str:
         with tracer.start_as_current_span("AssetUploader.upload_asset"):
             logger.debug("Uploading asset: %s", asset)
             assert isinstance(asset, str), "Asset must be a string"
-            
+
             asset_key = self._get_cache_key(asset)
             if asset_key in self._shared_upload_cache:
                 logger.debug("Asset found in cache")
@@ -92,3 +92,9 @@ class AssetUploader:
                 _t="ExistingAssetInput",
                 name=self.upload_asset(assets),
             )
+
+    def __str__(self) -> str:
+        return f"AssetUploader(openapi_service={self.openapi_service})"
+
+    def __repr__(self) -> str:
+        return f"AssetUploader(openapi_service={self.openapi_service})"

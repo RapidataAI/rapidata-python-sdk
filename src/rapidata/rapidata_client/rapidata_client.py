@@ -93,8 +93,8 @@ class RapidataClient:
 
             logger.debug("Initializing RapidataBenchmarkManager")
             self.mri = RapidataBenchmarkManager(openapi_service=self._openapi_service)
-            
-        self._check_beta_features() # can't be in the trace for some reason
+
+        self._check_beta_features()  # can't be in the trace for some reason
 
     def reset_credentials(self):
         """Reset the credentials saved in the configuration file for the current environment."""
