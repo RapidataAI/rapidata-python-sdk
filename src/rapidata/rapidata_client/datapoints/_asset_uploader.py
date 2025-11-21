@@ -23,13 +23,13 @@ class AssetUploader:
         """Generate cache key for an asset, including environment."""
         env = self.openapi_service.environment
         if re.match(r"^https?://", asset):
-            return f"{env}:{asset}"
+            return f"{env}@{asset}"
         else:
             if not os.path.exists(asset):
                 raise FileNotFoundError(f"File not found: {asset}")
 
             stat = os.stat(asset)
-            return f"{env}:{asset}:{stat.st_size}:{stat.st_mtime_ns}"
+            return f"{env}@{asset}:{stat.st_size}:{stat.st_mtime_ns}"
 
     def upload_asset(self, asset: str) -> str:
         with tracer.start_as_current_span("AssetUploader.upload_asset"):
