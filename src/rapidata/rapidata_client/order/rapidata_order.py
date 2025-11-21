@@ -3,7 +3,7 @@ import json
 import urllib.parse
 import webbrowser
 from time import sleep
-from typing import cast
+from typing import cast, Callable, TypeVar
 from colorama import Fore
 from datetime import datetime
 from tqdm import tqdm
@@ -18,6 +18,9 @@ from rapidata.api_client.models.preliminary_download_model import (
     PreliminaryDownloadModel,
 )
 from rapidata.api_client.models.workflow_artifact_model import WorkflowArtifactModel
+from rapidata.api_client.models.get_workflow_progress_result import (
+    GetWorkflowProgressResult,
+)
 from rapidata.rapidata_client.order.rapidata_results import RapidataResults
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.config import (
@@ -29,6 +32,8 @@ from rapidata.rapidata_client.config import (
 from rapidata.rapidata_client.api.rapidata_api_client import (
     suppress_rapidata_error_logging,
 )
+
+T = TypeVar("T")
 
 
 class RapidataOrder:
@@ -57,12 +62,81 @@ class RapidataOrder:
         self.__workflow_id: str = ""
         self.__campaign_id: str = ""
         self.__pipeline_id: str = ""
-        self._max_retries = 10
-        self._retry_delay = 2
         self.order_details_page = (
             f"https://app.{self._openapi_service.environment}/order/detail/{self.id}"
         )
         logger.debug("RapidataOrder initialized")
+
+    def _get_order_failure_message(self) -> str | None:
+        """Retrieves the failure message from the order if available."""
+        try:
+            order = self._openapi_service.order_api.order_order_id_get(self.id)
+            return order.failure_message
+        except Exception:
+            logger.debug("Failed to get order failure message", self, exc_info=True)
+            return None
+
+    def _retry_operation(
+        self,
+        operation: Callable[[], T],
+        max_retries: int = 10,
+        retry_delay: float = 2,
+    ) -> T:
+        """
+        Unified retry logic for all operations with failure message handling.
+
+        Args:
+            operation: The operation to retry
+            max_retries: Maximum number of retry attempts
+            retry_delay: Delay between retries in seconds
+
+        Returns:
+            The result of the operation
+
+        Raises:
+            Exception: If the operation fails after all retries, includes order failure message if available
+        """
+        last_exception = None
+
+        for attempt in range(max_retries):
+            try:
+                return operation()
+            except Exception as e:
+                last_exception = e
+                if attempt < max_retries - 1:
+                    sleep(retry_delay)
+
+        failure_message = self._get_order_failure_message()
+        if failure_message:
+            raise Exception(failure_message) from last_exception
+
+        raise Exception(
+            f"Operation failed after {max_retries} retries: {str(last_exception)}"
+        ) from last_exception
+
+    def _wait_for_state(
+        self,
+        target_states: list[OrderState],
+        check_interval: float = 5,
+        status_message: str | None = None,
+    ) -> str:
+        """
+        Wait until the order reaches one of the target states.
+
+        Args:
+            target_states: List of states to wait for
+            check_interval: How often to check the state in seconds
+            status_message: Optional message to display while waiting
+
+        Returns:
+            The final state reached
+        """
+        while (current_state := self.get_status()) not in target_states:
+            if status_message:
+                logger.debug(status_message, self, current_state)
+            sleep(check_interval)
+
+        return current_state
 
     @property
     def created_at(self) -> datetime:
@@ -72,6 +146,65 @@ class RapidataOrder:
                 self.id
             ).order_date
         return self.__created_at
+
+    def __get_pipeline_id(self) -> str:
+        """Gets the pipeline ID for this order (cached, internal use only)."""
+        if not self.__pipeline_id:
+            self.__pipeline_id = self._retry_operation(
+                lambda: self._openapi_service.order_api.order_order_id_get(
+                    self.id
+                ).pipeline_id,
+            )
+        return self.__pipeline_id
+
+    def __get_workflow_id(self) -> str:
+        """Gets the workflow ID for this order (cached, internal use only)."""
+        if not self.__workflow_id:
+            self.__load_workflow_and_campaign_ids()
+        return self.__workflow_id
+
+    def __get_campaign_id(self) -> str:
+        """Gets the campaign ID for this order (cached, internal use only)."""
+        if not self.__campaign_id:
+            self.__load_workflow_and_campaign_ids()
+        return self.__campaign_id
+
+    def __load_workflow_and_campaign_ids(self) -> None:
+        """Loads workflow and campaign IDs from the pipeline (with retry logic)."""
+        if self.__workflow_id and self.__campaign_id:
+            return
+
+        def fetch_ids():
+            pipeline_id = self.__get_pipeline_id()
+            pipeline = self._openapi_service.pipeline_api.pipeline_pipeline_id_get(
+                pipeline_id
+            )
+            self.__workflow_id = cast(
+                WorkflowArtifactModel,
+                pipeline.artifacts["workflow-artifact"].actual_instance,
+            ).workflow_id
+            self.__campaign_id = cast(
+                CampaignArtifactModel,
+                pipeline.artifacts["campaign-artifact"].actual_instance,
+            ).campaign_id
+
+        self._retry_operation(fetch_ids)
+
+    def __get_workflow_progress(self) -> GetWorkflowProgressResult:
+        """Gets the workflow progress (internal use only)."""
+
+        def get_progress():
+            with suppress_rapidata_error_logging():
+                workflow_id = self.__get_workflow_id()
+                return self._openapi_service.workflow_api.workflow_workflow_id_progress_get(
+                    workflow_id
+                )
+
+        return self._retry_operation(
+            get_progress,
+            max_retries=5,
+            retry_delay=4,
+        )
 
     def run(self) -> "RapidataOrder":
         """Runs the order to start collecting responses."""
@@ -140,6 +273,7 @@ class RapidataOrder:
         if self.get_status() == OrderState.CREATED:
             raise Exception("Order has not been started yet. Please start it first.")
 
+        # Wait for submission review
         while self.get_status() == OrderState.SUBMITTED:
             managed_print(
                 f"Order '{self}' is submitted and being reviewed. Standby...", end="\r"
@@ -148,7 +282,9 @@ class RapidataOrder:
 
         if self.get_status() == OrderState.MANUALREVIEW:
             raise Exception(
-                f"Order '{self}' is in manual review. It might take some time to start. To speed up the process, contact support (info@rapidata.ai).\nOnce started, run this method again to display the progress bar."
+                f"Order '{self}' is in manual review. It might take some time to start. "
+                f"To speed up the process, contact support (info@rapidata.ai).\n"
+                f"Once started, run this method again to display the progress bar."
             )
 
         with tqdm(
@@ -160,7 +296,10 @@ class RapidataOrder:
         ) as pbar:
             last_percentage = 0
             while True:
-                current_percentage = self._workflow_progress.completion_percentage
+                current_percentage = (
+                    self.__get_workflow_progress().completion_percentage
+                )
+
                 if current_percentage > last_percentage:
                     pbar.update(current_percentage - last_percentage)
                     last_percentage = current_percentage
@@ -170,26 +309,6 @@ class RapidataOrder:
 
                 sleep(refresh_rate)
 
-    @property
-    def _workflow_progress(self):
-        """
-        Gets the workflow progress.
-        """
-        progress = None
-        for _ in range(self._max_retries // 2):
-            try:
-                with suppress_rapidata_error_logging():
-                    workflow_id = self.__get_workflow_id()
-                    progress = self._openapi_service.workflow_api.workflow_workflow_id_progress_get(
-                        workflow_id
-                    )
-                break
-            except Exception:
-                sleep(self._retry_delay * 2)
-        if not progress:
-            raise Exception("Failed to get progress. Please try again later.")
-        return progress
-
     def get_results(self, preliminary_results: bool = False) -> RapidataResults:
         """
         Gets the results of the order.
@@ -197,50 +316,66 @@ class RapidataOrder:
 
         Args:
             preliminary_results: If True, returns the preliminary results of the order. Defaults to False.
-                Note that preliminary results are not final and may not contain all the datapoints & responses. Only the onese that are already available.
+                Note that preliminary results are not final and may not contain all the datapoints & responses. Only the ones that are already available.
         """
         with tracer.start_as_current_span("RapidataOrder.get_results"):
             logger.info("Getting results for order '%s'...", self)
-            if preliminary_results and self.get_status() not in [OrderState.COMPLETED]:
-                return self.__get_preliminary_results()
 
-            elif preliminary_results and self.get_status() in [OrderState.COMPLETED]:
+            if preliminary_results and self.get_status() not in [OrderState.COMPLETED]:
+                return self._get_preliminary_results()
+
+            if preliminary_results and self.get_status() == OrderState.COMPLETED:
                 managed_print("Order is already completed. Returning final results.")
 
-            while (state := self.get_status()) not in [
-                OrderState.COMPLETED,
-                OrderState.PAUSED,
-                OrderState.MANUALREVIEW,
-                OrderState.FAILED,
-            ]:
-                sleep(5)
-                logger.debug(
-                    "Order '%s' is in state %s not yet completed. Waiting...",
-                    self,
-                    state,
-                )
+            self._wait_for_state(
+                target_states=[
+                    OrderState.COMPLETED,
+                    OrderState.PAUSED,
+                    OrderState.MANUALREVIEW,
+                    OrderState.FAILED,
+                ],
+                status_message="Order '%s' is in state %s, waiting for completion...",
+            )
 
             try:
-                return RapidataResults(
-                    json.loads(
-                        self._openapi_service.order_api.order_order_id_download_results_get(
-                            order_id=self.id
-                        )
+                results_json = (
+                    self._openapi_service.order_api.order_order_id_download_results_get(
+                        order_id=self.id
                     )
                 )
+                return RapidataResults(json.loads(results_json))
             except (ApiException, json.JSONDecodeError) as e:
                 raise Exception(f"Failed to get order results: {str(e)}") from e
 
-    def view(self) -> None:
-        """
-        Opens the order details page in the browser.
+    def _get_preliminary_results(self) -> RapidataResults:
+        """Fetches preliminary results for an in-progress order."""
+        try:
+            pipeline_id = self.__get_pipeline_id()
+            download_id = self._openapi_service.pipeline_api.pipeline_pipeline_id_preliminary_download_post(
+                pipeline_id, PreliminaryDownloadModel(sendEmail=False)
+            ).download_id
 
-        Raises:
-            Exception: If the order is not in processing state.
-        """
+            def check_results():
+                results = self._openapi_service.pipeline_api.pipeline_preliminary_download_preliminary_download_id_get(
+                    preliminary_download_id=download_id
+                )
+                if results:
+                    return RapidataResults(json.loads(results.decode()))
+                raise Exception("Results not ready yet")
+
+            return self._retry_operation(
+                check_results,
+                max_retries=60,
+                retry_delay=1,
+            )
+
+        except (ApiException, json.JSONDecodeError) as e:
+            raise Exception(f"Failed to get preliminary results: {str(e)}") from e
+
+    def view(self) -> None:
+        """Opens the order details page in the browser."""
         logger.info("Opening order details page in browser...")
-        could_open_browser = webbrowser.open(self.order_details_page)
-        if not could_open_browser:
+        if not webbrowser.open(self.order_details_page):
             encoded_url = urllib.parse.quote(
                 self.order_details_page, safe="%/:=&?~#+!$,;'@()*[]"
             )
@@ -251,13 +386,9 @@ class RapidataOrder:
             )
 
     def preview(self) -> None:
-        """
-        Opens a preview of the order in the browser.
-
-        Raises:
-            Exception: If the order is not in processing state.
-        """
+        """Opens a preview of the order in the browser."""
         logger.info("Opening order preview in browser...")
+
         if self.get_status() == OrderState.CREATED:
             logger.info("Order is still in state created. Setting it to preview.")
             self._openapi_service.order_api.order_order_id_preview_post(
@@ -267,88 +398,14 @@ class RapidataOrder:
 
         campaign_id = self.__get_campaign_id()
         auth_url = f"https://app.{self._openapi_service.environment}/order/detail/{self.id}/preview?campaignId={campaign_id}"
-        could_open_browser = webbrowser.open(auth_url)
-        if not could_open_browser:
+
+        if not webbrowser.open(auth_url):
             encoded_url = urllib.parse.quote(auth_url, safe="%/:=&?~#+!$,;'@()*[]")
             managed_print(
                 Fore.RED
                 + f"Please open this URL in your browser: '{encoded_url}'"
                 + Fore.RESET
             )
-
-    def __get_pipeline_id(self) -> str:
-        """Internal method to fetch and cache the pipeline ID."""
-        if not self.__pipeline_id:
-            for _ in range(self._max_retries):
-                try:
-                    self.__pipeline_id = (
-                        self._openapi_service.order_api.order_order_id_get(
-                            self.id
-                        ).pipeline_id
-                    )
-                    break
-                except Exception:
-                    sleep(self._retry_delay)
-            else:
-                raise Exception("Failed to fetch pipeline ID after retries.")
-        return self.__pipeline_id
-
-    def __get_workflow_id(self) -> str:
-        """Internal method to fetch and cache the workflow ID."""
-        if not self.__workflow_id:
-            self.__fetch_workflow_and_campaign_ids()
-        return self.__workflow_id
-
-    def __get_campaign_id(self) -> str:
-        """Internal method to fetch and cache the campaign ID."""
-        if not self.__campaign_id:
-            self.__fetch_workflow_and_campaign_ids()
-        return self.__campaign_id
-
-    def __fetch_workflow_and_campaign_ids(self) -> None:
-        """Fetches workflow and campaign IDs from the pipeline."""
-        if self.__workflow_id and self.__campaign_id:
-            return
-        pipeline_id = self.__get_pipeline_id()
-        for _ in range(self._max_retries):
-            try:
-                pipeline = self._openapi_service.pipeline_api.pipeline_pipeline_id_get(
-                    pipeline_id
-                )
-                self.__workflow_id = cast(
-                    WorkflowArtifactModel,
-                    pipeline.artifacts["workflow-artifact"].actual_instance,
-                ).workflow_id
-                self.__campaign_id = cast(
-                    CampaignArtifactModel,
-                    pipeline.artifacts["campaign-artifact"].actual_instance,
-                ).campaign_id
-                return
-            except Exception:
-                sleep(self._retry_delay)
-        raise Exception("Failed to fetch workflow and campaign IDs after retries.")
-
-    def __get_preliminary_results(self) -> RapidataResults:
-        """Internal method to fetch preliminary results."""
-        try:
-            pipeline_id = self.__get_pipeline_id()
-            download_id = self._openapi_service.pipeline_api.pipeline_pipeline_id_preliminary_download_post(
-                pipeline_id, PreliminaryDownloadModel(sendEmail=False)
-            ).download_id
-
-            elapsed = 0
-            timeout = 60
-            while elapsed < timeout:
-                preliminary_results = self._openapi_service.pipeline_api.pipeline_preliminary_download_preliminary_download_id_get(
-                    preliminary_download_id=download_id
-                )
-                if preliminary_results:
-                    return RapidataResults(json.loads(preliminary_results.decode()))
-                sleep(1)
-                elapsed += 1
-            raise Exception("Timeout waiting for preliminary results.")
-        except (ApiException, json.JSONDecodeError) as e:
-            raise Exception(f"Failed to get preliminary results: {str(e)}") from e
 
     def __str__(self) -> str:
         return f"RapidataOrder(name='{self.name}', order_id='{self.id}')"
