@@ -10,11 +10,18 @@ from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.config import logger
 from rapidata.rapidata_client.config import tracer
 from rapidata.rapidata_client.config import rapidata_config
-from cachetools import LRUCache
+from diskcache import FanoutCache
+from pathlib import Path
+from typing import cast
 
 
 class AssetUploader:
-    _shared_upload_cache: LRUCache = LRUCache(maxsize=100_000)
+    _shared_upload_cache: FanoutCache = FanoutCache(
+        Path.home() / ".rapidata" / "upload_cache",
+        shards=rapidata_config.upload.maxWorkers,
+        timeout=0.01,
+        size_limit=100_000_000,  # 100MB
+    )
 
     def __init__(self, openapi_service: OpenAPIService):
         self.openapi_service = openapi_service
@@ -37,9 +44,10 @@ class AssetUploader:
             assert isinstance(asset, str), "Asset must be a string"
 
             asset_key = self._get_cache_key(asset)
-            if asset_key in self._shared_upload_cache:
+            cached_value = self._shared_upload_cache.get(asset_key)
+            if cached_value is not None:
                 logger.debug("Asset found in cache")
-                return self._shared_upload_cache[asset_key]
+                return cast(str, cached_value)  # Type hint for the linter
 
             if re.match(r"^https?://", asset):
                 response = self.openapi_service.asset_api.asset_url_post(
