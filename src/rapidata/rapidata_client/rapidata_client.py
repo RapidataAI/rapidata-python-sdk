@@ -66,10 +66,6 @@ class RapidataClient:
             self._check_version()
             if environment != "rapidata.ai":
                 rapidata_config.logging.enable_otlp = False
-                rapidata_config.upload.cacheUploads = False
-            else:
-                rapidata_config.upload.cacheUploads = True
-                rapidata_config.logging.enable_otlp = True
 
             logger.debug("Initializing OpenAPIService")
             self._openapi_service = OpenAPIService(
