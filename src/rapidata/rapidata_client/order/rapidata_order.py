@@ -73,6 +73,7 @@ class RapidataOrder:
             order = self._openapi_service.order_api.order_order_id_get(self.id)
             return order.failure_message
         except Exception:
+            logger.debug("Failed to get order failure message", self, exc_info=True)
             return None
 
     def _retry_operation(
