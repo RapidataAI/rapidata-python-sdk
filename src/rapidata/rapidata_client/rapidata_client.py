@@ -66,6 +66,10 @@ class RapidataClient:
             self._check_version()
             if environment != "rapidata.ai":
                 rapidata_config.logging.enable_otlp = False
+                rapidata_config.upload.cacheUploads = False
+            else:
+                rapidata_config.upload.cacheUploads = True
+                rapidata_config.logging.enable_otlp = True
 
             logger.debug("Initializing OpenAPIService")
             self._openapi_service = OpenAPIService(
@@ -93,8 +97,8 @@ class RapidataClient:
 
             logger.debug("Initializing RapidataBenchmarkManager")
             self.mri = RapidataBenchmarkManager(openapi_service=self._openapi_service)
-            
-        self._check_beta_features() # can't be in the trace for some reason
+
+        self._check_beta_features()  # can't be in the trace for some reason
 
     def reset_credentials(self):
         """Reset the credentials saved in the configuration file for the current environment."""
