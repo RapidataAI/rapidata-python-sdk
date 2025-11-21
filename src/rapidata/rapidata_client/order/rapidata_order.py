@@ -18,6 +18,9 @@ from rapidata.api_client.models.preliminary_download_model import (
     PreliminaryDownloadModel,
 )
 from rapidata.api_client.models.workflow_artifact_model import WorkflowArtifactModel
+from rapidata.api_client.models.get_workflow_progress_result import (
+    GetWorkflowProgressResult,
+)
 from rapidata.rapidata_client.order.rapidata_results import RapidataResults
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.config import (
@@ -64,13 +67,13 @@ class RapidataOrder:
         )
         logger.debug("RapidataOrder initialized")
 
-    def _get_order_failure_message(self) -> str:
+    def _get_order_failure_message(self) -> str | None:
         """Retrieves the failure message from the order if available."""
         try:
             order = self._openapi_service.order_api.order_order_id_get(self.id)
-            return order.failure_message or "Unexpected Error Occurred"
-        except Exception as e:
-            raise Exception(f"Failed to get order failure message: {str(e)}") from e
+            return order.failure_message
+        except Exception:
+            return None
 
     def _retry_operation(
         self,
@@ -85,7 +88,6 @@ class RapidataOrder:
             operation: The operation to retry
             max_retries: Maximum number of retry attempts
             retry_delay: Delay between retries in seconds
-            operation_name: Name of the operation for error messages
 
         Returns:
             The result of the operation
@@ -103,7 +105,16 @@ class RapidataOrder:
                 if attempt < max_retries - 1:
                     sleep(retry_delay)
 
-        raise Exception(self._get_order_failure_message()) from last_exception
+        try:
+            failure_message = self._get_order_failure_message()
+            if failure_message:
+                raise Exception(failure_message) from last_exception
+        except Exception:
+            pass
+
+        raise Exception(
+            f"Operation failed after {max_retries} retries: {str(last_exception)}"
+        ) from last_exception
 
     def _wait_for_state(
         self,
@@ -178,11 +189,10 @@ class RapidataOrder:
                 CampaignArtifactModel,
                 pipeline.artifacts["campaign-artifact"].actual_instance,
             ).campaign_id
-            return True
 
         self._retry_operation(fetch_ids)
 
-    def __get_workflow_progress(self):
+    def __get_workflow_progress(self) -> GetWorkflowProgressResult:
         """Gets the workflow progress (internal use only)."""
 
         def get_progress():
