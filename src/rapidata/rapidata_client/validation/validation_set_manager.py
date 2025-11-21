@@ -626,10 +626,6 @@ class ValidationSetManager:
         if dimensions:
             validation_set.update_dimensions(dimensions)
 
-        self._openapi_service.validation_api.validation_set_validation_set_id_update_labeling_hints_post(
-            validation_set_id=validation_set_id
-        )
-
         return validation_set
 
     def _create_order_validation_set(
@@ -718,7 +714,8 @@ rapidata_config.order.autoValidationSetCreation = False"""
                             + Fore.RESET
                         )
                         raise RuntimeError(
-                            f"Not enough rapids annotated. Required: {required_amount}, Annotated: {labeled_rapids}")
+                            f"Not enough rapids annotated. Required: {required_amount}, Annotated: {labeled_rapids}"
+                        )
 
                     if (
                         rapid_index < len(rapids)
