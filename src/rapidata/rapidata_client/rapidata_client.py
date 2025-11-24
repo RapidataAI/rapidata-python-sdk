@@ -11,6 +11,9 @@ from rapidata.rapidata_client.order.rapidata_order_manager import RapidataOrderM
 from rapidata.rapidata_client.benchmark.rapidata_benchmark_manager import (
     RapidataBenchmarkManager,
 )
+from rapidata.rapidata_client.audience.rapidata_audience_manager import (
+    RapidataAudienceManager,
+)
 
 from rapidata.rapidata_client.validation.validation_set_manager import (
     ValidationSetManager,
@@ -93,6 +96,11 @@ class RapidataClient:
 
             logger.debug("Initializing RapidataBenchmarkManager")
             self.mri = RapidataBenchmarkManager(openapi_service=self._openapi_service)
+
+            logger.debug("Initializing RapidataAudienceManager")
+            self._audience = RapidataAudienceManager(
+                openapi_service=self._openapi_service
+            )
 
         self._check_beta_features()  # can't be in the trace for some reason
 

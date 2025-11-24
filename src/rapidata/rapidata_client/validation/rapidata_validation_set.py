@@ -27,7 +27,7 @@ class RapidataValidationSet:
 
     def __init__(
         self,
-        validation_set_id,
+        validation_set_id: str,
         name: str,
         dimensions: list[str],
         openapi_service: OpenAPIService,
@@ -41,7 +41,7 @@ class RapidataValidationSet:
         self._openapi_service = openapi_service
         self.validation_rapid_uploader = ValidationRapidUploader(openapi_service)
 
-    def add_rapid(self, rapid: Rapid):
+    def add_rapid(self, rapid: Rapid) -> "RapidataValidationSet":
         """Add a Rapid to the validation set.
 
         Args:
@@ -50,9 +50,10 @@ class RapidataValidationSet:
         with tracer.start_as_current_span("RapidataValidationSet.add_rapid"):
             logger.debug("Adding rapid %s to validation set %s", rapid, self.id)
             self.validation_rapid_uploader.upload_rapid(rapid, self.id)
-        return self
+            # Currently necessary until backend properly propagates the dimensions
+            return self.update_dimensions(self.dimensions)
 
-    def update_dimensions(self, dimensions: list[str]):
+    def update_dimensions(self, dimensions: list[str]) -> "RapidataValidationSet":
         """Update the dimensions of the validation set.
 
         Args:
@@ -68,7 +69,7 @@ class RapidataValidationSet:
             self.dimensions = dimensions
             return self
 
-    def update_should_alert(self, should_alert: bool):
+    def update_should_alert(self, should_alert: bool) -> "RapidataValidationSet":
         """Determines whether users should be alerted if they answer incorrectly.
 
         Args:
@@ -86,7 +87,7 @@ class RapidataValidationSet:
             )
             return self
 
-    def update_can_be_flagged(self, can_be_flagged: bool):
+    def update_can_be_flagged(self, can_be_flagged: bool) -> "RapidataValidationSet":
         """Update if tasks in the validation set can be flagged for bad accuracy.
 
         Args:
@@ -134,8 +135,8 @@ class RapidataValidationSet:
             logger.debug("ValidationSet '%s' has been deleted.", self)
             managed_print(f"ValidationSet '{self}' has been deleted.")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"name: '{self.name}' id: {self.id} dimensions: {self.dimensions}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"name: '{self.name}' id: {self.id} dimensions: {self.dimensions}"

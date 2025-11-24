@@ -559,29 +559,35 @@ class ValidationSetManager:
 
             return self._submit(name=name, rapids=rapids, dimensions=dimensions)
 
+    def _create_validation_set(
+        self, name: str, dimensions: list[str]
+    ) -> RapidataValidationSet:
+        with tracer.start_as_current_span(
+            "ValidationSetManager._create_validation_set"
+        ):
+            logger.debug("Creating validation set")
+            validation_set_id = (
+                self._openapi_service.validation_api.validation_set_post(
+                    create_validation_set_model=CreateValidationSetModel(name=name)
+                )
+            ).validation_set_id
+            if validation_set_id is None:
+                raise ValueError("Failed to create validation set")
+            return RapidataValidationSet(
+                validation_set_id=validation_set_id,
+                name=name,
+                dimensions=dimensions,
+                openapi_service=self._openapi_service,
+            )
+
     def _submit(
         self, name: str, rapids: list[Rapid], dimensions: list[str]
     ) -> RapidataValidationSet:
         logger.debug("Creating validation set")
-        validation_set_id = (
-            self._openapi_service.validation_api.validation_set_post(
-                create_validation_set_model=CreateValidationSetModel(name=name)
-            )
-        ).validation_set_id
+        validation_set = self._create_validation_set(name, dimensions)
 
-        logger.debug("Validation set created with ID: %s", validation_set_id)
+        logger.debug("Validation set created with ID: %s", validation_set.id)
 
-        if validation_set_id is None:
-            raise ValueError("Failed to create validation set")
-
-        logger.debug("Creating validation set instance")
-
-        validation_set = RapidataValidationSet(
-            name=name,
-            validation_set_id=validation_set_id,
-            dimensions=dimensions,
-            openapi_service=self._openapi_service,
-        )
         with tracer.start_as_current_span("Adding rapids to validation set"):
             logger.debug("Adding rapids to validation set")
             failed_rapids = []
@@ -618,13 +624,10 @@ class ValidationSetManager:
 
         managed_print()
         managed_print(
-            f"Validation set '{name}' created with ID {validation_set_id}\n",
+            f"Validation set '{name}' created with ID {validation_set.id}\n",
             f"Now viewable under: {validation_set.validation_set_details_page}",
             sep="",
         )
-
-        if dimensions:
-            validation_set.update_dimensions(dimensions)
 
         return validation_set
 
@@ -652,14 +655,7 @@ class ValidationSetManager:
                         settings=settings,
                     )
                 )
-            validation_set = RapidataValidationSet(
-                validation_set_id=self._openapi_service.validation_api.validation_set_post(
-                    create_validation_set_model=CreateValidationSetModel(name=name)
-                ).validation_set_id,
-                name=name,
-                dimensions=dimensions,
-                openapi_service=self._openapi_service,
-            )
+            validation_set = self._create_validation_set(name, dimensions)
 
             managed_print()
             managed_print(
