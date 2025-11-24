@@ -7,6 +7,7 @@ from rapidata.api_client.models.multi_asset_input import (
 )
 from rapidata.api_client.models.text_asset_input import TextAssetInput
 from rapidata.rapidata_client.config.upload_config import register_upload_config_handler
+from rapidata.rapidata_client.config.upload_config import UploadConfig
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.config import logger
 from rapidata.rapidata_client.config import tracer
@@ -29,7 +30,7 @@ class AssetUploader:
         register_upload_config_handler(self._handle_config_update)
 
     @classmethod
-    def _handle_config_update(cls, config):
+    def _handle_config_update(cls, config: UploadConfig):
         """
         Handle updates to the upload config (e.g., cache location, size, workers, timeout).
         Re-instantiates the shared cache based on the new configuration.

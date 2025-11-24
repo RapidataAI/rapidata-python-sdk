@@ -1,5 +1,6 @@
 from typing import Callable
 from pydantic import BaseModel, Field
+from rapidata.rapidata_client.config import logger
 
 # Type alias for config update handlers
 ConfigUpdateHandler = Callable[["LoggingConfig"], None]
@@ -51,8 +52,4 @@ class LoggingConfig(BaseModel):
             try:
                 handler(self)
             except Exception as e:
-                # Log the error but don't let one handler failure break others
-                print(f"Warning: Config handler failed: {e}")
-
-
-# Tracer is now handled in tracer.py with event-based updates
+                logger.warning(f"Warning: Config handler failed: {e}")

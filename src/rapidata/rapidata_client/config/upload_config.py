@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import Callable
 from pydantic import BaseModel, Field
+from rapidata.rapidata_client.config import logger
 
 # Type alias for config update handlers
 UploadConfigUpdateHandler = Callable[["UploadConfig"], None]
@@ -51,4 +52,4 @@ class UploadConfig(BaseModel):
             try:
                 handler(self)
             except Exception as e:
-                print(f"Warning: UploadConfig handler failed: {e}")
+                logger.warning(f"Warning: UploadConfig handler failed: {e}")
