@@ -77,6 +77,8 @@ Class | Method | HTTP request | Description
 *AssetApi* | [**asset_file_name_metadata_get**](rapidata/api_client/docs/AssetApi.md#asset_file_name_metadata_get) | **GET** /asset/{fileName}/metadata | Gets the metadata for an asset by file name.
 *AssetApi* | [**asset_file_post**](rapidata/api_client/docs/AssetApi.md#asset_file_post) | **POST** /asset/file | Uploads a single asset to S3 and returns the asset details.
 *AssetApi* | [**asset_url_post**](rapidata/api_client/docs/AssetApi.md#asset_url_post) | **POST** /asset/url | Uploads a single asset to S3 and returns the asset details.
+*AudienceApi* | [**audience_audience_id_patch**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_patch) | **PATCH** /audience/{audienceId} | Patches an existing audience.
+*AudienceApi* | [**audience_post**](rapidata/api_client/docs/AudienceApi.md#audience_post) | **POST** /audience | Creates a new empty audience.
 *BenchmarkApi* | [**benchmark_benchmark_id_delete**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_delete) | **DELETE** /benchmark/{benchmarkId} | Deletes a single benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_fork_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_fork_post) | **POST** /benchmark/{benchmarkId}/fork | Creates a copy of a public benchmark and all of its related entities
 *BenchmarkApi* | [**benchmark_benchmark_id_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_get) | **GET** /benchmark/{benchmarkId} | Returns a single benchmark by its ID.
@@ -272,6 +274,8 @@ Class | Method | HTTP request | Description
  - [CountMetadataModel](rapidata/api_client/docs/CountMetadataModel.md)
  - [CountryFilter](rapidata/api_client/docs/CountryFilter.md)
  - [CountryUserFilterModel](rapidata/api_client/docs/CountryUserFilterModel.md)
+ - [CreateAudienceRequest](rapidata/api_client/docs/CreateAudienceRequest.md)
+ - [CreateAudienceResult](rapidata/api_client/docs/CreateAudienceResult.md)
  - [CreateBenchmarkModel](rapidata/api_client/docs/CreateBenchmarkModel.md)
  - [CreateBenchmarkParticipantModel](rapidata/api_client/docs/CreateBenchmarkParticipantModel.md)
  - [CreateBenchmarkParticipantResult](rapidata/api_client/docs/CreateBenchmarkParticipantResult.md)
@@ -560,6 +564,7 @@ Class | Method | HTTP request | Description
  - [TranscriptionWord](rapidata/api_client/docs/TranscriptionWord.md)
  - [TranslatedString](rapidata/api_client/docs/TranslatedString.md)
  - [UnlockOrderResult](rapidata/api_client/docs/UnlockOrderResult.md)
+ - [UpdateAudienceRequest](rapidata/api_client/docs/UpdateAudienceRequest.md)
  - [UpdateBenchmarkModel](rapidata/api_client/docs/UpdateBenchmarkModel.md)
  - [UpdateBenchmarkNameModel](rapidata/api_client/docs/UpdateBenchmarkNameModel.md)
  - [UpdateCampaignModel](rapidata/api_client/docs/UpdateCampaignModel.md)

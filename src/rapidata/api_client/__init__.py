@@ -18,6 +18,7 @@ __version__ = "1.0.0"
 
 # import apis into sdk package
 from rapidata.api_client.api.asset_api import AssetApi
+from rapidata.api_client.api.audience_api import AudienceApi
 from rapidata.api_client.api.benchmark_api import BenchmarkApi
 from rapidata.api_client.api.campaign_api import CampaignApi
 from rapidata.api_client.api.client_api import ClientApi
@@ -126,6 +127,8 @@ from rapidata.api_client.models.count_metadata import CountMetadata
 from rapidata.api_client.models.count_metadata_model import CountMetadataModel
 from rapidata.api_client.models.country_filter import CountryFilter
 from rapidata.api_client.models.country_user_filter_model import CountryUserFilterModel
+from rapidata.api_client.models.create_audience_request import CreateAudienceRequest
+from rapidata.api_client.models.create_audience_result import CreateAudienceResult
 from rapidata.api_client.models.create_benchmark_model import CreateBenchmarkModel
 from rapidata.api_client.models.create_benchmark_participant_model import CreateBenchmarkParticipantModel
 from rapidata.api_client.models.create_benchmark_participant_result import CreateBenchmarkParticipantResult
@@ -414,6 +417,7 @@ from rapidata.api_client.models.transcription_truth import TranscriptionTruth
 from rapidata.api_client.models.transcription_word import TranscriptionWord
 from rapidata.api_client.models.translated_string import TranslatedString
 from rapidata.api_client.models.unlock_order_result import UnlockOrderResult
+from rapidata.api_client.models.update_audience_request import UpdateAudienceRequest
 from rapidata.api_client.models.update_benchmark_model import UpdateBenchmarkModel
 from rapidata.api_client.models.update_benchmark_name_model import UpdateBenchmarkNameModel
 from rapidata.api_client.models.update_campaign_model import UpdateCampaignModel
