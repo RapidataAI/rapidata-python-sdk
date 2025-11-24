@@ -65,19 +65,21 @@ class AssetUploader:
     def _get_cache_key(self, asset: str) -> str:
         """Generate cache key for an asset, including environment."""
         env = self.openapi_service.environment
-        if re.match(r"^https?://", asset):
-            return f"{env}@{asset}"
-        else:
-            if not os.path.exists(asset):
-                raise FileNotFoundError(f"File not found: {asset}")
+        if not os.path.exists(asset):
+            raise FileNotFoundError(f"File not found: {asset}")
 
-            stat = os.stat(asset)
-            return f"{env}@{asset}:{stat.st_size}:{stat.st_mtime_ns}"
+        stat = os.stat(asset)
+        return f"{env}@{asset}:{stat.st_size}:{stat.st_mtime_ns}"
 
     def upload_asset(self, asset: str) -> str:
         with tracer.start_as_current_span("AssetUploader.upload_asset"):
             logger.debug("Uploading asset: %s", asset)
             assert isinstance(asset, str), "Asset must be a string"
+            if re.match(r"^https?://", asset):
+                response = self.openapi_service.asset_api.asset_url_post(
+                    url=asset,
+                )
+                return response.file_name
 
             asset_key = self._get_cache_key(asset)
             cached_value = self._shared_upload_cache.get(asset_key)
@@ -85,18 +87,13 @@ class AssetUploader:
                 logger.debug("Asset found in cache")
                 return cast(str, cached_value)  # Type hint for the linter
 
-            if re.match(r"^https?://", asset):
-                response = self.openapi_service.asset_api.asset_url_post(
-                    url=asset,
-                )
-            else:
-                response = self.openapi_service.asset_api.asset_file_post(
-                    file=asset,
-                )
-            logger.info("Asset uploaded: %s", response.file_name)
+            response = self.openapi_service.asset_api.asset_file_post(
+                file=asset,
+            )
             if rapidata_config.upload.cacheUploads:
                 self._shared_upload_cache[asset_key] = response.file_name
                 logger.debug("Asset added to cache")
+            logger.info("Asset uploaded: %s", response.file_name)
             return response.file_name
 
     def get_uploaded_text_input(
