@@ -29,6 +29,9 @@
     },
     {
       "inputFile": "./spec/asset.json"
+    },
+    {
+      "inputFile": "./spec/audience.json"
     }
   ],
   "output": "./output.swagger.json"
