@@ -6,18 +6,61 @@ from rapidata.api_client.models.multi_asset_input import (
     MultiAssetInputAssetsInner,
 )
 from rapidata.api_client.models.text_asset_input import TextAssetInput
+from rapidata.rapidata_client.config.upload_config import register_upload_config_handler
+from rapidata.rapidata_client.config.upload_config import UploadConfig
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.config import logger
 from rapidata.rapidata_client.config import tracer
 from rapidata.rapidata_client.config import rapidata_config
-from cachetools import LRUCache
+from diskcache import FanoutCache
+from typing import cast
 
 
 class AssetUploader:
-    _shared_upload_cache: LRUCache = LRUCache(maxsize=100_000)
+    _shared_upload_cache: FanoutCache = FanoutCache(
+        rapidata_config.upload.cacheLocation,
+        shards=rapidata_config.upload.maxWorkers,
+        timeout=rapidata_config.upload.cacheTimeout,
+        size_limit=rapidata_config.upload.cacheSizeLimit,
+    )
 
     def __init__(self, openapi_service: OpenAPIService):
         self.openapi_service = openapi_service
+        # Register the handler for config update changes
+        register_upload_config_handler(self._handle_config_update)
+
+    @classmethod
+    def _handle_config_update(cls, config: UploadConfig):
+        """
+        Handle updates to the upload config (e.g., cache location, size, workers, timeout).
+        Re-instantiates the shared cache based on the new configuration.
+        """
+        logger.debug("Updating AssetUploader shared upload cache with new config")
+        try:
+            # Dispose of the old cache (closes open resources)
+            old_cache = getattr(cls, "_shared_upload_cache", None)
+            if old_cache:
+                try:
+                    old_cache.close()
+                except Exception:
+                    pass  # ignore close errors
+
+            # Re-initialize with the updated config
+            cls._shared_upload_cache = FanoutCache(
+                config.cacheLocation,
+                shards=config.maxWorkers,
+                timeout=config.cacheTimeout,
+                size_limit=config.cacheSizeLimit,
+            )
+            logger.info(
+                "AssetUploader shared upload cache updated: location=%s, shards=%s, timeout=%s, size_limit=%s",
+                config.cacheLocation,
+                config.maxWorkers,
+                config.cacheTimeout,
+                config.cacheSizeLimit,
+            )
+        except Exception as e:
+            logger.warning(f"Failed to update AssetUploader shared upload cache: {e}")
 
     def _get_cache_key(self, asset: str) -> str:
         """Generate cache key for an asset, including environment."""
@@ -37,9 +80,10 @@ class AssetUploader:
             assert isinstance(asset, str), "Asset must be a string"
 
             asset_key = self._get_cache_key(asset)
-            if asset_key in self._shared_upload_cache:
+            cached_value = self._shared_upload_cache.get(asset_key)
+            if cached_value is not None:
                 logger.debug("Asset found in cache")
-                return self._shared_upload_cache[asset_key]
+                return cast(str, cached_value)  # Type hint for the linter
 
             if re.match(r"^https?://", asset):
                 response = self.openapi_service.asset_api.asset_url_post(
@@ -92,6 +136,10 @@ class AssetUploader:
                 _t="ExistingAssetInput",
                 name=self.upload_asset(assets),
             )
+
+    def clear_cache(self):
+        self._shared_upload_cache.clear()
+        logger.info("Upload cache cleared")
 
     def __str__(self) -> str:
         return f"AssetUploader(openapi_service={self.openapi_service})"

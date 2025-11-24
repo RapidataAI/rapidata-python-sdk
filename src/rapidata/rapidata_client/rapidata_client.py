@@ -100,6 +100,11 @@ class RapidataClient:
         """Reset the credentials saved in the configuration file for the current environment."""
         self._openapi_service.reset_credentials()
 
+    def clear_all_caches(self):
+        """Clear all caches for the client."""
+        self.order._asset_uploader.clear_cache()
+        logger.info("All caches cleared")
+
     def _check_beta_features(self):
         """Enable beta features for the client."""
         with tracer.start_as_current_span("RapidataClient.check_beta_features"):
