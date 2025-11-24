@@ -5233,6 +5233,99 @@
           }
         }
       }
+    },
+    "/audience": {
+      "post": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Creates a new empty audience.",
+        "description": "An audience is a group of users that are trained to solve particular tasks.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAudienceRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAudienceRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAudienceRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateAudienceResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateAudienceResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateAudienceResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/audience/{audienceId}": {
+      "patch": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Patches an existing audience.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAudienceRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAudienceRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAudienceRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -17461,6 +17554,51 @@
           }
         },
         "additionalProperties": false
+      },
+      "CreateAudienceRequest": {
+        "required": [
+          "name",
+          "validationSetId"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name to give the newly created audience."
+          },
+          "validationSetId": {
+            "type": "string",
+            "description": "Each audience is trained against a validation set.\nThis is the Id of the validation set to use for the training of the audience."
+          }
+        },
+        "additionalProperties": false,
+        "description": "The body request to create an audience."
+      },
+      "CreateAudienceResult": {
+        "required": [
+          "audienceId"
+        ],
+        "type": "object",
+        "properties": {
+          "audienceId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateAudienceRequest": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The body request to update an audience."
       }
     },
     "securitySchemes": {
