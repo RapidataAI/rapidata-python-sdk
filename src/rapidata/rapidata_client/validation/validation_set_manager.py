@@ -1,8 +1,10 @@
+from __future__ import annotations
+
 import time
 import urllib.parse
 import webbrowser
 from colorama import Fore
-from typing import Literal
+from typing import Literal, TYPE_CHECKING
 from rapidata.api_client import QueryModel
 from rapidata.rapidata_client.validation.rapidata_validation_set import (
     RapidataValidationSet,
@@ -12,7 +14,6 @@ from rapidata.api_client.models.create_validation_set_model import (
 )
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.validation.rapids.rapids_manager import RapidsManager
-from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 
 from rapidata.api_client.models.page_info import PageInfo
 from rapidata.api_client.models.root_filter import RootFilter
@@ -30,11 +31,13 @@ from rapidata.rapidata_client.config import (
     tracer,
 )
 from tqdm import tqdm
-from rapidata.rapidata_client.workflow import Workflow
-from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.rapidata_client.validation.rapids.rapids import Rapid
-from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
-from typing import Sequence
+
+if TYPE_CHECKING:
+    from rapidata.rapidata_client.workflow import Workflow
+    from rapidata.rapidata_client.datapoints._datapoint import Datapoint
+    from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
+    from typing import Sequence
 
 
 class ValidationSetManager:
