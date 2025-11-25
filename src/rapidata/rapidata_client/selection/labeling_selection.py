@@ -1,10 +1,10 @@
+from __future__ import annotations
+
 from typing import Any
+
 from rapidata.rapidata_client.selection._base_selection import RapidataSelection
 from rapidata.rapidata_client.selection.rapidata_retrieval_modes import (
     RapidataRetrievalMode,
-)
-from rapidata.api_client.models.labeling_selection import (
-    LabelingSelection as LabelingSelectionModel,
 )
 
 
@@ -32,6 +32,10 @@ class LabelingSelection(RapidataSelection):
         self.max_iterations = max_iterations
 
     def _to_model(self) -> Any:
+        from rapidata.api_client.models.labeling_selection import (
+            LabelingSelection as LabelingSelectionModel,
+        )
+
         return LabelingSelectionModel(
             _t="LabelingSelection",
             amount=self.amount,

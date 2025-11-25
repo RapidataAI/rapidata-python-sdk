@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from rapidata.rapidata_client.filter._base_filter import RapidataFilter
-from rapidata.api_client.models.gender_user_filter_model import GenderUserFilterModel
 from rapidata.rapidata_client.filter.models.gender import Gender
 from pydantic import BaseModel, ConfigDict
 
@@ -21,6 +22,10 @@ class GenderFilter(RapidataFilter, BaseModel):
         super().__init__(genders=genders)
 
     def _to_model(self):
+        from rapidata.api_client.models.gender_user_filter_model import (
+            GenderUserFilterModel,
+        )
+
         return GenderUserFilterModel(
             _t="GenderFilter",
             genders=[gender._to_backend_model() for gender in self.genders],

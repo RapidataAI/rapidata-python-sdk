@@ -1,4 +1,6 @@
-from typing import Literal
+from __future__ import annotations
+
+from typing import Literal, TYPE_CHECKING
 
 from pydantic import BaseModel, model_validator, field_validator
 from typing_extensions import Self
@@ -7,9 +9,11 @@ from rapidata.rapidata_client.datapoints.assets.constants import (
     ALLOWED_IMAGE_EXTENSIONS,
     ALLOWED_AUDIO_EXTENSIONS,
 )
-from rapidata.api_client.models.asset_type import AssetType
-from rapidata.api_client.models.prompt_type import PromptType
 from rapidata.rapidata_client.config import logger
+
+if TYPE_CHECKING:
+    from rapidata.api_client.models.asset_type import AssetType
+    from rapidata.api_client.models.prompt_type import PromptType
 
 
 class Datapoint(BaseModel):
@@ -55,6 +59,8 @@ class Datapoint(BaseModel):
         return self
 
     def get_asset_type(self) -> AssetType:
+        from rapidata.api_client.models.asset_type import AssetType
+
         if self.data_type == "text":
             return AssetType.TEXT
 
@@ -72,6 +78,8 @@ class Datapoint(BaseModel):
             return AssetType.NONE
 
     def get_prompt_type(self) -> list[PromptType]:
+        from rapidata.api_client.models.prompt_type import PromptType
+
         prompt_types = []
         if self.context:
             prompt_types.append(PromptType.TEXT)

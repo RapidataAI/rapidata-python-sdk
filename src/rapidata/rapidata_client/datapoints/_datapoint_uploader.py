@@ -1,14 +1,16 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.service.openapi_service import OpenAPIService
-from rapidata.api_client.models.create_datapoint_model import CreateDatapointModel
-from rapidata.api_client.models.create_datapoint_model_asset import (
-    CreateDatapointModelAsset,
-)
-from rapidata.api_client.models.create_datapoint_model_context_asset import (
-    CreateDatapointModelContextAsset,
-)
-from rapidata.api_client.models.create_datapoint_result import CreateDatapointResult
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
+
+if TYPE_CHECKING:
+    from rapidata.api_client.models.create_datapoint_model_asset import (
+        CreateDatapointModelAsset,
+    )
+    from rapidata.api_client.models.create_datapoint_result import CreateDatapointResult
 
 
 class DatapointUploader:
@@ -19,6 +21,12 @@ class DatapointUploader:
     def upload_datapoint(
         self, datapoint: Datapoint, dataset_id: str, index: int
     ) -> CreateDatapointResult:
+        from rapidata.api_client.models.create_datapoint_model import (
+            CreateDatapointModel,
+        )
+        from rapidata.api_client.models.create_datapoint_model_context_asset import (
+            CreateDatapointModelContextAsset,
+        )
 
         uploaded_asset = (
             self._handle_media_datapoint(datapoint)
@@ -46,6 +54,10 @@ class DatapointUploader:
         )
 
     def _handle_text_datapoint(self, datapoint: Datapoint) -> CreateDatapointModelAsset:
+        from rapidata.api_client.models.create_datapoint_model_asset import (
+            CreateDatapointModelAsset,
+        )
+
         return CreateDatapointModelAsset(
             actual_instance=self.asset_uploader.get_uploaded_text_input(
                 datapoint.asset
@@ -55,6 +67,10 @@ class DatapointUploader:
     def _handle_media_datapoint(
         self, datapoint: Datapoint
     ) -> CreateDatapointModelAsset:
+        from rapidata.api_client.models.create_datapoint_model_asset import (
+            CreateDatapointModelAsset,
+        )
+
         return CreateDatapointModelAsset(
             actual_instance=self.asset_uploader.get_uploaded_asset_input(
                 datapoint.asset

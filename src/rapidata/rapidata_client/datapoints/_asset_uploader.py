@@ -1,11 +1,9 @@
+from __future__ import annotations
+
 import re
 import os
-from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
-from rapidata.api_client.models.multi_asset_input import (
-    MultiAssetInput,
-    MultiAssetInputAssetsInner,
-)
-from rapidata.api_client.models.text_asset_input import TextAssetInput
+from typing import TYPE_CHECKING, cast
+
 from rapidata.rapidata_client.config.upload_config import register_upload_config_handler
 from rapidata.rapidata_client.config.upload_config import UploadConfig
 from rapidata.service.openapi_service import OpenAPIService
@@ -13,7 +11,13 @@ from rapidata.rapidata_client.config import logger
 from rapidata.rapidata_client.config import tracer
 from rapidata.rapidata_client.config import rapidata_config
 from diskcache import FanoutCache
-from typing import cast
+
+if TYPE_CHECKING:
+    from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
+    from rapidata.api_client.models.multi_asset_input import (
+        MultiAssetInput,
+    )
+    from rapidata.api_client.models.text_asset_input import TextAssetInput
 
 
 class AssetUploader:
@@ -99,6 +103,12 @@ class AssetUploader:
     def get_uploaded_text_input(
         self, assets: list[str] | str
     ) -> MultiAssetInput | TextAssetInput:
+        from rapidata.api_client.models.multi_asset_input import (
+            MultiAssetInput,
+            MultiAssetInputAssetsInner,
+        )
+        from rapidata.api_client.models.text_asset_input import TextAssetInput
+
         if isinstance(assets, list):
             return MultiAssetInput(
                 _t="MultiAssetInput",
@@ -115,6 +125,12 @@ class AssetUploader:
     def get_uploaded_asset_input(
         self, assets: list[str] | str
     ) -> MultiAssetInput | ExistingAssetInput:
+        from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
+        from rapidata.api_client.models.multi_asset_input import (
+            MultiAssetInput,
+            MultiAssetInputAssetsInner,
+        )
+
         if isinstance(assets, list):
             return MultiAssetInput(
                 _t="MultiAssetInput",

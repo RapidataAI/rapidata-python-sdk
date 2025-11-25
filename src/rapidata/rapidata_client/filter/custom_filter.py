@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from rapidata.rapidata_client.filter._base_filter import RapidataFilter
-from rapidata.api_client.models.custom_user_filter_model import CustomUserFilterModel
 from pydantic import BaseModel
 
 
@@ -24,6 +25,10 @@ class CustomFilter(RapidataFilter, BaseModel):
         super().__init__(identifier=identifier, values=values)
 
     def _to_model(self):
+        from rapidata.api_client.models.custom_user_filter_model import (
+            CustomUserFilterModel,
+        )
+
         return CustomUserFilterModel(
             _t="CustomFilter",
             identifier=self.identifier,

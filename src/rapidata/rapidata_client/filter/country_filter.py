@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from rapidata.rapidata_client.filter._base_filter import RapidataFilter
-from rapidata.api_client.models.country_user_filter_model import CountryUserFilterModel
 from pydantic import BaseModel, field_validator
 from rapidata.rapidata_client.config import logger
 
@@ -35,4 +36,8 @@ class CountryFilter(RapidataFilter, BaseModel):
         return validated
 
     def _to_model(self):
+        from rapidata.api_client.models.country_user_filter_model import (
+            CountryUserFilterModel,
+        )
+
         return CountryUserFilterModel(_t="CountryFilter", countries=self.country_codes)
