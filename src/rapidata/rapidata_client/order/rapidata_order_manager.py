@@ -1,4 +1,6 @@
-from typing import Literal, Optional, Sequence, get_args
+from __future__ import annotations
+
+from typing import Literal, Optional, Sequence, get_args, TYPE_CHECKING
 
 from rapidata.rapidata_client.config import logger
 from rapidata.rapidata_client.config.tracer import tracer
@@ -9,41 +11,19 @@ from rapidata.rapidata_client.datapoints._datapoints_validator import (
 )
 from rapidata.rapidata_client.filter import RapidataFilter
 from rapidata.rapidata_client.filter.rapidata_filters import RapidataFilters
-from rapidata.rapidata_client.order._rapidata_order_builder import (
-    RapidataOrderBuilder,
-    StickyStateLiteral,
-)
-from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
-from rapidata.rapidata_client.referee._early_stopping_referee import (
-    EarlyStoppingReferee,
-)
-from rapidata.rapidata_client.referee._naive_referee import NaiveReferee
-from rapidata.rapidata_client.selection._base_selection import RapidataSelection
-from rapidata.rapidata_client.selection.rapidata_selections import RapidataSelections
 from rapidata.rapidata_client.settings import RapidataSetting, RapidataSettings
-from rapidata.rapidata_client.workflow import (
-    ClassifyWorkflow,
-    CompareWorkflow,
-    DrawWorkflow,
-    FreeTextWorkflow,
-    LocateWorkflow,
-    MultiRankingWorkflow,
-    SelectWordsWorkflow,
-    TimestampWorkflow,
-    Workflow,
-)
-from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
-from rapidata.api_client.models.filter import Filter
-from rapidata.api_client.models.filter_operator import FilterOperator
-from rapidata.api_client.models.multi_asset_input_assets_inner import (
-    MultiAssetInputAssetsInner,
-)
-from rapidata.api_client.models.page_info import PageInfo
-from rapidata.api_client.models.query_model import QueryModel
-from rapidata.api_client.models.root_filter import RootFilter
-from rapidata.api_client.models.sort_criterion import SortCriterion
-from rapidata.api_client.models.sort_direction import SortDirection
+from rapidata.rapidata_client.selection.rapidata_selections import RapidataSelections
 from rapidata.service.openapi_service import OpenAPIService
+
+if TYPE_CHECKING:
+    from rapidata.rapidata_client.order._rapidata_order_builder import (
+        StickyStateLiteral,
+    )
+    from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
+    from rapidata.rapidata_client.selection._base_selection import RapidataSelection
+    from rapidata.rapidata_client.workflow import (
+        Workflow,
+    )
 
 
 class RapidataOrderManager:
@@ -60,6 +40,10 @@ class RapidataOrderManager:
         self.filters = RapidataFilters
         self.settings = RapidataSettings
         self.selections = RapidataSelections
+        from rapidata.rapidata_client.order._rapidata_order_builder import (
+            StickyStateLiteral,
+        )
+
         self.__priority: int | None = None
         self.__sticky_state: StickyStateLiteral | None = None
         self._asset_uploader = AssetUploader(openapi_service)
@@ -85,8 +69,14 @@ class RapidataOrderManager:
             selections = []
 
         if not confidence_threshold:
+            from rapidata.rapidata_client.referee._naive_referee import NaiveReferee
+
             referee = NaiveReferee(responses=responses_per_datapoint)
         else:
+            from rapidata.rapidata_client.referee._early_stopping_referee import (
+                EarlyStoppingReferee,
+            )
+
             referee = EarlyStoppingReferee(
                 threshold=confidence_threshold,
                 max_vote_count=responses_per_datapoint,
@@ -103,6 +93,10 @@ class RapidataOrderManager:
             filters,
             settings,
             selections,
+        )
+
+        from rapidata.rapidata_client.order._rapidata_order_builder import (
+            RapidataOrderBuilder,
         )
 
         order_builder = RapidataOrderBuilder(
@@ -139,6 +133,10 @@ class RapidataOrderManager:
         self.__priority = priority
 
     def _set_sticky_state(self, sticky_state: StickyStateLiteral | None):
+        from rapidata.rapidata_client.order._rapidata_order_builder import (
+            StickyStateLiteral,
+        )
+
         sticky_state_valid_values = get_args(StickyStateLiteral)
 
         if sticky_state is not None and sticky_state not in sticky_state_valid_values:
@@ -201,6 +199,8 @@ class RapidataOrderManager:
                 isinstance(datapoint, str) for datapoint in datapoints
             ):
                 raise ValueError("Datapoints must be a list of strings")
+
+            from rapidata.rapidata_client.workflow import ClassifyWorkflow
 
             datapoints_instances = DatapointsValidator.map_datapoints(
                 datapoints=datapoints,
@@ -291,6 +291,8 @@ class RapidataOrderManager:
                     "A_B_naming must be a list of exactly two strings or None"
                 )
 
+            from rapidata.rapidata_client.workflow import CompareWorkflow
+
             datapoints_instances = DatapointsValidator.map_datapoints(
                 datapoints=datapoints,
                 contexts=contexts,
@@ -375,6 +377,14 @@ class RapidataOrderManager:
                 raise ValueError(
                     "Each ranking must contain at least two unique datapoints."
                 )
+
+            from rapidata.rapidata_client.workflow import MultiRankingWorkflow
+            from rapidata.api_client.models.multi_asset_input_assets_inner import (
+                MultiAssetInputAssetsInner,
+            )
+            from rapidata.api_client.models.existing_asset_input import (
+                ExistingAssetInput,
+            )
 
             datapoints_instances = []
             for i, datapoint in enumerate(datapoints):
@@ -468,6 +478,8 @@ class RapidataOrderManager:
         with tracer.start_as_current_span(
             "RapidataOrderManager.create_free_text_order"
         ):
+            from rapidata.rapidata_client.workflow import FreeTextWorkflow
+
             datapoints_instances = DatapointsValidator.map_datapoints(
                 datapoints=datapoints,
                 contexts=contexts,
@@ -523,6 +535,8 @@ class RapidataOrderManager:
         with tracer.start_as_current_span(
             "RapidataOrderManager.create_select_words_order"
         ):
+            from rapidata.rapidata_client.workflow import SelectWordsWorkflow
+
             datapoints_instances = DatapointsValidator.map_datapoints(
                 datapoints=datapoints,
                 sentences=sentences,
@@ -580,6 +594,8 @@ class RapidataOrderManager:
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
         with tracer.start_as_current_span("RapidataOrderManager.create_locate_order"):
+            from rapidata.rapidata_client.workflow import LocateWorkflow
+
             datapoints_instances = DatapointsValidator.map_datapoints(
                 datapoints=datapoints,
                 contexts=contexts,
@@ -636,6 +652,8 @@ class RapidataOrderManager:
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
         with tracer.start_as_current_span("RapidataOrderManager.create_draw_order"):
+            from rapidata.rapidata_client.workflow import DrawWorkflow
+
             datapoints_instances = DatapointsValidator.map_datapoints(
                 datapoints=datapoints,
                 contexts=contexts,
@@ -698,6 +716,8 @@ class RapidataOrderManager:
         with tracer.start_as_current_span(
             "RapidataOrderManager.create_timestamp_order"
         ):
+            from rapidata.rapidata_client.workflow import TimestampWorkflow
+
             datapoints_instances = DatapointsValidator.map_datapoints(
                 datapoints=datapoints,
                 contexts=contexts,
@@ -725,6 +745,8 @@ class RapidataOrderManager:
             RapidataOrder: The Order instance.
         """
         with tracer.start_as_current_span("RapidataOrderManager.get_order_by_id"):
+            from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
+
             order = self.__openapi_service.order_api.order_order_id_get(order_id)
 
             return RapidataOrder(
@@ -744,6 +766,14 @@ class RapidataOrderManager:
             list[RapidataOrder]: A list of RapidataOrder instances.
         """
         with tracer.start_as_current_span("RapidataOrderManager.find_orders"):
+            from rapidata.api_client.models.page_info import PageInfo
+            from rapidata.api_client.models.query_model import QueryModel
+            from rapidata.api_client.models.root_filter import RootFilter
+            from rapidata.api_client.models.filter import Filter
+            from rapidata.api_client.models.filter_operator import FilterOperator
+            from rapidata.api_client.models.sort_criterion import SortCriterion
+            from rapidata.api_client.models.sort_direction import SortDirection
+
             order_page_result = self.__openapi_service.order_api.orders_get(
                 QueryModel(
                     page=PageInfo(index=1, size=amount),

@@ -1,7 +1,6 @@
+from __future__ import annotations
+
 from rapidata.rapidata_client.filter._base_filter import RapidataFilter
-from rapidata.api_client.models.language_user_filter_model import (
-    LanguageUserFilterModel,
-)
 from pydantic import BaseModel, field_validator
 from rapidata.rapidata_client.config import logger
 
@@ -43,6 +42,10 @@ class LanguageFilter(RapidataFilter, BaseModel):
         return validated
 
     def _to_model(self):
+        from rapidata.api_client.models.language_user_filter_model import (
+            LanguageUserFilterModel,
+        )
+
         return LanguageUserFilterModel(
             _t="LanguageFilter",
             languages=self.language_codes,

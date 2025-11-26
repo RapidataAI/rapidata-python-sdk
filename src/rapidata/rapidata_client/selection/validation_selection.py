@@ -1,6 +1,5 @@
-from rapidata.api_client.models.validation_selection import (
-    ValidationSelection as ValidationSelectionModel,
-)
+from __future__ import annotations
+
 from rapidata.rapidata_client.selection._base_selection import RapidataSelection
 
 
@@ -19,6 +18,10 @@ class ValidationSelection(RapidataSelection):
         self.amount = amount
 
     def _to_model(self):
+        from rapidata.api_client.models.validation_selection import (
+            ValidationSelection as ValidationSelectionModel,
+        )
+
         return ValidationSelectionModel(
             _t="ValidationSelection",
             validationSetId=self.validation_set_id,

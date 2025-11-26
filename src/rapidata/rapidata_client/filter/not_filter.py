@@ -1,9 +1,6 @@
-from typing import Any
+from __future__ import annotations
+
 from rapidata.rapidata_client.filter._base_filter import RapidataFilter
-from rapidata.api_client.models.not_user_filter_model import NotUserFilterModel
-from rapidata.api_client.models.and_user_filter_model_filters_inner import (
-    AndUserFilterModelFiltersInner,
-)
 from pydantic import BaseModel, ConfigDict
 
 
@@ -32,6 +29,11 @@ class NotFilter(RapidataFilter, BaseModel):
         super().__init__(filter=filter)
 
     def _to_model(self):
+        from rapidata.api_client.models.not_user_filter_model import NotUserFilterModel
+        from rapidata.api_client.models.and_user_filter_model_filters_inner import (
+            AndUserFilterModelFiltersInner,
+        )
+
         return NotUserFilterModel(
             _t="NotFilter",
             filter=AndUserFilterModelFiltersInner(self.filter._to_model()),

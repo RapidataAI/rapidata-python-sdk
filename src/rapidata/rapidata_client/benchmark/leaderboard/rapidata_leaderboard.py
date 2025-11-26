@@ -1,13 +1,15 @@
 import urllib.parse
 import webbrowser
 from colorama import Fore
-import pandas as pd
-from typing import Literal, Optional
+from typing import Literal, Optional, TYPE_CHECKING
 
 from rapidata.rapidata_client.config import logger, managed_print, tracer
 from rapidata.rapidata_client.benchmark._detail_mapper import DetailMapper
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.api_client.models.update_leaderboard_model import UpdateLeaderboardModel
+
+if TYPE_CHECKING:
+    import pandas as pd
 
 
 class RapidataLeaderboard:
@@ -144,7 +146,7 @@ class RapidataLeaderboard:
             self.__name = name
             self._update_config()
 
-    def get_standings(self, tags: Optional[list[str]] = None) -> pd.DataFrame:
+    def get_standings(self, tags: Optional[list[str]] = None) -> "pd.DataFrame":
         """
         Returns the standings of the leaderboard.
 
@@ -160,6 +162,8 @@ class RapidataLeaderboard:
             participants = self.__openapi_service.leaderboard_api.leaderboard_leaderboard_id_standings_get(
                 leaderboard_id=self.id, tags=tags
             )
+
+            import pandas as pd
 
             standings = []
             for participant in participants.items:

@@ -3,9 +3,39 @@
 # flake8: noqa
 {{>partial_header}}
 
-# import models into model package
+# Lazy loading for models - models are imported only when accessed
+_MODEL_IMPORTS = {
 {{#models}}
 {{#model}}
-from {{modelPackage}}.{{classFilename}} import {{classname}}
+    "{{classname}}": "{{modelPackage}}.{{classFilename}}",
 {{/model}}
 {{/models}}
+}
+
+# Cache for imported models
+_IMPORTED = {}
+
+
+def __getattr__(name: str):
+    """Lazy import handler for models."""
+    if name in _IMPORTED:
+        return _IMPORTED[name]
+
+    if name in _MODEL_IMPORTS:
+        module_path = _MODEL_IMPORTS[name]
+        import importlib
+        module = importlib.import_module(module_path)
+        attr = getattr(module, name)
+        _IMPORTED[name] = attr
+        return attr
+
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
+
+def __dir__():
+    """Return list of available attributes for autocompletion."""
+    return list(_MODEL_IMPORTS.keys())
+
+
+# For type checkers and IDE support
+__all__ = list(_MODEL_IMPORTS.keys())

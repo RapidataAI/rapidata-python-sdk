@@ -1,21 +1,13 @@
-from typing import Literal, Optional, Sequence, get_args, cast
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Literal, Optional, Sequence, get_args
 import random
 import secrets
 
-from rapidata.api_client.models.ab_test_selection_a_inner import AbTestSelectionAInner
-from rapidata.api_client.models.and_user_filter_model_filters_inner import (
-    AndUserFilterModelFiltersInner,
-)
-from rapidata.api_client.models.create_order_model import CreateOrderModel
-from rapidata.api_client.models.create_order_model_referee import (
-    CreateOrderModelReferee,
-)
-from rapidata.api_client.models.create_order_model_workflow import (
-    CreateOrderModelWorkflow,
-)
-from rapidata.api_client.models.sticky_state import StickyState
-
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
+
+if TYPE_CHECKING:
+    from rapidata.api_client.models.create_order_model import CreateOrderModel
 from rapidata.rapidata_client.exceptions.failed_upload_exception import (
     FailedUploadException,
 )
@@ -117,6 +109,21 @@ class RapidataOrderBuilder:
             if (self.__validation_set and not self.__selections)
             else None
         )
+
+        from rapidata.api_client.models.ab_test_selection_a_inner import (
+            AbTestSelectionAInner,
+        )
+        from rapidata.api_client.models.and_user_filter_model_filters_inner import (
+            AndUserFilterModelFiltersInner,
+        )
+        from rapidata.api_client.models.create_order_model import CreateOrderModel
+        from rapidata.api_client.models.create_order_model_referee import (
+            CreateOrderModelReferee,
+        )
+        from rapidata.api_client.models.create_order_model_workflow import (
+            CreateOrderModelWorkflow,
+        )
+        from rapidata.api_client.models.sticky_state import StickyState
 
         return CreateOrderModel(
             _t="CreateOrderModel",

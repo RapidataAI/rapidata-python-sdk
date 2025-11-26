@@ -1,7 +1,6 @@
+from __future__ import annotations
+
 from rapidata.rapidata_client.selection._base_selection import RapidataSelection
-from rapidata.api_client.models.demographic_selection import (
-    DemographicSelection as DemographicSelectionModel,
-)
 
 
 class DemographicSelection(RapidataSelection):
@@ -31,6 +30,10 @@ class DemographicSelection(RapidataSelection):
         self.max_rapids = max_rapids
 
     def _to_model(self):
+        from rapidata.api_client.models.demographic_selection import (
+            DemographicSelection as DemographicSelectionModel,
+        )
+
         return DemographicSelectionModel(
             _t="DemographicSelection", keys=self.keys, maxRapids=self.max_rapids
         )

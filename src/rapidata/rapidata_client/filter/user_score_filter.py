@@ -1,8 +1,7 @@
+from __future__ import annotations
+
 from pydantic_core.core_schema import FieldValidationInfo
 from rapidata.rapidata_client.filter._base_filter import RapidataFilter
-from rapidata.api_client.models.user_score_user_filter_model import (
-    UserScoreUserFilterModel,
-)
 from pydantic import BaseModel, field_validator, model_validator
 
 
@@ -51,6 +50,10 @@ class UserScoreFilter(RapidataFilter, BaseModel):
         return self
 
     def _to_model(self):
+        from rapidata.api_client.models.user_score_user_filter_model import (
+            UserScoreUserFilterModel,
+        )
+
         return UserScoreUserFilterModel(
             _t="UserScoreFilter",
             upperbound=self.upper_bound,

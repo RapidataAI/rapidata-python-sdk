@@ -1,11 +1,8 @@
-from rapidata.api_client.models.ab_test_selection import (
-    AbTestSelection as AbTestSelectionModel,
-)
-from rapidata.api_client.models.ab_test_selection_a_inner import (
-    AbTestSelectionAInner,
-)
-from rapidata.rapidata_client.selection._base_selection import RapidataSelection
+from __future__ import annotations
+
 from typing import Sequence
+
+from rapidata.rapidata_client.selection._base_selection import RapidataSelection
 
 
 class AbTestSelection(RapidataSelection):
@@ -29,6 +26,13 @@ class AbTestSelection(RapidataSelection):
         self.b_selections = b_selections
 
     def _to_model(self):
+        from rapidata.api_client.models.ab_test_selection import (
+            AbTestSelection as AbTestSelectionModel,
+        )
+        from rapidata.api_client.models.ab_test_selection_a_inner import (
+            AbTestSelectionAInner,
+        )
+
         return AbTestSelectionModel(
             _t="AbTestSelection",
             a=[

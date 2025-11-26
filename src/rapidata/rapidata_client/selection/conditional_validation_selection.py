@@ -1,12 +1,9 @@
+from __future__ import annotations
+
+from typing import Optional
+
 from rapidata.rapidata_client.config.logger import logger
 from rapidata.rapidata_client.selection._base_selection import RapidataSelection
-from rapidata.api_client.models.conditional_validation_selection_validation_chance import (
-    ConditionalValidationSelectionValidationChance,
-)
-from rapidata.api_client.models.conditional_validation_selection import (
-    ConditionalValidationSelection as ConditionalValidationSelectionModel,
-)
-from typing import Optional
 
 
 class ConditionalValidationSelection(RapidataSelection):
@@ -59,7 +56,14 @@ class ConditionalValidationSelection(RapidataSelection):
         self.dimensions = dimensions
 
     def _to_model(self):
-        return ConditionalValidationSelectionModel(
+        from rapidata.api_client.models.conditional_validation_selection import (
+            ConditionalValidationSelection,
+        )
+        from rapidata.api_client.models.conditional_validation_selection_validation_chance import (
+            ConditionalValidationSelectionValidationChance,
+        )
+
+        return ConditionalValidationSelection(
             _t="ConditionalValidationSelection",
             validationSetId=self.validation_set_id,
             validationChances=[

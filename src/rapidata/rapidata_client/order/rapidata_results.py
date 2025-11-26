@@ -1,8 +1,10 @@
-import pandas as pd
-from typing import Any
-from pandas.core.indexes.base import Index
-import json
+from typing import TYPE_CHECKING, Any
 from rapidata.rapidata_client.config import managed_print
+import json
+
+if TYPE_CHECKING:
+    import pandas as pd
+    from pandas.core.indexes.base import Index
 
 
 class RapidataResults(dict):
@@ -11,7 +13,7 @@ class RapidataResults(dict):
     Extends the built-in dict class with specialized methods.
     """
 
-    def to_pandas(self, split_details: bool = False) -> pd.DataFrame:
+    def to_pandas(self, split_details: bool = False) -> "pd.DataFrame":
         """
         Warning:
             This method is currently under development. The structure of the results may change in the future.
@@ -31,6 +33,9 @@ class RapidataResults(dict):
         Raises:
             ValueError: If split_details is True but no detailed results are found
         """
+        import pandas as pd
+        from pandas.core.indexes.base import Index
+
         if "results" not in self or not self["results"]:
             return pd.DataFrame()
 
@@ -85,13 +90,15 @@ class RapidataResults(dict):
             first_result["detailedResults"], list
         )
 
-    def _to_pandas_with_detailed_results(self) -> pd.DataFrame:
+    def _to_pandas_with_detailed_results(self) -> "pd.DataFrame":
         """
         Converts results to a pandas DataFrame with detailed results split into separate rows.
 
         Returns:
             pd.DataFrame: A DataFrame with one row per detailed result
         """
+        import pandas as pd
+
         rows = []
 
         for result in self["results"]:
@@ -182,10 +189,12 @@ class RapidataResults(dict):
             d = d.get(key, {})
         return d.get(path[-1])
 
-    def _compare_to_pandas(self) -> pd.DataFrame:
+    def _compare_to_pandas(self) -> "pd.DataFrame":
         """
         Converts Compare results to a pandas DataFrame dynamically.
         """
+        import pandas as pd
+
         if not self.get("results"):
             return pd.DataFrame()
 

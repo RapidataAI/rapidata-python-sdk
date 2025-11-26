@@ -6,10 +6,7 @@
 
 __version__ = "{{packageVersion}}"
 
-# import apis into sdk package
-{{#apiInfo}}{{#apis}}from {{apiPackage}}.{{classFilename}} import {{classname}}
-{{/apis}}{{/apiInfo}}
-# import ApiClient
+# These are imported eagerly as they're commonly needed
 from {{packageName}}.api_response import ApiResponse
 from {{packageName}}.api_client import ApiClient
 from {{packageName}}.configuration import Configuration
@@ -23,12 +20,64 @@ from {{packageName}}.exceptions import ApiException
 from {{packageName}}.signing import HttpSigningConfiguration
 {{/hasHttpSignatureMethods}}
 
-# import models into sdk package
+# Lazy loading for APIs and models
+_API_IMPORTS = {
+{{#apiInfo}}{{#apis}}    "{{classname}}": "{{apiPackage}}.{{classFilename}}",
+{{/apis}}{{/apiInfo}}}
+
+_MODEL_IMPORTS = {
 {{#models}}
 {{#model}}
-from {{modelPackage}}.{{classFilename}} import {{classname}}
+    "{{classname}}": "{{modelPackage}}.{{classFilename}}",
 {{/model}}
 {{/models}}
+}
+
+# Combine all lazy imports
+_LAZY_IMPORTS = {**_API_IMPORTS, **_MODEL_IMPORTS}
+
+# Cache for imported modules
+_IMPORTED = {}
+
+
+def __getattr__(name: str):
+    """Lazy import handler for APIs and models."""
+    if name in _IMPORTED:
+        return _IMPORTED[name]
+
+    if name in _LAZY_IMPORTS:
+        module_path = _LAZY_IMPORTS[name]
+        import importlib
+        module = importlib.import_module(module_path)
+        attr = getattr(module, name)
+        _IMPORTED[name] = attr
+        return attr
+
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
+
+def __dir__():
+    """Return list of available attributes for autocompletion."""
+    return list(globals().keys()) + list(_LAZY_IMPORTS.keys())
+
+
+# For type checkers and IDE support
+__all__ = [
+    # Core
+    "__version__",
+    "ApiResponse",
+    "ApiClient",
+    "Configuration",
+    "OpenApiException",
+    "ApiTypeError",
+    "ApiValueError",
+    "ApiKeyError",
+    "ApiAttributeError",
+    "ApiException",
+{{#hasHttpSignatureMethods}}
+    "HttpSigningConfiguration",
+{{/hasHttpSignatureMethods}}
+] + list(_API_IMPORTS.keys()) + list(_MODEL_IMPORTS.keys())
 {{#recursionLimit}}
 
 __import__('sys').setrecursionlimit({{{.}}})

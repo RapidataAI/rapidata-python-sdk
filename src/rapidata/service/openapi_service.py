@@ -1,22 +1,26 @@
+from __future__ import annotations
+
 import subprocess
 from importlib.metadata import version, PackageNotFoundError
+from typing import TYPE_CHECKING
 
-from rapidata.api_client import CustomerRapidApi
-from rapidata.api_client.api.campaign_api import CampaignApi
-from rapidata.api_client.api.asset_api import AssetApi
-from rapidata.api_client.api.dataset_api import DatasetApi
-from rapidata.api_client.api.benchmark_api import BenchmarkApi
-from rapidata.api_client.api.order_api import OrderApi
-from rapidata.api_client.api.pipeline_api import PipelineApi
-from rapidata.api_client.api.leaderboard_api import LeaderboardApi
-from rapidata.api_client.api.validation_set_api import ValidationSetApi
-from rapidata.api_client.api.workflow_api import WorkflowApi
-from rapidata.api_client.api.participant_api import ParticipantApi
-from rapidata.api_client.api.audience_api import AudienceApi
 from rapidata.api_client.configuration import Configuration
 from rapidata.service.credential_manager import CredentialManager
 from rapidata.rapidata_client.api.rapidata_api_client import RapidataApiClient
 from rapidata.rapidata_client.config import logger
+
+if TYPE_CHECKING:
+    from rapidata.api_client import CustomerRapidApi
+    from rapidata.api_client.api.campaign_api import CampaignApi
+    from rapidata.api_client.api.asset_api import AssetApi
+    from rapidata.api_client.api.dataset_api import DatasetApi
+    from rapidata.api_client.api.benchmark_api import BenchmarkApi
+    from rapidata.api_client.api.order_api import OrderApi
+    from rapidata.api_client.api.pipeline_api import PipelineApi
+    from rapidata.api_client.api.leaderboard_api import LeaderboardApi
+    from rapidata.api_client.api.validation_set_api import ValidationSetApi
+    from rapidata.api_client.api.workflow_api import WorkflowApi
+    from rapidata.api_client.api.participant_api import ParticipantApi
 
 
 class OpenAPIService:
@@ -94,46 +98,68 @@ class OpenAPIService:
 
     @property
     def order_api(self) -> OrderApi:
+        from rapidata.api_client.api.order_api import OrderApi
+
         return OrderApi(self.api_client)
 
     @property
     def asset_api(self) -> AssetApi:
+        from rapidata.api_client.api.asset_api import AssetApi
+
         return AssetApi(self.api_client)
 
     @property
     def dataset_api(self) -> DatasetApi:
+        from rapidata.api_client.api.dataset_api import DatasetApi
+
         return DatasetApi(self.api_client)
 
     @property
     def validation_api(self) -> ValidationSetApi:
+        from rapidata.api_client.api.validation_set_api import ValidationSetApi
+
         return ValidationSetApi(self.api_client)
 
     @property
     def rapid_api(self) -> CustomerRapidApi:
+        from rapidata.api_client import CustomerRapidApi
+
         return CustomerRapidApi(self.api_client)
 
     @property
     def campaign_api(self) -> CampaignApi:
+        from rapidata.api_client.api.campaign_api import CampaignApi
+
         return CampaignApi(self.api_client)
 
     @property
     def pipeline_api(self) -> PipelineApi:
+        from rapidata.api_client.api.pipeline_api import PipelineApi
+
         return PipelineApi(self.api_client)
 
     @property
     def workflow_api(self) -> WorkflowApi:
+        from rapidata.api_client.api.workflow_api import WorkflowApi
+
         return WorkflowApi(self.api_client)
 
     @property
     def leaderboard_api(self) -> LeaderboardApi:
+        from rapidata.api_client.api.leaderboard_api import LeaderboardApi
+
         return LeaderboardApi(self.api_client)
 
     @property
     def benchmark_api(self) -> BenchmarkApi:
+        from rapidata.api_client.api.benchmark_api import BenchmarkApi
+
         return BenchmarkApi(self.api_client)
 
     @property
     def participant_api(self) -> ParticipantApi:
+        from rapidata.api_client.api.participant_api import ParticipantApi
+
         return ParticipantApi(self.api_client)
 
     @property

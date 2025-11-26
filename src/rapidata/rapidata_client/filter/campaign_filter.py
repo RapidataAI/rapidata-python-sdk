@@ -1,7 +1,6 @@
+from __future__ import annotations
+
 from rapidata.rapidata_client.filter._base_filter import RapidataFilter
-from rapidata.api_client.models.campaign_user_filter_model import (
-    CampaignUserFilterModel,
-)
 from pydantic import BaseModel
 
 
@@ -22,6 +21,10 @@ class CampaignFilter(RapidataFilter, BaseModel):
         super().__init__(campaign_ids=campaign_ids)
 
     def _to_model(self):
+        from rapidata.api_client.models.campaign_user_filter_model import (
+            CampaignUserFilterModel,
+        )
+
         return CampaignUserFilterModel(
             _t="CampaignFilter",
             campaignIds=self.campaign_ids,
