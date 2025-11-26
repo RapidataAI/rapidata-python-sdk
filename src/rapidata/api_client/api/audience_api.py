@@ -22,7 +22,7 @@ from typing_extensions import Annotated
 from rapidata.api_client.models.create_audience_request import CreateAudienceRequest
 from rapidata.api_client.models.create_audience_result import CreateAudienceResult
 from rapidata.api_client.models.get_audience_by_id_result import GetAudienceByIdResult
-from rapidata.api_client.models.query_audiences_result import QueryAudiencesResult
+from rapidata.api_client.models.paged_result_query_audiences_result import PagedResultQueryAudiencesResult
 from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.update_audience_request import UpdateAudienceRequest
 
@@ -882,7 +882,7 @@ class AudienceApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> QueryAudiencesResult:
+    ) -> PagedResultQueryAudiencesResult:
         """Queries all available audiences.
 
 
@@ -919,7 +919,7 @@ class AudienceApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "QueryAudiencesResult",
+            '200': "PagedResultQueryAudiencesResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -948,7 +948,7 @@ class AudienceApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[QueryAudiencesResult]:
+    ) -> ApiResponse[PagedResultQueryAudiencesResult]:
         """Queries all available audiences.
 
 
@@ -985,7 +985,7 @@ class AudienceApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "QueryAudiencesResult",
+            '200': "PagedResultQueryAudiencesResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1051,7 +1051,7 @@ class AudienceApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "QueryAudiencesResult",
+            '200': "PagedResultQueryAudiencesResult",
         }
         response_data = self.api_client.call_api(
             *_param,
