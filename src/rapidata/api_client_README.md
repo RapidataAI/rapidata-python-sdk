@@ -473,6 +473,7 @@ Class | Method | HTTP request | Description
  - [PagedResultOrderModel](rapidata/api_client/docs/PagedResultOrderModel.md)
  - [PagedResultParticipantByBenchmark](rapidata/api_client/docs/PagedResultParticipantByBenchmark.md)
  - [PagedResultPromptByBenchmarkResult](rapidata/api_client/docs/PagedResultPromptByBenchmarkResult.md)
+ - [PagedResultQueryAudiencesResult](rapidata/api_client/docs/PagedResultQueryAudiencesResult.md)
  - [PagedResultQueryDatapointsByDatasetIdResult](rapidata/api_client/docs/PagedResultQueryDatapointsByDatasetIdResult.md)
  - [PagedResultQueryValidationRapidEligibilityResult](rapidata/api_client/docs/PagedResultQueryValidationRapidEligibilityResult.md)
  - [PagedResultRapidModel](rapidata/api_client/docs/PagedResultRapidModel.md)

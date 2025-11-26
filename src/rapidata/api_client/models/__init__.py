@@ -282,6 +282,7 @@ _MODEL_IMPORTS = {
     "PagedResultOrderModel": "rapidata.api_client.models.paged_result_order_model",
     "PagedResultParticipantByBenchmark": "rapidata.api_client.models.paged_result_participant_by_benchmark",
     "PagedResultPromptByBenchmarkResult": "rapidata.api_client.models.paged_result_prompt_by_benchmark_result",
+    "PagedResultQueryAudiencesResult": "rapidata.api_client.models.paged_result_query_audiences_result",
     "PagedResultQueryDatapointsByDatasetIdResult": "rapidata.api_client.models.paged_result_query_datapoints_by_dataset_id_result",
     "PagedResultQueryValidationRapidEligibilityResult": "rapidata.api_client.models.paged_result_query_validation_rapid_eligibility_result",
     "PagedResultRapidModel": "rapidata.api_client.models.paged_result_rapid_model",
