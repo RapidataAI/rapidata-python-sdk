@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -26,8 +26,9 @@ class UpdateAudienceRequest(BaseModel):
     """
     The body request to update an audience.
     """ # noqa: E501
-    name: StrictStr
-    __properties: ClassVar[List[str]] = ["name"]
+    name: Optional[StrictStr] = None
+    filters: Optional[List[StrictStr]] = None
+    __properties: ClassVar[List[str]] = ["name", "filters"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -80,7 +81,8 @@ class UpdateAudienceRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "name": obj.get("name")
+            "name": obj.get("name"),
+            "filters": obj.get("filters")
         })
         return _obj
 
