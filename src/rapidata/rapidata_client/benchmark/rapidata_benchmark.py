@@ -1,8 +1,11 @@
-import pandas as pd
 import urllib.parse
 import webbrowser
 from colorama import Fore
-from typing import Literal, Optional, Sequence
+from typing import Literal, Optional, Sequence, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import pandas as pd
+
 
 from rapidata.api_client.models.and_user_filter_model_filters_inner import (
     AndUserFilterModelFiltersInner,
@@ -492,11 +495,14 @@ class RapidataBenchmark:
                 + Fore.RESET
             )
 
-    def get_overall_standings(self, tags: Optional[list[str]] = None) -> pd.DataFrame:
+    def get_overall_standings(self, tags: Optional[list[str]] = None) -> "pd.DataFrame":
         """
         Returns an aggregated elo table of all leaderboards in the benchmark.
         """
+
         with tracer.start_as_current_span("get_overall_standings"):
+            import pandas as pd
+
             participants = self._openapi_service.benchmark_api.benchmark_benchmark_id_standings_get(
                 benchmark_id=self.id,
                 tags=tags,

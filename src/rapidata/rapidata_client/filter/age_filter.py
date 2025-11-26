@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from rapidata.rapidata_client.filter._base_filter import RapidataFilter
-from rapidata.api_client.models.age_user_filter_model import AgeUserFilterModel
 from rapidata.rapidata_client.filter.models.age_group import AgeGroup
 from pydantic import BaseModel, ConfigDict
 
@@ -20,6 +21,8 @@ class AgeFilter(RapidataFilter, BaseModel):
         super().__init__(age_groups=age_groups)
 
     def _to_model(self):
+        from rapidata.api_client.models.age_user_filter_model import AgeUserFilterModel
+
         return AgeUserFilterModel(
             _t="AgeFilter",
             ageGroups=[age_group._to_backend_model() for age_group in self.age_groups],

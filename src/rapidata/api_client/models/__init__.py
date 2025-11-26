@@ -12,402 +12,431 @@
     Do not edit the class manually.
 """  # noqa: E501
 
+# Lazy loading for models - models are imported only when accessed
+_MODEL_IMPORTS = {
+    "AbTestSelection": "rapidata.api_client.models.ab_test_selection",
+    "AbTestSelectionAInner": "rapidata.api_client.models.ab_test_selection_a_inner",
+    "AddUserResponseResult": "rapidata.api_client.models.add_user_response_result",
+    "AddValidationRapidModel": "rapidata.api_client.models.add_validation_rapid_model",
+    "AddValidationRapidModelAsset": "rapidata.api_client.models.add_validation_rapid_model_asset",
+    "AddValidationRapidModelContextAsset": "rapidata.api_client.models.add_validation_rapid_model_context_asset",
+    "AddValidationRapidModelMetadataInner": "rapidata.api_client.models.add_validation_rapid_model_metadata_inner",
+    "AddValidationRapidModelPayload": "rapidata.api_client.models.add_validation_rapid_model_payload",
+    "AddValidationRapidModelTruth": "rapidata.api_client.models.add_validation_rapid_model_truth",
+    "AddValidationRapidNewModel": "rapidata.api_client.models.add_validation_rapid_new_model",
+    "AddValidationRapidNewModelTruth": "rapidata.api_client.models.add_validation_rapid_new_model_truth",
+    "AgeUserFilterModel": "rapidata.api_client.models.age_user_filter_model",
+    "AgeUserFilterModelAgeGroup": "rapidata.api_client.models.age_user_filter_model_age_group",
+    "AggregatedOrdersModel": "rapidata.api_client.models.aggregated_orders_model",
+    "AggregatorType": "rapidata.api_client.models.aggregator_type",
+    "AndFilter": "rapidata.api_client.models.and_filter",
+    "AndFilterFiltersInner": "rapidata.api_client.models.and_filter_filters_inner",
+    "AndUserFilterModel": "rapidata.api_client.models.and_user_filter_model",
+    "AndUserFilterModelFiltersInner": "rapidata.api_client.models.and_user_filter_model_filters_inner",
+    "AreRapidsActiveResult": "rapidata.api_client.models.are_rapids_active_result",
+    "AttachCategoryRapidBlueprint": "rapidata.api_client.models.attach_category_rapid_blueprint",
+    "AttachCategoryRapidBlueprintCategory": "rapidata.api_client.models.attach_category_rapid_blueprint_category",
+    "AttachCategoryResult": "rapidata.api_client.models.attach_category_result",
+    "AttachCategoryTruth": "rapidata.api_client.models.attach_category_truth",
+    "BenchmarkQueryResult": "rapidata.api_client.models.benchmark_query_result",
+    "BoostLeaderboardModel": "rapidata.api_client.models.boost_leaderboard_model",
+    "BoostingProfile": "rapidata.api_client.models.boosting_profile",
+    "BoundingBoxPayload": "rapidata.api_client.models.bounding_box_payload",
+    "BoundingBoxRapidBlueprint": "rapidata.api_client.models.bounding_box_rapid_blueprint",
+    "BoundingBoxResult": "rapidata.api_client.models.bounding_box_result",
+    "BoundingBoxTruth": "rapidata.api_client.models.bounding_box_truth",
+    "BoxShape": "rapidata.api_client.models.box_shape",
+    "CampaignArtifactModel": "rapidata.api_client.models.campaign_artifact_model",
+    "CampaignFilter": "rapidata.api_client.models.campaign_filter",
+    "CampaignQueryResult": "rapidata.api_client.models.campaign_query_result",
+    "CampaignStatus": "rapidata.api_client.models.campaign_status",
+    "CampaignUserFilterModel": "rapidata.api_client.models.campaign_user_filter_model",
+    "CappedSelection": "rapidata.api_client.models.capped_selection",
+    "ChangeBoostModel": "rapidata.api_client.models.change_boost_model",
+    "ClassificationMetadata": "rapidata.api_client.models.classification_metadata",
+    "ClassificationMetadataModel": "rapidata.api_client.models.classification_metadata_model",
+    "ClassifyPayload": "rapidata.api_client.models.classify_payload",
+    "ClassifyPayloadCategory": "rapidata.api_client.models.classify_payload_category",
+    "ClientModel": "rapidata.api_client.models.client_model",
+    "ClientsQueryResult": "rapidata.api_client.models.clients_query_result",
+    "CloneDatasetModel": "rapidata.api_client.models.clone_dataset_model",
+    "CloneOrderModel": "rapidata.api_client.models.clone_order_model",
+    "CloneOrderResult": "rapidata.api_client.models.clone_order_result",
+    "ComparePayload": "rapidata.api_client.models.compare_payload",
+    "CompareRapidBlueprint": "rapidata.api_client.models.compare_rapid_blueprint",
+    "CompareResult": "rapidata.api_client.models.compare_result",
+    "CompareTruth": "rapidata.api_client.models.compare_truth",
+    "CompareWorkflowConfig": "rapidata.api_client.models.compare_workflow_config",
+    "CompareWorkflowConfigContextAsset": "rapidata.api_client.models.compare_workflow_config_context_asset",
+    "CompareWorkflowConfigPairMakerConfig": "rapidata.api_client.models.compare_workflow_config_pair_maker_config",
+    "CompareWorkflowModel": "rapidata.api_client.models.compare_workflow_model",
+    "CompareWorkflowModel1": "rapidata.api_client.models.compare_workflow_model1",
+    "CompareWorkflowModel1PairMakerInformation": "rapidata.api_client.models.compare_workflow_model1_pair_maker_information",
+    "CompareWorkflowModel1Referee": "rapidata.api_client.models.compare_workflow_model1_referee",
+    "CompareWorkflowModelContextAsset": "rapidata.api_client.models.compare_workflow_model_context_asset",
+    "CompareWorkflowModelMetadataInner": "rapidata.api_client.models.compare_workflow_model_metadata_inner",
+    "CompareWorkflowModelPairMakerConfig": "rapidata.api_client.models.compare_workflow_model_pair_maker_config",
+    "ComparisonOperator": "rapidata.api_client.models.comparison_operator",
+    "ConditionalValidationSelection": "rapidata.api_client.models.conditional_validation_selection",
+    "ConditionalValidationSelectionValidationChance": "rapidata.api_client.models.conditional_validation_selection_validation_chance",
+    "ConfidenceInterval": "rapidata.api_client.models.confidence_interval",
+    "CountMetadata": "rapidata.api_client.models.count_metadata",
+    "CountMetadataModel": "rapidata.api_client.models.count_metadata_model",
+    "CountryFilter": "rapidata.api_client.models.country_filter",
+    "CountryUserFilterModel": "rapidata.api_client.models.country_user_filter_model",
+    "CreateAudienceRequest": "rapidata.api_client.models.create_audience_request",
+    "CreateAudienceResult": "rapidata.api_client.models.create_audience_result",
+    "CreateBenchmarkModel": "rapidata.api_client.models.create_benchmark_model",
+    "CreateBenchmarkParticipantModel": "rapidata.api_client.models.create_benchmark_participant_model",
+    "CreateBenchmarkParticipantResult": "rapidata.api_client.models.create_benchmark_participant_result",
+    "CreateBenchmarkPromptResult": "rapidata.api_client.models.create_benchmark_prompt_result",
+    "CreateBenchmarkResult": "rapidata.api_client.models.create_benchmark_result",
+    "CreateBridgeTokenResult": "rapidata.api_client.models.create_bridge_token_result",
+    "CreateClientModel": "rapidata.api_client.models.create_client_model",
+    "CreateComplexOrderModel": "rapidata.api_client.models.create_complex_order_model",
+    "CreateComplexOrderModelPipeline": "rapidata.api_client.models.create_complex_order_model_pipeline",
+    "CreateComplexOrderResult": "rapidata.api_client.models.create_complex_order_result",
+    "CreateCustomerClientResult": "rapidata.api_client.models.create_customer_client_result",
+    "CreateDatapointModel": "rapidata.api_client.models.create_datapoint_model",
+    "CreateDatapointModelAsset": "rapidata.api_client.models.create_datapoint_model_asset",
+    "CreateDatapointModelContextAsset": "rapidata.api_client.models.create_datapoint_model_context_asset",
+    "CreateDatapointModelMetadataInner": "rapidata.api_client.models.create_datapoint_model_metadata_inner",
+    "CreateDatapointResult": "rapidata.api_client.models.create_datapoint_result",
+    "CreateDatasetArtifactModel": "rapidata.api_client.models.create_dataset_artifact_model",
+    "CreateDatasetArtifactModelDataset": "rapidata.api_client.models.create_dataset_artifact_model_dataset",
+    "CreateDemographicRapidModel": "rapidata.api_client.models.create_demographic_rapid_model",
+    "CreateDemographicRapidModelAsset": "rapidata.api_client.models.create_demographic_rapid_model_asset",
+    "CreateDemographicRapidModelContextAsset": "rapidata.api_client.models.create_demographic_rapid_model_context_asset",
+    "CreateEmptyValidationSetResult": "rapidata.api_client.models.create_empty_validation_set_result",
+    "CreateLeaderboardModel": "rapidata.api_client.models.create_leaderboard_model",
+    "CreateLeaderboardResult": "rapidata.api_client.models.create_leaderboard_result",
+    "CreateOrderModel": "rapidata.api_client.models.create_order_model",
+    "CreateOrderModelReferee": "rapidata.api_client.models.create_order_model_referee",
+    "CreateOrderModelWorkflow": "rapidata.api_client.models.create_order_model_workflow",
+    "CreateOrderResult": "rapidata.api_client.models.create_order_result",
+    "CreateRapidResult": "rapidata.api_client.models.create_rapid_result",
+    "CreateSampleModel": "rapidata.api_client.models.create_sample_model",
+    "CreateSampleModelAsset": "rapidata.api_client.models.create_sample_model_asset",
+    "CreateSimplePipelineModel": "rapidata.api_client.models.create_simple_pipeline_model",
+    "CreateSimplePipelineModelArtifactsInner": "rapidata.api_client.models.create_simple_pipeline_model_artifacts_inner",
+    "CreateSimplePipelineModelPipelineStepsInner": "rapidata.api_client.models.create_simple_pipeline_model_pipeline_steps_inner",
+    "CreateUnsupportedOrderModel": "rapidata.api_client.models.create_unsupported_order_model",
+    "CreateValidationSetModel": "rapidata.api_client.models.create_validation_set_model",
+    "CustomUserFilterModel": "rapidata.api_client.models.custom_user_filter_model",
+    "DatapointState": "rapidata.api_client.models.datapoint_state",
+    "DatasetArtifactModel": "rapidata.api_client.models.dataset_artifact_model",
+    "DatasetEvaluationStepModel": "rapidata.api_client.models.dataset_evaluation_step_model",
+    "DemographicFilter": "rapidata.api_client.models.demographic_filter",
+    "DemographicSelection": "rapidata.api_client.models.demographic_selection",
+    "DynamicClientRegistrationRequest": "rapidata.api_client.models.dynamic_client_registration_request",
+    "EarlyStoppingRefereeModel": "rapidata.api_client.models.early_stopping_referee_model",
+    "EffortCappedSelection": "rapidata.api_client.models.effort_capped_selection",
+    "EloConfig": "rapidata.api_client.models.elo_config",
+    "EloConfigModel": "rapidata.api_client.models.elo_config_model",
+    "EmptyValidationTruth": "rapidata.api_client.models.empty_validation_truth",
+    "EvaluationWorkflowConfig": "rapidata.api_client.models.evaluation_workflow_config",
+    "EvaluationWorkflowModel": "rapidata.api_client.models.evaluation_workflow_model",
+    "EvaluationWorkflowModel1": "rapidata.api_client.models.evaluation_workflow_model1",
+    "ExistingAssetInput": "rapidata.api_client.models.existing_asset_input",
+    "ExistingAssetInputMetadataValue": "rapidata.api_client.models.existing_asset_input_metadata_value",
+    "FeatureFlag": "rapidata.api_client.models.feature_flag",
+    "FeatureFlagModel": "rapidata.api_client.models.feature_flag_model",
+    "FeedbackModel": "rapidata.api_client.models.feedback_model",
+    "FileArtifactModel": "rapidata.api_client.models.file_artifact_model",
+    "FileAsset": "rapidata.api_client.models.file_asset",
+    "FileAssetMetadataValue": "rapidata.api_client.models.file_asset_metadata_value",
+    "FileAssetModel": "rapidata.api_client.models.file_asset_model",
+    "FileAssetModelMetadataValue": "rapidata.api_client.models.file_asset_model_metadata_value",
+    "FileType": "rapidata.api_client.models.file_type",
+    "FileTypeMetadata": "rapidata.api_client.models.file_type_metadata",
+    "FileTypeMetadataModel": "rapidata.api_client.models.file_type_metadata_model",
+    "Filter": "rapidata.api_client.models.filter",
+    "FilterOperator": "rapidata.api_client.models.filter_operator",
+    "ForkBenchmarkResult": "rapidata.api_client.models.fork_benchmark_result",
+    "FreeTextPayload": "rapidata.api_client.models.free_text_payload",
+    "FreeTextRapidBlueprint": "rapidata.api_client.models.free_text_rapid_blueprint",
+    "FreeTextResult": "rapidata.api_client.models.free_text_result",
+    "GenderUserFilterModel": "rapidata.api_client.models.gender_user_filter_model",
+    "GenderUserFilterModelGender": "rapidata.api_client.models.gender_user_filter_model_gender",
+    "GetAvailableValidationSetsResult": "rapidata.api_client.models.get_available_validation_sets_result",
+    "GetBenchmarkByIdResult": "rapidata.api_client.models.get_benchmark_by_id_result",
+    "GetBoostResult": "rapidata.api_client.models.get_boost_result",
+    "GetBoostResultBoostMode": "rapidata.api_client.models.get_boost_result_boost_mode",
+    "GetBoostResultBoostStatus": "rapidata.api_client.models.get_boost_result_boost_status",
+    "GetCompareAbSummaryResult": "rapidata.api_client.models.get_compare_ab_summary_result",
+    "GetCompareWorkflowResultsModel": "rapidata.api_client.models.get_compare_workflow_results_model",
+    "GetCompareWorkflowResultsResult": "rapidata.api_client.models.get_compare_workflow_results_result",
+    "GetDatapointByIdResult": "rapidata.api_client.models.get_datapoint_by_id_result",
+    "GetDatapointByIdResultAsset": "rapidata.api_client.models.get_datapoint_by_id_result_asset",
+    "GetDatasetByIdResult": "rapidata.api_client.models.get_dataset_by_id_result",
+    "GetDatasetProgressResult": "rapidata.api_client.models.get_dataset_progress_result",
+    "GetEvaluationWorkflowResultsModel": "rapidata.api_client.models.get_evaluation_workflow_results_model",
+    "GetFailedDatapointsResult": "rapidata.api_client.models.get_failed_datapoints_result",
+    "GetFailedDatapointsResultDatapoint": "rapidata.api_client.models.get_failed_datapoints_result_datapoint",
+    "GetFileMetadataResult": "rapidata.api_client.models.get_file_metadata_result",
+    "GetGroupedRankingWorkflowResultsModel": "rapidata.api_client.models.get_grouped_ranking_workflow_results_model",
+    "GetGroupedRankingWorkflowResultsResult": "rapidata.api_client.models.get_grouped_ranking_workflow_results_result",
+    "GetLeaderboardByIdResult": "rapidata.api_client.models.get_leaderboard_by_id_result",
+    "GetOrderByIdResult": "rapidata.api_client.models.get_order_by_id_result",
+    "GetParticipantByIdResult": "rapidata.api_client.models.get_participant_by_id_result",
+    "GetPipelineByIdResult": "rapidata.api_client.models.get_pipeline_by_id_result",
+    "GetPipelineByIdResultArtifactsValue": "rapidata.api_client.models.get_pipeline_by_id_result_artifacts_value",
+    "GetPublicOrdersResult": "rapidata.api_client.models.get_public_orders_result",
+    "GetPublicResponsesResult": "rapidata.api_client.models.get_public_responses_result",
+    "GetPublicResponsesResultResponse": "rapidata.api_client.models.get_public_responses_result_response",
+    "GetRecommendedValidationSetResult": "rapidata.api_client.models.get_recommended_validation_set_result",
+    "GetResponsesForRapidResult": "rapidata.api_client.models.get_responses_for_rapid_result",
+    "GetResponsesForRapidResultResponse": "rapidata.api_client.models.get_responses_for_rapid_result_response",
+    "GetResponsesForRapidResultResponseResult": "rapidata.api_client.models.get_responses_for_rapid_result_response_result",
+    "GetResponsesResult": "rapidata.api_client.models.get_responses_result",
+    "GetResponsesResultResponse": "rapidata.api_client.models.get_responses_result_response",
+    "GetSampleByIdResult": "rapidata.api_client.models.get_sample_by_id_result",
+    "GetSimpleWorkflowResultsModel": "rapidata.api_client.models.get_simple_workflow_results_model",
+    "GetStandingByIdResult": "rapidata.api_client.models.get_standing_by_id_result",
+    "GetValidationRapidsResult": "rapidata.api_client.models.get_validation_rapids_result",
+    "GetValidationRapidsResultAsset": "rapidata.api_client.models.get_validation_rapids_result_asset",
+    "GetValidationRapidsResultPayload": "rapidata.api_client.models.get_validation_rapids_result_payload",
+    "GetValidationRapidsResultTruth": "rapidata.api_client.models.get_validation_rapids_result_truth",
+    "GetValidationSetByIdResult": "rapidata.api_client.models.get_validation_set_by_id_result",
+    "GetWorkflowByIdResult": "rapidata.api_client.models.get_workflow_by_id_result",
+    "GetWorkflowByIdResultWorkflow": "rapidata.api_client.models.get_workflow_by_id_result_workflow",
+    "GetWorkflowProgressResult": "rapidata.api_client.models.get_workflow_progress_result",
+    "GetWorkflowResultsResult": "rapidata.api_client.models.get_workflow_results_result",
+    "GetWorkflowResultsResultResponse": "rapidata.api_client.models.get_workflow_results_result_response",
+    "GoogleOneTapLoginModel": "rapidata.api_client.models.google_one_tap_login_model",
+    "GroupedRankingWorkflowConfig": "rapidata.api_client.models.grouped_ranking_workflow_config",
+    "GroupedRankingWorkflowConfigContextAssetsValue": "rapidata.api_client.models.grouped_ranking_workflow_config_context_assets_value",
+    "GroupedRankingWorkflowModel": "rapidata.api_client.models.grouped_ranking_workflow_model",
+    "GroupedRankingWorkflowModel1": "rapidata.api_client.models.grouped_ranking_workflow_model1",
+    "ImageDimensionMetadata": "rapidata.api_client.models.image_dimension_metadata",
+    "ImageDimensionMetadataModel": "rapidata.api_client.models.image_dimension_metadata_model",
+    "InspectReportResult": "rapidata.api_client.models.inspect_report_result",
+    "JsonWebKey": "rapidata.api_client.models.json_web_key",
+    "JsonWebKeySet": "rapidata.api_client.models.json_web_key_set",
+    "LabelingSelection": "rapidata.api_client.models.labeling_selection",
+    "LanguageFilter": "rapidata.api_client.models.language_filter",
+    "LanguageUserFilterModel": "rapidata.api_client.models.language_user_filter_model",
+    "LeaderboardsQueryResult": "rapidata.api_client.models.leaderboards_query_result",
+    "LinePayload": "rapidata.api_client.models.line_payload",
+    "LineRapidBlueprint": "rapidata.api_client.models.line_rapid_blueprint",
+    "LineResult": "rapidata.api_client.models.line_result",
+    "LineResultLine": "rapidata.api_client.models.line_result_line",
+    "LineResultLinePoint": "rapidata.api_client.models.line_result_line_point",
+    "LineTruth": "rapidata.api_client.models.line_truth",
+    "LocateBoxTruth": "rapidata.api_client.models.locate_box_truth",
+    "LocateCoordinate": "rapidata.api_client.models.locate_coordinate",
+    "LocatePayload": "rapidata.api_client.models.locate_payload",
+    "LocateRapidBlueprint": "rapidata.api_client.models.locate_rapid_blueprint",
+    "LocateResult": "rapidata.api_client.models.locate_result",
+    "LocationMetadata": "rapidata.api_client.models.location_metadata",
+    "LocationMetadataModel": "rapidata.api_client.models.location_metadata_model",
+    "LogicOperator": "rapidata.api_client.models.logic_operator",
+    "MetadataPromptAssetMetadataInput": "rapidata.api_client.models.metadata_prompt_asset_metadata_input",
+    "MetadataPromptMetadataInput": "rapidata.api_client.models.metadata_prompt_metadata_input",
+    "MetadataTranscriptionMetadataInput": "rapidata.api_client.models.metadata_transcription_metadata_input",
+    "MultiAsset": "rapidata.api_client.models.multi_asset",
+    "MultiAssetInput": "rapidata.api_client.models.multi_asset_input",
+    "MultiAssetInputAssetsInner": "rapidata.api_client.models.multi_asset_input_assets_inner",
+    "MultiAssetModel": "rapidata.api_client.models.multi_asset_model",
+    "MultiCompareTruth": "rapidata.api_client.models.multi_compare_truth",
+    "NaiveRefereeConfig": "rapidata.api_client.models.naive_referee_config",
+    "NaiveRefereeInfo": "rapidata.api_client.models.naive_referee_info",
+    "NaiveRefereeModel": "rapidata.api_client.models.naive_referee_model",
+    "NamedClassification": "rapidata.api_client.models.named_classification",
+    "NamedEntityPayload": "rapidata.api_client.models.named_entity_payload",
+    "NamedEntityRapidBlueprint": "rapidata.api_client.models.named_entity_rapid_blueprint",
+    "NamedEntityResult": "rapidata.api_client.models.named_entity_result",
+    "NamedEntityTruth": "rapidata.api_client.models.named_entity_truth",
+    "NeverEndingRefereeConfig": "rapidata.api_client.models.never_ending_referee_config",
+    "NeverEndingRefereeInfo": "rapidata.api_client.models.never_ending_referee_info",
+    "NewUserFilter": "rapidata.api_client.models.new_user_filter",
+    "NewUserFilterModel": "rapidata.api_client.models.new_user_filter_model",
+    "NewsletterModel": "rapidata.api_client.models.newsletter_model",
+    "NotAvailableYetResult": "rapidata.api_client.models.not_available_yet_result",
+    "NotFilter": "rapidata.api_client.models.not_filter",
+    "NotUserFilterModel": "rapidata.api_client.models.not_user_filter_model",
+    "NullAsset": "rapidata.api_client.models.null_asset",
+    "NullAssetModel": "rapidata.api_client.models.null_asset_model",
+    "OnlinePairMakerConfig": "rapidata.api_client.models.online_pair_maker_config",
+    "OnlinePairMakerConfigModel": "rapidata.api_client.models.online_pair_maker_config_model",
+    "OnlinePairMakerInformation": "rapidata.api_client.models.online_pair_maker_information",
+    "OrFilter": "rapidata.api_client.models.or_filter",
+    "OrUserFilterModel": "rapidata.api_client.models.or_user_filter_model",
+    "OrderModel": "rapidata.api_client.models.order_model",
+    "OrderState": "rapidata.api_client.models.order_state",
+    "OriginalFilenameMetadata": "rapidata.api_client.models.original_filename_metadata",
+    "OriginalFilenameMetadataModel": "rapidata.api_client.models.original_filename_metadata_model",
+    "PageInfo": "rapidata.api_client.models.page_info",
+    "PagedResultAggregatedOrdersModel": "rapidata.api_client.models.paged_result_aggregated_orders_model",
+    "PagedResultBenchmarkQueryResult": "rapidata.api_client.models.paged_result_benchmark_query_result",
+    "PagedResultCampaignQueryResult": "rapidata.api_client.models.paged_result_campaign_query_result",
+    "PagedResultClientsQueryResult": "rapidata.api_client.models.paged_result_clients_query_result",
+    "PagedResultGetCompareWorkflowResultsResult": "rapidata.api_client.models.paged_result_get_compare_workflow_results_result",
+    "PagedResultGetGroupedRankingWorkflowResultsResult": "rapidata.api_client.models.paged_result_get_grouped_ranking_workflow_results_result",
+    "PagedResultGetValidationRapidsResult": "rapidata.api_client.models.paged_result_get_validation_rapids_result",
+    "PagedResultGetWorkflowResultsResult": "rapidata.api_client.models.paged_result_get_workflow_results_result",
+    "PagedResultIWorkflowModel": "rapidata.api_client.models.paged_result_i_workflow_model",
+    "PagedResultLeaderboardsQueryResult": "rapidata.api_client.models.paged_result_leaderboards_query_result",
+    "PagedResultOrderModel": "rapidata.api_client.models.paged_result_order_model",
+    "PagedResultParticipantByBenchmark": "rapidata.api_client.models.paged_result_participant_by_benchmark",
+    "PagedResultPromptByBenchmarkResult": "rapidata.api_client.models.paged_result_prompt_by_benchmark_result",
+    "PagedResultQueryDatapointsByDatasetIdResult": "rapidata.api_client.models.paged_result_query_datapoints_by_dataset_id_result",
+    "PagedResultQueryValidationRapidEligibilityResult": "rapidata.api_client.models.paged_result_query_validation_rapid_eligibility_result",
+    "PagedResultRapidModel": "rapidata.api_client.models.paged_result_rapid_model",
+    "PagedResultRunsByLeaderboardResult": "rapidata.api_client.models.paged_result_runs_by_leaderboard_result",
+    "PagedResultSampleByIdentifier": "rapidata.api_client.models.paged_result_sample_by_identifier",
+    "PagedResultSampleByParticipant": "rapidata.api_client.models.paged_result_sample_by_participant",
+    "PagedResultStandingByLeaderboard": "rapidata.api_client.models.paged_result_standing_by_leaderboard",
+    "PagedResultValidationSetModel": "rapidata.api_client.models.paged_result_validation_set_model",
+    "ParticipantByBenchmark": "rapidata.api_client.models.participant_by_benchmark",
+    "ParticipantStatus": "rapidata.api_client.models.participant_status",
+    "PolygonPayload": "rapidata.api_client.models.polygon_payload",
+    "PolygonRapidBlueprint": "rapidata.api_client.models.polygon_rapid_blueprint",
+    "PolygonResult": "rapidata.api_client.models.polygon_result",
+    "PolygonResultCoordinate": "rapidata.api_client.models.polygon_result_coordinate",
+    "PolygonResultShape": "rapidata.api_client.models.polygon_result_shape",
+    "PolygonTruth": "rapidata.api_client.models.polygon_truth",
+    "PreliminaryDownloadModel": "rapidata.api_client.models.preliminary_download_model",
+    "PreviewOrderModel": "rapidata.api_client.models.preview_order_model",
+    "ProbabilisticAttachCategoryRefereeConfig": "rapidata.api_client.models.probabilistic_attach_category_referee_config",
+    "ProbabilisticAttachCategoryRefereeInfo": "rapidata.api_client.models.probabilistic_attach_category_referee_info",
+    "ProblemDetails": "rapidata.api_client.models.problem_details",
+    "PromptAssetMetadataInput": "rapidata.api_client.models.prompt_asset_metadata_input",
+    "PromptAssetMetadataInputAsset": "rapidata.api_client.models.prompt_asset_metadata_input_asset",
+    "PromptByBenchmarkResult": "rapidata.api_client.models.prompt_by_benchmark_result",
+    "PromptMetadataInput": "rapidata.api_client.models.prompt_metadata_input",
+    "PublicOrderModel": "rapidata.api_client.models.public_order_model",
+    "QueryDatapointsByDatasetIdResult": "rapidata.api_client.models.query_datapoints_by_dataset_id_result",
+    "QueryModel": "rapidata.api_client.models.query_model",
+    "QueryValidationRapidEligibilityModelQueryValidationModel": "rapidata.api_client.models.query_validation_rapid_eligibility_model_query_validation_model",
+    "QueryValidationRapidEligibilityResult": "rapidata.api_client.models.query_validation_rapid_eligibility_result",
+    "QueryValidationRapidEligibilityResultTruth": "rapidata.api_client.models.query_validation_rapid_eligibility_result_truth",
+    "RapidIssue": "rapidata.api_client.models.rapid_issue",
+    "RapidModel": "rapidata.api_client.models.rapid_model",
+    "RapidModelReferee": "rapidata.api_client.models.rapid_model_referee",
+    "RapidResultModel": "rapidata.api_client.models.rapid_result_model",
+    "RapidResultModelResult": "rapidata.api_client.models.rapid_result_model_result",
+    "RapidSkippedModel": "rapidata.api_client.models.rapid_skipped_model",
+    "RapidState": "rapidata.api_client.models.rapid_state",
+    "ReadBridgeTokenKeysResult": "rapidata.api_client.models.read_bridge_token_keys_result",
+    "ReportModel": "rapidata.api_client.models.report_model",
+    "ResponseCountFilter": "rapidata.api_client.models.response_count_filter",
+    "ResponseCountUserFilterModel": "rapidata.api_client.models.response_count_user_filter_model",
+    "RetrievalMode": "rapidata.api_client.models.retrieval_mode",
+    "RootFilter": "rapidata.api_client.models.root_filter",
+    "RunStatus": "rapidata.api_client.models.run_status",
+    "RunsByLeaderboardResult": "rapidata.api_client.models.runs_by_leaderboard_result",
+    "SampleByIdentifier": "rapidata.api_client.models.sample_by_identifier",
+    "SampleByParticipant": "rapidata.api_client.models.sample_by_participant",
+    "ScrubPayload": "rapidata.api_client.models.scrub_payload",
+    "ScrubRange": "rapidata.api_client.models.scrub_range",
+    "ScrubRapidBlueprint": "rapidata.api_client.models.scrub_rapid_blueprint",
+    "ScrubResult": "rapidata.api_client.models.scrub_result",
+    "ScrubTruth": "rapidata.api_client.models.scrub_truth",
+    "SendCompletionMailStepModel": "rapidata.api_client.models.send_completion_mail_step_model",
+    "SendSurveyModel": "rapidata.api_client.models.send_survey_model",
+    "ShufflingSelection": "rapidata.api_client.models.shuffling_selection",
+    "SimpleWorkflowConfig": "rapidata.api_client.models.simple_workflow_config",
+    "SimpleWorkflowModel": "rapidata.api_client.models.simple_workflow_model",
+    "SimpleWorkflowModel1": "rapidata.api_client.models.simple_workflow_model1",
+    "SimpleWorkflowModelBlueprint": "rapidata.api_client.models.simple_workflow_model_blueprint",
+    "SkipResult": "rapidata.api_client.models.skip_result",
+    "SkipTruth": "rapidata.api_client.models.skip_truth",
+    "SortCriterion": "rapidata.api_client.models.sort_criterion",
+    "SortDirection": "rapidata.api_client.models.sort_direction",
+    "SourceUrlMetadata": "rapidata.api_client.models.source_url_metadata",
+    "SourceUrlMetadataModel": "rapidata.api_client.models.source_url_metadata_model",
+    "StandingByBenchmark": "rapidata.api_client.models.standing_by_benchmark",
+    "StandingByLeaderboard": "rapidata.api_client.models.standing_by_leaderboard",
+    "StandingStatus": "rapidata.api_client.models.standing_status",
+    "StandingsByBenchmarkResult": "rapidata.api_client.models.standings_by_benchmark_result",
+    "StandingsByLeaderboardResult": "rapidata.api_client.models.standings_by_leaderboard_result",
+    "StartPreliminaryDownloadResult": "rapidata.api_client.models.start_preliminary_download_result",
+    "StaticSelection": "rapidata.api_client.models.static_selection",
+    "StickyState": "rapidata.api_client.models.sticky_state",
+    "StreamsMetadata": "rapidata.api_client.models.streams_metadata",
+    "StreamsMetadataModel": "rapidata.api_client.models.streams_metadata_model",
+    "SubmitOrderModel": "rapidata.api_client.models.submit_order_model",
+    "SubmitParticipantResult": "rapidata.api_client.models.submit_participant_result",
+    "SubmitPromptModel": "rapidata.api_client.models.submit_prompt_model",
+    "TagsByBenchmarkResult": "rapidata.api_client.models.tags_by_benchmark_result",
+    "TextAsset": "rapidata.api_client.models.text_asset",
+    "TextAssetInput": "rapidata.api_client.models.text_asset_input",
+    "TextAssetModel": "rapidata.api_client.models.text_asset_model",
+    "TextMetadata": "rapidata.api_client.models.text_metadata",
+    "TextMetadataInput": "rapidata.api_client.models.text_metadata_input",
+    "TextMetadataModel": "rapidata.api_client.models.text_metadata_model",
+    "TranscriptionMetadataInput": "rapidata.api_client.models.transcription_metadata_input",
+    "TranscriptionPayload": "rapidata.api_client.models.transcription_payload",
+    "TranscriptionRapidBlueprint": "rapidata.api_client.models.transcription_rapid_blueprint",
+    "TranscriptionResult": "rapidata.api_client.models.transcription_result",
+    "TranscriptionTruth": "rapidata.api_client.models.transcription_truth",
+    "TranscriptionWord": "rapidata.api_client.models.transcription_word",
+    "TranslatedString": "rapidata.api_client.models.translated_string",
+    "UnlockOrderResult": "rapidata.api_client.models.unlock_order_result",
+    "UpdateAudienceRequest": "rapidata.api_client.models.update_audience_request",
+    "UpdateBenchmarkModel": "rapidata.api_client.models.update_benchmark_model",
+    "UpdateBenchmarkNameModel": "rapidata.api_client.models.update_benchmark_name_model",
+    "UpdateCampaignModel": "rapidata.api_client.models.update_campaign_model",
+    "UpdateDatasetNameModel": "rapidata.api_client.models.update_dataset_name_model",
+    "UpdateDimensionsModel": "rapidata.api_client.models.update_dimensions_model",
+    "UpdateLeaderboardModel": "rapidata.api_client.models.update_leaderboard_model",
+    "UpdateLeaderboardNameModel": "rapidata.api_client.models.update_leaderboard_name_model",
+    "UpdateLeaderboardResponseConfigModel": "rapidata.api_client.models.update_leaderboard_response_config_model",
+    "UpdateOrderNameModel": "rapidata.api_client.models.update_order_name_model",
+    "UpdateParticipantModel": "rapidata.api_client.models.update_participant_model",
+    "UpdateParticipantNameModel": "rapidata.api_client.models.update_participant_name_model",
+    "UpdatePriorityModel": "rapidata.api_client.models.update_priority_model",
+    "UpdatePromptTagsModel": "rapidata.api_client.models.update_prompt_tags_model",
+    "UpdateShouldAlertModel": "rapidata.api_client.models.update_should_alert_model",
+    "UpdateValidationRapidModel": "rapidata.api_client.models.update_validation_rapid_model",
+    "UpdateValidationRapidModelContextAsset": "rapidata.api_client.models.update_validation_rapid_model_context_asset",
+    "UpdateValidationRapidModelTruth": "rapidata.api_client.models.update_validation_rapid_model_truth",
+    "UpdateValidationSetModel": "rapidata.api_client.models.update_validation_set_model",
+    "UploadFileResult": "rapidata.api_client.models.upload_file_result",
+    "UserActionRestriction": "rapidata.api_client.models.user_action_restriction",
+    "UserActionRestrictionFilter": "rapidata.api_client.models.user_action_restriction_filter",
+    "UserScoreFilter": "rapidata.api_client.models.user_score_filter",
+    "UserScoreUserFilterModel": "rapidata.api_client.models.user_score_user_filter_model",
+    "UserState": "rapidata.api_client.models.user_state",
+    "UserStateFilter": "rapidata.api_client.models.user_state_filter",
+    "ValidationSelection": "rapidata.api_client.models.validation_selection",
+    "ValidationSetModel": "rapidata.api_client.models.validation_set_model",
+    "ValidationSetOverviewModel": "rapidata.api_client.models.validation_set_overview_model",
+    "VideoDurationMetadata": "rapidata.api_client.models.video_duration_metadata",
+    "VideoDurationMetadataModel": "rapidata.api_client.models.video_duration_metadata_model",
+    "WorkflowAggregationStepModel": "rapidata.api_client.models.workflow_aggregation_step_model",
+    "WorkflowArtifactModel": "rapidata.api_client.models.workflow_artifact_model",
+    "WorkflowConfigArtifactModel": "rapidata.api_client.models.workflow_config_artifact_model",
+    "WorkflowConfigArtifactModelWorkflowConfig": "rapidata.api_client.models.workflow_config_artifact_model_workflow_config",
+    "WorkflowLabelingStepModel": "rapidata.api_client.models.workflow_labeling_step_model",
+    "WorkflowState": "rapidata.api_client.models.workflow_state",
+}
 
-# import models into model package
-from rapidata.api_client.models.ab_test_selection import AbTestSelection
-from rapidata.api_client.models.ab_test_selection_a_inner import AbTestSelectionAInner
-from rapidata.api_client.models.add_user_response_result import AddUserResponseResult
-from rapidata.api_client.models.add_validation_rapid_model import AddValidationRapidModel
-from rapidata.api_client.models.add_validation_rapid_model_asset import AddValidationRapidModelAsset
-from rapidata.api_client.models.add_validation_rapid_model_context_asset import AddValidationRapidModelContextAsset
-from rapidata.api_client.models.add_validation_rapid_model_metadata_inner import AddValidationRapidModelMetadataInner
-from rapidata.api_client.models.add_validation_rapid_model_payload import AddValidationRapidModelPayload
-from rapidata.api_client.models.add_validation_rapid_model_truth import AddValidationRapidModelTruth
-from rapidata.api_client.models.add_validation_rapid_new_model import AddValidationRapidNewModel
-from rapidata.api_client.models.add_validation_rapid_new_model_truth import AddValidationRapidNewModelTruth
-from rapidata.api_client.models.age_user_filter_model import AgeUserFilterModel
-from rapidata.api_client.models.age_user_filter_model_age_group import AgeUserFilterModelAgeGroup
-from rapidata.api_client.models.aggregated_orders_model import AggregatedOrdersModel
-from rapidata.api_client.models.aggregator_type import AggregatorType
-from rapidata.api_client.models.and_filter import AndFilter
-from rapidata.api_client.models.and_filter_filters_inner import AndFilterFiltersInner
-from rapidata.api_client.models.and_user_filter_model import AndUserFilterModel
-from rapidata.api_client.models.and_user_filter_model_filters_inner import AndUserFilterModelFiltersInner
-from rapidata.api_client.models.are_rapids_active_result import AreRapidsActiveResult
-from rapidata.api_client.models.attach_category_rapid_blueprint import AttachCategoryRapidBlueprint
-from rapidata.api_client.models.attach_category_rapid_blueprint_category import AttachCategoryRapidBlueprintCategory
-from rapidata.api_client.models.attach_category_result import AttachCategoryResult
-from rapidata.api_client.models.attach_category_truth import AttachCategoryTruth
-from rapidata.api_client.models.benchmark_query_result import BenchmarkQueryResult
-from rapidata.api_client.models.boost_leaderboard_model import BoostLeaderboardModel
-from rapidata.api_client.models.boosting_profile import BoostingProfile
-from rapidata.api_client.models.bounding_box_payload import BoundingBoxPayload
-from rapidata.api_client.models.bounding_box_rapid_blueprint import BoundingBoxRapidBlueprint
-from rapidata.api_client.models.bounding_box_result import BoundingBoxResult
-from rapidata.api_client.models.bounding_box_truth import BoundingBoxTruth
-from rapidata.api_client.models.box_shape import BoxShape
-from rapidata.api_client.models.campaign_artifact_model import CampaignArtifactModel
-from rapidata.api_client.models.campaign_filter import CampaignFilter
-from rapidata.api_client.models.campaign_query_result import CampaignQueryResult
-from rapidata.api_client.models.campaign_status import CampaignStatus
-from rapidata.api_client.models.campaign_user_filter_model import CampaignUserFilterModel
-from rapidata.api_client.models.capped_selection import CappedSelection
-from rapidata.api_client.models.change_boost_model import ChangeBoostModel
-from rapidata.api_client.models.classification_metadata import ClassificationMetadata
-from rapidata.api_client.models.classification_metadata_model import ClassificationMetadataModel
-from rapidata.api_client.models.classify_payload import ClassifyPayload
-from rapidata.api_client.models.classify_payload_category import ClassifyPayloadCategory
-from rapidata.api_client.models.client_model import ClientModel
-from rapidata.api_client.models.clients_query_result import ClientsQueryResult
-from rapidata.api_client.models.clone_dataset_model import CloneDatasetModel
-from rapidata.api_client.models.clone_order_model import CloneOrderModel
-from rapidata.api_client.models.clone_order_result import CloneOrderResult
-from rapidata.api_client.models.compare_payload import ComparePayload
-from rapidata.api_client.models.compare_rapid_blueprint import CompareRapidBlueprint
-from rapidata.api_client.models.compare_result import CompareResult
-from rapidata.api_client.models.compare_truth import CompareTruth
-from rapidata.api_client.models.compare_workflow_config import CompareWorkflowConfig
-from rapidata.api_client.models.compare_workflow_config_context_asset import CompareWorkflowConfigContextAsset
-from rapidata.api_client.models.compare_workflow_config_pair_maker_config import CompareWorkflowConfigPairMakerConfig
-from rapidata.api_client.models.compare_workflow_model import CompareWorkflowModel
-from rapidata.api_client.models.compare_workflow_model1 import CompareWorkflowModel1
-from rapidata.api_client.models.compare_workflow_model1_pair_maker_information import CompareWorkflowModel1PairMakerInformation
-from rapidata.api_client.models.compare_workflow_model1_referee import CompareWorkflowModel1Referee
-from rapidata.api_client.models.compare_workflow_model_context_asset import CompareWorkflowModelContextAsset
-from rapidata.api_client.models.compare_workflow_model_metadata_inner import CompareWorkflowModelMetadataInner
-from rapidata.api_client.models.compare_workflow_model_pair_maker_config import CompareWorkflowModelPairMakerConfig
-from rapidata.api_client.models.comparison_operator import ComparisonOperator
-from rapidata.api_client.models.conditional_validation_selection import ConditionalValidationSelection
-from rapidata.api_client.models.conditional_validation_selection_validation_chance import ConditionalValidationSelectionValidationChance
-from rapidata.api_client.models.confidence_interval import ConfidenceInterval
-from rapidata.api_client.models.count_metadata import CountMetadata
-from rapidata.api_client.models.count_metadata_model import CountMetadataModel
-from rapidata.api_client.models.country_filter import CountryFilter
-from rapidata.api_client.models.country_user_filter_model import CountryUserFilterModel
-from rapidata.api_client.models.create_audience_request import CreateAudienceRequest
-from rapidata.api_client.models.create_audience_result import CreateAudienceResult
-from rapidata.api_client.models.create_benchmark_model import CreateBenchmarkModel
-from rapidata.api_client.models.create_benchmark_participant_model import CreateBenchmarkParticipantModel
-from rapidata.api_client.models.create_benchmark_participant_result import CreateBenchmarkParticipantResult
-from rapidata.api_client.models.create_benchmark_prompt_result import CreateBenchmarkPromptResult
-from rapidata.api_client.models.create_benchmark_result import CreateBenchmarkResult
-from rapidata.api_client.models.create_bridge_token_result import CreateBridgeTokenResult
-from rapidata.api_client.models.create_client_model import CreateClientModel
-from rapidata.api_client.models.create_complex_order_model import CreateComplexOrderModel
-from rapidata.api_client.models.create_complex_order_model_pipeline import CreateComplexOrderModelPipeline
-from rapidata.api_client.models.create_complex_order_result import CreateComplexOrderResult
-from rapidata.api_client.models.create_customer_client_result import CreateCustomerClientResult
-from rapidata.api_client.models.create_datapoint_model import CreateDatapointModel
-from rapidata.api_client.models.create_datapoint_model_asset import CreateDatapointModelAsset
-from rapidata.api_client.models.create_datapoint_model_context_asset import CreateDatapointModelContextAsset
-from rapidata.api_client.models.create_datapoint_model_metadata_inner import CreateDatapointModelMetadataInner
-from rapidata.api_client.models.create_datapoint_result import CreateDatapointResult
-from rapidata.api_client.models.create_dataset_artifact_model import CreateDatasetArtifactModel
-from rapidata.api_client.models.create_dataset_artifact_model_dataset import CreateDatasetArtifactModelDataset
-from rapidata.api_client.models.create_demographic_rapid_model import CreateDemographicRapidModel
-from rapidata.api_client.models.create_demographic_rapid_model_asset import CreateDemographicRapidModelAsset
-from rapidata.api_client.models.create_demographic_rapid_model_context_asset import CreateDemographicRapidModelContextAsset
-from rapidata.api_client.models.create_empty_validation_set_result import CreateEmptyValidationSetResult
-from rapidata.api_client.models.create_leaderboard_model import CreateLeaderboardModel
-from rapidata.api_client.models.create_leaderboard_result import CreateLeaderboardResult
-from rapidata.api_client.models.create_order_model import CreateOrderModel
-from rapidata.api_client.models.create_order_model_referee import CreateOrderModelReferee
-from rapidata.api_client.models.create_order_model_workflow import CreateOrderModelWorkflow
-from rapidata.api_client.models.create_order_result import CreateOrderResult
-from rapidata.api_client.models.create_rapid_result import CreateRapidResult
-from rapidata.api_client.models.create_sample_model import CreateSampleModel
-from rapidata.api_client.models.create_sample_model_asset import CreateSampleModelAsset
-from rapidata.api_client.models.create_simple_pipeline_model import CreateSimplePipelineModel
-from rapidata.api_client.models.create_simple_pipeline_model_artifacts_inner import CreateSimplePipelineModelArtifactsInner
-from rapidata.api_client.models.create_simple_pipeline_model_pipeline_steps_inner import CreateSimplePipelineModelPipelineStepsInner
-from rapidata.api_client.models.create_unsupported_order_model import CreateUnsupportedOrderModel
-from rapidata.api_client.models.create_validation_set_model import CreateValidationSetModel
-from rapidata.api_client.models.custom_user_filter_model import CustomUserFilterModel
-from rapidata.api_client.models.datapoint_state import DatapointState
-from rapidata.api_client.models.dataset_artifact_model import DatasetArtifactModel
-from rapidata.api_client.models.dataset_evaluation_step_model import DatasetEvaluationStepModel
-from rapidata.api_client.models.demographic_filter import DemographicFilter
-from rapidata.api_client.models.demographic_selection import DemographicSelection
-from rapidata.api_client.models.dynamic_client_registration_request import DynamicClientRegistrationRequest
-from rapidata.api_client.models.early_stopping_referee_model import EarlyStoppingRefereeModel
-from rapidata.api_client.models.effort_capped_selection import EffortCappedSelection
-from rapidata.api_client.models.elo_config import EloConfig
-from rapidata.api_client.models.elo_config_model import EloConfigModel
-from rapidata.api_client.models.empty_validation_truth import EmptyValidationTruth
-from rapidata.api_client.models.evaluation_workflow_config import EvaluationWorkflowConfig
-from rapidata.api_client.models.evaluation_workflow_model import EvaluationWorkflowModel
-from rapidata.api_client.models.evaluation_workflow_model1 import EvaluationWorkflowModel1
-from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
-from rapidata.api_client.models.existing_asset_input_metadata_value import ExistingAssetInputMetadataValue
-from rapidata.api_client.models.feature_flag import FeatureFlag
-from rapidata.api_client.models.feature_flag_model import FeatureFlagModel
-from rapidata.api_client.models.feedback_model import FeedbackModel
-from rapidata.api_client.models.file_artifact_model import FileArtifactModel
-from rapidata.api_client.models.file_asset import FileAsset
-from rapidata.api_client.models.file_asset_metadata_value import FileAssetMetadataValue
-from rapidata.api_client.models.file_asset_model import FileAssetModel
-from rapidata.api_client.models.file_asset_model_metadata_value import FileAssetModelMetadataValue
-from rapidata.api_client.models.file_type import FileType
-from rapidata.api_client.models.file_type_metadata import FileTypeMetadata
-from rapidata.api_client.models.file_type_metadata_model import FileTypeMetadataModel
-from rapidata.api_client.models.filter import Filter
-from rapidata.api_client.models.filter_operator import FilterOperator
-from rapidata.api_client.models.fork_benchmark_result import ForkBenchmarkResult
-from rapidata.api_client.models.free_text_payload import FreeTextPayload
-from rapidata.api_client.models.free_text_rapid_blueprint import FreeTextRapidBlueprint
-from rapidata.api_client.models.free_text_result import FreeTextResult
-from rapidata.api_client.models.gender_user_filter_model import GenderUserFilterModel
-from rapidata.api_client.models.gender_user_filter_model_gender import GenderUserFilterModelGender
-from rapidata.api_client.models.get_available_validation_sets_result import GetAvailableValidationSetsResult
-from rapidata.api_client.models.get_benchmark_by_id_result import GetBenchmarkByIdResult
-from rapidata.api_client.models.get_boost_result import GetBoostResult
-from rapidata.api_client.models.get_boost_result_boost_mode import GetBoostResultBoostMode
-from rapidata.api_client.models.get_boost_result_boost_status import GetBoostResultBoostStatus
-from rapidata.api_client.models.get_compare_ab_summary_result import GetCompareAbSummaryResult
-from rapidata.api_client.models.get_compare_workflow_results_model import GetCompareWorkflowResultsModel
-from rapidata.api_client.models.get_compare_workflow_results_result import GetCompareWorkflowResultsResult
-from rapidata.api_client.models.get_datapoint_by_id_result import GetDatapointByIdResult
-from rapidata.api_client.models.get_datapoint_by_id_result_asset import GetDatapointByIdResultAsset
-from rapidata.api_client.models.get_dataset_by_id_result import GetDatasetByIdResult
-from rapidata.api_client.models.get_dataset_progress_result import GetDatasetProgressResult
-from rapidata.api_client.models.get_evaluation_workflow_results_model import GetEvaluationWorkflowResultsModel
-from rapidata.api_client.models.get_failed_datapoints_result import GetFailedDatapointsResult
-from rapidata.api_client.models.get_failed_datapoints_result_datapoint import GetFailedDatapointsResultDatapoint
-from rapidata.api_client.models.get_file_metadata_result import GetFileMetadataResult
-from rapidata.api_client.models.get_grouped_ranking_workflow_results_model import GetGroupedRankingWorkflowResultsModel
-from rapidata.api_client.models.get_grouped_ranking_workflow_results_result import GetGroupedRankingWorkflowResultsResult
-from rapidata.api_client.models.get_leaderboard_by_id_result import GetLeaderboardByIdResult
-from rapidata.api_client.models.get_order_by_id_result import GetOrderByIdResult
-from rapidata.api_client.models.get_participant_by_id_result import GetParticipantByIdResult
-from rapidata.api_client.models.get_pipeline_by_id_result import GetPipelineByIdResult
-from rapidata.api_client.models.get_pipeline_by_id_result_artifacts_value import GetPipelineByIdResultArtifactsValue
-from rapidata.api_client.models.get_public_orders_result import GetPublicOrdersResult
-from rapidata.api_client.models.get_public_responses_result import GetPublicResponsesResult
-from rapidata.api_client.models.get_public_responses_result_response import GetPublicResponsesResultResponse
-from rapidata.api_client.models.get_recommended_validation_set_result import GetRecommendedValidationSetResult
-from rapidata.api_client.models.get_responses_for_rapid_result import GetResponsesForRapidResult
-from rapidata.api_client.models.get_responses_for_rapid_result_response import GetResponsesForRapidResultResponse
-from rapidata.api_client.models.get_responses_for_rapid_result_response_result import GetResponsesForRapidResultResponseResult
-from rapidata.api_client.models.get_responses_result import GetResponsesResult
-from rapidata.api_client.models.get_responses_result_response import GetResponsesResultResponse
-from rapidata.api_client.models.get_sample_by_id_result import GetSampleByIdResult
-from rapidata.api_client.models.get_simple_workflow_results_model import GetSimpleWorkflowResultsModel
-from rapidata.api_client.models.get_standing_by_id_result import GetStandingByIdResult
-from rapidata.api_client.models.get_validation_rapids_result import GetValidationRapidsResult
-from rapidata.api_client.models.get_validation_rapids_result_asset import GetValidationRapidsResultAsset
-from rapidata.api_client.models.get_validation_rapids_result_payload import GetValidationRapidsResultPayload
-from rapidata.api_client.models.get_validation_rapids_result_truth import GetValidationRapidsResultTruth
-from rapidata.api_client.models.get_validation_set_by_id_result import GetValidationSetByIdResult
-from rapidata.api_client.models.get_workflow_by_id_result import GetWorkflowByIdResult
-from rapidata.api_client.models.get_workflow_by_id_result_workflow import GetWorkflowByIdResultWorkflow
-from rapidata.api_client.models.get_workflow_progress_result import GetWorkflowProgressResult
-from rapidata.api_client.models.get_workflow_results_result import GetWorkflowResultsResult
-from rapidata.api_client.models.get_workflow_results_result_response import GetWorkflowResultsResultResponse
-from rapidata.api_client.models.google_one_tap_login_model import GoogleOneTapLoginModel
-from rapidata.api_client.models.grouped_ranking_workflow_config import GroupedRankingWorkflowConfig
-from rapidata.api_client.models.grouped_ranking_workflow_config_context_assets_value import GroupedRankingWorkflowConfigContextAssetsValue
-from rapidata.api_client.models.grouped_ranking_workflow_model import GroupedRankingWorkflowModel
-from rapidata.api_client.models.grouped_ranking_workflow_model1 import GroupedRankingWorkflowModel1
-from rapidata.api_client.models.image_dimension_metadata import ImageDimensionMetadata
-from rapidata.api_client.models.image_dimension_metadata_model import ImageDimensionMetadataModel
-from rapidata.api_client.models.inspect_report_result import InspectReportResult
-from rapidata.api_client.models.json_web_key import JsonWebKey
-from rapidata.api_client.models.json_web_key_set import JsonWebKeySet
-from rapidata.api_client.models.labeling_selection import LabelingSelection
-from rapidata.api_client.models.language_filter import LanguageFilter
-from rapidata.api_client.models.language_user_filter_model import LanguageUserFilterModel
-from rapidata.api_client.models.leaderboards_query_result import LeaderboardsQueryResult
-from rapidata.api_client.models.line_payload import LinePayload
-from rapidata.api_client.models.line_rapid_blueprint import LineRapidBlueprint
-from rapidata.api_client.models.line_result import LineResult
-from rapidata.api_client.models.line_result_line import LineResultLine
-from rapidata.api_client.models.line_result_line_point import LineResultLinePoint
-from rapidata.api_client.models.line_truth import LineTruth
-from rapidata.api_client.models.locate_box_truth import LocateBoxTruth
-from rapidata.api_client.models.locate_coordinate import LocateCoordinate
-from rapidata.api_client.models.locate_payload import LocatePayload
-from rapidata.api_client.models.locate_rapid_blueprint import LocateRapidBlueprint
-from rapidata.api_client.models.locate_result import LocateResult
-from rapidata.api_client.models.location_metadata import LocationMetadata
-from rapidata.api_client.models.location_metadata_model import LocationMetadataModel
-from rapidata.api_client.models.logic_operator import LogicOperator
-from rapidata.api_client.models.metadata_prompt_asset_metadata_input import MetadataPromptAssetMetadataInput
-from rapidata.api_client.models.metadata_prompt_metadata_input import MetadataPromptMetadataInput
-from rapidata.api_client.models.metadata_transcription_metadata_input import MetadataTranscriptionMetadataInput
-from rapidata.api_client.models.multi_asset import MultiAsset
-from rapidata.api_client.models.multi_asset_input import MultiAssetInput
-from rapidata.api_client.models.multi_asset_input_assets_inner import MultiAssetInputAssetsInner
-from rapidata.api_client.models.multi_asset_model import MultiAssetModel
-from rapidata.api_client.models.multi_compare_truth import MultiCompareTruth
-from rapidata.api_client.models.naive_referee_config import NaiveRefereeConfig
-from rapidata.api_client.models.naive_referee_info import NaiveRefereeInfo
-from rapidata.api_client.models.naive_referee_model import NaiveRefereeModel
-from rapidata.api_client.models.named_classification import NamedClassification
-from rapidata.api_client.models.named_entity_payload import NamedEntityPayload
-from rapidata.api_client.models.named_entity_rapid_blueprint import NamedEntityRapidBlueprint
-from rapidata.api_client.models.named_entity_result import NamedEntityResult
-from rapidata.api_client.models.named_entity_truth import NamedEntityTruth
-from rapidata.api_client.models.never_ending_referee_config import NeverEndingRefereeConfig
-from rapidata.api_client.models.never_ending_referee_info import NeverEndingRefereeInfo
-from rapidata.api_client.models.new_user_filter import NewUserFilter
-from rapidata.api_client.models.new_user_filter_model import NewUserFilterModel
-from rapidata.api_client.models.newsletter_model import NewsletterModel
-from rapidata.api_client.models.not_available_yet_result import NotAvailableYetResult
-from rapidata.api_client.models.not_filter import NotFilter
-from rapidata.api_client.models.not_user_filter_model import NotUserFilterModel
-from rapidata.api_client.models.null_asset import NullAsset
-from rapidata.api_client.models.null_asset_model import NullAssetModel
-from rapidata.api_client.models.online_pair_maker_config import OnlinePairMakerConfig
-from rapidata.api_client.models.online_pair_maker_config_model import OnlinePairMakerConfigModel
-from rapidata.api_client.models.online_pair_maker_information import OnlinePairMakerInformation
-from rapidata.api_client.models.or_filter import OrFilter
-from rapidata.api_client.models.or_user_filter_model import OrUserFilterModel
-from rapidata.api_client.models.order_model import OrderModel
-from rapidata.api_client.models.order_state import OrderState
-from rapidata.api_client.models.original_filename_metadata import OriginalFilenameMetadata
-from rapidata.api_client.models.original_filename_metadata_model import OriginalFilenameMetadataModel
-from rapidata.api_client.models.page_info import PageInfo
-from rapidata.api_client.models.paged_result_aggregated_orders_model import PagedResultAggregatedOrdersModel
-from rapidata.api_client.models.paged_result_benchmark_query_result import PagedResultBenchmarkQueryResult
-from rapidata.api_client.models.paged_result_campaign_query_result import PagedResultCampaignQueryResult
-from rapidata.api_client.models.paged_result_clients_query_result import PagedResultClientsQueryResult
-from rapidata.api_client.models.paged_result_get_compare_workflow_results_result import PagedResultGetCompareWorkflowResultsResult
-from rapidata.api_client.models.paged_result_get_grouped_ranking_workflow_results_result import PagedResultGetGroupedRankingWorkflowResultsResult
-from rapidata.api_client.models.paged_result_get_validation_rapids_result import PagedResultGetValidationRapidsResult
-from rapidata.api_client.models.paged_result_get_workflow_results_result import PagedResultGetWorkflowResultsResult
-from rapidata.api_client.models.paged_result_i_workflow_model import PagedResultIWorkflowModel
-from rapidata.api_client.models.paged_result_leaderboards_query_result import PagedResultLeaderboardsQueryResult
-from rapidata.api_client.models.paged_result_order_model import PagedResultOrderModel
-from rapidata.api_client.models.paged_result_participant_by_benchmark import PagedResultParticipantByBenchmark
-from rapidata.api_client.models.paged_result_prompt_by_benchmark_result import PagedResultPromptByBenchmarkResult
-from rapidata.api_client.models.paged_result_query_datapoints_by_dataset_id_result import PagedResultQueryDatapointsByDatasetIdResult
-from rapidata.api_client.models.paged_result_query_validation_rapid_eligibility_result import PagedResultQueryValidationRapidEligibilityResult
-from rapidata.api_client.models.paged_result_rapid_model import PagedResultRapidModel
-from rapidata.api_client.models.paged_result_runs_by_leaderboard_result import PagedResultRunsByLeaderboardResult
-from rapidata.api_client.models.paged_result_sample_by_identifier import PagedResultSampleByIdentifier
-from rapidata.api_client.models.paged_result_sample_by_participant import PagedResultSampleByParticipant
-from rapidata.api_client.models.paged_result_standing_by_leaderboard import PagedResultStandingByLeaderboard
-from rapidata.api_client.models.paged_result_validation_set_model import PagedResultValidationSetModel
-from rapidata.api_client.models.participant_by_benchmark import ParticipantByBenchmark
-from rapidata.api_client.models.participant_status import ParticipantStatus
-from rapidata.api_client.models.polygon_payload import PolygonPayload
-from rapidata.api_client.models.polygon_rapid_blueprint import PolygonRapidBlueprint
-from rapidata.api_client.models.polygon_result import PolygonResult
-from rapidata.api_client.models.polygon_result_coordinate import PolygonResultCoordinate
-from rapidata.api_client.models.polygon_result_shape import PolygonResultShape
-from rapidata.api_client.models.polygon_truth import PolygonTruth
-from rapidata.api_client.models.preliminary_download_model import PreliminaryDownloadModel
-from rapidata.api_client.models.preview_order_model import PreviewOrderModel
-from rapidata.api_client.models.probabilistic_attach_category_referee_config import ProbabilisticAttachCategoryRefereeConfig
-from rapidata.api_client.models.probabilistic_attach_category_referee_info import ProbabilisticAttachCategoryRefereeInfo
-from rapidata.api_client.models.problem_details import ProblemDetails
-from rapidata.api_client.models.prompt_asset_metadata_input import PromptAssetMetadataInput
-from rapidata.api_client.models.prompt_asset_metadata_input_asset import PromptAssetMetadataInputAsset
-from rapidata.api_client.models.prompt_by_benchmark_result import PromptByBenchmarkResult
-from rapidata.api_client.models.prompt_metadata_input import PromptMetadataInput
-from rapidata.api_client.models.public_order_model import PublicOrderModel
-from rapidata.api_client.models.query_datapoints_by_dataset_id_result import QueryDatapointsByDatasetIdResult
-from rapidata.api_client.models.query_model import QueryModel
-from rapidata.api_client.models.query_validation_rapid_eligibility_model_query_validation_model import QueryValidationRapidEligibilityModelQueryValidationModel
-from rapidata.api_client.models.query_validation_rapid_eligibility_result import QueryValidationRapidEligibilityResult
-from rapidata.api_client.models.query_validation_rapid_eligibility_result_truth import QueryValidationRapidEligibilityResultTruth
-from rapidata.api_client.models.rapid_issue import RapidIssue
-from rapidata.api_client.models.rapid_model import RapidModel
-from rapidata.api_client.models.rapid_model_referee import RapidModelReferee
-from rapidata.api_client.models.rapid_result_model import RapidResultModel
-from rapidata.api_client.models.rapid_result_model_result import RapidResultModelResult
-from rapidata.api_client.models.rapid_skipped_model import RapidSkippedModel
-from rapidata.api_client.models.rapid_state import RapidState
-from rapidata.api_client.models.read_bridge_token_keys_result import ReadBridgeTokenKeysResult
-from rapidata.api_client.models.report_model import ReportModel
-from rapidata.api_client.models.response_count_filter import ResponseCountFilter
-from rapidata.api_client.models.response_count_user_filter_model import ResponseCountUserFilterModel
-from rapidata.api_client.models.retrieval_mode import RetrievalMode
-from rapidata.api_client.models.root_filter import RootFilter
-from rapidata.api_client.models.run_status import RunStatus
-from rapidata.api_client.models.runs_by_leaderboard_result import RunsByLeaderboardResult
-from rapidata.api_client.models.sample_by_identifier import SampleByIdentifier
-from rapidata.api_client.models.sample_by_participant import SampleByParticipant
-from rapidata.api_client.models.scrub_payload import ScrubPayload
-from rapidata.api_client.models.scrub_range import ScrubRange
-from rapidata.api_client.models.scrub_rapid_blueprint import ScrubRapidBlueprint
-from rapidata.api_client.models.scrub_result import ScrubResult
-from rapidata.api_client.models.scrub_truth import ScrubTruth
-from rapidata.api_client.models.send_completion_mail_step_model import SendCompletionMailStepModel
-from rapidata.api_client.models.send_survey_model import SendSurveyModel
-from rapidata.api_client.models.shuffling_selection import ShufflingSelection
-from rapidata.api_client.models.simple_workflow_config import SimpleWorkflowConfig
-from rapidata.api_client.models.simple_workflow_model import SimpleWorkflowModel
-from rapidata.api_client.models.simple_workflow_model1 import SimpleWorkflowModel1
-from rapidata.api_client.models.simple_workflow_model_blueprint import SimpleWorkflowModelBlueprint
-from rapidata.api_client.models.skip_result import SkipResult
-from rapidata.api_client.models.skip_truth import SkipTruth
-from rapidata.api_client.models.sort_criterion import SortCriterion
-from rapidata.api_client.models.sort_direction import SortDirection
-from rapidata.api_client.models.source_url_metadata import SourceUrlMetadata
-from rapidata.api_client.models.source_url_metadata_model import SourceUrlMetadataModel
-from rapidata.api_client.models.standing_by_benchmark import StandingByBenchmark
-from rapidata.api_client.models.standing_by_leaderboard import StandingByLeaderboard
-from rapidata.api_client.models.standing_status import StandingStatus
-from rapidata.api_client.models.standings_by_benchmark_result import StandingsByBenchmarkResult
-from rapidata.api_client.models.standings_by_leaderboard_result import StandingsByLeaderboardResult
-from rapidata.api_client.models.start_preliminary_download_result import StartPreliminaryDownloadResult
-from rapidata.api_client.models.static_selection import StaticSelection
-from rapidata.api_client.models.sticky_state import StickyState
-from rapidata.api_client.models.streams_metadata import StreamsMetadata
-from rapidata.api_client.models.streams_metadata_model import StreamsMetadataModel
-from rapidata.api_client.models.submit_order_model import SubmitOrderModel
-from rapidata.api_client.models.submit_participant_result import SubmitParticipantResult
-from rapidata.api_client.models.submit_prompt_model import SubmitPromptModel
-from rapidata.api_client.models.tags_by_benchmark_result import TagsByBenchmarkResult
-from rapidata.api_client.models.text_asset import TextAsset
-from rapidata.api_client.models.text_asset_input import TextAssetInput
-from rapidata.api_client.models.text_asset_model import TextAssetModel
-from rapidata.api_client.models.text_metadata import TextMetadata
-from rapidata.api_client.models.text_metadata_input import TextMetadataInput
-from rapidata.api_client.models.text_metadata_model import TextMetadataModel
-from rapidata.api_client.models.transcription_metadata_input import TranscriptionMetadataInput
-from rapidata.api_client.models.transcription_payload import TranscriptionPayload
-from rapidata.api_client.models.transcription_rapid_blueprint import TranscriptionRapidBlueprint
-from rapidata.api_client.models.transcription_result import TranscriptionResult
-from rapidata.api_client.models.transcription_truth import TranscriptionTruth
-from rapidata.api_client.models.transcription_word import TranscriptionWord
-from rapidata.api_client.models.translated_string import TranslatedString
-from rapidata.api_client.models.unlock_order_result import UnlockOrderResult
-from rapidata.api_client.models.update_audience_request import UpdateAudienceRequest
-from rapidata.api_client.models.update_benchmark_model import UpdateBenchmarkModel
-from rapidata.api_client.models.update_benchmark_name_model import UpdateBenchmarkNameModel
-from rapidata.api_client.models.update_campaign_model import UpdateCampaignModel
-from rapidata.api_client.models.update_dataset_name_model import UpdateDatasetNameModel
-from rapidata.api_client.models.update_dimensions_model import UpdateDimensionsModel
-from rapidata.api_client.models.update_leaderboard_model import UpdateLeaderboardModel
-from rapidata.api_client.models.update_leaderboard_name_model import UpdateLeaderboardNameModel
-from rapidata.api_client.models.update_leaderboard_response_config_model import UpdateLeaderboardResponseConfigModel
-from rapidata.api_client.models.update_order_name_model import UpdateOrderNameModel
-from rapidata.api_client.models.update_participant_model import UpdateParticipantModel
-from rapidata.api_client.models.update_participant_name_model import UpdateParticipantNameModel
-from rapidata.api_client.models.update_priority_model import UpdatePriorityModel
-from rapidata.api_client.models.update_prompt_tags_model import UpdatePromptTagsModel
-from rapidata.api_client.models.update_should_alert_model import UpdateShouldAlertModel
-from rapidata.api_client.models.update_validation_rapid_model import UpdateValidationRapidModel
-from rapidata.api_client.models.update_validation_rapid_model_context_asset import UpdateValidationRapidModelContextAsset
-from rapidata.api_client.models.update_validation_rapid_model_truth import UpdateValidationRapidModelTruth
-from rapidata.api_client.models.update_validation_set_model import UpdateValidationSetModel
-from rapidata.api_client.models.upload_file_result import UploadFileResult
-from rapidata.api_client.models.user_action_restriction import UserActionRestriction
-from rapidata.api_client.models.user_action_restriction_filter import UserActionRestrictionFilter
-from rapidata.api_client.models.user_score_filter import UserScoreFilter
-from rapidata.api_client.models.user_score_user_filter_model import UserScoreUserFilterModel
-from rapidata.api_client.models.user_state import UserState
-from rapidata.api_client.models.user_state_filter import UserStateFilter
-from rapidata.api_client.models.validation_selection import ValidationSelection
-from rapidata.api_client.models.validation_set_model import ValidationSetModel
-from rapidata.api_client.models.validation_set_overview_model import ValidationSetOverviewModel
-from rapidata.api_client.models.video_duration_metadata import VideoDurationMetadata
-from rapidata.api_client.models.video_duration_metadata_model import VideoDurationMetadataModel
-from rapidata.api_client.models.workflow_aggregation_step_model import WorkflowAggregationStepModel
-from rapidata.api_client.models.workflow_artifact_model import WorkflowArtifactModel
-from rapidata.api_client.models.workflow_config_artifact_model import WorkflowConfigArtifactModel
-from rapidata.api_client.models.workflow_config_artifact_model_workflow_config import WorkflowConfigArtifactModelWorkflowConfig
-from rapidata.api_client.models.workflow_labeling_step_model import WorkflowLabelingStepModel
-from rapidata.api_client.models.workflow_state import WorkflowState
+# Cache for imported models
+_IMPORTED = {}
+
+
+def __getattr__(name: str):
+    """Lazy import handler for models."""
+    if name in _IMPORTED:
+        return _IMPORTED[name]
+
+    if name in _MODEL_IMPORTS:
+        module_path = _MODEL_IMPORTS[name]
+        import importlib
+        module = importlib.import_module(module_path)
+        attr = getattr(module, name)
+        _IMPORTED[name] = attr
+        return attr
+
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
+
+def __dir__():
+    """Return list of available attributes for autocompletion."""
+    return list(_MODEL_IMPORTS.keys())
+
+
+# For type checkers and IDE support
+__all__ = list(_MODEL_IMPORTS.keys())

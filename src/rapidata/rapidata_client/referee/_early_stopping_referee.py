@@ -1,8 +1,8 @@
+from __future__ import annotations
+
 from typing import Any
+
 from rapidata.rapidata_client.referee._base_referee import Referee
-from rapidata.api_client.models.early_stopping_referee_model import (
-    EarlyStoppingRefereeModel,
-)
 
 
 class EarlyStoppingReferee(Referee):
@@ -46,6 +46,10 @@ class EarlyStoppingReferee(Referee):
         }
 
     def _to_model(self) -> Any:
+        from rapidata.api_client.models.early_stopping_referee_model import (
+            EarlyStoppingRefereeModel,
+        )
+
         return EarlyStoppingRefereeModel(
             _t="EarlyStoppingReferee",
             threshold=self.threshold,

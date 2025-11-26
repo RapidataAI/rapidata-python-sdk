@@ -1,4 +1,5 @@
-from rapidata.api_client.models.naive_referee_model import NaiveRefereeModel
+from __future__ import annotations
+
 from rapidata.rapidata_client.referee._base_referee import Referee
 
 
@@ -30,4 +31,6 @@ class NaiveReferee(Referee):
         }
 
     def _to_model(self):
+        from rapidata.api_client.models.naive_referee_model import NaiveRefereeModel
+
         return NaiveRefereeModel(_t="NaiveReferee", totalVotes=self.responses)

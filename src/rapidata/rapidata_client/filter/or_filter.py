@@ -1,8 +1,6 @@
+from __future__ import annotations
+
 from rapidata.rapidata_client.filter._base_filter import RapidataFilter
-from rapidata.api_client.models.or_user_filter_model import OrUserFilterModel
-from rapidata.api_client.models.and_user_filter_model_filters_inner import (
-    AndUserFilterModelFiltersInner,
-)
 from pydantic import BaseModel, ConfigDict
 
 
@@ -31,6 +29,11 @@ class OrFilter(RapidataFilter, BaseModel):
         super().__init__(filters=filters)
 
     def _to_model(self):
+        from rapidata.api_client.models.or_user_filter_model import OrUserFilterModel
+        from rapidata.api_client.models.and_user_filter_model_filters_inner import (
+            AndUserFilterModelFiltersInner,
+        )
+
         return OrUserFilterModel(
             _t="OrFilter",
             filters=[

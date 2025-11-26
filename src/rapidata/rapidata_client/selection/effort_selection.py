@@ -1,7 +1,6 @@
+from __future__ import annotations
+
 from rapidata.rapidata_client.selection._base_selection import RapidataSelection
-from rapidata.api_client.models.effort_capped_selection import (
-    EffortCappedSelection as EffortCappedSelectionModel,
-)
 from rapidata.rapidata_client.selection.rapidata_retrieval_modes import (
     RapidataRetrievalMode,
 )
@@ -29,6 +28,10 @@ class EffortSelection(RapidataSelection):
         self.max_iterations = max_iterations
 
     def _to_model(self):
+        from rapidata.api_client.models.effort_capped_selection import (
+            EffortCappedSelection as EffortCappedSelectionModel,
+        )
+
         return EffortCappedSelectionModel(
             _t="EffortCappedSelection",
             effortBudget=self.effort_budget,
