@@ -5259,17 +5259,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/QueryAudiencesResult"
+                  "$ref": "#/components/schemas/PagedResult.QueryAudiencesResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/QueryAudiencesResult"
+                  "$ref": "#/components/schemas/PagedResult.QueryAudiencesResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/QueryAudiencesResult"
+                  "$ref": "#/components/schemas/PagedResult.QueryAudiencesResult"
                 }
               }
             }
@@ -17783,6 +17783,41 @@
                 "propertyName": "_t"
               }
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "PagedResult.QueryAudiencesResult": {
+        "required": [
+          "items",
+          "page",
+          "pageSize",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueryAudiencesResult"
+            }
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
           }
         },
         "additionalProperties": false
