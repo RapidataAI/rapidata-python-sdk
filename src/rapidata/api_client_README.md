@@ -230,6 +230,7 @@ Class | Method | HTTP request | Description
  - [AttachCategoryRapidBlueprintCategory](rapidata/api_client/docs/AttachCategoryRapidBlueprintCategory.md)
  - [AttachCategoryResult](rapidata/api_client/docs/AttachCategoryResult.md)
  - [AttachCategoryTruth](rapidata/api_client/docs/AttachCategoryTruth.md)
+ - [AudienceStatus](rapidata/api_client/docs/AudienceStatus.md)
  - [BenchmarkQueryResult](rapidata/api_client/docs/BenchmarkQueryResult.md)
  - [BoostLeaderboardModel](rapidata/api_client/docs/BoostLeaderboardModel.md)
  - [BoostingProfile](rapidata/api_client/docs/BoostingProfile.md)

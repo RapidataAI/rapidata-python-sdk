@@ -39,6 +39,7 @@ _MODEL_IMPORTS = {
     "AttachCategoryRapidBlueprintCategory": "rapidata.api_client.models.attach_category_rapid_blueprint_category",
     "AttachCategoryResult": "rapidata.api_client.models.attach_category_result",
     "AttachCategoryTruth": "rapidata.api_client.models.attach_category_truth",
+    "AudienceStatus": "rapidata.api_client.models.audience_status",
     "BenchmarkQueryResult": "rapidata.api_client.models.benchmark_query_result",
     "BoostLeaderboardModel": "rapidata.api_client.models.boost_leaderboard_model",
     "BoostingProfile": "rapidata.api_client.models.boosting_profile",

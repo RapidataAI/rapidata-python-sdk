@@ -10699,6 +10699,7 @@
           "id",
           "isPublic",
           "name",
+          "ownerId",
           "ownerMail"
         ],
         "type": "object",
@@ -10714,6 +10715,10 @@
           },
           "ownerMail": {
             "type": "string"
+          },
+          "ownerId": {
+            "type": "string",
+            "format": "uuid"
           },
           "dimensions": {
             "type": "array",
@@ -17638,6 +17643,14 @@
         },
         "additionalProperties": false
       },
+      "AudienceStatus": {
+        "enum": [
+          "Created",
+          "Recruiting",
+          "Ready"
+        ],
+        "type": "string"
+      },
       "CreateAudienceRequest": {
         "required": [
           "name",
@@ -17724,6 +17737,7 @@
           "filters",
           "id",
           "name",
+          "status",
           "validationSetId"
         ],
         "type": "object",
@@ -17737,6 +17751,9 @@
           },
           "validationSetId": {
             "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/AudienceStatus"
           },
           "filters": {
             "type": "array",
@@ -17787,6 +17804,10 @@
         },
         "additionalProperties": false
       },
+      "Option.AudienceStatus": {
+        "title": "Option`1",
+        "additionalProperties": false
+      },
       "PagedResult.QueryAudiencesResult": {
         "required": [
           "items",
@@ -17827,6 +17848,7 @@
           "filters",
           "id",
           "name",
+          "status",
           "validationSetId"
         ],
         "type": "object",
@@ -17840,6 +17862,9 @@
           },
           "validationSetId": {
             "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/AudienceStatus"
           },
           "filters": {
             "type": "array",
@@ -17896,6 +17921,7 @@
           "name": {
             "type": "string"
           },
+          "status": {},
           "filters": {
             "type": "array"
           }
