@@ -6038,6 +6038,132 @@
         }
       }
     },
+    "/audiences": {
+      "get": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Queries all available audiences.",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryAudiencesResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryAudiencesResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryAudiencesResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/audience/{audienceId}": {
+      "get": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Gets an audience by its Id.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "description": "The id of the audience to get.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAudienceByIdResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAudienceByIdResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAudienceByIdResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Patches an existing audience.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAudienceRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAudienceRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAudienceRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
     "/audience": {
       "post": {
         "tags": [
@@ -6084,49 +6210,6 @@
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/audience/{audienceId}": {
-      "patch": {
-        "tags": [
-          "Audience"
-        ],
-        "summary": "Patches an existing audience.",
-        "parameters": [
-          {
-            "name": "audienceId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateAudienceRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateAudienceRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateAudienceRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
           }
         }
       }
@@ -18373,6 +18456,55 @@
           "validationSetId": {
             "type": "string",
             "description": "Each audience is trained against a validation set.\nThis is the Id of the validation set to use for the training of the audience."
+          },
+          "filters": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AndFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/CampaignFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/CountryFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/DemographicFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/LanguageFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/NewUserFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/NotFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/OrFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/ResponseCountFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/UserActionRestrictionFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/UserScoreFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/UserStateFilter"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            },
+            "description": "The filters to apply to any orders created for this audience.\nA filter can be used to restrict the audience to a specific subset of users.",
+            "default": null,
+            "nullable": true
           }
         },
         "additionalProperties": false,
@@ -18391,14 +18523,150 @@
         },
         "additionalProperties": false
       },
-      "UpdateAudienceRequest": {
+      "GetAudienceByIdResult": {
         "required": [
-          "name"
+          "filters",
+          "id",
+          "name",
+          "validationSetId"
         ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "validationSetId": {
+            "type": "string"
+          },
+          "filters": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AndFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/CampaignFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/CountryFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/DemographicFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/LanguageFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/NewUserFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/NotFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/OrFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/ResponseCountFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/UserActionRestrictionFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/UserScoreFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/UserStateFilter"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "QueryAudiencesResult": {
+        "required": [
+          "filters",
+          "id",
+          "name",
+          "validationSetId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "validationSetId": {
+            "type": "string"
+          },
+          "filters": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/AndFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/CampaignFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/CountryFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/DemographicFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/LanguageFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/NewUserFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/NotFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/OrFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/ResponseCountFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/UserActionRestrictionFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/UserScoreFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/UserStateFilter"
+                }
+              ],
+              "discriminator": {
+                "propertyName": "_t"
+              }
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateAudienceRequest": {
         "type": "object",
         "properties": {
           "name": {
             "type": "string"
+          },
+          "filters": {
+            "type": "array"
           }
         },
         "additionalProperties": false,

@@ -18,19 +18,20 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.and_filter_filters_inner import AndFilterFiltersInner
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateAudienceRequest(BaseModel):
+class GetAudienceByIdResult(BaseModel):
     """
-    The body request to create an audience.
+    GetAudienceByIdResult
     """ # noqa: E501
-    name: StrictStr = Field(description="The name to give the newly created audience.")
-    validation_set_id: StrictStr = Field(description="Each audience is trained against a validation set. This is the Id of the validation set to use for the training of the audience.", alias="validationSetId")
-    filters: Optional[List[AndFilterFiltersInner]] = Field(default=None, description="The filters to apply to any orders created for this audience. A filter can be used to restrict the audience to a specific subset of users.")
-    __properties: ClassVar[List[str]] = ["name", "validationSetId", "filters"]
+    id: StrictStr
+    name: StrictStr
+    validation_set_id: StrictStr = Field(alias="validationSetId")
+    filters: List[AndFilterFiltersInner]
+    __properties: ClassVar[List[str]] = ["id", "name", "validationSetId", "filters"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -50,7 +51,7 @@ class CreateAudienceRequest(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateAudienceRequest from a JSON string"""
+        """Create an instance of GetAudienceByIdResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -78,16 +79,11 @@ class CreateAudienceRequest(BaseModel):
                 if _item_filters:
                     _items.append(_item_filters.to_dict())
             _dict['filters'] = _items
-        # set to None if filters (nullable) is None
-        # and model_fields_set contains the field
-        if self.filters is None and "filters" in self.model_fields_set:
-            _dict['filters'] = None
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateAudienceRequest from a dict"""
+        """Create an instance of GetAudienceByIdResult from a dict"""
         if obj is None:
             return None
 
@@ -95,6 +91,7 @@ class CreateAudienceRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "id": obj.get("id"),
             "name": obj.get("name"),
             "validationSetId": obj.get("validationSetId"),
             "filters": [AndFilterFiltersInner.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None
