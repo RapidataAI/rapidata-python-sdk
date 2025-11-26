@@ -77,8 +77,10 @@ Class | Method | HTTP request | Description
 *AssetApi* | [**asset_file_name_metadata_get**](rapidata/api_client/docs/AssetApi.md#asset_file_name_metadata_get) | **GET** /asset/{fileName}/metadata | Gets the metadata for an asset by file name.
 *AssetApi* | [**asset_file_post**](rapidata/api_client/docs/AssetApi.md#asset_file_post) | **POST** /asset/file | Uploads a single asset to S3 and returns the asset details.
 *AssetApi* | [**asset_url_post**](rapidata/api_client/docs/AssetApi.md#asset_url_post) | **POST** /asset/url | Uploads a single asset to S3 and returns the asset details.
+*AudienceApi* | [**audience_audience_id_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_get) | **GET** /audience/{audienceId} | Gets an audience by its Id.
 *AudienceApi* | [**audience_audience_id_patch**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_patch) | **PATCH** /audience/{audienceId} | Patches an existing audience.
 *AudienceApi* | [**audience_post**](rapidata/api_client/docs/AudienceApi.md#audience_post) | **POST** /audience | Creates a new empty audience.
+*AudienceApi* | [**audiences_get**](rapidata/api_client/docs/AudienceApi.md#audiences_get) | **GET** /audiences | Queries all available audiences.
 *BenchmarkApi* | [**benchmark_benchmark_id_delete**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_delete) | **DELETE** /benchmark/{benchmarkId} | Deletes a single benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_fork_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_fork_post) | **POST** /benchmark/{benchmarkId}/fork | Creates a copy of a public benchmark and all of its related entities
 *BenchmarkApi* | [**benchmark_benchmark_id_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_get) | **GET** /benchmark/{benchmarkId} | Returns a single benchmark by its ID.
@@ -348,6 +350,7 @@ Class | Method | HTTP request | Description
  - [FreeTextResult](rapidata/api_client/docs/FreeTextResult.md)
  - [GenderUserFilterModel](rapidata/api_client/docs/GenderUserFilterModel.md)
  - [GenderUserFilterModelGender](rapidata/api_client/docs/GenderUserFilterModelGender.md)
+ - [GetAudienceByIdResult](rapidata/api_client/docs/GetAudienceByIdResult.md)
  - [GetAvailableValidationSetsResult](rapidata/api_client/docs/GetAvailableValidationSetsResult.md)
  - [GetBenchmarkByIdResult](rapidata/api_client/docs/GetBenchmarkByIdResult.md)
  - [GetBoostResult](rapidata/api_client/docs/GetBoostResult.md)
@@ -496,6 +499,7 @@ Class | Method | HTTP request | Description
  - [PromptByBenchmarkResult](rapidata/api_client/docs/PromptByBenchmarkResult.md)
  - [PromptMetadataInput](rapidata/api_client/docs/PromptMetadataInput.md)
  - [PublicOrderModel](rapidata/api_client/docs/PublicOrderModel.md)
+ - [QueryAudiencesResult](rapidata/api_client/docs/QueryAudiencesResult.md)
  - [QueryDatapointsByDatasetIdResult](rapidata/api_client/docs/QueryDatapointsByDatasetIdResult.md)
  - [QueryModel](rapidata/api_client/docs/QueryModel.md)
  - [QueryValidationRapidEligibilityModelQueryValidationModel](rapidata/api_client/docs/QueryValidationRapidEligibilityModelQueryValidationModel.md)
