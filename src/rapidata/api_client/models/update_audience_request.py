@@ -27,8 +27,9 @@ class UpdateAudienceRequest(BaseModel):
     The body request to update an audience.
     """ # noqa: E501
     name: Optional[StrictStr] = None
+    status: Optional[Any] = None
     filters: Optional[List[StrictStr]] = None
-    __properties: ClassVar[List[str]] = ["name", "filters"]
+    __properties: ClassVar[List[str]] = ["name", "status", "filters"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -69,6 +70,11 @@ class UpdateAudienceRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if status (nullable) is None
+        # and model_fields_set contains the field
+        if self.status is None and "status" in self.model_fields_set:
+            _dict['status'] = None
+
         return _dict
 
     @classmethod
@@ -82,6 +88,7 @@ class UpdateAudienceRequest(BaseModel):
 
         _obj = cls.model_validate({
             "name": obj.get("name"),
+            "status": obj.get("status"),
             "filters": obj.get("filters")
         })
         return _obj

@@ -20,6 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.and_filter_filters_inner import AndFilterFiltersInner
+from rapidata.api_client.models.audience_status import AudienceStatus
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -30,8 +31,9 @@ class GetAudienceByIdResult(BaseModel):
     id: StrictStr
     name: StrictStr
     validation_set_id: StrictStr = Field(alias="validationSetId")
+    status: AudienceStatus
     filters: List[AndFilterFiltersInner]
-    __properties: ClassVar[List[str]] = ["id", "name", "validationSetId", "filters"]
+    __properties: ClassVar[List[str]] = ["id", "name", "validationSetId", "status", "filters"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -94,6 +96,7 @@ class GetAudienceByIdResult(BaseModel):
             "id": obj.get("id"),
             "name": obj.get("name"),
             "validationSetId": obj.get("validationSetId"),
+            "status": obj.get("status"),
             "filters": [AndFilterFiltersInner.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None
         })
         return _obj
