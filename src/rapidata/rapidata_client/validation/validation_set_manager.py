@@ -53,14 +53,6 @@ class ValidationSetManager:
         self.rapid = RapidsManager(openapi_service)
         logger.debug("ValidationSetManager initialized")
 
-    def _get_total_and_labeled_rapids_count(
-        self, validation_set_id: str
-    ) -> tuple[int, int]:
-        uploaded_rapids = self._openapi_service.validation_api.validation_set_validation_set_id_rapids_get(
-            validation_set_id=validation_set_id
-        ).items
-        return len(uploaded_rapids), sum(1 for rapid in uploaded_rapids if rapid.truth)
-
     def create_classification_set(
         self,
         name: str,
@@ -693,7 +685,7 @@ class ValidationSetManager:
                 rapid_index = 0
                 while True:
                     total_rapids, labeled_rapids = (
-                        self._get_total_and_labeled_rapids_count(validation_set.id)
+                        validation_set._get_total_and_labeled_rapids_count()
                     )
 
                     progress_bar.n = labeled_rapids

@@ -195,9 +195,7 @@ class RapidataOrderBuilder:
         sufficient_rapids_count = False
         if self.__validation_set is not None:
             sufficient_rapids_count = (
-                self.__validation_set_manager._get_total_and_labeled_rapids_count(
-                    self.__validation_set.id
-                )[1]
+                self.__validation_set._get_total_and_labeled_rapids_count()[1]
                 >= required_amount
             )
 

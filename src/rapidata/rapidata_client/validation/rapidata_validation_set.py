@@ -106,6 +106,45 @@ class RapidataValidationSet:
             )
             return self
 
+    def _get_total_and_labeled_rapids_count(self) -> tuple[int, int]:
+        """Get the total and labeled rapids count of the validation set."""
+        with tracer.start_as_current_span(
+            "RapidataValidationSet.get_total_and_labeled_rapids_count"
+        ):
+            from rapidata.api_client.models.query_model import QueryModel
+            from rapidata.api_client.models.get_validation_rapids_result import (
+                GetValidationRapidsResult,
+            )
+            from rapidata.api_client.models.page_info import PageInfo
+
+            current_page = 1
+            total_pages = None
+            uploaded_rapids: list[GetValidationRapidsResult] = []
+
+            while True:
+                rapids_result = self._openapi_service.validation_api.validation_set_validation_set_id_rapids_get(
+                    validation_set_id=self.id,
+                    model=QueryModel(page=PageInfo(index=current_page, size=100)),
+                )
+
+                if rapids_result.total_pages is None:
+                    raise ValueError(
+                        "An error occurred while fetching rapids: total_pages is None"
+                    )
+
+                total_pages = rapids_result.total_pages
+
+                uploaded_rapids.extend(rapids_result.items)
+
+                if current_page >= total_pages:
+                    break
+
+                current_page += 1
+
+            return len(uploaded_rapids), sum(
+                1 for rapid in uploaded_rapids if rapid.truth
+            )
+
     def view(self) -> None:
         """
         Opens the validation set details page in the browser.
