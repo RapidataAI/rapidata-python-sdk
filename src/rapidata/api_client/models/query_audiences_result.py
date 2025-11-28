@@ -17,7 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from datetime import datetime
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.and_filter_filters_inner import AndFilterFiltersInner
 from rapidata.api_client.models.audience_status import AudienceStatus
@@ -32,8 +33,11 @@ class QueryAudiencesResult(BaseModel):
     name: StrictStr
     validation_set_id: StrictStr = Field(alias="validationSetId")
     status: AudienceStatus
+    qualified_user_count: StrictInt = Field(alias="qualifiedUserCount")
     filters: List[AndFilterFiltersInner]
-    __properties: ClassVar[List[str]] = ["id", "name", "validationSetId", "status", "filters"]
+    created_at: datetime = Field(alias="createdAt")
+    owner_mail: StrictStr = Field(alias="ownerMail")
+    __properties: ClassVar[List[str]] = ["id", "name", "validationSetId", "status", "qualifiedUserCount", "filters", "createdAt", "ownerMail"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -97,7 +101,10 @@ class QueryAudiencesResult(BaseModel):
             "name": obj.get("name"),
             "validationSetId": obj.get("validationSetId"),
             "status": obj.get("status"),
-            "filters": [AndFilterFiltersInner.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None
+            "qualifiedUserCount": obj.get("qualifiedUserCount"),
+            "filters": [AndFilterFiltersInner.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
+            "createdAt": obj.get("createdAt"),
+            "ownerMail": obj.get("ownerMail")
         })
         return _obj
 

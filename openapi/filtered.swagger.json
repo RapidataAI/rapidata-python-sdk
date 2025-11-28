@@ -17734,9 +17734,12 @@
       },
       "GetAudienceByIdResult": {
         "required": [
+          "createdAt",
           "filters",
           "id",
           "name",
+          "ownerMail",
+          "qualifiedUserCount",
           "status",
           "validationSetId"
         ],
@@ -17754,6 +17757,10 @@
           },
           "status": {
             "$ref": "#/components/schemas/AudienceStatus"
+          },
+          "qualifiedUserCount": {
+            "type": "integer",
+            "format": "int64"
           },
           "filters": {
             "type": "array",
@@ -17800,6 +17807,13 @@
                 "propertyName": "_t"
               }
             }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ownerMail": {
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -17845,9 +17859,12 @@
       },
       "QueryAudiencesResult": {
         "required": [
+          "createdAt",
           "filters",
           "id",
           "name",
+          "ownerMail",
+          "qualifiedUserCount",
           "status",
           "validationSetId"
         ],
@@ -17865,6 +17882,10 @@
           },
           "status": {
             "$ref": "#/components/schemas/AudienceStatus"
+          },
+          "qualifiedUserCount": {
+            "type": "integer",
+            "format": "int64"
           },
           "filters": {
             "type": "array",
@@ -17911,6 +17932,13 @@
                 "propertyName": "_t"
               }
             }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ownerMail": {
+            "type": "string"
           }
         },
         "additionalProperties": false
