@@ -108,7 +108,8 @@ class RapidataAudience:
             )
             order_builder._workflow(
                 ClassifyWorkflow(
-                    instruction="Won't be shown", answer_options=["Yes", "No"]
+                    instruction="Check the preview to see the validation tasks",
+                    answer_options=["Yes", "No"],
                 )
             )
             order_builder._filters(
