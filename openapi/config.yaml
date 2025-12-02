@@ -1,3 +1,3 @@
-validateSpec: false
 generateSourceCodeOnly: true
 packageName: rapidata.api_client
+lazyImports: true
