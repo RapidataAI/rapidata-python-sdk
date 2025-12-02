@@ -16,12 +16,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v5
+    - uses: actions/setup-python@v6
       with:
-        python-version: '3.x'
-    - name: Install Poetry
-      uses: snok/install-poetry@v1
+        python-version-file: ".python-version"
+    - name: Install uv
+      uses: astral-sh/setup-uv@v7
     - name: Configure Git
       run: |
         git config user.name github-actions
@@ -30,9 +29,9 @@ jobs:
     - name: Update version
       id: update_version
       run: |
-        old_version=$(poetry version -s)
-        poetry version ${{ github.event.inputs.version_part }}
-        new_version=$(poetry version -s)
+        old_version=$(uv version --short)
+        uv version ${{ github.event.inputs.version_part }}
+        new_version=$(uv version --short)
         echo "new_version=$new_version" >>$GITHUB_OUTPUT
         echo "old_version=$old_version" >>$GITHUB_OUTPUT
     
@@ -77,9 +76,8 @@ jobs:
       env:
         PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
       run: |
-        poetry config pypi-token.pypi $PYPI_TOKEN
-        poetry build
-        poetry publish
+        uv build
+        uv publish
     - name: List dist contents
       run: ls -l dist/
     - name: Create GitHub Release
