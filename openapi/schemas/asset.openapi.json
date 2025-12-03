@@ -1,0 +1,569 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Rapidata Asset API",
+    "description": "The API for the Rapidata Asset service",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "https://api.rabbitdata.ch/"
+    }
+  ],
+  "paths": {
+    "/asset/file": {
+      "post": {
+        "tags": [
+          "Asset"
+        ],
+        "summary": "Uploads a single asset to S3 and returns the asset details.",
+        "description": "This endpoint allows uploading a single file to S3 storage with the asset creator.\n The uploaded asset will be stored using the configured S3 settings and a unique filename will be generated.",
+        "requestBody": {
+          "description": "The file to upload to S3.",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "$ref": "#/components/schemas/IFormFile"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadFileResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadFileResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadFileResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/asset/url": {
+      "post": {
+        "tags": [
+          "Asset"
+        ],
+        "summary": "Uploads a single asset to S3 and returns the asset details.",
+        "description": "This endpoint allows uploading a single file to S3 storage with the asset creator.\n The uploaded asset will be stored using the configured S3 settings and a unique filename will be generated.",
+        "parameters": [
+          {
+            "name": "url",
+            "in": "query",
+            "description": "The url of the file to upload to S3.",
+            "schema": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadFileResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadFileResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadFileResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/asset/{fileName}/metadata": {
+      "get": {
+        "tags": [
+          "Asset"
+        ],
+        "summary": "Gets the metadata for an asset by file name.",
+        "description": "This endpoint retrieves metadata information for an asset stored in S3.\n The metadata includes details such as content type, size, creation date, and custom metadata fields.",
+        "parameters": [
+          {
+            "name": "fileName",
+            "in": "path",
+            "description": "The name of the file to retrieve metadata for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetFileMetadataResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetFileMetadataResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetFileMetadataResult"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "FileType": {
+        "enum": [
+          "Unknown",
+          "Image",
+          "Video",
+          "Audio"
+        ]
+      },
+      "GetFileMetadataResult": {
+        "required": [
+          "metadata"
+        ],
+        "type": "object",
+        "properties": {
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataCollection"
+          }
+        }
+      },
+      "IFormFile": {
+        "type": "string",
+        "format": "binary"
+      },
+      "IMetadata": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IMetadataClassificationMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataCountMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataFileTypeMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataImageDimensionMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataLocationMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataOriginalFilenameMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataSourceUrlMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataStreamsMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataTextMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataVideoDurationMetadata"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "ClassificationMetadata": "#/components/schemas/IMetadataClassificationMetadata",
+            "CountMetadata": "#/components/schemas/IMetadataCountMetadata",
+            "FileTypeMetadata": "#/components/schemas/IMetadataFileTypeMetadata",
+            "ImageDimensionMetadata": "#/components/schemas/IMetadataImageDimensionMetadata",
+            "LocationMetadata": "#/components/schemas/IMetadataLocationMetadata",
+            "OriginalFilenameMetadata": "#/components/schemas/IMetadataOriginalFilenameMetadata",
+            "SourceUrlMetadata": "#/components/schemas/IMetadataSourceUrlMetadata",
+            "StreamsMetadata": "#/components/schemas/IMetadataStreamsMetadata",
+            "TextMetadata": "#/components/schemas/IMetadataTextMetadata",
+            "VideoDurationMetadata": "#/components/schemas/IMetadataVideoDurationMetadata"
+          }
+        }
+      },
+      "IMetadataClassificationMetadata": {
+        "required": [
+          "classification",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ClassificationMetadata"
+            ],
+            "type": "string"
+          },
+          "classification": {
+            "type": "string"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "IMetadataCountMetadata": {
+        "required": [
+          "count",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CountMetadata"
+            ],
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "IMetadataFileTypeMetadata": {
+        "required": [
+          "fileType",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "FileTypeMetadata"
+            ],
+            "type": "string"
+          },
+          "fileType": {
+            "$ref": "#/components/schemas/FileType"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "IMetadataImageDimensionMetadata": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ImageDimensionMetadata"
+            ],
+            "type": "string"
+          },
+          "height": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "width": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "IMetadataLocationMetadata": {
+        "required": [
+          "x",
+          "y",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LocationMetadata"
+            ],
+            "type": "string"
+          },
+          "x": {
+            "type": "number",
+            "format": "float"
+          },
+          "y": {
+            "type": "number",
+            "format": "float"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "IMetadataOriginalFilenameMetadata": {
+        "required": [
+          "originalFilename",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OriginalFilenameMetadata"
+            ],
+            "type": "string"
+          },
+          "originalFilename": {
+            "type": "string"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "IMetadataSourceUrlMetadata": {
+        "required": [
+          "url",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "SourceUrlMetadata"
+            ],
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "IMetadataStreamsMetadata": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "StreamsMetadata"
+            ],
+            "type": "string"
+          },
+          "hasAudio": {
+            "type": "boolean"
+          },
+          "hasVideo": {
+            "type": "boolean"
+          },
+          "hasSubtitles": {
+            "type": "boolean"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "IMetadataTextMetadata": {
+        "required": [
+          "text",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TextMetadata"
+            ],
+            "type": "string"
+          },
+          "text": {
+            "type": "string",
+            "nullable": true
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "IMetadataVideoDurationMetadata": {
+        "required": [
+          "duration",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "VideoDurationMetadata"
+            ],
+            "type": "string"
+          },
+          "duration": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "MetadataCollection": {
+        "type": "object",
+        "additionalProperties": {
+          "$ref": "#/components/schemas/IMetadata"
+        }
+      },
+      "MetadataVisibilities": {
+        "type": "array",
+        "items": {
+          "enum": [
+            "None",
+            "Users",
+            "Customers",
+            "Admins",
+            "Dashboard",
+            "All"
+          ],
+          "type": "string"
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "UploadFileResult": {
+        "required": [
+          "fileName"
+        ],
+        "type": "object",
+        "properties": {
+          "fileName": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "JWT Authorization header using the Bearer scheme",
+        "scheme": "bearer",
+        "bearerFormat": "Json Web Token"
+      },
+      "OpenIdConnect": {
+        "type": "openIdConnect",
+        "description": "OpenId Connect connection flow",
+        "openIdConnectUrl": "https://auth.rabbitdata.ch/.well-known/openid-configuration"
+      },
+      "OAuth2": {
+        "type": "oauth2",
+        "description": "OAuth2 authorization header using the Bearer scheme",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://auth.rabbitdata.ch/connect/authorize",
+            "tokenUrl": "https://auth.rabbitdata.ch/connect/token",
+            "refreshUrl": "https://auth.rabbitdata.ch/connect/token",
+            "scopes": {
+              "openid": "OpenID",
+              "profile": "Profile",
+              "email": "Email"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "Bearer": [ ],
+      "OpenIdConnect": [
+        "openid",
+        "profile",
+        "email"
+      ],
+      "OAuth2": [
+        "openid",
+        "profile",
+        "email"
+      ]
+    }
+  ],
+  "tags": [
+    {
+      "name": "Asset"
+    }
+  ]
+}

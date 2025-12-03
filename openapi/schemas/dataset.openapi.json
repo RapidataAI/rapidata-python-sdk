@@ -1,0 +1,1452 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Rapidata Dataset API",
+    "description": "The API for the Rapidata Dataset service",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "https://api.rabbitdata.ch/"
+    }
+  ],
+  "paths": {
+    "/datapoint/{datapointId}": {
+      "get": {
+        "tags": [
+          "Datapoint"
+        ],
+        "summary": "Gets a datapoint by its id.",
+        "parameters": [
+          {
+            "name": "datapointId",
+            "in": "path",
+            "description": "The id of the datapoint to get.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDatapointByIdResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDatapointByIdResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDatapointByIdResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Datapoint"
+        ],
+        "summary": "Deletes a datapoint by its id.",
+        "parameters": [
+          {
+            "name": "datapointId",
+            "in": "path",
+            "description": "The id of the datapoint to delete.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/dataset/{datasetId}": {
+      "get": {
+        "tags": [
+          "Dataset"
+        ],
+        "summary": "Gets a dataset by its id.",
+        "parameters": [
+          {
+            "name": "datasetId",
+            "in": "path",
+            "description": "The id of the dataset to get.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDatasetByIdResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDatasetByIdResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDatasetByIdResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dataset/{datasetId}/datapoints": {
+      "get": {
+        "tags": [
+          "Dataset"
+        ],
+        "summary": "Gets all datapoints of a dataset.",
+        "parameters": [
+          {
+            "name": "datasetId",
+            "in": "path",
+            "description": "The id of the dataset to get the datapoints of.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "request",
+            "in": "query",
+            "description": "The query model to filter, sort, and paginate the results.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfQueryDatapointsByDatasetIdResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfQueryDatapointsByDatasetIdResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfQueryDatapointsByDatasetIdResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dataset/{datasetId}/progress": {
+      "get": {
+        "tags": [
+          "Dataset"
+        ],
+        "summary": "Gets the upload progress of a dataset.",
+        "parameters": [
+          {
+            "name": "datasetId",
+            "in": "path",
+            "description": "The id of the dataset to get the progress of.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDatasetProgressResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDatasetProgressResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetDatasetProgressResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dataset/{datasetId}/datapoints/failed": {
+      "get": {
+        "tags": [
+          "Dataset"
+        ],
+        "summary": "Gets a list of all datapoints that failed to upload.",
+        "description": "A datapoint usually fails to upload when using a deferred upload mechanism such as when providing a URL\n and the URL is not accessible.",
+        "parameters": [
+          {
+            "name": "datasetId",
+            "in": "path",
+            "description": "The id of the dataset to get the failed datapoints of.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetFailedDatapointsResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetFailedDatapointsResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetFailedDatapointsResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dataset/{datasetId}/datapoint": {
+      "post": {
+        "tags": [
+          "Dataset"
+        ],
+        "summary": "Creates a datapoint with JSON body.",
+        "parameters": [
+          {
+            "name": "datasetId",
+            "in": "path",
+            "description": "The id of the dataset to create the datapoint in.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The datapoint model containing asset, metadata, and sort index.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDatapointModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDatapointModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDatapointModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateDatapointResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateDatapointResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateDatapointResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dataset/{datasetId}/name": {
+      "patch": {
+        "tags": [
+          "Dataset"
+        ],
+        "summary": "Updates the name of a dataset.",
+        "parameters": [
+          {
+            "name": "datasetId",
+            "in": "path",
+            "description": "The id of the dataset to update.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The body of the request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDatasetNameModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDatasetNameModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDatasetNameModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CreateDatapointModel": {
+        "required": [
+          "asset"
+        ],
+        "type": "object",
+        "properties": {
+          "asset": {
+            "$ref": "#/components/schemas/IAssetInput"
+          },
+          "metadata": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/ListOfIDatasetMetadataInput"
+              }
+            ]
+          },
+          "context": {
+            "type": "string",
+            "nullable": true
+          },
+          "contextAsset": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IAssetInput"
+              }
+            ]
+          },
+          "sortIndex": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "group": {
+            "type": "string",
+            "nullable": true
+          },
+          "transcription": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "CreateDatapointResult": {
+        "required": [
+          "datapointId"
+        ],
+        "type": "object",
+        "properties": {
+          "datapointId": {
+            "type": "string"
+          }
+        }
+      },
+      "DatapointState": {
+        "enum": [
+          "Ready",
+          "Pending",
+          "Failed"
+        ]
+      },
+      "FileType": {
+        "enum": [
+          "Unknown",
+          "Image",
+          "Video",
+          "Audio"
+        ]
+      },
+      "Filter": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": { },
+          "operator": {
+            "$ref": "#/components/schemas/FilterOperator"
+          },
+          "logic": {
+            "$ref": "#/components/schemas/LogicOperator"
+          },
+          "filters": {
+            "$ref": "#/components/schemas/ListOfFilter"
+          }
+        }
+      },
+      "FilterOperator": {
+        "enum": [
+          "Eq",
+          "Neq",
+          "Gt",
+          "Gte",
+          "Lt",
+          "Lte",
+          "Contains",
+          "StartsWith",
+          "EndsWith",
+          "In"
+        ]
+      },
+      "GetDatapointByIdResult": {
+        "required": [
+          "id",
+          "datasetId",
+          "state",
+          "sortIndex",
+          "asset",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "datasetId": {
+            "type": "string"
+          },
+          "state": {
+            "$ref": "#/components/schemas/DatapointState"
+          },
+          "sortIndex": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAssetModel"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "GetDatasetByIdResult": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "GetDatasetProgressResult": {
+        "required": [
+          "total",
+          "ready",
+          "pending",
+          "failed"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ready": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pending": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "failed": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "GetFailedDatapointsResult": {
+        "required": [
+          "datapoints"
+        ],
+        "type": "object",
+        "properties": {
+          "datapoints": {
+            "$ref": "#/components/schemas/ListOfGetFailedDatapointsResult_Datapoint"
+          }
+        }
+      },
+      "GetFailedDatapointsResult_Datapoint": {
+        "required": [
+          "id",
+          "datasetId",
+          "sortIndex",
+          "asset",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "datasetId": {
+            "type": "string"
+          },
+          "sortIndex": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAssetModel"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "IAssetInput": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IAssetInputExistingAssetInput"
+          },
+          {
+            "$ref": "#/components/schemas/IAssetInputMultiAssetInput"
+          },
+          {
+            "$ref": "#/components/schemas/IAssetInputTextAssetInput"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "ExistingAssetInput": "#/components/schemas/IAssetInputExistingAssetInput",
+            "MultiAssetInput": "#/components/schemas/IAssetInputMultiAssetInput",
+            "TextAssetInput": "#/components/schemas/IAssetInputTextAssetInput"
+          }
+        }
+      },
+      "IAssetInputExistingAssetInput": {
+        "required": [
+          "name",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ExistingAssetInput"
+            ],
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "metadata": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/MetadataInputCollection"
+              }
+            ]
+          },
+          "identifier": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "IAssetInputMultiAssetInput": {
+        "required": [
+          "assets",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "MultiAssetInput"
+            ],
+            "type": "string"
+          },
+          "assets": {
+            "$ref": "#/components/schemas/ListOfIAssetInput"
+          },
+          "metadata": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/MetadataInputCollection"
+              }
+            ]
+          },
+          "identifier": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "IAssetInputTextAssetInput": {
+        "required": [
+          "text",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TextAssetInput"
+            ],
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "metadata": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/MetadataInputCollection"
+              }
+            ]
+          },
+          "identifier": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "IAssetModel": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IAssetModelFileAssetModel"
+          },
+          {
+            "$ref": "#/components/schemas/IAssetModelMultiAssetModel"
+          },
+          {
+            "$ref": "#/components/schemas/IAssetModelNullAssetModel"
+          },
+          {
+            "$ref": "#/components/schemas/IAssetModelTextAssetModel"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "FileAsset": "#/components/schemas/IAssetModelFileAssetModel",
+            "MultiAsset": "#/components/schemas/IAssetModelMultiAssetModel",
+            "NullAsset": "#/components/schemas/IAssetModelNullAssetModel",
+            "TextAsset": "#/components/schemas/IAssetModelTextAssetModel"
+          }
+        }
+      },
+      "IAssetModelFileAssetModel": {
+        "required": [
+          "fileName",
+          "metadata",
+          "identifier",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "FileAsset"
+            ],
+            "type": "string"
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataModelCollection"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        }
+      },
+      "IAssetModelMultiAssetModel": {
+        "required": [
+          "assets",
+          "metadata",
+          "identifier",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "MultiAsset"
+            ],
+            "type": "string"
+          },
+          "assets": {
+            "$ref": "#/components/schemas/ListOfIAssetModel"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataModelCollection"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        }
+      },
+      "IAssetModelNullAssetModel": {
+        "required": [
+          "metadata",
+          "identifier",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NullAsset"
+            ],
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataModelCollection"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        }
+      },
+      "IAssetModelTextAssetModel": {
+        "required": [
+          "text",
+          "metadata",
+          "identifier",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TextAsset"
+            ],
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataModelCollection"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        }
+      },
+      "IDatasetMetadataInput": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IDatasetMetadataInputPromptMetadataInput"
+          },
+          {
+            "$ref": "#/components/schemas/IDatasetMetadataInputPromptAssetMetadataInput"
+          },
+          {
+            "$ref": "#/components/schemas/IDatasetMetadataInputTranscriptionMetadataInput"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "PromptMetadataInput": "#/components/schemas/IDatasetMetadataInputPromptMetadataInput",
+            "PromptAssetMetadataInput": "#/components/schemas/IDatasetMetadataInputPromptAssetMetadataInput",
+            "TranscriptionMetadataInput": "#/components/schemas/IDatasetMetadataInputTranscriptionMetadataInput"
+          }
+        }
+      },
+      "IDatasetMetadataInputPromptAssetMetadataInput": {
+        "required": [
+          "asset",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "PromptAssetMetadataInput"
+            ],
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAssetInput"
+          }
+        }
+      },
+      "IDatasetMetadataInputPromptMetadataInput": {
+        "required": [
+          "prompt",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "PromptMetadataInput"
+            ],
+            "type": "string"
+          },
+          "prompt": {
+            "type": "string"
+          }
+        }
+      },
+      "IDatasetMetadataInputTranscriptionMetadataInput": {
+        "required": [
+          "transcription",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TranscriptionMetadataInput"
+            ],
+            "type": "string"
+          },
+          "transcription": {
+            "type": "string"
+          }
+        }
+      },
+      "IMetadataInput": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IMetadataInputTextMetadataInput"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "TextMetadataInput": "#/components/schemas/IMetadataInputTextMetadataInput"
+          }
+        }
+      },
+      "IMetadataInputTextMetadataInput": {
+        "required": [
+          "text",
+          "visibilities",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TextMetadataInput"
+            ],
+            "type": "string"
+          },
+          "text": {
+            "type": "string",
+            "nullable": true
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "IMetadataModel": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IMetadataModelClassificationMetadataModel"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataModelCountMetadataModel"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataModelFileTypeMetadataModel"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataModelImageDimensionMetadataModel"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataModelLocationMetadataModel"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataModelOriginalFilenameMetadataModel"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataModelSourceUrlMetadataModel"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataModelStreamsMetadataModel"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataModelTextMetadataModel"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataModelVideoDurationMetadataModel"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "ClassificationMetadata": "#/components/schemas/IMetadataModelClassificationMetadataModel",
+            "CountMetadata": "#/components/schemas/IMetadataModelCountMetadataModel",
+            "FileTypeMetadata": "#/components/schemas/IMetadataModelFileTypeMetadataModel",
+            "ImageDimensionMetadata": "#/components/schemas/IMetadataModelImageDimensionMetadataModel",
+            "LocationMetadata": "#/components/schemas/IMetadataModelLocationMetadataModel",
+            "OriginalFilenameMetadata": "#/components/schemas/IMetadataModelOriginalFilenameMetadataModel",
+            "SourceUrlMetadataModel": "#/components/schemas/IMetadataModelSourceUrlMetadataModel",
+            "StreamsMetadata": "#/components/schemas/IMetadataModelStreamsMetadataModel",
+            "TextMetadata": "#/components/schemas/IMetadataModelTextMetadataModel",
+            "VideoDurationMetadata": "#/components/schemas/IMetadataModelVideoDurationMetadataModel"
+          }
+        }
+      },
+      "IMetadataModelClassificationMetadataModel": {
+        "required": [
+          "classification",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ClassificationMetadata"
+            ],
+            "type": "string"
+          },
+          "classification": {
+            "type": "string"
+          }
+        }
+      },
+      "IMetadataModelCountMetadataModel": {
+        "required": [
+          "count",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CountMetadata"
+            ],
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IMetadataModelFileTypeMetadataModel": {
+        "required": [
+          "fileType",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "FileTypeMetadata"
+            ],
+            "type": "string"
+          },
+          "fileType": {
+            "$ref": "#/components/schemas/FileType"
+          }
+        }
+      },
+      "IMetadataModelImageDimensionMetadataModel": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ImageDimensionMetadata"
+            ],
+            "type": "string"
+          },
+          "height": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "width": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IMetadataModelLocationMetadataModel": {
+        "required": [
+          "x",
+          "y",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LocationMetadata"
+            ],
+            "type": "string"
+          },
+          "x": {
+            "type": "number",
+            "format": "float"
+          },
+          "y": {
+            "type": "number",
+            "format": "float"
+          }
+        }
+      },
+      "IMetadataModelOriginalFilenameMetadataModel": {
+        "required": [
+          "originalFilename",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OriginalFilenameMetadata"
+            ],
+            "type": "string"
+          },
+          "originalFilename": {
+            "type": "string"
+          }
+        }
+      },
+      "IMetadataModelSourceUrlMetadataModel": {
+        "required": [
+          "url",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "SourceUrlMetadataModel"
+            ],
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      },
+      "IMetadataModelStreamsMetadataModel": {
+        "required": [
+          "hasVideo",
+          "hasAudio",
+          "hasSubtitles",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "StreamsMetadata"
+            ],
+            "type": "string"
+          },
+          "hasVideo": {
+            "type": "boolean"
+          },
+          "hasAudio": {
+            "type": "boolean"
+          },
+          "hasSubtitles": {
+            "type": "boolean"
+          }
+        }
+      },
+      "IMetadataModelTextMetadataModel": {
+        "required": [
+          "text",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TextMetadata"
+            ],
+            "type": "string"
+          },
+          "text": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "IMetadataModelVideoDurationMetadataModel": {
+        "required": [
+          "duration",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "VideoDurationMetadata"
+            ],
+            "type": "string"
+          },
+          "duration": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ListOfFilter": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Filter"
+        }
+      },
+      "ListOfGetFailedDatapointsResult_Datapoint": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/GetFailedDatapointsResult_Datapoint"
+        }
+      },
+      "ListOfIAssetInput": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/IAssetInput"
+        }
+      },
+      "ListOfIAssetModel": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/IAssetModel"
+        }
+      },
+      "ListOfIDatasetMetadataInput": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/IDatasetMetadataInput"
+        }
+      },
+      "ListOfQueryDatapointsByDatasetIdResult": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/QueryDatapointsByDatasetIdResult"
+        }
+      },
+      "ListOfSortCriterion": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/SortCriterion"
+        }
+      },
+      "LogicOperator": {
+        "enum": [
+          "And",
+          "Or",
+          "Not"
+        ]
+      },
+      "MetadataInputCollection": {
+        "type": "object",
+        "additionalProperties": {
+          "$ref": "#/components/schemas/IMetadataInput"
+        }
+      },
+      "MetadataModelCollection": {
+        "type": "object",
+        "additionalProperties": {
+          "$ref": "#/components/schemas/IMetadataModel"
+        }
+      },
+      "MetadataVisibilities": {
+        "type": "array",
+        "items": {
+          "enum": [
+            "None",
+            "Users",
+            "Customers",
+            "Admins",
+            "Dashboard",
+            "All"
+          ],
+          "type": "string"
+        }
+      },
+      "PagedResultOfQueryDatapointsByDatasetIdResult": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "$ref": "#/components/schemas/ListOfQueryDatapointsByDatasetIdResult"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PageInfo": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "QueryDatapointsByDatasetIdResult": {
+        "required": [
+          "id",
+          "datasetId",
+          "asset"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "datasetId": {
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAssetModel"
+          }
+        }
+      },
+      "QueryModel": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/PageInfo"
+              }
+            ]
+          },
+          "filter": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/RootFilter"
+              }
+            ]
+          },
+          "sortCriteria": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/ListOfSortCriterion"
+              }
+            ]
+          }
+        }
+      },
+      "RootFilter": {
+        "type": "object",
+        "properties": {
+          "filters": {
+            "$ref": "#/components/schemas/ListOfFilter"
+          },
+          "logic": {
+            "$ref": "#/components/schemas/LogicOperator"
+          }
+        }
+      },
+      "SortCriterion": {
+        "required": [
+          "propertyName",
+          "direction"
+        ],
+        "type": "object",
+        "properties": {
+          "propertyName": {
+            "type": "string"
+          },
+          "direction": {
+            "$ref": "#/components/schemas/SortDirection"
+          }
+        }
+      },
+      "SortDirection": {
+        "enum": [
+          "Asc",
+          "Desc"
+        ]
+      },
+      "UpdateDatasetNameModel": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "JWT Authorization header using the Bearer scheme",
+        "scheme": "bearer",
+        "bearerFormat": "Json Web Token"
+      },
+      "OpenIdConnect": {
+        "type": "openIdConnect",
+        "description": "OpenId Connect connection flow",
+        "openIdConnectUrl": "https://auth.rabbitdata.ch/.well-known/openid-configuration"
+      },
+      "OAuth2": {
+        "type": "oauth2",
+        "description": "OAuth2 authorization header using the Bearer scheme",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://auth.rabbitdata.ch/connect/authorize",
+            "tokenUrl": "https://auth.rabbitdata.ch/connect/token",
+            "refreshUrl": "https://auth.rabbitdata.ch/connect/token",
+            "scopes": {
+              "openid": "OpenID",
+              "profile": "Profile",
+              "email": "Email"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "Bearer": [ ],
+      "OpenIdConnect": [
+        "openid",
+        "profile",
+        "email"
+      ],
+      "OAuth2": [
+        "openid",
+        "profile",
+        "email"
+      ]
+    }
+  ],
+  "tags": [
+    {
+      "name": "Datapoint"
+    },
+    {
+      "name": "Dataset"
+    }
+  ]
+}

@@ -1,0 +1,1171 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Rapidata Identity API",
+    "description": "The API for the Rapidata Identity service",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "https://api.rabbitdata.ch/"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "tags": [
+          "Rapidata.Identity.API"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/clients": {
+      "get": {
+        "tags": [
+          "Client"
+        ],
+        "summary": "Queries the clients for the current customer.",
+        "description": "A client allows a customer to authenticate with the APIs without using their own credentials.\n This is useful for creating service accounts or other automated processes,\n as when using the Rapidata Python SDK.",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfClientsQueryResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfClientsQueryResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfClientsQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/client/{clientId}": {
+      "get": {
+        "tags": [
+          "Client"
+        ],
+        "summary": "Gets a specific client by its ID.",
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "path",
+            "description": "The ID of the client to retrieve.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Client"
+        ],
+        "summary": "Deletes a customers' client.",
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "path",
+            "description": "The id of the client to delete.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/client": {
+      "post": {
+        "tags": [
+          "Client"
+        ],
+        "summary": "Creates a new client for the current customer.",
+        "requestBody": {
+          "description": "The model for creating a new client.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateClientModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateClientModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateClientModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateCustomerClientResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateCustomerClientResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateCustomerClientResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/client/register": {
+      "post": {
+        "tags": [
+          "Client"
+        ],
+        "summary": "Registers a new client dynamically.",
+        "description": "The implementation of this method follows the OpenID Connect Dynamic Client Registration.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DynamicClientRegistrationRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DynamicClientRegistrationRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DynamicClientRegistrationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/identity/bridge-token": {
+      "post": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Creates a pair of read and write keys for a client.\n The write key is used to store the authentication result.\n The read key is used to retrieve the authentication result.",
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "query",
+            "description": "The client ID to create the keys for.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBridgeTokenResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBridgeTokenResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBridgeTokenResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Tries to read the bridge token keys for a given read key.\n The read key is used to retrieve the authentication result written by the write key.",
+        "parameters": [
+          {
+            "name": "readKey",
+            "in": "query",
+            "description": "The read key to read the bridge token keys for.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReadBridgeTokenKeysResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReadBridgeTokenKeysResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReadBridgeTokenKeysResult"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotAvailableYetResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotAvailableYetResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotAvailableYetResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/identity/referrer": {
+      "post": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Sets the referrer for the current customer.",
+        "parameters": [
+          {
+            "name": "referrer",
+            "in": "query",
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/identity/google-one-tap": {
+      "post": {
+        "tags": [
+          "Identity"
+        ],
+        "summary": "Signs in a user using a token received from Google One Tap.",
+        "requestBody": {
+          "description": "The body of the request containing the id token.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleOneTapLoginModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleOneTapLoginModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleOneTapLoginModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/newsletter/subscribe": {
+      "post": {
+        "tags": [
+          "Newsletter"
+        ],
+        "summary": "Signs a user up to the newsletter.",
+        "requestBody": {
+          "description": "The model containing the email of a user and recaptcha token.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewsletterModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewsletterModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewsletterModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/newsletter/unsubscribe": {
+      "post": {
+        "tags": [
+          "Newsletter"
+        ],
+        "summary": "Unsubscribes a user from the newsletter.",
+        "requestBody": {
+          "description": "The model containing the email of a user and recaptcha token.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewsletterModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewsletterModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewsletterModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/identity/survey": {
+      "post": {
+        "tags": [
+          "Survey"
+        ],
+        "summary": "Sends a survey.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendSurveyModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendSurveyModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendSurveyModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ClientModel": {
+        "required": [
+          "client_id",
+          "client_secret",
+          "client_id_issued_at",
+          "client_secret_expires_at",
+          "redirect_uris",
+          "grant_types",
+          "response_types",
+          "client_name",
+          "client_uri",
+          "logo_uri",
+          "scope",
+          "contacts",
+          "tos_uri",
+          "policy_uri",
+          "jwks_uri",
+          "jwks"
+        ],
+        "type": "object",
+        "properties": {
+          "client_id": {
+            "type": "string"
+          },
+          "client_secret": {
+            "type": "string",
+            "nullable": true
+          },
+          "client_id_issued_at": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "client_secret_expires_at": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "redirect_uris": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "nullable": true
+          },
+          "grant_types": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "nullable": true
+          },
+          "response_types": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "nullable": true
+          },
+          "client_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "client_uri": {
+            "type": "string",
+            "nullable": true
+          },
+          "logo_uri": {
+            "type": "string",
+            "nullable": true
+          },
+          "scope": {
+            "type": "string",
+            "nullable": true
+          },
+          "contacts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "tos_uri": {
+            "type": "string",
+            "nullable": true
+          },
+          "policy_uri": {
+            "type": "string",
+            "nullable": true
+          },
+          "jwks_uri": {
+            "type": "string",
+            "nullable": true
+          },
+          "jwks": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/JsonWebKeySet"
+              }
+            ]
+          }
+        }
+      },
+      "ClientsQueryResult": {
+        "required": [
+          "clientId",
+          "displayName",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "clientId": {
+            "type": "string",
+            "nullable": true
+          },
+          "displayName": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "CreateBridgeTokenResult": {
+        "required": [
+          "readKey",
+          "writeKey"
+        ],
+        "type": "object",
+        "properties": {
+          "readKey": {
+            "type": "string"
+          },
+          "writeKey": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateClientModel": {
+        "type": "object",
+        "properties": {
+          "displayName": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "CreateCustomerClientResult": {
+        "required": [
+          "clientId",
+          "clientSecret"
+        ],
+        "type": "object",
+        "properties": {
+          "clientId": {
+            "type": "string"
+          },
+          "clientSecret": {
+            "type": "string"
+          }
+        }
+      },
+      "DynamicClientRegistrationRequest": {
+        "type": "object",
+        "properties": {
+          "redirect_uris": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "grant_types": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "response_types": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "client_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "client_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "client_uri": {
+            "type": "string",
+            "nullable": true
+          },
+          "logo_uri": {
+            "type": "string",
+            "nullable": true
+          },
+          "scope": {
+            "type": "string",
+            "nullable": true
+          },
+          "contacts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "tos_uri": {
+            "type": "string",
+            "nullable": true
+          },
+          "policy_uri": {
+            "type": "string",
+            "nullable": true
+          },
+          "jwks_uri": {
+            "type": "string",
+            "nullable": true
+          },
+          "jwks": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/JsonWebKeySet"
+              }
+            ]
+          }
+        }
+      },
+      "Filter": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": { },
+          "operator": {
+            "$ref": "#/components/schemas/FilterOperator"
+          },
+          "logic": {
+            "$ref": "#/components/schemas/LogicOperator"
+          },
+          "filters": {
+            "$ref": "#/components/schemas/ListOfFilter"
+          }
+        }
+      },
+      "FilterOperator": {
+        "enum": [
+          "Eq",
+          "Neq",
+          "Gt",
+          "Gte",
+          "Lt",
+          "Lte",
+          "Contains",
+          "StartsWith",
+          "EndsWith",
+          "In"
+        ]
+      },
+      "GoogleOneTapLoginModel": {
+        "required": [
+          "idToken"
+        ],
+        "type": "object",
+        "properties": {
+          "idToken": {
+            "type": "string"
+          }
+        }
+      },
+      "JsonWebKey": {
+        "type": "object",
+        "properties": {
+          "alg": {
+            "type": "string",
+            "nullable": true
+          },
+          "crv": {
+            "type": "string",
+            "nullable": true
+          },
+          "d": {
+            "type": "string",
+            "nullable": true
+          },
+          "dp": {
+            "type": "string",
+            "nullable": true
+          },
+          "dq": {
+            "type": "string",
+            "nullable": true
+          },
+          "e": {
+            "type": "string",
+            "nullable": true
+          },
+          "k": {
+            "type": "string",
+            "nullable": true
+          },
+          "key_ops": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "kid": {
+            "type": "string",
+            "nullable": true
+          },
+          "kty": {
+            "type": "string",
+            "nullable": true
+          },
+          "n": {
+            "type": "string",
+            "nullable": true
+          },
+          "oth": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "p": {
+            "type": "string",
+            "nullable": true
+          },
+          "q": {
+            "type": "string",
+            "nullable": true
+          },
+          "qi": {
+            "type": "string",
+            "nullable": true
+          },
+          "use": {
+            "type": "string",
+            "nullable": true
+          },
+          "x": {
+            "type": "string",
+            "nullable": true
+          },
+          "x5c": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "x5t": {
+            "type": "string",
+            "nullable": true
+          },
+          "x5t#S256": {
+            "type": "string",
+            "nullable": true
+          },
+          "x5u": {
+            "type": "string",
+            "nullable": true
+          },
+          "y": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "JsonWebKeySet": {
+        "type": "object",
+        "properties": {
+          "keys": {
+            "$ref": "#/components/schemas/ListOfJsonWebKey"
+          }
+        }
+      },
+      "ListOfClientsQueryResult": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/ClientsQueryResult"
+        }
+      },
+      "ListOfFilter": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Filter"
+        }
+      },
+      "ListOfJsonWebKey": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/JsonWebKey"
+        }
+      },
+      "ListOfSortCriterion": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/SortCriterion"
+        }
+      },
+      "LogicOperator": {
+        "enum": [
+          "And",
+          "Or",
+          "Not"
+        ]
+      },
+      "NewsletterModel": {
+        "required": [
+          "email",
+          "token"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          }
+        }
+      },
+      "NotAvailableYetResult": {
+        "required": [
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "PagedResultOfClientsQueryResult": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "$ref": "#/components/schemas/ListOfClientsQueryResult"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PageInfo": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "QueryModel": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/PageInfo"
+              }
+            ]
+          },
+          "filter": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/RootFilter"
+              }
+            ]
+          },
+          "sortCriteria": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/ListOfSortCriterion"
+              }
+            ]
+          }
+        }
+      },
+      "ReadBridgeTokenKeysResult": {
+        "required": [
+          "accessToken",
+          "expiresIn",
+          "refreshToken",
+          "idToken",
+          "tokenType",
+          "scope"
+        ],
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "nullable": true
+          },
+          "expiresIn": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "refreshToken": {
+            "type": "string",
+            "nullable": true
+          },
+          "idToken": {
+            "type": "string",
+            "nullable": true
+          },
+          "tokenType": {
+            "type": "string",
+            "nullable": true
+          },
+          "scope": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "RootFilter": {
+        "type": "object",
+        "properties": {
+          "filters": {
+            "$ref": "#/components/schemas/ListOfFilter"
+          },
+          "logic": {
+            "$ref": "#/components/schemas/LogicOperator"
+          }
+        }
+      },
+      "SendSurveyModel": {
+        "required": [
+          "fields"
+        ],
+        "type": "object",
+        "properties": {
+          "fields": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "SortCriterion": {
+        "required": [
+          "propertyName",
+          "direction"
+        ],
+        "type": "object",
+        "properties": {
+          "propertyName": {
+            "type": "string"
+          },
+          "direction": {
+            "$ref": "#/components/schemas/SortDirection"
+          }
+        }
+      },
+      "SortDirection": {
+        "enum": [
+          "Asc",
+          "Desc"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "JWT Authorization header using the Bearer scheme",
+        "scheme": "bearer",
+        "bearerFormat": "Json Web Token"
+      },
+      "OpenIdConnect": {
+        "type": "openIdConnect",
+        "description": "OpenId Connect connection flow",
+        "openIdConnectUrl": "https://auth.rabbitdata.ch/.well-known/openid-configuration"
+      },
+      "OAuth2": {
+        "type": "oauth2",
+        "description": "OAuth2 authorization header using the Bearer scheme",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://auth.rabbitdata.ch/connect/authorize",
+            "tokenUrl": "https://auth.rabbitdata.ch/connect/token",
+            "refreshUrl": "https://auth.rabbitdata.ch/connect/token",
+            "scopes": {
+              "openid": "OpenID",
+              "profile": "Profile",
+              "email": "Email"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "Bearer": [ ],
+      "OpenIdConnect": [
+        "openid",
+        "profile",
+        "email"
+      ],
+      "OAuth2": [
+        "openid",
+        "profile",
+        "email"
+      ]
+    }
+  ],
+  "tags": [
+    {
+      "name": "Rapidata.Identity.API"
+    },
+    {
+      "name": "Client"
+    },
+    {
+      "name": "Identity"
+    },
+    {
+      "name": "Newsletter"
+    },
+    {
+      "name": "Survey"
+    }
+  ]
+}
