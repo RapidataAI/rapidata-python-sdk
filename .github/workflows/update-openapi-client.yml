@@ -27,10 +27,8 @@ jobs:
         uses: actions/setup-node@v4
       - name: Install node packages
         run: npm i -g openapi-merge-cli @openapitools/openapi-generator-cli
-      - name: Download specs
-        run: ./openapi/download-and-merge-spec.sh
       - name: Generate client
-        run: ./openapi/generate.sh
+        run: ./openapi/generate-schema.sh
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
