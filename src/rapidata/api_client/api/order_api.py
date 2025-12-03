@@ -16,8 +16,8 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictBool, StrictStr
-from typing import Optional
+from pydantic import Field, StrictBool, StrictBytes, StrictStr
+from typing import Optional, Tuple, Union
 from typing_extensions import Annotated
 from rapidata.api_client.models.clone_order_model import CloneOrderModel
 from rapidata.api_client.models.clone_order_result import CloneOrderResult
@@ -26,7 +26,6 @@ from rapidata.api_client.models.create_complex_order_result import CreateComplex
 from rapidata.api_client.models.create_order_model import CreateOrderModel
 from rapidata.api_client.models.create_order_result import CreateOrderResult
 from rapidata.api_client.models.create_unsupported_order_model import CreateUnsupportedOrderModel
-from rapidata.api_client.models.file_stream_result import FileStreamResult
 from rapidata.api_client.models.get_order_by_id_result import GetOrderByIdResult
 from rapidata.api_client.models.get_public_orders_result import GetPublicOrdersResult
 from rapidata.api_client.models.paged_result_of_aggregated_orders_model import PagedResultOfAggregatedOrdersModel
@@ -1422,7 +1421,7 @@ class OrderApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FileStreamResult:
+    ) -> bytearray:
         """Aggregates the results of an order and returns it as a file attachment.
 
         Returns the aggregated result as a file with a given name.  The annotated type of the response represents the content type of the file.
@@ -1460,7 +1459,7 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FileStreamResult",
+            '200': "bytearray",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1489,7 +1488,7 @@ class OrderApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FileStreamResult]:
+    ) -> ApiResponse[bytearray]:
         """Aggregates the results of an order and returns it as a file attachment.
 
         Returns the aggregated result as a file with a given name.  The annotated type of the response represents the content type of the file.
@@ -1527,7 +1526,7 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FileStreamResult",
+            '200': "bytearray",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1594,7 +1593,7 @@ class OrderApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FileStreamResult",
+            '200': "bytearray",
         }
         response_data = self.api_client.call_api(
             *_param,

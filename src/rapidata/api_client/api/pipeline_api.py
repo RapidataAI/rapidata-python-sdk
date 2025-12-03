@@ -16,9 +16,9 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictStr
+from pydantic import Field, StrictBytes, StrictStr
+from typing import Tuple, Union
 from typing_extensions import Annotated
-from rapidata.api_client.models.file_stream_result import FileStreamResult
 from rapidata.api_client.models.get_pipeline_by_id_result import GetPipelineByIdResult
 from rapidata.api_client.models.preliminary_download_model import PreliminaryDownloadModel
 from rapidata.api_client.models.start_preliminary_download_result import StartPreliminaryDownloadResult
@@ -611,7 +611,7 @@ class PipelineApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FileStreamResult:
+    ) -> bytearray:
         """Gets the preliminary download.
 
         If it's still processing the request will return 202 Accepted.
@@ -649,7 +649,7 @@ class PipelineApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FileStreamResult",
+            '200': "bytearray",
             '202': None,
         }
         response_data = self.api_client.call_api(
@@ -679,7 +679,7 @@ class PipelineApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FileStreamResult]:
+    ) -> ApiResponse[bytearray]:
         """Gets the preliminary download.
 
         If it's still processing the request will return 202 Accepted.
@@ -717,7 +717,7 @@ class PipelineApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FileStreamResult",
+            '200': "bytearray",
             '202': None,
         }
         response_data = self.api_client.call_api(
@@ -785,7 +785,7 @@ class PipelineApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FileStreamResult",
+            '200': "bytearray",
             '202': None,
         }
         response_data = self.api_client.call_api(

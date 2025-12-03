@@ -29,9 +29,9 @@ class ValidationSetModel(BaseModel):
     """ # noqa: E501
     id: StrictStr
     name: StrictStr
-    asset_type: List[List[StrictStr]] = Field(alias="assetType")
-    modality: List[List[StrictStr]]
-    prompt_type: List[List[StrictStr]] = Field(alias="promptType")
+    asset_type: List[StrictStr] = Field(alias="assetType")
+    modality: List[StrictStr]
+    prompt_type: List[StrictStr] = Field(alias="promptType")
     dimensions: Optional[List[StrictStr]] = None
     is_public: StrictBool = Field(alias="isPublic")
     owner_id: StrictStr = Field(alias="ownerId")

@@ -7111,17 +7111,23 @@
           {
             "name": "assetType",
             "in": "query",
-            "schema": {}
+            "schema": {
+              "$ref": "#/components/schemas/AssetType"
+            }
           },
           {
             "name": "modality",
             "in": "query",
-            "schema": {}
+            "schema": {
+              "$ref": "#/components/schemas/RapidModality"
+            }
           },
           {
             "name": "promptType",
             "in": "query",
-            "schema": {}
+            "schema": {
+              "$ref": "#/components/schemas/PromptType"
+            }
           },
           {
             "name": "instruction",
@@ -12998,22 +13004,13 @@
             "$ref": "#/components/schemas/IRefereeModel"
           },
           "aggregator": {
-            "enum": [
-              "NonCommittal",
-              "MajorityVote",
-              "SimpleMatchup",
-              "LocateCluster",
-              "Classification",
-              "Locate",
-              "BoundingBox",
-              "Line",
-              "Transcription",
-              "SinglePointLocate",
-              "FreeText",
-              "Scrub",
-              "Ranking",
-              "MultiRanking",
-              null
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/AggregatorType"
+              }
             ]
           },
           "featureFlags": {
@@ -13031,12 +13028,13 @@
             "format": "int32"
           },
           "stickyState": {
-            "enum": [
-              "None",
-              "Temporary",
-              "Permanent",
-              "Passive",
-              null
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/StickyState"
+              }
             ]
           },
           "userScoreDimensions": {
@@ -13076,11 +13074,13 @@
             ]
           },
           "retrievalMode": {
-            "enum": [
-              "Random",
-              "Shuffled",
-              "Sequential",
-              null
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/RetrievalMode"
+              }
             ]
           },
           "maxIterations": {
@@ -13148,17 +13148,6 @@
           }
         }
       },
-      "EntityTagHeaderValue": {
-        "type": "object",
-        "properties": {
-          "tag": {
-            "$ref": "#/components/schemas/StringSegment"
-          },
-          "isWeak": {
-            "type": "boolean"
-          }
-        }
-      },
       "FeedbackModel": {
         "required": [
           "feedback"
@@ -13179,38 +13168,8 @@
         }
       },
       "FileStreamResult": {
-        "type": "object",
-        "properties": {
-          "fileStream": {
-            "$ref": "#/components/schemas/Stream"
-          },
-          "contentType": {
-            "type": "string",
-            "nullable": true
-          },
-          "fileDownloadName": {
-            "type": "string",
-            "nullable": true
-          },
-          "lastModified": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "entityTag": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/EntityTagHeaderValue"
-              }
-            ]
-          },
-          "enableRangeProcessing": {
-            "type": "boolean"
-          }
-        }
+        "type": "string",
+        "format": "binary"
       },
       "GetOrderByIdResult": {
         "required": [
@@ -14555,36 +14514,18 @@
         "enum": [
           "Random",
           "Shuffled",
-          "Sequential"
+          "Sequential",
+          null
         ]
       },
-      "Stream": {
-        "type": "string",
-        "format": "binary"
-      },
-      "StringSegment": {
-        "type": "object",
-        "properties": {
-          "buffer": {
-            "type": "string",
-            "nullable": true
-          },
-          "offset": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "length": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "value": {
-            "type": "string",
-            "nullable": true
-          },
-          "hasValue": {
-            "type": "boolean"
-          }
-        }
+      "StickyState": {
+        "enum": [
+          "None",
+          "Temporary",
+          "Permanent",
+          "Passive",
+          null
+        ]
       },
       "SubmitOrderModel": {
         "type": "object",

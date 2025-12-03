@@ -16,13 +16,12 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictBool, StrictStr, field_validator
-from typing import List, Optional
+from pydantic import Field, StrictBool, StrictBytes, StrictStr, field_validator
+from typing import List, Optional, Tuple, Union
 from typing_extensions import Annotated
 from rapidata.api_client.models.add_validation_rapid_model import AddValidationRapidModel
 from rapidata.api_client.models.create_empty_validation_set_result import CreateEmptyValidationSetResult
 from rapidata.api_client.models.create_validation_set_model import CreateValidationSetModel
-from rapidata.api_client.models.file_stream_result import FileStreamResult
 from rapidata.api_client.models.get_available_validation_sets_result import GetAvailableValidationSetsResult
 from rapidata.api_client.models.get_recommended_validation_set_result import GetRecommendedValidationSetResult
 from rapidata.api_client.models.get_validation_set_by_id_result import GetValidationSetByIdResult
@@ -329,9 +328,9 @@ class ValidationSetApi:
     @validate_call
     def validation_set_recommended_get(
         self,
-        asset_type: Optional[List[List[StrictStr]]] = None,
-        modality: Optional[List[List[StrictStr]]] = None,
-        prompt_type: Optional[List[List[StrictStr]]] = None,
+        asset_type: Optional[List[StrictStr]] = None,
+        modality: Optional[List[StrictStr]] = None,
+        prompt_type: Optional[List[StrictStr]] = None,
         instruction: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
@@ -350,11 +349,11 @@ class ValidationSetApi:
 
 
         :param asset_type:
-        :type asset_type: List[List[str]]
+        :type asset_type: List[str]
         :param modality:
-        :type modality: List[List[str]]
+        :type modality: List[str]
         :param prompt_type:
-        :type prompt_type: List[List[str]]
+        :type prompt_type: List[str]
         :param instruction:
         :type instruction: str
         :param _request_timeout: timeout setting for this request. If one
@@ -408,9 +407,9 @@ class ValidationSetApi:
     @validate_call
     def validation_set_recommended_get_with_http_info(
         self,
-        asset_type: Optional[List[List[StrictStr]]] = None,
-        modality: Optional[List[List[StrictStr]]] = None,
-        prompt_type: Optional[List[List[StrictStr]]] = None,
+        asset_type: Optional[List[StrictStr]] = None,
+        modality: Optional[List[StrictStr]] = None,
+        prompt_type: Optional[List[StrictStr]] = None,
         instruction: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
@@ -429,11 +428,11 @@ class ValidationSetApi:
 
 
         :param asset_type:
-        :type asset_type: List[List[str]]
+        :type asset_type: List[str]
         :param modality:
-        :type modality: List[List[str]]
+        :type modality: List[str]
         :param prompt_type:
-        :type prompt_type: List[List[str]]
+        :type prompt_type: List[str]
         :param instruction:
         :type instruction: str
         :param _request_timeout: timeout setting for this request. If one
@@ -487,9 +486,9 @@ class ValidationSetApi:
     @validate_call
     def validation_set_recommended_get_without_preload_content(
         self,
-        asset_type: Optional[List[List[StrictStr]]] = None,
-        modality: Optional[List[List[StrictStr]]] = None,
-        prompt_type: Optional[List[List[StrictStr]]] = None,
+        asset_type: Optional[List[StrictStr]] = None,
+        modality: Optional[List[StrictStr]] = None,
+        prompt_type: Optional[List[StrictStr]] = None,
         instruction: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
@@ -508,11 +507,11 @@ class ValidationSetApi:
 
 
         :param asset_type:
-        :type asset_type: List[List[str]]
+        :type asset_type: List[str]
         :param modality:
-        :type modality: List[List[str]]
+        :type modality: List[str]
         :param prompt_type:
-        :type prompt_type: List[List[str]]
+        :type prompt_type: List[str]
         :param instruction:
         :type instruction: str
         :param _request_timeout: timeout setting for this request. If one
@@ -916,7 +915,7 @@ class ValidationSetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FileStreamResult:
+    ) -> bytearray:
         """Exports all rapids of a validation-set to a file.
 
 
@@ -953,7 +952,7 @@ class ValidationSetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FileStreamResult",
+            '200': "bytearray",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -982,7 +981,7 @@ class ValidationSetApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FileStreamResult]:
+    ) -> ApiResponse[bytearray]:
         """Exports all rapids of a validation-set to a file.
 
 
@@ -1019,7 +1018,7 @@ class ValidationSetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FileStreamResult",
+            '200': "bytearray",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1085,7 +1084,7 @@ class ValidationSetApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FileStreamResult",
+            '200': "bytearray",
         }
         response_data = self.api_client.call_api(
             *_param,

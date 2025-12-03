@@ -64,17 +64,23 @@
           {
             "name": "assetType",
             "in": "query",
-            "schema": { }
+            "schema": {
+              "$ref": "#/components/schemas/AssetType"
+            }
           },
           {
             "name": "modality",
             "in": "query",
-            "schema": { }
+            "schema": {
+              "$ref": "#/components/schemas/RapidModality"
+            }
           },
           {
             "name": "promptType",
             "in": "query",
-            "schema": { }
+            "schema": {
+              "$ref": "#/components/schemas/PromptType"
+            }
           },
           {
             "name": "instruction",
@@ -849,17 +855,6 @@
           }
         }
       },
-      "EntityTagHeaderValue": {
-        "type": "object",
-        "properties": {
-          "tag": {
-            "$ref": "#/components/schemas/StringSegment"
-          },
-          "isWeak": {
-            "type": "boolean"
-          }
-        }
-      },
       "FeatureFlagModel": {
         "required": [
           "key",
@@ -876,38 +871,8 @@
         }
       },
       "FileStreamResult": {
-        "type": "object",
-        "properties": {
-          "fileStream": {
-            "$ref": "#/components/schemas/Stream"
-          },
-          "contentType": {
-            "type": "string",
-            "nullable": true
-          },
-          "fileDownloadName": {
-            "type": "string",
-            "nullable": true
-          },
-          "lastModified": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "entityTag": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/EntityTagHeaderValue"
-              }
-            ]
-          },
-          "enableRangeProcessing": {
-            "type": "boolean"
-          }
-        }
+        "type": "string",
+        "format": "binary"
       },
       "FileType": {
         "enum": [
@@ -2580,34 +2545,6 @@
           "Asc",
           "Desc"
         ]
-      },
-      "Stream": {
-        "type": "string",
-        "format": "binary"
-      },
-      "StringSegment": {
-        "type": "object",
-        "properties": {
-          "buffer": {
-            "type": "string",
-            "nullable": true
-          },
-          "offset": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "length": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "value": {
-            "type": "string",
-            "nullable": true
-          },
-          "hasValue": {
-            "type": "boolean"
-          }
-        }
       },
       "TranscriptionWord": {
         "required": [
