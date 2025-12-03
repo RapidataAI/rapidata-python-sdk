@@ -357,14 +357,12 @@ class RapidataOrder:
             )
 
             try:
-                result_stream = (
+                results = (
                     self._openapi_service.order_api.order_order_id_download_results_get(
                         order_id=self.id
                     )
                 )
-                return RapidataResults(
-                    json.loads(self._decode_file_stream(result_stream))
-                )
+                return RapidataResults(json.loads(results))
             except (ApiException, json.JSONDecodeError) as e:
                 raise Exception(f"Failed to get order results: {str(e)}") from e
 
@@ -386,12 +384,7 @@ class RapidataOrder:
                 results = self._openapi_service.pipeline_api.pipeline_preliminary_download_preliminary_download_id_get(
                     preliminary_download_id=download_id
                 )
-                if results and results.file_stream:
-                    # Handle the file_stream which can be bytes, str, or tuple
-                    return RapidataResults(
-                        json.loads(self._decode_file_stream(results))
-                    )
-                raise Exception("Results not ready yet")
+                return RapidataResults(json.loads(results))
 
             return self._retry_operation(
                 check_results,
@@ -401,15 +394,6 @@ class RapidataOrder:
 
         except (ApiException, json.JSONDecodeError) as e:
             raise Exception(f"Failed to get preliminary results: {str(e)}") from e
-
-    def _decode_file_stream(self, file_stream: FileStreamResult) -> str:
-        if isinstance(file_stream.file_stream, bytes):
-            return file_stream.file_stream.decode()
-        elif isinstance(file_stream.file_stream, str):
-            return file_stream.file_stream
-        elif isinstance(file_stream.file_stream, tuple):
-            return file_stream.file_stream[1].decode()
-        raise Exception("Invalid file stream type")
 
     def view(self) -> None:
         """Opens the order details page in the browser."""

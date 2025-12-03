@@ -13,6 +13,7 @@ from rapidata.api_client.models.i_rapid_payload_transcription_payload import (
 from rapidata.api_client.models.transcription_word import TranscriptionWord
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.api_client.models.rapid_modality import RapidModality
+from rapidata.api_client.models.i_rapid_payload import IRapidPayload
 
 
 class SelectWordsWorkflow(Workflow):
@@ -50,18 +51,20 @@ class SelectWordsWorkflow(Workflow):
             )
         )
 
-    def _to_payload(self, datapoint: Datapoint) -> IRapidPayloadTranscriptionPayload:
+    def _to_payload(self, datapoint: Datapoint) -> IRapidPayload:
         assert (
             datapoint.sentence is not None
         ), "SelectWordsWorkflow requires a sentence datapoint"
 
-        return IRapidPayloadTranscriptionPayload(
-            _t="TranscriptionPayload",
-            title=self._instruction,
-            transcription=[
-                TranscriptionWord(word=word, wordIndex=i)
-                for i, word in enumerate(datapoint.sentence.split())
-            ],
+        return IRapidPayload(
+            actual_instance=IRapidPayloadTranscriptionPayload(
+                _t="TranscriptionPayload",
+                title=self._instruction,
+                transcription=[
+                    TranscriptionWord(word=word, wordIndex=i)
+                    for i, word in enumerate(datapoint.sentence.split())
+                ],
+            )
         )
 
     def __str__(self) -> str:

@@ -41,7 +41,11 @@ class ValidationRapidUploader:
                     if rapid.media_context
                     else None
                 ),
-                truth=IValidationTruth(actual_instance=rapid.truth),
+                truth=(
+                    IValidationTruth(actual_instance=rapid.truth)
+                    if rapid.truth
+                    else None
+                ),
                 randomCorrectProbability=rapid.random_correct_probability,
                 explanation=rapid.explanation,
                 featureFlags=(

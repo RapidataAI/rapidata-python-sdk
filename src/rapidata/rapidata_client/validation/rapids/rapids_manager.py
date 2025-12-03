@@ -45,6 +45,7 @@ from rapidata.api_client.models.transcription_word import TranscriptionWord
 from rapidata.rapidata_client.validation.rapids.box import Box
 from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 from rapidata.service.openapi_service import OpenAPIService
+from rapidata.api_client.models.i_rapid_payload import IRapidPayload
 
 
 class RapidsManager:
@@ -84,13 +85,15 @@ class RapidsManager:
         if not all(truth in answer_options for truth in truths):
             raise ValueError("Truths must be part of the answer options")
 
-        payload = IRapidPayloadClassifyPayload(
-            _t="ClassifyPayload",
-            categories=[
-                ClassifyPayloadCategory(label=option, value=option)
-                for option in answer_options
-            ],
-            title=instruction,
+        payload = IRapidPayload(
+            actual_instance=IRapidPayloadClassifyPayload(
+                _t="ClassifyPayload",
+                categories=[
+                    ClassifyPayloadCategory(label=option, value=option)
+                    for option in answer_options
+                ],
+                title=instruction,
+            )
         )
         model_truth = IValidationTruthAttachCategoryTruth(
             correctCategories=truths, _t="AttachCategoryTruth"
@@ -129,7 +132,11 @@ class RapidsManager:
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
         """
 
-        payload = IRapidPayloadComparePayload(_t="ComparePayload", criteria=instruction)
+        payload = IRapidPayload(
+            actual_instance=IRapidPayloadComparePayload(
+                _t="ComparePayload", criteria=instruction
+            )
+        )
         truth = os.path.basename(truth)
         model_truth = IValidationTruthCompareTruth(_t="CompareTruth", winnerId=truth)
 
@@ -180,10 +187,12 @@ class RapidsManager:
                 TranscriptionWord(word=transcription_words[index].word, wordIndex=index)
             )
 
-        payload = IRapidPayloadTranscriptionPayload(
-            _t="TranscriptionPayload",
-            title=instruction,
-            transcription=transcription_words,
+        payload = IRapidPayload(
+            actual_instance=IRapidPayloadTranscriptionPayload(
+                _t="TranscriptionPayload",
+                title=instruction,
+                transcription=transcription_words,
+            )
         )
 
         model_truth = IValidationTruthTranscriptionTruth(
@@ -223,7 +232,11 @@ class RapidsManager:
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
         """
 
-        payload = IRapidPayloadLocatePayload(_t="LocatePayload", target=instruction)
+        payload = IRapidPayload(
+            actual_instance=IRapidPayloadLocatePayload(
+                _t="LocatePayload", target=instruction
+            )
+        )
 
         model_truth = IValidationTruthLocateBoxTruth(
             _t="LocateBoxTruth",
@@ -264,7 +277,11 @@ class RapidsManager:
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
         """
 
-        payload = IRapidPayloadLinePayload(_t="LinePayload", target=instruction)
+        payload = IRapidPayload(
+            actual_instance=IRapidPayloadLinePayload(
+                _t="LinePayload", target=instruction
+            )
+        )
 
         model_truth = IValidationTruthBoundingBoxTruth(
             _t="BoundingBoxTruth",
@@ -319,7 +336,11 @@ class RapidsManager:
                     "The start of the interval must be smaller than the end of the interval."
                 )
 
-        payload = IRapidPayloadScrubPayload(_t="ScrubPayload", target=instruction)
+        payload = IRapidPayload(
+            actual_instance=IRapidPayloadScrubPayload(
+                _t="ScrubPayload", target=instruction
+            )
+        )
 
         model_truth = IValidationTruthScrubTruth(
             _t="ScrubTruth",

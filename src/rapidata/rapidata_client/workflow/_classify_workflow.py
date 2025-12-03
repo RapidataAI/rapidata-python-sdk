@@ -7,6 +7,7 @@ from rapidata.api_client.models.i_order_workflow_model_simple_workflow_model imp
 from rapidata.api_client.models.attach_category_rapid_blueprint_category import (
     AttachCategoryRapidBlueprintCategory,
 )
+from rapidata.api_client.models.i_rapid_payload import IRapidPayload
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.api_client.models.i_rapid_payload_classify_payload import (
     IRapidPayloadClassifyPayload,
@@ -72,14 +73,16 @@ class ClassifyWorkflow(Workflow):
             )
         )
 
-    def _to_payload(self, datapoint: Datapoint) -> IRapidPayloadClassifyPayload:
-        return IRapidPayloadClassifyPayload(
-            _t="ClassifyPayload",
-            categories=[
-                ClassifyPayloadCategory(label=option, value=option)
-                for option in self._answer_options
-            ],
-            title=self._instruction,
+    def _to_payload(self, datapoint: Datapoint) -> IRapidPayload:
+        return IRapidPayload(
+            actual_instance=IRapidPayloadClassifyPayload(
+                _t="ClassifyPayload",
+                categories=[
+                    ClassifyPayloadCategory(label=option, value=option)
+                    for option in self._answer_options
+                ],
+                title=self._instruction,
+            )
         )
 
     def __str__(self) -> str:

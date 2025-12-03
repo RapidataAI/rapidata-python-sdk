@@ -1,3 +1,4 @@
+from rapidata.api_client.models.add_validation_rapid_model import IRapidPayload
 from rapidata.api_client.models.i_order_workflow_model import IOrderWorkflowModel
 from rapidata.api_client.models.i_order_workflow_model_simple_workflow_model import (
     IOrderWorkflowModelSimpleWorkflowModel,
@@ -36,10 +37,12 @@ class DrawWorkflow(Workflow):
             )
         )
 
-    def _to_payload(self, datapoint: Datapoint) -> IRapidPayloadLinePayload:
-        return IRapidPayloadLinePayload(
-            _t="LinePayload",
-            target=self._target,
+    def _to_payload(self, datapoint: Datapoint) -> IRapidPayload:
+        return IRapidPayload(
+            actual_instance=IRapidPayloadLinePayload(
+                _t="LinePayload",
+                target=self._target,
+            )
         )
 
     def __str__(self) -> str:

@@ -12,6 +12,7 @@ from rapidata.api_client.models.i_rapid_payload_scrub_payload import (
 )
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.api_client.models.rapid_modality import RapidModality
+from rapidata.api_client.models.i_rapid_payload import IRapidPayload
 
 
 class TimestampWorkflow(Workflow):
@@ -49,10 +50,12 @@ class TimestampWorkflow(Workflow):
             )
         )
 
-    def _to_payload(self, datapoint: Datapoint) -> IRapidPayloadScrubPayload:
-        return IRapidPayloadScrubPayload(
-            _t="ScrubPayload",
-            target=self._instruction,
+    def _to_payload(self, datapoint: Datapoint) -> IRapidPayload:
+        return IRapidPayload(
+            actual_instance=IRapidPayloadScrubPayload(
+                _t="ScrubPayload",
+                target=self._instruction,
+            )
         )
 
     def __str__(self) -> str:

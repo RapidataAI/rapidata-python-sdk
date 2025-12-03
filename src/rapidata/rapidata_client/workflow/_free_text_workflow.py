@@ -1,4 +1,5 @@
 from typing import Any
+from rapidata.api_client.models.i_rapid_payload import IRapidPayload
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.api_client.models.i_rapid_payload_free_text_payload import (
     IRapidPayloadFreeTextPayload,
@@ -65,10 +66,12 @@ class FreeTextWorkflow(Workflow):
             )
         )
 
-    def _to_payload(self, datapoint: Datapoint) -> IRapidPayloadFreeTextPayload:
-        return IRapidPayloadFreeTextPayload(
-            _t="FreeTextPayload",
-            question=self._instruction,
+    def _to_payload(self, datapoint: Datapoint) -> IRapidPayload:
+        return IRapidPayload(
+            actual_instance=IRapidPayloadFreeTextPayload(
+                _t="FreeTextPayload",
+                question=self._instruction,
+            )
         )
 
     def __str__(self) -> str:

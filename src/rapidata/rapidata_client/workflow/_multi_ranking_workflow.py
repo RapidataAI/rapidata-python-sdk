@@ -3,6 +3,7 @@ from rapidata.api_client import (
     OnlinePairMakerConfigModel,
     EloConfigModel,
 )
+from rapidata.api_client.models.add_validation_rapid_model import IRapidPayload
 from rapidata.api_client.models.i_order_workflow_model import IOrderWorkflowModel
 from rapidata.api_client.models.i_order_workflow_model_grouped_ranking_workflow_model import (
     IOrderWorkflowModelGroupedRankingWorkflowModel,
@@ -71,10 +72,12 @@ class MultiRankingWorkflow(Workflow):
     def _get_instruction(self) -> str:
         return self.instruction
 
-    def _to_payload(self, datapoint: Datapoint) -> IRapidPayloadComparePayload:
-        return IRapidPayloadComparePayload(
-            _t="ComparePayload",
-            criteria=self.instruction,
+    def _to_payload(self, datapoint: Datapoint) -> IRapidPayload:
+        return IRapidPayload(
+            actual_instance=IRapidPayloadComparePayload(
+                _t="ComparePayload",
+                criteria=self.instruction,
+            )
         )
 
     def __str__(self) -> str:
