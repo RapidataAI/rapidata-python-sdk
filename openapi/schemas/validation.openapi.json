@@ -64,23 +64,17 @@
           {
             "name": "assetType",
             "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/AssetType"
-            }
+            "schema": { }
           },
           {
             "name": "modality",
             "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/RapidModality"
-            }
+            "schema": { }
           },
           {
             "name": "promptType",
             "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/PromptType"
-            }
+            "schema": { }
           },
           {
             "name": "instruction",

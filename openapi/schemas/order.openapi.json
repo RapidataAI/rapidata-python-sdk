@@ -1080,13 +1080,22 @@
             "$ref": "#/components/schemas/IRefereeModel"
           },
           "aggregator": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/AggregatorType"
-              }
+            "enum": [
+              "NonCommittal",
+              "MajorityVote",
+              "SimpleMatchup",
+              "LocateCluster",
+              "Classification",
+              "Locate",
+              "BoundingBox",
+              "Line",
+              "Transcription",
+              "SinglePointLocate",
+              "FreeText",
+              "Scrub",
+              "Ranking",
+              "MultiRanking",
+              null
             ]
           },
           "featureFlags": {
@@ -1104,13 +1113,12 @@
             "format": "int32"
           },
           "stickyState": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/StickyState"
-              }
+            "enum": [
+              "None",
+              "Temporary",
+              "Permanent",
+              "Passive",
+              null
             ]
           },
           "userScoreDimensions": {
@@ -1150,13 +1158,11 @@
             ]
           },
           "retrievalMode": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/RetrievalMode"
-              }
+            "enum": [
+              "Random",
+              "Shuffled",
+              "Sequential",
+              null
             ]
           },
           "maxIterations": {
@@ -3273,8 +3279,7 @@
         "enum": [
           "Random",
           "Shuffled",
-          "Sequential",
-          null
+          "Sequential"
         ]
       },
       "RootFilter": {
@@ -3307,15 +3312,6 @@
         "enum": [
           "Asc",
           "Desc"
-        ]
-      },
-      "StickyState": {
-        "enum": [
-          "None",
-          "Temporary",
-          "Permanent",
-          "Passive",
-          null
         ]
       },
       "Stream": {

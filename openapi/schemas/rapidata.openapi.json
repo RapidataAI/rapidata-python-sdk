@@ -116,86 +116,6 @@
       "x-displayName": "Workflow"
     }
   ],
-  "tags": [
-    {
-      "name": "Datapoint"
-    },
-    {
-      "name": "Dataset"
-    },
-    {
-      "name": "Feedback"
-    },
-    {
-      "name": "Order"
-    },
-    {
-      "name": "Rapidata.Identity.API"
-    },
-    {
-      "name": "Client"
-    },
-    {
-      "name": "Identity"
-    },
-    {
-      "name": "Newsletter"
-    },
-    {
-      "name": "Survey"
-    },
-    {
-      "name": "ValidationSet"
-    },
-    {
-      "name": "CustomerRapid"
-    },
-    {
-      "name": "UserRapid"
-    },
-    {
-      "name": "CompareWorkflow"
-    },
-    {
-      "name": "EvaluationWorkflow"
-    },
-    {
-      "name": "GroupedRankingWorkflow"
-    },
-    {
-      "name": "SimpleWorkflow"
-    },
-    {
-      "name": "Workflow"
-    },
-    {
-      "name": "Pipeline"
-    },
-    {
-      "name": "Campaign"
-    },
-    {
-      "name": "Benchmark"
-    },
-    {
-      "name": "Leaderboard"
-    },
-    {
-      "name": "Participant"
-    },
-    {
-      "name": "Prompt"
-    },
-    {
-      "name": "Sample"
-    },
-    {
-      "name": "Asset"
-    },
-    {
-      "name": "Audience"
-    }
-  ],
   "paths": {
     "/asset/file": {
       "post": {
@@ -7191,23 +7111,17 @@
           {
             "name": "assetType",
             "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/AssetType"
-            }
+            "schema": {}
           },
           {
             "name": "modality",
             "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/RapidModality"
-            }
+            "schema": {}
           },
           {
             "name": "promptType",
             "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/PromptType"
-            }
+            "schema": {}
           },
           {
             "name": "instruction",
@@ -11686,135 +11600,6 @@
           "isDisabled"
         ],
         "type": "object",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/IRapidPayloadTranscriptionPayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadScrubPayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadPolygonPayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadNamedEntityPayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadLocatePayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadLinePayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadFreeTextPayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadComparePayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadClassifyPayload"
-          },
-          {
-            "$ref": "#/components/schemas/IRapidPayloadBoundingBoxPayload"
-          }
-        ],
-        "discriminator": {
-          "propertyName": "_t",
-          "mapping": {
-            "TranscriptionPayload": "#/components/schemas/IRapidPayloadTranscriptionPayload",
-            "ScrubPayload": "#/components/schemas/IRapidPayloadScrubPayload",
-            "PolygonPayload": "#/components/schemas/IRapidPayloadPolygonPayload",
-            "NamedEntityPayload": "#/components/schemas/IRapidPayloadNamedEntityPayload",
-            "LocatePayload": "#/components/schemas/IRapidPayloadLocatePayload",
-            "LinePayload": "#/components/schemas/IRapidPayloadLinePayload",
-            "FreeTextPayload": "#/components/schemas/IRapidPayloadFreeTextPayload",
-            "ComparePayload": "#/components/schemas/IRapidPayloadComparePayload",
-            "ClassifyPayload": "#/components/schemas/IRapidPayloadClassifyPayload",
-            "BoundingBoxPayload": "#/components/schemas/IRapidPayloadBoundingBoxPayload"
-          }
-        }
-      },
-      "IRapidPayloadBoundingBoxPayload": {
-        "required": [
-          "target",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "BoundingBoxPayload"
-            ],
-            "type": "string"
-          },
-          "target": {
-            "type": "string"
-          }
-        }
-      },
-      "IRapidPayloadClassifyPayload": {
-        "required": [
-          "categories",
-          "title",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "ClassifyPayload"
-            ],
-            "type": "string"
-          },
-          "categories": {
-            "$ref": "#/components/schemas/ListOfClassifyPayload_Category"
-          },
-          "title": {
-            "type": "string"
-          }
-        }
-      },
-      "IRapidPayloadComparePayload": {
-        "required": [
-          "criteria",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "ComparePayload"
-            ],
-            "type": "string"
-          },
-          "criteria": {
-            "type": "string"
-          }
-        }
-      },
-      "IRapidPayloadFreeTextPayload": {
-        "required": [
-          "question",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "FreeTextPayload"
-            ],
-            "type": "string"
-          },
-          "question": {
-            "type": "string"
-          },
-          "validationSystemPrompt": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "IRapidPayloadLinePayload": {
-        "required": [
-          "target",
-          "_t"
-        ],
         "properties": {
           "id": {
             "type": "string"
@@ -11835,7 +11620,6 @@
       },
       "IUserFilterModel": {
         "required": [
-          "target",
           "_t"
         ],
         "type": "object",
@@ -13214,13 +12998,22 @@
             "$ref": "#/components/schemas/IRefereeModel"
           },
           "aggregator": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/AggregatorType"
-              }
+            "enum": [
+              "NonCommittal",
+              "MajorityVote",
+              "SimpleMatchup",
+              "LocateCluster",
+              "Classification",
+              "Locate",
+              "BoundingBox",
+              "Line",
+              "Transcription",
+              "SinglePointLocate",
+              "FreeText",
+              "Scrub",
+              "Ranking",
+              "MultiRanking",
+              null
             ]
           },
           "featureFlags": {
@@ -13238,13 +13031,12 @@
             "format": "int32"
           },
           "stickyState": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/StickyState"
-              }
+            "enum": [
+              "None",
+              "Temporary",
+              "Permanent",
+              "Passive",
+              null
             ]
           },
           "userScoreDimensions": {
@@ -13284,13 +13076,11 @@
             ]
           },
           "retrievalMode": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/RetrievalMode"
-              }
+            "enum": [
+              "Random",
+              "Shuffled",
+              "Sequential",
+              null
             ]
           },
           "maxIterations": {
@@ -14765,17 +14555,7 @@
         "enum": [
           "Random",
           "Shuffled",
-          "Sequential",
-          null
-        ]
-      },
-      "StickyState": {
-        "enum": [
-          "None",
-          "Temporary",
-          "Permanent",
-          "Passive",
-          null
+          "Sequential"
         ]
       },
       "Stream": {
