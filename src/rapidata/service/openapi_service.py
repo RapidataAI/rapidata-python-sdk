@@ -122,7 +122,7 @@ class OpenAPIService:
 
     @property
     def rapid_api(self) -> CustomerRapidApi:
-        from rapidata.api_client import CustomerRapidApi
+        from rapidata.api_client.api.customer_rapid_api import CustomerRapidApi
 
         return CustomerRapidApi(self.api_client)
 

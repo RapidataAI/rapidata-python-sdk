@@ -28,15 +28,18 @@ class EffortSelection(RapidataSelection):
         self.max_iterations = max_iterations
 
     def _to_model(self):
-        from rapidata.api_client.models.effort_capped_selection import (
-            EffortCappedSelection as EffortCappedSelectionModel,
+        from rapidata.api_client.models.i_selection import ISelection
+        from rapidata.api_client.models.i_selection_effort_capped_selection import (
+            ISelectionEffortCappedSelection,
         )
 
-        return EffortCappedSelectionModel(
-            _t="EffortCappedSelection",
-            effortBudget=self.effort_budget,
-            retrievalMode=self.retrieval_mode.value,
-            maxIterations=self.max_iterations,
+        return ISelection(
+            actual_instance=ISelectionEffortCappedSelection(
+                _t="EffortCappedSelection",
+                effortBudget=self.effort_budget,
+                retrievalMode=self.retrieval_mode.value,
+                maxIterations=self.max_iterations,
+            )
         )
 
     def __str__(self) -> str:

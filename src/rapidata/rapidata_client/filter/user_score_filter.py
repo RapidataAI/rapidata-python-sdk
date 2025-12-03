@@ -50,13 +50,16 @@ class UserScoreFilter(RapidataFilter, BaseModel):
         return self
 
     def _to_model(self):
-        from rapidata.api_client.models.user_score_user_filter_model import (
-            UserScoreUserFilterModel,
+        from rapidata.api_client.models.i_user_filter_model import IUserFilterModel
+        from rapidata.api_client.models.i_user_filter_model_user_score_user_filter_model import (
+            IUserFilterModelUserScoreUserFilterModel,
         )
 
-        return UserScoreUserFilterModel(
-            _t="UserScoreFilter",
-            upperbound=self.upper_bound,
-            lowerbound=self.lower_bound,
-            dimension=self.dimension,
+        return IUserFilterModel(
+            actual_instance=IUserFilterModelUserScoreUserFilterModel(
+                _t="UserScoreFilter",
+                upperbound=self.upper_bound,
+                lowerbound=self.lower_bound,
+                dimension=self.dimension,
+            )
         )

@@ -22,11 +22,14 @@ class GenderFilter(RapidataFilter, BaseModel):
         super().__init__(genders=genders)
 
     def _to_model(self):
-        from rapidata.api_client.models.gender_user_filter_model import (
-            GenderUserFilterModel,
+        from rapidata.api_client.models.i_user_filter_model import IUserFilterModel
+        from rapidata.api_client.models.i_user_filter_model_gender_user_filter_model import (
+            IUserFilterModelGenderUserFilterModel,
         )
 
-        return GenderUserFilterModel(
-            _t="GenderFilter",
-            genders=[gender._to_backend_model() for gender in self.genders],
+        return IUserFilterModel(
+            actual_instance=IUserFilterModelGenderUserFilterModel(
+                _t="GenderFilter",
+                genders=[gender._to_backend_model() for gender in self.genders],
+            )
         )

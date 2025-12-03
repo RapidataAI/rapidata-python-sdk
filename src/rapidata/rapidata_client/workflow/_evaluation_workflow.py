@@ -1,7 +1,10 @@
-from rapidata.api_client.models.evaluation_workflow_model import EvaluationWorkflowModel
 from rapidata.rapidata_client.workflow._base_workflow import Workflow
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.api_client.models.rapid_modality import RapidModality
+from rapidata.api_client.models.i_order_workflow_model import IOrderWorkflowModel
+from rapidata.api_client.models.i_order_workflow_model_evaluation_workflow_model import (
+    IOrderWorkflowModelEvaluationWorkflowModel,
+)
 
 
 class EvaluationWorkflow(Workflow):
@@ -25,11 +28,13 @@ class EvaluationWorkflow(Workflow):
     def _get_instruction(self) -> str:
         return ""
 
-    def _to_model(self):
-        return EvaluationWorkflowModel(
-            _t="EvaluationWorkflow",
-            validationSetId=self.validation_set_id,
-            shouldAcceptIncorrect=self.should_accept_incorrect,
+    def _to_model(self) -> IOrderWorkflowModel:
+        return IOrderWorkflowModel(
+            actual_instance=IOrderWorkflowModelEvaluationWorkflowModel(
+                _t="EvaluationWorkflow",
+                validationSetId=self.validation_set_id,
+                shouldAcceptIncorrect=self.should_accept_incorrect,
+            )
         )
 
     def _to_payload(self, datapoint: Datapoint):

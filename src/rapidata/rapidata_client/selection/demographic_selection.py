@@ -30,12 +30,15 @@ class DemographicSelection(RapidataSelection):
         self.max_rapids = max_rapids
 
     def _to_model(self):
-        from rapidata.api_client.models.demographic_selection import (
-            DemographicSelection as DemographicSelectionModel,
+        from rapidata.api_client.models.i_selection import ISelection
+        from rapidata.api_client.models.i_selection_demographic_selection import (
+            ISelectionDemographicSelection,
         )
 
-        return DemographicSelectionModel(
-            _t="DemographicSelection", keys=self.keys, maxRapids=self.max_rapids
+        return ISelection(
+            actual_instance=ISelectionDemographicSelection(
+                _t="DemographicSelection", keys=self.keys, maxRapids=self.max_rapids
+            )
         )
 
     def __str__(self) -> str:

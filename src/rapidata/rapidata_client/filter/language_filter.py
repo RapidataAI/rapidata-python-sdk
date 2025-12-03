@@ -42,11 +42,14 @@ class LanguageFilter(RapidataFilter, BaseModel):
         return validated
 
     def _to_model(self):
-        from rapidata.api_client.models.language_user_filter_model import (
-            LanguageUserFilterModel,
+        from rapidata.api_client.models.i_user_filter_model import IUserFilterModel
+        from rapidata.api_client.models.i_user_filter_model_language_user_filter_model import (
+            IUserFilterModelLanguageUserFilterModel,
         )
 
-        return LanguageUserFilterModel(
-            _t="LanguageFilter",
-            languages=self.language_codes,
+        return IUserFilterModel(
+            actual_instance=IUserFilterModelLanguageUserFilterModel(
+                _t="LanguageFilter",
+                languages=self.language_codes,
+            )
         )

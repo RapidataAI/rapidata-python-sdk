@@ -12063,17 +12063,6 @@
           }
         }
       },
-      "EntityTagHeaderValue": {
-        "type": "object",
-        "properties": {
-          "tag": {
-            "$ref": "#/components/schemas/StringSegment"
-          },
-          "isWeak": {
-            "type": "boolean"
-          }
-        }
-      },
       "FeedbackModel": {
         "required": [
           "feedback"
@@ -12094,38 +12083,8 @@
         }
       },
       "FileStreamResult": {
-        "type": "object",
-        "properties": {
-          "fileStream": {
-            "$ref": "#/components/schemas/Stream"
-          },
-          "contentType": {
-            "type": "string",
-            "nullable": true
-          },
-          "fileDownloadName": {
-            "type": "string",
-            "nullable": true
-          },
-          "lastModified": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "entityTag": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/EntityTagHeaderValue"
-              }
-            ]
-          },
-          "enableRangeProcessing": {
-            "type": "boolean"
-          }
-        }
+        "type": "string",
+        "format": "binary"
       },
       "GetOrderByIdResult": {
         "required": [
@@ -13482,34 +13441,6 @@
           "Passive",
           null
         ]
-      },
-      "Stream": {
-        "type": "string",
-        "format": "binary"
-      },
-      "StringSegment": {
-        "type": "object",
-        "properties": {
-          "buffer": {
-            "type": "string",
-            "nullable": true
-          },
-          "offset": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "length": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "value": {
-            "type": "string",
-            "nullable": true
-          },
-          "hasValue": {
-            "type": "boolean"
-          }
-        }
       },
       "SubmitOrderModel": {
         "type": "object",

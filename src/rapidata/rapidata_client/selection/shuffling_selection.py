@@ -1,13 +1,8 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Sequence
+from typing import Sequence
 
 from rapidata.rapidata_client.selection._base_selection import RapidataSelection
-
-if TYPE_CHECKING:
-    from rapidata.api_client.models.shuffling_selection import (
-        ShufflingSelection as ShufflingSelectionModel,
-    )
 
 
 class ShufflingSelection(RapidataSelection):
@@ -29,18 +24,17 @@ class ShufflingSelection(RapidataSelection):
     def __init__(self, selections: Sequence[RapidataSelection]):
         self.selections = selections
 
-    def _to_model(self) -> ShufflingSelectionModel:
-        from rapidata.api_client.models.ab_test_selection_a_inner import AbTestSelectionAInner
-        from rapidata.api_client.models.shuffling_selection import (
-            ShufflingSelection as ShufflingSelectionModel,
+    def _to_model(self):
+        from rapidata.api_client.models.i_selection import ISelection
+        from rapidata.api_client.models.i_selection_shuffling_selection import (
+            ISelectionShufflingSelection,
         )
 
-        return ShufflingSelectionModel(
-            _t="ShufflingSelection",
-            selections=[
-                AbTestSelectionAInner(selection._to_model())
-                for selection in self.selections
-            ],
+        return ISelection(
+            actual_instance=ISelectionShufflingSelection(
+                _t="ShufflingSelection",
+                selections=[selection._to_model() for selection in self.selections],
+            )
         )
 
     def __str__(self) -> str:

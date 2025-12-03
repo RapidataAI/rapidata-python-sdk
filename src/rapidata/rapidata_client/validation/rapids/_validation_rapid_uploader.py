@@ -13,9 +13,9 @@ from rapidata.api_client.models.add_validation_rapid_model_asset import (
 from rapidata.api_client.models.add_validation_rapid_model_context_asset import (
     AddValidationRapidModelContextAsset,
 )
-from rapidata.api_client.models.add_validation_rapid_model_payload import (
-    AddValidationRapidModelPayload,
-)
+from rapidata.api_client.models.i_asset_input import IAssetInput
+from rapidata.api_client.models.i_rapid_payload import IRapidPayload
+from rapidata.api_client.models.i_validation_truth import IValidationTruth
 
 
 class ValidationRapidUploader:
@@ -24,28 +24,28 @@ class ValidationRapidUploader:
         self.asset_uploader = AssetUploader(openapi_service)
 
     def upload_rapid(self, rapid: Rapid, validation_set_id: str) -> None:
-        uploaded_asset = (
-            self._handle_media_rapid(rapid)
+        uploaded_asset: IAssetInput = (
+            self.asset_uploader.get_uploaded_asset_input(rapid.asset)
             if rapid.data_type == "media"
-            else self._handle_text_rapid(rapid)
+            else self.asset_uploader.get_uploaded_text_input(rapid.asset)
         )
 
         self.openapi_service.validation_api.validation_set_validation_set_id_rapid_post(
             validation_set_id=validation_set_id,
             add_validation_rapid_model=AddValidationRapidModel(
                 asset=uploaded_asset,
+                payload=self._get_payload(rapid),
                 context=rapid.context,
                 contextAsset=(
-                    AddValidationRapidModelContextAsset(
-                        actual_instance=self.asset_uploader.get_uploaded_asset_input(
-                            rapid.media_context
-                        ),
-                    )
+                    self.asset_uploader.get_uploaded_asset_input(rapid.media_context)
                     if rapid.media_context
                     else None
                 ),
-                payload=self._get_payload(rapid),
-                truth=AddValidationRapidModelTruth(actual_instance=rapid.truth),
+                truth=(
+                    IValidationTruth(actual_instance=rapid.truth)
+                    if rapid.truth
+                    else None
+                ),
                 randomCorrectProbability=rapid.random_correct_probability,
                 explanation=rapid.explanation,
                 featureFlags=(
@@ -56,17 +56,7 @@ class ValidationRapidUploader:
             ),
         )
 
-    def _get_payload(self, rapid: Rapid) -> AddValidationRapidModelPayload:
+    def _get_payload(self, rapid: Rapid) -> IRapidPayload:
         if isinstance(rapid.payload, dict):
-            return AddValidationRapidModelPayload(actual_instance=rapid.payload)
-        return AddValidationRapidModelPayload(actual_instance=rapid.payload.to_dict())
-
-    def _handle_text_rapid(self, rapid: Rapid) -> AddValidationRapidModelAsset:
-        return AddValidationRapidModelAsset(
-            actual_instance=self.asset_uploader.get_uploaded_text_input(rapid.asset),
-        )
-
-    def _handle_media_rapid(self, rapid: Rapid) -> AddValidationRapidModelAsset:
-        return AddValidationRapidModelAsset(
-            actual_instance=self.asset_uploader.get_uploaded_asset_input(rapid.asset),
-        )
+            return IRapidPayload(actual_instance=rapid.payload)
+        return IRapidPayload(actual_instance=rapid.payload.to_dict())

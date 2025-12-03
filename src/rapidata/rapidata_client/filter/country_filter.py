@@ -36,8 +36,13 @@ class CountryFilter(RapidataFilter, BaseModel):
         return validated
 
     def _to_model(self):
-        from rapidata.api_client.models.country_user_filter_model import (
-            CountryUserFilterModel,
+        from rapidata.api_client.models.i_user_filter_model import IUserFilterModel
+        from rapidata.api_client.models.i_user_filter_model_country_user_filter_model import (
+            IUserFilterModelCountryUserFilterModel,
         )
 
-        return CountryUserFilterModel(_t="CountryFilter", countries=self.country_codes)
+        return IUserFilterModel(
+            actual_instance=IUserFilterModelCountryUserFilterModel(
+                _t="CountryFilter", countries=self.country_codes
+            )
+        )
