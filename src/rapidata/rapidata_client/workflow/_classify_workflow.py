@@ -1,19 +1,20 @@
 from typing import Any
-from rapidata.api_client.models.attach_category_rapid_blueprint import (
-    AttachCategoryRapidBlueprint,
+from rapidata.api_client.models.i_rapid_blueprint import IRapidBlueprint
+from rapidata.api_client.models.i_order_workflow_model import IOrderWorkflowModel
+from rapidata.api_client.models.i_order_workflow_model_simple_workflow_model import (
+    IOrderWorkflowModelSimpleWorkflowModel,
 )
-from rapidata.api_client.models.simple_workflow_model import SimpleWorkflowModel
 from rapidata.api_client.models.attach_category_rapid_blueprint_category import (
     AttachCategoryRapidBlueprintCategory,
-)
-from rapidata.api_client.models.simple_workflow_model_blueprint import (
-    SimpleWorkflowModelBlueprint,
 )
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.api_client import ClassifyPayload
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.api_client.models.rapid_modality import RapidModality
 from rapidata.api_client.models.classify_payload_category import ClassifyPayloadCategory
+from rapidata.api_client.models.i_rapid_blueprint_attach_category_rapid_blueprint import (
+    IRapidBlueprintAttachCategoryRapidBlueprint,
+)
 
 
 class ClassifyWorkflow(Workflow):
@@ -52,8 +53,8 @@ class ClassifyWorkflow(Workflow):
             },
         }
 
-    def _to_model(self) -> SimpleWorkflowModel:
-        blueprint = AttachCategoryRapidBlueprint(
+    def _to_model(self) -> IOrderWorkflowModel:
+        blueprint = IRapidBlueprintAttachCategoryRapidBlueprint(
             _t="ClassifyBlueprint",
             title=self._instruction,
             categories=[
@@ -62,9 +63,11 @@ class ClassifyWorkflow(Workflow):
             ],
         )
 
-        return SimpleWorkflowModel(
-            _t="SimpleWorkflow",
-            blueprint=SimpleWorkflowModelBlueprint(blueprint),
+        return IOrderWorkflowModel(
+            actual_instance=IOrderWorkflowModelSimpleWorkflowModel(
+                _t="SimpleWorkflow",
+                blueprint=IRapidBlueprint(actual_instance=blueprint),
+            )
         )
 
     def _to_payload(self, datapoint: Datapoint) -> ClassifyPayload:

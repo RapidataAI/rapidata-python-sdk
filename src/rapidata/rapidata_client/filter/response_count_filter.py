@@ -47,13 +47,16 @@ class ResponseCountFilter(RapidataFilter, BaseModel):
         )
 
     def _to_model(self):
-        from rapidata.api_client.models.response_count_user_filter_model import (
-            ResponseCountUserFilterModel,
+        from rapidata.api_client.models.i_user_filter_model import IUserFilterModel
+        from rapidata.api_client.models.i_user_filter_model_response_count_user_filter_model import (
+            IUserFilterModelResponseCountUserFilterModel,
         )
 
-        return ResponseCountUserFilterModel(
-            _t="ResponseCountFilter",
-            responseCount=self.response_count,
-            dimension=self.dimension,
-            operator=self.operator,
+        return IUserFilterModel(
+            actual_instance=IUserFilterModelResponseCountUserFilterModel(
+                _t="ResponseCountFilter",
+                responseCount=self.response_count,
+                dimension=self.dimension,
+                operator=self.operator,
+            )
         )

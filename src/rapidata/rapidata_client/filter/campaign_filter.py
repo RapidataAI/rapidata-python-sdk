@@ -21,11 +21,14 @@ class CampaignFilter(RapidataFilter, BaseModel):
         super().__init__(campaign_ids=campaign_ids)
 
     def _to_model(self):
-        from rapidata.api_client.models.campaign_user_filter_model import (
-            CampaignUserFilterModel,
+        from rapidata.api_client.models.i_user_filter_model import IUserFilterModel
+        from rapidata.api_client.models.i_user_filter_model_campaign_user_filter_model import (
+            IUserFilterModelCampaignUserFilterModel,
         )
 
-        return CampaignUserFilterModel(
-            _t="CampaignFilter",
-            campaignIds=self.campaign_ids,
+        return IUserFilterModel(
+            actual_instance=IUserFilterModelCampaignUserFilterModel(
+                _t="CampaignFilter",
+                campaignIds=self.campaign_ids,
+            )
         )

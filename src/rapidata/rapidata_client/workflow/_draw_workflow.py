@@ -1,11 +1,11 @@
-from rapidata.api_client.models.simple_workflow_model import SimpleWorkflowModel
-from rapidata.api_client.models.simple_workflow_model_blueprint import (
-    SimpleWorkflowModelBlueprint,
+from rapidata.api_client.models.i_order_workflow_model import IOrderWorkflowModel
+from rapidata.api_client.models.i_order_workflow_model_simple_workflow_model import (
+    IOrderWorkflowModelSimpleWorkflowModel,
 )
-from rapidata.api_client.models.validation_set_zip_post_request_blueprint import (
-    ValidationSetZipPostRequestBlueprint,
+from rapidata.api_client.models.i_rapid_blueprint import IRapidBlueprint
+from rapidata.api_client.models.i_rapid_blueprint_line_rapid_blueprint import (
+    IRapidBlueprintLineRapidBlueprint,
 )
-from rapidata.api_client.models.line_rapid_blueprint import LineRapidBlueprint
 from rapidata.rapidata_client.workflow._base_workflow import Workflow
 from rapidata.api_client import LinePayload
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
@@ -22,12 +22,16 @@ class DrawWorkflow(Workflow):
     def _get_instruction(self) -> str:
         return self._target
 
-    def _to_model(self) -> SimpleWorkflowModel:
-        blueprint = LineRapidBlueprint(_t="LineBlueprint", target=self._target)
+    def _to_model(self) -> IOrderWorkflowModel:
+        blueprint = IRapidBlueprintLineRapidBlueprint(
+            _t="LineBlueprint", target=self._target
+        )
 
-        return SimpleWorkflowModel(
-            _t="SimpleWorkflow",
-            blueprint=SimpleWorkflowModelBlueprint(blueprint),
+        return IOrderWorkflowModel(
+            actual_instance=IOrderWorkflowModelSimpleWorkflowModel(
+                _t="SimpleWorkflow",
+                blueprint=IRapidBlueprint(actual_instance=blueprint),
+            )
         )
 
     def _to_payload(self, datapoint: Datapoint) -> LinePayload:

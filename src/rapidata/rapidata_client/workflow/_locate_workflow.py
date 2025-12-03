@@ -1,8 +1,11 @@
-from rapidata.api_client.models.simple_workflow_model import SimpleWorkflowModel
-from rapidata.api_client.models.simple_workflow_model_blueprint import (
-    SimpleWorkflowModelBlueprint,
+from rapidata.api_client.models.i_order_workflow_model import IOrderWorkflowModel
+from rapidata.api_client.models.i_order_workflow_model_simple_workflow_model import (
+    IOrderWorkflowModelSimpleWorkflowModel,
 )
-from rapidata.api_client.models.locate_rapid_blueprint import LocateRapidBlueprint
+from rapidata.api_client.models.i_rapid_blueprint import IRapidBlueprint
+from rapidata.api_client.models.i_rapid_blueprint_locate_rapid_blueprint import (
+    IRapidBlueprintLocateRapidBlueprint,
+)
 from rapidata.rapidata_client.workflow._base_workflow import Workflow
 from rapidata.api_client import LocatePayload
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
@@ -19,12 +22,16 @@ class LocateWorkflow(Workflow):
     def _get_instruction(self) -> str:
         return self._target
 
-    def _to_model(self) -> SimpleWorkflowModel:
-        blueprint = LocateRapidBlueprint(_t="LocateBlueprint", target=self._target)
+    def _to_model(self) -> IOrderWorkflowModel:
+        blueprint = IRapidBlueprintLocateRapidBlueprint(
+            _t="LocateBlueprint", target=self._target
+        )
 
-        return SimpleWorkflowModel(
-            _t="SimpleWorkflow",
-            blueprint=SimpleWorkflowModelBlueprint(blueprint),
+        return IOrderWorkflowModel(
+            actual_instance=IOrderWorkflowModelSimpleWorkflowModel(
+                _t="SimpleWorkflow",
+                blueprint=IRapidBlueprint(actual_instance=blueprint),
+            )
         )
 
     def _to_payload(self, datapoint: Datapoint) -> LocatePayload:

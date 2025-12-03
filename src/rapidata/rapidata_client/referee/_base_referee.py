@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
-from typing import Any, Mapping
+from typing import Mapping
+
+from rapidata.api_client.models.i_referee_model import IRefereeModel
 
 
 class Referee(ABC):
@@ -15,7 +17,7 @@ class Referee(ABC):
         pass
 
     @abstractmethod
-    def _to_model(self) -> Any:
+    def _to_model(self) -> IRefereeModel:
         """
         Convert the referee to a referee configuration model.
         """

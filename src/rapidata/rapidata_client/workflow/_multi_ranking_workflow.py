@@ -3,17 +3,15 @@ from rapidata.api_client import (
     OnlinePairMakerConfigModel,
     EloConfigModel,
 )
-from rapidata.api_client.models.grouped_ranking_workflow_model import (
-    GroupedRankingWorkflowModel,
+from rapidata.api_client.models.i_order_workflow_model import IOrderWorkflowModel
+from rapidata.api_client.models.i_order_workflow_model_grouped_ranking_workflow_model import (
+    IOrderWorkflowModelGroupedRankingWorkflowModel,
 )
 from rapidata.rapidata_client.workflow._base_workflow import Workflow
 from rapidata.api_client import ComparePayload
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.api_client.models.rapid_modality import RapidModality
-from rapidata.rapidata_client.datapoints.metadata import Metadata
-from rapidata.api_client.models.multi_asset_input_assets_inner import (
-    MultiAssetInputAssetsInner,
-)
+from rapidata.api_client.models.i_asset_input import IAssetInput
 
 
 class MultiRankingWorkflow(Workflow):
@@ -28,7 +26,7 @@ class MultiRankingWorkflow(Workflow):
         elo_k_factor: int = 40,
         elo_scaling_factor: int = 400,
         contexts: dict[str, str] | None = None,
-        media_contexts: dict[str, MultiAssetInputAssetsInner] | None = None,
+        media_contexts: dict[str, IAssetInput] | None = None,
     ):
         super().__init__(type="CompareWorkflowConfig")
 
@@ -56,15 +54,16 @@ class MultiRankingWorkflow(Workflow):
             scalingFactor=elo_scaling_factor,
         )
 
-    def _to_model(self) -> GroupedRankingWorkflowModel:
-
-        return GroupedRankingWorkflowModel(
-            _t="GroupedRankingWorkflow",
-            criteria=self.instruction,
-            eloConfig=self.elo_config,
-            pairMakerConfig=self.pair_maker_config,
-            contexts=self.contexts,
-            contextAssets=self.media_contexts,
+    def _to_model(self) -> IOrderWorkflowModel:
+        return IOrderWorkflowModel(
+            actual_instance=IOrderWorkflowModelGroupedRankingWorkflowModel(
+                _t="GroupedRankingWorkflow",
+                criteria=self.instruction,
+                eloConfig=self.elo_config,
+                pairMakerConfig=self.pair_maker_config,
+                contexts=self.contexts,
+                contextAssets=self.media_contexts,
+            )
         )
 
     def _get_instruction(self) -> str:

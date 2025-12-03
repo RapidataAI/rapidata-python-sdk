@@ -1,27 +1,17 @@
+from __future__ import annotations
+
+
 # Standard library imports
 import json
 import urllib.parse
 import webbrowser
 from time import sleep
-from typing import cast, Callable, TypeVar
+from typing import cast, Callable, TypeVar, TYPE_CHECKING
 from colorama import Fore
 from datetime import datetime
 from tqdm import tqdm
 
 # Local/application imports
-from rapidata.api_client.exceptions import ApiException
-from rapidata.api_client.models.campaign_artifact_model import CampaignArtifactModel
-from rapidata.api_client.models.order_state import OrderState
-from rapidata.api_client.models.preview_order_model import PreviewOrderModel
-from rapidata.api_client.models.submit_order_model import SubmitOrderModel
-from rapidata.api_client.models.preliminary_download_model import (
-    PreliminaryDownloadModel,
-)
-from rapidata.api_client.models.workflow_artifact_model import WorkflowArtifactModel
-from rapidata.api_client.models.get_workflow_progress_result import (
-    GetWorkflowProgressResult,
-)
-from rapidata.rapidata_client.order.rapidata_results import RapidataResults
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.config import (
     logger,
@@ -32,6 +22,16 @@ from rapidata.rapidata_client.config import (
 from rapidata.rapidata_client.api.rapidata_api_client import (
     suppress_rapidata_error_logging,
 )
+
+if TYPE_CHECKING:
+    from rapidata.api_client.models.campaign_artifact_model import CampaignArtifactModel
+    from rapidata.api_client.models.file_stream_result import FileStreamResult
+    from rapidata.api_client.models.order_state import OrderState
+    from rapidata.api_client.models.workflow_artifact_model import WorkflowArtifactModel
+    from rapidata.api_client.models.get_workflow_progress_result import (
+        GetWorkflowProgressResult,
+    )
+    from rapidata.rapidata_client.order.rapidata_results import RapidataResults
 
 T = TypeVar("T")
 
@@ -175,6 +175,13 @@ class RapidataOrder:
             return
 
         def fetch_ids():
+            from rapidata.api_client.models.workflow_artifact_model import (
+                WorkflowArtifactModel,
+            )
+            from rapidata.api_client.models.campaign_artifact_model import (
+                CampaignArtifactModel,
+            )
+
             pipeline_id = self.__get_pipeline_id()
             pipeline = self._openapi_service.pipeline_api.pipeline_pipeline_id_get(
                 pipeline_id
@@ -194,6 +201,10 @@ class RapidataOrder:
         """Gets the workflow progress (internal use only)."""
 
         def get_progress():
+            from rapidata.api_client.models.get_workflow_progress_result import (
+                GetWorkflowProgressResult,
+            )
+
             with suppress_rapidata_error_logging():
                 workflow_id = self.__get_workflow_id()
                 return self._openapi_service.workflow_api.workflow_workflow_id_progress_get(
@@ -206,9 +217,11 @@ class RapidataOrder:
             retry_delay=4,
         )
 
-    def run(self) -> "RapidataOrder":
+    def run(self) -> RapidataOrder:
         """Runs the order to start collecting responses."""
         with tracer.start_as_current_span("RapidataOrder.run"):
+            from rapidata.api_client.models.submit_order_model import SubmitOrderModel
+
             logger.info("Starting order '%s'", self)
             self._openapi_service.order_api.order_order_id_submit_post(
                 self.id, SubmitOrderModel(ignoreFailedDatapoints=True)
@@ -267,6 +280,8 @@ class RapidataOrder:
         Args:
             refresh_rate: How often to refresh the progress bar, in seconds.
         """
+        from rapidata.api_client.models.order_state import OrderState
+
         if refresh_rate < 1:
             raise ValueError("refresh_rate must be at least 1")
 
@@ -319,6 +334,10 @@ class RapidataOrder:
                 Note that preliminary results are not final and may not contain all the datapoints & responses. Only the ones that are already available.
         """
         with tracer.start_as_current_span("RapidataOrder.get_results"):
+            from rapidata.api_client.models.order_state import OrderState
+            from rapidata.api_client.exceptions import ApiException
+            from rapidata.rapidata_client.order.rapidata_results import RapidataResults
+
             logger.info("Getting results for order '%s'...", self)
 
             if preliminary_results and self.get_status() not in [OrderState.COMPLETED]:
@@ -338,17 +357,25 @@ class RapidataOrder:
             )
 
             try:
-                results_json = (
+                result_stream = (
                     self._openapi_service.order_api.order_order_id_download_results_get(
                         order_id=self.id
                     )
                 )
-                return RapidataResults(json.loads(results_json))
+                return RapidataResults(
+                    json.loads(self._decode_file_stream(result_stream))
+                )
             except (ApiException, json.JSONDecodeError) as e:
                 raise Exception(f"Failed to get order results: {str(e)}") from e
 
     def _get_preliminary_results(self) -> RapidataResults:
         """Fetches preliminary results for an in-progress order."""
+        from rapidata.api_client.models.preliminary_download_model import (
+            PreliminaryDownloadModel,
+        )
+        from rapidata.api_client.exceptions import ApiException
+        from rapidata.rapidata_client.order.rapidata_results import RapidataResults
+
         try:
             pipeline_id = self.__get_pipeline_id()
             download_id = self._openapi_service.pipeline_api.pipeline_pipeline_id_preliminary_download_post(
@@ -359,8 +386,11 @@ class RapidataOrder:
                 results = self._openapi_service.pipeline_api.pipeline_preliminary_download_preliminary_download_id_get(
                     preliminary_download_id=download_id
                 )
-                if results:
-                    return RapidataResults(json.loads(results.decode()))
+                if results and results.file_stream:
+                    # Handle the file_stream which can be bytes, str, or tuple
+                    return RapidataResults(
+                        json.loads(self._decode_file_stream(results))
+                    )
                 raise Exception("Results not ready yet")
 
             return self._retry_operation(
@@ -371,6 +401,15 @@ class RapidataOrder:
 
         except (ApiException, json.JSONDecodeError) as e:
             raise Exception(f"Failed to get preliminary results: {str(e)}") from e
+
+    def _decode_file_stream(self, file_stream: FileStreamResult) -> str:
+        if isinstance(file_stream.file_stream, bytes):
+            return file_stream.file_stream.decode()
+        elif isinstance(file_stream.file_stream, str):
+            return file_stream.file_stream
+        elif isinstance(file_stream.file_stream, tuple):
+            return file_stream.file_stream[1].decode()
+        raise Exception("Invalid file stream type")
 
     def view(self) -> None:
         """Opens the order details page in the browser."""
@@ -387,6 +426,9 @@ class RapidataOrder:
 
     def preview(self) -> None:
         """Opens a preview of the order in the browser."""
+        from rapidata.api_client.models.order_state import OrderState
+        from rapidata.api_client.models.preview_order_model import PreviewOrderModel
+
         logger.info("Opening order preview in browser...")
 
         if self.get_status() == OrderState.CREATED:
