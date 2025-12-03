@@ -7,7 +7,9 @@ from rapidata.api_client.models.i_rapid_blueprint_line_rapid_blueprint import (
     IRapidBlueprintLineRapidBlueprint,
 )
 from rapidata.rapidata_client.workflow._base_workflow import Workflow
-from rapidata.api_client import LinePayload
+from rapidata.api_client.models.i_rapid_payload_line_payload import (
+    IRapidPayloadLinePayload,
+)
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.api_client.models.rapid_modality import RapidModality
 
@@ -34,8 +36,8 @@ class DrawWorkflow(Workflow):
             )
         )
 
-    def _to_payload(self, datapoint: Datapoint) -> LinePayload:
-        return LinePayload(
+    def _to_payload(self, datapoint: Datapoint) -> IRapidPayloadLinePayload:
+        return IRapidPayloadLinePayload(
             _t="LinePayload",
             target=self._target,
         )

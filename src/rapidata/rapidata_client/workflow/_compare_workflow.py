@@ -7,7 +7,9 @@ from rapidata.api_client.models.i_rapid_blueprint_compare_rapid_blueprint import
     IRapidBlueprintCompareRapidBlueprint,
 )
 from rapidata.rapidata_client.workflow import Workflow
-from rapidata.api_client import ComparePayload
+from rapidata.api_client.models.i_rapid_payload_compare_payload import (
+    IRapidPayloadComparePayload,
+)
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.api_client.models.i_rapid_blueprint import IRapidBlueprint
 from rapidata.api_client.models.rapid_modality import RapidModality
@@ -58,8 +60,8 @@ class CompareWorkflow(Workflow):
             )
         )
 
-    def _to_payload(self, datapoint: Datapoint) -> ComparePayload:
-        return ComparePayload(
+    def _to_payload(self, datapoint: Datapoint) -> IRapidPayloadComparePayload:
+        return IRapidPayloadComparePayload(
             _t="ComparePayload",
             criteria=self._instruction,
         )

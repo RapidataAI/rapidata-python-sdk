@@ -24,7 +24,7 @@ class ValidationRapidUploader:
         self.asset_uploader = AssetUploader(openapi_service)
 
     def upload_rapid(self, rapid: Rapid, validation_set_id: str) -> None:
-        uploaded_asset = (
+        uploaded_asset: IAssetInput = (
             self.asset_uploader.get_uploaded_asset_input(rapid.asset)
             if rapid.data_type == "media"
             else self.asset_uploader.get_uploaded_text_input(rapid.asset)
@@ -33,15 +33,11 @@ class ValidationRapidUploader:
         self.openapi_service.validation_api.validation_set_validation_set_id_rapid_post(
             validation_set_id=validation_set_id,
             add_validation_rapid_model=AddValidationRapidModel(
-                asset=IAssetInput(actual_instance=uploaded_asset),
+                asset=uploaded_asset,
                 payload=self._get_payload(rapid),
                 context=rapid.context,
                 contextAsset=(
-                    IAssetInput(
-                        actual_instance=self.asset_uploader.get_uploaded_asset_input(
-                            rapid.media_context
-                        ),
-                    )
+                    self.asset_uploader.get_uploaded_asset_input(rapid.media_context)
                     if rapid.media_context
                     else None
                 ),
@@ -60,13 +56,3 @@ class ValidationRapidUploader:
         if isinstance(rapid.payload, dict):
             return IRapidPayload(actual_instance=rapid.payload)
         return IRapidPayload(actual_instance=rapid.payload.to_dict())
-
-    def _handle_text_rapid(self, rapid: Rapid) -> AddValidationRapidModelAsset:
-        return AddValidationRapidModelAsset(
-            actual_instance=self.asset_uploader.get_uploaded_text_input(rapid.asset),
-        )
-
-    def _handle_media_rapid(self, rapid: Rapid) -> AddValidationRapidModelAsset:
-        return AddValidationRapidModelAsset(
-            actual_instance=self.asset_uploader.get_uploaded_asset_input(rapid.asset),
-        )

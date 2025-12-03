@@ -7,7 +7,9 @@ from rapidata.api_client.models.i_rapid_blueprint_scrub_rapid_blueprint import (
     IRapidBlueprintScrubRapidBlueprint,
 )
 from rapidata.rapidata_client.workflow._base_workflow import Workflow
-from rapidata.api_client import ScrubPayload
+from rapidata.api_client.models.i_rapid_payload_scrub_payload import (
+    IRapidPayloadScrubPayload,
+)
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.api_client.models.rapid_modality import RapidModality
 
@@ -47,8 +49,8 @@ class TimestampWorkflow(Workflow):
             )
         )
 
-    def _to_payload(self, datapoint: Datapoint) -> ScrubPayload:
-        return ScrubPayload(
+    def _to_payload(self, datapoint: Datapoint) -> IRapidPayloadScrubPayload:
+        return IRapidPayloadScrubPayload(
             _t="ScrubPayload",
             target=self._instruction,
         )

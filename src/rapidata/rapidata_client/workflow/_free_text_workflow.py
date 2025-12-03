@@ -1,6 +1,8 @@
 from typing import Any
 from rapidata.rapidata_client.workflow import Workflow
-from rapidata.api_client import FreeTextPayload
+from rapidata.api_client.models.i_rapid_payload_free_text_payload import (
+    IRapidPayloadFreeTextPayload,
+)
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.api_client.models.rapid_modality import RapidModality
 from rapidata.api_client.models.i_order_workflow_model import IOrderWorkflowModel
@@ -63,8 +65,8 @@ class FreeTextWorkflow(Workflow):
             )
         )
 
-    def _to_payload(self, datapoint: Datapoint) -> FreeTextPayload:
-        return FreeTextPayload(
+    def _to_payload(self, datapoint: Datapoint) -> IRapidPayloadFreeTextPayload:
+        return IRapidPayloadFreeTextPayload(
             _t="FreeTextPayload",
             question=self._instruction,
         )

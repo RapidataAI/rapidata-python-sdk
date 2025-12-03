@@ -8,7 +8,9 @@ from rapidata.api_client.models.i_order_workflow_model_grouped_ranking_workflow_
     IOrderWorkflowModelGroupedRankingWorkflowModel,
 )
 from rapidata.rapidata_client.workflow._base_workflow import Workflow
-from rapidata.api_client import ComparePayload
+from rapidata.api_client.models.i_rapid_payload_compare_payload import (
+    IRapidPayloadComparePayload,
+)
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.api_client.models.rapid_modality import RapidModality
 from rapidata.api_client.models.i_asset_input import IAssetInput
@@ -69,8 +71,8 @@ class MultiRankingWorkflow(Workflow):
     def _get_instruction(self) -> str:
         return self.instruction
 
-    def _to_payload(self, datapoint: Datapoint) -> ComparePayload:
-        return ComparePayload(
+    def _to_payload(self, datapoint: Datapoint) -> IRapidPayloadComparePayload:
+        return IRapidPayloadComparePayload(
             _t="ComparePayload",
             criteria=self.instruction,
         )
