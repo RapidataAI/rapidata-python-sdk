@@ -3,17 +3,44 @@
 # flake8: noqa
 {{>partial_header}}
 
+import os as _os
+import re as _re
+
+# Dynamically discover all model modules in this package
+def _discover_models() -> dict[str, str]:
+    """Discover all model classes from .py files in this package directory."""
+    models = {}
+    package_dir = _os.path.dirname(_os.path.abspath(__file__))
+    package_name = __name__
+    
+    # Pattern to match class names (PascalCase)
+    class_pattern = _re.compile(r'^class\s+([A-Z][A-Za-z0-9]*)\s*[\(:]', _re.MULTILINE)
+    
+    for filename in _os.listdir(package_dir):
+        if filename.endswith('.py') and not filename.startswith('_'):
+            module_name = filename[:-3]  # Remove .py extension
+            filepath = _os.path.join(package_dir, filename)
+            
+            try:
+                with open(filepath, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                    # Find all class definitions
+                    for match in class_pattern.finditer(content):
+                        class_name = match.group(1)
+                        # Skip private classes and base classes
+                        if not class_name.startswith('_'):
+                            models[class_name] = f"{package_name}.{module_name}"
+            except Exception:
+                pass  # Skip files that can't be read
+    
+    return models
+
+
 # Lazy loading for models - models are imported only when accessed
-_MODEL_IMPORTS = {
-{{#models}}
-{{#model}}
-    "{{classname}}": "{{modelPackage}}.{{classFilename}}",
-{{/model}}
-{{/models}}
-}
+_MODEL_IMPORTS = _discover_models()
 
 # Cache for imported models
-_IMPORTED = {}
+_IMPORTED: dict[str, type] = {}
 
 
 def __getattr__(name: str):
