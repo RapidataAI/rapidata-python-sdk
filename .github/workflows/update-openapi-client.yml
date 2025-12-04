@@ -9,6 +9,14 @@ on:
         default: 'latest'
         required: true
         type: string
+      target_branch:
+        description: 'Target branch for the PR'
+        default: 'main'
+        required: true
+        type: choice
+        options:
+        - main
+        - 2.x
     
 jobs:
   generate_openapi_client:
@@ -21,8 +29,9 @@ jobs:
           private-key: ${{ secrets.RAPIDATA_OPENAPI_GENERATOR_PRIVATE_KEY }}
       - name: Checkout code
         uses: actions/checkout@v4
-        with: 
+        with:
           token: ${{ steps.generate-token.outputs.token }}
+          ref: ${{ inputs.target_branch || 'main' }}
       - name: Setup node
         uses: actions/setup-node@v4
       - name: Install node packages
@@ -32,8 +41,8 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
-          base: 'main'
-          branch: 'openapi-generation'
+          base: ${{ inputs.target_branch || 'main' }}
+          branch: 'openapi-generation-${{ inputs.target_branch || 'main' }}'
           title: 'Update OpenAPI Schemas'
           committer: Rudolf the Rabbit <login@rapidata.ai>
           author: Rudolf the Rabbit <login@rapidata.ai>
