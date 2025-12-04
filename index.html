@@ -1,14 +1,18 @@
-
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-    <meta charset="utf-8">
-    <title>Redirecting...</title>
-    <link rel="canonical" href="starting_page/">
-    <script>var anchor=window.location.hash.substr(1);location.href="starting_page/"+(anchor?"#"+anchor:"")</script>
-    <meta http-equiv="refresh" content="0; url=starting_page/">
+  <meta charset="utf-8">
+  <title>Redirecting</title>
+  <noscript>
+    <meta http-equiv="refresh" content="1; url=latest/" />
+  </noscript>
+  <script>
+    window.location.replace(
+      "latest/" + window.location.search + window.location.hash
+    );
+  </script>
 </head>
 <body>
-You're being redirected to a <a href="starting_page/">new destination</a>.
+  Redirecting to <a href="latest/">latest/</a>...
 </body>
 </html>
