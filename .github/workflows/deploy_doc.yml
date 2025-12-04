@@ -33,21 +33,17 @@ jobs:
         with:
           ref: ${{ github.event.inputs.branch }}
           fetch-depth: 0
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
-          python-version: '3.10'
-      - name: Install Poetry
-        run: |
-          curl -sSL https://install.python-poetry.org | python3 -
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          python-version-file: ".python-version"
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+      - name: Install dependencies
+        run:  uv sync --group docs --frozen
       - name: Configure Git for mike
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-      - name: Update lock file and install dependencies
-        run: |
-          poetry lock
-          poetry install --with docs
       - name: Deploy docs with mike
         run: |
           # Fetch gh-pages branch if it exists
@@ -55,8 +51,8 @@ jobs:
 
           # Deploy the version
           if [ "${{ github.event.inputs.set_latest }}" = "true" ]; then
-            poetry run mike deploy --push --update-aliases ${{ github.event.inputs.version_alias }} latest
-            poetry run mike set-default --push latest
+            uv run mike deploy --push --update-aliases ${{ github.event.inputs.version_alias }} latest
+            uv run mike set-default --push latest
           else
-            poetry run mike deploy --push ${{ github.event.inputs.version_alias }}
+            uv run mike deploy --push ${{ github.event.inputs.version_alias }}
           fi
