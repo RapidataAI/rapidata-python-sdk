@@ -19,7 +19,7 @@ Set up your environment and make your first API request in minutes.
     *Estimated time: 5 minutes*
 
     ```python
-    pip install -U rapidata
+    pip install "rapidata<3.0.0"
     ```
 
     === "Image"
