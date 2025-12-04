@@ -18,6 +18,7 @@ jobs:
         uses: astral-sh/setup-uv@v7
       
       - run: uv sync
+      - run: echo "$PWD/.venv/bin" >> $GITHUB_PATH
       
       - uses: jakebailey/pyright-action@v2
         with:
