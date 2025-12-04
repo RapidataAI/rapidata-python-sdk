@@ -1,11 +1,12 @@
 from abc import abstractmethod
-from typing import Any
+
+from rapidata.api_client.models.i_selection import ISelection
 
 
 class RapidataSelection:
 
     @abstractmethod
-    def _to_model(self) -> Any:
+    def _to_model(self) -> ISelection:
         pass
 
     def __str__(self) -> str:

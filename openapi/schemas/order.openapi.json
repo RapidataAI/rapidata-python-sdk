@@ -1,0 +1,3367 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Rapidata Order API",
+    "description": "The API for the Rapidata Order service",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "https://api.rabbitdata.ch/"
+    }
+  ],
+  "paths": {
+    "/feedback": {
+      "post": {
+        "tags": [
+          "Feedback"
+        ],
+        "summary": "Submits feedback about our services.",
+        "requestBody": {
+          "description": "The body content of the request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeedbackModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeedbackModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeedbackModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/orders": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Queries orders based on a filter, page, and sort criteria.",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "query",
+            "description": "The parameters for filtering, paging, and sorting",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfOrderModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfOrderModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfOrderModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/aggregated-overview": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Retrieves the orders aggregated by customer, with total amounts and most recent order informations.",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfAggregatedOrdersModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfAggregatedOrdersModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfAggregatedOrdersModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/public": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Retrieves orders that are public and can be cloned by any user.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPublicOrdersResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPublicOrdersResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPublicOrdersResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/order/{orderId}": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Retrieves an order by its id.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "The id of the order",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetOrderByIdResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetOrderByIdResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetOrderByIdResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Deletes an order.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "The id of the order to delete",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/order/{orderId}/results": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Aggregates the results of an order and returns the result as a json body.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "The id of the order",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/order/{orderId}/download-results": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Aggregates the results of an order and returns it as a file attachment.",
+        "description": "Returns the aggregated result as a file with a given name.\n The annotated type of the response represents the content type of the file.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "The id of the order",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileStreamResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileStreamResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileStreamResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/order": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Used to create a new order.",
+        "requestBody": {
+          "description": "The body request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrderModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrderModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateOrderResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateOrderResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateOrderResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/order/complex": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Creates a new order with a custom pipeline.",
+        "requestBody": {
+          "description": "The body content of the request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateComplexOrderModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateComplexOrderModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateComplexOrderModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateComplexOrderResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateComplexOrderResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateComplexOrderResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/order/unsupported": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Notifies the admins that a user wants to create an order with an unsupported label type or data type.",
+        "requestBody": {
+          "description": "The body content of the request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUnsupportedOrderModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUnsupportedOrderModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUnsupportedOrderModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/order/{orderId}/clone": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Clones an existing order.",
+        "description": "In order to clone an order, the existing order must be marked as public.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "The id of the order to clone",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The body content of the request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CloneOrderModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CloneOrderModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CloneOrderModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CloneOrderResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CloneOrderResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CloneOrderResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/order/{orderId}/unlock": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Unlocks a newly cloned order.",
+        "description": "When an order is cloned only the necessary information is copied.\n In order to make changes to the order, it must be unlocked first.\n Unlocking the order will clone the entire dataset and its datapoints.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "The id of the order to unlock",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnlockOrderResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnlockOrderResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnlockOrderResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/order/{orderId}/demo": {
+      "patch": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Updates whether an order is a demo or not.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "The id of the order to update",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "isDemo",
+            "in": "query",
+            "description": "Whether to mark or unmark the order as a demo",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/order/{orderId}/share": {
+      "patch": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Updates whether an order is public or not.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "The id of the order to update",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "isPublic",
+            "in": "query",
+            "description": "Whether to mark or unmark the order as public",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/order/{orderId}/submit": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Submits an order for approval.",
+        "description": "Once an order is created its order id and dataset id is returned.\n The dataset id can be used to fill the dataset with data points.\n Once submitted, the order will be locked and no further changes can be made.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "The id of the order to submit",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The model containing additional information for the submission.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "nullable": true
+                  },
+                  {
+                    "$ref": "#/components/schemas/SubmitOrderModel"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "nullable": true
+                  },
+                  {
+                    "$ref": "#/components/schemas/SubmitOrderModel"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "nullable": true
+                  },
+                  {
+                    "$ref": "#/components/schemas/SubmitOrderModel"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/order/{orderId}/approve": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Approves an order that has been submitted for manual approval.",
+        "description": "An order is submitted for manual approval when the automatic approval process could not automatically\n determine if the order is safe to process.\n Once an order is approved, the pipeline will start processing the order.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "The id of the order to approve",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/order/{orderId}/name": {
+      "patch": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Updates the name of an order.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "The id of the order to update",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The body content of the request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateOrderNameModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateOrderNameModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateOrderNameModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/order/{orderId}/retry": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Retries a failed order.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "The id of the order to retry",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/order/{orderId}/pause": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Pauses an order that is processing. Meaning all campaigns in the order will be paused.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "The id of the order to pause",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/order/{orderId}/preview": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Puts the order into preview mode, where one can inspect what our labelers receive.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "The id of the order to submit",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The model containing additional information for the preview.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "nullable": true
+                  },
+                  {
+                    "$ref": "#/components/schemas/PreviewOrderModel"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "nullable": true
+                  },
+                  {
+                    "$ref": "#/components/schemas/PreviewOrderModel"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "nullable": true
+                  },
+                  {
+                    "$ref": "#/components/schemas/PreviewOrderModel"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/order/{orderId}/resume": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Resumes a paused order. Meaning all campaigns in the order will be resumed.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "The id of the order to resume",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AggregatedOrdersModel": {
+        "required": [
+          "amount",
+          "last7Days",
+          "lastOrderDate",
+          "lastOrderName",
+          "lastOrderId",
+          "customerMail"
+        ],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "last7Days": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lastOrderDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastOrderName": {
+            "type": "string"
+          },
+          "lastOrderId": {
+            "type": "string"
+          },
+          "customerMail": {
+            "type": "string"
+          }
+        }
+      },
+      "AggregatorType": {
+        "enum": [
+          "NonCommittal",
+          "MajorityVote",
+          "SimpleMatchup",
+          "LocateCluster",
+          "Classification",
+          "Locate",
+          "BoundingBox",
+          "Line",
+          "Transcription",
+          "SinglePointLocate",
+          "FreeText",
+          "Scrub",
+          "Ranking",
+          "MultiRanking"
+        ]
+      },
+      "AttachCategoryRapidBlueprint_Category": {
+        "required": [
+          "label",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "CloneOrderModel": {
+        "required": [
+          "orderName"
+        ],
+        "type": "object",
+        "properties": {
+          "orderName": {
+            "type": "string"
+          }
+        }
+      },
+      "CloneOrderResult": {
+        "required": [
+          "orderId"
+        ],
+        "type": "object",
+        "properties": {
+          "datasetId": {
+            "type": "string",
+            "nullable": true
+          },
+          "orderId": {
+            "type": "string"
+          }
+        }
+      },
+      "ComparisonOperator": {
+        "enum": [
+          "Equal",
+          "NotEqual",
+          "LessThan",
+          "LessThanOrEqual",
+          "GreaterThan",
+          "GreaterThanOrEqual"
+        ]
+      },
+      "ConditionalValidationSelection_ValidationChance": {
+        "required": [
+          "userScoreThreshold",
+          "chance",
+          "rapidCount"
+        ],
+        "type": "object",
+        "properties": {
+          "userScoreThreshold": {
+            "type": "number",
+            "format": "double"
+          },
+          "chance": {
+            "type": "number",
+            "format": "double"
+          },
+          "rapidCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "selections": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/ListOfISelection"
+              }
+            ]
+          }
+        }
+      },
+      "CreateComplexOrderModel": {
+        "required": [
+          "orderName",
+          "pipeline"
+        ],
+        "type": "object",
+        "properties": {
+          "orderName": {
+            "type": "string"
+          },
+          "pipeline": {
+            "$ref": "#/components/schemas/IPipelineModel"
+          },
+          "isDemo": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CreateComplexOrderResult": {
+        "required": [
+          "orderId",
+          "pipelineId"
+        ],
+        "type": "object",
+        "properties": {
+          "datasetId": {
+            "type": "string",
+            "nullable": true
+          },
+          "orderId": {
+            "type": "string"
+          },
+          "campaignId": {
+            "type": "string",
+            "nullable": true
+          },
+          "pipelineId": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateOrderModel": {
+        "required": [
+          "orderName",
+          "workflow",
+          "referee"
+        ],
+        "type": "object",
+        "properties": {
+          "orderName": {
+            "type": "string"
+          },
+          "workflow": {
+            "$ref": "#/components/schemas/IOrderWorkflowModel"
+          },
+          "referee": {
+            "$ref": "#/components/schemas/IRefereeModel"
+          },
+          "aggregator": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/AggregatorType"
+              }
+            ]
+          },
+          "featureFlags": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/ListOfFeatureFlagModel"
+              }
+            ]
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "stickyState": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/StickyState"
+              }
+            ]
+          },
+          "userScoreDimensions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "demographicKeys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "userFilters": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/ListOfIUserFilterModel"
+              }
+            ]
+          },
+          "validationSetId": {
+            "type": "string",
+            "nullable": true
+          },
+          "selections": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/ListOfISelection"
+              }
+            ]
+          },
+          "retrievalMode": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/RetrievalMode"
+              }
+            ]
+          },
+          "maxIterations": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "CreateOrderResult": {
+        "required": [
+          "orderId",
+          "pipelineId"
+        ],
+        "type": "object",
+        "properties": {
+          "datasetId": {
+            "type": "string",
+            "nullable": true
+          },
+          "orderId": {
+            "type": "string"
+          },
+          "campaignId": {
+            "type": "string",
+            "nullable": true
+          },
+          "pipelineId": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateUnsupportedOrderModel": {
+        "required": [
+          "orderName",
+          "dataType",
+          "labelType"
+        ],
+        "type": "object",
+        "properties": {
+          "orderName": {
+            "type": "string"
+          },
+          "dataType": {
+            "type": "string"
+          },
+          "labelType": {
+            "type": "string"
+          }
+        }
+      },
+      "EloConfigModel": {
+        "type": "object",
+        "properties": {
+          "startingElo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "kFactor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "scalingFactor": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "FeatureFlag": {
+        "required": [
+          "key",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "FeatureFlagModel": {
+        "required": [
+          "key",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "FeedbackModel": {
+        "required": [
+          "feedback"
+        ],
+        "type": "object",
+        "properties": {
+          "feedback": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "token": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "FileStreamResult": {
+        "type": "string",
+        "format": "binary"
+      },
+      "Filter": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": { },
+          "operator": {
+            "$ref": "#/components/schemas/FilterOperator"
+          },
+          "logic": {
+            "$ref": "#/components/schemas/LogicOperator"
+          },
+          "filters": {
+            "$ref": "#/components/schemas/ListOfFilter"
+          }
+        }
+      },
+      "FilterOperator": {
+        "enum": [
+          "Eq",
+          "Neq",
+          "Gt",
+          "Gte",
+          "Lt",
+          "Lte",
+          "Contains",
+          "StartsWith",
+          "EndsWith",
+          "In"
+        ]
+      },
+      "GetOrderByIdResult": {
+        "required": [
+          "orderName",
+          "customerMail",
+          "orderDate",
+          "state",
+          "pipelineId",
+          "isLocked",
+          "isPublic"
+        ],
+        "type": "object",
+        "properties": {
+          "orderName": {
+            "type": "string"
+          },
+          "customerMail": {
+            "type": "string"
+          },
+          "orderDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "state": {
+            "type": "string"
+          },
+          "pipelineId": {
+            "type": "string"
+          },
+          "isLocked": {
+            "type": "boolean"
+          },
+          "isPublic": {
+            "type": "boolean"
+          },
+          "failureMessage": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "GetPublicOrdersResult": {
+        "required": [
+          "orders"
+        ],
+        "type": "object",
+        "properties": {
+          "orders": {
+            "$ref": "#/components/schemas/ListOfPublicOrderModel"
+          }
+        }
+      },
+      "IAssetInput": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IAssetInputExistingAssetInput"
+          },
+          {
+            "$ref": "#/components/schemas/IAssetInputMultiAssetInput"
+          },
+          {
+            "$ref": "#/components/schemas/IAssetInputTextAssetInput"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "ExistingAssetInput": "#/components/schemas/IAssetInputExistingAssetInput",
+            "MultiAssetInput": "#/components/schemas/IAssetInputMultiAssetInput",
+            "TextAssetInput": "#/components/schemas/IAssetInputTextAssetInput"
+          }
+        }
+      },
+      "IAssetInputExistingAssetInput": {
+        "required": [
+          "name",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ExistingAssetInput"
+            ],
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "metadata": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/MetadataInputCollection"
+              }
+            ]
+          },
+          "identifier": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "IAssetInputMultiAssetInput": {
+        "required": [
+          "assets",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "MultiAssetInput"
+            ],
+            "type": "string"
+          },
+          "assets": {
+            "$ref": "#/components/schemas/ListOfIAssetInput"
+          },
+          "metadata": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/MetadataInputCollection"
+              }
+            ]
+          },
+          "identifier": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "IAssetInputTextAssetInput": {
+        "required": [
+          "text",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TextAssetInput"
+            ],
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "metadata": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/MetadataInputCollection"
+              }
+            ]
+          },
+          "identifier": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "IDatasetModel": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IDatasetModelCloneDatasetModel"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "CloneDatasetModel": "#/components/schemas/IDatasetModelCloneDatasetModel"
+          }
+        }
+      },
+      "IDatasetModelCloneDatasetModel": {
+        "required": [
+          "datasetToCloneId",
+          "datasetName",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CloneDatasetModel"
+            ],
+            "type": "string"
+          },
+          "datasetToCloneId": {
+            "type": "string"
+          },
+          "datasetName": {
+            "type": "string"
+          }
+        }
+      },
+      "IMetadataInput": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IMetadataInputTextMetadataInput"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "TextMetadataInput": "#/components/schemas/IMetadataInputTextMetadataInput"
+          }
+        }
+      },
+      "IMetadataInputTextMetadataInput": {
+        "required": [
+          "text",
+          "visibilities",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TextMetadataInput"
+            ],
+            "type": "string"
+          },
+          "text": {
+            "type": "string",
+            "nullable": true
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "IOrderWorkflowModel": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IOrderWorkflowModelCompareWorkflowModel"
+          },
+          {
+            "$ref": "#/components/schemas/IOrderWorkflowModelEvaluationWorkflowModel"
+          },
+          {
+            "$ref": "#/components/schemas/IOrderWorkflowModelGroupedRankingWorkflowModel"
+          },
+          {
+            "$ref": "#/components/schemas/IOrderWorkflowModelSimpleWorkflowModel"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "CompareWorkflow": "#/components/schemas/IOrderWorkflowModelCompareWorkflowModel",
+            "EvaluationWorkflow": "#/components/schemas/IOrderWorkflowModelEvaluationWorkflowModel",
+            "GroupedRankingWorkflow": "#/components/schemas/IOrderWorkflowModelGroupedRankingWorkflowModel",
+            "SimpleWorkflow": "#/components/schemas/IOrderWorkflowModelSimpleWorkflowModel"
+          }
+        }
+      },
+      "IOrderWorkflowModelCompareWorkflowModel": {
+        "required": [
+          "criteria",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CompareWorkflow"
+            ],
+            "type": "string"
+          },
+          "criteria": {
+            "type": "string"
+          },
+          "pairMakerConfig": {
+            "$ref": "#/components/schemas/IPairMakerConfigModel"
+          },
+          "eloConfig": {
+            "$ref": "#/components/schemas/EloConfigModel"
+          },
+          "context": {
+            "type": "string",
+            "nullable": true
+          },
+          "contextAsset": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IAssetInput"
+              }
+            ]
+          },
+          "metadata": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/ListOfMetadata_IOrderMetadataInput"
+              }
+            ]
+          },
+          "featureFlags": {
+            "$ref": "#/components/schemas/ListOfFeatureFlag"
+          }
+        }
+      },
+      "IOrderWorkflowModelEvaluationWorkflowModel": {
+        "required": [
+          "validationSetId",
+          "shouldAcceptIncorrect",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "EvaluationWorkflow"
+            ],
+            "type": "string"
+          },
+          "validationSetId": {
+            "type": "string"
+          },
+          "shouldAcceptIncorrect": {
+            "type": "boolean"
+          },
+          "featureFlags": {
+            "$ref": "#/components/schemas/ListOfFeatureFlag"
+          }
+        }
+      },
+      "IOrderWorkflowModelGroupedRankingWorkflowModel": {
+        "required": [
+          "criteria",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "GroupedRankingWorkflow"
+            ],
+            "type": "string"
+          },
+          "criteria": {
+            "type": "string"
+          },
+          "pairMakerConfig": {
+            "$ref": "#/components/schemas/IPairMakerConfigModel"
+          },
+          "eloConfig": {
+            "$ref": "#/components/schemas/EloConfigModel"
+          },
+          "contexts": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "contextAssets": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/IAssetInput"
+            },
+            "nullable": true
+          },
+          "featureFlags": {
+            "$ref": "#/components/schemas/ListOfFeatureFlag"
+          },
+          "maxParallelism": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IOrderWorkflowModelSimpleWorkflowModel": {
+        "required": [
+          "blueprint",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "SimpleWorkflow"
+            ],
+            "type": "string"
+          },
+          "blueprint": {
+            "$ref": "#/components/schemas/IRapidBlueprint"
+          },
+          "featureFlags": {
+            "$ref": "#/components/schemas/ListOfFeatureFlag"
+          }
+        }
+      },
+      "IPairMakerConfigModel": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IPairMakerConfigModelOnlinePairMakerConfigModel"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "OnlinePairMaker": "#/components/schemas/IPairMakerConfigModelOnlinePairMakerConfigModel"
+          }
+        }
+      },
+      "IPairMakerConfigModelOnlinePairMakerConfigModel": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OnlinePairMaker"
+            ],
+            "type": "string"
+          },
+          "randomMatchesRatio": {
+            "type": "number",
+            "format": "float"
+          },
+          "totalComparisonBudget": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IPipelineArtifactModel": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IPipelineArtifactModelCreateDatasetArtifactModel"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "CreateDatasetArtifactModel": "#/components/schemas/IPipelineArtifactModelCreateDatasetArtifactModel"
+          }
+        }
+      },
+      "IPipelineArtifactModelCreateDatasetArtifactModel": {
+        "required": [
+          "identifier",
+          "dataset",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CreateDatasetArtifactModel"
+            ],
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "dataset": {
+            "$ref": "#/components/schemas/IDatasetModel"
+          }
+        }
+      },
+      "IPipelineModel": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IPipelineModelCreateSimplePipelineModel"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "CreateSimplePipelineModel": "#/components/schemas/IPipelineModelCreateSimplePipelineModel"
+          }
+        }
+      },
+      "IPipelineModelCreateSimplePipelineModel": {
+        "required": [
+          "artifacts",
+          "pipelineSteps",
+          "namePrefix",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CreateSimplePipelineModel"
+            ],
+            "type": "string"
+          },
+          "artifacts": {
+            "$ref": "#/components/schemas/ListOfIPipelineArtifactModel"
+          },
+          "pipelineSteps": {
+            "$ref": "#/components/schemas/ListOfIPipelineStepModel"
+          },
+          "namePrefix": {
+            "type": "string"
+          }
+        }
+      },
+      "IPipelineStepModel": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IPipelineStepModelDatasetEvaluationStepModel"
+          },
+          {
+            "$ref": "#/components/schemas/IPipelineStepModelSendCompletionMailStepModel"
+          },
+          {
+            "$ref": "#/components/schemas/IPipelineStepModelWorkflowAggregationStepModel"
+          },
+          {
+            "$ref": "#/components/schemas/IPipelineStepModelWorkflowLabelingStepModel"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "DatasetEvaluationStepModel": "#/components/schemas/IPipelineStepModelDatasetEvaluationStepModel",
+            "SendCompletionMailStepModel": "#/components/schemas/IPipelineStepModelSendCompletionMailStepModel",
+            "WorkflowAggregationStepModel": "#/components/schemas/IPipelineStepModelWorkflowAggregationStepModel",
+            "WorkflowLabelingStepModel": "#/components/schemas/IPipelineStepModelWorkflowLabelingStepModel"
+          }
+        }
+      },
+      "IPipelineStepModelDatasetEvaluationStepModel": {
+        "required": [
+          "datasetArtifactId",
+          "aggregationResultFileArtifactId",
+          "evaluationResultFileArtifactId",
+          "receiver",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "DatasetEvaluationStepModel"
+            ],
+            "type": "string"
+          },
+          "datasetArtifactId": {
+            "type": "string"
+          },
+          "aggregationResultFileArtifactId": {
+            "type": "string"
+          },
+          "evaluationResultFileArtifactId": {
+            "type": "string"
+          },
+          "receiver": {
+            "type": "string"
+          }
+        }
+      },
+      "IPipelineStepModelSendCompletionMailStepModel": {
+        "required": [
+          "receiver",
+          "resultsFileArtifactIdentifier",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "SendCompletionMailStepModel"
+            ],
+            "type": "string"
+          },
+          "receiver": {
+            "type": "string"
+          },
+          "resultsFileArtifactIdentifier": {
+            "type": "string"
+          }
+        }
+      },
+      "IPipelineStepModelWorkflowAggregationStepModel": {
+        "required": [
+          "campaignArtifactId",
+          "workflowArtifactId",
+          "fileArtifactId",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "WorkflowAggregationStepModel"
+            ],
+            "type": "string"
+          },
+          "campaignArtifactId": {
+            "type": "string"
+          },
+          "workflowArtifactId": {
+            "type": "string"
+          },
+          "fileArtifactId": {
+            "type": "string"
+          },
+          "aggregatorType": {
+            "$ref": "#/components/schemas/AggregatorType"
+          }
+        }
+      },
+      "IPipelineStepModelWorkflowLabelingStepModel": {
+        "required": [
+          "workflowArtifactId",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "WorkflowLabelingStepModel"
+            ],
+            "type": "string"
+          },
+          "workflowArtifactId": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidBlueprint": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IRapidBlueprintTranscriptionRapidBlueprint"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidBlueprintScrubRapidBlueprint"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidBlueprintPolygonRapidBlueprint"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidBlueprintNamedEntityRapidBlueprint"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidBlueprintLocateRapidBlueprint"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidBlueprintLineRapidBlueprint"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidBlueprintFreeTextRapidBlueprint"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidBlueprintCompareRapidBlueprint"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidBlueprintAttachCategoryRapidBlueprint"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidBlueprintBoundingBoxRapidBlueprint"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "TranscriptionBlueprint": "#/components/schemas/IRapidBlueprintTranscriptionRapidBlueprint",
+            "ScrubBlueprint": "#/components/schemas/IRapidBlueprintScrubRapidBlueprint",
+            "PolygonBlueprint": "#/components/schemas/IRapidBlueprintPolygonRapidBlueprint",
+            "NamedEntityBlueprint": "#/components/schemas/IRapidBlueprintNamedEntityRapidBlueprint",
+            "LocateBlueprint": "#/components/schemas/IRapidBlueprintLocateRapidBlueprint",
+            "LineBlueprint": "#/components/schemas/IRapidBlueprintLineRapidBlueprint",
+            "FreeTextBlueprint": "#/components/schemas/IRapidBlueprintFreeTextRapidBlueprint",
+            "CompareBlueprint": "#/components/schemas/IRapidBlueprintCompareRapidBlueprint",
+            "ClassifyBlueprint": "#/components/schemas/IRapidBlueprintAttachCategoryRapidBlueprint",
+            "BoundingBoxBlueprint": "#/components/schemas/IRapidBlueprintBoundingBoxRapidBlueprint"
+          }
+        }
+      },
+      "IRapidBlueprintAttachCategoryRapidBlueprint": {
+        "required": [
+          "title",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ClassifyBlueprint"
+            ],
+            "type": "string"
+          },
+          "possibleCategories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "categories": {
+            "$ref": "#/components/schemas/ListOfAttachCategoryRapidBlueprint_Category"
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidBlueprintBoundingBoxRapidBlueprint": {
+        "required": [
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "BoundingBoxBlueprint"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidBlueprintCompareRapidBlueprint": {
+        "required": [
+          "criteria",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CompareBlueprint"
+            ],
+            "type": "string"
+          },
+          "criteria": {
+            "type": "string"
+          },
+          "indexIdentifiers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IRapidBlueprintFreeTextRapidBlueprint": {
+        "required": [
+          "question",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "FreeTextBlueprint"
+            ],
+            "type": "string"
+          },
+          "question": {
+            "type": "string"
+          },
+          "validationSystemPrompt": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "IRapidBlueprintLineRapidBlueprint": {
+        "required": [
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LineBlueprint"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidBlueprintLocateRapidBlueprint": {
+        "required": [
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LocateBlueprint"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidBlueprintNamedEntityRapidBlueprint": {
+        "required": [
+          "target",
+          "classes",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NamedEntityBlueprint"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          },
+          "classes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IRapidBlueprintPolygonRapidBlueprint": {
+        "required": [
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "PolygonBlueprint"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidBlueprintScrubRapidBlueprint": {
+        "required": [
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ScrubBlueprint"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidBlueprintTranscriptionRapidBlueprint": {
+        "required": [
+          "title",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TranscriptionBlueprint"
+            ],
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "IRefereeModel": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IRefereeModelEarlyStoppingRefereeModel"
+          },
+          {
+            "$ref": "#/components/schemas/IRefereeModelNaiveRefereeModel"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "EarlyStoppingReferee": "#/components/schemas/IRefereeModelEarlyStoppingRefereeModel",
+            "NaiveReferee": "#/components/schemas/IRefereeModelNaiveRefereeModel"
+          }
+        }
+      },
+      "IRefereeModelEarlyStoppingRefereeModel": {
+        "required": [
+          "maxVotes",
+          "threshold",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "EarlyStoppingReferee"
+            ],
+            "type": "string"
+          },
+          "maxVotes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "threshold": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "IRefereeModelNaiveRefereeModel": {
+        "required": [
+          "totalVotes",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NaiveReferee"
+            ],
+            "type": "string"
+          },
+          "totalVotes": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ISelection": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ISelectionAbTestSelection"
+          },
+          {
+            "$ref": "#/components/schemas/ISelectionCappedSelection"
+          },
+          {
+            "$ref": "#/components/schemas/ISelectionConditionalValidationSelection"
+          },
+          {
+            "$ref": "#/components/schemas/ISelectionDemographicSelection"
+          },
+          {
+            "$ref": "#/components/schemas/ISelectionEffortCappedSelection"
+          },
+          {
+            "$ref": "#/components/schemas/ISelectionLabelingSelection"
+          },
+          {
+            "$ref": "#/components/schemas/ISelectionShufflingSelection"
+          },
+          {
+            "$ref": "#/components/schemas/ISelectionStaticSelection"
+          },
+          {
+            "$ref": "#/components/schemas/ISelectionValidationSelection"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "AbTestSelection": "#/components/schemas/ISelectionAbTestSelection",
+            "CappedSelection": "#/components/schemas/ISelectionCappedSelection",
+            "ConditionalValidationSelection": "#/components/schemas/ISelectionConditionalValidationSelection",
+            "DemographicSelection": "#/components/schemas/ISelectionDemographicSelection",
+            "EffortCappedSelection": "#/components/schemas/ISelectionEffortCappedSelection",
+            "LabelingSelection": "#/components/schemas/ISelectionLabelingSelection",
+            "ShufflingSelection": "#/components/schemas/ISelectionShufflingSelection",
+            "StaticSelection": "#/components/schemas/ISelectionStaticSelection",
+            "ValidationSelection": "#/components/schemas/ISelectionValidationSelection"
+          }
+        }
+      },
+      "ISelectionAbTestSelection": {
+        "required": [
+          "a",
+          "b",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "AbTestSelection"
+            ],
+            "type": "string"
+          },
+          "userSegment": {
+            "type": "string",
+            "nullable": true
+          },
+          "a": {
+            "$ref": "#/components/schemas/ListOfISelection"
+          },
+          "b": {
+            "$ref": "#/components/schemas/ListOfISelection"
+          }
+        }
+      },
+      "ISelectionCappedSelection": {
+        "required": [
+          "selections",
+          "maxRapids",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CappedSelection"
+            ],
+            "type": "string"
+          },
+          "selections": {
+            "$ref": "#/components/schemas/ListOfISelection"
+          },
+          "maxRapids": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ISelectionConditionalValidationSelection": {
+        "required": [
+          "validationSetId",
+          "validationChances",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ConditionalValidationSelection"
+            ],
+            "type": "string"
+          },
+          "validationSetId": {
+            "type": "string"
+          },
+          "validationChances": {
+            "$ref": "#/components/schemas/ListOfConditionalValidationSelection_ValidationChance"
+          },
+          "dimensions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ISelectionDemographicSelection": {
+        "required": [
+          "keys",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "DemographicSelection"
+            ],
+            "type": "string"
+          },
+          "keys": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "maxRapids": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ISelectionEffortCappedSelection": {
+        "required": [
+          "effortBudget",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "EffortCappedSelection"
+            ],
+            "type": "string"
+          },
+          "effortBudget": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "retrievalMode": {
+            "$ref": "#/components/schemas/RetrievalMode"
+          },
+          "maxIterations": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ISelectionLabelingSelection": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LabelingSelection"
+            ],
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "effortBudget": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "retrievalMode": {
+            "$ref": "#/components/schemas/RetrievalMode"
+          },
+          "maxIterations": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ISelectionShufflingSelection": {
+        "required": [
+          "selections",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ShufflingSelection"
+            ],
+            "type": "string"
+          },
+          "selections": {
+            "$ref": "#/components/schemas/ListOfISelection"
+          }
+        }
+      },
+      "ISelectionStaticSelection": {
+        "required": [
+          "rapidIds",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "StaticSelection"
+            ],
+            "type": "string"
+          },
+          "rapidIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ISelectionValidationSelection": {
+        "required": [
+          "amount",
+          "validationSetId",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ValidationSelection"
+            ],
+            "type": "string"
+          },
+          "amount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "validationSetId": {
+            "type": "string"
+          }
+        }
+      },
+      "IUserFilterModel": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IUserFilterModelAgeUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelAndUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelCampaignUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelCountryUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelCustomUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelGenderUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelLanguageUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelNewUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelNotUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelOrUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelResponseCountUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelUserScoreUserFilterModel"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "AgeFilter": "#/components/schemas/IUserFilterModelAgeUserFilterModel",
+            "AndFilter": "#/components/schemas/IUserFilterModelAndUserFilterModel",
+            "CampaignFilter": "#/components/schemas/IUserFilterModelCampaignUserFilterModel",
+            "CountryFilter": "#/components/schemas/IUserFilterModelCountryUserFilterModel",
+            "CustomFilter": "#/components/schemas/IUserFilterModelCustomUserFilterModel",
+            "GenderFilter": "#/components/schemas/IUserFilterModelGenderUserFilterModel",
+            "LanguageFilter": "#/components/schemas/IUserFilterModelLanguageUserFilterModel",
+            "NewUserFilter": "#/components/schemas/IUserFilterModelNewUserFilterModel",
+            "NotFilter": "#/components/schemas/IUserFilterModelNotUserFilterModel",
+            "OrFilter": "#/components/schemas/IUserFilterModelOrUserFilterModel",
+            "ResponseCountFilter": "#/components/schemas/IUserFilterModelResponseCountUserFilterModel",
+            "UserScoreFilter": "#/components/schemas/IUserFilterModelUserScoreUserFilterModel"
+          }
+        }
+      },
+      "IUserFilterModelAgeUserFilterModel": {
+        "required": [
+          "ageGroups",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "AgeFilter"
+            ],
+            "type": "string"
+          },
+          "ageGroups": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "0-17",
+                "18-29",
+                "30-39",
+                "40-49",
+                "50-64",
+                "65+"
+              ]
+            }
+          }
+        }
+      },
+      "IUserFilterModelAndUserFilterModel": {
+        "required": [
+          "filters",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "AndFilter"
+            ],
+            "type": "string"
+          },
+          "filters": {
+            "$ref": "#/components/schemas/ListOfIUserFilterModel"
+          }
+        }
+      },
+      "IUserFilterModelCampaignUserFilterModel": {
+        "required": [
+          "campaignIds",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CampaignFilter"
+            ],
+            "type": "string"
+          },
+          "campaignIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IUserFilterModelCountryUserFilterModel": {
+        "required": [
+          "countries",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CountryFilter"
+            ],
+            "type": "string"
+          },
+          "countries": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IUserFilterModelCustomUserFilterModel": {
+        "required": [
+          "identifier",
+          "values",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CustomFilter"
+            ],
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IUserFilterModelGenderUserFilterModel": {
+        "required": [
+          "genders",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "GenderFilter"
+            ],
+            "type": "string"
+          },
+          "genders": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "Male",
+                "Female",
+                "Other"
+              ]
+            }
+          }
+        }
+      },
+      "IUserFilterModelLanguageUserFilterModel": {
+        "required": [
+          "languages",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LanguageFilter"
+            ],
+            "type": "string"
+          },
+          "languages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IUserFilterModelNewUserFilterModel": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NewUserFilter"
+            ],
+            "type": "string"
+          }
+        }
+      },
+      "IUserFilterModelNotUserFilterModel": {
+        "required": [
+          "filter",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NotFilter"
+            ],
+            "type": "string"
+          },
+          "filter": {
+            "$ref": "#/components/schemas/IUserFilterModel"
+          }
+        }
+      },
+      "IUserFilterModelOrUserFilterModel": {
+        "required": [
+          "filters",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OrFilter"
+            ],
+            "type": "string"
+          },
+          "filters": {
+            "$ref": "#/components/schemas/ListOfIUserFilterModel"
+          }
+        }
+      },
+      "IUserFilterModelResponseCountUserFilterModel": {
+        "required": [
+          "responseCount",
+          "dimension",
+          "operator",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ResponseCountFilter"
+            ],
+            "type": "string"
+          },
+          "responseCount": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "dimension": {
+            "type": "string"
+          },
+          "operator": {
+            "$ref": "#/components/schemas/ComparisonOperator"
+          }
+        }
+      },
+      "IUserFilterModelUserScoreUserFilterModel": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "UserScoreFilter"
+            ],
+            "type": "string"
+          },
+          "lowerbound": {
+            "type": "number",
+            "format": "double"
+          },
+          "upperbound": {
+            "type": "number",
+            "format": "double"
+          },
+          "dimension": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ListOfAggregatedOrdersModel": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/AggregatedOrdersModel"
+        }
+      },
+      "ListOfAttachCategoryRapidBlueprint_Category": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/AttachCategoryRapidBlueprint_Category"
+        }
+      },
+      "ListOfConditionalValidationSelection_ValidationChance": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/ConditionalValidationSelection_ValidationChance"
+        }
+      },
+      "ListOfFeatureFlag": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/FeatureFlag"
+        }
+      },
+      "ListOfFeatureFlagModel": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/FeatureFlagModel"
+        }
+      },
+      "ListOfFilter": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Filter"
+        }
+      },
+      "ListOfIAssetInput": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/IAssetInput"
+        }
+      },
+      "ListOfIPipelineArtifactModel": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/IPipelineArtifactModel"
+        }
+      },
+      "ListOfIPipelineStepModel": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/IPipelineStepModel"
+        }
+      },
+      "ListOfISelection": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/ISelection"
+        }
+      },
+      "ListOfIUserFilterModel": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/IUserFilterModel"
+        }
+      },
+      "ListOfMetadata_IOrderMetadataInput": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Metadata_IOrderMetadataInput"
+        }
+      },
+      "ListOfOrderModel": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/OrderModel"
+        }
+      },
+      "ListOfPublicOrderModel": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/PublicOrderModel"
+        }
+      },
+      "ListOfSortCriterion": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/SortCriterion"
+        }
+      },
+      "LogicOperator": {
+        "enum": [
+          "And",
+          "Or",
+          "Not"
+        ]
+      },
+      "Metadata_IOrderMetadataInput": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/Metadata_IOrderMetadataInputMetadata_PromptMetadataInput"
+          },
+          {
+            "$ref": "#/components/schemas/Metadata_IOrderMetadataInputMetadata_PromptAssetMetadataInput"
+          },
+          {
+            "$ref": "#/components/schemas/Metadata_IOrderMetadataInputMetadata_TranscriptionMetadataInput"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "PromptMetadataInput": "#/components/schemas/Metadata_IOrderMetadataInputMetadata_PromptMetadataInput",
+            "PromptAssetMetadataInput": "#/components/schemas/Metadata_IOrderMetadataInputMetadata_PromptAssetMetadataInput",
+            "TranscriptionMetadataInput": "#/components/schemas/Metadata_IOrderMetadataInputMetadata_TranscriptionMetadataInput"
+          }
+        }
+      },
+      "Metadata_IOrderMetadataInputMetadata_PromptAssetMetadataInput": {
+        "required": [
+          "asset",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "PromptAssetMetadataInput"
+            ],
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAssetInput"
+          }
+        }
+      },
+      "Metadata_IOrderMetadataInputMetadata_PromptMetadataInput": {
+        "required": [
+          "prompt",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "PromptMetadataInput"
+            ],
+            "type": "string"
+          },
+          "prompt": {
+            "type": "string"
+          }
+        }
+      },
+      "Metadata_IOrderMetadataInputMetadata_TranscriptionMetadataInput": {
+        "required": [
+          "transcription",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TranscriptionMetadataInput"
+            ],
+            "type": "string"
+          },
+          "transcription": {
+            "type": "string"
+          }
+        }
+      },
+      "MetadataInputCollection": {
+        "type": "object",
+        "additionalProperties": {
+          "$ref": "#/components/schemas/IMetadataInput"
+        }
+      },
+      "MetadataVisibilities": {
+        "type": "array",
+        "items": {
+          "enum": [
+            "None",
+            "Users",
+            "Customers",
+            "Admins",
+            "Dashboard",
+            "All"
+          ],
+          "type": "string"
+        }
+      },
+      "OrderModel": {
+        "required": [
+          "id",
+          "pipelineId",
+          "orderDate",
+          "customerMail",
+          "state",
+          "orderName",
+          "isPublic"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "pipelineId": {
+            "type": "string"
+          },
+          "orderDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "customerMail": {
+            "type": "string"
+          },
+          "state": {
+            "$ref": "#/components/schemas/OrderState"
+          },
+          "orderName": {
+            "type": "string"
+          },
+          "isPublic": {
+            "type": "boolean"
+          },
+          "failureMessage": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "OrderState": {
+        "enum": [
+          "Created",
+          "Preview",
+          "Submitted",
+          "ManualReview",
+          "Processing",
+          "Paused",
+          "Completed",
+          "Cancelled",
+          "Failed"
+        ]
+      },
+      "PagedResultOfAggregatedOrdersModel": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "$ref": "#/components/schemas/ListOfAggregatedOrdersModel"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PagedResultOfOrderModel": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "$ref": "#/components/schemas/ListOfOrderModel"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PageInfo": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PreviewOrderModel": {
+        "type": "object",
+        "properties": {
+          "ignoreFailedDatapoints": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PublicOrderModel": {
+        "required": [
+          "id",
+          "name",
+          "isPublic"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "isPublic": {
+            "type": "boolean"
+          }
+        }
+      },
+      "QueryModel": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/PageInfo"
+              }
+            ]
+          },
+          "filter": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/RootFilter"
+              }
+            ]
+          },
+          "sortCriteria": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/ListOfSortCriterion"
+              }
+            ]
+          }
+        }
+      },
+      "RetrievalMode": {
+        "enum": [
+          "Random",
+          "Shuffled",
+          "Sequential",
+          null
+        ]
+      },
+      "RootFilter": {
+        "type": "object",
+        "properties": {
+          "filters": {
+            "$ref": "#/components/schemas/ListOfFilter"
+          },
+          "logic": {
+            "$ref": "#/components/schemas/LogicOperator"
+          }
+        }
+      },
+      "SortCriterion": {
+        "required": [
+          "propertyName",
+          "direction"
+        ],
+        "type": "object",
+        "properties": {
+          "propertyName": {
+            "type": "string"
+          },
+          "direction": {
+            "$ref": "#/components/schemas/SortDirection"
+          }
+        }
+      },
+      "SortDirection": {
+        "enum": [
+          "Asc",
+          "Desc"
+        ]
+      },
+      "StickyState": {
+        "enum": [
+          "None",
+          "Temporary",
+          "Permanent",
+          "Passive",
+          null
+        ]
+      },
+      "SubmitOrderModel": {
+        "type": "object",
+        "properties": {
+          "ignoreFailedDatapoints": {
+            "type": "boolean"
+          }
+        }
+      },
+      "UnlockOrderResult": {
+        "required": [
+          "datasetIds"
+        ],
+        "type": "object",
+        "properties": {
+          "datasetIds": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "UpdateOrderNameModel": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "JWT Authorization header using the Bearer scheme",
+        "scheme": "bearer",
+        "bearerFormat": "Json Web Token"
+      },
+      "OpenIdConnect": {
+        "type": "openIdConnect",
+        "description": "OpenId Connect connection flow",
+        "openIdConnectUrl": "https://auth.rabbitdata.ch/.well-known/openid-configuration"
+      },
+      "OAuth2": {
+        "type": "oauth2",
+        "description": "OAuth2 authorization header using the Bearer scheme",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://auth.rabbitdata.ch/connect/authorize",
+            "tokenUrl": "https://auth.rabbitdata.ch/connect/token",
+            "refreshUrl": "https://auth.rabbitdata.ch/connect/token",
+            "scopes": {
+              "openid": "OpenID",
+              "profile": "Profile",
+              "email": "Email"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "Bearer": [ ],
+      "OpenIdConnect": [
+        "openid",
+        "profile",
+        "email"
+      ],
+      "OAuth2": [
+        "openid",
+        "profile",
+        "email"
+      ]
+    }
+  ],
+  "tags": [
+    {
+      "name": "Feedback"
+    },
+    {
+      "name": "Order"
+    }
+  ]
+}

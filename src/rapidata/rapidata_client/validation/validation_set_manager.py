@@ -736,6 +736,7 @@ rapidata_config.order.autoValidationSetCreation = False"""
         with tracer.start_as_current_span(
             "ValidationSetManager.get_validation_set_by_id"
         ):
+            logger.debug("Getting validation set by ID: %s", validation_set_id)
             validation_set = self._openapi_service.validation_api.validation_set_validation_set_id_get(
                 validation_set_id=validation_set_id
             )
@@ -760,6 +761,9 @@ rapidata_config.order.autoValidationSetCreation = False"""
             list[RapidataValidationSet]: The list of validation sets.
         """
         with tracer.start_as_current_span("ValidationSetManager.find_validation_sets"):
+            logger.debug(
+                "Finding validation sets with name: %s and amount: %s", name, amount
+            )
 
             validation_page_result = (
                 self._openapi_service.validation_api.validation_sets_get(
@@ -782,6 +786,8 @@ rapidata_config.order.autoValidationSetCreation = False"""
                     )
                 )
             )
+
+            logger.debug("Validation sets found: %s", validation_page_result.items)
 
             validation_sets = [
                 self.get_validation_set_by_id(str(validation_set.id))

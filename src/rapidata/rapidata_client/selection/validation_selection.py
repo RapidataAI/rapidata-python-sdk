@@ -18,14 +18,17 @@ class ValidationSelection(RapidataSelection):
         self.amount = amount
 
     def _to_model(self):
-        from rapidata.api_client.models.validation_selection import (
-            ValidationSelection as ValidationSelectionModel,
+        from rapidata.api_client.models.i_selection import ISelection
+        from rapidata.api_client.models.i_selection_validation_selection import (
+            ISelectionValidationSelection,
         )
 
-        return ValidationSelectionModel(
-            _t="ValidationSelection",
-            validationSetId=self.validation_set_id,
-            amount=self.amount,
+        return ISelection(
+            actual_instance=ISelectionValidationSelection(
+                _t="ValidationSelection",
+                validationSetId=self.validation_set_id,
+                amount=self.amount,
+            )
         )
 
     def __str__(self) -> str:

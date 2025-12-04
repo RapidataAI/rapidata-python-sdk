@@ -11,17 +11,27 @@ on:
         - patch
         - minor
         - major
+      branch:
+        description: 'Branch to release from'
+        required: true
+        default: 'main'
+        type: choice
+        options:
+        - main
+        - 2.x
 jobs:
   release-and-publish:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v5
       with:
-        python-version: '3.x'
-    - name: Install Poetry
-      uses: snok/install-poetry@v1
+        ref: ${{ github.event.inputs.branch }}
+    - name: Set up Python
+      uses: actions/setup-python@v6
+      with:
+        python-version-file: ".python-version"
+    - name: Install uv
+      uses: astral-sh/setup-uv@v7
     - name: Configure Git
       run: |
         git config user.name github-actions
@@ -30,9 +40,9 @@ jobs:
     - name: Update version
       id: update_version
       run: |
-        old_version=$(poetry version -s)
-        poetry version ${{ github.event.inputs.version_part }}
-        new_version=$(poetry version -s)
+        old_version=$(uv version --short)
+        uv version ${{ github.event.inputs.version_part }}
+        new_version=$(uv version --short)
         echo "new_version=$new_version" >>$GITHUB_OUTPUT
         echo "old_version=$old_version" >>$GITHUB_OUTPUT
     
@@ -66,7 +76,7 @@ jobs:
       run: |
         git add pyproject.toml src/rapidata/__init__.py
         git commit -m "Bump version from ${{ steps.update_version.outputs.old_version }} to ${{ steps.update_version.outputs.new_version }}"
-        git push
+        git push origin ${{ github.event.inputs.branch }}
     
     - name: Create and push tag
       run: |
@@ -77,9 +87,8 @@ jobs:
       env:
         PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
       run: |
-        poetry config pypi-token.pypi $PYPI_TOKEN
-        poetry build
-        poetry publish
+        uv build
+        uv publish --token $PYPI_TOKEN
     - name: List dist contents
       run: ls -l dist/
     - name: Create GitHub Release

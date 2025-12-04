@@ -1,0 +1,949 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Rapidata Audience API",
+    "description": "The API for the Rapidata Audience service",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "https://api.rabbitdata.ch/"
+    }
+  ],
+  "paths": {
+    "/audiences": {
+      "get": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Queries all available audiences.",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfQueryAudiencesResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfQueryAudiencesResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfQueryAudiencesResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/audience/{audienceId}": {
+      "get": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Gets an audience by its Id.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "description": "The id of the audience to get.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAudienceByIdResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAudienceByIdResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAudienceByIdResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Patches an existing audience.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAudienceRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAudienceRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAudienceRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/audience": {
+      "post": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Creates a new empty audience.",
+        "description": "An audience is a group of users that are trained to solve particular tasks.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAudienceRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAudienceRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAudienceRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateAudienceResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateAudienceResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateAudienceResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AudienceStatus": {
+        "enum": [
+          "Created",
+          "Recruiting",
+          "Ready"
+        ]
+      },
+      "ComparisonOperator": {
+        "enum": [
+          "Equal",
+          "NotEqual",
+          "LessThan",
+          "LessThanOrEqual",
+          "GreaterThan",
+          "GreaterThanOrEqual"
+        ]
+      },
+      "CreateAudienceRequest": {
+        "required": [
+          "name",
+          "validationSetId"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "validationSetId": {
+            "type": "string"
+          },
+          "filters": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/ListOfICampaignFilter"
+              }
+            ]
+          }
+        }
+      },
+      "CreateAudienceResult": {
+        "required": [
+          "audienceId"
+        ],
+        "type": "object",
+        "properties": {
+          "audienceId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "Filter": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": { },
+          "operator": {
+            "$ref": "#/components/schemas/FilterOperator"
+          },
+          "logic": {
+            "$ref": "#/components/schemas/LogicOperator"
+          },
+          "filters": {
+            "$ref": "#/components/schemas/ListOfFilter"
+          }
+        }
+      },
+      "FilterOperator": {
+        "enum": [
+          "Eq",
+          "Neq",
+          "Gt",
+          "Gte",
+          "Lt",
+          "Lte",
+          "Contains",
+          "StartsWith",
+          "EndsWith",
+          "In"
+        ]
+      },
+      "GetAudienceByIdResult": {
+        "required": [
+          "id",
+          "name",
+          "validationSetId",
+          "status",
+          "qualifiedUserCount",
+          "filters",
+          "createdAt",
+          "ownerMail"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "validationSetId": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/AudienceStatus"
+          },
+          "qualifiedUserCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "filters": {
+            "$ref": "#/components/schemas/ListOfICampaignFilter"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ownerMail": {
+            "type": "string"
+          }
+        }
+      },
+      "ICampaignFilter": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ICampaignFilterAndFilter"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterCampaignFilter"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterCountryFilter"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterDemographicFilter"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterLanguageFilter"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterNewUserFilter"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterNotFilter"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterOrFilter"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterResponseCountFilter"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterUserActionRestrictionFilter"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterUserScoreFilter"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterUserStateFilter"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "AndFilter": "#/components/schemas/ICampaignFilterAndFilter",
+            "CampaignFilter": "#/components/schemas/ICampaignFilterCampaignFilter",
+            "CountryFilter": "#/components/schemas/ICampaignFilterCountryFilter",
+            "DemographicFilter": "#/components/schemas/ICampaignFilterDemographicFilter",
+            "LanguageFilter": "#/components/schemas/ICampaignFilterLanguageFilter",
+            "NewUserFilter": "#/components/schemas/ICampaignFilterNewUserFilter",
+            "NotFilter": "#/components/schemas/ICampaignFilterNotFilter",
+            "OrFilter": "#/components/schemas/ICampaignFilterOrFilter",
+            "ResponseCountFilter": "#/components/schemas/ICampaignFilterResponseCountFilter",
+            "UserActionRestrictionFilter": "#/components/schemas/ICampaignFilterUserActionRestrictionFilter",
+            "UserScoreFilter": "#/components/schemas/ICampaignFilterUserScoreFilter",
+            "UserStateFilter": "#/components/schemas/ICampaignFilterUserStateFilter"
+          }
+        }
+      },
+      "ICampaignFilterAndFilter": {
+        "required": [
+          "filters",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "AndFilter"
+            ],
+            "type": "string"
+          },
+          "filters": {
+            "$ref": "#/components/schemas/ListOfICampaignFilter"
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "innerFilters": {
+            "$ref": "#/components/schemas/ListOfICampaignFilter"
+          }
+        }
+      },
+      "ICampaignFilterCampaignFilter": {
+        "required": [
+          "campaignIds",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CampaignFilter"
+            ],
+            "type": "string"
+          },
+          "campaignIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "uint32"
+          }
+        }
+      },
+      "ICampaignFilterCountryFilter": {
+        "required": [
+          "countries",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CountryFilter"
+            ],
+            "type": "string"
+          },
+          "countries": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "uint32"
+          }
+        }
+      },
+      "ICampaignFilterDemographicFilter": {
+        "required": [
+          "identifier",
+          "values",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "DemographicFilter"
+            ],
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "uint32"
+          }
+        }
+      },
+      "ICampaignFilterLanguageFilter": {
+        "required": [
+          "languages",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LanguageFilter"
+            ],
+            "type": "string"
+          },
+          "languages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "uint32"
+          }
+        }
+      },
+      "ICampaignFilterNewUserFilter": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NewUserFilter"
+            ],
+            "type": "string"
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "uint32"
+          }
+        }
+      },
+      "ICampaignFilterNotFilter": {
+        "required": [
+          "filter",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NotFilter"
+            ],
+            "type": "string"
+          },
+          "filter": {
+            "$ref": "#/components/schemas/ICampaignFilter"
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "innerFilters": {
+            "$ref": "#/components/schemas/ListOfICampaignFilter"
+          }
+        }
+      },
+      "ICampaignFilterOrFilter": {
+        "required": [
+          "filters",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OrFilter"
+            ],
+            "type": "string"
+          },
+          "filters": {
+            "$ref": "#/components/schemas/ListOfICampaignFilter"
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "innerFilters": {
+            "$ref": "#/components/schemas/ListOfICampaignFilter"
+          }
+        }
+      },
+      "ICampaignFilterResponseCountFilter": {
+        "required": [
+          "responseCount",
+          "dimension",
+          "operator",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ResponseCountFilter"
+            ],
+            "type": "string"
+          },
+          "responseCount": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "dimension": {
+            "type": "string"
+          },
+          "operator": {
+            "$ref": "#/components/schemas/ComparisonOperator"
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "uint32"
+          }
+        }
+      },
+      "ICampaignFilterUserActionRestrictionFilter": {
+        "required": [
+          "requiredActions",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "UserActionRestrictionFilter"
+            ],
+            "type": "string"
+          },
+          "requiredActions": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "Listen",
+                "UseKeyboard"
+              ]
+            }
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "uint32"
+          }
+        }
+      },
+      "ICampaignFilterUserScoreFilter": {
+        "required": [
+          "lowerbound",
+          "upperbound",
+          "dimension",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "UserScoreFilter"
+            ],
+            "type": "string"
+          },
+          "lowerbound": {
+            "type": "number",
+            "format": "double"
+          },
+          "upperbound": {
+            "type": "number",
+            "format": "double"
+          },
+          "dimension": {
+            "type": "string"
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "uint32"
+          }
+        }
+      },
+      "ICampaignFilterUserStateFilter": {
+        "required": [
+          "states",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "UserStateFilter"
+            ],
+            "type": "string"
+          },
+          "states": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "Training",
+                "Blacklist",
+                "Active"
+              ]
+            }
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "uint32"
+          }
+        }
+      },
+      "ListOfFilter": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Filter"
+        }
+      },
+      "ListOfICampaignFilter": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/ICampaignFilter"
+        }
+      },
+      "ListOfQueryAudiencesResult": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/QueryAudiencesResult"
+        }
+      },
+      "ListOfSortCriterion": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/SortCriterion"
+        }
+      },
+      "LogicOperator": {
+        "enum": [
+          "And",
+          "Or",
+          "Not"
+        ]
+      },
+      "OptionOfIReadOnlyListOfICampaignFilter": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ListOfICampaignFilter"
+          },
+          {
+            "nullable": true
+          }
+        ]
+      },
+      "OptionOfstring": {
+        "type": "string",
+        "nullable": true
+      },
+      "PagedResultOfQueryAudiencesResult": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "$ref": "#/components/schemas/ListOfQueryAudiencesResult"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PageInfo": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "QueryAudiencesResult": {
+        "required": [
+          "id",
+          "name",
+          "validationSetId",
+          "status",
+          "qualifiedUserCount",
+          "filters",
+          "createdAt",
+          "ownerMail"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "validationSetId": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/AudienceStatus"
+          },
+          "qualifiedUserCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "filters": {
+            "$ref": "#/components/schemas/ListOfICampaignFilter"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ownerMail": {
+            "type": "string"
+          }
+        }
+      },
+      "QueryModel": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/PageInfo"
+              }
+            ]
+          },
+          "filter": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/RootFilter"
+              }
+            ]
+          },
+          "sortCriteria": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/ListOfSortCriterion"
+              }
+            ]
+          }
+        }
+      },
+      "RootFilter": {
+        "type": "object",
+        "properties": {
+          "filters": {
+            "$ref": "#/components/schemas/ListOfFilter"
+          },
+          "logic": {
+            "$ref": "#/components/schemas/LogicOperator"
+          }
+        }
+      },
+      "SortCriterion": {
+        "required": [
+          "propertyName",
+          "direction"
+        ],
+        "type": "object",
+        "properties": {
+          "propertyName": {
+            "type": "string"
+          },
+          "direction": {
+            "$ref": "#/components/schemas/SortDirection"
+          }
+        }
+      },
+      "SortDirection": {
+        "enum": [
+          "Asc",
+          "Desc"
+        ]
+      },
+      "UpdateAudienceRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/OptionOfstring"
+          },
+          "filters": {
+            "$ref": "#/components/schemas/OptionOfIReadOnlyListOfICampaignFilter"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "JWT Authorization header using the Bearer scheme",
+        "scheme": "bearer",
+        "bearerFormat": "Json Web Token"
+      },
+      "OpenIdConnect": {
+        "type": "openIdConnect",
+        "description": "OpenId Connect connection flow",
+        "openIdConnectUrl": "https://auth.rabbitdata.ch/.well-known/openid-configuration"
+      },
+      "OAuth2": {
+        "type": "oauth2",
+        "description": "OAuth2 authorization header using the Bearer scheme",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://auth.rabbitdata.ch/connect/authorize",
+            "tokenUrl": "https://auth.rabbitdata.ch/connect/token",
+            "refreshUrl": "https://auth.rabbitdata.ch/connect/token",
+            "scopes": {
+              "openid": "OpenID",
+              "profile": "Profile",
+              "email": "Email"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "Bearer": [ ],
+      "OpenIdConnect": [
+        "openid",
+        "profile",
+        "email"
+      ],
+      "OAuth2": [
+        "openid",
+        "profile",
+        "email"
+      ]
+    }
+  ],
+  "tags": [
+    {
+      "name": "Audience"
+    }
+  ]
+}

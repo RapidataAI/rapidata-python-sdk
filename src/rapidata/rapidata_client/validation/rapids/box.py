@@ -35,7 +35,6 @@ class Box(BaseModel):
 
     def to_model(self) -> BoxShape:
         return BoxShape(
-            _t="BoxShape",
             xMin=self.x_min * 100,
             yMin=self.y_min * 100,
             xMax=self.x_max * 100,

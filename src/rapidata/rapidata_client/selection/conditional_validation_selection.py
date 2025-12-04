@@ -56,25 +56,28 @@ class ConditionalValidationSelection(RapidataSelection):
         self.dimensions = dimensions
 
     def _to_model(self):
-        from rapidata.api_client.models.conditional_validation_selection import (
-            ConditionalValidationSelection,
+        from rapidata.api_client.models.i_selection import ISelection
+        from rapidata.api_client.models.i_selection_conditional_validation_selection import (
+            ISelectionConditionalValidationSelection,
         )
         from rapidata.api_client.models.conditional_validation_selection_validation_chance import (
             ConditionalValidationSelectionValidationChance,
         )
 
-        return ConditionalValidationSelection(
-            _t="ConditionalValidationSelection",
-            validationSetId=self.validation_set_id,
-            validationChances=[
-                ConditionalValidationSelectionValidationChance(
-                    userScoreThreshold=threshold, chance=chance, rapidCount=rapid_count
-                )
-                for threshold, chance, rapid_count in zip(
-                    self.thresholds, self.chances, self.rapid_counts
-                )
-            ],
-            dimensions=self.dimensions,
+        return ISelection(
+            actual_instance=ISelectionConditionalValidationSelection(
+                _t="ConditionalValidationSelection",
+                validationSetId=self.validation_set_id,
+                validationChances=[
+                    ConditionalValidationSelectionValidationChance(
+                        userScoreThreshold=threshold, chance=chance, rapidCount=rapid_count
+                    )
+                    for threshold, chance, rapid_count in zip(
+                        self.thresholds, self.chances, self.rapid_counts
+                    )
+                ],
+                dimensions=self.dimensions,
+            )
         )
 
     def __str__(self) -> str:

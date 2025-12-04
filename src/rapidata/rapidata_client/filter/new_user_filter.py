@@ -10,6 +10,11 @@ class NewUserFilter(RapidataFilter):
     """
 
     def _to_model(self):
-        from rapidata.api_client.models.new_user_filter_model import NewUserFilterModel
+        from rapidata.api_client.models.i_user_filter_model import IUserFilterModel
+        from rapidata.api_client.models.i_user_filter_model_new_user_filter_model import (
+            IUserFilterModelNewUserFilterModel,
+        )
 
-        return NewUserFilterModel(_t="NewUserFilter")
+        return IUserFilterModel(
+            actual_instance=IUserFilterModelNewUserFilterModel(_t="NewUserFilter")
+        )

@@ -1,26 +1,51 @@
 import os
-from rapidata.api_client import (
-    AttachCategoryTruth,
-    BoundingBoxTruth,
-    ClassifyPayload,
-    ComparePayload,
-    CompareTruth,
-    LinePayload,
-    LocateBoxTruth,
-    LocatePayload,
-    ScrubPayload,
-    ScrubRange,
-    ScrubTruth,
-    TranscriptionPayload,
-    TranscriptionTruth,
-    TranscriptionWord,
-)
-from rapidata.rapidata_client.validation.rapids.box import Box
-from rapidata.api_client.models.classify_payload_category import ClassifyPayloadCategory
 from typing import Literal
 
+from rapidata.api_client.models.i_validation_truth_attach_category_truth import (
+    IValidationTruthAttachCategoryTruth,
+)
+from rapidata.api_client.models.i_validation_truth_bounding_box_truth import (
+    IValidationTruthBoundingBoxTruth,
+)
+from rapidata.api_client.models.i_rapid_payload_classify_payload import (
+    IRapidPayloadClassifyPayload,
+)
+from rapidata.api_client.models.classify_payload_category import ClassifyPayloadCategory
+from rapidata.api_client.models.i_rapid_payload_compare_payload import (
+    IRapidPayloadComparePayload,
+)
+from rapidata.api_client.models.i_validation_truth_compare_truth import (
+    IValidationTruthCompareTruth,
+)
+from rapidata.api_client.models.i_rapid_payload_line_payload import (
+    IRapidPayloadLinePayload,
+)
+from rapidata.api_client.models.i_validation_truth_locate_box_truth import (
+    IValidationTruthLocateBoxTruth,
+)
+from rapidata.api_client.models.i_rapid_payload_locate_payload import (
+    IRapidPayloadLocatePayload,
+)
+from rapidata.api_client.models.i_rapid_payload_scrub_payload import (
+    IRapidPayloadScrubPayload,
+)
+from rapidata.api_client.models.scrub_payload import ScrubPayload
+from rapidata.api_client.models.scrub_range import ScrubRange
+from rapidata.api_client.models.i_validation_truth_scrub_truth import (
+    IValidationTruthScrubTruth,
+)
+from rapidata.api_client.models.scrub_truth import ScrubTruth
+from rapidata.api_client.models.i_rapid_payload_transcription_payload import (
+    IRapidPayloadTranscriptionPayload,
+)
+from rapidata.api_client.models.i_validation_truth_transcription_truth import (
+    IValidationTruthTranscriptionTruth,
+)
+from rapidata.api_client.models.transcription_word import TranscriptionWord
+from rapidata.rapidata_client.validation.rapids.box import Box
 from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 from rapidata.service.openapi_service import OpenAPIService
+from rapidata.api_client.models.i_rapid_payload import IRapidPayload
 
 
 class RapidsManager:
@@ -60,15 +85,17 @@ class RapidsManager:
         if not all(truth in answer_options for truth in truths):
             raise ValueError("Truths must be part of the answer options")
 
-        payload = ClassifyPayload(
-            _t="ClassifyPayload",
-            categories=[
-                ClassifyPayloadCategory(label=option, value=option)
-                for option in answer_options
-            ],
-            title=instruction,
+        payload = IRapidPayload(
+            actual_instance=IRapidPayloadClassifyPayload(
+                _t="ClassifyPayload",
+                categories=[
+                    ClassifyPayloadCategory(label=option, value=option)
+                    for option in answer_options
+                ],
+                title=instruction,
+            )
         )
-        model_truth = AttachCategoryTruth(
+        model_truth = IValidationTruthAttachCategoryTruth(
             correctCategories=truths, _t="AttachCategoryTruth"
         )
 
@@ -105,9 +132,13 @@ class RapidsManager:
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
         """
 
-        payload = ComparePayload(_t="ComparePayload", criteria=instruction)
+        payload = IRapidPayload(
+            actual_instance=IRapidPayloadComparePayload(
+                _t="ComparePayload", criteria=instruction
+            )
+        )
         truth = os.path.basename(truth)
-        model_truth = CompareTruth(_t="CompareTruth", winnerId=truth)
+        model_truth = IValidationTruthCompareTruth(_t="CompareTruth", winnerId=truth)
 
         if len(datapoint) != 2:
             raise ValueError("Compare rapid requires exactly two media paths")
@@ -156,13 +187,15 @@ class RapidsManager:
                 TranscriptionWord(word=transcription_words[index].word, wordIndex=index)
             )
 
-        payload = TranscriptionPayload(
-            _t="TranscriptionPayload",
-            title=instruction,
-            transcription=transcription_words,
+        payload = IRapidPayload(
+            actual_instance=IRapidPayloadTranscriptionPayload(
+                _t="TranscriptionPayload",
+                title=instruction,
+                transcription=transcription_words,
+            )
         )
 
-        model_truth = TranscriptionTruth(
+        model_truth = IValidationTruthTranscriptionTruth(
             _t="TranscriptionTruth",
             correctWords=correct_transcription_words,
             requiredPrecision=required_precision,
@@ -199,9 +232,13 @@ class RapidsManager:
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
         """
 
-        payload = LocatePayload(_t="LocatePayload", target=instruction)
+        payload = IRapidPayload(
+            actual_instance=IRapidPayloadLocatePayload(
+                _t="LocatePayload", target=instruction
+            )
+        )
 
-        model_truth = LocateBoxTruth(
+        model_truth = IValidationTruthLocateBoxTruth(
             _t="LocateBoxTruth",
             boundingBoxes=[truth.to_model() for truth in truths],
         )
@@ -240,9 +277,13 @@ class RapidsManager:
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
         """
 
-        payload = LinePayload(_t="LinePayload", target=instruction)
+        payload = IRapidPayload(
+            actual_instance=IRapidPayloadLinePayload(
+                _t="LinePayload", target=instruction
+            )
+        )
 
-        model_truth = BoundingBoxTruth(
+        model_truth = IValidationTruthBoundingBoxTruth(
             _t="BoundingBoxTruth",
             xMax=truths[0].x_max * 100,
             xMin=truths[0].x_min * 100,
@@ -295,9 +336,13 @@ class RapidsManager:
                     "The start of the interval must be smaller than the end of the interval."
                 )
 
-        payload = ScrubPayload(_t="ScrubPayload", target=instruction)
+        payload = IRapidPayload(
+            actual_instance=IRapidPayloadScrubPayload(
+                _t="ScrubPayload", target=instruction
+            )
+        )
 
-        model_truth = ScrubTruth(
+        model_truth = IValidationTruthScrubTruth(
             _t="ScrubTruth",
             validRanges=[ScrubRange(start=truth[0], end=truth[1]) for truth in truths],
         )

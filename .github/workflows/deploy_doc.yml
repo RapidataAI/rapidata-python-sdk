@@ -1,36 +1,58 @@
 name: Deploy Documentation
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to deploy docs from'
+        required: true
+        default: 'main'
+        type: choice
+        options:
+        - main
+        - 2.x
+      version_alias:
+        description: 'Version alias for docs (e.g., 3.x, 2.x)'
+        required: true
+        default: '3.x'
+        type: choice
+        options:
+        - 3.x
+        - 2.x
+      set_latest:
+        description: 'Set this version as latest?'
+        required: true
+        default: true
+        type: boolean
 
 jobs:
   deploy-docs:
-    if: github.event_name != 'pull_request' || github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
-      - name: Install Poetry
-        run: |
-          curl -sSL https://install.python-poetry.org | python3 -
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
-      - name: Update lock file and install dependencies
-        run: |
-          poetry lock
-          poetry install --with docs
-      - name: Clean docs
-        run: |
-          rm -rf site/
-          poetry run mkdocs build --clean
-      - name: Build MkDocs site
-        run: |
-          poetry run mkdocs build
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        if: github.ref == 'refs/heads/main'
+          ref: ${{ github.event.inputs.branch }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./site
-          force_orphan: true
-          cname: docs.rapidata.ai
+          python-version-file: ".python-version"
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+      - name: Install dependencies
+        run:  uv sync --group docs --frozen
+      - name: Configure Git for mike
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+      - name: Deploy docs with mike
+        run: |
+          # Fetch gh-pages branch if it exists
+          git fetch origin gh-pages:gh-pages || true
+
+          # Deploy the version
+          if [ "${{ github.event.inputs.set_latest }}" = "true" ]; then
+            uv run mike deploy --push --update-aliases ${{ github.event.inputs.version_alias }} latest
+            uv run mike set-default --push latest
+          else
+            uv run mike deploy --push ${{ github.event.inputs.version_alias }}
+          fi

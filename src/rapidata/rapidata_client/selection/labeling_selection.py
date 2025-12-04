@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Any
-
 from rapidata.rapidata_client.selection._base_selection import RapidataSelection
 from rapidata.rapidata_client.selection.rapidata_retrieval_modes import (
     RapidataRetrievalMode,
@@ -31,16 +29,19 @@ class LabelingSelection(RapidataSelection):
         self.retrieval_mode = retrieval_mode
         self.max_iterations = max_iterations
 
-    def _to_model(self) -> Any:
-        from rapidata.api_client.models.labeling_selection import (
-            LabelingSelection as LabelingSelectionModel,
+    def _to_model(self):
+        from rapidata.api_client.models.i_selection import ISelection
+        from rapidata.api_client.models.i_selection_labeling_selection import (
+            ISelectionLabelingSelection,
         )
 
-        return LabelingSelectionModel(
-            _t="LabelingSelection",
-            amount=self.amount,
-            retrievalMode=self.retrieval_mode.value,
-            maxIterations=self.max_iterations,
+        return ISelection(
+            actual_instance=ISelectionLabelingSelection(
+                _t="LabelingSelection",
+                amount=self.amount,
+                retrievalMode=self.retrieval_mode.value,
+                maxIterations=self.max_iterations,
+            )
         )
 
     def __str__(self) -> str:

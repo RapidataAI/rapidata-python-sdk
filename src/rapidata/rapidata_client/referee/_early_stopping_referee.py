@@ -1,8 +1,10 @@
 from __future__ import annotations
 
-from typing import Any
-
 from rapidata.rapidata_client.referee._base_referee import Referee
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from rapidata.api_client.models.i_referee_model import IRefereeModel
 
 
 class EarlyStoppingReferee(Referee):
@@ -45,13 +47,16 @@ class EarlyStoppingReferee(Referee):
             "maxVotes": self.max_vote_count,
         }
 
-    def _to_model(self) -> Any:
-        from rapidata.api_client.models.early_stopping_referee_model import (
-            EarlyStoppingRefereeModel,
+    def _to_model(self) -> IRefereeModel:
+        from rapidata.api_client.models.i_referee_model_early_stopping_referee_model import (
+            IRefereeModelEarlyStoppingRefereeModel,
         )
+        from rapidata.api_client.models.i_referee_model import IRefereeModel
 
-        return EarlyStoppingRefereeModel(
-            _t="EarlyStoppingReferee",
-            threshold=self.threshold,
-            maxVotes=self.max_vote_count,
+        return IRefereeModel(
+            actual_instance=IRefereeModelEarlyStoppingRefereeModel(
+                _t="EarlyStoppingReferee",
+                threshold=self.threshold,
+                maxVotes=self.max_vote_count,
+            )
         )

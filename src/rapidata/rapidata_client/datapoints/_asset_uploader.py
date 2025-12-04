@@ -13,11 +13,7 @@ from rapidata.rapidata_client.config import rapidata_config
 from diskcache import FanoutCache
 
 if TYPE_CHECKING:
-    from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
-    from rapidata.api_client.models.multi_asset_input import (
-        MultiAssetInput,
-    )
-    from rapidata.api_client.models.text_asset_input import TextAssetInput
+    from rapidata.api_client.models.i_asset_input import IAssetInput
 
 
 class AssetUploader:
@@ -100,54 +96,66 @@ class AssetUploader:
             logger.info("Asset uploaded: %s", response.file_name)
             return response.file_name
 
-    def get_uploaded_text_input(
-        self, assets: list[str] | str
-    ) -> MultiAssetInput | TextAssetInput:
-        from rapidata.api_client.models.multi_asset_input import (
-            MultiAssetInput,
-            MultiAssetInputAssetsInner,
+    def get_uploaded_text_input(self, assets: list[str] | str) -> IAssetInput:
+        from rapidata.api_client.models.i_asset_input import IAssetInput
+        from rapidata.api_client.models.i_asset_input_text_asset_input import (
+            IAssetInputTextAssetInput,
         )
-        from rapidata.api_client.models.text_asset_input import TextAssetInput
-
-        if isinstance(assets, list):
-            return MultiAssetInput(
-                _t="MultiAssetInput",
-                assets=[
-                    MultiAssetInputAssetsInner(
-                        actual_instance=TextAssetInput(_t="TextAssetInput", text=asset)
-                    )
-                    for asset in assets
-                ],
-            )
-        else:
-            return TextAssetInput(_t="TextAssetInput", text=assets)
-
-    def get_uploaded_asset_input(
-        self, assets: list[str] | str
-    ) -> MultiAssetInput | ExistingAssetInput:
-        from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
-        from rapidata.api_client.models.multi_asset_input import (
-            MultiAssetInput,
-            MultiAssetInputAssetsInner,
+        from rapidata.api_client.models.i_asset_input_multi_asset_input import (
+            IAssetInputMultiAssetInput,
         )
 
         if isinstance(assets, list):
-            return MultiAssetInput(
-                _t="MultiAssetInput",
-                assets=[
-                    MultiAssetInputAssetsInner(
-                        actual_instance=ExistingAssetInput(
-                            _t="ExistingAssetInput",
-                            name=self.upload_asset(asset),
-                        ),
-                    )
-                    for asset in assets
-                ],
+            return IAssetInput(
+                actual_instance=IAssetInputMultiAssetInput(
+                    _t="MultiAssetInput",
+                    assets=[
+                        IAssetInput(
+                            actual_instance=IAssetInputTextAssetInput(
+                                _t="TextAssetInput", text=asset
+                            )
+                        )
+                        for asset in assets
+                    ],
+                )
             )
         else:
-            return ExistingAssetInput(
-                _t="ExistingAssetInput",
-                name=self.upload_asset(assets),
+            return IAssetInput(
+                actual_instance=IAssetInputTextAssetInput(
+                    _t="TextAssetInput", text=assets
+                )
+            )
+
+    def get_uploaded_asset_input(self, assets: list[str] | str) -> IAssetInput:
+        from rapidata.api_client.models.i_asset_input import IAssetInput
+        from rapidata.api_client.models.i_asset_input_existing_asset_input import (
+            IAssetInputExistingAssetInput,
+        )
+        from rapidata.api_client.models.i_asset_input_multi_asset_input import (
+            IAssetInputMultiAssetInput,
+        )
+
+        if isinstance(assets, list):
+            return IAssetInput(
+                actual_instance=IAssetInputMultiAssetInput(
+                    _t="MultiAssetInput",
+                    assets=[
+                        IAssetInput(
+                            actual_instance=IAssetInputExistingAssetInput(
+                                _t="ExistingAssetInput",
+                                name=self.upload_asset(asset),
+                            )
+                        )
+                        for asset in assets
+                    ],
+                )
+            )
+        else:
+            return IAssetInput(
+                actual_instance=IAssetInputExistingAssetInput(
+                    _t="ExistingAssetInput",
+                    name=self.upload_asset(assets),
+                )
             )
 
     def clear_cache(self):

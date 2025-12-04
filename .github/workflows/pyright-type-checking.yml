@@ -2,6 +2,7 @@ name: Python Type Checking with Pyright
 
 on:
   pull_request:
+    branches: [main, 2.x]
     types: [opened, synchronize, reopened]
 
 jobs:
@@ -10,14 +11,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      
-      - run: pipx install poetry
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
-          cache: 'poetry'
+          python-version-file: ".python-version"
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
       
-      - run: poetry install
-      - run: echo "$(poetry env info --path)/bin" >> $GITHUB_PATH
+      - run: uv sync
+      - run: echo "$PWD/.venv/bin" >> $GITHUB_PATH
       
       - uses: jakebailey/pyright-action@v2
         with:
