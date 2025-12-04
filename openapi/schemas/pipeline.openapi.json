@@ -1,0 +1,1410 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Rapidata Pipeline API",
+    "description": "The API for the Rapidata Pipeline service",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "https://api.rabbitdata.ch/"
+    }
+  ],
+  "paths": {
+    "/pipeline/{pipelineId}": {
+      "get": {
+        "tags": [
+          "Pipeline"
+        ],
+        "summary": "Gets a pipeline by its id.",
+        "parameters": [
+          {
+            "name": "pipelineId",
+            "in": "path",
+            "description": "The id of the pipeline to get.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPipelineByIdResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPipelineByIdResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPipelineByIdResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pipeline/{pipelineId}/preliminary-download": {
+      "post": {
+        "tags": [
+          "Pipeline"
+        ],
+        "summary": "Initiates a preliminary download of the pipeline.",
+        "parameters": [
+          {
+            "name": "pipelineId",
+            "in": "path",
+            "description": "The id of the pipeline to initiate the download for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The body request.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreliminaryDownloadModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreliminaryDownloadModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreliminaryDownloadModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StartPreliminaryDownloadResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StartPreliminaryDownloadResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StartPreliminaryDownloadResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pipeline/preliminary-download/{preliminaryDownloadId}": {
+      "get": {
+        "tags": [
+          "Pipeline"
+        ],
+        "summary": "Gets the preliminary download.",
+        "description": "If it's still processing the request will return 202 Accepted.",
+        "parameters": [
+          {
+            "name": "preliminaryDownloadId",
+            "in": "path",
+            "description": "The id of the preliminary download to get.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileStreamResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileStreamResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileStreamResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AttachCategoryRapidBlueprint_Category": {
+        "required": [
+          "label",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "EloConfig": {
+        "type": "object",
+        "properties": {
+          "startingElo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "kFactor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "scalingFactor": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "FeatureFlag": {
+        "required": [
+          "key",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "FileStreamResult": {
+        "type": "string",
+        "format": "binary"
+      },
+      "FileType": {
+        "enum": [
+          "Unknown",
+          "Image",
+          "Video",
+          "Audio"
+        ]
+      },
+      "GetPipelineByIdResult": {
+        "required": [
+          "artifacts",
+          "featureFlags"
+        ],
+        "type": "object",
+        "properties": {
+          "artifacts": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/IArtifactModel"
+            }
+          },
+          "featureFlags": {
+            "$ref": "#/components/schemas/ListOfFeatureFlag"
+          }
+        }
+      },
+      "IArtifactModel": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IArtifactModelCampaignArtifactModel"
+          },
+          {
+            "$ref": "#/components/schemas/IArtifactModelDatasetArtifactModel"
+          },
+          {
+            "$ref": "#/components/schemas/IArtifactModelFileArtifactModel"
+          },
+          {
+            "$ref": "#/components/schemas/IArtifactModelWorkflowArtifactModel"
+          },
+          {
+            "$ref": "#/components/schemas/IArtifactModelWorkflowConfigArtifactModel"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "CampaignArtifactModel": "#/components/schemas/IArtifactModelCampaignArtifactModel",
+            "DatasetArtifactModel": "#/components/schemas/IArtifactModelDatasetArtifactModel",
+            "FileArtifactModel": "#/components/schemas/IArtifactModelFileArtifactModel",
+            "WorkflowArtifactModel": "#/components/schemas/IArtifactModelWorkflowArtifactModel",
+            "WorkflowConfigArtifactModel": "#/components/schemas/IArtifactModelWorkflowConfigArtifactModel"
+          }
+        }
+      },
+      "IArtifactModelCampaignArtifactModel": {
+        "required": [
+          "campaignId",
+          "identifier",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CampaignArtifactModel"
+            ],
+            "type": "string"
+          },
+          "campaignId": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        }
+      },
+      "IArtifactModelDatasetArtifactModel": {
+        "required": [
+          "datasetId",
+          "identifier",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "DatasetArtifactModel"
+            ],
+            "type": "string"
+          },
+          "datasetId": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        }
+      },
+      "IArtifactModelFileArtifactModel": {
+        "required": [
+          "fileName",
+          "identifier",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "FileArtifactModel"
+            ],
+            "type": "string"
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        }
+      },
+      "IArtifactModelWorkflowArtifactModel": {
+        "required": [
+          "workflowId",
+          "identifier",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "WorkflowArtifactModel"
+            ],
+            "type": "string"
+          },
+          "workflowId": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        }
+      },
+      "IArtifactModelWorkflowConfigArtifactModel": {
+        "required": [
+          "workflowConfig",
+          "identifier",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "WorkflowConfigArtifactModel"
+            ],
+            "type": "string"
+          },
+          "workflowConfig": {
+            "$ref": "#/components/schemas/IWorkflowConfig"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        }
+      },
+      "IAsset": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IAssetFileAsset"
+          },
+          {
+            "$ref": "#/components/schemas/IAssetMultiAsset"
+          },
+          {
+            "$ref": "#/components/schemas/IAssetNullAsset"
+          },
+          {
+            "$ref": "#/components/schemas/IAssetTextAsset"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "FileAsset": "#/components/schemas/IAssetFileAsset",
+            "MultiAsset": "#/components/schemas/IAssetMultiAsset",
+            "NullAsset": "#/components/schemas/IAssetNullAsset",
+            "TextAsset": "#/components/schemas/IAssetTextAsset"
+          }
+        }
+      },
+      "IAssetFileAsset": {
+        "required": [
+          "fileName",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "FileAsset"
+            ],
+            "type": "string"
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataCollection"
+          }
+        }
+      },
+      "IAssetMultiAsset": {
+        "required": [
+          "assets",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "MultiAsset"
+            ],
+            "type": "string"
+          },
+          "assets": {
+            "$ref": "#/components/schemas/ListOfIAsset"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataCollection"
+          }
+        }
+      },
+      "IAssetNullAsset": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NullAsset"
+            ],
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataCollection"
+          }
+        }
+      },
+      "IAssetTextAsset": {
+        "required": [
+          "text",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TextAsset"
+            ],
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataCollection"
+          }
+        }
+      },
+      "IMetadata": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IMetadataClassificationMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataCountMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataFileTypeMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataImageDimensionMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataLocationMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataOriginalFilenameMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataSourceUrlMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataStreamsMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataTextMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataVideoDurationMetadata"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "ClassificationMetadata": "#/components/schemas/IMetadataClassificationMetadata",
+            "CountMetadata": "#/components/schemas/IMetadataCountMetadata",
+            "FileTypeMetadata": "#/components/schemas/IMetadataFileTypeMetadata",
+            "ImageDimensionMetadata": "#/components/schemas/IMetadataImageDimensionMetadata",
+            "LocationMetadata": "#/components/schemas/IMetadataLocationMetadata",
+            "OriginalFilenameMetadata": "#/components/schemas/IMetadataOriginalFilenameMetadata",
+            "SourceUrlMetadata": "#/components/schemas/IMetadataSourceUrlMetadata",
+            "StreamsMetadata": "#/components/schemas/IMetadataStreamsMetadata",
+            "TextMetadata": "#/components/schemas/IMetadataTextMetadata",
+            "VideoDurationMetadata": "#/components/schemas/IMetadataVideoDurationMetadata"
+          }
+        }
+      },
+      "IMetadataClassificationMetadata": {
+        "required": [
+          "classification",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ClassificationMetadata"
+            ],
+            "type": "string"
+          },
+          "classification": {
+            "type": "string"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "IMetadataCountMetadata": {
+        "required": [
+          "count",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CountMetadata"
+            ],
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "IMetadataFileTypeMetadata": {
+        "required": [
+          "fileType",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "FileTypeMetadata"
+            ],
+            "type": "string"
+          },
+          "fileType": {
+            "$ref": "#/components/schemas/FileType"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "IMetadataImageDimensionMetadata": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ImageDimensionMetadata"
+            ],
+            "type": "string"
+          },
+          "height": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "width": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "IMetadataLocationMetadata": {
+        "required": [
+          "x",
+          "y",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LocationMetadata"
+            ],
+            "type": "string"
+          },
+          "x": {
+            "type": "number",
+            "format": "float"
+          },
+          "y": {
+            "type": "number",
+            "format": "float"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "IMetadataOriginalFilenameMetadata": {
+        "required": [
+          "originalFilename",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OriginalFilenameMetadata"
+            ],
+            "type": "string"
+          },
+          "originalFilename": {
+            "type": "string"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "IMetadataSourceUrlMetadata": {
+        "required": [
+          "url",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "SourceUrlMetadata"
+            ],
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "IMetadataStreamsMetadata": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "StreamsMetadata"
+            ],
+            "type": "string"
+          },
+          "hasAudio": {
+            "type": "boolean"
+          },
+          "hasVideo": {
+            "type": "boolean"
+          },
+          "hasSubtitles": {
+            "type": "boolean"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "IMetadataTextMetadata": {
+        "required": [
+          "text",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TextMetadata"
+            ],
+            "type": "string"
+          },
+          "text": {
+            "type": "string",
+            "nullable": true
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "IMetadataVideoDurationMetadata": {
+        "required": [
+          "duration",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "VideoDurationMetadata"
+            ],
+            "type": "string"
+          },
+          "duration": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "IPairMakerConfig": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IPairMakerConfigOnlinePairMakerConfig"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "OnlinePairMakerConfig": "#/components/schemas/IPairMakerConfigOnlinePairMakerConfig"
+          }
+        }
+      },
+      "IPairMakerConfigOnlinePairMakerConfig": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OnlinePairMakerConfig"
+            ],
+            "type": "string"
+          },
+          "randomMatchesRatio": {
+            "type": "number",
+            "format": "float"
+          },
+          "totalComparisonBudget": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IRapidBlueprint": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IRapidBlueprintTranscriptionRapidBlueprint"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidBlueprintScrubRapidBlueprint"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidBlueprintPolygonRapidBlueprint"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidBlueprintNamedEntityRapidBlueprint"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidBlueprintLocateRapidBlueprint"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidBlueprintLineRapidBlueprint"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidBlueprintFreeTextRapidBlueprint"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidBlueprintCompareRapidBlueprint"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidBlueprintAttachCategoryRapidBlueprint"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidBlueprintBoundingBoxRapidBlueprint"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "TranscriptionBlueprint": "#/components/schemas/IRapidBlueprintTranscriptionRapidBlueprint",
+            "ScrubBlueprint": "#/components/schemas/IRapidBlueprintScrubRapidBlueprint",
+            "PolygonBlueprint": "#/components/schemas/IRapidBlueprintPolygonRapidBlueprint",
+            "NamedEntityBlueprint": "#/components/schemas/IRapidBlueprintNamedEntityRapidBlueprint",
+            "LocateBlueprint": "#/components/schemas/IRapidBlueprintLocateRapidBlueprint",
+            "LineBlueprint": "#/components/schemas/IRapidBlueprintLineRapidBlueprint",
+            "FreeTextBlueprint": "#/components/schemas/IRapidBlueprintFreeTextRapidBlueprint",
+            "CompareBlueprint": "#/components/schemas/IRapidBlueprintCompareRapidBlueprint",
+            "ClassifyBlueprint": "#/components/schemas/IRapidBlueprintAttachCategoryRapidBlueprint",
+            "BoundingBoxBlueprint": "#/components/schemas/IRapidBlueprintBoundingBoxRapidBlueprint"
+          }
+        }
+      },
+      "IRapidBlueprintAttachCategoryRapidBlueprint": {
+        "required": [
+          "title",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ClassifyBlueprint"
+            ],
+            "type": "string"
+          },
+          "possibleCategories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "categories": {
+            "$ref": "#/components/schemas/ListOfAttachCategoryRapidBlueprint_Category"
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidBlueprintBoundingBoxRapidBlueprint": {
+        "required": [
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "BoundingBoxBlueprint"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidBlueprintCompareRapidBlueprint": {
+        "required": [
+          "criteria",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CompareBlueprint"
+            ],
+            "type": "string"
+          },
+          "criteria": {
+            "type": "string"
+          },
+          "indexIdentifiers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IRapidBlueprintFreeTextRapidBlueprint": {
+        "required": [
+          "question",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "FreeTextBlueprint"
+            ],
+            "type": "string"
+          },
+          "question": {
+            "type": "string"
+          },
+          "validationSystemPrompt": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "IRapidBlueprintLineRapidBlueprint": {
+        "required": [
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LineBlueprint"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidBlueprintLocateRapidBlueprint": {
+        "required": [
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LocateBlueprint"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidBlueprintNamedEntityRapidBlueprint": {
+        "required": [
+          "target",
+          "classes",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NamedEntityBlueprint"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          },
+          "classes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IRapidBlueprintPolygonRapidBlueprint": {
+        "required": [
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "PolygonBlueprint"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidBlueprintScrubRapidBlueprint": {
+        "required": [
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ScrubBlueprint"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidBlueprintTranscriptionRapidBlueprint": {
+        "required": [
+          "title",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TranscriptionBlueprint"
+            ],
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "IRefereeConfig": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IRefereeConfigNaiveRefereeConfig"
+          },
+          {
+            "$ref": "#/components/schemas/IRefereeConfigNeverEndingRefereeConfig"
+          },
+          {
+            "$ref": "#/components/schemas/IRefereeConfigProbabilisticAttachCategoryRefereeConfig"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "NaiveRefereeConfig": "#/components/schemas/IRefereeConfigNaiveRefereeConfig",
+            "NeverEndingRefereeConfig": "#/components/schemas/IRefereeConfigNeverEndingRefereeConfig",
+            "ProbabilisticAttachCategoryRefereeConfig": "#/components/schemas/IRefereeConfigProbabilisticAttachCategoryRefereeConfig"
+          }
+        }
+      },
+      "IRefereeConfigNaiveRefereeConfig": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NaiveRefereeConfig"
+            ],
+            "type": "string"
+          },
+          "guessesRequired": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IRefereeConfigNeverEndingRefereeConfig": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NeverEndingRefereeConfig"
+            ],
+            "type": "string"
+          }
+        }
+      },
+      "IRefereeConfigProbabilisticAttachCategoryRefereeConfig": {
+        "required": [
+          "threshold",
+          "maxVotes",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ProbabilisticAttachCategoryRefereeConfig"
+            ],
+            "type": "string"
+          },
+          "threshold": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxVotes": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IWorkflowConfig": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IWorkflowConfigCompareWorkflowConfig"
+          },
+          {
+            "$ref": "#/components/schemas/IWorkflowConfigEvaluationWorkflowConfig"
+          },
+          {
+            "$ref": "#/components/schemas/IWorkflowConfigGroupedRankingWorkflowConfig"
+          },
+          {
+            "$ref": "#/components/schemas/IWorkflowConfigSimpleWorkflowConfig"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "CompareWorkflowConfig": "#/components/schemas/IWorkflowConfigCompareWorkflowConfig",
+            "EvaluationWorkflowConfig": "#/components/schemas/IWorkflowConfigEvaluationWorkflowConfig",
+            "GroupedRankingWorkflowConfig": "#/components/schemas/IWorkflowConfigGroupedRankingWorkflowConfig",
+            "SimpleWorkflowConfig": "#/components/schemas/IWorkflowConfigSimpleWorkflowConfig"
+          }
+        }
+      },
+      "IWorkflowConfigCompareWorkflowConfig": {
+        "required": [
+          "criteria",
+          "referee",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CompareWorkflowConfig"
+            ],
+            "type": "string"
+          },
+          "criteria": {
+            "type": "string"
+          },
+          "referee": {
+            "$ref": "#/components/schemas/IRefereeConfig"
+          },
+          "context": {
+            "type": "string",
+            "nullable": true
+          },
+          "contextAsset": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ]
+          },
+          "eloConfig": {
+            "$ref": "#/components/schemas/EloConfig"
+          },
+          "pairMakerConfig": {
+            "$ref": "#/components/schemas/IPairMakerConfig"
+          },
+          "featureFlags": {
+            "$ref": "#/components/schemas/ListOfFeatureFlag"
+          }
+        }
+      },
+      "IWorkflowConfigEvaluationWorkflowConfig": {
+        "required": [
+          "validationSetId",
+          "referee",
+          "shouldAcceptIncorrect",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "EvaluationWorkflowConfig"
+            ],
+            "type": "string"
+          },
+          "validationSetId": {
+            "type": "string"
+          },
+          "referee": {
+            "$ref": "#/components/schemas/IRefereeConfig"
+          },
+          "shouldAcceptIncorrect": {
+            "type": "boolean"
+          },
+          "featureFlags": {
+            "$ref": "#/components/schemas/ListOfFeatureFlag"
+          }
+        }
+      },
+      "IWorkflowConfigGroupedRankingWorkflowConfig": {
+        "required": [
+          "criteria",
+          "referee",
+          "targetCountryCodes",
+          "maxParallelism",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "GroupedRankingWorkflowConfig"
+            ],
+            "type": "string"
+          },
+          "criteria": {
+            "type": "string"
+          },
+          "referee": {
+            "$ref": "#/components/schemas/IRefereeConfig"
+          },
+          "targetCountryCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "maxParallelism": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "contexts": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "contextAssets": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/IAsset"
+            },
+            "nullable": true
+          },
+          "eloConfig": {
+            "$ref": "#/components/schemas/EloConfig"
+          },
+          "pairMakerConfig": {
+            "$ref": "#/components/schemas/IPairMakerConfig"
+          },
+          "featureFlags": {
+            "$ref": "#/components/schemas/ListOfFeatureFlag"
+          }
+        }
+      },
+      "IWorkflowConfigSimpleWorkflowConfig": {
+        "required": [
+          "referee",
+          "blueprint",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "SimpleWorkflowConfig"
+            ],
+            "type": "string"
+          },
+          "referee": {
+            "$ref": "#/components/schemas/IRefereeConfig"
+          },
+          "blueprint": {
+            "$ref": "#/components/schemas/IRapidBlueprint"
+          },
+          "featureFlags": {
+            "$ref": "#/components/schemas/ListOfFeatureFlag"
+          }
+        }
+      },
+      "ListOfAttachCategoryRapidBlueprint_Category": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/AttachCategoryRapidBlueprint_Category"
+        }
+      },
+      "ListOfFeatureFlag": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/FeatureFlag"
+        }
+      },
+      "ListOfIAsset": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/IAsset"
+        }
+      },
+      "MetadataCollection": {
+        "type": "object",
+        "additionalProperties": {
+          "$ref": "#/components/schemas/IMetadata"
+        }
+      },
+      "MetadataVisibilities": {
+        "type": "array",
+        "items": {
+          "enum": [
+            "None",
+            "Users",
+            "Customers",
+            "Admins",
+            "Dashboard",
+            "All"
+          ],
+          "type": "string"
+        }
+      },
+      "PreliminaryDownloadModel": {
+        "type": "object",
+        "properties": {
+          "sendEmail": {
+            "type": "boolean"
+          }
+        }
+      },
+      "StartPreliminaryDownloadResult": {
+        "required": [
+          "downloadId"
+        ],
+        "type": "object",
+        "properties": {
+          "downloadId": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "JWT Authorization header using the Bearer scheme",
+        "scheme": "bearer",
+        "bearerFormat": "Json Web Token"
+      },
+      "OpenIdConnect": {
+        "type": "openIdConnect",
+        "description": "OpenId Connect connection flow",
+        "openIdConnectUrl": "https://auth.rabbitdata.ch/.well-known/openid-configuration"
+      },
+      "OAuth2": {
+        "type": "oauth2",
+        "description": "OAuth2 authorization header using the Bearer scheme",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://auth.rabbitdata.ch/connect/authorize",
+            "tokenUrl": "https://auth.rabbitdata.ch/connect/token",
+            "refreshUrl": "https://auth.rabbitdata.ch/connect/token",
+            "scopes": {
+              "openid": "OpenID",
+              "profile": "Profile",
+              "email": "Email"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "Bearer": [ ],
+      "OpenIdConnect": [
+        "openid",
+        "profile",
+        "email"
+      ],
+      "OAuth2": [
+        "openid",
+        "profile",
+        "email"
+      ]
+    }
+  ],
+  "tags": [
+    {
+      "name": "Pipeline"
+    }
+  ]
+}

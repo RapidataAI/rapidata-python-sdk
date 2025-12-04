@@ -26,23 +26,17 @@ class AbTestSelection(RapidataSelection):
         self.b_selections = b_selections
 
     def _to_model(self):
-        from rapidata.api_client.models.ab_test_selection import (
-            AbTestSelection as AbTestSelectionModel,
-        )
-        from rapidata.api_client.models.ab_test_selection_a_inner import (
-            AbTestSelectionAInner,
+        from rapidata.api_client.models.i_selection import ISelection
+        from rapidata.api_client.models.i_selection_ab_test_selection import (
+            ISelectionAbTestSelection,
         )
 
-        return AbTestSelectionModel(
-            _t="AbTestSelection",
-            a=[
-                AbTestSelectionAInner(selection._to_model())
-                for selection in self.a_selections
-            ],
-            b=[
-                AbTestSelectionAInner(selection._to_model())
-                for selection in self.b_selections
-            ],
+        return ISelection(
+            actual_instance=ISelectionAbTestSelection(
+                _t="AbTestSelection",
+                a=[selection._to_model() for selection in self.a_selections],
+                b=[selection._to_model() for selection in self.b_selections],
+            )
         )
 
     def __str__(self) -> str:

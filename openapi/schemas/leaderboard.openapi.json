@@ -1,0 +1,4993 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Rapidata Leaderboard API",
+    "description": "The API for the Rapidata Leaderboard service",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "https://api.rabbitdata.ch/"
+    }
+  ],
+  "paths": {
+    "/benchmarks": {
+      "get": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Queries all benchmarks of the user.",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfBenchmarkQueryResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfBenchmarkQueryResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfBenchmarkQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/benchmark/{benchmarkId}/leaderboards": {
+      "get": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Queries all leaderboards for the current user's benchmarks.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The Id of the benchmark whoms leaderboards will be returned",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "request",
+            "in": "query",
+            "description": "Query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfLeaderboardsQueryResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfLeaderboardsQueryResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfLeaderboardsQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/benchmark": {
+      "post": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Creates a benchmark",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBenchmarkModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBenchmarkModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBenchmarkModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBenchmarkResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBenchmarkResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBenchmarkResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/benchmark/{benchmarkId}": {
+      "get": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Returns a single benchmark by its ID.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBenchmarkByIdResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBenchmarkByIdResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBenchmarkByIdResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Deletes a single benchmark.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Updates a benchmark using patch semantics.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBenchmarkModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBenchmarkModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBenchmarkModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/benchmark/{benchmarkId}/participants": {
+      "get": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Query all participants within a benchmark",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfParticipantByBenchmark"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfParticipantByBenchmark"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfParticipantByBenchmark"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Creates a participant in a benchmark.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBenchmarkParticipantModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBenchmarkParticipantModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBenchmarkParticipantModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBenchmarkParticipantResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBenchmarkParticipantResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBenchmarkParticipantResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/benchmark/{benchmarkId}/standings": {
+      "get": {
+        "tags": [
+          "Benchmark"
+        ],
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "participantIds",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "leaderboardIds",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "useWeightedScoring",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "includeConfidenceIntervals",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandingsByBenchmarkResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandingsByBenchmarkResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandingsByBenchmarkResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/benchmark/{benchmarkId}/participant/{participantId}": {
+      "delete": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Deletes a participant on a benchmark.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "participantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "deprecated": true
+      }
+    },
+    "/benchmark/{benchmarkId}/name": {
+      "put": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Updates the name of a benchmark.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBenchmarkNameModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBenchmarkNameModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBenchmarkNameModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "deprecated": true
+      }
+    },
+    "/benchmark/{benchmarkId}/fork": {
+      "post": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Creates a copy of a public benchmark and all of its related entities",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForkBenchmarkResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForkBenchmarkResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForkBenchmarkResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/benchmark/{benchmarkId}/prompts": {
+      "get": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Returns the paged prompts of a benchmark by its ID.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "request",
+            "in": "query",
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfPromptByBenchmarkResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfPromptByBenchmarkResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfPromptByBenchmarkResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/benchmark/{benchmarkId}/samples/{identifier}": {
+      "get": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Returns the paged prompts of a benchmark by its ID.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The id of the benchmark to query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "identifier",
+            "in": "path",
+            "description": "The identifier to filter all samples for",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "request",
+            "in": "query",
+            "description": "additional query settings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfSampleByIdentifier"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfSampleByIdentifier"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfSampleByIdentifier"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/benchmark/{benchmarkId}/prompt": {
+      "post": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Adds a new prompt to a benchmark.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The benchmark id.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitPromptModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitPromptModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitPromptModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBenchmarkPromptResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBenchmarkPromptResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBenchmarkPromptResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/benchmark/{benchmarkId}/tags": {
+      "get": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Query all tags within a benchmark",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "The id of the benchmark the prompts should be retrieved from",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagsByBenchmarkResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagsByBenchmarkResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagsByBenchmarkResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/benchmark/{benchmarkId}/participants/{participantId}/submit": {
+      "post": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Submits a participant to a benchmark.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "participantId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitParticipantResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitParticipantResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitParticipantResult"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": true
+      }
+    },
+    "/leaderboards": {
+      "get": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "Queries all leaderboards for a specific benchmark.",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "query",
+            "description": "Query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfLeaderboardsQueryResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfLeaderboardsQueryResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfLeaderboardsQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/leaderboard/{leaderboardId}": {
+      "get": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "Gets a leaderboard by its ID.",
+        "parameters": [
+          {
+            "name": "leaderboardId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetLeaderboardByIdResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetLeaderboardByIdResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetLeaderboardByIdResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "Updates the response config of a leaderboard.",
+        "parameters": [
+          {
+            "name": "leaderboardId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLeaderboardModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLeaderboardModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLeaderboardModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "Deletes a leaderboard by its ID.",
+        "parameters": [
+          {
+            "name": "leaderboardId",
+            "in": "path",
+            "description": "The id of the leaderboard that gets deleted",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/leaderboard/{leaderboardId}/name": {
+      "put": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "Updates the name of a leaderboard.",
+        "parameters": [
+          {
+            "name": "leaderboardId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLeaderboardNameModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLeaderboardNameModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLeaderboardNameModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "deprecated": true
+      }
+    },
+    "/leaderboard/{leaderboardId}/response-config": {
+      "put": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "Updates the response config of a leaderboard.",
+        "parameters": [
+          {
+            "name": "leaderboardId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLeaderboardResponseConfigModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLeaderboardResponseConfigModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLeaderboardResponseConfigModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "deprecated": true
+      }
+    },
+    "/leaderboard": {
+      "post": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "Creates a new leaderboard with the specified name and criteria.",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLeaderboardModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLeaderboardModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLeaderboardModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateLeaderboardResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateLeaderboardResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateLeaderboardResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/leaderboard/{leaderboardId}/prompts": {
+      "get": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "returns the paged prompts of a leaderboard by its ID.",
+        "parameters": [
+          {
+            "name": "leaderboardId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "request",
+            "in": "query",
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfPromptByBenchmarkResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfPromptByBenchmarkResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfPromptByBenchmarkResult"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": true
+      },
+      "post": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "adds a new prompt to a leaderboard.",
+        "parameters": [
+          {
+            "name": "leaderboardId",
+            "in": "path",
+            "description": "The leaderboard id.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The prompt",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "text/plain": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "deprecated": true
+      }
+    },
+    "/leaderboard/{leaderboardId}/participants": {
+      "get": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "queries all the participants connected to leaderboard by its ID.",
+        "parameters": [
+          {
+            "name": "leaderboardId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfStandingByLeaderboard"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfStandingByLeaderboard"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfStandingByLeaderboard"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": true
+      },
+      "post": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "Creates a participant in a leaderboard.",
+        "parameters": [
+          {
+            "name": "leaderboardId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBenchmarkParticipantModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBenchmarkParticipantModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBenchmarkParticipantModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBenchmarkParticipantResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBenchmarkParticipantResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBenchmarkParticipantResult"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": true
+      }
+    },
+    "/leaderboard/{leaderboardId}/standings": {
+      "get": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "parameters": [
+          {
+            "name": "leaderboardId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "useWeightedScoring",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "includeConfidenceIntervals",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandingsByLeaderboardResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandingsByLeaderboardResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StandingsByLeaderboardResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/leaderboard/{leaderboardId}/runs": {
+      "get": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "Gets the runs related to a leaderboard",
+        "parameters": [
+          {
+            "name": "leaderboardId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "request",
+            "in": "query",
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfRunsByLeaderboardResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfRunsByLeaderboardResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfRunsByLeaderboardResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/leaderboard/{leaderboardId}/participant/{participantId}": {
+      "get": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "Gets a participant by its ID.",
+        "parameters": [
+          {
+            "name": "leaderboardId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "participantId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetStandingByIdResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetStandingByIdResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetStandingByIdResult"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": true
+      }
+    },
+    "/benchmark/standing/{leaderboardId}/{participantId}": {
+      "get": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "Gets a standing by leaderboardId and participantId.",
+        "parameters": [
+          {
+            "name": "leaderboardId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "participantId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetStandingByIdResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetStandingByIdResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetStandingByIdResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/leaderboard/{leaderboardId}/participants/{participantId}/submit": {
+      "post": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "Submits a participant to a leaderboard.",
+        "parameters": [
+          {
+            "name": "leaderboardId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "participantId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitParticipantResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitParticipantResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitParticipantResult"
+                }
+              }
+            }
+          }
+        },
+        "deprecated": true
+      }
+    },
+    "/leaderboard/{leaderboardId}/boost": {
+      "post": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "Boosts a subset of participants within a leaderboard.",
+        "parameters": [
+          {
+            "name": "leaderboardId",
+            "in": "path",
+            "description": "the leaderboard that should be boosted",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BoostLeaderboardModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BoostLeaderboardModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/BoostLeaderboardModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitParticipantResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitParticipantResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitParticipantResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/participant/{participantId}/sample": {
+      "post": {
+        "tags": [
+          "Participant"
+        ],
+        "summary": "Adds a sample to a participant.",
+        "parameters": [
+          {
+            "name": "participantId",
+            "in": "path",
+            "description": "The id of the participant to add the sample to",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The model for the sample creation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSampleModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSampleModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSampleModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/participant/{participantId}/sample-new": {
+      "post": {
+        "tags": [
+          "Participant"
+        ],
+        "summary": "Adds a sample to a participant.",
+        "parameters": [
+          {
+            "name": "participantId",
+            "in": "path",
+            "description": "The id of the participant to add the sample to",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The model for the sample creation",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSampleModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSampleModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSampleModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "deprecated": true
+      }
+    },
+    "/participant/{participantId}": {
+      "delete": {
+        "tags": [
+          "Participant"
+        ],
+        "summary": "Deletes a participant on a benchmark.",
+        "parameters": [
+          {
+            "name": "participantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Participant"
+        ],
+        "summary": "Gets a participant by it's Id.",
+        "parameters": [
+          {
+            "name": "participantId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetParticipantByIdResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetParticipantByIdResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetParticipantByIdResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Participant"
+        ],
+        "summary": "Updates a participant using patch semantics.",
+        "parameters": [
+          {
+            "name": "participantId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateParticipantModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateParticipantModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateParticipantModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/participants/{participantId}/submit": {
+      "post": {
+        "tags": [
+          "Participant"
+        ],
+        "summary": "Submits a participant to a benchmark.",
+        "parameters": [
+          {
+            "name": "participantId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitParticipantResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitParticipantResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitParticipantResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/participant/{participantId}/name": {
+      "put": {
+        "tags": [
+          "Participant"
+        ],
+        "summary": "Updates the name of a participant",
+        "parameters": [
+          {
+            "name": "participantId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateParticipantNameModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateParticipantNameModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateParticipantNameModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "deprecated": true
+      }
+    },
+    "/participant-sample/{sampleId}": {
+      "delete": {
+        "tags": [
+          "Participant"
+        ],
+        "summary": "Deletes a sample.",
+        "parameters": [
+          {
+            "name": "sampleId",
+            "in": "path",
+            "description": "the id of the sample to be deleted.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetParticipantByIdResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetParticipantByIdResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetParticipantByIdResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/participant/{participantId}/samples": {
+      "get": {
+        "tags": [
+          "Participant"
+        ],
+        "summary": "Queries all samples of a participant.",
+        "parameters": [
+          {
+            "name": "participantId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "request",
+            "in": "query",
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfSampleByParticipant"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfSampleByParticipant"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfSampleByParticipant"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/participant/{participantId}/disable": {
+      "post": {
+        "tags": [
+          "Participant"
+        ],
+        "summary": "This endpoint disables a participant in a benchmark. this means that the participant will no longer actively be matched up against other participants and not collect further results. It will still be visible in the leaderboard.",
+        "parameters": [
+          {
+            "name": "participantId",
+            "in": "path",
+            "description": "The id of the participant to be disabled",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/benchmark-prompt/{promptId}/tags": {
+      "put": {
+        "tags": [
+          "Prompt"
+        ],
+        "summary": "Updates the tags associated with a prompt.",
+        "parameters": [
+          {
+            "name": "promptId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePromptTagsModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePromptTagsModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePromptTagsModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/benchmark-sample/{sampleId}": {
+      "get": {
+        "tags": [
+          "Sample"
+        ],
+        "summary": "Gets a sample by its Id.",
+        "parameters": [
+          {
+            "name": "sampleId",
+            "in": "path",
+            "description": "The Id of the sample to be retrieved",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSampleByIdResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSampleByIdResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSampleByIdResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BenchmarkQueryResult": {
+        "required": [
+          "id",
+          "name",
+          "isManaged",
+          "isPublic",
+          "createdAt",
+          "ownerMail"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "isManaged": {
+            "type": "boolean"
+          },
+          "isPublic": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ownerMail": {
+            "type": "string"
+          }
+        }
+      },
+      "BoostLeaderboardModel": {
+        "required": [
+          "participants",
+          "totalResponses"
+        ],
+        "type": "object",
+        "properties": {
+          "participants": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "totalResponses": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ComparisonOperator": {
+        "enum": [
+          "Equal",
+          "NotEqual",
+          "LessThan",
+          "LessThanOrEqual",
+          "GreaterThan",
+          "GreaterThanOrEqual"
+        ]
+      },
+      "ConfidenceInterval": {
+        "required": [
+          "lowerOffset",
+          "upperOffset"
+        ],
+        "type": "object",
+        "properties": {
+          "lowerOffset": {
+            "type": "number",
+            "format": "double"
+          },
+          "upperOffset": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "CreateBenchmarkModel": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateBenchmarkParticipantModel": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateBenchmarkParticipantResult": {
+        "required": [
+          "participantId"
+        ],
+        "type": "object",
+        "properties": {
+          "participantId": {
+            "type": "string"
+          },
+          "datasetId": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateBenchmarkPromptResult": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateBenchmarkResult": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateLeaderboardModel": {
+        "required": [
+          "name",
+          "instruction",
+          "showPrompt"
+        ],
+        "type": "object",
+        "properties": {
+          "benchmarkId": {
+            "type": "string",
+            "nullable": true
+          },
+          "benchmarkName": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "instruction": {
+            "type": "string"
+          },
+          "showPrompt": {
+            "type": "boolean"
+          },
+          "showPromptAsset": {
+            "type": "boolean"
+          },
+          "responseBudget": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minResponses": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isInversed": {
+            "type": "boolean"
+          },
+          "validationSetId": {
+            "type": "string",
+            "nullable": true
+          },
+          "filters": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/ListOfIUserFilterModel"
+              }
+            ]
+          },
+          "featureFlags": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/ListOfFeatureFlagModel"
+              }
+            ]
+          }
+        }
+      },
+      "CreateLeaderboardResult": {
+        "required": [
+          "id",
+          "benchmarkId",
+          "showPrompt",
+          "showPromptAsset",
+          "responseBudget",
+          "minResponses",
+          "isInversed"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "benchmarkId": {
+            "type": "string"
+          },
+          "showPrompt": {
+            "type": "boolean"
+          },
+          "showPromptAsset": {
+            "type": "boolean"
+          },
+          "responseBudget": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minResponses": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isInversed": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CreateSampleModel": {
+        "required": [
+          "identifier",
+          "asset"
+        ],
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAssetInput"
+          }
+        }
+      },
+      "FeatureFlag": {
+        "required": [
+          "key",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "FeatureFlagModel": {
+        "required": [
+          "key",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "FileType": {
+        "enum": [
+          "Unknown",
+          "Image",
+          "Video",
+          "Audio"
+        ]
+      },
+      "Filter": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": { },
+          "operator": {
+            "$ref": "#/components/schemas/FilterOperator"
+          },
+          "logic": {
+            "$ref": "#/components/schemas/LogicOperator"
+          },
+          "filters": {
+            "$ref": "#/components/schemas/ListOfFilter"
+          }
+        }
+      },
+      "FilterOperator": {
+        "enum": [
+          "Eq",
+          "Neq",
+          "Gt",
+          "Gte",
+          "Lt",
+          "Lte",
+          "Contains",
+          "StartsWith",
+          "EndsWith",
+          "In"
+        ]
+      },
+      "ForkBenchmarkResult": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "GetBenchmarkByIdResult": {
+        "required": [
+          "id",
+          "name",
+          "isPublic",
+          "createdAt",
+          "ownerMail"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "isPublic": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ownerMail": {
+            "type": "string"
+          }
+        }
+      },
+      "GetLeaderboardByIdResult": {
+        "required": [
+          "id",
+          "name",
+          "instruction",
+          "showPrompt",
+          "showPromptAsset",
+          "isInversed",
+          "responseBudget",
+          "minResponses",
+          "filters",
+          "featureFlags"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "orderId": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "instruction": {
+            "type": "string"
+          },
+          "showPrompt": {
+            "type": "boolean"
+          },
+          "showPromptAsset": {
+            "type": "boolean"
+          },
+          "isInversed": {
+            "type": "boolean"
+          },
+          "responseBudget": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minResponses": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "validationSetId": {
+            "type": "string",
+            "nullable": true
+          },
+          "filters": {
+            "$ref": "#/components/schemas/ListOfICampaignFilter"
+          },
+          "featureFlags": {
+            "$ref": "#/components/schemas/ListOfFeatureFlag"
+          }
+        }
+      },
+      "GetParticipantByIdResult": {
+        "required": [
+          "id",
+          "name",
+          "benchmarkId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "benchmarkId": {
+            "type": "string"
+          }
+        }
+      },
+      "GetSampleByIdResult": {
+        "required": [
+          "id",
+          "identifier",
+          "participantId",
+          "participantName",
+          "asset",
+          "tags",
+          "ownerMail"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "participantId": {
+            "type": "string"
+          },
+          "participantName": {
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAssetModel"
+          },
+          "prompt": {
+            "type": "string",
+            "nullable": true
+          },
+          "promptAsset": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ]
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ownerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string"
+          }
+        }
+      },
+      "GetStandingByIdResult": {
+        "required": [
+          "id",
+          "name",
+          "benchmarkId",
+          "status",
+          "isDisabled"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "benchmarkId": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/StandingStatus"
+          },
+          "isDisabled": {
+            "type": "boolean"
+          }
+        }
+      },
+      "IAssetInput": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IAssetInputExistingAssetInput"
+          },
+          {
+            "$ref": "#/components/schemas/IAssetInputMultiAssetInput"
+          },
+          {
+            "$ref": "#/components/schemas/IAssetInputTextAssetInput"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "ExistingAssetInput": "#/components/schemas/IAssetInputExistingAssetInput",
+            "MultiAssetInput": "#/components/schemas/IAssetInputMultiAssetInput",
+            "TextAssetInput": "#/components/schemas/IAssetInputTextAssetInput"
+          }
+        }
+      },
+      "IAssetInputExistingAssetInput": {
+        "required": [
+          "name",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ExistingAssetInput"
+            ],
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "metadata": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/MetadataInputCollection"
+              }
+            ]
+          },
+          "identifier": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "IAssetInputMultiAssetInput": {
+        "required": [
+          "assets",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "MultiAssetInput"
+            ],
+            "type": "string"
+          },
+          "assets": {
+            "$ref": "#/components/schemas/ListOfIAssetInput"
+          },
+          "metadata": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/MetadataInputCollection"
+              }
+            ]
+          },
+          "identifier": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "IAssetInputTextAssetInput": {
+        "required": [
+          "text",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TextAssetInput"
+            ],
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "metadata": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/MetadataInputCollection"
+              }
+            ]
+          },
+          "identifier": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "IAssetModel": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IAssetModelFileAssetModel"
+          },
+          {
+            "$ref": "#/components/schemas/IAssetModelMultiAssetModel"
+          },
+          {
+            "$ref": "#/components/schemas/IAssetModelNullAssetModel"
+          },
+          {
+            "$ref": "#/components/schemas/IAssetModelTextAssetModel"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "FileAsset": "#/components/schemas/IAssetModelFileAssetModel",
+            "MultiAsset": "#/components/schemas/IAssetModelMultiAssetModel",
+            "NullAsset": "#/components/schemas/IAssetModelNullAssetModel",
+            "TextAsset": "#/components/schemas/IAssetModelTextAssetModel"
+          }
+        }
+      },
+      "IAssetModelFileAssetModel": {
+        "required": [
+          "fileName",
+          "metadata",
+          "identifier",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "FileAsset"
+            ],
+            "type": "string"
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataModelCollection"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        }
+      },
+      "IAssetModelMultiAssetModel": {
+        "required": [
+          "assets",
+          "metadata",
+          "identifier",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "MultiAsset"
+            ],
+            "type": "string"
+          },
+          "assets": {
+            "$ref": "#/components/schemas/ListOfIAssetModel"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataModelCollection"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        }
+      },
+      "IAssetModelNullAssetModel": {
+        "required": [
+          "metadata",
+          "identifier",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NullAsset"
+            ],
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataModelCollection"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        }
+      },
+      "IAssetModelTextAssetModel": {
+        "required": [
+          "text",
+          "metadata",
+          "identifier",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TextAsset"
+            ],
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataModelCollection"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        }
+      },
+      "ICampaignFilter": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ICampaignFilterAndFilter"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterCampaignFilter"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterCountryFilter"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterDemographicFilter"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterLanguageFilter"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterNewUserFilter"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterNotFilter"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterOrFilter"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterResponseCountFilter"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterUserActionRestrictionFilter"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterUserScoreFilter"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterUserStateFilter"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "AndFilter": "#/components/schemas/ICampaignFilterAndFilter",
+            "CampaignFilter": "#/components/schemas/ICampaignFilterCampaignFilter",
+            "CountryFilter": "#/components/schemas/ICampaignFilterCountryFilter",
+            "DemographicFilter": "#/components/schemas/ICampaignFilterDemographicFilter",
+            "LanguageFilter": "#/components/schemas/ICampaignFilterLanguageFilter",
+            "NewUserFilter": "#/components/schemas/ICampaignFilterNewUserFilter",
+            "NotFilter": "#/components/schemas/ICampaignFilterNotFilter",
+            "OrFilter": "#/components/schemas/ICampaignFilterOrFilter",
+            "ResponseCountFilter": "#/components/schemas/ICampaignFilterResponseCountFilter",
+            "UserActionRestrictionFilter": "#/components/schemas/ICampaignFilterUserActionRestrictionFilter",
+            "UserScoreFilter": "#/components/schemas/ICampaignFilterUserScoreFilter",
+            "UserStateFilter": "#/components/schemas/ICampaignFilterUserStateFilter"
+          }
+        }
+      },
+      "ICampaignFilterAndFilter": {
+        "required": [
+          "filters",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "AndFilter"
+            ],
+            "type": "string"
+          },
+          "filters": {
+            "$ref": "#/components/schemas/ListOfICampaignFilter"
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "innerFilters": {
+            "$ref": "#/components/schemas/ListOfICampaignFilter"
+          }
+        }
+      },
+      "ICampaignFilterCampaignFilter": {
+        "required": [
+          "campaignIds",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CampaignFilter"
+            ],
+            "type": "string"
+          },
+          "campaignIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "uint32"
+          }
+        }
+      },
+      "ICampaignFilterCountryFilter": {
+        "required": [
+          "countries",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CountryFilter"
+            ],
+            "type": "string"
+          },
+          "countries": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "uint32"
+          }
+        }
+      },
+      "ICampaignFilterDemographicFilter": {
+        "required": [
+          "identifier",
+          "values",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "DemographicFilter"
+            ],
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "uint32"
+          }
+        }
+      },
+      "ICampaignFilterLanguageFilter": {
+        "required": [
+          "languages",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LanguageFilter"
+            ],
+            "type": "string"
+          },
+          "languages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "uint32"
+          }
+        }
+      },
+      "ICampaignFilterNewUserFilter": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NewUserFilter"
+            ],
+            "type": "string"
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "uint32"
+          }
+        }
+      },
+      "ICampaignFilterNotFilter": {
+        "required": [
+          "filter",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NotFilter"
+            ],
+            "type": "string"
+          },
+          "filter": {
+            "$ref": "#/components/schemas/ICampaignFilter"
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "innerFilters": {
+            "$ref": "#/components/schemas/ListOfICampaignFilter"
+          }
+        }
+      },
+      "ICampaignFilterOrFilter": {
+        "required": [
+          "filters",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OrFilter"
+            ],
+            "type": "string"
+          },
+          "filters": {
+            "$ref": "#/components/schemas/ListOfICampaignFilter"
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "innerFilters": {
+            "$ref": "#/components/schemas/ListOfICampaignFilter"
+          }
+        }
+      },
+      "ICampaignFilterResponseCountFilter": {
+        "required": [
+          "responseCount",
+          "dimension",
+          "operator",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ResponseCountFilter"
+            ],
+            "type": "string"
+          },
+          "responseCount": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "dimension": {
+            "type": "string"
+          },
+          "operator": {
+            "$ref": "#/components/schemas/ComparisonOperator"
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "uint32"
+          }
+        }
+      },
+      "ICampaignFilterUserActionRestrictionFilter": {
+        "required": [
+          "requiredActions",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "UserActionRestrictionFilter"
+            ],
+            "type": "string"
+          },
+          "requiredActions": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "Listen",
+                "UseKeyboard"
+              ]
+            }
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "uint32"
+          }
+        }
+      },
+      "ICampaignFilterUserScoreFilter": {
+        "required": [
+          "lowerbound",
+          "upperbound",
+          "dimension",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "UserScoreFilter"
+            ],
+            "type": "string"
+          },
+          "lowerbound": {
+            "type": "number",
+            "format": "double"
+          },
+          "upperbound": {
+            "type": "number",
+            "format": "double"
+          },
+          "dimension": {
+            "type": "string"
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "uint32"
+          }
+        }
+      },
+      "ICampaignFilterUserStateFilter": {
+        "required": [
+          "states",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "UserStateFilter"
+            ],
+            "type": "string"
+          },
+          "states": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "Training",
+                "Blacklist",
+                "Active"
+              ]
+            }
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "uint32"
+          }
+        }
+      },
+      "IMetadataInput": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IMetadataInputTextMetadataInput"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "TextMetadataInput": "#/components/schemas/IMetadataInputTextMetadataInput"
+          }
+        }
+      },
+      "IMetadataInputTextMetadataInput": {
+        "required": [
+          "text",
+          "visibilities",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TextMetadataInput"
+            ],
+            "type": "string"
+          },
+          "text": {
+            "type": "string",
+            "nullable": true
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "IMetadataModel": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IMetadataModelClassificationMetadataModel"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataModelCountMetadataModel"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataModelFileTypeMetadataModel"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataModelImageDimensionMetadataModel"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataModelLocationMetadataModel"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataModelOriginalFilenameMetadataModel"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataModelSourceUrlMetadataModel"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataModelStreamsMetadataModel"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataModelTextMetadataModel"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataModelVideoDurationMetadataModel"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "ClassificationMetadata": "#/components/schemas/IMetadataModelClassificationMetadataModel",
+            "CountMetadata": "#/components/schemas/IMetadataModelCountMetadataModel",
+            "FileTypeMetadata": "#/components/schemas/IMetadataModelFileTypeMetadataModel",
+            "ImageDimensionMetadata": "#/components/schemas/IMetadataModelImageDimensionMetadataModel",
+            "LocationMetadata": "#/components/schemas/IMetadataModelLocationMetadataModel",
+            "OriginalFilenameMetadata": "#/components/schemas/IMetadataModelOriginalFilenameMetadataModel",
+            "SourceUrlMetadataModel": "#/components/schemas/IMetadataModelSourceUrlMetadataModel",
+            "StreamsMetadata": "#/components/schemas/IMetadataModelStreamsMetadataModel",
+            "TextMetadata": "#/components/schemas/IMetadataModelTextMetadataModel",
+            "VideoDurationMetadata": "#/components/schemas/IMetadataModelVideoDurationMetadataModel"
+          }
+        }
+      },
+      "IMetadataModelClassificationMetadataModel": {
+        "required": [
+          "classification",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ClassificationMetadata"
+            ],
+            "type": "string"
+          },
+          "classification": {
+            "type": "string"
+          }
+        }
+      },
+      "IMetadataModelCountMetadataModel": {
+        "required": [
+          "count",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CountMetadata"
+            ],
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IMetadataModelFileTypeMetadataModel": {
+        "required": [
+          "fileType",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "FileTypeMetadata"
+            ],
+            "type": "string"
+          },
+          "fileType": {
+            "$ref": "#/components/schemas/FileType"
+          }
+        }
+      },
+      "IMetadataModelImageDimensionMetadataModel": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ImageDimensionMetadata"
+            ],
+            "type": "string"
+          },
+          "height": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "width": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IMetadataModelLocationMetadataModel": {
+        "required": [
+          "x",
+          "y",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LocationMetadata"
+            ],
+            "type": "string"
+          },
+          "x": {
+            "type": "number",
+            "format": "float"
+          },
+          "y": {
+            "type": "number",
+            "format": "float"
+          }
+        }
+      },
+      "IMetadataModelOriginalFilenameMetadataModel": {
+        "required": [
+          "originalFilename",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OriginalFilenameMetadata"
+            ],
+            "type": "string"
+          },
+          "originalFilename": {
+            "type": "string"
+          }
+        }
+      },
+      "IMetadataModelSourceUrlMetadataModel": {
+        "required": [
+          "url",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "SourceUrlMetadataModel"
+            ],
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      },
+      "IMetadataModelStreamsMetadataModel": {
+        "required": [
+          "hasVideo",
+          "hasAudio",
+          "hasSubtitles",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "StreamsMetadata"
+            ],
+            "type": "string"
+          },
+          "hasVideo": {
+            "type": "boolean"
+          },
+          "hasAudio": {
+            "type": "boolean"
+          },
+          "hasSubtitles": {
+            "type": "boolean"
+          }
+        }
+      },
+      "IMetadataModelTextMetadataModel": {
+        "required": [
+          "text",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TextMetadata"
+            ],
+            "type": "string"
+          },
+          "text": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "IMetadataModelVideoDurationMetadataModel": {
+        "required": [
+          "duration",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "VideoDurationMetadata"
+            ],
+            "type": "string"
+          },
+          "duration": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "IUserFilterModel": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IUserFilterModelAgeUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelAndUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelCampaignUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelCountryUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelCustomUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelGenderUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelLanguageUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelNewUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelNotUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelOrUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelResponseCountUserFilterModel"
+          },
+          {
+            "$ref": "#/components/schemas/IUserFilterModelUserScoreUserFilterModel"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "AgeFilter": "#/components/schemas/IUserFilterModelAgeUserFilterModel",
+            "AndFilter": "#/components/schemas/IUserFilterModelAndUserFilterModel",
+            "CampaignFilter": "#/components/schemas/IUserFilterModelCampaignUserFilterModel",
+            "CountryFilter": "#/components/schemas/IUserFilterModelCountryUserFilterModel",
+            "CustomFilter": "#/components/schemas/IUserFilterModelCustomUserFilterModel",
+            "GenderFilter": "#/components/schemas/IUserFilterModelGenderUserFilterModel",
+            "LanguageFilter": "#/components/schemas/IUserFilterModelLanguageUserFilterModel",
+            "NewUserFilter": "#/components/schemas/IUserFilterModelNewUserFilterModel",
+            "NotFilter": "#/components/schemas/IUserFilterModelNotUserFilterModel",
+            "OrFilter": "#/components/schemas/IUserFilterModelOrUserFilterModel",
+            "ResponseCountFilter": "#/components/schemas/IUserFilterModelResponseCountUserFilterModel",
+            "UserScoreFilter": "#/components/schemas/IUserFilterModelUserScoreUserFilterModel"
+          }
+        }
+      },
+      "IUserFilterModelAgeUserFilterModel": {
+        "required": [
+          "ageGroups",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "AgeFilter"
+            ],
+            "type": "string"
+          },
+          "ageGroups": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "0-17",
+                "18-29",
+                "30-39",
+                "40-49",
+                "50-64",
+                "65+"
+              ]
+            }
+          }
+        }
+      },
+      "IUserFilterModelAndUserFilterModel": {
+        "required": [
+          "filters",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "AndFilter"
+            ],
+            "type": "string"
+          },
+          "filters": {
+            "$ref": "#/components/schemas/ListOfIUserFilterModel"
+          }
+        }
+      },
+      "IUserFilterModelCampaignUserFilterModel": {
+        "required": [
+          "campaignIds",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CampaignFilter"
+            ],
+            "type": "string"
+          },
+          "campaignIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IUserFilterModelCountryUserFilterModel": {
+        "required": [
+          "countries",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CountryFilter"
+            ],
+            "type": "string"
+          },
+          "countries": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IUserFilterModelCustomUserFilterModel": {
+        "required": [
+          "identifier",
+          "values",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CustomFilter"
+            ],
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IUserFilterModelGenderUserFilterModel": {
+        "required": [
+          "genders",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "GenderFilter"
+            ],
+            "type": "string"
+          },
+          "genders": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "Male",
+                "Female",
+                "Other"
+              ]
+            }
+          }
+        }
+      },
+      "IUserFilterModelLanguageUserFilterModel": {
+        "required": [
+          "languages",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LanguageFilter"
+            ],
+            "type": "string"
+          },
+          "languages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IUserFilterModelNewUserFilterModel": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NewUserFilter"
+            ],
+            "type": "string"
+          }
+        }
+      },
+      "IUserFilterModelNotUserFilterModel": {
+        "required": [
+          "filter",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NotFilter"
+            ],
+            "type": "string"
+          },
+          "filter": {
+            "$ref": "#/components/schemas/IUserFilterModel"
+          }
+        }
+      },
+      "IUserFilterModelOrUserFilterModel": {
+        "required": [
+          "filters",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OrFilter"
+            ],
+            "type": "string"
+          },
+          "filters": {
+            "$ref": "#/components/schemas/ListOfIUserFilterModel"
+          }
+        }
+      },
+      "IUserFilterModelResponseCountUserFilterModel": {
+        "required": [
+          "responseCount",
+          "dimension",
+          "operator",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ResponseCountFilter"
+            ],
+            "type": "string"
+          },
+          "responseCount": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "dimension": {
+            "type": "string"
+          },
+          "operator": {
+            "$ref": "#/components/schemas/ComparisonOperator"
+          }
+        }
+      },
+      "IUserFilterModelUserScoreUserFilterModel": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "UserScoreFilter"
+            ],
+            "type": "string"
+          },
+          "lowerbound": {
+            "type": "number",
+            "format": "double"
+          },
+          "upperbound": {
+            "type": "number",
+            "format": "double"
+          },
+          "dimension": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "LeaderboardsQueryResult": {
+        "required": [
+          "id",
+          "name",
+          "instruction",
+          "showPrompt",
+          "showPromptAsset",
+          "isInversed",
+          "responseBudget",
+          "minResponses",
+          "filters",
+          "featureFlags"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "orderId": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "instruction": {
+            "type": "string"
+          },
+          "showPrompt": {
+            "type": "boolean"
+          },
+          "showPromptAsset": {
+            "type": "boolean"
+          },
+          "isInversed": {
+            "type": "boolean"
+          },
+          "responseBudget": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minResponses": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "validationSetId": {
+            "type": "string",
+            "nullable": true
+          },
+          "filters": {
+            "$ref": "#/components/schemas/ListOfICampaignFilter"
+          },
+          "featureFlags": {
+            "$ref": "#/components/schemas/ListOfFeatureFlag"
+          }
+        }
+      },
+      "ListOfBenchmarkQueryResult": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/BenchmarkQueryResult"
+        }
+      },
+      "ListOfFeatureFlag": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/FeatureFlag"
+        }
+      },
+      "ListOfFeatureFlagModel": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/FeatureFlagModel"
+        }
+      },
+      "ListOfFilter": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Filter"
+        }
+      },
+      "ListOfIAssetInput": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/IAssetInput"
+        }
+      },
+      "ListOfIAssetModel": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/IAssetModel"
+        }
+      },
+      "ListOfICampaignFilter": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/ICampaignFilter"
+        }
+      },
+      "ListOfIUserFilterModel": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/IUserFilterModel"
+        }
+      },
+      "ListOfLeaderboardsQueryResult": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/LeaderboardsQueryResult"
+        }
+      },
+      "ListOfParticipantByBenchmark": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/ParticipantByBenchmark"
+        }
+      },
+      "ListOfPromptByBenchmarkResult": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/PromptByBenchmarkResult"
+        }
+      },
+      "ListOfRunsByLeaderboardResult": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/RunsByLeaderboardResult"
+        }
+      },
+      "ListOfSampleByIdentifier": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/SampleByIdentifier"
+        }
+      },
+      "ListOfSampleByParticipant": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/SampleByParticipant"
+        }
+      },
+      "ListOfSortCriterion": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/SortCriterion"
+        }
+      },
+      "ListOfStandingByBenchmark": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/StandingByBenchmark"
+        }
+      },
+      "ListOfStandingByLeaderboard": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/StandingByLeaderboard"
+        }
+      },
+      "LogicOperator": {
+        "enum": [
+          "And",
+          "Or",
+          "Not"
+        ]
+      },
+      "MetadataInputCollection": {
+        "type": "object",
+        "additionalProperties": {
+          "$ref": "#/components/schemas/IMetadataInput"
+        }
+      },
+      "MetadataModelCollection": {
+        "type": "object",
+        "additionalProperties": {
+          "$ref": "#/components/schemas/IMetadataModel"
+        }
+      },
+      "MetadataVisibilities": {
+        "type": "array",
+        "items": {
+          "enum": [
+            "None",
+            "Users",
+            "Customers",
+            "Admins",
+            "Dashboard",
+            "All"
+          ],
+          "type": "string"
+        }
+      },
+      "OptionOfboolean": {
+        "type": "boolean",
+        "nullable": true
+      },
+      "OptionOfint": {
+        "type": "integer",
+        "format": "int32",
+        "nullable": true
+      },
+      "OptionOfstring": {
+        "type": "string",
+        "nullable": true
+      },
+      "PagedResultOfBenchmarkQueryResult": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "$ref": "#/components/schemas/ListOfBenchmarkQueryResult"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PagedResultOfLeaderboardsQueryResult": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "$ref": "#/components/schemas/ListOfLeaderboardsQueryResult"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PagedResultOfParticipantByBenchmark": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "$ref": "#/components/schemas/ListOfParticipantByBenchmark"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PagedResultOfPromptByBenchmarkResult": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "$ref": "#/components/schemas/ListOfPromptByBenchmarkResult"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PagedResultOfRunsByLeaderboardResult": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "$ref": "#/components/schemas/ListOfRunsByLeaderboardResult"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PagedResultOfSampleByIdentifier": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "$ref": "#/components/schemas/ListOfSampleByIdentifier"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PagedResultOfSampleByParticipant": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "$ref": "#/components/schemas/ListOfSampleByParticipant"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PagedResultOfStandingByLeaderboard": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "$ref": "#/components/schemas/ListOfStandingByLeaderboard"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PageInfo": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ParticipantByBenchmark": {
+        "required": [
+          "id",
+          "name",
+          "benchmarkId",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "benchmarkId": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ParticipantStatus"
+          }
+        }
+      },
+      "ParticipantStatus": {
+        "enum": [
+          "Created",
+          "Submitted",
+          "Disabled"
+        ]
+      },
+      "PromptByBenchmarkResult": {
+        "required": [
+          "id",
+          "identifier",
+          "createdAt",
+          "tags"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "prompt": {
+            "type": "string",
+            "nullable": true
+          },
+          "promptAsset": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ]
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "QueryModel": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/PageInfo"
+              }
+            ]
+          },
+          "filter": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/RootFilter"
+              }
+            ]
+          },
+          "sortCriteria": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/ListOfSortCriterion"
+              }
+            ]
+          }
+        }
+      },
+      "RootFilter": {
+        "type": "object",
+        "properties": {
+          "filters": {
+            "$ref": "#/components/schemas/ListOfFilter"
+          },
+          "logic": {
+            "$ref": "#/components/schemas/LogicOperator"
+          }
+        }
+      },
+      "RunsByLeaderboardResult": {
+        "required": [
+          "id",
+          "name",
+          "status",
+          "createdAt",
+          "ownerMail",
+          "orderId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/RunStatus"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ownerMail": {
+            "type": "string"
+          },
+          "orderId": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "RunStatus": {
+        "enum": [
+          "Queued",
+          "Running",
+          "Completed",
+          "Failed"
+        ]
+      },
+      "SampleByIdentifier": {
+        "required": [
+          "id",
+          "identifier",
+          "participantId",
+          "participantName",
+          "asset",
+          "tags",
+          "ownerMail"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "participantId": {
+            "type": "string"
+          },
+          "participantName": {
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAssetModel"
+          },
+          "prompt": {
+            "type": "string",
+            "nullable": true
+          },
+          "promptAsset": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ]
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ownerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string"
+          }
+        }
+      },
+      "SampleByParticipant": {
+        "required": [
+          "id",
+          "identifier",
+          "asset",
+          "tags",
+          "ownerMail"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAssetModel"
+          },
+          "prompt": {
+            "type": "string",
+            "nullable": true
+          },
+          "promptAsset": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ]
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ownerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string"
+          }
+        }
+      },
+      "SortCriterion": {
+        "required": [
+          "propertyName",
+          "direction"
+        ],
+        "type": "object",
+        "properties": {
+          "propertyName": {
+            "type": "string"
+          },
+          "direction": {
+            "$ref": "#/components/schemas/SortDirection"
+          }
+        }
+      },
+      "SortDirection": {
+        "enum": [
+          "Asc",
+          "Desc"
+        ]
+      },
+      "StandingByBenchmark": {
+        "required": [
+          "id",
+          "name",
+          "benchmarkId",
+          "status",
+          "score",
+          "wins",
+          "totalMatches",
+          "isDisabled"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "benchmarkId": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/StandingStatus"
+          },
+          "score": {
+            "type": "number",
+            "format": "double"
+          },
+          "wins": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalMatches": {
+            "type": "number",
+            "format": "double"
+          },
+          "isDisabled": {
+            "type": "boolean"
+          },
+          "confidenceInterval": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/ConfidenceInterval"
+              }
+            ]
+          }
+        }
+      },
+      "StandingByLeaderboard": {
+        "required": [
+          "id",
+          "name",
+          "leaderboardId",
+          "status",
+          "score",
+          "wins",
+          "totalMatches",
+          "isDisabled"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "leaderboardId": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/StandingStatus"
+          },
+          "score": {
+            "type": "number",
+            "format": "double"
+          },
+          "wins": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalMatches": {
+            "type": "number",
+            "format": "double"
+          },
+          "isDisabled": {
+            "type": "boolean"
+          },
+          "confidenceInterval": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/ConfidenceInterval"
+              }
+            ]
+          }
+        }
+      },
+      "StandingsByBenchmarkResult": {
+        "required": [
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "$ref": "#/components/schemas/ListOfStandingByBenchmark"
+          }
+        }
+      },
+      "StandingsByLeaderboardResult": {
+        "required": [
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "$ref": "#/components/schemas/ListOfStandingByLeaderboard"
+          }
+        }
+      },
+      "StandingStatus": {
+        "enum": [
+          "Created",
+          "Active",
+          "Idle"
+        ]
+      },
+      "SubmitParticipantResult": {
+        "required": [
+          "validDatapoints",
+          "invalidDatapoints"
+        ],
+        "type": "object",
+        "properties": {
+          "validDatapoints": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "invalidDatapoints": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "SubmitPromptModel": {
+        "required": [
+          "identifier"
+        ],
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string"
+          },
+          "prompt": {
+            "type": "string",
+            "nullable": true
+          },
+          "promptAsset": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IAssetInput"
+              }
+            ]
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "TagsByBenchmarkResult": {
+        "required": [
+          "tags"
+        ],
+        "type": "object",
+        "properties": {
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "UpdateBenchmarkModel": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/OptionOfstring"
+          },
+          "isPublic": {
+            "$ref": "#/components/schemas/OptionOfboolean"
+          }
+        }
+      },
+      "UpdateBenchmarkNameModel": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateLeaderboardModel": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/OptionOfstring"
+          },
+          "responseBudget": {
+            "$ref": "#/components/schemas/OptionOfint"
+          },
+          "minResponses": {
+            "$ref": "#/components/schemas/OptionOfint"
+          }
+        }
+      },
+      "UpdateLeaderboardNameModel": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateLeaderboardResponseConfigModel": {
+        "required": [
+          "responseBudget",
+          "minResponses"
+        ],
+        "type": "object",
+        "properties": {
+          "responseBudget": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minResponses": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "UpdateParticipantModel": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/OptionOfstring"
+          }
+        }
+      },
+      "UpdateParticipantNameModel": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdatePromptTagsModel": {
+        "required": [
+          "tags"
+        ],
+        "type": "object",
+        "properties": {
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "JWT Authorization header using the Bearer scheme",
+        "scheme": "bearer",
+        "bearerFormat": "Json Web Token"
+      },
+      "OpenIdConnect": {
+        "type": "openIdConnect",
+        "description": "OpenId Connect connection flow",
+        "openIdConnectUrl": "https://auth.rabbitdata.ch/.well-known/openid-configuration"
+      },
+      "OAuth2": {
+        "type": "oauth2",
+        "description": "OAuth2 authorization header using the Bearer scheme",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://auth.rabbitdata.ch/connect/authorize",
+            "tokenUrl": "https://auth.rabbitdata.ch/connect/token",
+            "refreshUrl": "https://auth.rabbitdata.ch/connect/token",
+            "scopes": {
+              "openid": "OpenID",
+              "profile": "Profile",
+              "email": "Email"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "Bearer": [ ],
+      "OpenIdConnect": [
+        "openid",
+        "profile",
+        "email"
+      ],
+      "OAuth2": [
+        "openid",
+        "profile",
+        "email"
+      ]
+    }
+  ],
+  "tags": [
+    {
+      "name": "Benchmark"
+    },
+    {
+      "name": "Leaderboard"
+    },
+    {
+      "name": "Participant"
+    },
+    {
+      "name": "Prompt"
+    },
+    {
+      "name": "Sample"
+    }
+  ]
+}

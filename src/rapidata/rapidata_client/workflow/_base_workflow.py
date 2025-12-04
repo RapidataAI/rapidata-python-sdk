@@ -1,21 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Any
 
-from rapidata.api_client.models.simple_workflow_model import SimpleWorkflowModel
-from rapidata.api_client.models.evaluation_workflow_model import EvaluationWorkflowModel
-from rapidata.api_client.models.compare_workflow_model import CompareWorkflowModel
-from rapidata.api_client.models.grouped_ranking_workflow_model import (
-    GroupedRankingWorkflowModel,
-)
-from rapidata.api_client import (
-    ClassifyPayload,
-    ComparePayload,
-    LocatePayload,
-    ScrubPayload,
-    TranscriptionPayload,
-    LinePayload,
-    FreeTextPayload,
-)
+from rapidata.api_client.models.i_order_workflow_model import IOrderWorkflowModel
+from rapidata.api_client.models.i_rapid_payload import IRapidPayload
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.api_client.models.rapid_modality import RapidModality
 
@@ -35,15 +22,7 @@ class Workflow(ABC):
     def _to_payload(
         self,
         datapoint: Datapoint,
-    ) -> (
-        ClassifyPayload
-        | ComparePayload
-        | LocatePayload
-        | ScrubPayload
-        | LinePayload
-        | FreeTextPayload
-        | TranscriptionPayload
-    ):
+    ) -> IRapidPayload:
         pass
 
     @abstractmethod
@@ -51,14 +30,7 @@ class Workflow(ABC):
         pass
 
     @abstractmethod
-    def _to_model(
-        self,
-    ) -> (
-        SimpleWorkflowModel
-        | CompareWorkflowModel
-        | EvaluationWorkflowModel
-        | GroupedRankingWorkflowModel
-    ):
+    def _to_model(self) -> IOrderWorkflowModel:
         pass
 
     def _format_datapoints(self, datapoints: list[Datapoint]) -> list[Datapoint]:

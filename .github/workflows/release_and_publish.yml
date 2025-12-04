@@ -11,12 +11,23 @@ on:
         - patch
         - minor
         - major
+      branch:
+        description: 'Branch to release from'
+        required: true
+        default: 'main'
+        type: choice
+        options:
+        - main
+        - 2.x
 jobs:
   release-and-publish:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: actions/setup-python@v6
+      with:
+        ref: ${{ github.event.inputs.branch }}
+    - name: Set up Python
+      uses: actions/setup-python@v6
       with:
         python-version-file: ".python-version"
     - name: Install uv
@@ -65,7 +76,7 @@ jobs:
       run: |
         git add pyproject.toml src/rapidata/__init__.py
         git commit -m "Bump version from ${{ steps.update_version.outputs.old_version }} to ${{ steps.update_version.outputs.new_version }}"
-        git push
+        git push origin ${{ github.event.inputs.branch }}
     
     - name: Create and push tag
       run: |

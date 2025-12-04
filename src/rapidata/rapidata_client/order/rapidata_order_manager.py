@@ -109,15 +109,15 @@ class RapidataOrderManager:
             )
 
         order = (
-            order_builder._workflow(workflow)
-            ._datapoints(datapoints=datapoints)
-            ._referee(referee)
-            ._filters(filters)
-            ._selections(selections)
-            ._settings(settings)
-            ._validation_set_id(validation_set_id if not selections else None)
-            ._priority(self.__priority)
-            ._sticky_state(self.__sticky_state)
+            order_builder._set_workflow(workflow)
+            ._set_datapoints(datapoints=datapoints)
+            ._set_referee(referee)
+            ._set_filters(filters)
+            ._set_selections(selections)
+            ._set_settings(settings)
+            ._set_validation_set_id(validation_set_id if not selections else None)
+            ._set_priority(self.__priority)
+            ._set_sticky_state(self.__sticky_state)
             ._create()
         )
         logger.debug("Order created: %s", order)
@@ -379,11 +379,9 @@ class RapidataOrderManager:
                 )
 
             from rapidata.rapidata_client.workflow import MultiRankingWorkflow
-            from rapidata.api_client.models.multi_asset_input_assets_inner import (
-                MultiAssetInputAssetsInner,
-            )
-            from rapidata.api_client.models.existing_asset_input import (
-                ExistingAssetInput,
+            from rapidata.api_client.models.i_asset_input import IAssetInput
+            from rapidata.api_client.models.i_asset_input_existing_asset_input import (
+                IAssetInputExistingAssetInput,
             )
 
             datapoints_instances = []
@@ -407,11 +405,11 @@ class RapidataOrderManager:
 
             media_contexts_dict = (
                 {
-                    str(i): MultiAssetInputAssetsInner(
-                        actual_instance=ExistingAssetInput(
+                    str(i): IAssetInput(
+                        actual_instance=IAssetInputExistingAssetInput(
                             _t="ExistingAssetInput",
                             name=self._asset_uploader.upload_asset(media_context),
-                        ),
+                        )
                     )
                     for i, media_context in enumerate(media_contexts)
                 }

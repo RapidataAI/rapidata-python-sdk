@@ -1,12 +1,13 @@
 from abc import abstractmethod
-from typing import Any
+
+from rapidata.api_client.models.i_user_filter_model import IUserFilterModel
 
 
 class RapidataFilter:
     """The base class for all Rapidata Filters."""
 
     @abstractmethod
-    def _to_model(self) -> Any:
+    def _to_model(self) -> IUserFilterModel:
         pass
 
     def __or__(self, other):

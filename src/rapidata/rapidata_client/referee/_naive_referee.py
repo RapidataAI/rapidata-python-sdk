@@ -1,6 +1,10 @@
 from __future__ import annotations
 
 from rapidata.rapidata_client.referee._base_referee import Referee
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from rapidata.api_client.models.i_referee_model import IRefereeModel
 
 
 class NaiveReferee(Referee):
@@ -30,7 +34,15 @@ class NaiveReferee(Referee):
             "guessesRequired": self.responses,
         }
 
-    def _to_model(self):
-        from rapidata.api_client.models.naive_referee_model import NaiveRefereeModel
+    def _to_model(self) -> IRefereeModel:
+        from rapidata.api_client.models.i_referee_model_naive_referee_model import (
+            IRefereeModelNaiveRefereeModel,
+        )
+        from rapidata.api_client.models.i_referee_model import IRefereeModel
 
-        return NaiveRefereeModel(_t="NaiveReferee", totalVotes=self.responses)
+        return IRefereeModel(
+            actual_instance=IRefereeModelNaiveRefereeModel(
+                _t="NaiveReferee",
+                totalVotes=self.responses,
+            )
+        )

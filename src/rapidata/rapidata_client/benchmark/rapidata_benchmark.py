@@ -1,40 +1,18 @@
+from __future__ import annotations
 import urllib.parse
 import webbrowser
 from colorama import Fore
 from typing import Literal, Optional, Sequence, TYPE_CHECKING
+from rapidata.rapidata_client.config import logger, managed_print, tracer
 
 if TYPE_CHECKING:
     import pandas as pd
-
-
-from rapidata.api_client.models.and_user_filter_model_filters_inner import (
-    AndUserFilterModelFiltersInner,
-)
-from rapidata.api_client.models.create_benchmark_participant_model import (
-    CreateBenchmarkParticipantModel,
-)
-from rapidata.api_client.models.create_leaderboard_model import CreateLeaderboardModel
-from rapidata.api_client.models.file_asset_model import FileAssetModel
-from rapidata.api_client.models.query_model import QueryModel
-from rapidata.api_client.models.page_info import PageInfo
-from rapidata.api_client.models.source_url_metadata_model import SourceUrlMetadataModel
-from rapidata.api_client.models.submit_prompt_model import SubmitPromptModel
-from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
-from rapidata.api_client.models.create_datapoint_model_context_asset import (
-    CreateDatapointModelContextAsset,
-)
-from rapidata.rapidata_client.benchmark._detail_mapper import DetailMapper
-from rapidata.rapidata_client.benchmark.leaderboard.rapidata_leaderboard import (
-    RapidataLeaderboard,
-)
-from rapidata.rapidata_client.benchmark.participant._participant import (
-    BenchmarkParticipant,
-)
-from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
-from rapidata.rapidata_client.filter import RapidataFilter
-from rapidata.rapidata_client.config import logger, managed_print, tracer
-from rapidata.rapidata_client.settings import RapidataSetting
-from rapidata.service.openapi_service import OpenAPIService
+    from rapidata.rapidata_client.benchmark.leaderboard.rapidata_leaderboard import (
+        RapidataLeaderboard,
+    )
+    from rapidata.rapidata_client.filter import RapidataFilter
+    from rapidata.rapidata_client.settings import RapidataSetting
+    from rapidata.service.openapi_service import OpenAPIService
 
 
 class RapidataBenchmark:
@@ -50,12 +28,14 @@ class RapidataBenchmark:
     """
 
     def __init__(self, name: str, id: str, openapi_service: OpenAPIService):
+        from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
+
         self.name = name
         self.id = id
         self._openapi_service = openapi_service
         self.__prompts: list[str | None] = []
         self.__prompt_assets: list[str | None] = []
-        self.__leaderboards: list[RapidataLeaderboard] = []
+        self.__leaderboards: list["RapidataLeaderboard"] = []
         self.__identifiers: list[str] = []
         self.__tags: list[list[str]] = []
         self.__benchmark_page: str = (
@@ -64,6 +44,14 @@ class RapidataBenchmark:
         self._asset_uploader = AssetUploader(openapi_service)
 
     def __instantiate_prompts(self) -> None:
+        from rapidata.rapidata_client.config import tracer
+        from rapidata.api_client.models.query_model import QueryModel
+        from rapidata.api_client.models.page_info import PageInfo
+        from rapidata.api_client.models.file_asset_model import FileAssetModel
+        from rapidata.api_client.models.source_url_metadata_model import (
+            SourceUrlMetadataModel,
+        )
+
         with tracer.start_as_current_span("RapidataBenchmark.__instantiate_prompts"):
             current_page = 1
             total_pages = None
@@ -144,6 +132,12 @@ class RapidataBenchmark:
         """
         Returns the leaderboards that are registered for the benchmark.
         """
+        from rapidata.api_client.models.query_model import QueryModel
+        from rapidata.api_client.models.page_info import PageInfo
+        from rapidata.rapidata_client.benchmark.leaderboard.rapidata_leaderboard import (
+            RapidataLeaderboard,
+        )
+
         with tracer.start_as_current_span("RapidataBenchmark.leaderboards"):
             if not self.__leaderboards:
                 current_page = 1
@@ -205,6 +199,10 @@ class RapidataBenchmark:
             prompt_asset: The prompt asset that will be used to evaluate the model. Provided as a link to the asset.
             tags: The tags can be used to filter the leaderboard results. They will NOT be shown to the users.
         """
+        from rapidata.api_client.models.submit_prompt_model import SubmitPromptModel
+        from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
+        from rapidata.api_client.models.i_asset_input import IAssetInput
+
         with tracer.start_as_current_span("RapidataBenchmark.add_prompt"):
             if tags is None:
                 tags = []
@@ -264,10 +262,16 @@ class RapidataBenchmark:
                     identifier=identifier,
                     prompt=prompt,
                     promptAsset=(
-                        CreateDatapointModelContextAsset(
-                            actual_instance=ExistingAssetInput(
-                                _t="ExistingAssetInput",
-                                name=self._asset_uploader.upload_asset(prompt_asset),
+                        IAssetInput(
+                            actual_instance=(
+                                ExistingAssetInput(
+                                    _t="ExistingAssetInput",
+                                    name=self._asset_uploader.upload_asset(
+                                        prompt_asset
+                                    ),
+                                )
+                                if prompt_asset is not None
+                                else None
                             )
                         )
                         if prompt_asset is not None
@@ -287,8 +291,8 @@ class RapidataBenchmark:
         level_of_detail: Literal["low", "medium", "high", "very high"] | None = None,
         min_responses_per_matchup: int | None = None,
         validation_set_id: str | None = None,
-        filters: Sequence[RapidataFilter] | None = None,
-        settings: Sequence[RapidataSetting] | None = None,
+        filters: Sequence["RapidataFilter"] | None = None,
+        settings: Sequence["RapidataSetting"] | None = None,
     ) -> RapidataLeaderboard:
         """
         Creates a new leaderboard for the benchmark.
@@ -305,6 +309,14 @@ class RapidataBenchmark:
             filters: The filters that should be applied to the leaderboard. Will determine who can solve answer in the leaderboard. (default: [])
             settings: The settings that should be applied to the leaderboard. Will determine the behavior of the tasks on the leaderboard. (default: [])
         """
+        from rapidata.api_client.models.create_leaderboard_model import (
+            CreateLeaderboardModel,
+        )
+        from rapidata.rapidata_client.benchmark._detail_mapper import DetailMapper
+        from rapidata.rapidata_client.benchmark.leaderboard.rapidata_leaderboard import (
+            RapidataLeaderboard,
+        )
+
         with tracer.start_as_current_span("create_leaderboard"):
             if level_of_detail is not None and (
                 not isinstance(level_of_detail, str)
@@ -352,12 +364,7 @@ class RapidataBenchmark:
                     ),
                     validationSetId=validation_set_id,
                     filters=(
-                        [
-                            AndUserFilterModelFiltersInner(filter._to_model())
-                            for filter in filters
-                        ]
-                        if filters
-                        else None
+                        [filter._to_model() for filter in filters] if filters else None
                     ),
                     featureFlags=(
                         [setting._to_feature_flag() for setting in settings]
@@ -405,6 +412,13 @@ class RapidataBenchmark:
                 The identifiers that are used must be registered for the benchmark. To see the registered identifiers, use the identifiers property.
             prompts: The prompts that correspond to the media. The order of the prompts must match the order of the media.
         """
+        from rapidata.api_client.models.create_benchmark_participant_model import (
+            CreateBenchmarkParticipantModel,
+        )
+        from rapidata.rapidata_client.benchmark.participant._participant import (
+            BenchmarkParticipant,
+        )
+
         with tracer.start_as_current_span("evaluate_model"):
             if not media:
                 raise ValueError("Media must be a non-empty list of strings")
@@ -483,6 +497,7 @@ class RapidataBenchmark:
         """
         Views the benchmark.
         """
+
         logger.info("Opening benchmark page in browser...")
         could_open_browser = webbrowser.open(self.__benchmark_page)
         if not could_open_browser:
@@ -495,14 +510,13 @@ class RapidataBenchmark:
                 + Fore.RESET
             )
 
-    def get_overall_standings(self, tags: Optional[list[str]] = None) -> "pd.DataFrame":
+    def get_overall_standings(self, tags: Optional[list[str]] = None) -> pd.DataFrame:
         """
         Returns an aggregated elo table of all leaderboards in the benchmark.
         """
+        import pandas as pd
 
         with tracer.start_as_current_span("get_overall_standings"):
-            import pandas as pd
-
             participants = self._openapi_service.benchmark_api.benchmark_benchmark_id_standings_get(
                 benchmark_id=self.id,
                 tags=tags,

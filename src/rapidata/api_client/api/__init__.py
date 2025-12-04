@@ -24,7 +24,6 @@ from rapidata.api_client.api.rapidata_identity_api_api import RapidataIdentityAP
 from rapidata.api_client.api.sample_api import SampleApi
 from rapidata.api_client.api.simple_workflow_api import SimpleWorkflowApi
 from rapidata.api_client.api.survey_api import SurveyApi
-from rapidata.api_client.api.user_info_api import UserInfoApi
 from rapidata.api_client.api.user_rapid_api import UserRapidApi
 from rapidata.api_client.api.validation_set_api import ValidationSetApi
 from rapidata.api_client.api.workflow_api import WorkflowApi

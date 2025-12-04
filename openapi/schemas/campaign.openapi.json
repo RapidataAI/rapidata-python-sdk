@@ -1,0 +1,656 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Rapidata Campaign API",
+    "description": "The API for the Rapidata Campaign service",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "https://api.rabbitdata.ch/"
+    }
+  ],
+  "paths": {
+    "/campaign/monitor": {
+      "get": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "The monitor endpoint is used to monitor the health of the service",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/campaigns": {
+      "get": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "Queries orders based on a filter, page, and sort criteria.",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "query",
+            "description": "The parameters for filtering, paging, and sorting",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfCampaignQueryResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfCampaignQueryResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfCampaignQueryResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/campaign/{campaignId}/pause": {
+      "post": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "Pauses a campaign.",
+        "parameters": [
+          {
+            "name": "campaignId",
+            "in": "path",
+            "description": "id of the campaign that should be paused",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/campaign/{campaignId}/resume": {
+      "post": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "Resumes a campaign.",
+        "parameters": [
+          {
+            "name": "campaignId",
+            "in": "path",
+            "description": "id of the campaign that should be paused",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/campaign/{campaignId}": {
+      "patch": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "Updates a campaign.",
+        "parameters": [
+          {
+            "name": "campaignId",
+            "in": "path",
+            "description": "id of the campaign to update",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "model containing the updates",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCampaignModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCampaignModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCampaignModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/campaign/{campaignId}/priority": {
+      "put": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "Updates the priority of a campaign.",
+        "parameters": [
+          {
+            "name": "campaignId",
+            "in": "path",
+            "description": "id of the campaign to update",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "model containing the new priority",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePriorityModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePriorityModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePriorityModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "deprecated": true
+      }
+    },
+    "/campaign/boost/status": {
+      "get": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "Gets the status of the boost.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBoostResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBoostResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBoostResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/campaign/boost": {
+      "put": {
+        "tags": [
+          "Campaign"
+        ],
+        "summary": "Updates the boost with manual boosts.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeBoostModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeBoostModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeBoostModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BoostingProfile": {
+        "type": "object",
+        "properties": {
+          "requiresGlobalBoost": {
+            "type": "boolean"
+          },
+          "languageBoosts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "CampaignQueryResult": {
+        "required": [
+          "id",
+          "ownerMail",
+          "name",
+          "status",
+          "priority",
+          "boostingProfile",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "ownerMail": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/CampaignStatus"
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "boostingProfile": {
+            "$ref": "#/components/schemas/BoostingProfile"
+          },
+          "requiresBooster": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CampaignStatus": {
+        "enum": [
+          "Created",
+          "Preview",
+          "Active",
+          "Analysis",
+          "Paused",
+          "Completed"
+        ]
+      },
+      "ChangeBoostModel": {
+        "required": [
+          "isManual",
+          "isActive"
+        ],
+        "type": "object",
+        "properties": {
+          "isManual": {
+            "type": "boolean"
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Filter": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": { },
+          "operator": {
+            "$ref": "#/components/schemas/FilterOperator"
+          },
+          "logic": {
+            "$ref": "#/components/schemas/LogicOperator"
+          },
+          "filters": {
+            "$ref": "#/components/schemas/ListOfFilter"
+          }
+        }
+      },
+      "FilterOperator": {
+        "enum": [
+          "Eq",
+          "Neq",
+          "Gt",
+          "Gte",
+          "Lt",
+          "Lte",
+          "Contains",
+          "StartsWith",
+          "EndsWith",
+          "In"
+        ]
+      },
+      "GetBoostResult": {
+        "required": [
+          "status",
+          "mode",
+          "activeCampaigns",
+          "inactiveCampaigns",
+          "unknownCampaigns"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/GetBoostResult_BoostStatus"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/GetBoostResult_BoostMode"
+          },
+          "activeCampaigns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "inactiveCampaigns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "unknownCampaigns": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        }
+      },
+      "GetBoostResult_BoostMode": {
+        "enum": [
+          "Automatic",
+          "Manual"
+        ]
+      },
+      "GetBoostResult_BoostStatus": {
+        "enum": [
+          "Active",
+          "Inactive",
+          "Partial",
+          "Unknown"
+        ]
+      },
+      "ListOfCampaignQueryResult": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/CampaignQueryResult"
+        }
+      },
+      "ListOfFilter": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Filter"
+        }
+      },
+      "ListOfSortCriterion": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/SortCriterion"
+        }
+      },
+      "LogicOperator": {
+        "enum": [
+          "And",
+          "Or",
+          "Not"
+        ]
+      },
+      "OptionOfboolean": {
+        "type": "boolean",
+        "nullable": true
+      },
+      "OptionOfint": {
+        "type": "integer",
+        "format": "int32",
+        "nullable": true
+      },
+      "PagedResultOfCampaignQueryResult": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "$ref": "#/components/schemas/ListOfCampaignQueryResult"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PageInfo": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "QueryModel": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/PageInfo"
+              }
+            ]
+          },
+          "filter": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/RootFilter"
+              }
+            ]
+          },
+          "sortCriteria": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/ListOfSortCriterion"
+              }
+            ]
+          }
+        }
+      },
+      "RootFilter": {
+        "type": "object",
+        "properties": {
+          "filters": {
+            "$ref": "#/components/schemas/ListOfFilter"
+          },
+          "logic": {
+            "$ref": "#/components/schemas/LogicOperator"
+          }
+        }
+      },
+      "SortCriterion": {
+        "required": [
+          "propertyName",
+          "direction"
+        ],
+        "type": "object",
+        "properties": {
+          "propertyName": {
+            "type": "string"
+          },
+          "direction": {
+            "$ref": "#/components/schemas/SortDirection"
+          }
+        }
+      },
+      "SortDirection": {
+        "enum": [
+          "Asc",
+          "Desc"
+        ]
+      },
+      "UpdateCampaignModel": {
+        "type": "object",
+        "properties": {
+          "priority": {
+            "$ref": "#/components/schemas/OptionOfint"
+          },
+          "requiresBooster": {
+            "$ref": "#/components/schemas/OptionOfboolean"
+          }
+        }
+      },
+      "UpdatePriorityModel": {
+        "required": [
+          "priority"
+        ],
+        "type": "object",
+        "properties": {
+          "priority": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "JWT Authorization header using the Bearer scheme",
+        "scheme": "bearer",
+        "bearerFormat": "Json Web Token"
+      },
+      "OpenIdConnect": {
+        "type": "openIdConnect",
+        "description": "OpenId Connect connection flow",
+        "openIdConnectUrl": "https://auth.rabbitdata.ch/.well-known/openid-configuration"
+      },
+      "OAuth2": {
+        "type": "oauth2",
+        "description": "OAuth2 authorization header using the Bearer scheme",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://auth.rabbitdata.ch/connect/authorize",
+            "tokenUrl": "https://auth.rabbitdata.ch/connect/token",
+            "refreshUrl": "https://auth.rabbitdata.ch/connect/token",
+            "scopes": {
+              "openid": "OpenID",
+              "profile": "Profile",
+              "email": "Email"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "Bearer": [ ],
+      "OpenIdConnect": [
+        "openid",
+        "profile",
+        "email"
+      ],
+      "OAuth2": [
+        "openid",
+        "profile",
+        "email"
+      ]
+    }
+  ],
+  "tags": [
+    {
+      "name": "Campaign"
+    }
+  ]
+}

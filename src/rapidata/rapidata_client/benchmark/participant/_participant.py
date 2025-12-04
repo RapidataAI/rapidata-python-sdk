@@ -1,19 +1,19 @@
+from __future__ import annotations
+
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import time
 from tqdm import tqdm
 
 from rapidata.rapidata_client.config import logger
-from rapidata.api_client.models.create_sample_model import CreateSampleModel
-from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.config.rapidata_config import rapidata_config
 from rapidata.rapidata_client.api.rapidata_api_client import (
     suppress_rapidata_error_logging,
 )
 
 from opentelemetry import context as otel_context
-from rapidata.api_client.models.create_sample_model_asset import CreateSampleModelAsset
-from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
+
+from rapidata.service.openapi_service import OpenAPIService
 
 
 class BenchmarkParticipant:
@@ -38,6 +38,12 @@ class BenchmarkParticipant:
         Returns:
             tuple[MediaAsset | None, MediaAsset | None]: (successful_asset, failed_asset)
         """
+        from rapidata.api_client.models.create_sample_model import CreateSampleModel
+        from rapidata.api_client.models.create_sample_model_asset import (
+            CreateSampleModelAsset,
+        )
+        from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
+        from rapidata.api_client.models.i_asset_input import IAssetInput
 
         last_exception = None
         for attempt in range(rapidata_config.upload.maxRetries):
@@ -47,10 +53,12 @@ class BenchmarkParticipant:
                         participant_id=self.id,
                         create_sample_model=CreateSampleModel(
                             identifier=identifier,
-                            asset=CreateSampleModelAsset(
-                                actual_instance=ExistingAssetInput(
-                                    _t="ExistingAssetInput",
-                                    name=self._asset_uploader.upload_asset(asset),
+                            asset=IAssetInput(
+                                actual_instance=CreateSampleModelAsset(
+                                    actual_instance=ExistingAssetInput(
+                                        _t="ExistingAssetInput",
+                                        name=self._asset_uploader.upload_asset(asset),
+                                    ),
                                 ),
                             ),
                         ),

@@ -25,12 +25,15 @@ class CustomFilter(RapidataFilter, BaseModel):
         super().__init__(identifier=identifier, values=values)
 
     def _to_model(self):
-        from rapidata.api_client.models.custom_user_filter_model import (
-            CustomUserFilterModel,
+        from rapidata.api_client.models.i_user_filter_model import IUserFilterModel
+        from rapidata.api_client.models.i_user_filter_model_custom_user_filter_model import (
+            IUserFilterModelCustomUserFilterModel,
         )
 
-        return CustomUserFilterModel(
-            _t="CustomFilter",
-            identifier=self.identifier,
-            values=self.values,
+        return IUserFilterModel(
+            actual_instance=IUserFilterModelCustomUserFilterModel(
+                _t="CustomFilter",
+                identifier=self.identifier,
+                values=self.values,
+            )
         )

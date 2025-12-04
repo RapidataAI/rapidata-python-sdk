@@ -3,17 +3,23 @@ from rapidata.api_client import (
     OnlinePairMakerConfigModel,
     EloConfigModel,
 )
-from rapidata.api_client.models.compare_workflow_model import CompareWorkflowModel
+from rapidata.api_client.models.add_validation_rapid_model import IRapidPayload
+from rapidata.api_client.models.i_order_workflow_model import IOrderWorkflowModel
+from rapidata.api_client.models.i_order_workflow_model_compare_workflow_model import (
+    IOrderWorkflowModelCompareWorkflowModel,
+)
 from rapidata.rapidata_client.workflow._base_workflow import Workflow
-from rapidata.api_client import ComparePayload
+from rapidata.api_client.models.i_rapid_payload_compare_payload import (
+    IRapidPayloadComparePayload,
+)
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.api_client.models.rapid_modality import RapidModality
 from rapidata.rapidata_client.datapoints.metadata import (
     MediaAssetMetadata,
     PromptMetadata,
 )
-from rapidata.api_client.models.compare_workflow_model_metadata_inner import (
-    CompareWorkflowModelMetadataInner,
+from rapidata.api_client.models.metadata_i_order_metadata_input import (
+    MetadataIOrderMetadataInput,
 )
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 import itertools
@@ -78,23 +84,26 @@ class RankingWorkflow(Workflow):
     def _get_instruction(self) -> str:
         return self.instruction
 
-    def _to_model(self) -> CompareWorkflowModel:
-
-        return CompareWorkflowModel(
-            _t="CompareWorkflow",
-            criteria=self.instruction,
-            eloConfig=self.elo_config,
-            pairMakerConfig=self.pair_maker_config,
-            metadata=[
-                CompareWorkflowModelMetadataInner(metadata.to_model())
-                for metadata in self.metadatas
-            ],
+    def _to_model(self) -> IOrderWorkflowModel:
+        return IOrderWorkflowModel(
+            actual_instance=IOrderWorkflowModelCompareWorkflowModel(
+                _t="CompareWorkflow",
+                criteria=self.instruction,
+                eloConfig=self.elo_config,
+                pairMakerConfig=self.pair_maker_config,
+                metadata=[
+                    MetadataIOrderMetadataInput(metadata.to_model())
+                    for metadata in self.metadatas
+                ],
+            )
         )
 
-    def _to_payload(self, datapoint: Datapoint) -> ComparePayload:
-        return ComparePayload(
-            _t="ComparePayload",
-            criteria=self.instruction,
+    def _to_payload(self, datapoint: Datapoint) -> IRapidPayload:
+        return IRapidPayload(
+            actual_instance=IRapidPayloadComparePayload(
+                _t="ComparePayload",
+                criteria=self.instruction,
+            )
         )
 
     def _format_datapoints(self, datapoints: list[Datapoint]) -> list[Datapoint]:
