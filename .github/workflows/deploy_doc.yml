@@ -60,13 +60,3 @@ jobs:
           else
             poetry run mike deploy --push ${{ github.event.inputs.version_alias }}
           fi
-      - name: Ensure CNAME exists
-        run: |
-          git checkout gh-pages
-          if [ ! -f CNAME ]; then
-            echo "docs.rapidata.ai" > CNAME
-            git add CNAME
-            git commit -m "Add CNAME file"
-            git push origin gh-pages
-          fi
-          git checkout ${{ github.event.inputs.branch }}
