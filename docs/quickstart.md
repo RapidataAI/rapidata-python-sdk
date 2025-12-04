@@ -17,7 +17,7 @@ They see the following screen:
 Install Rapidata using pip:
 
 ```
-pip install -U rapidata
+pip install "rapidata<3.0.0"
 ```
 
 
