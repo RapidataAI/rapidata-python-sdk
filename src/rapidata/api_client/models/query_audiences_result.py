@@ -31,13 +31,12 @@ class QueryAudiencesResult(BaseModel):
     """ # noqa: E501
     id: StrictStr
     name: StrictStr
-    validation_set_id: StrictStr = Field(alias="validationSetId")
     status: AudienceStatus
     qualified_user_count: StrictInt = Field(alias="qualifiedUserCount")
     filters: List[ICampaignFilter]
     created_at: datetime = Field(alias="createdAt")
     owner_mail: StrictStr = Field(alias="ownerMail")
-    __properties: ClassVar[List[str]] = ["id", "name", "validationSetId", "status", "qualifiedUserCount", "filters", "createdAt", "ownerMail"]
+    __properties: ClassVar[List[str]] = ["id", "name", "status", "qualifiedUserCount", "filters", "createdAt", "ownerMail"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -99,7 +98,6 @@ class QueryAudiencesResult(BaseModel):
         _obj = cls.model_validate({
             "id": obj.get("id"),
             "name": obj.get("name"),
-            "validationSetId": obj.get("validationSetId"),
             "status": obj.get("status"),
             "qualifiedUserCount": obj.get("qualifiedUserCount"),
             "filters": [ICampaignFilter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
