@@ -5446,6 +5446,149 @@
         ]
       }
     },
+    "/order/definition": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Creates a new order definition.",
+        "requestBody": {
+          "description": "The body content of the request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrderDefinitionModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrderDefinitionModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrderDefinitionModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateOrderDefinitionResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateOrderDefinitionResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateOrderDefinitionResult"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
+    "/order/definition/{definitionId}/revision": {
+      "post": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Creates a new revision for an existing order definition.",
+        "parameters": [
+          {
+            "name": "definitionId",
+            "in": "path",
+            "description": "The id of the definition this revision should belong to",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The body content of the request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrderDefinitionRevisionModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrderDefinitionRevisionModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrderDefinitionRevisionModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateOrderDefinitionRevisionResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateOrderDefinitionRevisionResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateOrderDefinitionRevisionResult"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
     "/order/unsupported": {
       "post": {
         "tags": [
@@ -12869,7 +13012,8 @@
           "FreeText",
           "Scrub",
           "Ranking",
-          "MultiRanking"
+          "MultiRanking",
+          null
         ]
       },
       "AttachCategoryRapidBlueprint_Category": {
@@ -12982,6 +13126,96 @@
             "nullable": true
           },
           "pipelineId": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateOrderDefinitionModel": {
+        "required": [
+          "definitionName",
+          "workflow",
+          "referee",
+          "datasetId"
+        ],
+        "type": "object",
+        "properties": {
+          "definitionName": {
+            "type": "string"
+          },
+          "workflow": {
+            "$ref": "#/components/schemas/IOrderWorkflowModel"
+          },
+          "referee": {
+            "$ref": "#/components/schemas/IRefereeModel"
+          },
+          "datasetId": {
+            "type": "string"
+          },
+          "featureFlags": {
+            "$ref": "#/components/schemas/ListOfFeatureFlag"
+          },
+          "aggregatorType": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/AggregatorType"
+              }
+            ]
+          }
+        }
+      },
+      "CreateOrderDefinitionResult": {
+        "required": [
+          "definitionId"
+        ],
+        "type": "object",
+        "properties": {
+          "definitionId": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateOrderDefinitionRevisionModel": {
+        "required": [
+          "workflow",
+          "referee",
+          "datasetId"
+        ],
+        "type": "object",
+        "properties": {
+          "workflow": {
+            "$ref": "#/components/schemas/IOrderWorkflowModel"
+          },
+          "referee": {
+            "$ref": "#/components/schemas/IRefereeModel"
+          },
+          "datasetId": {
+            "type": "string"
+          },
+          "featureFlags": {
+            "$ref": "#/components/schemas/ListOfFeatureFlag"
+          },
+          "aggregatorType": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/AggregatorType"
+              }
+            ]
+          }
+        }
+      },
+      "CreateOrderDefinitionRevisionResult": {
+        "required": [
+          "revisionId"
+        ],
+        "type": "object",
+        "properties": {
+          "revisionId": {
             "type": "string"
           }
         }
@@ -13802,6 +14036,9 @@
           },
           "question": {
             "type": "string"
+          },
+          "shouldValidateResponse": {
+            "type": "boolean"
           },
           "validationSystemPrompt": {
             "type": "string",
@@ -15557,6 +15794,9 @@
           },
           "question": {
             "type": "string"
+          },
+          "shouldValidateResponse": {
+            "type": "boolean"
           },
           "validationSystemPrompt": {
             "type": "string",

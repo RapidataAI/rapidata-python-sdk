@@ -144,6 +144,8 @@ Class | Method | HTTP request | Description
 *NewsletterApi* | [**newsletter_subscribe_post**](rapidata/api_client/docs/NewsletterApi.md#newsletter_subscribe_post) | **POST** /newsletter/subscribe | Signs a user up to the newsletter.
 *NewsletterApi* | [**newsletter_unsubscribe_post**](rapidata/api_client/docs/NewsletterApi.md#newsletter_unsubscribe_post) | **POST** /newsletter/unsubscribe | Unsubscribes a user from the newsletter.
 *OrderApi* | [**order_complex_post**](rapidata/api_client/docs/OrderApi.md#order_complex_post) | **POST** /order/complex | Creates a new order with a custom pipeline.
+*OrderApi* | [**order_definition_definition_id_revision_post**](rapidata/api_client/docs/OrderApi.md#order_definition_definition_id_revision_post) | **POST** /order/definition/{definitionId}/revision | Creates a new revision for an existing order definition.
+*OrderApi* | [**order_definition_post**](rapidata/api_client/docs/OrderApi.md#order_definition_post) | **POST** /order/definition | Creates a new order definition.
 *OrderApi* | [**order_order_id_approve_post**](rapidata/api_client/docs/OrderApi.md#order_order_id_approve_post) | **POST** /order/{orderId}/approve | Approves an order that has been submitted for manual approval.
 *OrderApi* | [**order_order_id_clone_post**](rapidata/api_client/docs/OrderApi.md#order_order_id_clone_post) | **POST** /order/{orderId}/clone | Clones an existing order.
 *OrderApi* | [**order_order_id_delete**](rapidata/api_client/docs/OrderApi.md#order_order_id_delete) | **DELETE** /order/{orderId} | Deletes an order.
@@ -248,6 +250,10 @@ Class | Method | HTTP request | Description
  - [CreateEmptyValidationSetResult](rapidata/api_client/docs/CreateEmptyValidationSetResult.md)
  - [CreateLeaderboardModel](rapidata/api_client/docs/CreateLeaderboardModel.md)
  - [CreateLeaderboardResult](rapidata/api_client/docs/CreateLeaderboardResult.md)
+ - [CreateOrderDefinitionModel](rapidata/api_client/docs/CreateOrderDefinitionModel.md)
+ - [CreateOrderDefinitionResult](rapidata/api_client/docs/CreateOrderDefinitionResult.md)
+ - [CreateOrderDefinitionRevisionModel](rapidata/api_client/docs/CreateOrderDefinitionRevisionModel.md)
+ - [CreateOrderDefinitionRevisionResult](rapidata/api_client/docs/CreateOrderDefinitionRevisionResult.md)
  - [CreateOrderModel](rapidata/api_client/docs/CreateOrderModel.md)
  - [CreateOrderResult](rapidata/api_client/docs/CreateOrderResult.md)
  - [CreateRapidResult](rapidata/api_client/docs/CreateRapidResult.md)
