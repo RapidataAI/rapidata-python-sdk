@@ -1545,6 +1545,9 @@
           "question": {
             "type": "string"
           },
+          "shouldValidateResponse": {
+            "type": "boolean"
+          },
           "validationSystemPrompt": {
             "type": "string",
             "nullable": true
