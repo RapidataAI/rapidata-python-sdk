@@ -28,6 +28,8 @@ from rapidata.rapidata_client.config import (
     rapidata_config,
 )
 
+from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
+
 
 class RapidataClient:
     """The Rapidata client is the main entry point for interacting with the Rapidata API. It allows you to create orders and validation sets."""
@@ -81,8 +83,7 @@ class RapidataClient:
                 leeway=leeway,
             )
 
-            logger.debug("Initializing RapidataOrderManager")
-            self.order = RapidataOrderManager(openapi_service=self._openapi_service)
+            self._asset_uploader = AssetUploader(openapi_service=self._openapi_service)
 
             logger.debug("Initializing ValidationSetManager")
             self.validation = ValidationSetManager(
@@ -98,7 +99,7 @@ class RapidataClient:
             self.mri = RapidataBenchmarkManager(openapi_service=self._openapi_service)
 
             logger.debug("Initializing RapidataAudienceManager")
-            self._audience = RapidataAudienceManager(
+            self.audience = RapidataAudienceManager(
                 openapi_service=self._openapi_service
             )
 
@@ -110,7 +111,7 @@ class RapidataClient:
 
     def clear_all_caches(self):
         """Clear all caches for the client."""
-        self.order._asset_uploader.clear_cache()
+        self._asset_uploader.clear_cache()
         logger.info("All caches cleared")
 
     def _check_beta_features(self):
