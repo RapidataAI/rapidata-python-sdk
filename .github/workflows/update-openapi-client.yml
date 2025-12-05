@@ -50,10 +50,10 @@ jobs:
           commit-message: 'chore: update OpenAPI client to ${{ inputs.version || github.event.client_payload.latest_tag }}'
           token: ${{ steps.generate-token.outputs.token }}
           add-paths: |
-            openapi/output.swagger.json
-            openapi/filtered.swagger.json
+            openapi/schemas/
             src/rapidata/api_client/
             src/rapidata/api_client_README.md
+            src/rapidata/__init__.py
           reviewers: |
             kannwism
             LinoGiger
