@@ -80,6 +80,8 @@ Class | Method | HTTP request | Description
 *AssetApi* | [**asset_url_post**](rapidata/api_client/docs/AssetApi.md#asset_url_post) | **POST** /asset/url | Uploads a single asset to S3 and returns the asset details.
 *AudienceApi* | [**audience_audience_id_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_get) | **GET** /audience/{audienceId} | Gets an audience by its Id.
 *AudienceApi* | [**audience_audience_id_patch**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_patch) | **PATCH** /audience/{audienceId} | Patches an existing audience.
+*AudienceApi* | [**audience_audience_id_rapid_post**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_rapid_post) | **POST** /audience/{audienceId}/rapid | Adds a new rapid to be used to train users for the specified audience.
+*AudienceApi* | [**audience_audience_id_rapids_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_rapids_get) | **GET** /audience/{audienceId}/rapids | Queries all rapids for the specified audience.
 *AudienceApi* | [**audience_post**](rapidata/api_client/docs/AudienceApi.md#audience_post) | **POST** /audience | Creates a new empty audience.
 *AudienceApi* | [**audiences_get**](rapidata/api_client/docs/AudienceApi.md#audiences_get) | **GET** /audiences | Queries all available audiences.
 *BenchmarkApi* | [**benchmark_benchmark_id_delete**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_delete) | **DELETE** /benchmark/{benchmarkId} | Deletes a single benchmark.
@@ -208,6 +210,7 @@ Class | Method | HTTP request | Description
 
 ## Documentation For Models
 
+ - [AddRapidToAudienceModel](rapidata/api_client/docs/AddRapidToAudienceModel.md)
  - [AddUserResponseResult](rapidata/api_client/docs/AddUserResponseResult.md)
  - [AddValidationRapidModel](rapidata/api_client/docs/AddValidationRapidModel.md)
  - [AddValidationRapidNewModel](rapidata/api_client/docs/AddValidationRapidNewModel.md)
@@ -521,6 +524,7 @@ Class | Method | HTTP request | Description
  - [PagedResultOfPromptByBenchmarkResult](rapidata/api_client/docs/PagedResultOfPromptByBenchmarkResult.md)
  - [PagedResultOfQueryAudiencesResult](rapidata/api_client/docs/PagedResultOfQueryAudiencesResult.md)
  - [PagedResultOfQueryDatapointsByDatasetIdResult](rapidata/api_client/docs/PagedResultOfQueryDatapointsByDatasetIdResult.md)
+ - [PagedResultOfQueryRapidsForAudienceResult](rapidata/api_client/docs/PagedResultOfQueryRapidsForAudienceResult.md)
  - [PagedResultOfQueryValidationRapidEligibilityResult](rapidata/api_client/docs/PagedResultOfQueryValidationRapidEligibilityResult.md)
  - [PagedResultOfRapidModel](rapidata/api_client/docs/PagedResultOfRapidModel.md)
  - [PagedResultOfRunsByLeaderboardResult](rapidata/api_client/docs/PagedResultOfRunsByLeaderboardResult.md)
@@ -540,6 +544,7 @@ Class | Method | HTTP request | Description
  - [QueryAudiencesResult](rapidata/api_client/docs/QueryAudiencesResult.md)
  - [QueryDatapointsByDatasetIdResult](rapidata/api_client/docs/QueryDatapointsByDatasetIdResult.md)
  - [QueryModel](rapidata/api_client/docs/QueryModel.md)
+ - [QueryRapidsForAudienceResult](rapidata/api_client/docs/QueryRapidsForAudienceResult.md)
  - [QueryValidationRapidEligibilityModelQueryValidationModel](rapidata/api_client/docs/QueryValidationRapidEligibilityModelQueryValidationModel.md)
  - [QueryValidationRapidEligibilityResult](rapidata/api_client/docs/QueryValidationRapidEligibilityResult.md)
  - [RapidIssue](rapidata/api_client/docs/RapidIssue.md)

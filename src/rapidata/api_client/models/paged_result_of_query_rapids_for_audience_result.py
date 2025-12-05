@@ -17,21 +17,22 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional, Union
-from rapidata.api_client.models.i_campaign_filter import ICampaignFilter
+from pydantic import BaseModel, ConfigDict, Field, StrictInt
+from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.query_rapids_for_audience_result import QueryRapidsForAudienceResult
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateAudienceRequest(BaseModel):
+class PagedResultOfQueryRapidsForAudienceResult(BaseModel):
     """
-    CreateAudienceRequest
+    PagedResultOfQueryRapidsForAudienceResult
     """ # noqa: E501
-    name: StrictStr
-    filters: Optional[List[ICampaignFilter]] = None
-    minimum_user_score: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="minimumUserScore")
-    minimum_size_for_activation: Optional[StrictInt] = Field(default=None, alias="minimumSizeForActivation")
-    __properties: ClassVar[List[str]] = ["name", "filters", "minimumUserScore", "minimumSizeForActivation"]
+    total: StrictInt
+    page: StrictInt
+    page_size: StrictInt = Field(alias="pageSize")
+    items: List[QueryRapidsForAudienceResult]
+    total_pages: Optional[StrictInt] = Field(default=None, alias="totalPages")
+    __properties: ClassVar[List[str]] = ["total", "page", "pageSize", "items", "totalPages"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -51,7 +52,7 @@ class CreateAudienceRequest(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateAudienceRequest from a JSON string"""
+        """Create an instance of PagedResultOfQueryRapidsForAudienceResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -72,18 +73,18 @@ class CreateAudienceRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in filters (list)
+        # override the default output from pydantic by calling `to_dict()` of each item in items (list)
         _items = []
-        if self.filters:
-            for _item_filters in self.filters:
-                if _item_filters:
-                    _items.append(_item_filters.to_dict())
-            _dict['filters'] = _items
+        if self.items:
+            for _item_items in self.items:
+                if _item_items:
+                    _items.append(_item_items.to_dict())
+            _dict['items'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateAudienceRequest from a dict"""
+        """Create an instance of PagedResultOfQueryRapidsForAudienceResult from a dict"""
         if obj is None:
             return None
 
@@ -91,10 +92,11 @@ class CreateAudienceRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "filters": [ICampaignFilter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
-            "minimumUserScore": obj.get("minimumUserScore"),
-            "minimumSizeForActivation": obj.get("minimumSizeForActivation")
+            "total": obj.get("total"),
+            "page": obj.get("page"),
+            "pageSize": obj.get("pageSize"),
+            "items": [QueryRapidsForAudienceResult.from_dict(_item) for _item in obj["items"]] if obj.get("items") is not None else None,
+            "totalPages": obj.get("totalPages")
         })
         return _obj
 
