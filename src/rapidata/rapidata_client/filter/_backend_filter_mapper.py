@@ -3,8 +3,8 @@ from __future__ import annotations
 from typing import Any, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from rapidata.api_client.models.and_filter_filters_inner import (
-        AndFilterFiltersInner,
+    from rapidata.api_client.models.i_campaign_filter import (
+        ICampaignFilter,
     )
     from rapidata.rapidata_client.filter._base_filter import RapidataFilter
 
@@ -84,7 +84,7 @@ class BackendFilterMapper:
 
     @classmethod
     def backend_filter_from_rapidata_filter(
-        cls, filter: AndFilterFiltersInner
+        cls, filter: ICampaignFilter
     ) -> RapidataFilter:
         """Convert a backend API filter model to a client-side RapidataFilter instance.
 
