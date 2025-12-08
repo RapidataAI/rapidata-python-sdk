@@ -127,6 +127,7 @@ Class | Method | HTTP request | Description
 *DatasetApi* | [**dataset_dataset_id_get**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_get) | **GET** /dataset/{datasetId} | Gets a dataset by its id.
 *DatasetApi* | [**dataset_dataset_id_name_patch**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_name_patch) | **PATCH** /dataset/{datasetId}/name | Updates the name of a dataset.
 *DatasetApi* | [**dataset_dataset_id_progress_get**](rapidata/api_client/docs/DatasetApi.md#dataset_dataset_id_progress_get) | **GET** /dataset/{datasetId}/progress | Gets the upload progress of a dataset.
+*DatasetApi* | [**dataset_post**](rapidata/api_client/docs/DatasetApi.md#dataset_post) | **POST** /dataset | Creates a new empty dataset.
 *EvaluationWorkflowApi* | [**workflow_evaluation_workflow_id_results_get**](rapidata/api_client/docs/EvaluationWorkflowApi.md#workflow_evaluation_workflow_id_results_get) | **GET** /workflow/evaluation/{workflowId}/results | Get the results for an evaluation workflow.
 *FeedbackApi* | [**feedback_post**](rapidata/api_client/docs/FeedbackApi.md#feedback_post) | **POST** /feedback | Submits feedback about our services.
 *GroupedRankingWorkflowApi* | [**workflow_grouped_ranking_workflow_id_results_get**](rapidata/api_client/docs/GroupedRankingWorkflowApi.md#workflow_grouped_ranking_workflow_id_results_get) | **GET** /workflow/grouped-ranking/{workflowId}/results | Get the result overview for a multi compare workflow.
@@ -249,6 +250,8 @@ Class | Method | HTTP request | Description
  - [CreateCustomerClientResult](rapidata/api_client/docs/CreateCustomerClientResult.md)
  - [CreateDatapointModel](rapidata/api_client/docs/CreateDatapointModel.md)
  - [CreateDatapointResult](rapidata/api_client/docs/CreateDatapointResult.md)
+ - [CreateDatasetEndpointInput](rapidata/api_client/docs/CreateDatasetEndpointInput.md)
+ - [CreateDatasetEndpointOutput](rapidata/api_client/docs/CreateDatasetEndpointOutput.md)
  - [CreateDemographicRapidModel](rapidata/api_client/docs/CreateDemographicRapidModel.md)
  - [CreateEmptyValidationSetResult](rapidata/api_client/docs/CreateEmptyValidationSetResult.md)
  - [CreateLeaderboardModel](rapidata/api_client/docs/CreateLeaderboardModel.md)
@@ -596,6 +599,7 @@ Class | Method | HTTP request | Description
  - [UpdateValidationRapidModel](rapidata/api_client/docs/UpdateValidationRapidModel.md)
  - [UpdateValidationSetModel](rapidata/api_client/docs/UpdateValidationSetModel.md)
  - [UploadFileResult](rapidata/api_client/docs/UploadFileResult.md)
+ - [ValidationProblemDetails](rapidata/api_client/docs/ValidationProblemDetails.md)
  - [ValidationSetModel](rapidata/api_client/docs/ValidationSetModel.md)
  - [ValidationSetOverviewModel](rapidata/api_client/docs/ValidationSetOverviewModel.md)
  - [WorkflowState](rapidata/api_client/docs/WorkflowState.md)
