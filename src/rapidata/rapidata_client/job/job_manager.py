@@ -54,7 +54,7 @@ class JobManager:
 
             referee = EarlyStoppingReferee(
                 threshold=confidence_threshold,
-                max_vote_count=responses_per_datapoint,
+                max_responses=responses_per_datapoint,
             )
 
         logger.debug(
