@@ -1,63 +1,72 @@
-from rapidata.rapidata_client.datapoints._datapoint import Datapoint
-from rapidata.service.openapi_service import OpenAPIService
+from typing import TypeVar, Generic, Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
-
-from typing import Generator
-from rapidata.rapidata_client.config import logger
 import time
-from rapidata.rapidata_client.api.rapidata_api_client import (
-    suppress_rapidata_error_logging,
-)
-from rapidata.rapidata_client.config.rapidata_config import rapidata_config
-from rapidata.rapidata_client.datapoints._datapoint_uploader import DatapointUploader
 
-# Add OpenTelemetry context imports for thread propagation
+from rapidata.rapidata_client.config import logger
+from rapidata.rapidata_client.config.rapidata_config import rapidata_config
+
 from opentelemetry import context as otel_context
 
+T = TypeVar("T")
 
-def chunk_list(lst: list, chunk_size: int) -> Generator:
+
+def _chunk_list(lst: list[T], chunk_size: int):
+    """Split a list into chunks of specified size."""
     for i in range(0, len(lst), chunk_size):
         yield lst[i : i + chunk_size]
 
 
-class RapidataDataset:
-    def __init__(self, dataset_id: str, openapi_service: OpenAPIService):
-        self.id = dataset_id
-        self.openapi_service = openapi_service
-        self.datapoint_uploader = DatapointUploader(openapi_service)
+class ThreadedUploader(Generic[T]):
+    """
+    A generic multi-threaded uploader that handles retries, progress tracking,
+    and OpenTelemetry context propagation.
 
-    def add_datapoints(
+    Type Parameters:
+        T: The type of items being uploaded.
+    """
+
+    def __init__(
         self,
-        datapoints: list[Datapoint],
-    ) -> tuple[list[Datapoint], list[Datapoint]]:
+        upload_fn: Callable[[T, int], None],
+        description: str = "Uploading items",
+    ):
         """
-        Process uploads in chunks with a ThreadPoolExecutor.
+        Initialize the threaded uploader.
 
         Args:
-            media_paths: List of assets to upload
-            multi_metadata: Optional sequence of sequences of metadata
-            chunk_size: Number of items to process in each batch
+            upload_fn: A function that uploads a single item. Takes (item, index) as arguments.
+            description: Description shown in the progress bar.
+        """
+        self.upload_fn = upload_fn
+        self.description = description
+
+    def upload(self, items: list[T]) -> tuple[list[T], list[T]]:
+        """
+        Upload items in parallel using multiple threads.
+
+        Args:
+            items: List of items to upload.
 
         Returns:
-            tuple[list[str], list[str]]: Lists of successful and failed uploads
+            tuple[list[T], list[T]]: Lists of successful and failed uploads.
         """
-        successful_uploads: list[Datapoint] = []
-        failed_uploads: list[Datapoint] = []
+        successful_uploads: list[T] = []
+        failed_uploads: list[T] = []
 
         with tqdm(
-            total=len(datapoints),
-            desc="Uploading datapoints",
+            total=len(items),
+            desc=self.description,
             disable=rapidata_config.logging.silent_mode,
         ) as progress_bar:
 
             def process_upload_with_context(
-                context: otel_context.Context, datapoint: Datapoint, index: int
-            ) -> tuple[list[Datapoint], list[Datapoint]]:
-                """Wrapper function that runs _process_single_upload with the provided context."""
+                context: otel_context.Context, item: T, index: int
+            ) -> tuple[list[T], list[T]]:
+                """Wrapper function that runs upload with the provided context."""
                 token = otel_context.attach(context)
                 try:
-                    return self._process_single_upload(datapoint, index)
+                    return self._process_single_upload(item, index)
                 finally:
                     otel_context.detach(token)
 
@@ -69,16 +78,16 @@ class RapidataDataset:
             ) as executor:
                 # Process uploads in chunks to avoid overwhelming the system
                 for chunk_idx, chunk in enumerate(
-                    chunk_list(datapoints, rapidata_config.upload.chunkSize)
+                    _chunk_list(items, rapidata_config.upload.chunkSize)
                 ):
                     futures = [
                         executor.submit(
                             process_upload_with_context,
                             current_context,
-                            datapoint,
+                            item,
                             chunk_idx * rapidata_config.upload.chunkSize + i,
                         )
-                        for i, datapoint in enumerate(chunk)
+                        for i, item in enumerate(chunk)
                     ]
 
                     # Wait for this chunk to complete before starting the next one
@@ -87,13 +96,15 @@ class RapidataDataset:
                             chunk_successful, chunk_failed = future.result()
                             successful_uploads.extend(chunk_successful)
                             failed_uploads.extend(chunk_failed)
-                            progress_bar.update(len(chunk_successful))
+                            progress_bar.update(
+                                len(chunk_successful) + len(chunk_failed)
+                            )
                         except Exception as e:
                             logger.error("Future execution failed: %s", str(e))
 
         if failed_uploads:
             logger.error(
-                "Upload failed for %s datapoints: %s",
+                "Upload failed for %s items: %s",
                 len(failed_uploads),
                 failed_uploads,
             )
@@ -102,38 +113,35 @@ class RapidataDataset:
 
     def _process_single_upload(
         self,
-        datapoint: Datapoint,
+        item: T,
         index: int,
-    ) -> tuple[list[Datapoint], list[Datapoint]]:
+    ) -> tuple[list[T], list[T]]:
         """
         Process single upload with retry logic and error tracking.
 
         Args:
-            media_asset: MediaAsset or MultiAsset to upload
-            meta_list: Optional sequence of metadata for the asset
-            index: Sort index for the upload
-            max_retries: Maximum number of retry attempts (default: 3)
+            item: Item to upload.
+            index: Sort index for the upload.
 
         Returns:
-            tuple[list[Datapoint], list[Datapoint]]: Lists of successful and failed datapoints
+            tuple[list[T], list[T]]: Lists of successful and failed items.
         """
-        logger.debug("Processing single upload for %s with index %s", datapoint, index)
+        logger.debug("Processing single upload for %s with index %s", item, index)
 
-        local_successful: list[Datapoint] = []
-        local_failed: list[Datapoint] = []
+        local_successful: list[T] = []
+        local_failed: list[T] = []
 
         last_exception = None
         for attempt in range(rapidata_config.upload.maxRetries):
             try:
+                from rapidata.rapidata_client.api.rapidata_api_client import (
+                    suppress_rapidata_error_logging,
+                )
+
                 with suppress_rapidata_error_logging():
-                    self.datapoint_uploader.upload_datapoint(
-                        dataset_id=self.id,
-                        datapoint=datapoint,
-                        index=index,
-                    )
+                    self.upload_fn(item, index)
 
-                local_successful.append(datapoint)
-
+                local_successful.append(item)
                 return local_successful, local_failed
 
             except Exception as e:
@@ -150,15 +158,9 @@ class RapidataDataset:
                     )
 
         # If we get here, all retries failed
-        local_failed.append(datapoint)
+        local_failed.append(item)
         tqdm.write(
-            f"Upload failed for {datapoint} after {rapidata_config.upload.maxRetries} attempts. \nFinal error: \n{str(last_exception)}"
+            f"Upload failed for {item} after {rapidata_config.upload.maxRetries} attempts. \nFinal error: \n{str(last_exception)}"
         )
 
         return local_successful, local_failed
-
-    def __str__(self) -> str:
-        return f"RapidataDataset(id={self.id})"
-
-    def __repr__(self) -> str:
-        return self.__str__()

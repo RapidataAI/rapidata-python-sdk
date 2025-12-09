@@ -1,14 +1,15 @@
 from rapidata.rapidata_client.settings._rapidata_setting import RapidataSetting
-from typing import Literal, Any, Sequence
+from typing import Literal, Sequence
 from pydantic import BaseModel, model_validator, ConfigDict
 from rapidata.api_client.models.i_rapid_payload import IRapidPayload
+from rapidata.api_client.models.i_validation_truth import IValidationTruth
 
 
 class Rapid(BaseModel):
     asset: str | list[str]
     payload: IRapidPayload
     data_type: Literal["media", "text"] = "media"
-    truth: Any | None = None
+    truth: IValidationTruth | None = None
     context: str | None = None
     media_context: str | None = None
     sentence: str | None = None

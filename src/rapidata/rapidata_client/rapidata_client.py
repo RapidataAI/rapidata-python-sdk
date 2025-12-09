@@ -7,16 +7,11 @@ import uuid
 import random
 from rapidata.service.openapi_service import OpenAPIService
 
-from rapidata.rapidata_client.order.rapidata_order_manager import RapidataOrderManager
 from rapidata.rapidata_client.benchmark.rapidata_benchmark_manager import (
     RapidataBenchmarkManager,
 )
 from rapidata.rapidata_client.audience.rapidata_audience_manager import (
     RapidataAudienceManager,
-)
-
-from rapidata.rapidata_client.validation.validation_set_manager import (
-    ValidationSetManager,
 )
 
 from rapidata.rapidata_client.demographic.demographic_manager import DemographicManager
@@ -29,6 +24,8 @@ from rapidata.rapidata_client.config import (
 )
 
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
+from rapidata.rapidata_client.validation.rapids.rapids_manager import RapidsManager
+from rapidata.rapidata_client.job.job_manager import JobManager
 
 
 class RapidataClient:
@@ -85,21 +82,21 @@ class RapidataClient:
 
             self._asset_uploader = AssetUploader(openapi_service=self._openapi_service)
 
-            logger.debug("Initializing ValidationSetManager")
-            self.validation = ValidationSetManager(
-                openapi_service=self._openapi_service
-            )
-
-            logger.debug("Initializing DemographicManager")
-            self._demographic = DemographicManager(
-                openapi_service=self._openapi_service
-            )
+            logger.debug("Initializing JobManager")
+            self.job = JobManager(openapi_service=self._openapi_service)
 
             logger.debug("Initializing RapidataBenchmarkManager")
             self.mri = RapidataBenchmarkManager(openapi_service=self._openapi_service)
 
             logger.debug("Initializing RapidataAudienceManager")
             self.audience = RapidataAudienceManager(
+                openapi_service=self._openapi_service
+            )
+
+            self.rapid = RapidsManager(openapi_service=self._openapi_service)
+
+            logger.debug("Initializing RapidataDemographicManager")
+            self._demographic = DemographicManager(
                 openapi_service=self._openapi_service
             )
 

@@ -46,3 +46,15 @@ class CountryFilter(RapidataFilter, BaseModel):
                 _t="CountryFilter", countries=self.country_codes
             )
         )
+
+    def _to_campaign_model(self):
+        from rapidata.api_client.models.i_campaign_filter import ICampaignFilter
+        from rapidata.api_client.models.i_campaign_filter_country_filter import (
+            ICampaignFilterCountryFilter,
+        )
+
+        return ICampaignFilter(
+            actual_instance=ICampaignFilterCountryFilter(
+                _t="CountryFilter", countries=self.country_codes
+            )
+        )

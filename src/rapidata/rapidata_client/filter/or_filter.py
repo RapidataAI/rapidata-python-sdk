@@ -40,3 +40,16 @@ class OrFilter(RapidataFilter, BaseModel):
                 filters=[filter._to_model() for filter in self.filters],
             )
         )
+
+    def _to_campaign_model(self):
+        from rapidata.api_client.models.i_campaign_filter import ICampaignFilter
+        from rapidata.api_client.models.i_campaign_filter_or_filter import (
+            ICampaignFilterOrFilter,
+        )
+
+        return ICampaignFilter(
+            actual_instance=ICampaignFilterOrFilter(
+                _t="OrFilter",
+                filters=[filter._to_campaign_model() for filter in self.filters],
+            )
+        )

@@ -63,3 +63,18 @@ class UserScoreFilter(RapidataFilter, BaseModel):
                 dimension=self.dimension,
             )
         )
+
+    def _to_campaign_model(self):
+        from rapidata.api_client.models.i_campaign_filter import ICampaignFilter
+        from rapidata.api_client.models.i_campaign_filter_user_score_filter import (
+            ICampaignFilterUserScoreFilter,
+        )
+
+        return ICampaignFilter(
+            actual_instance=ICampaignFilterUserScoreFilter(
+                _t="UserScoreFilter",
+                upperbound=self.upper_bound,
+                lowerbound=self.lower_bound,
+                dimension=self.dimension if self.dimension else "global",
+            )
+        )

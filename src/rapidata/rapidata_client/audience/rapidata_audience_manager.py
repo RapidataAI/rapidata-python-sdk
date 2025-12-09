@@ -12,11 +12,6 @@ if TYPE_CHECKING:
 class RapidataAudienceManager:
     def __init__(self, openapi_service: OpenAPIService):
         self._openapi_service = openapi_service
-        from rapidata.rapidata_client.validation.validation_set_manager import (
-            ValidationSetManager,
-        )
-
-        self._validation_set_manager = ValidationSetManager(openapi_service)
 
     def create_audience(
         self,
@@ -35,22 +30,16 @@ class RapidataAudienceManager:
             logger.debug(f"Creating audience: {name}")
             if filters is None:
                 filters = []
-            validation_set = self._validation_set_manager._create_validation_set(
-                name=name + " Filtering Validation Set",
-                dimensions=[],
-            )
             response = self._openapi_service.audience_api.audience_post(
                 create_audience_request=CreateAudienceRequest(
                     name=name,
-                    validationSetId=validation_set.id,
+                    filters=[filter._to_campaign_model() for filter in filters],
                 ),
             )
-            validation_set.update_dimensions([response.audience_id])
             return RapidataAudience(
                 id=response.audience_id,
                 name=name,
                 filters=filters,
-                validation_set=validation_set,
                 openapi_service=self._openapi_service,
             )
 
@@ -74,9 +63,6 @@ class RapidataAudienceManager:
                     BackendFilterMapper.backend_filter_from_rapidata_filter(filter)
                     for filter in response.filters
                 ],
-                validation_set=self._validation_set_manager.get_validation_set_by_id(
-                    response.validation_set_id
-                ),
                 openapi_service=self._openapi_service,
             )
 
@@ -130,9 +116,6 @@ class RapidataAudienceManager:
                             )
                             for filter in item.filters
                         ],
-                        validation_set=self._validation_set_manager.get_validation_set_by_id(
-                            item.validation_set_id
-                        ),
                         openapi_service=self._openapi_service,
                     )
                 )

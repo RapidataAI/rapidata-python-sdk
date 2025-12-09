@@ -1,11 +1,7 @@
 from .rapidata_client import RapidataClient
 from .audience import (
     RapidataAudience,
-    ClassifyOrder,
-    CompareOrder,
     RapidataAudienceManager,
-    ClassifyRapid,
-    CompareRapid,
 )
 from .selection import (
     DemographicSelection,

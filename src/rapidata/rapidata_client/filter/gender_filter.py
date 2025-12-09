@@ -33,3 +33,17 @@ class GenderFilter(RapidataFilter, BaseModel):
                 genders=[gender._to_backend_model() for gender in self.genders],
             )
         )
+
+    def _to_campaign_model(self):
+        from rapidata.api_client.models.i_campaign_filter import ICampaignFilter
+        from rapidata.api_client.models.i_campaign_filter_demographic_filter import (
+            ICampaignFilterDemographicFilter,
+        )
+
+        return ICampaignFilter(
+            actual_instance=ICampaignFilterDemographicFilter(
+                _t="DemographicFilter",
+                identifier="gender",
+                values=[gender.value for gender in self.genders],
+            )
+        )

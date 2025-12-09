@@ -46,3 +46,9 @@ class NaiveReferee(Referee):
                 totalVotes=self.responses,
             )
         )
+
+    def __str__(self) -> str:
+        return f"NaiveReferee(responses={self.responses})"
+
+    def __repr__(self) -> str:
+        return self.__str__()

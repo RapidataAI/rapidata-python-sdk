@@ -32,3 +32,16 @@ class CampaignFilter(RapidataFilter, BaseModel):
                 campaignIds=self.campaign_ids,
             )
         )
+
+    def _to_campaign_model(self):
+        from rapidata.api_client.models.i_campaign_filter import ICampaignFilter
+        from rapidata.api_client.models.i_campaign_filter_campaign_filter import (
+            ICampaignFilterCampaignFilter,
+        )
+
+        return ICampaignFilter(
+            actual_instance=ICampaignFilterCampaignFilter(
+                _t="CampaignFilter",
+                campaignIds=self.campaign_ids,
+            )
+        )

@@ -3,11 +3,7 @@ __version__ = "2.44.2"
 from .rapidata_client import (
     RapidataClient,
     RapidataAudience,
-    ClassifyOrder,
-    CompareOrder,
     RapidataAudienceManager,
-    ClassifyRapid,
-    CompareRapid,
     DemographicSelection,
     LabelingSelection,
     EffortSelection,

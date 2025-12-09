@@ -46,6 +46,7 @@ from rapidata.rapidata_client.validation.rapids.box import Box
 from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.api_client.models.i_rapid_payload import IRapidPayload
+from rapidata.api_client.models.i_validation_truth import IValidationTruth
 
 
 class RapidsManager:
@@ -56,7 +57,7 @@ class RapidsManager:
     def __init__(self, openapi_service: OpenAPIService):
         self._openapi_service = openapi_service
 
-    def classification_rapid(
+    def create_classification_rapid(
         self,
         instruction: str,
         answer_options: list[str],
@@ -106,11 +107,11 @@ class RapidsManager:
             media_context=media_context,
             explanation=explanation,
             payload=payload,
-            truth=model_truth,
+            truth=IValidationTruth(actual_instance=model_truth),
             random_correct_probability=len(truths) / len(answer_options),
         )
 
-    def compare_rapid(
+    def create_compare_rapid(
         self,
         instruction: str,
         truth: str,
@@ -146,7 +147,7 @@ class RapidsManager:
         return Rapid(
             asset=datapoint,
             data_type=data_type,
-            truth=model_truth,
+            truth=IValidationTruth(actual_instance=model_truth),
             context=context,
             media_context=media_context,
             payload=payload,
@@ -154,7 +155,7 @@ class RapidsManager:
             random_correct_probability=0.5,
         )
 
-    def select_words_rapid(
+    def create_select_words_rapid(
         self,
         instruction: str,
         truths: list[int],
@@ -204,7 +205,7 @@ class RapidsManager:
 
         return Rapid(
             payload=payload,
-            truth=model_truth,
+            truth=IValidationTruth(actual_instance=model_truth),
             asset=datapoint,
             sentence=sentence,
             explanation=explanation,
@@ -212,7 +213,7 @@ class RapidsManager:
             / len(transcription_words),
         )
 
-    def locate_rapid(
+    def create_locate_rapid(
         self,
         instruction: str,
         truths: list[Box],
@@ -249,7 +250,7 @@ class RapidsManager:
 
         return Rapid(
             payload=payload,
-            truth=model_truth,
+            truth=IValidationTruth(actual_instance=model_truth),
             asset=datapoint,
             context=context,
             media_context=media_context,
@@ -257,7 +258,7 @@ class RapidsManager:
             random_correct_probability=coverage,
         )
 
-    def draw_rapid(
+    def create_draw_rapid(
         self,
         instruction: str,
         truths: list[Box],
@@ -297,7 +298,7 @@ class RapidsManager:
 
         return Rapid(
             payload=payload,
-            truth=model_truth,
+            truth=IValidationTruth(actual_instance=model_truth),
             asset=datapoint,
             context=context,
             media_context=media_context,
@@ -305,7 +306,7 @@ class RapidsManager:
             random_correct_probability=coverage,
         )
 
-    def timestamp_rapid(
+    def create_timestamp_rapid(
         self,
         instruction: str,
         truths: list[tuple[int, int]],
@@ -349,7 +350,7 @@ class RapidsManager:
 
         return Rapid(
             payload=payload,
-            truth=model_truth,
+            truth=IValidationTruth(actual_instance=model_truth),
             asset=datapoint,
             context=context,
             media_context=media_context,

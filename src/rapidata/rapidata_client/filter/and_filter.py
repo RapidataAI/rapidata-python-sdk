@@ -40,3 +40,16 @@ class AndFilter(RapidataFilter, BaseModel):
                 filters=[filter._to_model() for filter in self.filters],
             )
         )
+
+    def _to_campaign_model(self):
+        from rapidata.api_client.models.i_campaign_filter import ICampaignFilter
+        from rapidata.api_client.models.i_campaign_filter_and_filter import (
+            ICampaignFilterAndFilter,
+        )
+
+        return ICampaignFilter(
+            actual_instance=ICampaignFilterAndFilter(
+                _t="AndFilter",
+                filters=[filter._to_campaign_model() for filter in self.filters],
+            )
+        )

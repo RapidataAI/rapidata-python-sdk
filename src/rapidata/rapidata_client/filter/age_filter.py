@@ -29,6 +29,22 @@ class AgeFilter(RapidataFilter, BaseModel):
         return IUserFilterModel(
             actual_instance=IUserFilterModelAgeUserFilterModel(
                 _t="AgeFilter",
-                ageGroups=[age_group._to_backend_model() for age_group in self.age_groups],
+                ageGroups=[
+                    age_group._to_backend_model() for age_group in self.age_groups
+                ],
+            )
+        )
+
+    def _to_campaign_model(self):
+        from rapidata.api_client.models.i_campaign_filter import ICampaignFilter
+        from rapidata.api_client.models.i_campaign_filter_demographic_filter import (
+            ICampaignFilterDemographicFilter,
+        )
+
+        return ICampaignFilter(
+            actual_instance=ICampaignFilterDemographicFilter(
+                _t="DemographicFilter",
+                identifier="age",
+                values=[age_group.value for age_group in self.age_groups],
             )
         )

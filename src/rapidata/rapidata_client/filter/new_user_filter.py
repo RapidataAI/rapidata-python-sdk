@@ -18,3 +18,13 @@ class NewUserFilter(RapidataFilter):
         return IUserFilterModel(
             actual_instance=IUserFilterModelNewUserFilterModel(_t="NewUserFilter")
         )
+
+    def _to_campaign_model(self):
+        from rapidata.api_client.models.i_campaign_filter import ICampaignFilter
+        from rapidata.api_client.models.i_campaign_filter_new_user_filter import (
+            ICampaignFilterNewUserFilter,
+        )
+
+        return ICampaignFilter(
+            actual_instance=ICampaignFilterNewUserFilter(_t="NewUserFilter")
+        )
