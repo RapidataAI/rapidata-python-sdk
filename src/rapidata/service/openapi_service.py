@@ -95,16 +95,26 @@ class OpenAPIService:
             )
         except OAuthError as e:
             if e.error != "invalid_client":
-                raise e
-            logger.error(
-                "OAuthError: %s, resetting credentials.",
-                e,
-            )
-            managed_print(
-                "Please try again.\nIf the problem persists, please contact info@rapidata.ai"
+                raise
+            logger.warning(
+                "Invalid client credentials detected, resetting and retrying: %s", e
             )
             self.reset_credentials()
-            raise e
+
+            # Retry with fresh credentials
+            credentials = self.credential_manager.get_client_credentials()
+            if not credentials:
+                raise ValueError(
+                    "Failed to fetch client credentials after reset"
+                ) from e
+
+            self.api_client.rest_client.setup_oauth_client_credentials(
+                client_id=credentials.client_id,
+                client_secret=credentials.client_secret,
+                token_endpoint=f"{auth_endpoint}/connect/token",
+                scope=oauth_scope,
+            )
+            managed_print("Credentials were reset and re-authenticated successfully")
 
         logger.debug("Client credentials authentication setup complete")
 
