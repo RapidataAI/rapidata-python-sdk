@@ -102,6 +102,7 @@ class OpenAPIService:
                 "Please try again.\nIf the problem persists, please contact info@rapidata.ai"
             )
             self.reset_credentials()
+            raise e
 
         logger.debug("Client credentials authentication setup complete")
 
