@@ -94,6 +94,8 @@ class OpenAPIService:
                 scope=oauth_scope,
             )
         except OAuthError as e:
+            if e.error != "invalid_client":
+                raise e
             logger.error(
                 "OAuthError: %s, resetting credentials.",
                 e,
@@ -107,9 +109,9 @@ class OpenAPIService:
         logger.debug("Client credentials authentication setup complete")
 
     def reset_credentials(self):
-        logger.debug("Resetting credentials in OpenAPIService")
+        logger.info("Resetting credentials in OpenAPIService")
         self.credential_manager.reset_credentials()
-        logger.debug("Credentials reset in OpenAPIService")
+        logger.info("Credentials reset in OpenAPIService")
 
     @property
     def order_api(self) -> OrderApi:
