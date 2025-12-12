@@ -1,0 +1,7 @@
+# Rapidata SDK Documentation
+User-agent: *
+Allow: /
+
+# AI/LLM agents: See llms.txt for a structured overview
+# https://docs.rapidata.ai/2.x/llms.txt
+Sitemap: https://docs.rapidata.ai/sitemap.xml

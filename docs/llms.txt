@@ -207,6 +207,28 @@ order.view()  # Open order in Rapidata dashboard
 
 4. **Confidence Threshold**: Use `confidence_threshold=0.8` to stop collecting responses early when consensus is reached.
 
+## Documentation URLs
+
+Base URL: https://docs.rapidata.ai/2.x/
+
+Pages:
+- /2.x/starting_page/ - Overview
+- /2.x/quickstart/ - Quick Start Guide
+- /2.x/understanding_the_results/ - Understanding Results
+- /2.x/improve_order_quality/ - Improve Quality
+- /2.x/confidence_stopping/ - Confidence Stopping
+- /2.x/human_prompting/ - Human Prompting
+- /2.x/examples/classify_order/ - Classification Order Example
+- /2.x/examples/compare_order/ - Compare Order Example
+- /2.x/examples/free_text_order/ - Free Text Order Example
+- /2.x/examples/select_words_order/ - Select Words Order Example
+- /2.x/examples/locate_order/ - Locate Order Example
+- /2.x/examples/draw_order/ - Draw Order Example
+- /2.x/examples/ranking_order/ - Ranking Order Example
+- /2.x/config/ - Logging & Configuration
+- /2.x/mri/ - Model Ranking Insights
+- /2.x/mri_advanced/ - Model Ranking Insights Advanced
+
 ## Full Documentation
 
 https://docs.rapidata.ai/

@@ -105,6 +105,7 @@ nav:
 
 theme:
   name: material
+  custom_dir: docs/overrides
   logo: media/rapidata.svg
   favicon: media/rapidata.svg
   palette:
