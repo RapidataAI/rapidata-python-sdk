@@ -7,7 +7,8 @@ from typing import TYPE_CHECKING
 from rapidata.api_client.configuration import Configuration
 from rapidata.service.credential_manager import CredentialManager
 from rapidata.rapidata_client.api.rapidata_api_client import RapidataApiClient
-from rapidata.rapidata_client.config import logger
+from rapidata.rapidata_client.config import logger, managed_print
+from authlib.integrations.httpx_client import OAuthError
 
 if TYPE_CHECKING:
     from rapidata.api_client import CustomerRapidApi
@@ -85,17 +86,42 @@ class OpenAPIService:
                 raise ValueError("Failed to fetch client credentials")
             client_id = credentials.client_id
             client_secret = credentials.client_secret
+        try:
+            self.api_client.rest_client.setup_oauth_client_credentials(
+                client_id=client_id,
+                client_secret=client_secret,
+                token_endpoint=f"{auth_endpoint}/connect/token",
+                scope=oauth_scope,
+            )
+        except OAuthError as e:
+            if e.error != "invalid_client":
+                raise
+            logger.warning(
+                "Invalid client credentials detected, resetting and retrying: %s", e
+            )
+            self.reset_credentials()
 
-        self.api_client.rest_client.setup_oauth_client_credentials(
-            client_id=client_id,
-            client_secret=client_secret,
-            token_endpoint=f"{auth_endpoint}/connect/token",
-            scope=oauth_scope,
-        )
+            # Retry with fresh credentials
+            credentials = self.credential_manager.get_client_credentials()
+            if not credentials:
+                raise ValueError(
+                    "Failed to fetch client credentials after reset"
+                ) from e
+
+            self.api_client.rest_client.setup_oauth_client_credentials(
+                client_id=credentials.client_id,
+                client_secret=credentials.client_secret,
+                token_endpoint=f"{auth_endpoint}/connect/token",
+                scope=oauth_scope,
+            )
+            managed_print("Credentials were reset and re-authenticated successfully")
+
         logger.debug("Client credentials authentication setup complete")
 
     def reset_credentials(self):
+        logger.info("Resetting credentials in OpenAPIService")
         self.credential_manager.reset_credentials()
+        logger.info("Credentials reset in OpenAPIService")
 
     @property
     def order_api(self) -> OrderApi:

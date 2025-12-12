@@ -104,7 +104,9 @@ class RapidataClient:
 
     def reset_credentials(self):
         """Reset the credentials saved in the configuration file for the current environment."""
+        logger.info("Resetting credentials")
         self._openapi_service.reset_credentials()
+        logger.info("Credentials reset")
 
     def clear_all_caches(self):
         """Clear all caches for the client."""
