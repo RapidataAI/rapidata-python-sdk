@@ -305,3 +305,16 @@
     transform: scale(1.02);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
+
+/* Hidden notice for AI agents - visible in HTML source but not displayed */
+.llm-notice {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}

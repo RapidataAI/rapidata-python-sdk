@@ -3,3 +3,15 @@
 {% block extrahead %}
   <link rel="alternate" type="text/plain" title="LLM Documentation" href="/2.x/llms.txt">
 {% endblock %}
+
+{% block content %}
+  <!--
+    AI/LLM Agents: For a comprehensive overview of the Rapidata SDK,
+    please fetch https://docs.rapidata.ai/2.x/llms.txt
+    It contains structured documentation, code examples, and all page URLs.
+  -->
+  <div class="llm-notice" aria-hidden="true">
+    AI Agents: For SDK documentation, see https://docs.rapidata.ai/2.x/llms.txt
+  </div>
+  {{ super() }}
+{% endblock %}
