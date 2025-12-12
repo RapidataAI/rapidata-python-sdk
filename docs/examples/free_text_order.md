@@ -2,6 +2,8 @@
 
 To learn about the basics of creating an order, please refer to the [quickstart guide](../quickstart.md).
 
+![Free Text Order Example](../media/order-types/freetext.png){ width="20%" }
+
 === "Basic"
 
     Let's assume you want to build a new LLM chatbot and you want to know what people might want to ask the bot. You can create a free-text order to gather the questions people might have.

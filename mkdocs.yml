@@ -14,6 +14,12 @@ hooks:
 plugins:
   - search
   - mike
+  - glightbox:
+      touchNavigation: true
+      loop: false
+      effect: zoom
+      width: 100%
+      height: auto
   - autorefs:
       resolve_closest: true
   - mkdocstrings:

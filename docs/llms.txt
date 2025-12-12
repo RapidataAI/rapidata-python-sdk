@@ -1,0 +1,212 @@
+# Rapidata Python SDK
+
+> Rapidata is a human data labeling platform. This SDK lets you create labeling orders, collect human annotations on images/text/video/audio, and retrieve results.
+
+## Installation
+
+```bash
+pip install "rapidata<3.0.0"
+```
+
+## Quick Start
+
+```python
+from rapidata import RapidataClient
+
+# Initialize (first time opens browser for login, then caches credentials)
+rapi = RapidataClient()
+
+# Or use API credentials from https://app.rapidata.ai/settings/tokens
+rapi = RapidataClient(client_id="YOUR_ID", client_secret="YOUR_SECRET")
+```
+
+## Order Types
+
+All orders follow the same pattern:
+1. Create order with `rapi.order.create_*_order(...)`
+2. Start it with `.run()`
+3. Monitor with `.display_progress_bar()`
+4. Get results with `.get_results()`
+
+### Classification Order
+Have humans classify datapoints into categories.
+
+```python
+order = rapi.order.create_classification_order(
+    name="Emotion Classification",
+    instruction="What emotion does this image convey?",
+    answer_options=["Happy", "Sad", "Angry", "Neutral"],
+    datapoints=["https://example.com/image1.jpg", "https://example.com/image2.jpg"],
+    responses_per_datapoint=10,
+).run()
+results = order.get_results()
+```
+
+### Compare Order
+Have humans compare pairs of items.
+
+```python
+order = rapi.order.create_compare_order(
+    name="Image Quality Comparison",
+    instruction="Which image is higher quality?",
+    datapoints=[
+        ["https://example.com/a1.jpg", "https://example.com/b1.jpg"],
+        ["https://example.com/a2.jpg", "https://example.com/b2.jpg"],
+    ],
+    contexts=["Prompt 1", "Prompt 2"],  # Optional context shown with each pair
+    responses_per_datapoint=25,
+).run()
+```
+
+### Free Text Order
+Collect open-ended text responses.
+
+```python
+order = rapi.order.create_free_text_order(
+    name="Image Description",
+    instruction="Describe what you see in this image",
+    datapoints=["https://example.com/image.jpg"],
+    responses_per_datapoint=10,
+).run()
+```
+
+### Locate Order
+Have humans tap/click on specific areas in images.
+
+```python
+order = rapi.order.create_locate_order(
+    name="Find Artifacts",
+    instruction="Tap on any visual glitches or errors",
+    datapoints=["https://example.com/image.jpg"],
+    responses_per_datapoint=35,
+).run()
+```
+
+### Select Words Order
+Have humans select specific words from text.
+
+```python
+order = rapi.order.create_select_words_order(
+    name="Find Errors",
+    instruction="Select words that don't match the image",
+    datapoints=["https://example.com/image.jpg"],
+    sentences=["A red car on a blue road"],
+    responses_per_datapoint=15,
+).run()
+```
+
+### Draw Order
+Have humans draw/color regions on images.
+
+```python
+order = rapi.order.create_draw_order(
+    name="Segment Objects",
+    instruction="Color in all the cars",
+    datapoints=["https://example.com/image.jpg"],
+    responses_per_datapoint=35,
+).run()
+```
+
+### Ranking Order
+Rank multiple items by preference using pairwise comparisons.
+
+```python
+order = rapi.order.create_ranking_order(
+    name="Image Ranking",
+    instruction="Which image looks better?",
+    datapoints=[["url1.jpg", "url2.jpg", "url3.jpg", "url4.jpg"]],
+    comparison_budget_per_ranking=50,
+).run()
+```
+
+## Common Parameters
+
+- `name`: Internal order name (not shown to labelers)
+- `instruction`: The question/task shown to labelers
+- `datapoints`: List of URLs or local file paths (images, videos, audio, or text)
+- `responses_per_datapoint`: How many human responses per item (default: 10)
+- `contexts`: Optional text shown alongside each datapoint
+- `data_type`: "media" (default) or "text"
+- `filters`: Control who sees the tasks
+- `settings`: Control how tasks are displayed
+- `confidence_threshold`: Stop early when confidence is reached (0.0-1.0)
+
+## Filters (Who Sees Tasks)
+
+```python
+from rapidata import CountryFilter, LanguageFilter, AgeFilter, GenderFilter, AgeGroup, Gender
+
+order = rapi.order.create_classification_order(
+    ...,
+    filters=[
+        CountryFilter(["US", "GB", "DE"]),  # Only these countries
+        LanguageFilter(["en"]),              # Phone language is English
+        AgeFilter([AgeGroup.AGE_25_34]),    # Age range
+        GenderFilter([Gender.FEMALE]),       # Gender
+    ],
+)
+
+# Combine with operators
+from rapidata import NotFilter, OrFilter
+filters = [
+    ~AgeFilter([AgeGroup.UNDER_18]),  # NOT under 18
+    CountryFilter(["US"]) | CountryFilter(["CA"]),  # US OR Canada
+]
+```
+
+## Settings (How Tasks Display)
+
+```python
+from rapidata import NoShuffle, FreeTextMinimumCharacters, AllowNeitherBoth, MuteVideo
+
+order = rapi.order.create_classification_order(
+    ...,
+    settings=[
+        NoShuffle(),  # Keep answer options in order (for Likert scales)
+    ],
+)
+
+# For compare orders
+settings=[AllowNeitherBoth()]  # Allow "neither" or "both" options
+
+# For free text orders
+settings=[FreeTextMinimumCharacters(10)]  # Minimum character count
+
+# For video datapoints
+settings=[MuteVideo()]  # Mute video audio
+```
+
+## Retrieving Results
+
+```python
+# Get results (blocks until complete)
+results = order.get_results()
+
+# Find previous orders by name
+orders = rapi.order.find_orders("My Order Name")
+
+# Get specific order by ID
+order = rapi.order.get_order_by_id("order_id_here")
+```
+
+## Monitoring Progress
+
+```python
+order.display_progress_bar()  # Show progress in terminal
+order.preview()  # Open browser preview of task UI
+order.view()  # Open order in Rapidata dashboard
+```
+
+## Key Concepts
+
+1. **Datapoints**: The items to be labeled (images, videos, audio files, or text). Can be URLs or local file paths.
+
+2. **Responses**: Each datapoint gets multiple human responses. More responses = higher confidence but higher cost.
+
+3. **Validation Sets**: Pre-labeled examples to filter out low-quality labelers. Create with `rapi.validation.create_*()`.
+
+4. **Confidence Threshold**: Use `confidence_threshold=0.8` to stop collecting responses early when consensus is reached.
+
+## Full Documentation
+
+https://docs.rapidata.ai/
