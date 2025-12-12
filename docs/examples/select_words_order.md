@@ -2,6 +2,8 @@
 
 To learn about the basics of creating an order, please refer to the [quickstart guide](../quickstart.md).
 
+![Select Words Order Example](../media/order-types/select_words.png){ width="20%" }
+
 A big part of image generation is following the prompt accurately. Rapidata makes it easy to get feedback on what parts of the prompt the model is struggling with. In this example, we will create an order where annotators are asked to select the words that are not correctly depicted in the image.
 
 ```python

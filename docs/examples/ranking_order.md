@@ -2,6 +2,8 @@
 
 To learn about the basics of creating an order, please refer to the [quickstart guide](../quickstart.md).
 
+![Ranking Order Example](../media/order-types/ranking.png){ width="20%" }
+
 In this example, we will create an order to rank various images of rabbits. The matchups will be generated automatically, comparing two images at a time. The ranking system is based on an Elo rating system, which updates rankings based on the results of these matchups.
 
 The instruction is designed to focus on the comparison between the two images rather than the overall ranking. For example, instead of asking "Which rabbit looks the coolest?", we ask "Which rabbit looks cooler?" to emphasize the specific matchup.

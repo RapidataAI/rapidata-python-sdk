@@ -2,6 +2,8 @@
 
 To learn about the basics of creating an order, please refer to the [quickstart guide](../quickstart.md).
 
+![Compare Order Example](../media/order-types/compare.png){ width="20%" }
+
 === "Basic"
 
     In this example we want to compare two image-to-text models, Flux and Midjourney, that have generated images based on a description, aka prompt. Those images have been saved to a public URL in order to be able to run the example anywhere. When you run this with your own examples, you may use local paths to your images instead of the URLs.

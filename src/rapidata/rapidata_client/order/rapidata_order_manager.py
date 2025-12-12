@@ -191,6 +191,23 @@ class RapidataOrderManager:
             private_notes (list[str], optional): The list of private notes for the classification. Defaults to None.
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
+
+        Example:
+            ```python
+            from rapidata import RapidataClient, NoShuffle
+
+            rapi = RapidataClient()
+            order = rapi.order.create_classification_order(
+                name="Image Quality Rating",
+                instruction="How would you rate the quality of this image?",
+                answer_options=["1: Poor", "2: Fair", "3: Good", "4: Excellent"],
+                datapoints=["https://example.com/image1.jpg", "https://example.com/image2.jpg"],
+                responses_per_datapoint=15,
+                settings=[NoShuffle()],  # Keep options in order for Likert scale
+            ).run()
+
+            results = order.get_results()
+            ```
         """
         with tracer.start_as_current_span(
             "RapidataOrderManager.create_classification_order"
@@ -276,6 +293,26 @@ class RapidataOrderManager:
             private_notes (list[str], optional): The list of private notes for the comparison. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
+
+        Example:
+            ```python
+            from rapidata import RapidataClient
+
+            rapi = RapidataClient()
+            order = rapi.order.create_compare_order(
+                name="Image Prompt Alignment",
+                instruction="Which image follows the prompt more accurately?",
+                datapoints=[
+                    ["https://example.com/model_a_img1.jpg", "https://example.com/model_b_img1.jpg"],
+                    ["https://example.com/model_a_img2.jpg", "https://example.com/model_b_img2.jpg"],
+                ],
+                contexts=["A cat sitting on a red couch", "A blue car in the rain"],
+                responses_per_datapoint=25,
+                a_b_names=["Flux", "Midjourney"],  # Optional: label the models in results
+            ).run()
+
+            results = order.get_results()
+            ```
         """
         with tracer.start_as_current_span("RapidataOrderManager.create_compare_order"):
             if any(not isinstance(datapoint, list) for datapoint in datapoints):
@@ -354,6 +391,25 @@ class RapidataOrderManager:
             filters (Sequence[RapidataFilter], optional): The list of filters for the ranking. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the ranking. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the ranking. Defaults to []. Decides in what order the tasks should be shown.
+
+        Example:
+            ```python
+            from rapidata import RapidataClient
+
+            rapi = RapidataClient()
+            # Rank 12 images by preference using 50 pairwise comparisons
+            order = rapi.order.create_ranking_order(
+                name="Image Quality Ranking",
+                instruction="Which image looks better?",
+                datapoints=[["img1.jpg", "img2.jpg", "img3.jpg", "img4.jpg", "img5.jpg",
+                            "img6.jpg", "img7.jpg", "img8.jpg", "img9.jpg", "img10.jpg",
+                            "img11.jpg", "img12.jpg"]],
+                comparison_budget_per_ranking=50,
+                random_comparisons_ratio=0.5,  # 50% random, 50% close matchups
+            ).run()
+
+            results = order.get_results()  # Returns ranked list with scores
+            ```
         """
         with tracer.start_as_current_span("RapidataOrderManager.create_ranking_order"):
             if contexts and len(contexts) != len(datapoints):
@@ -472,6 +528,22 @@ class RapidataOrderManager:
             private_notes (list[str], optional): The list of private notes for the free text. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
+
+        Example:
+            ```python
+            from rapidata import RapidataClient, FreeTextMinimumCharacters
+
+            rapi = RapidataClient()
+            order = rapi.order.create_free_text_order(
+                name="Image Captioning",
+                instruction="Describe what you see in this image in detail",
+                datapoints=["https://example.com/image1.jpg", "https://example.com/image2.jpg"],
+                responses_per_datapoint=5,
+                settings=[FreeTextMinimumCharacters(20)],  # Require at least 20 characters
+            ).run()
+
+            results = order.get_results()
+            ```
         """
         with tracer.start_as_current_span(
             "RapidataOrderManager.create_free_text_order"
@@ -529,6 +601,22 @@ class RapidataOrderManager:
             private_notes (list[str], optional): The list of private notes for the select words. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
+
+        Example:
+            ```python
+            from rapidata import RapidataClient
+
+            rapi = RapidataClient()
+            order = rapi.order.create_select_words_order(
+                name="Find Text-Image Mismatches",
+                instruction="Select words that don't match what's shown in the image",
+                datapoints=["https://example.com/image1.jpg", "https://example.com/image2.jpg"],
+                sentences=["A red car on a blue road", "Two cats playing with yarn"],
+                responses_per_datapoint=15,
+            ).run()
+
+            results = order.get_results()
+            ```
         """
         with tracer.start_as_current_span(
             "RapidataOrderManager.create_select_words_order"
@@ -590,6 +678,21 @@ class RapidataOrderManager:
             private_notes (list[str], optional): The list of private notes for the locate. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
+
+        Example:
+            ```python
+            from rapidata import RapidataClient
+
+            rapi = RapidataClient()
+            order = rapi.order.create_locate_order(
+                name="Find Artifacts",
+                instruction="Tap on any visual glitches or errors in the image",
+                datapoints=["https://example.com/ai_generated1.jpg", "https://example.com/ai_generated2.jpg"],
+                responses_per_datapoint=35,
+            ).run()
+
+            results = order.get_results()
+            ```
         """
         with tracer.start_as_current_span("RapidataOrderManager.create_locate_order"):
             from rapidata.rapidata_client.workflow import LocateWorkflow
@@ -648,6 +751,21 @@ class RapidataOrderManager:
             private_notes (list[str], optional): The list of private notes for the draw lines. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
+
+        Example:
+            ```python
+            from rapidata import RapidataClient
+
+            rapi = RapidataClient()
+            order = rapi.order.create_draw_order(
+                name="Segment Objects",
+                instruction="Color in all the cars in the image",
+                datapoints=["https://example.com/street1.jpg", "https://example.com/street2.jpg"],
+                responses_per_datapoint=35,
+            ).run()
+
+            results = order.get_results()
+            ```
         """
         with tracer.start_as_current_span("RapidataOrderManager.create_draw_order"):
             from rapidata.rapidata_client.workflow import DrawWorkflow

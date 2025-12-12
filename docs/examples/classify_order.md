@@ -2,6 +2,8 @@
 
 To learn about the basics of creating an order, please refer to the [quickstart guide](../quickstart.md).
 
+![Classify Order Example](../media/order-types/classify.png){ width="20%" }
+
 === "Basic"
 
     With this order, we want to rate different images based on a Likert scale to better understand how well the model generated the images we intended. We have various images that we want to evaluate, and we will assess how accurately they represent the desired concepts. When you run this with your own examples, you may use local paths to your images instead of the URLs.

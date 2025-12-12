@@ -35,9 +35,12 @@ for path in sorted(src.rglob("*.py")):
 
     with mkdocs_gen_files.open(full_doc_path, "w") as fd:
         ident = ".".join(parts)
+        # Demote API reference in search results (manual docs are boosted to 10)
+        fd.write("---\nsearch:\n  boost: 0.2\n---\n\n")
         fd.write(f"::: {ident}")
 
     mkdocs_gen_files.set_edit_path(full_doc_path, path.relative_to(root))
 
 with mkdocs_gen_files.open("reference/SUMMARY.md", "w") as nav_file:
+    nav_file.write("---\nsearch:\n  boost: 0.2\n---\n\n")
     nav_file.writelines(nav.build_literate_nav())
