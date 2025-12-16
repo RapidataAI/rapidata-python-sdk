@@ -388,16 +388,6 @@
           }
         }
       },
-      "ComparisonOperator": {
-        "enum": [
-          "Equal",
-          "NotEqual",
-          "LessThan",
-          "LessThanOrEqual",
-          "GreaterThan",
-          "GreaterThanOrEqual"
-        ]
-      },
       "CreateAudienceRequest": {
         "required": [
           "name"
@@ -413,7 +403,7 @@
                 "nullable": true
               },
               {
-                "$ref": "#/components/schemas/ListOfICampaignFilter"
+                "$ref": "#/components/schemas/ListOfIAudienceFilter"
               }
             ]
           },
@@ -522,7 +512,7 @@
             "format": "int64"
           },
           "filters": {
-            "$ref": "#/components/schemas/ListOfICampaignFilter"
+            "$ref": "#/components/schemas/ListOfIAudienceFilter"
           },
           "createdAt": {
             "type": "string",
@@ -776,116 +766,28 @@
           }
         }
       },
-      "ICampaignFilter": {
+      "IAudienceFilter": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/ICampaignFilterAndFilter"
+            "$ref": "#/components/schemas/IAudienceFilterCountryFilter"
           },
           {
-            "$ref": "#/components/schemas/ICampaignFilterCampaignFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterCountryFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterDemographicFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterLanguageFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterNewUserFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterNotFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterOrFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterResponseCountFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterUserActionRestrictionFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterUserScoreFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterUserStateFilter"
+            "$ref": "#/components/schemas/IAudienceFilterLanguageFilter"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "AndFilter": "#/components/schemas/ICampaignFilterAndFilter",
-            "CampaignFilter": "#/components/schemas/ICampaignFilterCampaignFilter",
-            "CountryFilter": "#/components/schemas/ICampaignFilterCountryFilter",
-            "DemographicFilter": "#/components/schemas/ICampaignFilterDemographicFilter",
-            "LanguageFilter": "#/components/schemas/ICampaignFilterLanguageFilter",
-            "NewUserFilter": "#/components/schemas/ICampaignFilterNewUserFilter",
-            "NotFilter": "#/components/schemas/ICampaignFilterNotFilter",
-            "OrFilter": "#/components/schemas/ICampaignFilterOrFilter",
-            "ResponseCountFilter": "#/components/schemas/ICampaignFilterResponseCountFilter",
-            "UserActionRestrictionFilter": "#/components/schemas/ICampaignFilterUserActionRestrictionFilter",
-            "UserScoreFilter": "#/components/schemas/ICampaignFilterUserScoreFilter",
-            "UserStateFilter": "#/components/schemas/ICampaignFilterUserStateFilter"
+            "CountryFilter": "#/components/schemas/IAudienceFilterCountryFilter",
+            "LanguageFilter": "#/components/schemas/IAudienceFilterLanguageFilter"
           }
         }
       },
-      "ICampaignFilterAndFilter": {
-        "required": [
-          "filters",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "AndFilter"
-            ],
-            "type": "string"
-          },
-          "filters": {
-            "$ref": "#/components/schemas/ListOfICampaignFilter"
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
-          },
-          "innerFilters": {
-            "$ref": "#/components/schemas/ListOfICampaignFilter"
-          }
-        }
-      },
-      "ICampaignFilterCampaignFilter": {
-        "required": [
-          "campaignIds",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "CampaignFilter"
-            ],
-            "type": "string"
-          },
-          "campaignIds": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
-          }
-        }
-      },
-      "ICampaignFilterCountryFilter": {
+      "IAudienceFilterCountryFilter": {
         "required": [
           "countries",
           "_t"
@@ -902,42 +804,10 @@
             "items": {
               "type": "string"
             }
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
           }
         }
       },
-      "ICampaignFilterDemographicFilter": {
-        "required": [
-          "identifier",
-          "values",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "DemographicFilter"
-            ],
-            "type": "string"
-          },
-          "identifier": {
-            "type": "string"
-          },
-          "values": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
-          }
-        }
-      },
-      "ICampaignFilterLanguageFilter": {
+      "IAudienceFilterLanguageFilter": {
         "required": [
           "languages",
           "_t"
@@ -954,191 +824,6 @@
             "items": {
               "type": "string"
             }
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
-          }
-        }
-      },
-      "ICampaignFilterNewUserFilter": {
-        "required": [
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "NewUserFilter"
-            ],
-            "type": "string"
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
-          }
-        }
-      },
-      "ICampaignFilterNotFilter": {
-        "required": [
-          "filter",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "NotFilter"
-            ],
-            "type": "string"
-          },
-          "filter": {
-            "$ref": "#/components/schemas/ICampaignFilter"
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
-          },
-          "innerFilters": {
-            "$ref": "#/components/schemas/ListOfICampaignFilter"
-          }
-        }
-      },
-      "ICampaignFilterOrFilter": {
-        "required": [
-          "filters",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "OrFilter"
-            ],
-            "type": "string"
-          },
-          "filters": {
-            "$ref": "#/components/schemas/ListOfICampaignFilter"
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
-          },
-          "innerFilters": {
-            "$ref": "#/components/schemas/ListOfICampaignFilter"
-          }
-        }
-      },
-      "ICampaignFilterResponseCountFilter": {
-        "required": [
-          "responseCount",
-          "dimension",
-          "operator",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "ResponseCountFilter"
-            ],
-            "type": "string"
-          },
-          "responseCount": {
-            "type": "integer",
-            "format": "uint32"
-          },
-          "dimension": {
-            "type": "string"
-          },
-          "operator": {
-            "$ref": "#/components/schemas/ComparisonOperator"
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
-          }
-        }
-      },
-      "ICampaignFilterUserActionRestrictionFilter": {
-        "required": [
-          "requiredActions",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "UserActionRestrictionFilter"
-            ],
-            "type": "string"
-          },
-          "requiredActions": {
-            "type": "array",
-            "items": {
-              "enum": [
-                "Listen",
-                "UseKeyboard"
-              ]
-            }
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
-          }
-        }
-      },
-      "ICampaignFilterUserScoreFilter": {
-        "required": [
-          "lowerbound",
-          "upperbound",
-          "dimension",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "UserScoreFilter"
-            ],
-            "type": "string"
-          },
-          "lowerbound": {
-            "type": "number",
-            "format": "double"
-          },
-          "upperbound": {
-            "type": "number",
-            "format": "double"
-          },
-          "dimension": {
-            "type": "string"
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
-          }
-        }
-      },
-      "ICampaignFilterUserStateFilter": {
-        "required": [
-          "states",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "UserStateFilter"
-            ],
-            "type": "string"
-          },
-          "states": {
-            "type": "array",
-            "items": {
-              "enum": [
-                "Training",
-                "Blacklist",
-                "Active"
-              ]
-            }
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
           }
         }
       },
@@ -1986,10 +1671,10 @@
           "$ref": "#/components/schemas/IAssetModel"
         }
       },
-      "ListOfICampaignFilter": {
+      "ListOfIAudienceFilter": {
         "type": "array",
         "items": {
-          "$ref": "#/components/schemas/ICampaignFilter"
+          "$ref": "#/components/schemas/IAudienceFilter"
         }
       },
       "ListOfListOfString": {
@@ -2091,10 +1776,10 @@
           }
         }
       },
-      "OptionOfIReadOnlyListOfICampaignFilter": {
+      "OptionOfIReadOnlyListOfIAudienceFilter": {
         "oneOf": [
           {
-            "$ref": "#/components/schemas/ListOfICampaignFilter"
+            "$ref": "#/components/schemas/ListOfIAudienceFilter"
           },
           {
             "nullable": true
@@ -2205,7 +1890,7 @@
             "format": "int64"
           },
           "filters": {
-            "$ref": "#/components/schemas/ListOfICampaignFilter"
+            "$ref": "#/components/schemas/ListOfIAudienceFilter"
           },
           "createdAt": {
             "type": "string",
@@ -2409,7 +2094,7 @@
             "$ref": "#/components/schemas/OptionOfstring"
           },
           "filters": {
-            "$ref": "#/components/schemas/OptionOfIReadOnlyListOfICampaignFilter"
+            "$ref": "#/components/schemas/OptionOfIReadOnlyListOfIAudienceFilter"
           }
         }
       }

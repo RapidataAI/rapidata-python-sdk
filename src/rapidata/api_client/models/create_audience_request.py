@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
-from rapidata.api_client.models.i_campaign_filter import ICampaignFilter
+from rapidata.api_client.models.i_audience_filter import IAudienceFilter
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,7 +28,7 @@ class CreateAudienceRequest(BaseModel):
     CreateAudienceRequest
     """ # noqa: E501
     name: StrictStr
-    filters: Optional[List[ICampaignFilter]] = None
+    filters: Optional[List[IAudienceFilter]] = None
     minimum_user_score: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="minimumUserScore")
     minimum_size_for_activation: Optional[StrictInt] = Field(default=None, alias="minimumSizeForActivation")
     __properties: ClassVar[List[str]] = ["name", "filters", "minimumUserScore", "minimumSizeForActivation"]
@@ -92,7 +92,7 @@ class CreateAudienceRequest(BaseModel):
 
         _obj = cls.model_validate({
             "name": obj.get("name"),
-            "filters": [ICampaignFilter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
+            "filters": [IAudienceFilter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
             "minimumUserScore": obj.get("minimumUserScore"),
             "minimumSizeForActivation": obj.get("minimumSizeForActivation")
         })

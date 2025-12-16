@@ -28,13 +28,12 @@ class UpdateValidationRapidModel(BaseModel):
     """
     UpdateValidationRapidModel
     """ # noqa: E501
-    truth: IValidationTruth
+    truth: Optional[IValidationTruth] = None
     explanation: Optional[StrictStr] = None
-    prompt: Optional[StrictStr] = None
     context: Optional[StrictStr] = None
     context_asset: Optional[IAssetInput] = Field(default=None, alias="contextAsset")
-    random_correct_probability: Union[StrictFloat, StrictInt] = Field(alias="randomCorrectProbability")
-    __properties: ClassVar[List[str]] = ["truth", "explanation", "prompt", "context", "contextAsset", "randomCorrectProbability"]
+    random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="randomCorrectProbability")
+    __properties: ClassVar[List[str]] = ["truth", "explanation", "context", "contextAsset", "randomCorrectProbability"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -81,15 +80,15 @@ class UpdateValidationRapidModel(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of context_asset
         if self.context_asset:
             _dict['contextAsset'] = self.context_asset.to_dict()
+        # set to None if truth (nullable) is None
+        # and model_fields_set contains the field
+        if self.truth is None and "truth" in self.model_fields_set:
+            _dict['truth'] = None
+
         # set to None if explanation (nullable) is None
         # and model_fields_set contains the field
         if self.explanation is None and "explanation" in self.model_fields_set:
             _dict['explanation'] = None
-
-        # set to None if prompt (nullable) is None
-        # and model_fields_set contains the field
-        if self.prompt is None and "prompt" in self.model_fields_set:
-            _dict['prompt'] = None
 
         # set to None if context (nullable) is None
         # and model_fields_set contains the field
@@ -100,6 +99,11 @@ class UpdateValidationRapidModel(BaseModel):
         # and model_fields_set contains the field
         if self.context_asset is None and "context_asset" in self.model_fields_set:
             _dict['contextAsset'] = None
+
+        # set to None if random_correct_probability (nullable) is None
+        # and model_fields_set contains the field
+        if self.random_correct_probability is None and "random_correct_probability" in self.model_fields_set:
+            _dict['randomCorrectProbability'] = None
 
         return _dict
 
@@ -115,7 +119,6 @@ class UpdateValidationRapidModel(BaseModel):
         _obj = cls.model_validate({
             "truth": IValidationTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
             "explanation": obj.get("explanation"),
-            "prompt": obj.get("prompt"),
             "context": obj.get("context"),
             "contextAsset": IAssetInput.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
             "randomCorrectProbability": obj.get("randomCorrectProbability")
