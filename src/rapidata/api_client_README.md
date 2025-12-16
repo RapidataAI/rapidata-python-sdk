@@ -82,6 +82,7 @@ Class | Method | HTTP request | Description
 *AudienceApi* | [**audience_audience_id_patch**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_patch) | **PATCH** /audience/{audienceId} | Patches an existing audience.
 *AudienceApi* | [**audience_audience_id_rapid_post**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_rapid_post) | **POST** /audience/{audienceId}/rapid | Adds a new rapid to be used to train users for the specified audience.
 *AudienceApi* | [**audience_audience_id_rapids_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_rapids_get) | **GET** /audience/{audienceId}/rapids | Queries all rapids for the specified audience.
+*AudienceApi* | [**audience_audience_id_recruit_post**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_recruit_post) | **POST** /audience/{audienceId}/recruit | Starts recruiting users for the specified audience.
 *AudienceApi* | [**audience_post**](rapidata/api_client/docs/AudienceApi.md#audience_post) | **POST** /audience | Creates a new empty audience.
 *AudienceApi* | [**audiences_get**](rapidata/api_client/docs/AudienceApi.md#audiences_get) | **GET** /audiences | Queries all available audiences.
 *BenchmarkApi* | [**benchmark_benchmark_id_delete**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_delete) | **DELETE** /benchmark/{benchmarkId} | Deletes a single benchmark.
@@ -276,6 +277,7 @@ Class | Method | HTTP request | Description
  - [DynamicClientRegistrationRequest](rapidata/api_client/docs/DynamicClientRegistrationRequest.md)
  - [EloConfig](rapidata/api_client/docs/EloConfig.md)
  - [EloConfigModel](rapidata/api_client/docs/EloConfigModel.md)
+ - [ExistingAssetInput](rapidata/api_client/docs/ExistingAssetInput.md)
  - [FeatureFlag](rapidata/api_client/docs/FeatureFlag.md)
  - [FeatureFlagModel](rapidata/api_client/docs/FeatureFlagModel.md)
  - [FeedbackModel](rapidata/api_client/docs/FeedbackModel.md)

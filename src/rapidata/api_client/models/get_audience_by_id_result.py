@@ -19,7 +19,7 @@ import json
 
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.audience_status import AudienceStatus
 from rapidata.api_client.models.i_audience_filter import IAudienceFilter
 from typing import Optional, Set
@@ -34,9 +34,10 @@ class GetAudienceByIdResult(BaseModel):
     status: AudienceStatus
     qualified_user_count: StrictInt = Field(alias="qualifiedUserCount")
     filters: List[IAudienceFilter]
+    logo: Optional[StrictStr] = None
     created_at: datetime = Field(alias="createdAt")
     owner_mail: StrictStr = Field(alias="ownerMail")
-    __properties: ClassVar[List[str]] = ["id", "name", "status", "qualifiedUserCount", "filters", "createdAt", "ownerMail"]
+    __properties: ClassVar[List[str]] = ["id", "name", "status", "qualifiedUserCount", "filters", "logo", "createdAt", "ownerMail"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -84,6 +85,11 @@ class GetAudienceByIdResult(BaseModel):
                 if _item_filters:
                     _items.append(_item_filters.to_dict())
             _dict['filters'] = _items
+        # set to None if logo (nullable) is None
+        # and model_fields_set contains the field
+        if self.logo is None and "logo" in self.model_fields_set:
+            _dict['logo'] = None
+
         return _dict
 
     @classmethod
@@ -101,6 +107,7 @@ class GetAudienceByIdResult(BaseModel):
             "status": obj.get("status"),
             "qualifiedUserCount": obj.get("qualifiedUserCount"),
             "filters": [IAudienceFilter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
+            "logo": obj.get("logo"),
             "createdAt": obj.get("createdAt"),
             "ownerMail": obj.get("ownerMail")
         })

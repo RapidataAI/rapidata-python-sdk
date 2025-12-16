@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
 from rapidata.api_client.models.i_audience_filter import IAudienceFilter
 from typing import Optional, Set
 from typing_extensions import Self
@@ -31,7 +32,8 @@ class CreateAudienceRequest(BaseModel):
     filters: Optional[List[IAudienceFilter]] = None
     minimum_user_score: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="minimumUserScore")
     minimum_size_for_activation: Optional[StrictInt] = Field(default=None, alias="minimumSizeForActivation")
-    __properties: ClassVar[List[str]] = ["name", "filters", "minimumUserScore", "minimumSizeForActivation"]
+    logo: Optional[ExistingAssetInput] = None
+    __properties: ClassVar[List[str]] = ["name", "filters", "minimumUserScore", "minimumSizeForActivation", "logo"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -79,6 +81,14 @@ class CreateAudienceRequest(BaseModel):
                 if _item_filters:
                     _items.append(_item_filters.to_dict())
             _dict['filters'] = _items
+        # override the default output from pydantic by calling `to_dict()` of logo
+        if self.logo:
+            _dict['logo'] = self.logo.to_dict()
+        # set to None if logo (nullable) is None
+        # and model_fields_set contains the field
+        if self.logo is None and "logo" in self.model_fields_set:
+            _dict['logo'] = None
+
         return _dict
 
     @classmethod
@@ -94,7 +104,8 @@ class CreateAudienceRequest(BaseModel):
             "name": obj.get("name"),
             "filters": [IAudienceFilter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
             "minimumUserScore": obj.get("minimumUserScore"),
-            "minimumSizeForActivation": obj.get("minimumSizeForActivation")
+            "minimumSizeForActivation": obj.get("minimumSizeForActivation"),
+            "logo": ExistingAssetInput.from_dict(obj["logo"]) if obj.get("logo") is not None else None
         })
         return _obj
 
