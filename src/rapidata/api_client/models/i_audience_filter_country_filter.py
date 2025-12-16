@@ -17,19 +17,25 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.i_audience_filter import IAudienceFilter
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class UpdateAudienceRequest(BaseModel):
+class IAudienceFilterCountryFilter(BaseModel):
     """
-    UpdateAudienceRequest
+    IAudienceFilterCountryFilter
     """ # noqa: E501
-    name: Optional[StrictStr] = None
-    filters: Optional[List[IAudienceFilter]] = None
-    __properties: ClassVar[List[str]] = ["name", "filters"]
+    t: StrictStr = Field(alias="_t")
+    countries: List[StrictStr]
+    __properties: ClassVar[List[str]] = ["_t", "countries"]
+
+    @field_validator('t')
+    def t_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['CountryFilter']):
+            raise ValueError("must be one of enum values ('CountryFilter')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -49,7 +55,7 @@ class UpdateAudienceRequest(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of UpdateAudienceRequest from a JSON string"""
+        """Create an instance of IAudienceFilterCountryFilter from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -70,23 +76,11 @@ class UpdateAudienceRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in filters (list)
-        _items = []
-        if self.filters:
-            for _item_filters in self.filters:
-                if _item_filters:
-                    _items.append(_item_filters.to_dict())
-            _dict['filters'] = _items
-        # set to None if name (nullable) is None
-        # and model_fields_set contains the field
-        if self.name is None and "name" in self.model_fields_set:
-            _dict['name'] = None
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of UpdateAudienceRequest from a dict"""
+        """Create an instance of IAudienceFilterCountryFilter from a dict"""
         if obj is None:
             return None
 
@@ -94,8 +88,8 @@ class UpdateAudienceRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "filters": [IAudienceFilter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None
+            "_t": obj.get("_t"),
+            "countries": obj.get("countries")
         })
         return _obj
 
