@@ -21,7 +21,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.audience_status import AudienceStatus
-from rapidata.api_client.models.i_campaign_filter import ICampaignFilter
+from rapidata.api_client.models.i_audience_filter import IAudienceFilter
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -33,7 +33,7 @@ class GetAudienceByIdResult(BaseModel):
     name: StrictStr
     status: AudienceStatus
     qualified_user_count: StrictInt = Field(alias="qualifiedUserCount")
-    filters: List[ICampaignFilter]
+    filters: List[IAudienceFilter]
     created_at: datetime = Field(alias="createdAt")
     owner_mail: StrictStr = Field(alias="ownerMail")
     __properties: ClassVar[List[str]] = ["id", "name", "status", "qualifiedUserCount", "filters", "createdAt", "ownerMail"]
@@ -100,7 +100,7 @@ class GetAudienceByIdResult(BaseModel):
             "name": obj.get("name"),
             "status": obj.get("status"),
             "qualifiedUserCount": obj.get("qualifiedUserCount"),
-            "filters": [ICampaignFilter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
+            "filters": [IAudienceFilter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
             "createdAt": obj.get("createdAt"),
             "ownerMail": obj.get("ownerMail")
         })

@@ -2541,6 +2541,35 @@
           }
         }
       },
+      "OptionOfdouble": {
+        "type": "number",
+        "format": "double",
+        "nullable": true
+      },
+      "OptionOfIAssetInput": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IAssetInput"
+          },
+          {
+            "nullable": true
+          }
+        ]
+      },
+      "OptionOfIValidationTruth": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IValidationTruth"
+          },
+          {
+            "nullable": true
+          }
+        ]
+      },
+      "OptionOfstring": {
+        "type": "string",
+        "nullable": true
+      },
       "PagedResultOfQueryValidationRapidEligibilityResult": {
         "required": [
           "total",
@@ -2970,40 +2999,22 @@
         }
       },
       "UpdateValidationRapidModel": {
-        "required": [
-          "truth",
-          "randomCorrectProbability"
-        ],
         "type": "object",
         "properties": {
           "truth": {
-            "$ref": "#/components/schemas/IValidationTruth"
+            "$ref": "#/components/schemas/OptionOfIValidationTruth"
           },
           "explanation": {
-            "type": "string",
-            "nullable": true
-          },
-          "prompt": {
-            "type": "string",
-            "nullable": true
+            "$ref": "#/components/schemas/OptionOfstring"
           },
           "context": {
-            "type": "string",
-            "nullable": true
+            "$ref": "#/components/schemas/OptionOfstring"
           },
           "contextAsset": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/IAssetInput"
-              }
-            ]
+            "$ref": "#/components/schemas/OptionOfIAssetInput"
           },
           "randomCorrectProbability": {
-            "type": "number",
-            "format": "double"
+            "$ref": "#/components/schemas/OptionOfdouble"
           }
         }
       }

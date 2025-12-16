@@ -135,6 +135,12 @@ Class | Method | HTTP request | Description
 *IdentityApi* | [**identity_bridge_token_post**](rapidata/api_client/docs/IdentityApi.md#identity_bridge_token_post) | **POST** /identity/bridge-token | Creates a pair of read and write keys for a client.  The write key is used to store the authentication result.  The read key is used to retrieve the authentication result.
 *IdentityApi* | [**identity_google_one_tap_post**](rapidata/api_client/docs/IdentityApi.md#identity_google_one_tap_post) | **POST** /identity/google-one-tap | Signs in a user using a token received from Google One Tap.
 *IdentityApi* | [**identity_referrer_post**](rapidata/api_client/docs/IdentityApi.md#identity_referrer_post) | **POST** /identity/referrer | Sets the referrer for the current customer.
+*JobApi* | [**job_definition_definition_id_revisions_get**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_revisions_get) | **GET** /job/definition/{definitionId}/revisions | Queries job revisions for a specific definition based on filter, page, and sort criteria.
+*JobApi* | [**job_definitions_get**](rapidata/api_client/docs/JobApi.md#job_definitions_get) | **GET** /job/definitions | Queries job definitions based on filter, page, and sort criteria.
+*JobApi* | [**job_post**](rapidata/api_client/docs/JobApi.md#job_post) | **POST** /job | Creates a new job from a job definition and audience.
+*JobApi* | [**jobs_get**](rapidata/api_client/docs/JobApi.md#jobs_get) | **GET** /jobs | Queries jobs based on filter, page, and sort criteria.
+*JobDefinitionApi* | [**job_definition_post**](rapidata/api_client/docs/JobDefinitionApi.md#job_definition_post) | **POST** /job/definition | Creates a new job definition.
+*JobRevisionApi* | [**job_definition_definition_id_revision_post**](rapidata/api_client/docs/JobRevisionApi.md#job_definition_definition_id_revision_post) | **POST** /job/definition/{definitionId}/revision | Creates a new revision for an existing job definition.
 *LeaderboardApi* | [**benchmark_standing_leaderboard_id_participant_id_get**](rapidata/api_client/docs/LeaderboardApi.md#benchmark_standing_leaderboard_id_participant_id_get) | **GET** /benchmark/standing/{leaderboardId}/{participantId} | Gets a standing by leaderboardId and participantId.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_boost_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_boost_post) | **POST** /leaderboard/{leaderboardId}/boost | Boosts a subset of participants within a leaderboard.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_delete**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_delete) | **DELETE** /leaderboard/{leaderboardId} | Deletes a leaderboard by its ID.
@@ -147,8 +153,6 @@ Class | Method | HTTP request | Description
 *NewsletterApi* | [**newsletter_subscribe_post**](rapidata/api_client/docs/NewsletterApi.md#newsletter_subscribe_post) | **POST** /newsletter/subscribe | Signs a user up to the newsletter.
 *NewsletterApi* | [**newsletter_unsubscribe_post**](rapidata/api_client/docs/NewsletterApi.md#newsletter_unsubscribe_post) | **POST** /newsletter/unsubscribe | Unsubscribes a user from the newsletter.
 *OrderApi* | [**order_complex_post**](rapidata/api_client/docs/OrderApi.md#order_complex_post) | **POST** /order/complex | Creates a new order with a custom pipeline.
-*OrderApi* | [**order_definition_definition_id_revision_post**](rapidata/api_client/docs/OrderApi.md#order_definition_definition_id_revision_post) | **POST** /order/definition/{definitionId}/revision | Creates a new revision for an existing order definition.
-*OrderApi* | [**order_definition_post**](rapidata/api_client/docs/OrderApi.md#order_definition_post) | **POST** /order/definition | Creates a new order definition.
 *OrderApi* | [**order_order_id_approve_post**](rapidata/api_client/docs/OrderApi.md#order_order_id_approve_post) | **POST** /order/{orderId}/approve | Approves an order that has been submitted for manual approval.
 *OrderApi* | [**order_order_id_clone_post**](rapidata/api_client/docs/OrderApi.md#order_order_id_clone_post) | **POST** /order/{orderId}/clone | Clones an existing order.
 *OrderApi* | [**order_order_id_delete**](rapidata/api_client/docs/OrderApi.md#order_order_id_delete) | **DELETE** /order/{orderId} | Deletes an order.
@@ -254,12 +258,14 @@ Class | Method | HTTP request | Description
  - [CreateDatasetEndpointOutput](rapidata/api_client/docs/CreateDatasetEndpointOutput.md)
  - [CreateDemographicRapidModel](rapidata/api_client/docs/CreateDemographicRapidModel.md)
  - [CreateEmptyValidationSetResult](rapidata/api_client/docs/CreateEmptyValidationSetResult.md)
+ - [CreateJobDefinitionEndpointInput](rapidata/api_client/docs/CreateJobDefinitionEndpointInput.md)
+ - [CreateJobDefinitionEndpointOutput](rapidata/api_client/docs/CreateJobDefinitionEndpointOutput.md)
+ - [CreateJobEndpointInput](rapidata/api_client/docs/CreateJobEndpointInput.md)
+ - [CreateJobEndpointOutput](rapidata/api_client/docs/CreateJobEndpointOutput.md)
+ - [CreateJobRevisionEndpointInput](rapidata/api_client/docs/CreateJobRevisionEndpointInput.md)
+ - [CreateJobRevisionEndpointOutput](rapidata/api_client/docs/CreateJobRevisionEndpointOutput.md)
  - [CreateLeaderboardModel](rapidata/api_client/docs/CreateLeaderboardModel.md)
  - [CreateLeaderboardResult](rapidata/api_client/docs/CreateLeaderboardResult.md)
- - [CreateOrderDefinitionModel](rapidata/api_client/docs/CreateOrderDefinitionModel.md)
- - [CreateOrderDefinitionResult](rapidata/api_client/docs/CreateOrderDefinitionResult.md)
- - [CreateOrderDefinitionRevisionModel](rapidata/api_client/docs/CreateOrderDefinitionRevisionModel.md)
- - [CreateOrderDefinitionRevisionResult](rapidata/api_client/docs/CreateOrderDefinitionRevisionResult.md)
  - [CreateOrderModel](rapidata/api_client/docs/CreateOrderModel.md)
  - [CreateOrderResult](rapidata/api_client/docs/CreateOrderResult.md)
  - [CreateRapidResult](rapidata/api_client/docs/CreateRapidResult.md)
@@ -337,6 +343,9 @@ Class | Method | HTTP request | Description
  - [IAssetMultiAsset](rapidata/api_client/docs/IAssetMultiAsset.md)
  - [IAssetNullAsset](rapidata/api_client/docs/IAssetNullAsset.md)
  - [IAssetTextAsset](rapidata/api_client/docs/IAssetTextAsset.md)
+ - [IAudienceFilter](rapidata/api_client/docs/IAudienceFilter.md)
+ - [IAudienceFilterCountryFilter](rapidata/api_client/docs/IAudienceFilterCountryFilter.md)
+ - [IAudienceFilterLanguageFilter](rapidata/api_client/docs/IAudienceFilterLanguageFilter.md)
  - [ICampaignFilter](rapidata/api_client/docs/ICampaignFilter.md)
  - [ICampaignFilterAndFilter](rapidata/api_client/docs/ICampaignFilterAndFilter.md)
  - [ICampaignFilterCampaignFilter](rapidata/api_client/docs/ICampaignFilterCampaignFilter.md)
@@ -527,6 +536,9 @@ Class | Method | HTTP request | Description
  - [PagedResultOfPromptByBenchmarkResult](rapidata/api_client/docs/PagedResultOfPromptByBenchmarkResult.md)
  - [PagedResultOfQueryAudiencesResult](rapidata/api_client/docs/PagedResultOfQueryAudiencesResult.md)
  - [PagedResultOfQueryDatapointsByDatasetIdResult](rapidata/api_client/docs/PagedResultOfQueryDatapointsByDatasetIdResult.md)
+ - [PagedResultOfQueryJobDefinitionsResult](rapidata/api_client/docs/PagedResultOfQueryJobDefinitionsResult.md)
+ - [PagedResultOfQueryJobRevisionsResult](rapidata/api_client/docs/PagedResultOfQueryJobRevisionsResult.md)
+ - [PagedResultOfQueryJobsResult](rapidata/api_client/docs/PagedResultOfQueryJobsResult.md)
  - [PagedResultOfQueryRapidsForAudienceResult](rapidata/api_client/docs/PagedResultOfQueryRapidsForAudienceResult.md)
  - [PagedResultOfQueryValidationRapidEligibilityResult](rapidata/api_client/docs/PagedResultOfQueryValidationRapidEligibilityResult.md)
  - [PagedResultOfRapidModel](rapidata/api_client/docs/PagedResultOfRapidModel.md)
@@ -546,6 +558,9 @@ Class | Method | HTTP request | Description
  - [PublicOrderModel](rapidata/api_client/docs/PublicOrderModel.md)
  - [QueryAudiencesResult](rapidata/api_client/docs/QueryAudiencesResult.md)
  - [QueryDatapointsByDatasetIdResult](rapidata/api_client/docs/QueryDatapointsByDatasetIdResult.md)
+ - [QueryJobDefinitionsResult](rapidata/api_client/docs/QueryJobDefinitionsResult.md)
+ - [QueryJobRevisionsResult](rapidata/api_client/docs/QueryJobRevisionsResult.md)
+ - [QueryJobsResult](rapidata/api_client/docs/QueryJobsResult.md)
  - [QueryModel](rapidata/api_client/docs/QueryModel.md)
  - [QueryRapidsForAudienceResult](rapidata/api_client/docs/QueryRapidsForAudienceResult.md)
  - [QueryValidationRapidEligibilityModelQueryValidationModel](rapidata/api_client/docs/QueryValidationRapidEligibilityModelQueryValidationModel.md)
