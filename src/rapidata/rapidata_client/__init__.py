@@ -17,7 +17,6 @@ from .datapoints import Datapoint
 from .datapoints.metadata import (
     PrivateTextMetadata,
     PublicTextMetadata,
-    PromptMetadata,
     SelectWordsMetadata,
 )
 from .settings import (

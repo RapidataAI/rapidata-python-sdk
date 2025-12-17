@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
 from rapidata.api_client.models.i_audience_filter import IAudienceFilter
 from typing import Optional, Set
 from typing_extensions import Self
@@ -29,7 +30,8 @@ class UpdateAudienceRequest(BaseModel):
     """ # noqa: E501
     name: Optional[StrictStr] = None
     filters: Optional[List[IAudienceFilter]] = None
-    __properties: ClassVar[List[str]] = ["name", "filters"]
+    logo: Optional[ExistingAssetInput] = None
+    __properties: ClassVar[List[str]] = ["name", "filters", "logo"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -77,10 +79,18 @@ class UpdateAudienceRequest(BaseModel):
                 if _item_filters:
                     _items.append(_item_filters.to_dict())
             _dict['filters'] = _items
+        # override the default output from pydantic by calling `to_dict()` of logo
+        if self.logo:
+            _dict['logo'] = self.logo.to_dict()
         # set to None if name (nullable) is None
         # and model_fields_set contains the field
         if self.name is None and "name" in self.model_fields_set:
             _dict['name'] = None
+
+        # set to None if logo (nullable) is None
+        # and model_fields_set contains the field
+        if self.logo is None and "logo" in self.model_fields_set:
+            _dict['logo'] = None
 
         return _dict
 
@@ -95,7 +105,8 @@ class UpdateAudienceRequest(BaseModel):
 
         _obj = cls.model_validate({
             "name": obj.get("name"),
-            "filters": [IAudienceFilter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None
+            "filters": [IAudienceFilter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
+            "logo": ExistingAssetInput.from_dict(obj["logo"]) if obj.get("logo") is not None else None
         })
         return _obj
 
