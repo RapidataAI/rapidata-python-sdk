@@ -84,14 +84,6 @@
       "x-displayName": "Order"
     },
     {
-      "name": "JobDefinition",
-      "x-displayName": "JobDefinition"
-    },
-    {
-      "name": "JobRevision",
-      "x-displayName": "JobRevision"
-    },
-    {
       "name": "Pipeline",
       "x-displayName": "Pipeline"
     },
@@ -5151,6 +5143,67 @@
         ]
       }
     },
+    "/job/definition": {
+      "post": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Creates a new job definition.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateJobDefinitionEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateJobDefinitionEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
     "/job": {
       "post": {
         "tags": [
@@ -5212,71 +5265,10 @@
         ]
       }
     },
-    "/job/definition": {
-      "post": {
-        "tags": [
-          "JobDefinition"
-        ],
-        "summary": "Creates a new job definition.",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateJobDefinitionEndpoint_Input"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateJobDefinitionEndpoint_Output"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ValidationProblemDetails"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "security": [
-          {
-            "Bearer": [],
-            "OpenIdConnect": [
-              "openid",
-              "profile",
-              "email"
-            ],
-            "OAuth2": [
-              "openid",
-              "profile",
-              "email"
-            ]
-          }
-        ]
-      }
-    },
     "/job/definition/{definitionId}/revision": {
       "post": {
         "tags": [
-          "JobRevision"
+          "Job"
         ],
         "summary": "Creates a new revision for an existing job definition.",
         "parameters": [
@@ -19617,9 +19609,7 @@
       "tags": [
         "Feedback",
         "Job",
-        "Order",
-        "JobDefinition",
-        "JobRevision"
+        "Order"
       ]
     },
     {
