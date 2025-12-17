@@ -200,7 +200,10 @@ class RapidataBenchmark:
             tags: The tags can be used to filter the leaderboard results. They will NOT be shown to the users.
         """
         from rapidata.api_client.models.submit_prompt_model import SubmitPromptModel
-        from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
+        from rapidata.api_client.models.i_asset_input_existing_asset_input import (
+            IAssetInputExistingAssetInput,
+        )
+
         from rapidata.api_client.models.i_asset_input import IAssetInput
 
         with tracer.start_as_current_span("RapidataBenchmark.add_prompt"):
@@ -264,7 +267,7 @@ class RapidataBenchmark:
                     promptAsset=(
                         IAssetInput(
                             actual_instance=(
-                                ExistingAssetInput(
+                                IAssetInputExistingAssetInput(
                                     _t="ExistingAssetInput",
                                     name=self._asset_uploader.upload_asset(
                                         prompt_asset
