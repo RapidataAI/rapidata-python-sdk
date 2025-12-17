@@ -11,6 +11,45 @@
     }
   ],
   "paths": {
+    "/audience/{audienceId}/recruit": {
+      "post": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Starts recruiting users for the specified audience.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/audiences": {
       "get": {
         "tags": [
@@ -67,8 +106,7 @@
             "description": "The id of the audience to get.",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "string"
             }
           }
         ],
@@ -106,8 +144,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "string"
             }
           }
         ],
@@ -201,8 +238,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "string"
             }
           },
           {
@@ -253,8 +289,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "string"
             }
           }
         ],
@@ -414,6 +449,16 @@
           "minimumSizeForActivation": {
             "type": "integer",
             "format": "int64"
+          },
+          "logo": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/ExistingAssetInput"
+              }
+            ]
           }
         }
       },
@@ -424,8 +469,32 @@
         "type": "object",
         "properties": {
           "audienceId": {
+            "type": "string"
+          }
+        }
+      },
+      "ExistingAssetInput": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "metadata": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/MetadataInputCollection"
+              }
+            ]
+          },
+          "identifier": {
             "type": "string",
-            "format": "uuid"
+            "nullable": true
           }
         }
       },
@@ -498,8 +567,7 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "string"
           },
           "name": {
             "type": "string"
@@ -513,6 +581,10 @@
           },
           "filters": {
             "$ref": "#/components/schemas/ListOfIAudienceFilter"
+          },
+          "logo": {
+            "type": "string",
+            "nullable": true
           },
           "createdAt": {
             "type": "string",
@@ -1776,6 +1848,16 @@
           }
         }
       },
+      "OptionOfExistingAssetInput": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ExistingAssetInput"
+          },
+          {
+            "nullable": true
+          }
+        ]
+      },
       "OptionOfIReadOnlyListOfIAudienceFilter": {
         "oneOf": [
           {
@@ -1876,8 +1958,7 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "string"
           },
           "name": {
             "type": "string"
@@ -1891,6 +1972,10 @@
           },
           "filters": {
             "$ref": "#/components/schemas/ListOfIAudienceFilter"
+          },
+          "logo": {
+            "type": "string",
+            "nullable": true
           },
           "createdAt": {
             "type": "string",
@@ -2095,6 +2180,43 @@
           },
           "filters": {
             "$ref": "#/components/schemas/OptionOfIReadOnlyListOfIAudienceFilter"
+          },
+          "logo": {
+            "$ref": "#/components/schemas/OptionOfExistingAssetInput"
+          }
+        }
+      },
+      "ValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           }
         }
       }
