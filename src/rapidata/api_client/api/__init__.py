@@ -15,8 +15,6 @@ from rapidata.api_client.api.feedback_api import FeedbackApi
 from rapidata.api_client.api.grouped_ranking_workflow_api import GroupedRankingWorkflowApi
 from rapidata.api_client.api.identity_api import IdentityApi
 from rapidata.api_client.api.job_api import JobApi
-from rapidata.api_client.api.job_definition_api import JobDefinitionApi
-from rapidata.api_client.api.job_revision_api import JobRevisionApi
 from rapidata.api_client.api.leaderboard_api import LeaderboardApi
 from rapidata.api_client.api.newsletter_api import NewsletterApi
 from rapidata.api_client.api.order_api import OrderApi

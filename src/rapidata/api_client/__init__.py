@@ -43,8 +43,6 @@ _API_IMPORTS = {
     "GroupedRankingWorkflowApi": "rapidata.api_client.api.grouped_ranking_workflow_api",
     "IdentityApi": "rapidata.api_client.api.identity_api",
     "JobApi": "rapidata.api_client.api.job_api",
-    "JobDefinitionApi": "rapidata.api_client.api.job_definition_api",
-    "JobRevisionApi": "rapidata.api_client.api.job_revision_api",
     "LeaderboardApi": "rapidata.api_client.api.leaderboard_api",
     "NewsletterApi": "rapidata.api_client.api.newsletter_api",
     "OrderApi": "rapidata.api_client.api.order_api",
