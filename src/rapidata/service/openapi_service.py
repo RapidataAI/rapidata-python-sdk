@@ -11,6 +11,7 @@ from rapidata.rapidata_client.config import logger, managed_print
 from authlib.integrations.httpx_client import OAuthError
 
 if TYPE_CHECKING:
+    from rapidata.api_client.api.job_api import JobApi
     from rapidata.api_client import CustomerRapidApi
     from rapidata.api_client.api.campaign_api import CampaignApi
     from rapidata.api_client.api.asset_api import AssetApi
@@ -128,6 +129,12 @@ class OpenAPIService:
         from rapidata.api_client.api.order_api import OrderApi
 
         return OrderApi(self.api_client)
+
+    @property
+    def job_api(self) -> JobApi:
+        from rapidata.api_client.api.job_api import JobApi
+
+        return JobApi(self.api_client)
 
     @property
     def asset_api(self) -> AssetApi:
