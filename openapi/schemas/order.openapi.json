@@ -159,6 +159,110 @@
         }
       }
     },
+    "/job/definition/{definitionId}/revision/{revisionNumber}": {
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Gets a specific revision for a job definition.",
+        "parameters": [
+          {
+            "name": "definitionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "revisionNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetJobRevisionEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/job/definition/{definitionId}": {
+      "patch": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Updates a job definition.",
+        "parameters": [
+          {
+            "name": "definitionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateJobDefinitionEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/feedback": {
       "post": {
         "tags": [
@@ -1414,6 +1518,10 @@
           "revisionNumber": {
             "type": "integer",
             "format": "int32"
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -1617,6 +1725,23 @@
           }
         }
       },
+      "EloConfig": {
+        "type": "object",
+        "properties": {
+          "startingElo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "kFactor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "scalingFactor": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "EloConfigModel": {
         "type": "object",
         "properties": {
@@ -1687,6 +1812,14 @@
         "type": "string",
         "format": "binary"
       },
+      "FileType": {
+        "enum": [
+          "Unknown",
+          "Image",
+          "Video",
+          "Audio"
+        ]
+      },
       "Filter": {
         "type": "object",
         "properties": {
@@ -1719,6 +1852,62 @@
           "EndsWith",
           "In"
         ]
+      },
+      "GetJobRevisionEndpoint_Output": {
+        "required": [
+          "definitionId",
+          "revisionNumber",
+          "pipelineId",
+          "datasetId",
+          "workflowConfig",
+          "featureFlags",
+          "createdAt",
+          "createdById",
+          "createdByMail"
+        ],
+        "type": "object",
+        "properties": {
+          "definitionId": {
+            "type": "string"
+          },
+          "revisionNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pipelineId": {
+            "type": "string"
+          },
+          "datasetId": {
+            "type": "string"
+          },
+          "aggregatorType": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/AggregatorType"
+              }
+            ]
+          },
+          "workflowConfig": {
+            "$ref": "#/components/schemas/IWorkflowConfig"
+          },
+          "featureFlags": {
+            "$ref": "#/components/schemas/ListOfFeatureFlag"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdById": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdByMail": {
+            "type": "string"
+          }
+        }
       },
       "GetOrderByIdResult": {
         "required": [
@@ -1768,6 +1957,55 @@
         "properties": {
           "orders": {
             "$ref": "#/components/schemas/ListOfPublicOrderModel"
+          }
+        }
+      },
+      "IAsset": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IAssetFileAsset"
+          },
+          {
+            "$ref": "#/components/schemas/IAssetMultiAsset"
+          },
+          {
+            "$ref": "#/components/schemas/IAssetNullAsset"
+          },
+          {
+            "$ref": "#/components/schemas/IAssetTextAsset"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "FileAsset": "#/components/schemas/IAssetFileAsset",
+            "MultiAsset": "#/components/schemas/IAssetMultiAsset",
+            "NullAsset": "#/components/schemas/IAssetNullAsset",
+            "TextAsset": "#/components/schemas/IAssetTextAsset"
+          }
+        }
+      },
+      "IAssetFileAsset": {
+        "required": [
+          "fileName",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "FileAsset"
+            ],
+            "type": "string"
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataCollection"
           }
         }
       },
@@ -1889,6 +2127,62 @@
           }
         }
       },
+      "IAssetMultiAsset": {
+        "required": [
+          "assets",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "MultiAsset"
+            ],
+            "type": "string"
+          },
+          "assets": {
+            "$ref": "#/components/schemas/ListOfIAsset"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataCollection"
+          }
+        }
+      },
+      "IAssetNullAsset": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NullAsset"
+            ],
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataCollection"
+          }
+        }
+      },
+      "IAssetTextAsset": {
+        "required": [
+          "text",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TextAsset"
+            ],
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataCollection"
+          }
+        }
+      },
       "IDatasetModel": {
         "required": [
           "_t"
@@ -1927,6 +2221,144 @@
           }
         }
       },
+      "IMetadata": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IMetadataClassificationMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataCountMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataFileTypeMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataImageDimensionMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataLocationMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataOriginalFilenameMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataSourceUrlMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataStreamsMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataTextMetadata"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataVideoDurationMetadata"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "ClassificationMetadata": "#/components/schemas/IMetadataClassificationMetadata",
+            "CountMetadata": "#/components/schemas/IMetadataCountMetadata",
+            "FileTypeMetadata": "#/components/schemas/IMetadataFileTypeMetadata",
+            "ImageDimensionMetadata": "#/components/schemas/IMetadataImageDimensionMetadata",
+            "LocationMetadata": "#/components/schemas/IMetadataLocationMetadata",
+            "OriginalFilenameMetadata": "#/components/schemas/IMetadataOriginalFilenameMetadata",
+            "SourceUrlMetadata": "#/components/schemas/IMetadataSourceUrlMetadata",
+            "StreamsMetadata": "#/components/schemas/IMetadataStreamsMetadata",
+            "TextMetadata": "#/components/schemas/IMetadataTextMetadata",
+            "VideoDurationMetadata": "#/components/schemas/IMetadataVideoDurationMetadata"
+          }
+        }
+      },
+      "IMetadataClassificationMetadata": {
+        "required": [
+          "classification",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ClassificationMetadata"
+            ],
+            "type": "string"
+          },
+          "classification": {
+            "type": "string"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "IMetadataCountMetadata": {
+        "required": [
+          "count",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CountMetadata"
+            ],
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "IMetadataFileTypeMetadata": {
+        "required": [
+          "fileType",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "FileTypeMetadata"
+            ],
+            "type": "string"
+          },
+          "fileType": {
+            "$ref": "#/components/schemas/FileType"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "IMetadataImageDimensionMetadata": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ImageDimensionMetadata"
+            ],
+            "type": "string"
+          },
+          "height": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "width": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
       "IMetadataInput": {
         "required": [
           "_t"
@@ -1960,6 +2392,139 @@
           "text": {
             "type": "string",
             "nullable": true
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "IMetadataLocationMetadata": {
+        "required": [
+          "x",
+          "y",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LocationMetadata"
+            ],
+            "type": "string"
+          },
+          "x": {
+            "type": "number",
+            "format": "float"
+          },
+          "y": {
+            "type": "number",
+            "format": "float"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "IMetadataOriginalFilenameMetadata": {
+        "required": [
+          "originalFilename",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OriginalFilenameMetadata"
+            ],
+            "type": "string"
+          },
+          "originalFilename": {
+            "type": "string"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "IMetadataSourceUrlMetadata": {
+        "required": [
+          "url",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "SourceUrlMetadata"
+            ],
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "IMetadataStreamsMetadata": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "StreamsMetadata"
+            ],
+            "type": "string"
+          },
+          "hasAudio": {
+            "type": "boolean"
+          },
+          "hasVideo": {
+            "type": "boolean"
+          },
+          "hasSubtitles": {
+            "type": "boolean"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "IMetadataTextMetadata": {
+        "required": [
+          "text",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TextMetadata"
+            ],
+            "type": "string"
+          },
+          "text": {
+            "type": "string",
+            "nullable": true
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "IMetadataVideoDurationMetadata": {
+        "required": [
+          "duration",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "VideoDurationMetadata"
+            ],
+            "type": "string"
+          },
+          "duration": {
+            "type": "string",
+            "format": "date-time"
           },
           "visibilities": {
             "$ref": "#/components/schemas/MetadataVisibilities"
@@ -2133,6 +2698,23 @@
           }
         }
       },
+      "IPairMakerConfig": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IPairMakerConfigOnlinePairMakerConfig"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "OnlinePairMakerConfig": "#/components/schemas/IPairMakerConfigOnlinePairMakerConfig"
+          }
+        }
+      },
       "IPairMakerConfigModel": {
         "required": [
           "_t"
@@ -2158,6 +2740,27 @@
           "_t": {
             "enum": [
               "OnlinePairMaker"
+            ],
+            "type": "string"
+          },
+          "randomMatchesRatio": {
+            "type": "number",
+            "format": "float"
+          },
+          "totalComparisonBudget": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IPairMakerConfigOnlinePairMakerConfig": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OnlinePairMakerConfig"
             ],
             "type": "string"
           },
@@ -2624,6 +3227,84 @@
           },
           "title": {
             "type": "string"
+          }
+        }
+      },
+      "IRefereeConfig": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IRefereeConfigNaiveRefereeConfig"
+          },
+          {
+            "$ref": "#/components/schemas/IRefereeConfigNeverEndingRefereeConfig"
+          },
+          {
+            "$ref": "#/components/schemas/IRefereeConfigProbabilisticAttachCategoryRefereeConfig"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "NaiveRefereeConfig": "#/components/schemas/IRefereeConfigNaiveRefereeConfig",
+            "NeverEndingRefereeConfig": "#/components/schemas/IRefereeConfigNeverEndingRefereeConfig",
+            "ProbabilisticAttachCategoryRefereeConfig": "#/components/schemas/IRefereeConfigProbabilisticAttachCategoryRefereeConfig"
+          }
+        }
+      },
+      "IRefereeConfigNaiveRefereeConfig": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NaiveRefereeConfig"
+            ],
+            "type": "string"
+          },
+          "guessesRequired": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IRefereeConfigNeverEndingRefereeConfig": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NeverEndingRefereeConfig"
+            ],
+            "type": "string"
+          }
+        }
+      },
+      "IRefereeConfigProbabilisticAttachCategoryRefereeConfig": {
+        "required": [
+          "threshold",
+          "maxVotes",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ProbabilisticAttachCategoryRefereeConfig"
+            ],
+            "type": "string"
+          },
+          "threshold": {
+            "type": "number",
+            "format": "double"
+          },
+          "maxVotes": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -3259,6 +3940,187 @@
           }
         }
       },
+      "IWorkflowConfig": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IWorkflowConfigCompareWorkflowConfig"
+          },
+          {
+            "$ref": "#/components/schemas/IWorkflowConfigEvaluationWorkflowConfig"
+          },
+          {
+            "$ref": "#/components/schemas/IWorkflowConfigGroupedRankingWorkflowConfig"
+          },
+          {
+            "$ref": "#/components/schemas/IWorkflowConfigSimpleWorkflowConfig"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "CompareWorkflowConfig": "#/components/schemas/IWorkflowConfigCompareWorkflowConfig",
+            "EvaluationWorkflowConfig": "#/components/schemas/IWorkflowConfigEvaluationWorkflowConfig",
+            "GroupedRankingWorkflowConfig": "#/components/schemas/IWorkflowConfigGroupedRankingWorkflowConfig",
+            "SimpleWorkflowConfig": "#/components/schemas/IWorkflowConfigSimpleWorkflowConfig"
+          }
+        }
+      },
+      "IWorkflowConfigCompareWorkflowConfig": {
+        "required": [
+          "criteria",
+          "referee",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CompareWorkflowConfig"
+            ],
+            "type": "string"
+          },
+          "criteria": {
+            "type": "string"
+          },
+          "referee": {
+            "$ref": "#/components/schemas/IRefereeConfig"
+          },
+          "context": {
+            "type": "string",
+            "nullable": true
+          },
+          "contextAsset": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IAsset"
+              }
+            ]
+          },
+          "eloConfig": {
+            "$ref": "#/components/schemas/EloConfig"
+          },
+          "pairMakerConfig": {
+            "$ref": "#/components/schemas/IPairMakerConfig"
+          },
+          "featureFlags": {
+            "$ref": "#/components/schemas/ListOfFeatureFlag"
+          }
+        }
+      },
+      "IWorkflowConfigEvaluationWorkflowConfig": {
+        "required": [
+          "validationSetId",
+          "referee",
+          "shouldAcceptIncorrect",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "EvaluationWorkflowConfig"
+            ],
+            "type": "string"
+          },
+          "validationSetId": {
+            "type": "string"
+          },
+          "referee": {
+            "$ref": "#/components/schemas/IRefereeConfig"
+          },
+          "shouldAcceptIncorrect": {
+            "type": "boolean"
+          },
+          "featureFlags": {
+            "$ref": "#/components/schemas/ListOfFeatureFlag"
+          }
+        }
+      },
+      "IWorkflowConfigGroupedRankingWorkflowConfig": {
+        "required": [
+          "criteria",
+          "referee",
+          "targetCountryCodes",
+          "maxParallelism",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "GroupedRankingWorkflowConfig"
+            ],
+            "type": "string"
+          },
+          "criteria": {
+            "type": "string"
+          },
+          "referee": {
+            "$ref": "#/components/schemas/IRefereeConfig"
+          },
+          "targetCountryCodes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "maxParallelism": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "contexts": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "contextAssets": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/IAsset"
+            },
+            "nullable": true
+          },
+          "eloConfig": {
+            "$ref": "#/components/schemas/EloConfig"
+          },
+          "pairMakerConfig": {
+            "$ref": "#/components/schemas/IPairMakerConfig"
+          },
+          "featureFlags": {
+            "$ref": "#/components/schemas/ListOfFeatureFlag"
+          }
+        }
+      },
+      "IWorkflowConfigSimpleWorkflowConfig": {
+        "required": [
+          "referee",
+          "blueprint",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "SimpleWorkflowConfig"
+            ],
+            "type": "string"
+          },
+          "referee": {
+            "$ref": "#/components/schemas/IRefereeConfig"
+          },
+          "blueprint": {
+            "$ref": "#/components/schemas/IRapidBlueprint"
+          },
+          "featureFlags": {
+            "$ref": "#/components/schemas/ListOfFeatureFlag"
+          }
+        }
+      },
       "ListOfAggregatedOrdersModel": {
         "type": "array",
         "items": {
@@ -3293,6 +4155,12 @@
         "type": "array",
         "items": {
           "$ref": "#/components/schemas/Filter"
+        }
+      },
+      "ListOfIAsset": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/IAsset"
         }
       },
       "ListOfIAssetInput": {
@@ -3450,6 +4318,12 @@
           }
         }
       },
+      "MetadataCollection": {
+        "type": "object",
+        "additionalProperties": {
+          "$ref": "#/components/schemas/IMetadata"
+        }
+      },
       "MetadataInputCollection": {
         "type": "object",
         "additionalProperties": {
@@ -3469,6 +4343,10 @@
           ],
           "type": "string"
         }
+      },
+      "OptionOfstring": {
+        "type": "string",
+        "nullable": true
       },
       "OrderModel": {
         "required": [
@@ -3896,6 +4774,14 @@
             "additionalProperties": {
               "type": "string"
             }
+          }
+        }
+      },
+      "UpdateJobDefinitionEndpoint_Input": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/OptionOfstring"
           }
         }
       },

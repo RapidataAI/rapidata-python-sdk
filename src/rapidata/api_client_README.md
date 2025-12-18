@@ -136,7 +136,9 @@ Class | Method | HTTP request | Description
 *IdentityApi* | [**identity_bridge_token_post**](rapidata/api_client/docs/IdentityApi.md#identity_bridge_token_post) | **POST** /identity/bridge-token | Creates a pair of read and write keys for a client.  The write key is used to store the authentication result.  The read key is used to retrieve the authentication result.
 *IdentityApi* | [**identity_google_one_tap_post**](rapidata/api_client/docs/IdentityApi.md#identity_google_one_tap_post) | **POST** /identity/google-one-tap | Signs in a user using a token received from Google One Tap.
 *IdentityApi* | [**identity_referrer_post**](rapidata/api_client/docs/IdentityApi.md#identity_referrer_post) | **POST** /identity/referrer | Sets the referrer for the current customer.
+*JobApi* | [**job_definition_definition_id_patch**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_patch) | **PATCH** /job/definition/{definitionId} | Updates a job definition.
 *JobApi* | [**job_definition_definition_id_revision_post**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_revision_post) | **POST** /job/definition/{definitionId}/revision | Creates a new revision for an existing job definition.
+*JobApi* | [**job_definition_definition_id_revision_revision_number_get**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_revision_revision_number_get) | **GET** /job/definition/{definitionId}/revision/{revisionNumber} | Gets a specific revision for a job definition.
 *JobApi* | [**job_definition_definition_id_revisions_get**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_revisions_get) | **GET** /job/definition/{definitionId}/revisions | Queries job revisions for a specific definition based on filter, page, and sort criteria.
 *JobApi* | [**job_definition_post**](rapidata/api_client/docs/JobApi.md#job_definition_post) | **POST** /job/definition | Creates a new job definition.
 *JobApi* | [**job_definitions_get**](rapidata/api_client/docs/JobApi.md#job_definitions_get) | **GET** /job/definitions | Queries job definitions based on filter, page, and sort criteria.
@@ -303,6 +305,7 @@ Class | Method | HTTP request | Description
  - [GetFileMetadataResult](rapidata/api_client/docs/GetFileMetadataResult.md)
  - [GetGroupedRankingWorkflowResultsModel](rapidata/api_client/docs/GetGroupedRankingWorkflowResultsModel.md)
  - [GetGroupedRankingWorkflowResultsResult](rapidata/api_client/docs/GetGroupedRankingWorkflowResultsResult.md)
+ - [GetJobRevisionEndpointOutput](rapidata/api_client/docs/GetJobRevisionEndpointOutput.md)
  - [GetLeaderboardByIdResult](rapidata/api_client/docs/GetLeaderboardByIdResult.md)
  - [GetOrderByIdResult](rapidata/api_client/docs/GetOrderByIdResult.md)
  - [GetParticipantByIdResult](rapidata/api_client/docs/GetParticipantByIdResult.md)
@@ -346,8 +349,11 @@ Class | Method | HTTP request | Description
  - [IAssetNullAsset](rapidata/api_client/docs/IAssetNullAsset.md)
  - [IAssetTextAsset](rapidata/api_client/docs/IAssetTextAsset.md)
  - [IAudienceFilter](rapidata/api_client/docs/IAudienceFilter.md)
- - [IAudienceFilterCountryFilter](rapidata/api_client/docs/IAudienceFilterCountryFilter.md)
- - [IAudienceFilterLanguageFilter](rapidata/api_client/docs/IAudienceFilterLanguageFilter.md)
+ - [IAudienceFilterAndAudienceFilter](rapidata/api_client/docs/IAudienceFilterAndAudienceFilter.md)
+ - [IAudienceFilterCountryAudienceFilter](rapidata/api_client/docs/IAudienceFilterCountryAudienceFilter.md)
+ - [IAudienceFilterLanguageAudienceFilter](rapidata/api_client/docs/IAudienceFilterLanguageAudienceFilter.md)
+ - [IAudienceFilterNotAudienceFilter](rapidata/api_client/docs/IAudienceFilterNotAudienceFilter.md)
+ - [IAudienceFilterOrAudienceFilter](rapidata/api_client/docs/IAudienceFilterOrAudienceFilter.md)
  - [ICampaignFilter](rapidata/api_client/docs/ICampaignFilter.md)
  - [ICampaignFilterAndFilter](rapidata/api_client/docs/ICampaignFilterAndFilter.md)
  - [ICampaignFilterCampaignFilter](rapidata/api_client/docs/ICampaignFilterCampaignFilter.md)
@@ -604,6 +610,7 @@ Class | Method | HTTP request | Description
  - [UpdateCampaignModel](rapidata/api_client/docs/UpdateCampaignModel.md)
  - [UpdateDatasetNameModel](rapidata/api_client/docs/UpdateDatasetNameModel.md)
  - [UpdateDimensionsModel](rapidata/api_client/docs/UpdateDimensionsModel.md)
+ - [UpdateJobDefinitionEndpointInput](rapidata/api_client/docs/UpdateJobDefinitionEndpointInput.md)
  - [UpdateLeaderboardModel](rapidata/api_client/docs/UpdateLeaderboardModel.md)
  - [UpdateLeaderboardNameModel](rapidata/api_client/docs/UpdateLeaderboardNameModel.md)
  - [UpdateLeaderboardResponseConfigModel](rapidata/api_client/docs/UpdateLeaderboardResponseConfigModel.md)
