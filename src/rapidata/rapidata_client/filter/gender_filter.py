@@ -34,16 +34,5 @@ class GenderFilter(RapidataFilter, BaseModel):
             )
         )
 
-    def _to_campaign_model(self):
-        from rapidata.api_client.models.i_campaign_filter import ICampaignFilter
-        from rapidata.api_client.models.i_campaign_filter_demographic_filter import (
-            ICampaignFilterDemographicFilter,
-        )
-
-        return ICampaignFilter(
-            actual_instance=ICampaignFilterDemographicFilter(
-                _t="DemographicFilter",
-                identifier="gender",
-                values=[gender.value for gender in self.genders],
-            )
-        )
+    def _to_audience_model(self):
+        raise NotImplementedError("GenderFilter is not supported for audiences")

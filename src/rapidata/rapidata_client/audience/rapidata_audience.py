@@ -49,7 +49,7 @@ class RapidataAudience:
             self._openapi_service.audience_api.audience_audience_id_patch(
                 audience_id=self.id,
                 update_audience_request=UpdateAudienceRequest(
-                    filters=[filter._to_campaign_model() for filter in filters],
+                    filters=[filter._to_audience_model() for filter in filters],
                 ),
             )
             self._filters = filters
@@ -82,14 +82,28 @@ class RapidataAudience:
     def start_recruiting(self) -> RapidataAudience:
         # will start the recruiting for the audience as soon as endpoint is ready
         with tracer.start_as_current_span("RapidataAudience.start_recruiting"):
-            raise NotImplementedError("Not implemented")
-
+            logger.debug(f"Sending request to start recruiting for audience: {self.id}")
+            self._openapi_service.audience_api.audience_audience_id_recruit_post(
+                audience_id=self.id,
+            )
+            logger.info(f"Started recruiting for audience: {self.id}")
             return self
 
-    def assign_job_to_audience(self, job: JobDefinition) -> RapidataOrder:
+    def assign_job_to_audience(self, job: JobDefinition) -> RapidataAudience:
         with tracer.start_as_current_span("RapidataAudience.assign_job_to_audience"):
+            from rapidata.api_client.models.create_job_endpoint_input import (
+                CreateJobEndpointInput,
+            )
+
             logger.debug(f"Assigning job to audience: {self.id}")
-            raise NotImplementedError("Not implemented")
+            self._openapi_service.job_api.job_post(
+                create_job_endpoint_input=CreateJobEndpointInput(
+                    audienceId=self.id,
+                    jobDefinitionId=job.id,
+                ),
+            )
+            logger.info(f"Assigned job to audience: {self.id}")
+            return self
 
     def __str__(self) -> str:
         return f"RapidataAudience(id={self.id}, name={self._name}, filters={self._filters})"

@@ -33,7 +33,7 @@ class RapidataAudienceManager:
             response = self._openapi_service.audience_api.audience_post(
                 create_audience_request=CreateAudienceRequest(
                     name=name,
-                    filters=[filter._to_campaign_model() for filter in filters],
+                    filters=[filter._to_audience_model() for filter in filters],
                 ),
             )
             return RapidataAudience(

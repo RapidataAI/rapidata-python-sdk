@@ -34,14 +34,4 @@ class CampaignFilter(RapidataFilter, BaseModel):
         )
 
     def _to_campaign_model(self):
-        from rapidata.api_client.models.i_campaign_filter import ICampaignFilter
-        from rapidata.api_client.models.i_campaign_filter_campaign_filter import (
-            ICampaignFilterCampaignFilter,
-        )
-
-        return ICampaignFilter(
-            actual_instance=ICampaignFilterCampaignFilter(
-                _t="CampaignFilter",
-                campaignIds=self.campaign_ids,
-            )
-        )
+        raise NotImplementedError("CampaignFilter is not supported for audiences")

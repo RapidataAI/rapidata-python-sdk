@@ -35,16 +35,5 @@ class AgeFilter(RapidataFilter, BaseModel):
             )
         )
 
-    def _to_campaign_model(self):
-        from rapidata.api_client.models.i_campaign_filter import ICampaignFilter
-        from rapidata.api_client.models.i_campaign_filter_demographic_filter import (
-            ICampaignFilterDemographicFilter,
-        )
-
-        return ICampaignFilter(
-            actual_instance=ICampaignFilterDemographicFilter(
-                _t="DemographicFilter",
-                identifier="age",
-                values=[age_group.value for age_group in self.age_groups],
-            )
-        )
+    def _to_audience_model(self):
+        raise NotImplementedError("AgeFilter is not supported for audiences")

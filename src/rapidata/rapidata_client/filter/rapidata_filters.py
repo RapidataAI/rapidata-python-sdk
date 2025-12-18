@@ -46,9 +46,8 @@ class RapidataFilters:
         This would return users who are from the US and whose phones are not set to French or who are from Canada and whose phones are set to English.
     """
 
-    user_score = UserScoreFilter
-    country = CountryFilter
-    language = LanguageFilter
-    not_filter = NotFilter
-    or_filter = OrFilter
-    and_filter = AndFilter
+    Country = CountryFilter
+    Language = LanguageFilter
+    Not_filter = NotFilter
+    Or_filter = OrFilter
+    And_filter = AndFilter

@@ -41,14 +41,14 @@ class NotFilter(RapidataFilter, BaseModel):
             )
         )
 
-    def _to_campaign_model(self):
-        from rapidata.api_client.models.i_campaign_filter import ICampaignFilter
-        from rapidata.api_client.models.i_campaign_filter_not_filter import (
-            ICampaignFilterNotFilter,
+    def _to_audience_model(self):
+        from rapidata.api_client.models.i_audience_filter import IAudienceFilter
+        from rapidata.api_client.models.i_audience_filter_not_audience_filter import (
+            IAudienceFilterNotAudienceFilter,
         )
 
-        return ICampaignFilter(
-            actual_instance=ICampaignFilterNotFilter(
-                _t="NotFilter", filter=self.filter._to_campaign_model()
+        return IAudienceFilter(
+            actual_instance=IAudienceFilterNotAudienceFilter(
+                _t="NotFilter", filter=self.filter._to_audience_model()
             )
         )

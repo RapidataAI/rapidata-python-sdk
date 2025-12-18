@@ -54,14 +54,14 @@ class LanguageFilter(RapidataFilter, BaseModel):
             )
         )
 
-    def _to_campaign_model(self):
-        from rapidata.api_client.models.i_campaign_filter import ICampaignFilter
-        from rapidata.api_client.models.i_campaign_filter_language_filter import (
-            ICampaignFilterLanguageFilter,
+    def _to_audience_model(self):
+        from rapidata.api_client.models.i_audience_filter import IAudienceFilter
+        from rapidata.api_client.models.i_audience_filter_language_filter import (
+            IAudienceFilterLanguageFilter,
         )
 
-        return ICampaignFilter(
-            actual_instance=ICampaignFilterLanguageFilter(
+        return IAudienceFilter(
+            actual_instance=IAudienceFilterLanguageFilter(
                 _t="LanguageFilter", languages=self.language_codes
             )
         )

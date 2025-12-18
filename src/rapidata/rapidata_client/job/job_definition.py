@@ -6,6 +6,7 @@ from typing import Sequence
 
 
 class JobDefinition(BaseModel):
+    id: str
     name: str
     workflow: Workflow
     datasetId: str

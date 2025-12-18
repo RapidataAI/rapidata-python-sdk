@@ -33,15 +33,15 @@ class RapidataSelections:
         This will require annotators to complete one validation task followed by two labeling tasks.
     """
 
-    labeling = LabelingSelection
-    validation = ValidationSelection
-    conditional_validation = ConditionalValidationSelection
-    demographic = DemographicSelection
-    capped = CappedSelection
-    shuffling = ShufflingSelection
+    Labeling = LabelingSelection
+    Validation = ValidationSelection
+    Conditional_validation = ConditionalValidationSelection
+    Demographic = DemographicSelection
+    Capped = CappedSelection
+    Shuffling = ShufflingSelection
 
     def __str__(self) -> str:
-        return f"RapidataSelections(labeling={self.labeling}, validation={self.validation}, conditional_validation={self.conditional_validation}, demographic={self.demographic}, capped={self.capped}, shuffling={self.shuffling})"
+        return f"RapidataSelections(Labeling={self.Labeling}, Validation={self.Validation}, Conditional_validation={self.Conditional_validation}, Demographic={self.Demographic}, Capped={self.Capped}, Shuffling={self.Shuffling})"
 
     def __repr__(self) -> str:
         return self.__str__()

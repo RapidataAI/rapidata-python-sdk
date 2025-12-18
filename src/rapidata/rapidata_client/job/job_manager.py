@@ -69,6 +69,9 @@ class JobManager:
         from rapidata.api_client.models.create_dataset_endpoint_input import (
             CreateDatasetEndpointInput,
         )
+        from rapidata.api_client.models.create_job_definition_endpoint_input import (
+            CreateJobDefinitionEndpointInput,
+        )
 
         dataset = self._openapi_service.dataset_api.dataset_post(
             create_dataset_endpoint_input=CreateDatasetEndpointInput(
@@ -76,7 +79,19 @@ class JobManager:
             )
         )
         rapidata_dataset = RapidataDataset(dataset.dataset_id, self._openapi_service)
+        job_definition_response = self._openapi_service.job_api.job_definition_post(
+            create_job_definition_endpoint_input=CreateJobDefinitionEndpointInput(
+                definitionName=name,
+                workflow=workflow._to_model(),
+                datasetId=rapidata_dataset.id,
+                referee=referee._to_model(),
+                featureFlags=(
+                    [s._to_feature_flag() for s in settings] if settings else None
+                ),
+            )
+        )
         job_model = JobDefinition(
+            id=job_definition_response.definition_id,
             name=name,
             workflow=workflow,
             datasetId=rapidata_dataset.id,

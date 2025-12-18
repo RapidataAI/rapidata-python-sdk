@@ -41,15 +41,15 @@ class OrFilter(RapidataFilter, BaseModel):
             )
         )
 
-    def _to_campaign_model(self):
-        from rapidata.api_client.models.i_campaign_filter import ICampaignFilter
-        from rapidata.api_client.models.i_campaign_filter_or_filter import (
-            ICampaignFilterOrFilter,
+    def _to_audience_model(self):
+        from rapidata.api_client.models.i_audience_filter import IAudienceFilter
+        from rapidata.api_client.models.i_audience_filter_or_audience_filter import (
+            IAudienceFilterOrAudienceFilter,
         )
 
-        return ICampaignFilter(
-            actual_instance=ICampaignFilterOrFilter(
+        return IAudienceFilter(
+            actual_instance=IAudienceFilterOrAudienceFilter(
                 _t="OrFilter",
-                filters=[filter._to_campaign_model() for filter in self.filters],
+                filters=[filter._to_audience_model() for filter in self.filters],
             )
         )

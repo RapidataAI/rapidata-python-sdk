@@ -38,5 +38,5 @@ class CustomFilter(RapidataFilter, BaseModel):
             )
         )
 
-    def _to_campaign_model(self):
+    def _to_audience_model(self):
         raise NotImplementedError("CustomFilter cannot be used in campaigns")
