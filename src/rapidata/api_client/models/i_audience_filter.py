@@ -17,24 +17,30 @@ import json
 import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
-from rapidata.api_client.models.i_audience_filter_country_filter import IAudienceFilterCountryFilter
-from rapidata.api_client.models.i_audience_filter_language_filter import IAudienceFilterLanguageFilter
+from rapidata.api_client.models.i_audience_filter_country_audience_filter import IAudienceFilterCountryAudienceFilter
+from rapidata.api_client.models.i_audience_filter_language_audience_filter import IAudienceFilterLanguageAudienceFilter
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-IAUDIENCEFILTER_ONE_OF_SCHEMAS = ["IAudienceFilterCountryFilter", "IAudienceFilterLanguageFilter"]
+IAUDIENCEFILTER_ONE_OF_SCHEMAS = ["IAudienceFilterAndAudienceFilter", "IAudienceFilterCountryAudienceFilter", "IAudienceFilterLanguageAudienceFilter", "IAudienceFilterNotAudienceFilter", "IAudienceFilterOrAudienceFilter"]
 
 class IAudienceFilter(BaseModel):
     """
     IAudienceFilter
     """
-    # data type: IAudienceFilterCountryFilter
-    oneof_schema_1_validator: Optional[IAudienceFilterCountryFilter] = None
-    # data type: IAudienceFilterLanguageFilter
-    oneof_schema_2_validator: Optional[IAudienceFilterLanguageFilter] = None
-    actual_instance: Optional[Union[IAudienceFilterCountryFilter, IAudienceFilterLanguageFilter]] = None
-    one_of_schemas: Set[str] = { "IAudienceFilterCountryFilter", "IAudienceFilterLanguageFilter" }
+    # data type: IAudienceFilterAndAudienceFilter
+    oneof_schema_1_validator: Optional[IAudienceFilterAndAudienceFilter] = None
+    # data type: IAudienceFilterCountryAudienceFilter
+    oneof_schema_2_validator: Optional[IAudienceFilterCountryAudienceFilter] = None
+    # data type: IAudienceFilterLanguageAudienceFilter
+    oneof_schema_3_validator: Optional[IAudienceFilterLanguageAudienceFilter] = None
+    # data type: IAudienceFilterNotAudienceFilter
+    oneof_schema_4_validator: Optional[IAudienceFilterNotAudienceFilter] = None
+    # data type: IAudienceFilterOrAudienceFilter
+    oneof_schema_5_validator: Optional[IAudienceFilterOrAudienceFilter] = None
+    actual_instance: Optional[Union[IAudienceFilterAndAudienceFilter, IAudienceFilterCountryAudienceFilter, IAudienceFilterLanguageAudienceFilter, IAudienceFilterNotAudienceFilter, IAudienceFilterOrAudienceFilter]] = None
+    one_of_schemas: Set[str] = { "IAudienceFilterAndAudienceFilter", "IAudienceFilterCountryAudienceFilter", "IAudienceFilterLanguageAudienceFilter", "IAudienceFilterNotAudienceFilter", "IAudienceFilterOrAudienceFilter" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -60,22 +66,37 @@ class IAudienceFilter(BaseModel):
         instance = IAudienceFilter.model_construct()
         error_messages = []
         match = 0
-        # validate data type: IAudienceFilterCountryFilter
-        if not isinstance(v, IAudienceFilterCountryFilter):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IAudienceFilterCountryFilter`")
+        # validate data type: IAudienceFilterAndAudienceFilter
+        if not isinstance(v, IAudienceFilterAndAudienceFilter):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IAudienceFilterAndAudienceFilter`")
         else:
             match += 1
-        # validate data type: IAudienceFilterLanguageFilter
-        if not isinstance(v, IAudienceFilterLanguageFilter):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IAudienceFilterLanguageFilter`")
+        # validate data type: IAudienceFilterCountryAudienceFilter
+        if not isinstance(v, IAudienceFilterCountryAudienceFilter):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IAudienceFilterCountryAudienceFilter`")
+        else:
+            match += 1
+        # validate data type: IAudienceFilterLanguageAudienceFilter
+        if not isinstance(v, IAudienceFilterLanguageAudienceFilter):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IAudienceFilterLanguageAudienceFilter`")
+        else:
+            match += 1
+        # validate data type: IAudienceFilterNotAudienceFilter
+        if not isinstance(v, IAudienceFilterNotAudienceFilter):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IAudienceFilterNotAudienceFilter`")
+        else:
+            match += 1
+        # validate data type: IAudienceFilterOrAudienceFilter
+        if not isinstance(v, IAudienceFilterOrAudienceFilter):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IAudienceFilterOrAudienceFilter`")
         else:
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in IAudienceFilter with oneOf schemas: IAudienceFilterCountryFilter, IAudienceFilterLanguageFilter. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in IAudienceFilter with oneOf schemas: IAudienceFilterAndAudienceFilter, IAudienceFilterCountryAudienceFilter, IAudienceFilterLanguageAudienceFilter, IAudienceFilterNotAudienceFilter, IAudienceFilterOrAudienceFilter. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in IAudienceFilter with oneOf schemas: IAudienceFilterCountryFilter, IAudienceFilterLanguageFilter. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in IAudienceFilter with oneOf schemas: IAudienceFilterAndAudienceFilter, IAudienceFilterCountryAudienceFilter, IAudienceFilterLanguageAudienceFilter, IAudienceFilterNotAudienceFilter, IAudienceFilterOrAudienceFilter. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -90,25 +111,43 @@ class IAudienceFilter(BaseModel):
         error_messages = []
         match = 0
 
-        # deserialize data into IAudienceFilterCountryFilter
+        # deserialize data into IAudienceFilterAndAudienceFilter
         try:
-            instance.actual_instance = IAudienceFilterCountryFilter.from_json(json_str)
+            instance.actual_instance = IAudienceFilterAndAudienceFilter.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # deserialize data into IAudienceFilterLanguageFilter
+        # deserialize data into IAudienceFilterCountryAudienceFilter
         try:
-            instance.actual_instance = IAudienceFilterLanguageFilter.from_json(json_str)
+            instance.actual_instance = IAudienceFilterCountryAudienceFilter.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IAudienceFilterLanguageAudienceFilter
+        try:
+            instance.actual_instance = IAudienceFilterLanguageAudienceFilter.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IAudienceFilterNotAudienceFilter
+        try:
+            instance.actual_instance = IAudienceFilterNotAudienceFilter.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IAudienceFilterOrAudienceFilter
+        try:
+            instance.actual_instance = IAudienceFilterOrAudienceFilter.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into IAudienceFilter with oneOf schemas: IAudienceFilterCountryFilter, IAudienceFilterLanguageFilter. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into IAudienceFilter with oneOf schemas: IAudienceFilterAndAudienceFilter, IAudienceFilterCountryAudienceFilter, IAudienceFilterLanguageAudienceFilter, IAudienceFilterNotAudienceFilter, IAudienceFilterOrAudienceFilter. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into IAudienceFilter with oneOf schemas: IAudienceFilterCountryFilter, IAudienceFilterLanguageFilter. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into IAudienceFilter with oneOf schemas: IAudienceFilterAndAudienceFilter, IAudienceFilterCountryAudienceFilter, IAudienceFilterLanguageAudienceFilter, IAudienceFilterNotAudienceFilter, IAudienceFilterOrAudienceFilter. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -122,7 +161,7 @@ class IAudienceFilter(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], IAudienceFilterCountryFilter, IAudienceFilterLanguageFilter]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], IAudienceFilterAndAudienceFilter, IAudienceFilterCountryAudienceFilter, IAudienceFilterLanguageAudienceFilter, IAudienceFilterNotAudienceFilter, IAudienceFilterOrAudienceFilter]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None
@@ -137,4 +176,9 @@ class IAudienceFilter(BaseModel):
         """Returns the string representation of the actual instance"""
         return pprint.pformat(self.model_dump())
 
+from rapidata.api_client.models.i_audience_filter_and_audience_filter import IAudienceFilterAndAudienceFilter
+from rapidata.api_client.models.i_audience_filter_not_audience_filter import IAudienceFilterNotAudienceFilter
+from rapidata.api_client.models.i_audience_filter_or_audience_filter import IAudienceFilterOrAudienceFilter
+# TODO: Rewrite to not use raise_errors
+IAudienceFilter.model_rebuild(raise_errors=False)
 
