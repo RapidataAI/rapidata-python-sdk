@@ -17,20 +17,25 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateJobEndpointInput(BaseModel):
+class IAudienceFilterLanguageAudienceFilter(BaseModel):
     """
-    CreateJobEndpointInput
+    IAudienceFilterLanguageAudienceFilter
     """ # noqa: E501
-    job_definition_id: StrictStr = Field(alias="jobDefinitionId")
-    audience_id: StrictStr = Field(alias="audienceId")
-    revision_number: Optional[StrictInt] = Field(default=None, alias="revisionNumber")
-    priority: Optional[StrictInt] = None
-    __properties: ClassVar[List[str]] = ["jobDefinitionId", "audienceId", "revisionNumber", "priority"]
+    t: StrictStr = Field(alias="_t")
+    languages: List[StrictStr]
+    __properties: ClassVar[List[str]] = ["_t", "languages"]
+
+    @field_validator('t')
+    def t_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['LanguageFilter']):
+            raise ValueError("must be one of enum values ('LanguageFilter')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -50,7 +55,7 @@ class CreateJobEndpointInput(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateJobEndpointInput from a JSON string"""
+        """Create an instance of IAudienceFilterLanguageAudienceFilter from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -75,7 +80,7 @@ class CreateJobEndpointInput(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateJobEndpointInput from a dict"""
+        """Create an instance of IAudienceFilterLanguageAudienceFilter from a dict"""
         if obj is None:
             return None
 
@@ -83,10 +88,8 @@ class CreateJobEndpointInput(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "jobDefinitionId": obj.get("jobDefinitionId"),
-            "audienceId": obj.get("audienceId"),
-            "revisionNumber": obj.get("revisionNumber"),
-            "priority": obj.get("priority")
+            "_t": obj.get("_t"),
+            "languages": obj.get("languages")
         })
         return _obj
 

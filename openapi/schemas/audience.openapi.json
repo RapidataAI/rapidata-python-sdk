@@ -383,6 +383,7 @@
       "AudienceStatus": {
         "enum": [
           "Created",
+          "Pending",
           "Recruiting",
           "Ready"
         ]
@@ -845,21 +846,50 @@
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IAudienceFilterCountryFilter"
+            "$ref": "#/components/schemas/IAudienceFilterAndAudienceFilter"
           },
           {
-            "$ref": "#/components/schemas/IAudienceFilterLanguageFilter"
+            "$ref": "#/components/schemas/IAudienceFilterCountryAudienceFilter"
+          },
+          {
+            "$ref": "#/components/schemas/IAudienceFilterLanguageAudienceFilter"
+          },
+          {
+            "$ref": "#/components/schemas/IAudienceFilterNotAudienceFilter"
+          },
+          {
+            "$ref": "#/components/schemas/IAudienceFilterOrAudienceFilter"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "CountryFilter": "#/components/schemas/IAudienceFilterCountryFilter",
-            "LanguageFilter": "#/components/schemas/IAudienceFilterLanguageFilter"
+            "AndFilter": "#/components/schemas/IAudienceFilterAndAudienceFilter",
+            "CountryFilter": "#/components/schemas/IAudienceFilterCountryAudienceFilter",
+            "LanguageFilter": "#/components/schemas/IAudienceFilterLanguageAudienceFilter",
+            "NotFilter": "#/components/schemas/IAudienceFilterNotAudienceFilter",
+            "OrFilter": "#/components/schemas/IAudienceFilterOrAudienceFilter"
           }
         }
       },
-      "IAudienceFilterCountryFilter": {
+      "IAudienceFilterAndAudienceFilter": {
+        "required": [
+          "filters",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "AndFilter"
+            ],
+            "type": "string"
+          },
+          "filters": {
+            "$ref": "#/components/schemas/ListOfIAudienceFilter"
+          }
+        }
+      },
+      "IAudienceFilterCountryAudienceFilter": {
         "required": [
           "countries",
           "_t"
@@ -879,7 +909,7 @@
           }
         }
       },
-      "IAudienceFilterLanguageFilter": {
+      "IAudienceFilterLanguageAudienceFilter": {
         "required": [
           "languages",
           "_t"
@@ -896,6 +926,40 @@
             "items": {
               "type": "string"
             }
+          }
+        }
+      },
+      "IAudienceFilterNotAudienceFilter": {
+        "required": [
+          "filter",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NotFilter"
+            ],
+            "type": "string"
+          },
+          "filter": {
+            "$ref": "#/components/schemas/IAudienceFilter"
+          }
+        }
+      },
+      "IAudienceFilterOrAudienceFilter": {
+        "required": [
+          "filters",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OrFilter"
+            ],
+            "type": "string"
+          },
+          "filters": {
+            "$ref": "#/components/schemas/ListOfIAudienceFilter"
           }
         }
       },
