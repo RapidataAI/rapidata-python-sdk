@@ -370,7 +370,7 @@ class RapidataBenchmark:
                         [filter._to_model() for filter in filters] if filters else None
                     ),
                     featureFlags=(
-                        [setting._to_feature_flag() for setting in settings]
+                        [setting._to_feature_flag() for setting in settings]  # type: ignore - until backend fixes generation
                         if settings
                         else None
                     ),

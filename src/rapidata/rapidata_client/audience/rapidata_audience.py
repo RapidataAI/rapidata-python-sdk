@@ -1,19 +1,17 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-from rapidata.rapidata_client.audience.training_rapid_uploader import (
-    TrainingRapidUploader,
-)
+from typing import TYPE_CHECKING, Literal
 from rapidata.rapidata_client.config import logger, tracer, rapidata_config
+from rapidata.rapidata_client.audience.audience_example_handler import (
+    AudienceExampleHandler,
+)
 
 if TYPE_CHECKING:
     from rapidata.service.openapi_service import OpenAPIService
     from rapidata.rapidata_client.filter import RapidataFilter
-    from rapidata.rapidata_client.validation.rapids.rapids import Rapid
     from rapidata.rapidata_client.job.job_definition import (
         JobDefinition,
     )
-    from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 
 
 class RapidataAudience:
@@ -28,7 +26,7 @@ class RapidataAudience:
         self._name = name
         self._filters = filters
         self._openapi_service = openapi_service
-        self._training_rapid_uploader = TrainingRapidUploader(openapi_service)
+        self._example_handler = AudienceExampleHandler(openapi_service, id)
 
     @property
     def name(self) -> str:
@@ -69,16 +67,6 @@ class RapidataAudience:
             self._name = name
             return self
 
-    # TODO: rename?
-    def add_validation_rapids(self, rapids: list[Rapid]) -> RapidataAudience:
-        with tracer.start_as_current_span("RapidataAudience.add_validation_rapid"):
-            logger.debug(f"Adding validation rapids: {rapids} to audience: {self.id}")
-            self._training_rapid_uploader.upload_training_rapids_to_audience(
-                rapids, self.id
-            )
-
-            return self
-
     def start_recruiting(self) -> RapidataAudience:
         # will start the recruiting for the audience as soon as endpoint is ready
         with tracer.start_as_current_span("RapidataAudience.start_recruiting"):
@@ -99,10 +87,64 @@ class RapidataAudience:
             self._openapi_service.job_api.job_post(
                 create_job_endpoint_input=CreateJobEndpointInput(
                     audienceId=self.id,
-                    jobDefinitionId=job.id,
+                    jobDefinitionId=job._id,
                 ),
             )
             logger.info(f"Assigned job to audience: {self.id}")
+            return self
+
+    def add_classification_example(
+        self,
+        instruction: str,
+        answer_options: list[str],
+        datapoint: str,
+        truths: list[str],
+        data_type: Literal["media", "text"] = "media",
+        context: str | None = None,
+        media_context: str | None = None,
+        explanation: str | None = None,
+    ) -> RapidataAudience:
+        with tracer.start_as_current_span(
+            "RapidataAudience.add_classification_example"
+        ):
+            logger.debug(
+                f"Adding classification example to audience: {self.id} with instruction: {instruction}, answer_options: {answer_options}, datapoint: {datapoint}, truths: {truths}, data_type: {data_type}, context: {context}, media_context: {media_context}, explanation: {explanation}"
+            )
+            self._example_handler.add_classification_example(
+                instruction,
+                answer_options,
+                datapoint,
+                truths,
+                data_type,
+                context,
+                media_context,
+                explanation,
+            )
+            return self
+
+    def add_compare_example(
+        self,
+        instruction: str,
+        truth: str,
+        datapoint: list[str],
+        data_type: Literal["media", "text"] = "media",
+        context: str | None = None,
+        media_context: str | None = None,
+        explanation: str | None = None,
+    ) -> RapidataAudience:
+        with tracer.start_as_current_span("RapidataAudience.add_compare_example"):
+            logger.debug(
+                f"Adding compare example to audience: {self.id} with instruction: {instruction}, truth: {truth}, datapoint: {datapoint}, data_type: {data_type}, context: {context}, media_context: {media_context}, explanation: {explanation}"
+            )
+            self._example_handler.add_compare_example(
+                instruction,
+                truth,
+                datapoint,
+                data_type,
+                context,
+                media_context,
+                explanation,
+            )
             return self
 
     def __str__(self) -> str:

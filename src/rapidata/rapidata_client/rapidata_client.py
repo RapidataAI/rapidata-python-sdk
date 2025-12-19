@@ -24,7 +24,6 @@ from rapidata.rapidata_client.config import (
 )
 
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
-from rapidata.rapidata_client.validation.rapids.rapids_manager import RapidsManager
 from rapidata.rapidata_client.job.job_manager import JobManager
 
 
@@ -55,7 +54,7 @@ class RapidataClient:
 
         Attributes:
             order (RapidataOrderManager): The RapidataOrderManager instance.
-            validation (ValidationSetManager): The ValidationSetManager instance.
+            audience (RapidataAudienceManager): The RapidataAudienceManager instance.
             demographic (DemographicManager): The DemographicManager instance.
             mri (RapidataBenchmarkManager): The RapidataBenchmarkManager instance.
         """
@@ -92,8 +91,6 @@ class RapidataClient:
             self.audience = RapidataAudienceManager(
                 openapi_service=self._openapi_service
             )
-
-            self.rapid = RapidsManager(openapi_service=self._openapi_service)
 
             logger.debug("Initializing RapidataDemographicManager")
             self._demographic = DemographicManager(

@@ -5,7 +5,7 @@ from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.rapidata_client.settings import RapidataSetting
 from rapidata.rapidata_client.job.job_definition import JobDefinition
-from typing import Sequence, Literal, TYPE_CHECKING
+from typing import Sequence, Literal
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 from rapidata.rapidata_client.dataset._rapidata_dataset import RapidataDataset
 from rapidata.rapidata_client.exceptions.failed_upload_exception import (
@@ -15,21 +15,14 @@ from rapidata.rapidata_client.datapoints._datapoints_validator import (
     DatapointsValidator,
 )
 
-if TYPE_CHECKING:
-    from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
-
 
 class JobManager:
     def __init__(self, openapi_service: OpenAPIService):
         self._openapi_service = openapi_service
-        from rapidata.rapidata_client.order._rapidata_order_builder import (
-            StickyStateLiteral,
-        )
 
         self.__priority: int | None = None
-        self.__sticky_state: StickyStateLiteral | None = None
         self._asset_uploader = AssetUploader(openapi_service)
-        logger.debug("RapidataOrderManager initialized")
+        logger.debug("JobManager initialized")
 
     def _create_general_job(
         self,
@@ -94,8 +87,9 @@ class JobManager:
             id=job_definition_response.definition_id,
             name=name,
             workflow=workflow,
-            datasetId=rapidata_dataset.id,
+            dataset_id=rapidata_dataset.id,
             referee=referee,
+            openapi_service=self._openapi_service,
             settings=settings,
         )
         with tracer.start_as_current_span("add_datapoints"):
@@ -608,29 +602,34 @@ class JobManager:
                 settings=settings,
             )
 
-    def get_job_by_id(self, job_id: str) -> JobDefinition:
+    def get_job_defintion_by_id(self, job_definition_id: str) -> JobDefinition:
         """Get a job by ID.
 
         Args:
-            job_id (str): The ID of the job.
+            job_definition_id (str): The ID of the job definition.
 
         Returns:
             JobDefinition: The JobDefinition instance.
         """
         with tracer.start_as_current_span("JobManager.get_job_by_id"):
-            from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 
-            raise NotImplementedError("Not implemented")
+            job_definition = self._openapi_service.job_api.job_definition_definition_id_revision_revision_number_get(
+                definition_id=job_definition_id,
+                revision_number=1,
+            )
 
-            # job = self._openapi_service.job_api.job_job_id_get(job_id)
+            return JobDefinition(
+                id=job_definition.definition_id,
+                name=job_definition.name,
+                workflow=None,  # Would need to reconstruct from job_definition data
+                datasetId=job_definition.dataset_id,
+                referee=None,  # Would need to reconstruct from job_definition data
+                settings=None,
+            )
 
-            # return JobDefinition(
-            #     job_id=job_id,
-            #     name=job.name,
-            #     openapi_service=self._openapi_service,
-            # )
-
-    def find_jobs(self, name: str = "", amount: int = 10) -> list[JobDefinition]:
+    def find_job_definitions(
+        self, name: str = "", amount: int = 10
+    ) -> list[JobDefinition]:
         """Find your recent jobs given criteria. If nothing is provided, it will return the most recent job.
 
         Args:
@@ -641,39 +640,65 @@ class JobManager:
             list[JobDefinition]: A list of JobDefinition instances.
         """
         with tracer.start_as_current_span("JobManager.find_jobs"):
-            raise NotImplementedError("Not implemented")
-            # from rapidata.api_client.models.page_info import PageInfo
-            # from rapidata.api_client.models.query_model import QueryModel
-            # from rapidata.api_client.models.root_filter import RootFilter
-            # from rapidata.api_client.models.filter import Filter
-            # from rapidata.api_client.models.filter_operator import FilterOperator
-            # from rapidata.api_client.models.sort_criterion import SortCriterion
-            # from rapidata.api_client.models.sort_direction import SortDirection
+            from rapidata.api_client.models.page_info import PageInfo
+            from rapidata.api_client.models.query_model import QueryModel
+            from rapidata.api_client.models.root_filter import RootFilter
+            from rapidata.api_client.models.filter import Filter
+            from rapidata.api_client.models.filter_operator import FilterOperator
+            from rapidata.api_client.models.sort_criterion import SortCriterion
+            from rapidata.api_client.models.sort_direction import SortDirection
 
-            # order_page_result = self._openapi_service.order_api.orders_get(
-            #     QueryModel(
-            #         page=PageInfo(index=1, size=amount),
-            #         filter=RootFilter(
-            #             filters=[
-            #                 Filter(
-            #                     field="OrderName",
-            #                     operator=FilterOperator.CONTAINS,
-            #                     value=name,
-            #                 )
-            #             ]
-            #         ),
-            #         sortCriteria=[
-            #             SortCriterion(
-            #                 direction=SortDirection.DESC, propertyName="OrderDate"
-            #             )
-            #         ],
-            #     )
-            # )
+            job_definition_page_result = (
+                self._openapi_service.job_api.job_definitions_get(
+                    request=QueryModel(
+                        page=PageInfo(index=1, size=amount),
+                        filter=RootFilter(
+                            filters=[
+                                Filter(
+                                    field="DefinitionName",
+                                    operator=FilterOperator.CONTAINS,
+                                    value=name,
+                                )
+                            ]
+                        ),
+                        sortCriteria=[
+                            SortCriterion(
+                                direction=SortDirection.DESC, propertyName="CreatedAt"
+                            )
+                        ],
+                    ),
+                )
+            )
 
-            # orders = [
-            #     self.get_order_by_id(order.id) for order in order_page_result.items
-            # ]
-            # return orders
+            jobs = [
+                JobDefinition(
+                    id=job_def.definition_id,
+                    name=job_def.name,
+                    workflow=None,  # Would need to reconstruct from job_def data
+                    datasetId=job_def.dataset_id,
+                    referee=None,  # Would need to reconstruct from job_def data
+                    settings=None,
+                )
+                for job_def in job_definition_page_result.items
+            ]
+            return jobs
+
+    def _get_definition_object(self, definition_id: str) -> JobDefinition:
+        # get the latest revision number
+        max_number = 1  # TO BE CHANGED
+        definition_name = "something"
+        latest_revision = self._openapi_service.job_api.job_definition_definition_id_revision_revision_number_get(
+            definition_id=definition_id,
+            revision_number=max_number,
+        )
+        return JobDefinition(
+            id=latest_revision.definition_id,
+            name=definition_name,
+            workflow=None,  # Would need to reconstruct from latest_revision data
+            datasetId=latest_revision.dataset_id,
+            referee=None,  # Would need to reconstruct from latest_revision data
+            settings=None,
+        )
 
     def __str__(self) -> str:
         return "JobManager"
