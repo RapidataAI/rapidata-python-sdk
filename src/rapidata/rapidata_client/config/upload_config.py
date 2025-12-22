@@ -30,7 +30,7 @@ class UploadConfig(BaseModel):
         maxRetries (int): The maximum number of retries for failed uploads. Defaults to 3.
     """
 
-    maxWorkers: int = Field(default=10)
+    maxWorkers: int = Field(default=100)
     maxRetries: int = Field(default=3)
     chunkSize: int = Field(default=50)
     cacheUploads: bool = Field(default=True)
