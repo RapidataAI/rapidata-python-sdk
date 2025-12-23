@@ -19,10 +19,10 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from rapidata.api_client.models.aggregator_type import AggregatorType
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.i_order_workflow_model import IOrderWorkflowModel
 from rapidata.api_client.models.i_referee_model import IRefereeModel
+from rapidata.api_client.models.option_of_aggregator_type import OptionOfAggregatorType
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -30,11 +30,11 @@ class CreateJobRevisionEndpointInput(BaseModel):
     """
     CreateJobRevisionEndpointInput
     """ # noqa: E501
-    workflow: IOrderWorkflowModel
-    referee: IRefereeModel
-    dataset_id: StrictStr = Field(alias="datasetId")
+    workflow: Optional[IOrderWorkflowModel] = None
+    referee: Optional[IRefereeModel] = None
+    dataset_id: Optional[StrictStr] = Field(default=None, alias="datasetId")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
-    aggregator_type: Optional[AggregatorType] = Field(default=None, alias="aggregatorType")
+    aggregator_type: Optional[OptionOfAggregatorType] = Field(default=None, alias="aggregatorType")
     __properties: ClassVar[List[str]] = ["workflow", "referee", "datasetId", "featureFlags", "aggregatorType"]
 
     model_config = ConfigDict(
@@ -89,10 +89,20 @@ class CreateJobRevisionEndpointInput(BaseModel):
                 if _item_feature_flags:
                     _items.append(_item_feature_flags.to_dict())
             _dict['featureFlags'] = _items
-        # set to None if aggregator_type (nullable) is None
+        # set to None if workflow (nullable) is None
         # and model_fields_set contains the field
-        if self.aggregator_type is None and "aggregator_type" in self.model_fields_set:
-            _dict['aggregatorType'] = None
+        if self.workflow is None and "workflow" in self.model_fields_set:
+            _dict['workflow'] = None
+
+        # set to None if referee (nullable) is None
+        # and model_fields_set contains the field
+        if self.referee is None and "referee" in self.model_fields_set:
+            _dict['referee'] = None
+
+        # set to None if dataset_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.dataset_id is None and "dataset_id" in self.model_fields_set:
+            _dict['datasetId'] = None
 
         return _dict
 
