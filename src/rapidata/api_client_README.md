@@ -78,7 +78,9 @@ Class | Method | HTTP request | Description
 *AssetApi* | [**asset_file_name_metadata_get**](rapidata/api_client/docs/AssetApi.md#asset_file_name_metadata_get) | **GET** /asset/{fileName}/metadata | Gets the metadata for an asset by file name.
 *AssetApi* | [**asset_file_post**](rapidata/api_client/docs/AssetApi.md#asset_file_post) | **POST** /asset/file | Uploads a single asset to S3 and returns the asset details.
 *AssetApi* | [**asset_url_post**](rapidata/api_client/docs/AssetApi.md#asset_url_post) | **POST** /asset/url | Uploads a single asset to S3 and returns the asset details.
+*AudienceApi* | [**audience_audience_id_delete**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_delete) | **DELETE** /audience/{audienceId} | Deletes the specified audience.
 *AudienceApi* | [**audience_audience_id_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_get) | **GET** /audience/{audienceId} | Gets an audience by its Id.
+*AudienceApi* | [**audience_audience_id_jobs_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_jobs_get) | **GET** /audience/{audienceId}/jobs | Queries all jobs for the specified audience.
 *AudienceApi* | [**audience_audience_id_patch**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_patch) | **PATCH** /audience/{audienceId} | Patches an existing audience.
 *AudienceApi* | [**audience_audience_id_rapid_post**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_rapid_post) | **POST** /audience/{audienceId}/rapid | Adds a new rapid to be used to train users for the specified audience.
 *AudienceApi* | [**audience_audience_id_rapids_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_rapids_get) | **GET** /audience/{audienceId}/rapids | Queries all rapids for the specified audience.
@@ -136,6 +138,8 @@ Class | Method | HTTP request | Description
 *IdentityApi* | [**identity_bridge_token_post**](rapidata/api_client/docs/IdentityApi.md#identity_bridge_token_post) | **POST** /identity/bridge-token | Creates a pair of read and write keys for a client.  The write key is used to store the authentication result.  The read key is used to retrieve the authentication result.
 *IdentityApi* | [**identity_google_one_tap_post**](rapidata/api_client/docs/IdentityApi.md#identity_google_one_tap_post) | **POST** /identity/google-one-tap | Signs in a user using a token received from Google One Tap.
 *IdentityApi* | [**identity_referrer_post**](rapidata/api_client/docs/IdentityApi.md#identity_referrer_post) | **POST** /identity/referrer | Sets the referrer for the current customer.
+*JobApi* | [**job_definition_definition_id_delete**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_delete) | **DELETE** /job/definition/{definitionId} | Deletes a job definition and all its revisions.
+*JobApi* | [**job_definition_definition_id_get**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_get) | **GET** /job/definition/{definitionId} | Gets a job definition by its id.
 *JobApi* | [**job_definition_definition_id_patch**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_patch) | **PATCH** /job/definition/{definitionId} | Updates a job definition.
 *JobApi* | [**job_definition_definition_id_revision_post**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_revision_post) | **POST** /job/definition/{definitionId}/revision | Creates a new revision for an existing job definition.
 *JobApi* | [**job_definition_definition_id_revision_revision_number_get**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_revision_revision_number_get) | **GET** /job/definition/{definitionId}/revision/{revisionNumber} | Gets a specific revision for a job definition.
@@ -276,6 +280,7 @@ Class | Method | HTTP request | Description
  - [CreateUnsupportedOrderModel](rapidata/api_client/docs/CreateUnsupportedOrderModel.md)
  - [CreateValidationSetModel](rapidata/api_client/docs/CreateValidationSetModel.md)
  - [DatapointState](rapidata/api_client/docs/DatapointState.md)
+ - [DefinitionType](rapidata/api_client/docs/DefinitionType.md)
  - [DynamicClientRegistrationRequest](rapidata/api_client/docs/DynamicClientRegistrationRequest.md)
  - [EloConfig](rapidata/api_client/docs/EloConfig.md)
  - [EloConfigModel](rapidata/api_client/docs/EloConfigModel.md)
@@ -305,6 +310,7 @@ Class | Method | HTTP request | Description
  - [GetFileMetadataResult](rapidata/api_client/docs/GetFileMetadataResult.md)
  - [GetGroupedRankingWorkflowResultsModel](rapidata/api_client/docs/GetGroupedRankingWorkflowResultsModel.md)
  - [GetGroupedRankingWorkflowResultsResult](rapidata/api_client/docs/GetGroupedRankingWorkflowResultsResult.md)
+ - [GetJobDefinitionByIdEndpointOutput](rapidata/api_client/docs/GetJobDefinitionByIdEndpointOutput.md)
  - [GetJobRevisionEndpointOutput](rapidata/api_client/docs/GetJobRevisionEndpointOutput.md)
  - [GetLeaderboardByIdResult](rapidata/api_client/docs/GetLeaderboardByIdResult.md)
  - [GetOrderByIdResult](rapidata/api_client/docs/GetOrderByIdResult.md)
@@ -526,6 +532,7 @@ Class | Method | HTTP request | Description
  - [NamedClassification](rapidata/api_client/docs/NamedClassification.md)
  - [NewsletterModel](rapidata/api_client/docs/NewsletterModel.md)
  - [NotAvailableYetResult](rapidata/api_client/docs/NotAvailableYetResult.md)
+ - [OptionOfAggregatorType](rapidata/api_client/docs/OptionOfAggregatorType.md)
  - [OrderModel](rapidata/api_client/docs/OrderModel.md)
  - [OrderState](rapidata/api_client/docs/OrderState.md)
  - [PageInfo](rapidata/api_client/docs/PageInfo.md)
