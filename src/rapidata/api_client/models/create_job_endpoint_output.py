@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
@@ -27,7 +27,8 @@ class CreateJobEndpointOutput(BaseModel):
     CreateJobEndpointOutput
     """ # noqa: E501
     job_id: StrictStr = Field(alias="jobId")
-    __properties: ClassVar[List[str]] = ["jobId"]
+    recruiting_started: StrictBool = Field(alias="recruitingStarted")
+    __properties: ClassVar[List[str]] = ["jobId", "recruitingStarted"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -80,7 +81,8 @@ class CreateJobEndpointOutput(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "jobId": obj.get("jobId")
+            "jobId": obj.get("jobId"),
+            "recruitingStarted": obj.get("recruitingStarted")
         })
         return _obj
 

@@ -11,6 +11,171 @@
     }
   ],
   "paths": {
+    "/audience/{audienceId}": {
+      "delete": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Deletes the specified audience.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Gets an audience by its Id.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "description": "The id of the audience to get.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAudienceByIdResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAudienceByIdResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAudienceByIdResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Patches an existing audience.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAudienceRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAudienceRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAudienceRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/audience/{audienceId}/jobs": {
+      "get": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Queries all jobs for the specified audience.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfQueryJobsResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/audience/{audienceId}/recruit": {
       "post": {
         "tags": [
@@ -89,88 +254,6 @@
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/audience/{audienceId}": {
-      "get": {
-        "tags": [
-          "Audience"
-        ],
-        "summary": "Gets an audience by its Id.",
-        "parameters": [
-          {
-            "name": "audienceId",
-            "in": "path",
-            "description": "The id of the audience to get.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetAudienceByIdResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetAudienceByIdResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetAudienceByIdResult"
-                }
-              }
-            }
-          }
-        }
-      },
-      "patch": {
-        "tags": [
-          "Audience"
-        ],
-        "summary": "Patches an existing audience.",
-        "parameters": [
-          {
-            "name": "audienceId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateAudienceRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateAudienceRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateAudienceRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
           }
         }
       }
@@ -1834,6 +1917,12 @@
           "$ref": "#/components/schemas/QueryAudiencesResult"
         }
       },
+      "ListOfQueryJobsResult": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/QueryJobsResult"
+        }
+      },
       "ListOfQueryRapidsForAudienceResult": {
         "type": "array",
         "items": {
@@ -1966,6 +2055,36 @@
           }
         }
       },
+      "PagedResultOfQueryJobsResult": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "$ref": "#/components/schemas/ListOfQueryJobsResult"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "PagedResultOfQueryRapidsForAudienceResult": {
         "required": [
           "total",
@@ -2047,6 +2166,43 @@
           },
           "ownerMail": {
             "type": "string"
+          }
+        }
+      },
+      "QueryJobsResult": {
+        "required": [
+          "jobId",
+          "name",
+          "definitionId",
+          "audienceId",
+          "revisionNumber",
+          "status",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "jobId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "definitionId": {
+            "type": "string"
+          },
+          "audienceId": {
+            "type": "string"
+          },
+          "revisionNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "status": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
