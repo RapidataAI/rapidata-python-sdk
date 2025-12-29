@@ -39,8 +39,8 @@ class BenchmarkParticipant:
             tuple[MediaAsset | None, MediaAsset | None]: (successful_asset, failed_asset)
         """
         from rapidata.api_client.models.create_sample_model import CreateSampleModel
-        from rapidata.api_client.models.create_sample_model_asset import (
-            CreateSampleModelAsset,
+        from rapidata.api_client.models.i_asset_input_existing_asset_input import (
+            IAssetInputExistingAssetInput,
         )
         from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
         from rapidata.api_client.models.i_asset_input import IAssetInput
@@ -54,11 +54,9 @@ class BenchmarkParticipant:
                         create_sample_model=CreateSampleModel(
                             identifier=identifier,
                             asset=IAssetInput(
-                                actual_instance=CreateSampleModelAsset(
-                                    actual_instance=ExistingAssetInput(
-                                        _t="ExistingAssetInput",
-                                        name=self._asset_uploader.upload_asset(asset),
-                                    ),
+                                actual_instance=IAssetInputExistingAssetInput(
+                                    _t="ExistingAssetInput",
+                                    name=self._asset_uploader.upload_asset(asset),
                                 ),
                             ),
                         ),
