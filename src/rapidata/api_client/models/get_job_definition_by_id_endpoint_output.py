@@ -17,21 +17,22 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from datetime import datetime
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.definition_type import DefinitionType
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateJobEndpointInput(BaseModel):
+class GetJobDefinitionByIdEndpointOutput(BaseModel):
     """
-    CreateJobEndpointInput
+    GetJobDefinitionByIdEndpointOutput
     """ # noqa: E501
-    job_definition_id: StrictStr = Field(alias="jobDefinitionId")
-    audience_id: StrictStr = Field(alias="audienceId")
-    revision_number: Optional[StrictInt] = Field(default=None, alias="revisionNumber")
-    name: Optional[StrictStr] = None
-    priority: Optional[StrictInt] = None
-    __properties: ClassVar[List[str]] = ["jobDefinitionId", "audienceId", "revisionNumber", "name", "priority"]
+    definition_id: StrictStr = Field(alias="definitionId")
+    name: StrictStr
+    definition_type: DefinitionType = Field(alias="definitionType")
+    created_at: datetime = Field(alias="createdAt")
+    __properties: ClassVar[List[str]] = ["definitionId", "name", "definitionType", "createdAt"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -51,7 +52,7 @@ class CreateJobEndpointInput(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateJobEndpointInput from a JSON string"""
+        """Create an instance of GetJobDefinitionByIdEndpointOutput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -72,16 +73,11 @@ class CreateJobEndpointInput(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if name (nullable) is None
-        # and model_fields_set contains the field
-        if self.name is None and "name" in self.model_fields_set:
-            _dict['name'] = None
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateJobEndpointInput from a dict"""
+        """Create an instance of GetJobDefinitionByIdEndpointOutput from a dict"""
         if obj is None:
             return None
 
@@ -89,11 +85,10 @@ class CreateJobEndpointInput(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "jobDefinitionId": obj.get("jobDefinitionId"),
-            "audienceId": obj.get("audienceId"),
-            "revisionNumber": obj.get("revisionNumber"),
+            "definitionId": obj.get("definitionId"),
             "name": obj.get("name"),
-            "priority": obj.get("priority")
+            "definitionType": obj.get("definitionType"),
+            "createdAt": obj.get("createdAt")
         })
         return _obj
 

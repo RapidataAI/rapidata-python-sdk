@@ -2498,6 +2498,7 @@
           "name",
           "isPublic",
           "createdAt",
+          "ownerId",
           "ownerMail"
         ],
         "type": "object",
@@ -2514,6 +2515,10 @@
           "createdAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "ownerId": {
+            "type": "string",
+            "format": "uuid"
           },
           "ownerMail": {
             "type": "string"

@@ -31,8 +31,9 @@ class GetBenchmarkByIdResult(BaseModel):
     name: StrictStr
     is_public: StrictBool = Field(alias="isPublic")
     created_at: datetime = Field(alias="createdAt")
+    owner_id: StrictStr = Field(alias="ownerId")
     owner_mail: StrictStr = Field(alias="ownerMail")
-    __properties: ClassVar[List[str]] = ["id", "name", "isPublic", "createdAt", "ownerMail"]
+    __properties: ClassVar[List[str]] = ["id", "name", "isPublic", "createdAt", "ownerId", "ownerMail"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -89,6 +90,7 @@ class GetBenchmarkByIdResult(BaseModel):
             "name": obj.get("name"),
             "isPublic": obj.get("isPublic"),
             "createdAt": obj.get("createdAt"),
+            "ownerId": obj.get("ownerId"),
             "ownerMail": obj.get("ownerMail")
         })
         return _obj
