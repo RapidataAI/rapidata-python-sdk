@@ -49,8 +49,13 @@ class UploadConfig(BaseModel):
             )
         return v
 
-    def model_post_init(self, __context) -> None:
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self._notify_handlers()
         self._migrate_cache()
+
+    def __setattr__(self, name: str, value) -> None:
+        super().__setattr__(name, value)
         self._notify_handlers()
 
     def _notify_handlers(self) -> None:
