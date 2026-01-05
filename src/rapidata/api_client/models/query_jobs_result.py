@@ -28,12 +28,13 @@ class QueryJobsResult(BaseModel):
     QueryJobsResult
     """ # noqa: E501
     job_id: StrictStr = Field(alias="jobId")
+    name: StrictStr
     definition_id: StrictStr = Field(alias="definitionId")
     audience_id: StrictStr = Field(alias="audienceId")
     revision_number: StrictInt = Field(alias="revisionNumber")
     status: StrictStr
     created_at: datetime = Field(alias="createdAt")
-    __properties: ClassVar[List[str]] = ["jobId", "definitionId", "audienceId", "revisionNumber", "status", "createdAt"]
+    __properties: ClassVar[List[str]] = ["jobId", "name", "definitionId", "audienceId", "revisionNumber", "status", "createdAt"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -87,6 +88,7 @@ class QueryJobsResult(BaseModel):
 
         _obj = cls.model_validate({
             "jobId": obj.get("jobId"),
+            "name": obj.get("name"),
             "definitionId": obj.get("definitionId"),
             "audienceId": obj.get("audienceId"),
             "revisionNumber": obj.get("revisionNumber"),
