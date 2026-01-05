@@ -21,7 +21,6 @@ class AssetUploader:
         rapidata_config.upload.cacheLocation,
         shards=rapidata_config.upload.maxWorkers,
         timeout=rapidata_config.upload.cacheTimeout,
-        size_limit=rapidata_config.upload.cacheSizeLimit,
     )
 
     def __init__(self, openapi_service: OpenAPIService):
@@ -50,15 +49,14 @@ class AssetUploader:
                 config.cacheLocation,
                 shards=config.maxWorkers,
                 timeout=config.cacheTimeout,
-                size_limit=config.cacheSizeLimit,
             )
             logger.info(
-                "AssetUploader shared upload cache updated: location=%s, shards=%s, timeout=%s, size_limit=%s",
+                "AssetUploader shared upload cache updated: location=%s, shards=%s, timeout=%s",
                 config.cacheLocation,
                 config.maxWorkers,
                 config.cacheTimeout,
-                config.cacheSizeLimit,
             )
+
         except Exception as e:
             logger.warning(f"Failed to update AssetUploader shared upload cache: {e}")
 
