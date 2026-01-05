@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import Callable
 from pydantic import BaseModel, Field, field_validator
+import shutil
 from rapidata.rapidata_client.config import logger
 
 # Type alias for config update handlers
@@ -49,12 +50,8 @@ class UploadConfig(BaseModel):
             )
         return v
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self._notify_handlers()
-
-    def __setattr__(self, name: str, value) -> None:
-        super().__setattr__(name, value)
+    def model_post_init(self, __context) -> None:
+        self._migrate_cache()
         self._notify_handlers()
 
     def _notify_handlers(self) -> None:
@@ -64,3 +61,16 @@ class UploadConfig(BaseModel):
                 handler(self)
             except Exception as e:
                 logger.warning(f"Warning: UploadConfig handler failed: {e}")
+
+    def _migrate_cache(self) -> None:
+        """Migrate the cache from the old location to the new location."""
+        old_cache = Path.home() / ".rapidata" / "upload_cache"
+        new_cache = self.cacheLocation
+        if old_cache.exists() and not new_cache.exists():
+            logger.info(f"Migrating cache from {old_cache} to {self.cacheLocation}")
+            self.cacheLocation.parent.mkdir(parents=True, exist_ok=True)
+            shutil.move(str(old_cache), str(self.cacheLocation))
+
+            # Clean up old directory if empty
+            if old_cache.parent.exists() and not any(old_cache.parent.iterdir()):
+                old_cache.parent.rmdir()
