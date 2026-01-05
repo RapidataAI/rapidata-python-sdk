@@ -42,7 +42,6 @@ class BenchmarkParticipant:
         from rapidata.api_client.models.i_asset_input_existing_asset_input import (
             IAssetInputExistingAssetInput,
         )
-        from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
         from rapidata.api_client.models.i_asset_input import IAssetInput
 
         last_exception = None
