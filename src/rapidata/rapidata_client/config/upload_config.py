@@ -38,7 +38,6 @@ class UploadConfig(BaseModel):
     cacheLocation: Path = Field(
         default=Path.home() / ".cache" / "rapidata" / "upload_cache"
     )
-    cacheSizeLimit: int = Field(default=100_000_000)  # 100MB
 
     @field_validator("maxWorkers")
     @classmethod
