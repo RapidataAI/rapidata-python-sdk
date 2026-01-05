@@ -34,7 +34,9 @@ class UploadConfig(BaseModel):
     maxRetries: int = Field(default=3)
     cacheUploads: bool = Field(default=True)
     cacheTimeout: float = Field(default=0.1)
-    cacheLocation: Path = Field(default=Path.home() / ".rapidata" / "upload_cache")
+    cacheLocation: Path = Field(
+        default=Path.home() / ".cache" / "rapidata" / "upload_cache"
+    )
     cacheSizeLimit: int = Field(default=100_000_000)  # 100MB
 
     @field_validator("maxWorkers")
