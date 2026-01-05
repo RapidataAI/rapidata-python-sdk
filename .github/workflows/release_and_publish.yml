@@ -41,7 +41,7 @@ jobs:
       id: update_version
       run: |
         old_version=$(uv version --short)
-        uv version ${{ github.event.inputs.version_part }}
+        uv version --bump ${{ github.event.inputs.version_part }}
         new_version=$(uv version --short)
         echo "new_version=$new_version" >>$GITHUB_OUTPUT
         echo "old_version=$old_version" >>$GITHUB_OUTPUT

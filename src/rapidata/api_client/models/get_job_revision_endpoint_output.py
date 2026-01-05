@@ -22,7 +22,8 @@ from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.aggregator_type import AggregatorType
 from rapidata.api_client.models.feature_flag import FeatureFlag
-from rapidata.api_client.models.i_workflow_config import IWorkflowConfig
+from rapidata.api_client.models.i_order_workflow_model import IOrderWorkflowModel
+from rapidata.api_client.models.i_referee_model import IRefereeModel
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -35,12 +36,13 @@ class GetJobRevisionEndpointOutput(BaseModel):
     pipeline_id: StrictStr = Field(alias="pipelineId")
     dataset_id: StrictStr = Field(alias="datasetId")
     aggregator_type: Optional[AggregatorType] = Field(default=None, alias="aggregatorType")
-    workflow_config: IWorkflowConfig = Field(alias="workflowConfig")
+    workflow: IOrderWorkflowModel
+    referee: IRefereeModel
     feature_flags: List[FeatureFlag] = Field(alias="featureFlags")
     created_at: datetime = Field(alias="createdAt")
     created_by_id: StrictStr = Field(alias="createdById")
     created_by_mail: StrictStr = Field(alias="createdByMail")
-    __properties: ClassVar[List[str]] = ["definitionId", "revisionNumber", "pipelineId", "datasetId", "aggregatorType", "workflowConfig", "featureFlags", "createdAt", "createdById", "createdByMail"]
+    __properties: ClassVar[List[str]] = ["definitionId", "revisionNumber", "pipelineId", "datasetId", "aggregatorType", "workflow", "referee", "featureFlags", "createdAt", "createdById", "createdByMail"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -81,9 +83,12 @@ class GetJobRevisionEndpointOutput(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of workflow_config
-        if self.workflow_config:
-            _dict['workflowConfig'] = self.workflow_config.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of workflow
+        if self.workflow:
+            _dict['workflow'] = self.workflow.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of referee
+        if self.referee:
+            _dict['referee'] = self.referee.to_dict()
         # override the default output from pydantic by calling `to_dict()` of each item in feature_flags (list)
         _items = []
         if self.feature_flags:
@@ -113,7 +118,8 @@ class GetJobRevisionEndpointOutput(BaseModel):
             "pipelineId": obj.get("pipelineId"),
             "datasetId": obj.get("datasetId"),
             "aggregatorType": obj.get("aggregatorType"),
-            "workflowConfig": IWorkflowConfig.from_dict(obj["workflowConfig"]) if obj.get("workflowConfig") is not None else None,
+            "workflow": IOrderWorkflowModel.from_dict(obj["workflow"]) if obj.get("workflow") is not None else None,
+            "referee": IRefereeModel.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "createdAt": obj.get("createdAt"),
             "createdById": obj.get("createdById"),
