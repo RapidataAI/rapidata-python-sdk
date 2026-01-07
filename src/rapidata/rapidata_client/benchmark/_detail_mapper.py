@@ -27,14 +27,12 @@ class DetailMapper:
     def get_level_of_detail(
         response_budget: int,
     ) -> LevelOfDetail:
-        if response_budget == 20:
+        if response_budget <= 20:
             return "debug"
-        elif response_budget == 2_000:
+        elif response_budget < 4_000:
             return "low"
-        elif response_budget == 4_000:
+        elif response_budget < 8_000:
             return "medium"
-        elif response_budget == 8_000:
+        elif response_budget < 16_000:
             return "high"
-        elif response_budget == 16_000:
-            return "very high"
-        return "custom"
+        return "very high"
