@@ -4,7 +4,7 @@ from colorama import Fore
 from typing import Literal, Optional, TYPE_CHECKING
 
 from rapidata.rapidata_client.config import logger, managed_print, tracer
-from rapidata.rapidata_client.benchmark._detail_mapper import DetailMapper
+from rapidata.rapidata_client.benchmark._detail_mapper import DetailMapper, LevelOfDetail
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.api_client.models.update_leaderboard_model import UpdateLeaderboardModel
 
@@ -52,7 +52,7 @@ class RapidataLeaderboard:
         self.__leaderboard_page = f"https://app.{self.__openapi_service.environment}/mri/benchmarks/{self.__benchmark_id}/leaderboard/{self.id}"
 
     @property
-    def level_of_detail(self) -> Literal["low", "medium", "high", "very high"]:
+    def level_of_detail(self) -> LevelOfDetail:
         """
         Returns the level of detail of the leaderboard.
         """
@@ -60,7 +60,7 @@ class RapidataLeaderboard:
 
     @level_of_detail.setter
     def level_of_detail(
-        self, level_of_detail: Literal["low", "medium", "high", "very high"]
+        self, level_of_detail: LevelOfDetail
     ):
         """
         Sets the level of detail of the leaderboard.

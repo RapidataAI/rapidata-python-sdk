@@ -14,6 +14,8 @@ if TYPE_CHECKING:
     from rapidata.rapidata_client.settings import RapidataSetting
     from rapidata.service.openapi_service import OpenAPIService
 
+from rapidata.rapidata_client.benchmark._detail_mapper import LevelOfDetail
+
 
 class RapidataBenchmark:
     """
@@ -288,7 +290,7 @@ class RapidataBenchmark:
         show_prompt: bool = False,
         show_prompt_asset: bool = False,
         inverse_ranking: bool = False,
-        level_of_detail: Literal["low", "medium", "high", "very high"] | None = None,
+        level_of_detail: LevelOfDetail | None = None,
         min_responses_per_matchup: int | None = None,
         validation_set_id: str | None = None,
         filters: Sequence["RapidataFilter"] | None = None,
@@ -320,10 +322,10 @@ class RapidataBenchmark:
         with tracer.start_as_current_span("create_leaderboard"):
             if level_of_detail is not None and (
                 not isinstance(level_of_detail, str)
-                or level_of_detail not in ["low", "medium", "high", "very high"]
+                or level_of_detail not in ["debug", "low", "medium", "high", "very high"]
             ):
                 raise ValueError(
-                    "Level of detail must be a string and one of: 'low', 'medium', 'high', 'very high'"
+                    "Level of detail must be a string and one of: 'debug', 'low', 'medium', 'high', 'very high'"
                 )
 
             if min_responses_per_matchup is not None and (
