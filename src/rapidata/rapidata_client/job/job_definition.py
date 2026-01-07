@@ -1,10 +1,7 @@
 from rapidata.rapidata_client.exceptions.failed_upload_exception import (
     FailedUploadException,
 )
-from rapidata.rapidata_client.workflow import Workflow
-from rapidata.rapidata_client.referee import Referee
-from rapidata.rapidata_client.settings import RapidataSetting
-from typing import Sequence, Literal
+from typing import Literal
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.config.tracer import tracer
 
@@ -14,19 +11,11 @@ class JobDefinition:
         self,
         id: str,
         name: str,
-        workflow: Workflow,
-        dataset_id: str,
-        referee: Referee,
         openapi_service: OpenAPIService,
-        settings: Sequence[RapidataSetting] | None = None,
     ):
         self._id = id
         self._name = name
-        self._workflow = workflow
-        self._dataset_id = dataset_id
-        self._referee = referee
         self._openapi_service = openapi_service
-        self._settings = settings
 
     def preview(self) -> None:
         """Will open the browser where you can preview the job definition before giving it to an audience."""
@@ -57,6 +46,9 @@ class JobDefinition:
             from rapidata.rapidata_client.dataset._rapidata_dataset import (
                 RapidataDataset,
             )
+            from rapidata.api_client.models.create_job_revision_endpoint_input import (
+                CreateJobRevisionEndpointInput,
+            )
 
             datapoints_list = DatapointsValidator.map_datapoints(
                 datapoints=datapoints,
@@ -81,10 +73,16 @@ class JobDefinition:
                 _, failed_uploads = rapidata_dataset.add_datapoints(datapoints_list)
                 if failed_uploads:
                     raise FailedUploadException(rapidata_dataset, self, failed_uploads)
-            self._dataset_id = rapidata_dataset.id
+
+            self._openapi_service.job_api.job_definition_definition_id_revision_post(
+                definition_id=self._id,
+                create_job_revision_endpoint_input=CreateJobRevisionEndpointInput(
+                    datasetId=rapidata_dataset.id,
+                ),
+            )
 
     def __str__(self) -> str:
-        return f"JobDefinition(id={self._id}, name={self._name}, dataset_id={self._dataset_id}), referee={self._referee}, workflow={self._workflow}, settings={self._settings})"
+        return f"JobDefinition(id={self._id}, name={self._name})"
 
     def __repr__(self) -> str:
         return self.__str__()

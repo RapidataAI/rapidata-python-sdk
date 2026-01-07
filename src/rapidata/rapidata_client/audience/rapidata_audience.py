@@ -98,7 +98,7 @@ class RapidataAudience:
         instruction: str,
         answer_options: list[str],
         datapoint: str,
-        truths: list[str],
+        truth: list[str],
         data_type: Literal["media", "text"] = "media",
         context: str | None = None,
         media_context: str | None = None,
@@ -108,13 +108,13 @@ class RapidataAudience:
             "RapidataAudience.add_classification_example"
         ):
             logger.debug(
-                f"Adding classification example to audience: {self.id} with instruction: {instruction}, answer_options: {answer_options}, datapoint: {datapoint}, truths: {truths}, data_type: {data_type}, context: {context}, media_context: {media_context}, explanation: {explanation}"
+                f"Adding classification example to audience: {self.id} with instruction: {instruction}, answer_options: {answer_options}, datapoint: {datapoint}, truths: {truth}, data_type: {data_type}, context: {context}, media_context: {media_context}, explanation: {explanation}"
             )
             self._example_handler.add_classification_example(
                 instruction,
                 answer_options,
                 datapoint,
-                truths,
+                truth,
                 data_type,
                 context,
                 media_context,

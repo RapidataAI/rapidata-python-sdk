@@ -24,7 +24,7 @@ class JobManager:
         self._asset_uploader = AssetUploader(openapi_service)
         logger.debug("JobManager initialized")
 
-    def _create_general_job(
+    def _create_general_job_definition(
         self,
         name: str,
         workflow: Workflow,
@@ -86,11 +86,7 @@ class JobManager:
         job_model = JobDefinition(
             id=job_definition_response.definition_id,
             name=name,
-            workflow=workflow,
-            dataset_id=rapidata_dataset.id,
-            referee=referee,
             openapi_service=self._openapi_service,
-            settings=settings,
         )
         with tracer.start_as_current_span("add_datapoints"):
             _, failed_uploads = rapidata_dataset.add_datapoints(datapoints)
@@ -98,7 +94,7 @@ class JobManager:
                 raise FailedUploadException(rapidata_dataset, job_model, failed_uploads)
         return job_model
 
-    def create_classification_job(
+    def create_classification_job_definition(
         self,
         name: str,
         instruction: str,
@@ -112,7 +108,7 @@ class JobManager:
         settings: Sequence[RapidataSetting] | None = None,
         private_notes: list[str] | None = None,
     ) -> JobDefinition:
-        """Create a classification job.
+        """Create a classification job definition.
 
         With this order you can have a datapoint (image, text, video, audio) be classified into one of the answer options.
         Each response will be exactly one of the answer options.
@@ -152,7 +148,7 @@ class JobManager:
                 private_notes=private_notes,
                 data_type=data_type,
             )
-            return self._create_general_job(
+            return self._create_general_job_definition(
                 name=name,
                 workflow=ClassifyWorkflow(
                     instruction=instruction, answer_options=answer_options
@@ -163,7 +159,7 @@ class JobManager:
                 settings=settings,
             )
 
-    def create_compare_job(
+    def create_compare_job_definition(
         self,
         name: str,
         instruction: str,
@@ -177,7 +173,7 @@ class JobManager:
         settings: Sequence[RapidataSetting] | None = None,
         private_notes: list[str] | None = None,
     ) -> JobDefinition:
-        """Create a compare job.
+        """Create a compare job definition.
 
         With this order you compare two datapoints (image, text, video, audio) and the annotators will choose one of the two based on the instruction.
 
@@ -233,7 +229,7 @@ class JobManager:
                 private_notes=private_notes,
                 data_type=data_type,
             )
-            return self._create_general_job(
+            return self._create_general_job_definition(
                 name=name,
                 workflow=CompareWorkflow(instruction=instruction, a_b_names=a_b_names),
                 datapoints=datapoints_instances,
@@ -242,7 +238,7 @@ class JobManager:
                 settings=settings,
             )
 
-    def _create_ranking_job(
+    def _create_ranking_job_definition(
         self,
         name: str,
         instruction: str,
@@ -256,7 +252,7 @@ class JobManager:
         settings: Sequence[RapidataSetting] | None = None,
     ) -> JobDefinition:
         """
-        Create a ranking job.
+        Create a ranking job definition.
 
         With this order you can have a multiple lists of datapoints (image, text, video, audio) be ranked based on the instruction.
         Each list will be ranked independently, based on comparison matchups.
@@ -342,7 +338,7 @@ class JobManager:
                 else None
             )
 
-            return self._create_general_job(
+            return self._create_general_job_definition(
                 name=name,
                 workflow=MultiRankingWorkflow(
                     instruction=instruction,
@@ -356,7 +352,7 @@ class JobManager:
                 settings=settings,
             )
 
-    def _create_free_text_job(
+    def _create_free_text_job_definition(
         self,
         name: str,
         instruction: str,
@@ -368,7 +364,7 @@ class JobManager:
         settings: Sequence[RapidataSetting] | None = None,
         private_notes: list[str] | None = None,
     ) -> JobDefinition:
-        """Create a free text job.
+        """Create a free text job definition.
 
         With this order you can have a datapoint (image, text, video, audio) be labeled with free text.
         The annotators will be shown a datapoint and will be asked to answer a question with free text.
@@ -401,7 +397,7 @@ class JobManager:
                 private_notes=private_notes,
                 data_type=data_type,
             )
-            return self._create_general_job(
+            return self._create_general_job_definition(
                 name=name,
                 workflow=FreeTextWorkflow(instruction=instruction),
                 datapoints=datapoints_instances,
@@ -409,7 +405,7 @@ class JobManager:
                 settings=settings,
             )
 
-    def _create_select_words_job(
+    def _create_select_words_job_definition(
         self,
         name: str,
         instruction: str,
@@ -419,7 +415,7 @@ class JobManager:
         settings: Sequence[RapidataSetting] | None = None,
         private_notes: list[str] | None = None,
     ) -> JobDefinition:
-        """Create a select words job.
+        """Create a select words job definition.
 
         With this order you can have a datapoint (image, text, video, audio) be labeled with a list of words.
         The annotators will be shown a datapoint as well as a list of sentences split up by spaces.
@@ -445,7 +441,7 @@ class JobManager:
                 sentences=sentences,
                 private_notes=private_notes,
             )
-            return self._create_general_job(
+            return self._create_general_job_definition(
                 name=name,
                 workflow=SelectWordsWorkflow(
                     instruction=instruction,
@@ -455,7 +451,7 @@ class JobManager:
                 settings=settings,
             )
 
-    def _create_locate_job(
+    def _create_locate_job_definition(
         self,
         name: str,
         instruction: str,
@@ -466,7 +462,7 @@ class JobManager:
         settings: Sequence[RapidataSetting] | None = None,
         private_notes: list[str] | None = None,
     ) -> JobDefinition:
-        """Create a locate job.
+        """Create a locate job definition.
 
         With this order you can have people locate specific objects in a datapoint (image, text, video, audio).
         The annotators will be shown a datapoint and will be asked to select locations based on the instruction.
@@ -495,7 +491,7 @@ class JobManager:
                 media_contexts=media_contexts,
                 private_notes=private_notes,
             )
-            return self._create_general_job(
+            return self._create_general_job_definition(
                 name=name,
                 workflow=LocateWorkflow(target=instruction),
                 datapoints=datapoints_instances,
@@ -503,7 +499,7 @@ class JobManager:
                 settings=settings,
             )
 
-    def _create_draw_job(
+    def _create_draw_job_definition(
         self,
         name: str,
         instruction: str,
@@ -514,7 +510,7 @@ class JobManager:
         settings: Sequence[RapidataSetting] | None = None,
         private_notes: list[str] | None = None,
     ) -> JobDefinition:
-        """Create a draw job.
+        """Create a draw job definition.
 
         With this order you can have people draw lines on a datapoint (image, text, video, audio).
         The annotators will be shown a datapoint and will be asked to draw lines based on the instruction.
@@ -543,7 +539,7 @@ class JobManager:
                 media_contexts=media_contexts,
                 private_notes=private_notes,
             )
-            return self._create_general_job(
+            return self._create_general_job_definition(
                 name=name,
                 workflow=DrawWorkflow(target=instruction),
                 datapoints=datapoints_instances,
@@ -551,7 +547,7 @@ class JobManager:
                 settings=settings,
             )
 
-    def _create_timestamp_job(
+    def _create_timestamp_job_definition(
         self,
         name: str,
         instruction: str,
@@ -562,7 +558,7 @@ class JobManager:
         settings: Sequence[RapidataSetting] | None = None,
         private_notes: list[str] | None = None,
     ) -> JobDefinition:
-        """Create a timestamp job.
+        """Create a timestamp job definition.
 
         Warning:
             This job is currently not fully supported and may give unexpected results.
@@ -594,7 +590,7 @@ class JobManager:
                 media_contexts=media_contexts,
                 private_notes=private_notes,
             )
-            return self._create_general_job(
+            return self._create_general_job_definition(
                 name=name,
                 workflow=TimestampWorkflow(instruction=instruction),
                 datapoints=datapoints_instances,
@@ -613,7 +609,13 @@ class JobManager:
         """
         with tracer.start_as_current_span("JobManager.get_job_by_id"):
 
-            job_definition = self._openapi_service.job_api.job_definition_definition_id_revision_revision_number_get(
+            job_definition = (
+                self._openapi_service.job_api.job_definition_definition_id_get(
+                    definition_id=job_definition_id,
+                )
+            )
+
+            latest_revision = self._openapi_service.job_api.job_definition_definition_id_revision_revision_number_get(
                 definition_id=job_definition_id,
                 revision_number=1,
             )
@@ -621,10 +623,7 @@ class JobManager:
             return JobDefinition(
                 id=job_definition.definition_id,
                 name=job_definition.name,
-                workflow=None,  # Would need to reconstruct from job_definition data
-                datasetId=job_definition.dataset_id,
-                referee=None,  # Would need to reconstruct from job_definition data
-                settings=None,
+                openapi_service=self._openapi_service,
             )
 
     def find_job_definitions(
@@ -674,10 +673,7 @@ class JobManager:
                 JobDefinition(
                     id=job_def.definition_id,
                     name=job_def.name,
-                    workflow=None,  # Would need to reconstruct from job_def data
-                    datasetId=job_def.dataset_id,
-                    referee=None,  # Would need to reconstruct from job_def data
-                    settings=None,
+                    openapi_service=self._openapi_service,
                 )
                 for job_def in job_definition_page_result.items
             ]
@@ -694,10 +690,7 @@ class JobManager:
         return JobDefinition(
             id=latest_revision.definition_id,
             name=definition_name,
-            workflow=None,  # Would need to reconstruct from latest_revision data
-            datasetId=latest_revision.dataset_id,
-            referee=None,  # Would need to reconstruct from latest_revision data
-            settings=None,
+            openapi_service=self._openapi_service,
         )
 
     def __str__(self) -> str:

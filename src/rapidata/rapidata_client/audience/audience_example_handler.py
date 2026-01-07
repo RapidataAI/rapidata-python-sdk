@@ -34,7 +34,7 @@ class AudienceExampleHandler:
         instruction: str,
         answer_options: list[str],
         datapoint: str,
-        truths: list[str],
+        truth: list[str],
         data_type: Literal["media", "text"] = "media",
         context: str | None = None,
         media_context: str | None = None,
@@ -56,10 +56,10 @@ class AudienceExampleHandler:
             AddRapidToAudienceModel,
         )
 
-        if not isinstance(truths, list):
+        if not isinstance(truth, list):
             raise ValueError("Truths must be a list of strings")
 
-        if not all(truth in answer_options for truth in truths):
+        if not all(truth in answer_options for truth in truth):
             raise ValueError("Truths must be part of the answer options")
 
         if data_type == "media":
@@ -79,7 +79,7 @@ class AudienceExampleHandler:
         )
         model_truth = IValidationTruth(
             actual_instance=IValidationTruthAttachCategoryTruth(
-                correctCategories=truths, _t="AttachCategoryTruth"
+                correctCategories=truth, _t="AttachCategoryTruth"
             )
         )
 
@@ -96,7 +96,7 @@ class AudienceExampleHandler:
                     else None
                 ),
                 explanation=explanation,
-                randomCorrectProbability=len(truths) / len(answer_options),
+                randomCorrectProbability=len(truth) / len(answer_options),
             ),
         )
 
