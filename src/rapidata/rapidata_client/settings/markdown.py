@@ -11,5 +11,5 @@ class Markdown(RapidataSetting):
 
     def __init__(self, value: bool = True):
         if not isinstance(value, bool):
-            raise ValueError("Value must be a boolean.")
+            raise ValueError("The value must be a boolean.")
         super().__init__(key="use_text_asset_markdown", value=value)

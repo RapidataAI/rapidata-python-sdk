@@ -119,7 +119,7 @@ datapoints=[[
 
 The minimum number of responses to collect for each datapoint. The actual number of responses may slightly exceed this due to concurrent annotators.
 
-> Note: For Ranking orders, you controle the global number of comparisons to collect with `comparison_budget_per_ranking` as the matchups are created dynamically.
+> Note: For Ranking orders, you control the global number of comparisons to collect with `comparison_budget_per_ranking` as the matchups are created dynamically.
 
 **Best Practices:**
 
@@ -340,13 +340,12 @@ order = rapi.order.create_free_text_order(
 
 Enables limited markdown rendering for text datapoints. Useful when comparing formatted text like LLM outputs or math equations.
 
-> Note: This will only be correcly displayed in the preview and not the order details page.
+> Note: This will only be correctly displayed in the preview and not the order details page.
 
 ```python
 from rapidata import Markdown
 
-from rapidata import Markdown
-order = client.order.create_compare_order(
+order = rapi.order.create_compare_order(
     name="LLM Response Comparison",
     instruction="Which response is better formatted?",
     datapoints=[["**Bold** and _italic_", "Plain text only"], ["$$x^2 + y^2 = z^2$$", "$$a^2 + b^2 = c^2$$"]],
