@@ -5,7 +5,7 @@
       
       
       
-        <link rel="canonical" href="https://docs.rapidata.ai/2.x/reference/rapidata/rapidata_client/filter/gender_filter/">
+        <link rel="canonical" href="https://docs.rapidata.ai/2.x/reference/rapidata/rapidata_client/settings/markdown/">
       
       
       
@@ -18,7 +18,7 @@
     
     
       
-        <title>Gender filter - Rapidata Python SDK Documentation</title>
+        <title>Markdown - Rapidata Python SDK Documentation</title>
       
     
     
@@ -85,7 +85,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#rapidata.rapidata_client.filter.gender_filter" class="md-skip">
+        <a href="#rapidata.rapidata_client.settings.markdown" class="md-skip">
           Skip to content
         </a>
       
@@ -124,7 +124,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Gender filter
+              Markdown
             
           </span>
         </div>
@@ -268,7 +268,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../rapidata_filters/" class="md-tabs__link">
+        <a href="../../filter/rapidata_filters/" class="md-tabs__link">
           
   
   
@@ -973,7 +973,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../rapidata_filters/" class="md-nav__link">
+      <a href="../../filter/rapidata_filters/" class="md-nav__link">
         
   
   
@@ -1001,7 +1001,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../settings/rapidata_settings/" class="md-nav__link">
+      <a href="../rapidata_settings/" class="md-nav__link">
         
   
   
@@ -1237,13 +1237,13 @@
   
 
 
-  <h1>Gender filter</h1>
+  <h1>Markdown</h1>
 
 <div class="doc doc-object doc-module">
 
 
 
-<a id="rapidata.rapidata_client.filter.gender_filter"></a>
+<a id="rapidata.rapidata_client.settings.markdown"></a>
     <div class="doc doc-contents first">
 
 
@@ -1269,22 +1269,21 @@
 
 
 
-<h2 id="rapidata.rapidata_client.filter.gender_filter.GenderFilter" class="doc doc-heading">
-            <span class="doc doc-object-name doc-class-name">GenderFilter</span>
+<h2 id="rapidata.rapidata_client.settings.markdown.Markdown" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">Markdown</span>
 
 
-<a href="#rapidata.rapidata_client.filter.gender_filter.GenderFilter" class="headerlink" title="Permanent link">#</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">GenderFilter</span><span class="p">(</span><span class="n">genders</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="Gender (rapidata.rapidata_client.filter.models.gender.Gender)" href="../models/gender/#rapidata.rapidata_client.filter.models.gender.Gender">Gender</a></span><span class="p">])</span>
+<a href="#rapidata.rapidata_client.settings.markdown.Markdown" class="headerlink" title="Permanent link">#</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">Markdown</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
             <p class="doc doc-class-bases">
-              Bases: <code><span title="rapidata.rapidata_client.filter._base_filter.RapidataFilter">RapidataFilter</span></code>, <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
+              Bases: <code><span title="rapidata.rapidata_client.settings._rapidata_setting.RapidataSetting">RapidataSetting</span></code></p>
 
 
 
-        <p>GenderFilter Class</p>
-<p>Can be used to filter who to target based on their gender.</p>
+        <p>Enable markdown rendering for text assets. Defaults to True.</p>
 
 
 <p><span class="doc-section-title">Parameters:</span></p>
@@ -1300,18 +1299,18 @@
       <tbody>
           <tr class="doc-section-item">
             <td>
-                <code>genders</code>
+                <code>value</code>
             </td>
             <td>
-                  <code><span title="list">list</span>[<a class="autorefs autorefs-internal" title="Gender (rapidata.rapidata_client.filter.models.gender.Gender)" href="../models/gender/#rapidata.rapidata_client.filter.models.gender.Gender">Gender</a>]</code>
+                  <code><span title="bool">bool</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>List of genders to filter by.</p>
+                <p>Whether to enable markdown rendering for text assets.</p>
               </div>
             </td>
             <td>
-                <em>required</em>
+                  <code>True</code>
             </td>
           </tr>
       </tbody>
@@ -1325,10 +1324,14 @@
 
 
                   <details class="mkdocstrings-source">
-                    <summary>Source code in <code>src/rapidata/rapidata_client/filter/gender_filter.py</code></summary>
-                    <div class="language-python highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-21">21</a></span>
-<span class="normal"><a href="#__codelineno-0-22">22</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">genders</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Gender</span><span class="p">]):</span>
-</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">genders</span><span class="o">=</span><span class="n">genders</span><span class="p">)</span>
+                    <summary>Source code in <code>src/rapidata/rapidata_client/settings/markdown.py</code></summary>
+                    <div class="language-python highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-12">12</a></span>
+<span class="normal"><a href="#__codelineno-0-13">13</a></span>
+<span class="normal"><a href="#__codelineno-0-14">14</a></span>
+<span class="normal"><a href="#__codelineno-0-15">15</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"The value must be a boolean."</span><span class="p">)</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="s2">"use_text_asset_markdown"</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
 </span></code></pre></div></td></tr></tbody></table></div>
                   </details>
 
