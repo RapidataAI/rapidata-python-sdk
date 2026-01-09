@@ -18,6 +18,7 @@ from .rapidata_client import (
     NoShuffle,
     PlayVideoUntilTheEnd,
     MuteVideo,
+    Markdown,
     CustomSetting,
     AllowNeitherBoth,
     SwapContextInstruction,
