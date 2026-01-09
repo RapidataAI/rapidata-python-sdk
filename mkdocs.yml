@@ -82,6 +82,7 @@ nav:
     - "🏠 Guides":
       - "👀 Overview": starting_page.md
       - "🚀 Quick Start": quickstart.md
+      - "📖 Order Parameters": order_parameters.md
       - "📊 Understanding Results": understanding_the_results.md
       - "🎯 Improve Quality": improve_order_quality.md
       - "🛑 Confidence Stopping": confidence_stopping.md

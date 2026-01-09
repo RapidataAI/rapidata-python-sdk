@@ -9,4 +9,5 @@ from ._rapidata_setting import RapidataSetting
 from .allow_neither_both import AllowNeitherBoth
 from .swap_context_instruction import SwapContextInstruction
 from .mute_video import MuteVideo
+from .markdown import Markdown
 from .rapidata_settings import RapidataSettings
