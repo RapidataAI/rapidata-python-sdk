@@ -3,7 +3,10 @@ from rapidata.rapidata_client.exceptions.failed_upload_exception import (
 )
 from typing import Literal
 from rapidata.service.openapi_service import OpenAPIService
-from rapidata.rapidata_client.config.tracer import tracer
+from rapidata.rapidata_client.config import tracer, logger, managed_print
+import webbrowser
+import urllib.parse
+from colorama import Fore
 
 
 class JobDefinition:
@@ -16,10 +19,22 @@ class JobDefinition:
         self._id = id
         self._name = name
         self._openapi_service = openapi_service
+        self._job_details_page = (
+            f"https://app.{self._openapi_service.environment}/definitions/{self._id}"
+        )
 
     def preview(self) -> None:
         """Will open the browser where you can preview the job definition before giving it to an audience."""
-        raise NotImplementedError("Not implemented")
+        logger.info("Opening order details page in browser...")
+        if not webbrowser.open(self._job_details_page):
+            encoded_url = urllib.parse.quote(
+                self._job_details_page, safe="%/:=&?~#+!$,;'@()*[]"
+            )
+            managed_print(
+                Fore.RED
+                + f"Please open this URL in your browser: '{encoded_url}'"
+                + Fore.RESET
+            )
 
     def update_dataset(
         self,
