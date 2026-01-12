@@ -58,21 +58,7 @@ order = rapi.order.create_compare_order(
 ```
 > **Note:** When calling this function the data gets uploaded and prepared, but no annotators will start working on it yet.
 
-The parameters are as follows:
-
-- `name`: The name of the order. This is used to identify the order in the [Rapidata Dashboard](https://app.rapidata.ai/dashboard/orders). This name is also be used to find the order again later.
-- `instruction`: The instruction you want to show the annotators to select the image by.
-- `contexts`: The prompt that will be shown along side the two images and the instruction. (optional parameter)
-- `datapoints`: The image pairs we want to compare (order is randomized for every annotator). This can be any public URL (that points to an image, video or audio) or a local file path. This is a list of all datapoints you want to compare. Each datapoint consists of 2 files that are compared, as well as an optional context (which in this case is the prompt). The same instruction will be shown for each datapoint. There is a limit of 100 datapoints per order. If you need more than that, you can reach out to us at <info@rapidata.ai>.
-
-Optionally you may add additional specifications with the [other parameters](../reference/rapidata/rapidata_client/order/rapidata_order_manager/#rapidata.rapidata_client.order.rapidata_order_manager.RapidataOrderManager.create_compare_order). As an example, the `responses_per_datapoint` that specifies how many responses you want per datapoint<sup>1</sup>.
-
-Further more you can customize to whom, how and in what sequence the tasks are shown:
-
-- [Filters](../reference/rapidata/rapidata_client/filter/rapidata_filters/) to specify who should work on the order
-- [Settings](../reference/rapidata/rapidata_client/settings/rapidata_settings/) to specify how the order should be shown
-
-These customizations can be added to the order through the `filters` and `settings` parameters respectively.
+For a detailed explanation of all available parameters (including `name`, `instruction`, `datapoints`, `contexts`, quality control options, and more), see the [Order Parameters Reference](order_parameters.md).
 
 ### Preview the Order
 
@@ -129,8 +115,4 @@ To better understand the results you can check out the [Understanding the Result
 
 ## Next Steps
 
-This is just the beginning. You can create many different types of orders and customize them to your needs. Check out the [Overview](index.md) for more examples and information or check out how to improve the quality of your responses in the [Improve Quality](/improve_order_quality/) .
-
-------------------
-
-<sup>1</sup> Due to the possibility of multiple people answering at the same time, this number is treated as a minimum. The actual number of responses may be higher. The overshoot per datapoint will be lower the more datapoints are added.
+This is just the beginning. You can create many different types of orders and customize them to your needs. Check out the [Overview](index.md) for more examples and information or check out how to improve the quality of your responses in the [Improve Quality](/improve_order_quality/).
