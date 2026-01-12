@@ -54,7 +54,6 @@ class RapidataClient:
         Attributes:
             order (RapidataOrderManager): The RapidataOrderManager instance.
             validation (ValidationSetManager): The ValidationSetManager instance.
-            demographic (DemographicManager): The DemographicManager instance.
             mri (RapidataBenchmarkManager): The RapidataBenchmarkManager instance.
         """
         tracer.set_session_id(
