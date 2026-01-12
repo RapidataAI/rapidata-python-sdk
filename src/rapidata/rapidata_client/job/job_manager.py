@@ -72,6 +72,10 @@ class JobManager:
             )
         )
         rapidata_dataset = RapidataDataset(dataset.dataset_id, self._openapi_service)
+
+        with tracer.start_as_current_span("add_datapoints"):
+            _, failed_uploads = rapidata_dataset.add_datapoints(datapoints)
+
         job_definition_response = self._openapi_service.job_api.job_definition_post(
             create_job_definition_endpoint_input=CreateJobDefinitionEndpointInput(
                 definitionName=name,
@@ -88,10 +92,10 @@ class JobManager:
             name=name,
             openapi_service=self._openapi_service,
         )
-        with tracer.start_as_current_span("add_datapoints"):
-            _, failed_uploads = rapidata_dataset.add_datapoints(datapoints)
-            if failed_uploads:
-                raise FailedUploadException(rapidata_dataset, job_model, failed_uploads)
+
+        if failed_uploads:
+            raise FailedUploadException(rapidata_dataset, job_model, failed_uploads)
+
         return job_model
 
     def create_classification_job_definition(
