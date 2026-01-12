@@ -115,178 +115,174 @@
 
 :root {
     /* primitives */
-  --primitive-white: oklch(100% 0 0);
-  --primitive-black: oklch(0% 0 0);
+    --primitive-white: oklch(100% 0 0);
+    --primitive-black: oklch(0% 0 0);
 
-  --primitive-brand-primary: oklch(59.67% 0.2212 258.03);
-  --primitive-brand-dark: oklch(0.48 0.1674 258.22);
-  --primitive-brand-light: oklch(0.707 0.165 254.624);
-  --color-blue-400: oklch(0.707 0.165 254.624);
+    --primitive-brand-primary: oklch(59.67% 0.2212 258.03);
+    --primitive-brand-dark: oklch(0.48 0.1674 258.22);
+    --primitive-brand-light: oklch(0.707 0.165 254.624);
+    --color-blue-400: oklch(0.707 0.165 254.624);
 
-  --primitive-gold: oklch(0.8238 0.1678 90.3);
-  --primitive-brand-secondary: oklch(83.92% 0.165058 170.6089);
+    --primitive-gold: oklch(0.8238 0.1678 90.3);
+    --primitive-brand-secondary: oklch(83.92% 0.165058 170.6089);
 
-  --primitive-gray-100: oklch(0.967 0.003 264.542);
-  --primitive-gray-150: oklch(55.55% 0 0);
-  --primitive-gray-200: oklch(28.04% 0.0119 264.36);
-  --primitive-gray-250: oklch(0.25 0.0099 268.28);
-  --primitive-gray-300: oklch(20.27% 0.0118 254.1);
-  --primitive-gray-400: oklch(16.34% 0.0091 264.28);
+    --primitive-gray-100: oklch(0.967 0.003 264.542);
+    --primitive-gray-150: oklch(55.55% 0 0);
+    --primitive-gray-200: oklch(28.04% 0.0119 264.36);
+    --primitive-gray-250: oklch(0.25 0.0099 268.28);
+    --primitive-gray-300: oklch(20.27% 0.0118 254.1);
+    --primitive-gray-400: oklch(16.34% 0.0091 264.28);
 
-  --primitive-red-100: oklch(58.02% 0.2043 24.84);
+    --primitive-red-100: oklch(58.02% 0.2043 24.84);
 
-  --primitive-green-100: oklch(57.77% 0.1309 147.68);
+    --primitive-green-100: oklch(57.77% 0.1309 147.68);
 
-  --color-chart-1: #e76e50;
-  --color-chart-2: #2a9d90;
-  --color-chart-3: #274754;
-  --color-chart-4: #e8c468;
-  --color-chart-5: #f4a462;
+    --color-chart-1: #e76e50;
+    --color-chart-2: #2a9d90;
+    --color-chart-3: #274754;
+    --color-chart-4: #e8c468;
+    --color-chart-5: #f4a462;
 
-  /* semantic */
-  /* [role]-[prominence]-[interaction] */
-  /* [role] can be brand */
+    /* semantic */
+    /* [role]-[prominence]-[interaction] */
+    /* [role] can be brand */
 
-  --color-background: var(--primitive-gray-400);
-  --color-background-secondary: var(--primitive-gray-300);
-  --color-background-tertiary: var(--primitive-gray-200);
-  --color-background-tertiary-dark: var(--primitive-gray-250);
-  --color-background-error: var(--primitive-red-100);
-  --color-background-success: var(--primitive-green-100);
+    --color-background: var(--primitive-gray-400);
+    --color-background-secondary: var(--primitive-gray-300);
+    --color-background-tertiary: var(--primitive-gray-200);
+    --color-background-tertiary-dark: var(--primitive-gray-250);
+    --color-background-error: var(--primitive-red-100);
+    --color-background-success: var(--primitive-green-100);
 
-  /* Borders */
-  --color-border-primary: var(--primitive-gray-200);
-  --color-border-secondary: var(--primitive-gray-300);
-  --color-border-success: var(--primitive-green-100);
+    /* Borders */
+    --color-border-primary: var(--primitive-gray-200);
+    --color-border-secondary: var(--primitive-gray-300);
+    --color-border-success: var(--primitive-green-100);
 
-  /* text */
+    /* text */
 
-  --color-text-primary: var(--primitive-gray-100);
-  --color-text-secondary: var(--primitive-gray-150);
-  --color-text-error: var(--primitive-red-100);
-  --color-text-success: var(--primitive-green-100);
+    --color-text-primary: var(--primitive-gray-100);
+    --color-text-secondary: var(--primitive-gray-150);
+    --color-text-error: var(--primitive-red-100);
+    --color-text-success: var(--primitive-green-100);
 
-  /* Buttons */
-  --color-button-primary: var(--primitive-brand-primary);
-  --color-button-primary-dark: var(--primitive-brand-dark);
-  --color-button-text-primary: var(--primitive-white);
+    /* Buttons */
+    --color-button-primary: var(--primitive-brand-primary);
+    --color-button-primary-dark: var(--primitive-brand-dark);
+    --color-button-text-primary: var(--primitive-white);
 
-  /* Fill */
-  --color-fill-primary: var(--primitive-brand-primary);
-  --color-fill-primary-light: var(--primitive-brand-light);
-  --color-fill-secondary: var(--primitive-brand-secondary);
-  --color-fill-muted: var(--primitive-gray-150);
+    /* Fill */
+    --color-fill-primary: var(--primitive-brand-primary);
+    --color-fill-primary-light: var(--primitive-brand-light);
+    --color-fill-secondary: var(--primitive-brand-secondary);
+    --color-fill-muted: var(--primitive-gray-150);
 
-  --color-fill-gold: var(--primitive-gold);
-  /* preview frame custom colors */
-  --color-preview-frame: var(--primitive-gray-200);
+    --color-fill-gold: var(--primitive-gold);
+    /* preview frame custom colors */
+    --color-preview-frame: var(--primitive-gray-200);
 }
 
 
 /* Default theme*/
 
-:root > * {
+:root>* {
 
-  /* Primary color shades */
-  --md-primary-fg-color:               var(--color-background);
-  --md-primary-fg-color--light:        var(--color-background);
-  --md-primary-fg-color--dark:         var(--color-background);
-  --md-primary-bg-color:               hsla(0, 0%, 100%, 1);
-  --md-primary-bg-color--light:        hsla(0, 0%, 100%, 0.7);
+    /* Primary color shades */
+    --md-primary-fg-color: var(--color-background);
+    --md-primary-fg-color--light: var(--color-background);
+    --md-primary-fg-color--dark: var(--color-background);
+    --md-primary-bg-color: hsla(0, 0%, 100%, 1);
+    --md-primary-bg-color--light: hsla(0, 0%, 100%, 0.7);
 
-  /* Accent color shades */
-  /*--md-accent-fg-color:                hsla(#{hex2hsl($clr-indigo-a200)}, 1);*/
-  --md-accent-fg-color--transparent:   var(--color-background-secondary);
-  --md-accent-bg-color:                hsla(0, 0%, 100%, 1);
-  --md-accent-bg-color--light:         hsla(0, 0%, 100%, 0.7);
-
-
-  --md-hue: 225deg;
-
-  /** Default color shades */
-  --md-default-fg-color:             hsla(var(--md-hue), 15%, 90%, 0.82);
-  --md-default-fg-color--light:      hsla(var(--md-hue), 15%, 90%, 0.56);
-  --md-default-fg-color--lighter:    hsla(var(--md-hue), 15%, 90%, 0.32);
-  --md-default-fg-color--lightest:   hsla(var(--md-hue), 15%, 90%, 0.12);
-  /*--md-default-fg-color--lightest:   hsla(var(--md-hue), 15%, 90%, 0.12);*/
-
-  /* background */
-  --md-default-bg-color:             var(--color-background);
-  --md-default-bg-color--light:      var(--color-background);
-  /*--md-default-bg-color--light:      var(--color-background-secondary);*/
-  --md-default-bg-color--lighter:    var(--color-background-secondary);
-  --md-default-bg-color--lightest:   var(--color-background-secondary);
-
-  /* Code color shades */
-  --md-code-fg-color:                hsla(var(--md-hue), 18%, 86%, 0.82);
-  --md-code-bg-color:                hsla(var(--md-hue), 15%, 18%, 1);
-
-  /* Code highlighting color shades */
-  /*--md-code-hl-color:                hsla(#{hex2hsl($clr-blue-a400)}, 1);*/
-  /*--md-code-hl-color--light:         hsla(#{hex2hsl($clr-blue-a400)}, 0.1);*/
+    /* Accent color shades */
+    /*--md-accent-fg-color:                hsla(#{hex2hsl($clr-indigo-a200)}, 1);*/
+    --md-accent-fg-color--transparent: var(--color-background-secondary);
+    --md-accent-bg-color: hsla(0, 0%, 100%, 1);
+    --md-accent-bg-color--light: hsla(0, 0%, 100%, 0.7);
 
 
-  /* Code highlighting syntax color shades */
-  --md-code-hl-number-color:         hsla(6, 74%, 63%, 1);
-  --md-code-hl-special-color:        hsla(340, 83%, 66%, 1);
-  --md-code-hl-function-color:       hsla(291, 57%, 65%, 1);
-  --md-code-hl-constant-color:       hsla(250, 62%, 70%, 1);
-  --md-code-hl-keyword-color:        hsla(219, 66%, 64%, 1);
-  --md-code-hl-string-color:         hsla(150, 58%, 44%, 1);
-  --md-code-hl-name-color:           var(--md-code-fg-color);
-  --md-code-hl-operator-color:       var(--md-default-fg-color--light);
-  --md-code-hl-punctuation-color:    var(--md-default-fg-color--light);
-  --md-code-hl-comment-color:        var(--md-default-fg-color--light);
-  --md-code-hl-generic-color:        var(--md-default-fg-color--light);
-  --md-code-hl-variable-color:       var(--md-default-fg-color--light);
+    --md-hue: 225deg;
 
-  /* Typeset color shades */
-  --md-typeset-color:                var(--color-text-primary);
-  /*--md-typeset-color:                var(--md-default-fg-color);*/
+    /** Default color shades */
+    --md-default-fg-color: hsla(var(--md-hue), 15%, 90%, 0.82);
+    --md-default-fg-color--light: hsla(var(--md-hue), 15%, 90%, 0.56);
+    --md-default-fg-color--lighter: hsla(var(--md-hue), 15%, 90%, 0.32);
+    --md-default-fg-color--lightest: hsla(var(--md-hue), 15%, 90%, 0.12);
+    /*--md-default-fg-color--lightest:   hsla(var(--md-hue), 15%, 90%, 0.12);*/
 
-  /* Typeset `a` color shades */
-  --md-typeset-a-color:              var(--color-text-primary) !important;
-  /*--md-typeset-a-color:              var(--md-primary-fg-color); */
+    /* background */
+    --md-default-bg-color: var(--color-background);
+    --md-default-bg-color--light: var(--color-background);
+    /*--md-default-bg-color--light:      var(--color-background-secondary);*/
+    --md-default-bg-color--lighter: var(--color-background-secondary);
+    --md-default-bg-color--lightest: var(--color-background-secondary);
 
-  /* Typeset `kbd` color shades */
-  --md-typeset-kbd-color:            hsla(var(--md-hue), 15%, 90%, 0.12);
-  --md-typeset-kbd-accent-color:     hsla(var(--md-hue), 15%, 90%, 0.2);
-  --md-typeset-kbd-border-color:     hsla(var(--md-hue), 15%, 14%, 1);
+    /* Code color shades */
+    --md-code-fg-color: hsla(var(--md-hue), 18%, 86%, 0.82);
+    --md-code-bg-color: hsla(var(--md-hue), 15%, 18%, 1);
 
-  /* Typeset `mark` color shades */
-  /*--md-typeset-mark-color:           hsla(#{hex2hsl($clr-blue-a200)}, 0.3);*/
+    /* Code highlighting color shades */
+    /*--md-code-hl-color:                hsla(#{hex2hsl($clr-blue-a400)}, 1);*/
+    /*--md-code-hl-color--light:         hsla(#{hex2hsl($clr-blue-a400)}, 0.1);*/
 
-  /* Typeset `table` color shades */
-  --md-typeset-table-color:          hsla(var(--md-hue), 15%, 95%, 0.12);
-  --md-typeset-table-color--light:   hsla(var(--md-hue), 15%, 95%, 0.035);
 
-  /* Admonition color shades */
-  --md-admonition-fg-color:          var(--md-default-fg-color);
-  --md-admonition-bg-color:          var(--md-default-bg-color);
+    /* Code highlighting syntax color shades */
+    --md-code-hl-number-color: hsla(6, 74%, 63%, 1);
+    --md-code-hl-special-color: hsla(340, 83%, 66%, 1);
+    --md-code-hl-function-color: hsla(291, 57%, 65%, 1);
+    --md-code-hl-constant-color: hsla(250, 62%, 70%, 1);
+    --md-code-hl-keyword-color: hsla(219, 66%, 64%, 1);
+    --md-code-hl-string-color: hsla(150, 58%, 44%, 1);
+    --md-code-hl-name-color: var(--md-code-fg-color);
+    --md-code-hl-operator-color: var(--md-default-fg-color--light);
+    --md-code-hl-punctuation-color: var(--md-default-fg-color--light);
+    --md-code-hl-comment-color: var(--md-default-fg-color--light);
+    --md-code-hl-generic-color: var(--md-default-fg-color--light);
+    --md-code-hl-variable-color: var(--md-default-fg-color--light);
 
-  /* Footer color shades */
-  --md-footer-bg-color:              hsla(var(--md-hue), 15%, 10%, 0.87);
-  --md-footer-bg-color--dark:        hsla(var(--md-hue), 15%, 8%, 1);
+    /* Typeset color shades */
+    --md-typeset-color: var(--color-text-primary);
+    /*--md-typeset-color:                var(--md-default-fg-color);*/
 
-  /* Shadow depth 1 */
-  --md-shadow-z1:
-    0 #{px2rem(4px)} #{px2rem(10px)} hsla(0, 0%, 0%, 0.05),
-    0 0              #{px2rem(1px)}  hsla(0, 0%, 0%, 0.1);
+    /* Typeset `a` color shades */
+    --md-typeset-a-color: var(--color-blue-400);
+    /*--md-typeset-a-color:              var(--md-primary-fg-color); */
 
-  /* Shadow depth 2 */
-  --md-shadow-z2:
-    0 #{px2rem(4px)} #{px2rem(10px)} hsla(0, 0%, 0%, 0.25),
-    0 0              #{px2rem(1px)}  hsla(0, 0%, 0%, 0.25);
+    /* Typeset `kbd` color shades */
+    --md-typeset-kbd-color: hsla(var(--md-hue), 15%, 90%, 0.12);
+    --md-typeset-kbd-accent-color: hsla(var(--md-hue), 15%, 90%, 0.2);
+    --md-typeset-kbd-border-color: hsla(var(--md-hue), 15%, 14%, 1);
 
-  /* Shadow depth 3 */
-  --md-shadow-z3:
-    0 #{px2rem(4px)} #{px2rem(10px)} hsla(0, 0%, 0%, 0.4),
-    0 0              #{px2rem(1px)}  hsla(0, 0%, 0%, 0.35);
+    /* Typeset `mark` color shades */
+    /*--md-typeset-mark-color:           hsla(#{hex2hsl($clr-blue-a200)}, 0.3);*/
+
+    /* Typeset `table` color shades */
+    --md-typeset-table-color: hsla(var(--md-hue), 15%, 95%, 0.12);
+    --md-typeset-table-color--light: hsla(var(--md-hue), 15%, 95%, 0.035);
+
+    /* Admonition color shades */
+    --md-admonition-fg-color: var(--md-default-fg-color);
+    --md-admonition-bg-color: var(--md-default-bg-color);
+
+    /* Footer color shades */
+    --md-footer-bg-color: hsla(var(--md-hue), 15%, 10%, 0.87);
+    --md-footer-bg-color--dark: hsla(var(--md-hue), 15%, 8%, 1);
+
+    /* Shadow depth 1 */
+    --md-shadow-z1: 0 #{px2rem(4px)} #{px2rem(10px)} hsla(0, 0%, 0%, 0.05),
+    0 0 #{px2rem(1px)} hsla(0, 0%, 0%, 0.1);
+
+    /* Shadow depth 2 */
+    --md-shadow-z2: 0 #{px2rem(4px)} #{px2rem(10px)} hsla(0, 0%, 0%, 0.25),
+    0 0 #{px2rem(1px)} hsla(0, 0%, 0%, 0.25);
+
+    /* Shadow depth 3 */
+    --md-shadow-z3: 0 #{px2rem(4px)} #{px2rem(10px)} hsla(0, 0%, 0%, 0.4),
+    0 0 #{px2rem(1px)} hsla(0, 0%, 0%, 0.35);
 
 }
 
-.md-nav__link--active {
-}
+.md-nav__link--active {}
 
 /* Active navigation item */
 .md-nav__link--active {

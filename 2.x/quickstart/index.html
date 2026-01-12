@@ -1435,20 +1435,7 @@
 <blockquote>
 <p><strong>Note:</strong> When calling this function the data gets uploaded and prepared, but no annotators will start working on it yet.</p>
 </blockquote>
-<p>The parameters are as follows:</p>
-<ul>
-<li><code>name</code>: The name of the order. This is used to identify the order in the <a href="https://app.rapidata.ai/dashboard/orders">Rapidata Dashboard</a>. This name is also be used to find the order again later.</li>
-<li><code>instruction</code>: The instruction you want to show the annotators to select the image by.</li>
-<li><code>contexts</code>: The prompt that will be shown along side the two images and the instruction. (optional parameter)</li>
-<li><code>datapoints</code>: The image pairs we want to compare (order is randomized for every annotator). This can be any public URL (that points to an image, video or audio) or a local file path. This is a list of all datapoints you want to compare. Each datapoint consists of 2 files that are compared, as well as an optional context (which in this case is the prompt). The same instruction will be shown for each datapoint. There is a limit of 100 datapoints per order. If you need more than that, you can reach out to us at <a href="mailto:info@rapidata.ai">info@rapidata.ai</a>.</li>
-</ul>
-<p>Optionally you may add additional specifications with the <a href="../reference/rapidata/rapidata_client/order/rapidata_order_manager/#rapidata.rapidata_client.order.rapidata_order_manager.RapidataOrderManager.create_compare_order">other parameters</a>. As an example, the <code>responses_per_datapoint</code> that specifies how many responses you want per datapoint<sup>1</sup>.</p>
-<p>Further more you can customize to whom, how and in what sequence the tasks are shown:</p>
-<ul>
-<li><a href="../reference/rapidata/rapidata_client/filter/rapidata_filters/">Filters</a> to specify who should work on the order</li>
-<li><a href="../reference/rapidata/rapidata_client/settings/rapidata_settings/">Settings</a> to specify how the order should be shown</li>
-</ul>
-<p>These customizations can be added to the order through the <code>filters</code> and <code>settings</code> parameters respectively.</p>
+<p>For a detailed explanation of all available parameters (including <code>name</code>, <code>instruction</code>, <code>datapoints</code>, <code>contexts</code>, quality control options, and more), see the <a href="../order_parameters/">Order Parameters Reference</a>.</p>
 <h3 id="preview-the-order">Preview the Order<a class="headerlink" href="#preview-the-order" title="Permanent link">#</a></h3>
 <p>You can see how the users will be presented with the task by calling the <code>.preview()</code> method on the order object to make sure everything looks as expected:</p>
 <div class="language-py highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">order</span><span class="o">.</span><span class="n">preview</span><span class="p">()</span>
@@ -1478,9 +1465,7 @@
 </span></code></pre></div>
 <p>To better understand the results you can check out the <a href="/understanding_the_results/">Understanding the Results</a> guide.</p>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">#</a></h2>
-<p>This is just the beginning. You can create many different types of orders and customize them to your needs. Check out the <a href="../">Overview</a> for more examples and information or check out how to improve the quality of your responses in the <a href="/improve_order_quality/">Improve Quality</a> .</p>
-<hr>
-<p><sup>1</sup> Due to the possibility of multiple people answering at the same time, this number is treated as a minimum. The actual number of responses may be higher. The overshoot per datapoint will be lower the more datapoints are added.</p>
+<p>This is just the beginning. You can create many different types of orders and customize them to your needs. Check out the <a href="../">Overview</a> for more examples and information or check out how to improve the quality of your responses in the <a href="/improve_order_quality/">Improve Quality</a>.</p>
 
 
 
