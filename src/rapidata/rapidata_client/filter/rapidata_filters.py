@@ -1,7 +1,6 @@
 from rapidata.rapidata_client.filter import (
     CountryFilter,
     LanguageFilter,
-    UserScoreFilter,
     NotFilter,
     OrFilter,
     AndFilter,
@@ -19,7 +18,6 @@ class RapidataFilters:
         This might significantly slow down the number of responses you receive.
 
     Attributes:
-        user_score (UserScoreFilter): Filters for users with a specific user score.
         country (CountryFilter): Filters for users with a specific country.
         language (LanguageFilter): Filters for users with a specific language.
         not_filter (NotFilter): Inverts the filter.
