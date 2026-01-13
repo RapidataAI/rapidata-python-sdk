@@ -24,6 +24,8 @@ jobs:
     - uses: actions/checkout@v4
       with:
         ref: ${{ github.event.inputs.branch }}
+        fetch-tags: true
+        fetch-depth: 0
     - name: Set up Python
       uses: actions/setup-python@v6
       with:
@@ -87,6 +89,12 @@ jobs:
           fi
           uv version --bump $version_part
           new_version=$(uv version --short)
+        fi
+
+        # Prevent publishing the same version
+        if [ "$new_version" = "$old_version" ]; then
+          echo "Error: Version unchanged ($old_version). Tag v${new_version} may already exist."
+          exit 1
         fi
 
         echo "new_version=$new_version" >> $GITHUB_OUTPUT
