@@ -4759,6 +4759,67 @@
         ]
       }
     },
+    "/job/{jobId}": {
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Gets a job by its id.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetJobByIdEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
     "/job/definition/{definitionId}/revision/{revisionNumber}": {
       "get": {
         "tags": [
@@ -8466,6 +8527,9 @@
             "$ref": "#/components/schemas/IMetadataCountMetadata"
           },
           {
+            "$ref": "#/components/schemas/IMetadataDurationMetadata"
+          },
+          {
             "$ref": "#/components/schemas/IMetadataFileTypeMetadata"
           },
           {
@@ -8485,9 +8549,6 @@
           },
           {
             "$ref": "#/components/schemas/IMetadataTextMetadata"
-          },
-          {
-            "$ref": "#/components/schemas/IMetadataVideoDurationMetadata"
           }
         ],
         "discriminator": {
@@ -8495,14 +8556,14 @@
           "mapping": {
             "ClassificationMetadata": "#/components/schemas/IMetadataClassificationMetadata",
             "CountMetadata": "#/components/schemas/IMetadataCountMetadata",
+            "DurationMetadata": "#/components/schemas/IMetadataDurationMetadata",
             "FileTypeMetadata": "#/components/schemas/IMetadataFileTypeMetadata",
             "ImageDimensionMetadata": "#/components/schemas/IMetadataImageDimensionMetadata",
             "LocationMetadata": "#/components/schemas/IMetadataLocationMetadata",
             "OriginalFilenameMetadata": "#/components/schemas/IMetadataOriginalFilenameMetadata",
             "SourceUrlMetadata": "#/components/schemas/IMetadataSourceUrlMetadata",
             "StreamsMetadata": "#/components/schemas/IMetadataStreamsMetadata",
-            "TextMetadata": "#/components/schemas/IMetadataTextMetadata",
-            "VideoDurationMetadata": "#/components/schemas/IMetadataVideoDurationMetadata"
+            "TextMetadata": "#/components/schemas/IMetadataTextMetadata"
           }
         }
       },
@@ -8541,6 +8602,27 @@
           "count": {
             "type": "integer",
             "format": "int32"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "IMetadataDurationMetadata": {
+        "required": [
+          "duration",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "DurationMetadata"
+            ],
+            "type": "string"
+          },
+          "duration": {
+            "type": "string",
+            "format": "date-time"
           },
           "visibilities": {
             "$ref": "#/components/schemas/MetadataVisibilities"
@@ -8703,27 +8785,6 @@
           }
         }
       },
-      "IMetadataVideoDurationMetadata": {
-        "required": [
-          "duration",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "VideoDurationMetadata"
-            ],
-            "type": "string"
-          },
-          "duration": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "visibilities": {
-            "$ref": "#/components/schemas/MetadataVisibilities"
-          }
-        }
-      },
       "MetadataCollection": {
         "type": "object",
         "additionalProperties": {
@@ -8783,7 +8844,8 @@
       "AddRapidToAudienceModel": {
         "required": [
           "asset",
-          "payload"
+          "payload",
+          "randomCorrectProbability"
         ],
         "type": "object",
         "properties": {
@@ -10111,6 +10173,14 @@
           },
           "boundingBoxes": {
             "$ref": "#/components/schemas/ListOfBoxShape"
+          },
+          "requiredPrecision": {
+            "type": "number",
+            "format": "double"
+          },
+          "requiredCompleteness": {
+            "type": "number",
+            "format": "double"
           }
         }
       },
@@ -10528,6 +10598,7 @@
           "definitionId",
           "audienceId",
           "revisionNumber",
+          "pipelineId",
           "status",
           "createdAt"
         ],
@@ -10548,6 +10619,9 @@
           "revisionNumber": {
             "type": "integer",
             "format": "int32"
+          },
+          "pipelineId": {
+            "type": "string"
           },
           "status": {
             "type": "string"
@@ -10802,6 +10876,12 @@
             "type": "array",
             "items": {
               "type": "string"
+            }
+          },
+          "kayzenAudienceIds": {
+            "type": "array",
+            "items": {
+              "type": "number"
             }
           }
         }
@@ -12336,9 +12416,6 @@
           },
           {
             "$ref": "#/components/schemas/ICampaignFilterUserScoreFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterUserStateFilter"
           }
         ],
         "discriminator": {
@@ -12354,8 +12431,7 @@
             "OrFilter": "#/components/schemas/ICampaignFilterOrFilter",
             "ResponseCountFilter": "#/components/schemas/ICampaignFilterResponseCountFilter",
             "UserActionRestrictionFilter": "#/components/schemas/ICampaignFilterUserActionRestrictionFilter",
-            "UserScoreFilter": "#/components/schemas/ICampaignFilterUserScoreFilter",
-            "UserStateFilter": "#/components/schemas/ICampaignFilterUserStateFilter"
+            "UserScoreFilter": "#/components/schemas/ICampaignFilterUserScoreFilter"
           }
         }
       },
@@ -12629,34 +12705,6 @@
           },
           "dimension": {
             "type": "string"
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
-          }
-        }
-      },
-      "ICampaignFilterUserStateFilter": {
-        "required": [
-          "states",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "UserStateFilter"
-            ],
-            "type": "string"
-          },
-          "states": {
-            "type": "array",
-            "items": {
-              "enum": [
-                "Training",
-                "Blacklist",
-                "Active"
-              ]
-            }
           },
           "executionOrder": {
             "type": "integer",
@@ -14349,6 +14397,65 @@
       "FileStreamResult": {
         "type": "string",
         "format": "binary"
+      },
+      "GetJobByIdEndpoint_Output": {
+        "required": [
+          "jobId",
+          "name",
+          "definitionId",
+          "audienceId",
+          "revisionNumber",
+          "pipelineId",
+          "status",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "jobId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "definitionId": {
+            "type": "string"
+          },
+          "audienceId": {
+            "type": "string"
+          },
+          "revisionNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pipelineId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "completedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "resultFileName": {
+            "type": "string",
+            "nullable": true
+          },
+          "failedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "failureMessage": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
       },
       "GetJobDefinitionByIdEndpoint_Output": {
         "required": [
@@ -17211,6 +17318,318 @@
           }
         }
       },
+      "IValidationTruthModel": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelAttachCategoryTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelBoundingBoxTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelClassifyTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelCompareTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelEmptyValidationTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelLineTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelLocateBoxTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelMultiCompareTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelNamedEntityTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelPolygonTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelScrubTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelSkipTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelTranscriptionTruthModel"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "AttachCategoryTruth": "#/components/schemas/IValidationTruthModelAttachCategoryTruthModel",
+            "BoundingBoxTruth": "#/components/schemas/IValidationTruthModelBoundingBoxTruthModel",
+            "ClassifyTruth": "#/components/schemas/IValidationTruthModelClassifyTruthModel",
+            "CompareTruth": "#/components/schemas/IValidationTruthModelCompareTruthModel",
+            "EmptyValidationTruth": "#/components/schemas/IValidationTruthModelEmptyValidationTruthModel",
+            "LineTruth": "#/components/schemas/IValidationTruthModelLineTruthModel",
+            "LocateBoxTruth": "#/components/schemas/IValidationTruthModelLocateBoxTruthModel",
+            "MultiCompareTruth": "#/components/schemas/IValidationTruthModelMultiCompareTruthModel",
+            "NamedEntityTruth": "#/components/schemas/IValidationTruthModelNamedEntityTruthModel",
+            "PolygonTruth": "#/components/schemas/IValidationTruthModelPolygonTruthModel",
+            "ScrubTruth": "#/components/schemas/IValidationTruthModelScrubTruthModel",
+            "SkipTruth": "#/components/schemas/IValidationTruthModelSkipTruthModel",
+            "TranscriptionTruth": "#/components/schemas/IValidationTruthModelTranscriptionTruthModel"
+          }
+        }
+      },
+      "IValidationTruthModelAttachCategoryTruthModel": {
+        "required": [
+          "correctCategories",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "AttachCategoryTruth"
+            ],
+            "type": "string"
+          },
+          "correctCategories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IValidationTruthModelBoundingBoxTruthModel": {
+        "required": [
+          "xMin",
+          "yMin",
+          "xMax",
+          "yMax",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "BoundingBoxTruth"
+            ],
+            "type": "string"
+          },
+          "xMin": {
+            "type": "number",
+            "format": "double"
+          },
+          "yMin": {
+            "type": "number",
+            "format": "double"
+          },
+          "xMax": {
+            "type": "number",
+            "format": "double"
+          },
+          "yMax": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "IValidationTruthModelClassifyTruthModel": {
+        "required": [
+          "correctCategories",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ClassifyTruth"
+            ],
+            "type": "string"
+          },
+          "correctCategories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IValidationTruthModelCompareTruthModel": {
+        "required": [
+          "winnerId",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CompareTruth"
+            ],
+            "type": "string"
+          },
+          "winnerId": {
+            "type": "string"
+          }
+        }
+      },
+      "IValidationTruthModelEmptyValidationTruthModel": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "EmptyValidationTruth"
+            ],
+            "type": "string"
+          }
+        }
+      },
+      "IValidationTruthModelLineTruthModel": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LineTruth"
+            ],
+            "type": "string"
+          }
+        }
+      },
+      "IValidationTruthModelLocateBoxTruthModel": {
+        "required": [
+          "boundingBoxes",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LocateBoxTruth"
+            ],
+            "type": "string"
+          },
+          "boundingBoxes": {
+            "$ref": "#/components/schemas/ListOfBoxShape"
+          },
+          "requiredPrecision": {
+            "type": "number",
+            "format": "double"
+          },
+          "requiredCompleteness": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "IValidationTruthModelMultiCompareTruthModel": {
+        "required": [
+          "correctCombinations",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "MultiCompareTruth"
+            ],
+            "type": "string"
+          },
+          "correctCombinations": {
+            "$ref": "#/components/schemas/ListOfListOfString"
+          }
+        }
+      },
+      "IValidationTruthModelNamedEntityTruthModel": {
+        "required": [
+          "classifications",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NamedEntityTruth"
+            ],
+            "type": "string"
+          },
+          "classifications": {
+            "$ref": "#/components/schemas/ListOfNamedClassification"
+          }
+        }
+      },
+      "IValidationTruthModelPolygonTruthModel": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "PolygonTruth"
+            ],
+            "type": "string"
+          }
+        }
+      },
+      "IValidationTruthModelScrubTruthModel": {
+        "required": [
+          "validRanges",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ScrubTruth"
+            ],
+            "type": "string"
+          },
+          "validRanges": {
+            "$ref": "#/components/schemas/ListOfScrubRange"
+          }
+        }
+      },
+      "IValidationTruthModelSkipTruthModel": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "SkipTruth"
+            ],
+            "type": "string"
+          }
+        }
+      },
+      "IValidationTruthModelTranscriptionTruthModel": {
+        "required": [
+          "correctWords",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TranscriptionTruth"
+            ],
+            "type": "string"
+          },
+          "correctWords": {
+            "$ref": "#/components/schemas/ListOfTranscriptionWord"
+          },
+          "strictGrading": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "requiredPrecision": {
+            "type": "number",
+            "format": "double"
+          },
+          "requiredCompleteness": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
       "LineResult_Line": {
         "required": [
           "size",
@@ -17330,10 +17749,10 @@
           }
         ]
       },
-      "OptionOfIValidationTruth": {
+      "OptionOfIValidationTruthModel": {
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IValidationTruth"
+            "$ref": "#/components/schemas/IValidationTruthModel"
           },
           {
             "nullable": true
@@ -17649,7 +18068,7 @@
         "type": "object",
         "properties": {
           "truth": {
-            "$ref": "#/components/schemas/OptionOfIValidationTruth"
+            "$ref": "#/components/schemas/OptionOfIValidationTruthModel"
           },
           "explanation": {
             "$ref": "#/components/schemas/OptionOfstring"
@@ -17684,7 +18103,7 @@
                 "nullable": true
               },
               {
-                "$ref": "#/components/schemas/IValidationTruth"
+                "$ref": "#/components/schemas/IValidationTruthModel"
               }
             ]
           },
@@ -17765,7 +18184,7 @@
                 "nullable": true
               },
               {
-                "$ref": "#/components/schemas/IValidationTruth"
+                "$ref": "#/components/schemas/IValidationTruthModel"
               }
             ]
           },
@@ -17880,7 +18299,7 @@
                 "nullable": true
               },
               {
-                "$ref": "#/components/schemas/IValidationTruth"
+                "$ref": "#/components/schemas/IValidationTruthModel"
               }
             ]
           },

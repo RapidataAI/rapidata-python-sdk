@@ -17,19 +17,25 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class BoostingProfile(BaseModel):
+class IValidationTruthModelClassifyTruthModel(BaseModel):
     """
-    BoostingProfile
+    IValidationTruthModelClassifyTruthModel
     """ # noqa: E501
-    requires_global_boost: Optional[StrictBool] = Field(default=None, alias="requiresGlobalBoost")
-    language_boosts: Optional[List[StrictStr]] = Field(default=None, alias="languageBoosts")
-    kayzen_audience_ids: Optional[List[Union[StrictFloat, StrictInt]]] = Field(default=None, alias="kayzenAudienceIds")
-    __properties: ClassVar[List[str]] = ["requiresGlobalBoost", "languageBoosts", "kayzenAudienceIds"]
+    t: StrictStr = Field(alias="_t")
+    correct_categories: List[StrictStr] = Field(alias="correctCategories")
+    __properties: ClassVar[List[str]] = ["_t", "correctCategories"]
+
+    @field_validator('t')
+    def t_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['ClassifyTruth']):
+            raise ValueError("must be one of enum values ('ClassifyTruth')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -49,7 +55,7 @@ class BoostingProfile(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of BoostingProfile from a JSON string"""
+        """Create an instance of IValidationTruthModelClassifyTruthModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -74,7 +80,7 @@ class BoostingProfile(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of BoostingProfile from a dict"""
+        """Create an instance of IValidationTruthModelClassifyTruthModel from a dict"""
         if obj is None:
             return None
 
@@ -82,9 +88,8 @@ class BoostingProfile(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "requiresGlobalBoost": obj.get("requiresGlobalBoost"),
-            "languageBoosts": obj.get("languageBoosts"),
-            "kayzenAudienceIds": obj.get("kayzenAudienceIds")
+            "_t": obj.get("_t"),
+            "correctCategories": obj.get("correctCategories")
         })
         return _obj
 

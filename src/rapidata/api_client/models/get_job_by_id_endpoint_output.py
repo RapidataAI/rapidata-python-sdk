@@ -19,13 +19,13 @@ import json
 
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class QueryJobsResult(BaseModel):
+class GetJobByIdEndpointOutput(BaseModel):
     """
-    QueryJobsResult
+    GetJobByIdEndpointOutput
     """ # noqa: E501
     job_id: StrictStr = Field(alias="jobId")
     name: StrictStr
@@ -34,8 +34,12 @@ class QueryJobsResult(BaseModel):
     revision_number: StrictInt = Field(alias="revisionNumber")
     pipeline_id: StrictStr = Field(alias="pipelineId")
     status: StrictStr
+    completed_at: Optional[datetime] = Field(default=None, alias="completedAt")
+    result_file_name: Optional[StrictStr] = Field(default=None, alias="resultFileName")
+    failed_at: Optional[datetime] = Field(default=None, alias="failedAt")
+    failure_message: Optional[StrictStr] = Field(default=None, alias="failureMessage")
     created_at: datetime = Field(alias="createdAt")
-    __properties: ClassVar[List[str]] = ["jobId", "name", "definitionId", "audienceId", "revisionNumber", "pipelineId", "status", "createdAt"]
+    __properties: ClassVar[List[str]] = ["jobId", "name", "definitionId", "audienceId", "revisionNumber", "pipelineId", "status", "completedAt", "resultFileName", "failedAt", "failureMessage", "createdAt"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -55,7 +59,7 @@ class QueryJobsResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of QueryJobsResult from a JSON string"""
+        """Create an instance of GetJobByIdEndpointOutput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -76,11 +80,31 @@ class QueryJobsResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if completed_at (nullable) is None
+        # and model_fields_set contains the field
+        if self.completed_at is None and "completed_at" in self.model_fields_set:
+            _dict['completedAt'] = None
+
+        # set to None if result_file_name (nullable) is None
+        # and model_fields_set contains the field
+        if self.result_file_name is None and "result_file_name" in self.model_fields_set:
+            _dict['resultFileName'] = None
+
+        # set to None if failed_at (nullable) is None
+        # and model_fields_set contains the field
+        if self.failed_at is None and "failed_at" in self.model_fields_set:
+            _dict['failedAt'] = None
+
+        # set to None if failure_message (nullable) is None
+        # and model_fields_set contains the field
+        if self.failure_message is None and "failure_message" in self.model_fields_set:
+            _dict['failureMessage'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of QueryJobsResult from a dict"""
+        """Create an instance of GetJobByIdEndpointOutput from a dict"""
         if obj is None:
             return None
 
@@ -95,6 +119,10 @@ class QueryJobsResult(BaseModel):
             "revisionNumber": obj.get("revisionNumber"),
             "pipelineId": obj.get("pipelineId"),
             "status": obj.get("status"),
+            "completedAt": obj.get("completedAt"),
+            "resultFileName": obj.get("resultFileName"),
+            "failedAt": obj.get("failedAt"),
+            "failureMessage": obj.get("failureMessage"),
             "createdAt": obj.get("createdAt")
         })
         return _obj

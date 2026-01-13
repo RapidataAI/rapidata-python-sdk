@@ -33,7 +33,7 @@ class AddRapidToAudienceModel(BaseModel):
     asset: IAssetInput
     payload: IRapidPayload
     truth: Optional[IValidationTruth] = None
-    random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="randomCorrectProbability")
+    random_correct_probability: Union[StrictFloat, StrictInt] = Field(alias="randomCorrectProbability")
     explanation: Optional[StrictStr] = None
     context: Optional[StrictStr] = None
     context_asset: Optional[IAssetInput] = Field(default=None, alias="contextAsset")

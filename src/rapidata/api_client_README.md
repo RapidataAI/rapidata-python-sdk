@@ -146,6 +146,7 @@ Class | Method | HTTP request | Description
 *JobApi* | [**job_definition_definition_id_revisions_get**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_revisions_get) | **GET** /job/definition/{definitionId}/revisions | Queries job revisions for a specific definition based on filter, page, and sort criteria.
 *JobApi* | [**job_definition_post**](rapidata/api_client/docs/JobApi.md#job_definition_post) | **POST** /job/definition | Creates a new job definition.
 *JobApi* | [**job_definitions_get**](rapidata/api_client/docs/JobApi.md#job_definitions_get) | **GET** /job/definitions | Queries job definitions based on filter, page, and sort criteria.
+*JobApi* | [**job_job_id_get**](rapidata/api_client/docs/JobApi.md#job_job_id_get) | **GET** /job/{jobId} | Gets a job by its id.
 *JobApi* | [**job_post**](rapidata/api_client/docs/JobApi.md#job_post) | **POST** /job | Creates a new job from a job definition and audience.
 *JobApi* | [**jobs_get**](rapidata/api_client/docs/JobApi.md#jobs_get) | **GET** /jobs | Queries jobs based on filter, page, and sort criteria.
 *LeaderboardApi* | [**benchmark_standing_leaderboard_id_participant_id_get**](rapidata/api_client/docs/LeaderboardApi.md#benchmark_standing_leaderboard_id_participant_id_get) | **GET** /benchmark/standing/{leaderboardId}/{participantId} | Gets a standing by leaderboardId and participantId.
@@ -310,6 +311,7 @@ Class | Method | HTTP request | Description
  - [GetFileMetadataResult](rapidata/api_client/docs/GetFileMetadataResult.md)
  - [GetGroupedRankingWorkflowResultsModel](rapidata/api_client/docs/GetGroupedRankingWorkflowResultsModel.md)
  - [GetGroupedRankingWorkflowResultsResult](rapidata/api_client/docs/GetGroupedRankingWorkflowResultsResult.md)
+ - [GetJobByIdEndpointOutput](rapidata/api_client/docs/GetJobByIdEndpointOutput.md)
  - [GetJobDefinitionByIdEndpointOutput](rapidata/api_client/docs/GetJobDefinitionByIdEndpointOutput.md)
  - [GetJobRevisionEndpointOutput](rapidata/api_client/docs/GetJobRevisionEndpointOutput.md)
  - [GetLeaderboardByIdResult](rapidata/api_client/docs/GetLeaderboardByIdResult.md)
@@ -372,7 +374,6 @@ Class | Method | HTTP request | Description
  - [ICampaignFilterResponseCountFilter](rapidata/api_client/docs/ICampaignFilterResponseCountFilter.md)
  - [ICampaignFilterUserActionRestrictionFilter](rapidata/api_client/docs/ICampaignFilterUserActionRestrictionFilter.md)
  - [ICampaignFilterUserScoreFilter](rapidata/api_client/docs/ICampaignFilterUserScoreFilter.md)
- - [ICampaignFilterUserStateFilter](rapidata/api_client/docs/ICampaignFilterUserStateFilter.md)
  - [IDatasetMetadataInput](rapidata/api_client/docs/IDatasetMetadataInput.md)
  - [IDatasetMetadataInputPromptAssetMetadataInput](rapidata/api_client/docs/IDatasetMetadataInputPromptAssetMetadataInput.md)
  - [IDatasetMetadataInputPromptMetadataInput](rapidata/api_client/docs/IDatasetMetadataInputPromptMetadataInput.md)
@@ -382,6 +383,7 @@ Class | Method | HTTP request | Description
  - [IMetadata](rapidata/api_client/docs/IMetadata.md)
  - [IMetadataClassificationMetadata](rapidata/api_client/docs/IMetadataClassificationMetadata.md)
  - [IMetadataCountMetadata](rapidata/api_client/docs/IMetadataCountMetadata.md)
+ - [IMetadataDurationMetadata](rapidata/api_client/docs/IMetadataDurationMetadata.md)
  - [IMetadataFileTypeMetadata](rapidata/api_client/docs/IMetadataFileTypeMetadata.md)
  - [IMetadataImageDimensionMetadata](rapidata/api_client/docs/IMetadataImageDimensionMetadata.md)
  - [IMetadataInput](rapidata/api_client/docs/IMetadataInput.md)
@@ -402,7 +404,6 @@ Class | Method | HTTP request | Description
  - [IMetadataSourceUrlMetadata](rapidata/api_client/docs/IMetadataSourceUrlMetadata.md)
  - [IMetadataStreamsMetadata](rapidata/api_client/docs/IMetadataStreamsMetadata.md)
  - [IMetadataTextMetadata](rapidata/api_client/docs/IMetadataTextMetadata.md)
- - [IMetadataVideoDurationMetadata](rapidata/api_client/docs/IMetadataVideoDurationMetadata.md)
  - [IOrderWorkflowModel](rapidata/api_client/docs/IOrderWorkflowModel.md)
  - [IOrderWorkflowModelCompareWorkflowModel](rapidata/api_client/docs/IOrderWorkflowModelCompareWorkflowModel.md)
  - [IOrderWorkflowModelEvaluationWorkflowModel](rapidata/api_client/docs/IOrderWorkflowModelEvaluationWorkflowModel.md)
@@ -501,6 +502,20 @@ Class | Method | HTTP request | Description
  - [IValidationTruthEmptyValidationTruth](rapidata/api_client/docs/IValidationTruthEmptyValidationTruth.md)
  - [IValidationTruthLineTruth](rapidata/api_client/docs/IValidationTruthLineTruth.md)
  - [IValidationTruthLocateBoxTruth](rapidata/api_client/docs/IValidationTruthLocateBoxTruth.md)
+ - [IValidationTruthModel](rapidata/api_client/docs/IValidationTruthModel.md)
+ - [IValidationTruthModelAttachCategoryTruthModel](rapidata/api_client/docs/IValidationTruthModelAttachCategoryTruthModel.md)
+ - [IValidationTruthModelBoundingBoxTruthModel](rapidata/api_client/docs/IValidationTruthModelBoundingBoxTruthModel.md)
+ - [IValidationTruthModelClassifyTruthModel](rapidata/api_client/docs/IValidationTruthModelClassifyTruthModel.md)
+ - [IValidationTruthModelCompareTruthModel](rapidata/api_client/docs/IValidationTruthModelCompareTruthModel.md)
+ - [IValidationTruthModelEmptyValidationTruthModel](rapidata/api_client/docs/IValidationTruthModelEmptyValidationTruthModel.md)
+ - [IValidationTruthModelLineTruthModel](rapidata/api_client/docs/IValidationTruthModelLineTruthModel.md)
+ - [IValidationTruthModelLocateBoxTruthModel](rapidata/api_client/docs/IValidationTruthModelLocateBoxTruthModel.md)
+ - [IValidationTruthModelMultiCompareTruthModel](rapidata/api_client/docs/IValidationTruthModelMultiCompareTruthModel.md)
+ - [IValidationTruthModelNamedEntityTruthModel](rapidata/api_client/docs/IValidationTruthModelNamedEntityTruthModel.md)
+ - [IValidationTruthModelPolygonTruthModel](rapidata/api_client/docs/IValidationTruthModelPolygonTruthModel.md)
+ - [IValidationTruthModelScrubTruthModel](rapidata/api_client/docs/IValidationTruthModelScrubTruthModel.md)
+ - [IValidationTruthModelSkipTruthModel](rapidata/api_client/docs/IValidationTruthModelSkipTruthModel.md)
+ - [IValidationTruthModelTranscriptionTruthModel](rapidata/api_client/docs/IValidationTruthModelTranscriptionTruthModel.md)
  - [IValidationTruthMultiCompareTruth](rapidata/api_client/docs/IValidationTruthMultiCompareTruth.md)
  - [IValidationTruthNamedEntityTruth](rapidata/api_client/docs/IValidationTruthNamedEntityTruth.md)
  - [IValidationTruthPolygonTruth](rapidata/api_client/docs/IValidationTruthPolygonTruth.md)

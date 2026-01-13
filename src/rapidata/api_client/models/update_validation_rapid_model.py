@@ -20,7 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.i_asset_input import IAssetInput
-from rapidata.api_client.models.i_validation_truth import IValidationTruth
+from rapidata.api_client.models.i_validation_truth_model import IValidationTruthModel
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,7 +28,7 @@ class UpdateValidationRapidModel(BaseModel):
     """
     UpdateValidationRapidModel
     """ # noqa: E501
-    truth: Optional[IValidationTruth] = None
+    truth: Optional[IValidationTruthModel] = None
     explanation: Optional[StrictStr] = None
     context: Optional[StrictStr] = None
     context_asset: Optional[IAssetInput] = Field(default=None, alias="contextAsset")
@@ -117,7 +117,7 @@ class UpdateValidationRapidModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "truth": IValidationTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
+            "truth": IValidationTruthModel.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
             "explanation": obj.get("explanation"),
             "context": obj.get("context"),
             "contextAsset": IAssetInput.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,

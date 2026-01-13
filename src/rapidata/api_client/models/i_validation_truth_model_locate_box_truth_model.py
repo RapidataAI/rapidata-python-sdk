@@ -17,19 +17,28 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from rapidata.api_client.models.box_shape import BoxShape
 from typing import Optional, Set
 from typing_extensions import Self
 
-class BoostingProfile(BaseModel):
+class IValidationTruthModelLocateBoxTruthModel(BaseModel):
     """
-    BoostingProfile
+    IValidationTruthModelLocateBoxTruthModel
     """ # noqa: E501
-    requires_global_boost: Optional[StrictBool] = Field(default=None, alias="requiresGlobalBoost")
-    language_boosts: Optional[List[StrictStr]] = Field(default=None, alias="languageBoosts")
-    kayzen_audience_ids: Optional[List[Union[StrictFloat, StrictInt]]] = Field(default=None, alias="kayzenAudienceIds")
-    __properties: ClassVar[List[str]] = ["requiresGlobalBoost", "languageBoosts", "kayzenAudienceIds"]
+    t: StrictStr = Field(alias="_t")
+    bounding_boxes: List[BoxShape] = Field(alias="boundingBoxes")
+    required_precision: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="requiredPrecision")
+    required_completeness: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="requiredCompleteness")
+    __properties: ClassVar[List[str]] = ["_t", "boundingBoxes", "requiredPrecision", "requiredCompleteness"]
+
+    @field_validator('t')
+    def t_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['LocateBoxTruth']):
+            raise ValueError("must be one of enum values ('LocateBoxTruth')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -49,7 +58,7 @@ class BoostingProfile(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of BoostingProfile from a JSON string"""
+        """Create an instance of IValidationTruthModelLocateBoxTruthModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -70,11 +79,18 @@ class BoostingProfile(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in bounding_boxes (list)
+        _items = []
+        if self.bounding_boxes:
+            for _item_bounding_boxes in self.bounding_boxes:
+                if _item_bounding_boxes:
+                    _items.append(_item_bounding_boxes.to_dict())
+            _dict['boundingBoxes'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of BoostingProfile from a dict"""
+        """Create an instance of IValidationTruthModelLocateBoxTruthModel from a dict"""
         if obj is None:
             return None
 
@@ -82,9 +98,10 @@ class BoostingProfile(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "requiresGlobalBoost": obj.get("requiresGlobalBoost"),
-            "languageBoosts": obj.get("languageBoosts"),
-            "kayzenAudienceIds": obj.get("kayzenAudienceIds")
+            "_t": obj.get("_t"),
+            "boundingBoxes": [BoxShape.from_dict(_item) for _item in obj["boundingBoxes"]] if obj.get("boundingBoxes") is not None else None,
+            "requiredPrecision": obj.get("requiredPrecision"),
+            "requiredCompleteness": obj.get("requiredCompleteness")
         })
         return _obj
 

@@ -21,7 +21,7 @@ from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, Stric
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.i_asset_model import IAssetModel
 from rapidata.api_client.models.i_rapid_payload import IRapidPayload
-from rapidata.api_client.models.i_validation_truth import IValidationTruth
+from rapidata.api_client.models.i_validation_truth_model import IValidationTruthModel
 from rapidata.api_client.models.rapid_state import RapidState
 from typing import Optional, Set
 from typing_extensions import Self
@@ -33,7 +33,7 @@ class GetValidationRapidsResult(BaseModel):
     id: StrictStr
     type: StrictStr
     asset: Optional[IAssetModel]
-    truth: Optional[IValidationTruth] = None
+    truth: Optional[IValidationTruthModel] = None
     payload: IRapidPayload
     context: Optional[StrictStr] = None
     context_asset: Optional[IAssetModel] = Field(default=None, alias="contextAsset")
@@ -135,7 +135,7 @@ class GetValidationRapidsResult(BaseModel):
             "id": obj.get("id"),
             "type": obj.get("type"),
             "asset": IAssetModel.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
-            "truth": IValidationTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
+            "truth": IValidationTruthModel.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
             "payload": IRapidPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
             "context": obj.get("context"),
             "contextAsset": IAssetModel.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
