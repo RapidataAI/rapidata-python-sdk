@@ -58,8 +58,8 @@ jobs:
 
           if [ "$version_part" = "none" ]; then
             # Just increment pre-release number, keep base version
-            # Extract base version (strip any existing pre-release suffix)
-            base_version=$(echo "$old_version" | sed -E 's/[ab]|rc[0-9]+$//')
+            # Extract base version (strip any existing pre-release suffix like a1, b2, rc3)
+            base_version=$(echo "$old_version" | sed -E 's/(a|b|rc)[0-9]+$//')
           else
             # Bump the base version first
             uv version --bump $version_part
