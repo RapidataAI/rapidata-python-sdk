@@ -23,7 +23,7 @@ from rapidata.api_client.models.feature_flag_model import FeatureFlagModel
 from rapidata.api_client.models.i_asset_input import IAssetInput
 from rapidata.api_client.models.i_rapid_payload import IRapidPayload
 from rapidata.api_client.models.i_validation_metadata_input import IValidationMetadataInput
-from rapidata.api_client.models.i_validation_truth import IValidationTruth
+from rapidata.api_client.models.i_validation_truth_model import IValidationTruthModel
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -33,7 +33,7 @@ class AddValidationRapidModel(BaseModel):
     """ # noqa: E501
     asset: IAssetInput
     payload: IRapidPayload
-    truth: Optional[IValidationTruth] = None
+    truth: Optional[IValidationTruthModel] = None
     random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="randomCorrectProbability")
     explanation: Optional[StrictStr] = None
     context: Optional[StrictStr] = None
@@ -141,7 +141,7 @@ class AddValidationRapidModel(BaseModel):
         _obj = cls.model_validate({
             "asset": IAssetInput.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
             "payload": IRapidPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
-            "truth": IValidationTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
+            "truth": IValidationTruthModel.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
             "randomCorrectProbability": obj.get("randomCorrectProbability"),
             "explanation": obj.get("explanation"),
             "context": obj.get("context"),

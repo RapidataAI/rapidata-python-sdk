@@ -157,6 +157,7 @@ class AudienceExampleHandler:
                     else None
                 ),
                 explanation=explanation,
+                randomCorrectProbability=0.5,
             ),
         )
 

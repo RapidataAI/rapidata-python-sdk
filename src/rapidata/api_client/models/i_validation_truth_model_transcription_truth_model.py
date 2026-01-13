@@ -17,27 +17,28 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
-from rapidata.api_client.models.box_shape import BoxShape
+from rapidata.api_client.models.transcription_word import TranscriptionWord
 from typing import Optional, Set
 from typing_extensions import Self
 
-class IValidationTruthLocateBoxTruth(BaseModel):
+class IValidationTruthModelTranscriptionTruthModel(BaseModel):
     """
-    IValidationTruthLocateBoxTruth
+    IValidationTruthModelTranscriptionTruthModel
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
-    bounding_boxes: List[BoxShape] = Field(alias="boundingBoxes")
+    correct_words: List[TranscriptionWord] = Field(alias="correctWords")
+    strict_grading: Optional[StrictBool] = Field(default=None, alias="strictGrading")
     required_precision: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="requiredPrecision")
     required_completeness: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="requiredCompleteness")
-    __properties: ClassVar[List[str]] = ["_t", "boundingBoxes", "requiredPrecision", "requiredCompleteness"]
+    __properties: ClassVar[List[str]] = ["_t", "correctWords", "strictGrading", "requiredPrecision", "requiredCompleteness"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['LocateBoxTruth']):
-            raise ValueError("must be one of enum values ('LocateBoxTruth')")
+        if value not in set(['TranscriptionTruth']):
+            raise ValueError("must be one of enum values ('TranscriptionTruth')")
         return value
 
     model_config = ConfigDict(
@@ -58,7 +59,7 @@ class IValidationTruthLocateBoxTruth(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of IValidationTruthLocateBoxTruth from a JSON string"""
+        """Create an instance of IValidationTruthModelTranscriptionTruthModel from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -79,18 +80,23 @@ class IValidationTruthLocateBoxTruth(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in bounding_boxes (list)
+        # override the default output from pydantic by calling `to_dict()` of each item in correct_words (list)
         _items = []
-        if self.bounding_boxes:
-            for _item_bounding_boxes in self.bounding_boxes:
-                if _item_bounding_boxes:
-                    _items.append(_item_bounding_boxes.to_dict())
-            _dict['boundingBoxes'] = _items
+        if self.correct_words:
+            for _item_correct_words in self.correct_words:
+                if _item_correct_words:
+                    _items.append(_item_correct_words.to_dict())
+            _dict['correctWords'] = _items
+        # set to None if strict_grading (nullable) is None
+        # and model_fields_set contains the field
+        if self.strict_grading is None and "strict_grading" in self.model_fields_set:
+            _dict['strictGrading'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of IValidationTruthLocateBoxTruth from a dict"""
+        """Create an instance of IValidationTruthModelTranscriptionTruthModel from a dict"""
         if obj is None:
             return None
 
@@ -99,7 +105,8 @@ class IValidationTruthLocateBoxTruth(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t"),
-            "boundingBoxes": [BoxShape.from_dict(_item) for _item in obj["boundingBoxes"]] if obj.get("boundingBoxes") is not None else None,
+            "correctWords": [TranscriptionWord.from_dict(_item) for _item in obj["correctWords"]] if obj.get("correctWords") is not None else None,
+            "strictGrading": obj.get("strictGrading"),
             "requiredPrecision": obj.get("requiredPrecision"),
             "requiredCompleteness": obj.get("requiredCompleteness")
         })

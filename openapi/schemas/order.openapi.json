@@ -289,6 +289,52 @@
         }
       }
     },
+    "/job/{jobId}": {
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Gets a job by its id.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetJobByIdEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/job/definition/{definitionId}/revision/{revisionNumber}": {
       "get": {
         "tags": [
@@ -1922,6 +1968,65 @@
           "EndsWith",
           "In"
         ]
+      },
+      "GetJobByIdEndpoint_Output": {
+        "required": [
+          "jobId",
+          "name",
+          "definitionId",
+          "audienceId",
+          "revisionNumber",
+          "pipelineId",
+          "status",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "jobId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "definitionId": {
+            "type": "string"
+          },
+          "audienceId": {
+            "type": "string"
+          },
+          "revisionNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pipelineId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "completedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "resultFileName": {
+            "type": "string",
+            "nullable": true
+          },
+          "failedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "failureMessage": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
       },
       "GetJobDefinitionByIdEndpoint_Output": {
         "required": [
@@ -4111,6 +4216,7 @@
           "definitionId",
           "audienceId",
           "revisionNumber",
+          "pipelineId",
           "status",
           "createdAt"
         ],
@@ -4131,6 +4237,9 @@
           "revisionNumber": {
             "type": "integer",
             "format": "int32"
+          },
+          "pipelineId": {
+            "type": "string"
           },
           "status": {
             "type": "string"

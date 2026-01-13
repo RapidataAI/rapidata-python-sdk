@@ -409,7 +409,8 @@
       "AddRapidToAudienceModel": {
         "required": [
           "asset",
-          "payload"
+          "payload",
+          "randomCorrectProbability"
         ],
         "type": "object",
         "properties": {
@@ -1745,6 +1746,14 @@
           },
           "boundingBoxes": {
             "$ref": "#/components/schemas/ListOfBoxShape"
+          },
+          "requiredPrecision": {
+            "type": "number",
+            "format": "double"
+          },
+          "requiredCompleteness": {
+            "type": "number",
+            "format": "double"
           }
         }
       },
@@ -2176,6 +2185,7 @@
           "definitionId",
           "audienceId",
           "revisionNumber",
+          "pipelineId",
           "status",
           "createdAt"
         ],
@@ -2196,6 +2206,9 @@
           "revisionNumber": {
             "type": "integer",
             "format": "int32"
+          },
+          "pipelineId": {
+            "type": "string"
           },
           "status": {
             "type": "string"

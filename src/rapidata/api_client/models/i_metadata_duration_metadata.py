@@ -17,19 +17,38 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from datetime import datetime
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class BoostingProfile(BaseModel):
+class IMetadataDurationMetadata(BaseModel):
     """
-    BoostingProfile
+    IMetadataDurationMetadata
     """ # noqa: E501
-    requires_global_boost: Optional[StrictBool] = Field(default=None, alias="requiresGlobalBoost")
-    language_boosts: Optional[List[StrictStr]] = Field(default=None, alias="languageBoosts")
-    kayzen_audience_ids: Optional[List[Union[StrictFloat, StrictInt]]] = Field(default=None, alias="kayzenAudienceIds")
-    __properties: ClassVar[List[str]] = ["requiresGlobalBoost", "languageBoosts", "kayzenAudienceIds"]
+    t: StrictStr = Field(alias="_t")
+    duration: datetime
+    visibilities: Optional[List[StrictStr]] = None
+    __properties: ClassVar[List[str]] = ["_t", "duration", "visibilities"]
+
+    @field_validator('t')
+    def t_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['DurationMetadata']):
+            raise ValueError("must be one of enum values ('DurationMetadata')")
+        return value
+
+    @field_validator('visibilities')
+    def visibilities_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        for i in value:
+            if i not in set(['None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All']):
+                raise ValueError("each list item must be one of ('None', 'Users', 'Customers', 'Admins', 'Dashboard', 'All')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -49,7 +68,7 @@ class BoostingProfile(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of BoostingProfile from a JSON string"""
+        """Create an instance of IMetadataDurationMetadata from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -74,7 +93,7 @@ class BoostingProfile(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of BoostingProfile from a dict"""
+        """Create an instance of IMetadataDurationMetadata from a dict"""
         if obj is None:
             return None
 
@@ -82,9 +101,9 @@ class BoostingProfile(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "requiresGlobalBoost": obj.get("requiresGlobalBoost"),
-            "languageBoosts": obj.get("languageBoosts"),
-            "kayzenAudienceIds": obj.get("kayzenAudienceIds")
+            "_t": obj.get("_t"),
+            "duration": obj.get("duration"),
+            "visibilities": obj.get("visibilities")
         })
         return _obj
 

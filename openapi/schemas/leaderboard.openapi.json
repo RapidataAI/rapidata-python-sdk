@@ -2969,9 +2969,6 @@
           },
           {
             "$ref": "#/components/schemas/ICampaignFilterUserScoreFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterUserStateFilter"
           }
         ],
         "discriminator": {
@@ -2987,8 +2984,7 @@
             "OrFilter": "#/components/schemas/ICampaignFilterOrFilter",
             "ResponseCountFilter": "#/components/schemas/ICampaignFilterResponseCountFilter",
             "UserActionRestrictionFilter": "#/components/schemas/ICampaignFilterUserActionRestrictionFilter",
-            "UserScoreFilter": "#/components/schemas/ICampaignFilterUserScoreFilter",
-            "UserStateFilter": "#/components/schemas/ICampaignFilterUserStateFilter"
+            "UserScoreFilter": "#/components/schemas/ICampaignFilterUserScoreFilter"
           }
         }
       },
@@ -3262,34 +3258,6 @@
           },
           "dimension": {
             "type": "string"
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
-          }
-        }
-      },
-      "ICampaignFilterUserStateFilter": {
-        "required": [
-          "states",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "UserStateFilter"
-            ],
-            "type": "string"
-          },
-          "states": {
-            "type": "array",
-            "items": {
-              "enum": [
-                "Training",
-                "Blacklist",
-                "Active"
-              ]
-            }
           },
           "executionOrder": {
             "type": "integer",
