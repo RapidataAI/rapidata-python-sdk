@@ -46,7 +46,7 @@ class AudienceExampleHandler:
             instruction (str): The instruction/question to be shown to the labeler.
             answer_options (list[str]): The options that the labeler can choose from to answer the question.
             datapoint (str): The datapoint that the labeler will be labeling.
-            truths (list[str]): The correct answers to the question.
+            truts (list[str]): The correct answers to the question.
             data_type (str, optional): The type of the datapoint. Defaults to "media" (any form of image, video or audio).
             context (str, optional): The context is text that will be shown in addition to the instruction. Defaults to None.
             media_context (str, optional): The media context is a link to an image / video that will be shown in addition to the instruction (can be combined with context). Defaults to None.
@@ -57,10 +57,10 @@ class AudienceExampleHandler:
         )
 
         if not isinstance(truth, list):
-            raise ValueError("Truths must be a list of strings")
+            raise ValueError("Truth must be a list of strings")
 
         if not all(truth in answer_options for truth in truth):
-            raise ValueError("Truths must be part of the answer options")
+            raise ValueError("Truth must be part of the answer options")
 
         if data_type == "media":
             asset_input = self._asset_uploader.get_uploaded_asset_input(datapoint)
