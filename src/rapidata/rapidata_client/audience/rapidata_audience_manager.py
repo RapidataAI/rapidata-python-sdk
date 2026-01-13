@@ -10,6 +10,11 @@ if TYPE_CHECKING:
 
 
 class RapidataAudienceManager:
+    """
+    A manager for audiences.
+    Used to create and retrieve audiences.
+    """
+
     def __init__(self, openapi_service: OpenAPIService):
         self._openapi_service = openapi_service
 

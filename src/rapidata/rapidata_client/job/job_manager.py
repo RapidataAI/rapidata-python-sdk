@@ -17,6 +17,11 @@ from rapidata.rapidata_client.datapoints._datapoints_validator import (
 
 
 class JobManager:
+    """
+    A manager for job definitions.
+    Used to create and retrieve job definitions.
+    """
+
     def __init__(self, openapi_service: OpenAPIService):
         self._openapi_service = openapi_service
 

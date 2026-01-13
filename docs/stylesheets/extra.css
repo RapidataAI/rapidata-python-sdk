@@ -245,7 +245,7 @@
   /*--md-typeset-color:                var(--md-default-fg-color);*/
 
   /* Typeset `a` color shades */
-  --md-typeset-a-color:              var(--color-text-primary) !important;
+  --md-typeset-a-color:              var(--color-blue-400);
   /*--md-typeset-a-color:              var(--md-primary-fg-color); */
 
   /* Typeset `kbd` color shades */

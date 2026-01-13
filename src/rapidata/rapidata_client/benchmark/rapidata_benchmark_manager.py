@@ -19,9 +19,6 @@ class RapidataBenchmarkManager:
     Used to create and retrieve benchmarks.
 
     A benchmark is a collection of leaderboards.
-
-    Args:
-        openapi_service: The OpenAPIService instance for API interaction.
     """
 
     def __init__(self, openapi_service: OpenAPIService):
