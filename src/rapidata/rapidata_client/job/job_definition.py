@@ -87,7 +87,9 @@ class JobDefinition:
             with tracer.start_as_current_span("update_datapoints"):
                 _, failed_uploads = rapidata_dataset.add_datapoints(datapoints_list)
                 if failed_uploads:
-                    raise FailedUploadException(rapidata_dataset, self, failed_uploads)
+                    raise FailedUploadException(
+                        rapidata_dataset, failed_uploads, job=self
+                    )
 
             self._openapi_service.job_api.job_definition_definition_id_revision_post(
                 definition_id=self._id,

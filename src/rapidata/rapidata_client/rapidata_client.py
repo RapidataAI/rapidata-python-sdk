@@ -13,6 +13,10 @@ from rapidata.rapidata_client.benchmark.rapidata_benchmark_manager import (
 from rapidata.rapidata_client.audience.rapidata_audience_manager import (
     RapidataAudienceManager,
 )
+from rapidata.rapidata_client.order.rapidata_order_manager import RapidataOrderManager
+from rapidata.rapidata_client.validation.validation_set_manager import (
+    ValidationSetManager,
+)
 
 from rapidata.rapidata_client.demographic.demographic_manager import DemographicManager
 
@@ -54,7 +58,9 @@ class RapidataClient:
 
         Attributes:
             order (RapidataOrderManager): The RapidataOrderManager instance.
+            validation (ValidationSetManager): The ValidationSetManager instance.
             audience (RapidataAudienceManager): The RapidataAudienceManager instance.
+            job (JobManager): The JobManager instance.
             mri (RapidataBenchmarkManager): The RapidataBenchmarkManager instance.
         """
         tracer.set_session_id(
@@ -79,6 +85,12 @@ class RapidataClient:
             )
 
             self._asset_uploader = AssetUploader(openapi_service=self._openapi_service)
+
+            logger.debug("Initializing RapidataOrderManager")
+            self.order = RapidataOrderManager(openapi_service=self._openapi_service)
+
+            logger.debug("Initializing ValidationSetManager")
+            self.validation = ValidationSetManager(openapi_service=self._openapi_service)
 
             logger.debug("Initializing JobManager")
             self.job = JobManager(openapi_service=self._openapi_service)

@@ -11,12 +11,6 @@ from opentelemetry import context as otel_context
 T = TypeVar("T")
 
 
-def _chunk_list(lst: list[T], chunk_size: int):
-    """Split a list into chunks of specified size."""
-    for i in range(0, len(lst), chunk_size):
-        yield lst[i : i + chunk_size]
-
-
 class ThreadedUploader(Generic[T]):
     """
     A generic multi-threaded uploader that handles retries, progress tracking,
@@ -76,31 +70,24 @@ class ThreadedUploader(Generic[T]):
             with ThreadPoolExecutor(
                 max_workers=rapidata_config.upload.maxWorkers
             ) as executor:
-                # Process uploads in chunks to avoid overwhelming the system
-                for chunk_idx, chunk in enumerate(
-                    _chunk_list(items, rapidata_config.upload.chunkSize)
-                ):
-                    futures = [
-                        executor.submit(
-                            process_upload_with_context,
-                            current_context,
-                            item,
-                            chunk_idx * rapidata_config.upload.chunkSize + i,
-                        )
-                        for i, item in enumerate(chunk)
-                    ]
+                futures = [
+                    executor.submit(
+                        process_upload_with_context,
+                        current_context,
+                        item,
+                        i,
+                    )
+                    for i, item in enumerate(items)
+                ]
 
-                    # Wait for this chunk to complete before starting the next one
-                    for future in as_completed(futures):
-                        try:
-                            chunk_successful, chunk_failed = future.result()
-                            successful_uploads.extend(chunk_successful)
-                            failed_uploads.extend(chunk_failed)
-                            progress_bar.update(
-                                len(chunk_successful) + len(chunk_failed)
-                            )
-                        except Exception as e:
-                            logger.error("Future execution failed: %s", str(e))
+                for future in as_completed(futures):
+                    try:
+                        chunk_successful, chunk_failed = future.result()
+                        successful_uploads.extend(chunk_successful)
+                        failed_uploads.extend(chunk_failed)
+                        progress_bar.update(len(chunk_successful) + len(chunk_failed))
+                    except Exception as e:
+                        logger.error("Future execution failed: %s", str(e))
 
         if failed_uploads:
             logger.error(

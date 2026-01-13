@@ -1,6 +1,6 @@
 from pathlib import Path
 from typing import Callable
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 from rapidata.rapidata_client.config import logger
 
 # Type alias for config update handlers
@@ -26,17 +26,26 @@ class UploadConfig(BaseModel):
     Holds the configuration for the upload process.
 
     Attributes:
-        maxWorkers (int): The maximum number of worker threads for processing media paths. Defaults to 10.
+        maxWorkers (int): The maximum number of worker threads for processing media paths. Defaults to 25.
         maxRetries (int): The maximum number of retries for failed uploads. Defaults to 3.
     """
 
-    maxWorkers: int = Field(default=10)
+    maxWorkers: int = Field(default=25)
     maxRetries: int = Field(default=3)
-    chunkSize: int = Field(default=50)
     cacheUploads: bool = Field(default=True)
     cacheTimeout: float = Field(default=0.1)
     cacheLocation: Path = Field(default=Path.home() / ".rapidata" / "upload_cache")
     cacheSizeLimit: int = Field(default=100_000_000)  # 100MB
+
+    @field_validator("maxWorkers")
+    @classmethod
+    def validate_max_workers(cls, v: int) -> int:
+        if v > 200:
+            logger.warning(
+                f"maxWorkers is set to {v}, which is above the recommended limit of 200. "
+                "This may lead to suboptimal performance due to connection pool constraints."
+            )
+        return v
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

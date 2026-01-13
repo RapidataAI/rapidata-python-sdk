@@ -2,8 +2,9 @@ from __future__ import annotations
 import urllib.parse
 import webbrowser
 from colorama import Fore
-from typing import Literal, Optional, Sequence, TYPE_CHECKING
+from typing import Optional, Sequence, TYPE_CHECKING
 from rapidata.rapidata_client.config import logger, managed_print, tracer
+from rapidata.rapidata_client.benchmark._detail_mapper import LevelOfDetail
 
 if TYPE_CHECKING:
     import pandas as pd
@@ -291,7 +292,7 @@ class RapidataBenchmark:
         show_prompt: bool = False,
         show_prompt_asset: bool = False,
         inverse_ranking: bool = False,
-        level_of_detail: Literal["low", "medium", "high", "very high"] | None = None,
+        level_of_detail: LevelOfDetail | None = None,
         min_responses_per_matchup: int | None = None,
         validation_set_id: str | None = None,
         filters: Sequence["RapidataFilter"] | None = None,
