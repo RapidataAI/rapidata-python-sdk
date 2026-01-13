@@ -3,11 +3,12 @@ on:
   workflow_dispatch:
     inputs:
       version_part:
-        description: 'Version part to bump (patch, minor, major)'
+        description: 'Version part to bump (none = just increment pre-release number)'
         required: true
-        default: 'patch'
+        default: 'none'
         type: choice
         options:
+        - none
         - patch
         - minor
         - major
@@ -50,11 +51,20 @@ jobs:
       run: |
         old_version=$(uv version --short)
         suffix="${{ steps.release_type.outputs.suffix }}"
+        version_part="${{ github.event.inputs.version_part }}"
 
         if [ -n "$suffix" ]; then
-          # Pre-release: bump version first to get base
-          uv version --bump ${{ github.event.inputs.version_part }}
-          base_version=$(uv version --short)
+          # Pre-release branch (alpha, beta, rc)
+
+          if [ "$version_part" = "none" ]; then
+            # Just increment pre-release number, keep base version
+            # Extract base version (strip any existing pre-release suffix)
+            base_version=$(echo "$old_version" | sed -E 's/[ab]|rc[0-9]+$//')
+          else
+            # Bump the base version first
+            uv version --bump $version_part
+            base_version=$(uv version --short)
+          fi
 
           # Find the latest pre-release number for this base version
           latest_num=$(git tag -l "v${base_version}${suffix}*" | \
@@ -70,8 +80,12 @@ jobs:
           new_version="${base_version}${suffix}${next_num}"
           uv version "$new_version"
         else
-          # Stable release: standard bump
-          uv version --bump ${{ github.event.inputs.version_part }}
+          # Stable release: standard bump (none not allowed for stable)
+          if [ "$version_part" = "none" ]; then
+            echo "Error: 'none' is only valid for pre-release branches (alpha, beta, rc)"
+            exit 1
+          fi
+          uv version --bump $version_part
           new_version=$(uv version --short)
         fi
 
