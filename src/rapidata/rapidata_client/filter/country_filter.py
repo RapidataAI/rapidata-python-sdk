@@ -49,12 +49,12 @@ class CountryFilter(RapidataFilter, BaseModel):
 
     def _to_audience_model(self):
         from rapidata.api_client.models.i_audience_filter import IAudienceFilter
-        from rapidata.api_client.models.i_audience_filter_country_filter import (
-            IAudienceFilterCountryFilter,
+        from rapidata.api_client.models.i_audience_filter_country_audience_filter import (
+            IAudienceFilterCountryAudienceFilter,
         )
 
         return IAudienceFilter(
-            actual_instance=IAudienceFilterCountryFilter(
+            actual_instance=IAudienceFilterCountryAudienceFilter(
                 _t="CountryFilter", countries=self.country_codes
             )
         )
