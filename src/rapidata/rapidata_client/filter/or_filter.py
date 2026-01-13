@@ -40,3 +40,16 @@ class OrFilter(RapidataFilter, BaseModel):
                 filters=[filter._to_model() for filter in self.filters],
             )
         )
+
+    def _to_audience_model(self):
+        from rapidata.api_client.models.i_audience_filter import IAudienceFilter
+        from rapidata.api_client.models.i_audience_filter_or_audience_filter import (
+            IAudienceFilterOrAudienceFilter,
+        )
+
+        return IAudienceFilter(
+            actual_instance=IAudienceFilterOrAudienceFilter(
+                _t="OrFilter",
+                filters=[filter._to_audience_model() for filter in self.filters],
+            )
+        )

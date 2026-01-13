@@ -18,8 +18,8 @@ Early Stopping addresses this by:
 The Early Stopping feature leverages the trustworthiness, quantified through their `userScores`, to calculate the confidence level of each category for any given datapoint.
 
 ### Confidence Calculation
-- **UserScores**: Each annotator has a `userScore` between 0 and 1, representing their reliability. [More information](/understanding_the_results/#understanding-the-user-scores)
-- **Aggregated Confidence**: By combining the userScores of annotators who selected a particular category, the system computes the probability that this category is the correct one.
+- **UserScores**: Each labeler has a `userScore` between 0 and 1, representing their reliability. [More information](understanding_the_results.md#understanding-the-user-scores)
+- **Aggregated Confidence**: By combining the userScores of labelers who selected a particular category, the system computes the probability that this category is the correct one.
 - **Threshold Comparison**: If the calculated confidence exceeds your specified threshold, the system stops collecting further responses for that datapoint.
 
 ## Understanding the Confidence Threshold
@@ -28,17 +28,17 @@ We've created a plot based on empirical data aided by simulations to give you an
 
 There are a few things to keep in mind when interpreting the results:
 
-- **Unambiguous Scenario**: The graph represents an ideal situation such as in the [example below](#using-early-stopping-in-your-order) with no ambiguity which category is the correct one. A counter-example would be subjective tasks like "Which image do you prefer?", where there's no clear correct answer.
+- **Unambiguous Scenario**: The graph represents an ideal situation such as in the [example below](#using-early-stopping-in-your-job) with no ambiguity which category is the correct one. A counter-example would be subjective tasks like "Which image do you prefer?", where there's no clear correct answer.
 - **Real-World Variability**: Actual required responses may vary based on task complexity.
-- **Guidance Tool**: Use the graph as a reference to set realistic expectations for your orders. 
+- **Guidance Tool**: Use the graph as a reference to set realistic expectations for your jobs.
 - **Response Overflow**: The number of responses per datapoint may exceed the specified amount due to multiple users answering simultaneously.
 
 
 <div style="width: 780px; height: 650px; overflow: hidden;">
     <iframe src="/plots/confidence_threshold_plot_with_slider_darkmode.html"
-            width="100%" 
-            height="100%" 
-            frameborder="0" 
+            width="100%"
+            height="100%"
+            frameborder="0"
             scrolling="no"
             style="overflow: hidden;">
     </iframe>
@@ -46,33 +46,50 @@ There are a few things to keep in mind when interpreting the results:
 
 >**Note:** The Early Stopping feature is supported for the Classification and Comparison workflows. The number of categories is the number of options in the Classification task. For the Comparison task, the number of categories is always 2.
 
-## Using Early Stopping in Your Order
+## Using Early Stopping in Your Job
 
-Implementing Early Stopping is straightforward. You simply add the confidence threshold as a parameter when creating the order.
+Implementing Early Stopping is straightforward. You simply add the confidence threshold as a parameter when creating the job definition.
 
-### Example: Classification Order with Early Stopping
+### Example: Classification Job with Early Stopping
 
 ```python
-order = rapi.order.create_classification_order(
-    name="Test Classification Order with Early Stopping",
+from rapidata import RapidataClient
+
+client = RapidataClient()
+
+# Create audience with qualification example
+audience = client.audience.create_audience(name="Animal Classification Audience")
+audience.add_classification_example(
+    instruction="What do you see in the image?",
+    answer_options=["Cat", "Dog"],
+    datapoint="https://assets.rapidata.ai/cat.jpeg",
+    truth=["Cat"]
+)
+
+# Create job definition with early stopping
+job_definition = client.job.create_classification_job_definition(
+    name="Test Classification with Early Stopping",
     instruction="What do you see in the image?",
     answer_options=["Cat", "Dog"],
     datapoints=["https://assets.rapidata.ai/dog.jpeg"],
     responses_per_datapoint=50,
     confidence_threshold=0.99,
-).run()
+)
 
-order.display_progress_bar()
-result = order.get_results()
-print(result)
+# Preview and run
+job_definition.preview()
+job = audience.assign_job_to_audience(job_definition)
+job.display_progress_bar()
+results = job.get_results()
+print(results)
 ```
 
 In this example:
 
-- responses_per_datapoint=50: Sets the maximum number of responses per datapoint.
-- confidence_threshold=0.99: Specifies that data collection for a datapoint should stop once a 99% confidence level is reached.
+- `responses_per_datapoint=50`: Sets the maximum number of responses per datapoint.
+- `confidence_threshold=0.99`: Specifies that data collection for a datapoint should stop once a 99% confidence level is reached.
 
-We'd expect this to take roughtly 4 responses to reach the 99% confidence level.
+We'd expect this to take roughly 4 responses to reach the 99% confidence level.
 
 ## When to Use Early Stopping
 
@@ -83,7 +100,7 @@ We recommend using Early Stopping when:
 
 ## Analyzing Early Stopping Results
 
-When using Early Stopping, the [results](/understanding_the_results/) will additionally include a `confidencePerCategory` field for each datapoint. This field shows the confidence level for each of the categories in the task.
+When using Early Stopping, the [results](understanding_the_results.md) will additionally include a `confidencePerCategory` field for each datapoint. This field shows the confidence level for each of the categories in the task.
 
 Example:
 ```json
@@ -117,7 +134,7 @@ Example:
                     "Cat": 0.0
                 },
                 # this only appears when using early stopping
-                "confidencePerCategory": { 
+                "confidencePerCategory": {
                     "Dog": 0.9943,
                     "Cat": 0.0057
                 },

@@ -60,3 +60,18 @@ class ResponseCountFilter(RapidataFilter, BaseModel):
                 operator=self.operator,
             )
         )
+
+    def _to_campaign_model(self):
+        from rapidata.api_client.models.i_campaign_filter import ICampaignFilter
+        from rapidata.api_client.models.i_campaign_filter_response_count_filter import (
+            ICampaignFilterResponseCountFilter,
+        )
+
+        return ICampaignFilter(
+            actual_instance=ICampaignFilterResponseCountFilter(
+                _t="ResponseCountFilter",
+                responseCount=self.response_count,
+                dimension=self.dimension,
+                operator=self.operator,
+            )
+        )

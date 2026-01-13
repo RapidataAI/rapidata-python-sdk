@@ -5,7 +5,8 @@
       "Bash(tree:*)",
       "Bash(find:*)",
       "Bash(cat:*)",
-      "Bash(.venv/Scripts/python.exe:*)"
+      "Bash(.venv/Scripts/python.exe:*)",
+      "Bash(git ls-tree:*)"
     ],
     "deny": [],
     "ask": []

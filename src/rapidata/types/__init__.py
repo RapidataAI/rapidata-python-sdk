@@ -1,21 +1,11 @@
 # Main Client and Core Types
 from rapidata.rapidata_client.rapidata_client import RapidataClient
 
-# Order Types
-from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
-from rapidata.rapidata_client.order.rapidata_order_manager import RapidataOrderManager
-from rapidata.rapidata_client.order.rapidata_results import RapidataResults
-
-# Validation Types
-from rapidata.rapidata_client.validation.rapidata_validation_set import (
-    RapidataValidationSet,
+# Audience Types
+from rapidata.rapidata_client.audience.rapidata_audience import RapidataAudience
+from rapidata.rapidata_client.audience.rapidata_audience_manager import (
+    RapidataAudienceManager,
 )
-from rapidata.rapidata_client.validation.validation_set_manager import (
-    ValidationSetManager,
-)
-from rapidata.rapidata_client.validation.rapids.rapids import Rapid
-from rapidata.rapidata_client.validation.rapids.box import Box
-from rapidata.rapidata_client.validation.rapids.rapids_manager import RapidsManager
 
 # Benchmark Types
 from rapidata.rapidata_client.benchmark.rapidata_benchmark import RapidataBenchmark
@@ -100,16 +90,9 @@ from rapidata.rapidata_client.api.rapidata_api_client import RapidataApiClient
 __all__ = [
     # Main Client and Core Types
     "RapidataClient",
-    # Order Types
-    "RapidataOrder",
-    "RapidataOrderManager",
-    "RapidataResults",
-    # Validation Types
-    "RapidataValidationSet",
-    "ValidationSetManager",
-    "Rapid",
-    "Box",
-    "RapidsManager",
+    # Audience Types
+    "RapidataAudience",
+    "RapidataAudienceManager",
     # Benchmark Types
     "RapidataBenchmark",
     "RapidataBenchmarkManager",

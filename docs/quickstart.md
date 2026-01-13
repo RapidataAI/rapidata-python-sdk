@@ -1,16 +1,12 @@
 # Quickstart Guide
 
-Directly ask real humans to compare your data. This guide will show you how to create a compare order using the Rapidata API.
+Get real humans to label your data. This guide shows you how to create a labeling job using the Rapidata API.
 
-There are many other types of orders you can create which you can find in the examples on the [Overview](index.md).
+The workflow consists of three main concepts:
 
-We will create an order assessing image-prompt-alignment, using 2 AI generated images and compare them against each other based on which image followed the prompt more accurately.
-
-Our annotators will then label the data according to the instruction we provided.
-
-They see the following screen:
-
-![Compare Example](./media/compare_quickstart.png){ width="40%" }
+1. **Audience**: A group of qualified labelers who have passed your qualification examples
+2. **Job Definition**: The configuration for your labeling task (instruction, datapoints, settings)
+3. **Job**: A running labeling task assigned to an audience
 
 ## Installation
 
@@ -20,117 +16,182 @@ Install Rapidata using pip:
 pip install -U rapidata
 ```
 
-
 ## Usage
 
-Orders are managed through the [`RapidataClient`](reference/rapidata/rapidata_client/rapidata_client.md#rapidata.rapidata_client.rapidata_client.RapidataClient).
+All operations are managed through the [`RapidataClient`](reference/rapidata/rapidata_client/rapidata_client.md#rapidata.rapidata_client.rapidata_client.RapidataClient).
 
-Create a client as follows, this will save your credentials in your `~/.config/rapidata/credentials.json` file so you don't have to log in again on that machine:
-
-```py
-from rapidata import RapidataClient
-
-#The first time executing it on a machine will require you to log in
-rapi = RapidataClient()
-```
-
-Alternatively you can generate a Client ID and Secret in the [Rapidata Settings](https://app.rapidata.ai/settings/tokens) and pass them to the [`RapidataClient`](reference/rapidata/rapidata_client/rapidata_client.md#rapidata.rapidata_client.rapidata_client.RapidataClient) constructor:
+Create a client as follows. This will save your credentials in your `~/.config/rapidata/credentials.json` file so you don't have to log in again on that machine:
 
 ```py
 from rapidata import RapidataClient
-rapi = RapidataClient(client_id="Your client ID", client_secret="Your client secret")
+
+# The first time executing it on a machine will require you to log in
+client = RapidataClient()
 ```
 
-### Creating an Order
-
-All order-related operations are performed using rapi.order.
-
-Here we create a compare order with a name and the instruction / question we want to ask. Additionally, we provide the prompt as context:
+Alternatively you can generate a Client ID and Secret in the [Rapidata Settings](https://app.rapidata.ai/settings/tokens) and pass them to the client constructor:
 
 ```py
-order = rapi.order.create_compare_order(
-    name="Example Alignment Order",
-    instruction="Which image matches the description better?",
-    contexts=["A small blue book sitting on a large red book."],
-    datapoints=[["https://assets.rapidata.ai/midjourney-5.2_37_3.jpg", 
-                "https://assets.rapidata.ai/flux-1-pro_37_0.jpg"]],
+from rapidata import RapidataClient
+client = RapidataClient(client_id="Your client ID", client_secret="Your client secret")
+```
+
+### Step 1: Create an Audience
+
+An audience is a pool of labelers who are qualified to work on your tasks. You create an audience and add qualification examples that labelers must answer correctly to join.
+
+```py
+audience = client.audience.create_audience(name="Image Comparison Audience")
+```
+
+### Step 2: Add Qualification Examples
+
+Add examples that labelers must answer correctly to join your audience. This ensures only qualified labelers work on your data.
+
+```py
+audience.add_compare_example(
+    instruction="Which image follows the prompt more accurately?",
+    datapoint=[
+        "https://assets.rapidata.ai/flux_sign_diffusion.jpg",
+        "https://assets.rapidata.ai/mj_sign_diffusion.jpg"
+    ],
+    truth="https://assets.rapidata.ai/flux_sign_diffusion.jpg",
+    context="A sign that says 'Diffusion'."
 )
 ```
-> **Note:** When calling this function the data gets uploaded and prepared, but no annotators will start working on it yet.
 
-The parameters are as follows:
+The parameters are:
 
-- `name`: The name of the order. This is used to identify the order in the [Rapidata Dashboard](https://app.rapidata.ai/dashboard/orders). This name is also be used to find the order again later.
-- `instruction`: The instruction you want to show the annotators to select the image by.
-- `contexts`: The prompt that will be shown along side the two images and the instruction. (optional parameter)
-- `datapoints`: The image pairs we want to compare (order is randomized for every annotator). This can be any public URL (that points to an image, video or audio) or a local file path. This is a list of all datapoints you want to compare. Each datapoint consists of 2 files that are compared, as well as an optional context (which in this case is the prompt). The same instruction will be shown for each datapoint. There is a limit of 100 datapoints per order. If you need more than that, you can reach out to us at <info@rapidata.ai>.
+- `instruction`: The question shown to labelers
+- `datapoint`: The two items to compare
+- `truth`: The correct answer (must be one of the datapoint items)
+- `context`: Additional context shown alongside the comparison (optional)
 
-Optionally you may add additional specifications with the [other parameters](../reference/rapidata/rapidata_client/order/rapidata_order_manager/#rapidata.rapidata_client.order.rapidata_order_manager.RapidataOrderManager.create_compare_order). As an example, the `responses_per_datapoint` that specifies how many responses you want per datapoint<sup>1</sup>.
+### Step 3: Create a Job Definition
 
-Further more you can customize to whom, how and in what sequence the tasks are shown:
-
-- [Filters](../reference/rapidata/rapidata_client/filter/rapidata_filters/) to specify who should work on the order
-- [Settings](../reference/rapidata/rapidata_client/settings/rapidata_settings/) to specify how the order should be shown
-
-These customizations can be added to the order through the `filters` and `settings` parameters respectively.
-
-### Preview the Order
-
-You can see how the users will be presented with the task by calling the `.preview()` method on the order object to make sure everything looks as expected:
+A job definition configures what you want labeled. Here we create a compare job to assess image-prompt alignment:
 
 ```py
-order.preview()
+job_definition = client.job.create_compare_job_definition(
+    name="Prompt Alignment Comparison",
+    instruction="Which image follows the prompt more accurately?",
+    datapoints=[
+        ["https://assets.rapidata.ai/flux_sign_diffusion.jpg",
+         "https://assets.rapidata.ai/mj_sign_diffusion.jpg"],
+        ["https://assets.rapidata.ai/flux_flower.jpg",
+         "https://assets.rapidata.ai/mj_flower.jpg"]
+    ],
+    contexts=[
+        "A sign that says 'Diffusion'.",
+        "A yellow flower sticking out of a green pot."
+    ]
+)
 ```
 
-### Start Collecting Responses
-To start the order and collect responses, call the `run` method:
+For a detailed explanation of all available parameters (including name, instruction, datapoints, contexts, quality control options, and more), see the [Job Definition Parameters Reference](job_definition_parameters.md).
+
+### Step 4: Preview the Job Definition
+
+Before running your job, preview it to see exactly what labelers will see:
 
 ```py
-order.run()
+job_definition.preview()
 ```
 
-Once you call this method, annotators will start working on your order immediately.
+This opens your browser where you can review and adjust the job configuration.
 
+### Step 5: Assign Job to Audience
 
-### Retrieve Orders
-
-To retrieve old orders, you can use the `find_orders` method. This method allows you to filter by name and amount of orders to retrieve:
+Once you're satisfied with your job definition, assign it to your audience to start collecting responses:
 
 ```py
-example_orders = rapi.order.find_orders("Example Alignment Order")
-
-# if no name is provided it will just return the most recent one
-most_recent_order = rapi.order.find_orders()[0]
+job = audience.assign_job_to_audience(job_definition)
 ```
 
-Optionally you can also retrieve a specific order using the order ID:
+Labelers who have passed your qualification examples will now start working on your data.
+
+### Step 6: Monitor Progress and Get Results
+
+Monitor progress on the [Rapidata Dashboard](https://app.rapidata.ai/dashboard) or programmatically:
 
 ```py
-order = rapi.order.get_order_by_id("order_id")
+job.display_progress_bar()
 ```
 
-### Monitoring Order Progress
-
-You can monitor the progress of the order on the [Rapidata Dashboard](https://app.rapidata.ai/dashboard/orders) or by checking how many datapoints are already done with labeling:
+Once complete, retrieve your results:
 
 ```py
-order.display_progress_bar()
+results = job.get_results()
 ```
 
-### Downloading Results
+To understand the results format, see the [Understanding the Results](understanding_the_results.md) guide.
 
-To download the results simply call the `get_results` method on the order:
+## Retrieve Existing Resources
+
+### Find Audiences
 
 ```py
-results = order.get_results()
+# Find audiences by name
+audiences = client.audience.find_audiences("Image Comparison")
+
+# Get a specific audience by ID
+audience = client.audience.get_audience_by_id("audience_id")
 ```
 
-To better understand the results you can check out the [Understanding the Results](/understanding_the_results/) guide.
+### Find Job Definitions
+
+```py
+# Find job definitions by name
+job_definitions = client.job.find_job_definitions("Prompt Alignment")
+
+# Get a specific job definition by ID
+job_definition = client.job.get_job_defintion_by_id("job_definition_id")
+```
+
+## Complete Example
+
+Here's the full workflow in one script:
+
+```py
+from rapidata import RapidataClient
+
+client = RapidataClient()
+
+# Create and configure audience
+audience = client.audience.create_audience(name="Prompt Alignment Audience")
+audience.add_compare_example(
+    instruction="Which image follows the prompt more accurately?",
+    datapoint=[
+        "https://assets.rapidata.ai/flux_sign_diffusion.jpg",
+        "https://assets.rapidata.ai/mj_sign_diffusion.jpg"
+    ],
+    truth="https://assets.rapidata.ai/flux_sign_diffusion.jpg",
+    context="A sign that says 'Diffusion'."
+)
+
+# Create job definition
+job_definition = client.job.create_compare_job_definition(
+    name="Prompt Alignment Job",
+    instruction="Which image follows the prompt more accurately?",
+    datapoints=[
+        ["https://assets.rapidata.ai/flux_flower.jpg",
+         "https://assets.rapidata.ai/mj_flower.jpg"]
+    ],
+    contexts=["A yellow flower sticking out of a green pot."]
+)
+
+# Preview before running
+job_definition.preview()
+
+# Assign to audience and get results
+job = audience.assign_job_to_audience(job_definition)
+job.display_progress_bar()
+results = job.get_results()
+print(results)
+```
 
 ## Next Steps
 
-This is just the beginning. You can create many different types of orders and customize them to your needs. Check out the [Overview](index.md) for more examples and information or check out how to improve the quality of your responses in the [Improve Quality](/improve_order_quality/) .
-
-------------------
-
-<sup>1</sup> Due to the possibility of multiple people answering at the same time, this number is treated as a minimum. The actual number of responses may be higher. The overshoot per datapoint will be lower the more datapoints are added.
+- Learn about [Classification Jobs](examples/classify_job.md) for categorizing data
+- Understand the [Results Format](understanding_the_results.md)
+- Configure [Early Stopping](confidence_stopping.md) based on confidence thresholds

@@ -35,17 +35,17 @@ class RapidataSettings:
         This can be used in a free text order to set the minimum number of characters required to submit the task.
     """
 
-    alert_on_fast_response = AlertOnFastResponse
-    translation_behaviour = TranslationBehaviour
-    free_text_minimum_characters = FreeTextMinimumCharacters
-    no_shuffle = NoShuffle
-    play_video_until_the_end = PlayVideoUntilTheEnd
-    allow_neither_both = AllowNeitherBoth
-    swap_context_instruction = SwapContextInstruction
-    mute_video = MuteVideo
+    Alert_on_fast_response = AlertOnFastResponse
+    Translation_behaviour = TranslationBehaviour
+    Free_text_minimum_characters = FreeTextMinimumCharacters
+    No_shuffle = NoShuffle
+    Play_video_until_the_end = PlayVideoUntilTheEnd
+    Allow_neither_both = AllowNeitherBoth
+    Swap_context_instruction = SwapContextInstruction
+    Mute_video = MuteVideo
 
     def __str__(self) -> str:
-        return f"RapidataSettings(alert_on_fast_response={self.alert_on_fast_response}, translation_behaviour={self.translation_behaviour}, free_text_minimum_characters={self.free_text_minimum_characters}, no_shuffle={self.no_shuffle}, play_video_until_the_end={self.play_video_until_the_end}, allow_neither_both={self.allow_neither_both}, swap_context_instruction={self.swap_context_instruction}, mute_video={self.mute_video})"
+        return f"RapidataSettings(Alert_on_fast_response={self.Alert_on_fast_response}, Translation_behaviour={self.Translation_behaviour}, Free_text_minimum_characters={self.Free_text_minimum_characters}, No_shuffle={self.No_shuffle}, Play_video_until_the_end={self.Play_video_until_the_end}, Allow_neither_both={self.Allow_neither_both}, Swap_context_instruction={self.Swap_context_instruction}, Mute_video={self.Mute_video})"
 
     def __repr__(self) -> str:
         return self.__str__()

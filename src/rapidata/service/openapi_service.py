@@ -7,9 +7,11 @@ from typing import TYPE_CHECKING
 from rapidata.api_client.configuration import Configuration
 from rapidata.service.credential_manager import CredentialManager
 from rapidata.rapidata_client.api.rapidata_api_client import RapidataApiClient
-from rapidata.rapidata_client.config import logger
+from rapidata.rapidata_client.config import logger, managed_print
+from authlib.integrations.httpx_client import OAuthError
 
 if TYPE_CHECKING:
+    from rapidata.api_client.api.job_api import JobApi
     from rapidata.api_client import CustomerRapidApi
     from rapidata.api_client.api.campaign_api import CampaignApi
     from rapidata.api_client.api.asset_api import AssetApi
@@ -21,6 +23,7 @@ if TYPE_CHECKING:
     from rapidata.api_client.api.validation_set_api import ValidationSetApi
     from rapidata.api_client.api.workflow_api import WorkflowApi
     from rapidata.api_client.api.participant_api import ParticipantApi
+    from rapidata.api_client.api.audience_api import AudienceApi
 
 
 class OpenAPIService:
@@ -84,23 +87,54 @@ class OpenAPIService:
                 raise ValueError("Failed to fetch client credentials")
             client_id = credentials.client_id
             client_secret = credentials.client_secret
+        try:
+            self.api_client.rest_client.setup_oauth_client_credentials(
+                client_id=client_id,
+                client_secret=client_secret,
+                token_endpoint=f"{auth_endpoint}/connect/token",
+                scope=oauth_scope,
+            )
+        except OAuthError as e:
+            if e.error != "invalid_client":
+                raise
+            logger.warning(
+                "Invalid client credentials detected, resetting and retrying: %s", e
+            )
+            self.reset_credentials()
 
-        self.api_client.rest_client.setup_oauth_client_credentials(
-            client_id=client_id,
-            client_secret=client_secret,
-            token_endpoint=f"{auth_endpoint}/connect/token",
-            scope=oauth_scope,
-        )
+            # Retry with fresh credentials
+            credentials = self.credential_manager.get_client_credentials()
+            if not credentials:
+                raise ValueError(
+                    "Failed to fetch client credentials after reset"
+                ) from e
+
+            self.api_client.rest_client.setup_oauth_client_credentials(
+                client_id=credentials.client_id,
+                client_secret=credentials.client_secret,
+                token_endpoint=f"{auth_endpoint}/connect/token",
+                scope=oauth_scope,
+            )
+            managed_print("Credentials were reset and re-authenticated successfully")
+
         logger.debug("Client credentials authentication setup complete")
 
     def reset_credentials(self):
+        logger.info("Resetting credentials in OpenAPIService")
         self.credential_manager.reset_credentials()
+        logger.info("Credentials reset in OpenAPIService")
 
     @property
     def order_api(self) -> OrderApi:
         from rapidata.api_client.api.order_api import OrderApi
 
         return OrderApi(self.api_client)
+
+    @property
+    def job_api(self) -> JobApi:
+        from rapidata.api_client.api.job_api import JobApi
+
+        return JobApi(self.api_client)
 
     @property
     def asset_api(self) -> AssetApi:
@@ -161,6 +195,12 @@ class OpenAPIService:
         from rapidata.api_client.api.participant_api import ParticipantApi
 
         return ParticipantApi(self.api_client)
+
+    @property
+    def audience_api(self) -> AudienceApi:
+        from rapidata.api_client.api.audience_api import AudienceApi
+
+        return AudienceApi(self.api_client)
 
     def _get_rapidata_package_version(self):
         """

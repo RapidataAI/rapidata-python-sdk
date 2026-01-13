@@ -32,3 +32,6 @@ class CampaignFilter(RapidataFilter, BaseModel):
                 campaignIds=self.campaign_ids,
             )
         )
+
+    def _to_campaign_model(self):
+        raise NotImplementedError("CampaignFilter is not supported for audiences")

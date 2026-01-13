@@ -1,6 +1,7 @@
 from abc import abstractmethod
 
 from rapidata.api_client.models.i_user_filter_model import IUserFilterModel
+from rapidata.api_client.models.i_audience_filter import IAudienceFilter
 
 
 class RapidataFilter:
@@ -8,6 +9,10 @@ class RapidataFilter:
 
     @abstractmethod
     def _to_model(self) -> IUserFilterModel:
+        pass
+
+    @abstractmethod
+    def _to_audience_model(self) -> IAudienceFilter:
         pass
 
     def __or__(self, other):

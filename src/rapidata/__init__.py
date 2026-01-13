@@ -2,6 +2,8 @@ __version__ = "2.44.2"
 
 from .rapidata_client import (
     RapidataClient,
+    RapidataAudience,
+    RapidataAudienceManager,
     DemographicSelection,
     LabelingSelection,
     EffortSelection,
@@ -32,9 +34,7 @@ from .rapidata_client import (
     AgeGroup,
     GenderFilter,
     Gender,
-    Box,
     Datapoint,
-    PromptMetadata,
     FailedUploadException,
     rapidata_config,
     logger,

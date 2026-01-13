@@ -40,3 +40,16 @@ class AndFilter(RapidataFilter, BaseModel):
                 filters=[filter._to_model() for filter in self.filters],
             )
         )
+
+    def _to_audience_model(self):
+        from rapidata.api_client.models.i_audience_filter import IAudienceFilter
+        from rapidata.api_client.models.i_audience_filter_and_audience_filter import (
+            IAudienceFilterAndAudienceFilter,
+        )
+
+        return IAudienceFilter(
+            actual_instance=IAudienceFilterAndAudienceFilter(
+                _t="AndFilter",
+                filters=[filter._to_audience_model() for filter in self.filters],
+            ),
+        )

@@ -40,3 +40,15 @@ class NotFilter(RapidataFilter, BaseModel):
                 filter=self.filter._to_model(),
             )
         )
+
+    def _to_audience_model(self):
+        from rapidata.api_client.models.i_audience_filter import IAudienceFilter
+        from rapidata.api_client.models.i_audience_filter_not_audience_filter import (
+            IAudienceFilterNotAudienceFilter,
+        )
+
+        return IAudienceFilter(
+            actual_instance=IAudienceFilterNotAudienceFilter(
+                _t="NotFilter", filter=self.filter._to_audience_model()
+            )
+        )

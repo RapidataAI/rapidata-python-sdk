@@ -1,4 +1,8 @@
 from .rapidata_client import RapidataClient
+from .audience import (
+    RapidataAudience,
+    RapidataAudienceManager,
+)
 from .selection import (
     DemographicSelection,
     LabelingSelection,
@@ -42,6 +46,5 @@ from .filter import (
     OrFilter,
     ResponseCountFilter,
 )
-from .validation import Box
 from .exceptions import FailedUploadException
 from .config import rapidata_config, logger, managed_print

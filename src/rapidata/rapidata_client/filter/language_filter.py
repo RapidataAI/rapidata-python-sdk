@@ -53,3 +53,15 @@ class LanguageFilter(RapidataFilter, BaseModel):
                 languages=self.language_codes,
             )
         )
+
+    def _to_audience_model(self):
+        from rapidata.api_client.models.i_audience_filter import IAudienceFilter
+        from rapidata.api_client.models.i_audience_filter_language_filter import (
+            IAudienceFilterLanguageFilter,
+        )
+
+        return IAudienceFilter(
+            actual_instance=IAudienceFilterLanguageFilter(
+                _t="LanguageFilter", languages=self.language_codes
+            )
+        )

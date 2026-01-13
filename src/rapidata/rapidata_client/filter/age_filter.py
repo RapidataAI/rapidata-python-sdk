@@ -29,6 +29,11 @@ class AgeFilter(RapidataFilter, BaseModel):
         return IUserFilterModel(
             actual_instance=IUserFilterModelAgeUserFilterModel(
                 _t="AgeFilter",
-                ageGroups=[age_group._to_backend_model() for age_group in self.age_groups],
+                ageGroups=[
+                    age_group._to_backend_model() for age_group in self.age_groups
+                ],
             )
         )
+
+    def _to_audience_model(self):
+        raise NotImplementedError("AgeFilter is not supported for audiences")

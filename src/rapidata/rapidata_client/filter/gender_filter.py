@@ -33,3 +33,6 @@ class GenderFilter(RapidataFilter, BaseModel):
                 genders=[gender._to_backend_model() for gender in self.genders],
             )
         )
+
+    def _to_audience_model(self):
+        raise NotImplementedError("GenderFilter is not supported for audiences")

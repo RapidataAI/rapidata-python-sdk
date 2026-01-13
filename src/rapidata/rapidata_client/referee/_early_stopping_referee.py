@@ -23,28 +23,28 @@ class EarlyStoppingReferee(Referee):
     Args:
         threshold (float, optional): The confidence threshold for early stopping.
             Defaults to 0.999.
-        max_vote_count (int, optional): The maximum number of votes allowed
+        max_responses (int, optional): The maximum number of votes allowed
             before stopping. Defaults to 100.
 
     Attributes:
         threshold (float): The confidence threshold for early stopping.
-        max_vote_count (int): The maximum number of votes allowed before stopping.
+        max_responses (int): The maximum number of votes allowed before stopping.
     """
 
-    def __init__(self, threshold: float = 0.999, max_vote_count: int = 100):
+    def __init__(self, threshold: float = 0.999, max_responses: int = 100):
         if threshold <= 0 or threshold >= 1:
             raise ValueError("The threshold must be between 0 and 1.")
-        if max_vote_count < 1:
+        if max_responses < 1:
             raise ValueError("The number of responses must be greater than 0.")
 
         self.threshold = threshold
-        self.max_vote_count = max_vote_count
+        self.max_responses = max_responses
 
     def _to_dict(self):
         return {
             "_t": "ProbabilisticAttachCategoryRefereeConfig",
             "threshold": self.threshold,
-            "maxVotes": self.max_vote_count,
+            "maxVotes": self.max_responses,
         }
 
     def _to_model(self) -> IRefereeModel:
@@ -57,6 +57,12 @@ class EarlyStoppingReferee(Referee):
             actual_instance=IRefereeModelEarlyStoppingRefereeModel(
                 _t="EarlyStoppingReferee",
                 threshold=self.threshold,
-                maxVotes=self.max_vote_count,
+                maxVotes=self.max_responses,
             )
         )
+
+    def __str__(self) -> str:
+        return f"EarlyStoppingReferee(threshold={self.threshold}, max_responses={self.max_responses})"
+
+    def __repr__(self) -> str:
+        return self.__str__()

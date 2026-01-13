@@ -7,13 +7,11 @@ import uuid
 import random
 from rapidata.service.openapi_service import OpenAPIService
 
-from rapidata.rapidata_client.order.rapidata_order_manager import RapidataOrderManager
 from rapidata.rapidata_client.benchmark.rapidata_benchmark_manager import (
     RapidataBenchmarkManager,
 )
-
-from rapidata.rapidata_client.validation.validation_set_manager import (
-    ValidationSetManager,
+from rapidata.rapidata_client.audience.rapidata_audience_manager import (
+    RapidataAudienceManager,
 )
 
 from rapidata.rapidata_client.demographic.demographic_manager import DemographicManager
@@ -24,6 +22,9 @@ from rapidata.rapidata_client.config import (
     managed_print,
     rapidata_config,
 )
+
+from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
+from rapidata.rapidata_client.job.job_manager import JobManager
 
 
 class RapidataClient:
@@ -53,8 +54,7 @@ class RapidataClient:
 
         Attributes:
             order (RapidataOrderManager): The RapidataOrderManager instance.
-            validation (ValidationSetManager): The ValidationSetManager instance.
-            demographic (DemographicManager): The DemographicManager instance.
+            audience (RapidataAudienceManager): The RapidataAudienceManager instance.
             mri (RapidataBenchmarkManager): The RapidataBenchmarkManager instance.
         """
         tracer.set_session_id(
@@ -78,31 +78,35 @@ class RapidataClient:
                 leeway=leeway,
             )
 
-            logger.debug("Initializing RapidataOrderManager")
-            self.order = RapidataOrderManager(openapi_service=self._openapi_service)
+            self._asset_uploader = AssetUploader(openapi_service=self._openapi_service)
 
-            logger.debug("Initializing ValidationSetManager")
-            self.validation = ValidationSetManager(
-                openapi_service=self._openapi_service
-            )
-
-            logger.debug("Initializing DemographicManager")
-            self._demographic = DemographicManager(
-                openapi_service=self._openapi_service
-            )
+            logger.debug("Initializing JobManager")
+            self.job = JobManager(openapi_service=self._openapi_service)
 
             logger.debug("Initializing RapidataBenchmarkManager")
             self.mri = RapidataBenchmarkManager(openapi_service=self._openapi_service)
+
+            logger.debug("Initializing RapidataAudienceManager")
+            self.audience = RapidataAudienceManager(
+                openapi_service=self._openapi_service
+            )
+
+            logger.debug("Initializing RapidataDemographicManager")
+            self._demographic = DemographicManager(
+                openapi_service=self._openapi_service
+            )
 
         self._check_beta_features()  # can't be in the trace for some reason
 
     def reset_credentials(self):
         """Reset the credentials saved in the configuration file for the current environment."""
+        logger.info("Resetting credentials")
         self._openapi_service.reset_credentials()
+        logger.info("Credentials reset")
 
     def clear_all_caches(self):
         """Clear all caches for the client."""
-        self.order._asset_uploader.clear_cache()
+        self._asset_uploader.clear_cache()
         logger.info("All caches cleared")
 
     def _check_beta_features(self):

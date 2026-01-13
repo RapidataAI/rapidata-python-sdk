@@ -18,3 +18,6 @@ class NewUserFilter(RapidataFilter):
         return IUserFilterModel(
             actual_instance=IUserFilterModelNewUserFilterModel(_t="NewUserFilter")
         )
+
+    def _to_audience_model(self):
+        raise NotImplementedError("NewUserFilter is not supported for audiences")
