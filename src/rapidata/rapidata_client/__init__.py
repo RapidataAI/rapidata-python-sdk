@@ -35,16 +35,9 @@ from .settings import (
 from .filter import (
     CountryFilter,
     LanguageFilter,
-    UserScoreFilter,
-    CampaignFilter,
-    AgeFilter,
-    GenderFilter,
-    CustomFilter,
-    AgeGroup,
-    Gender,
     NotFilter,
     OrFilter,
-    ResponseCountFilter,
+    AndFilter,
 )
 from .exceptions import FailedUploadException
 from .config import rapidata_config, logger, managed_print
