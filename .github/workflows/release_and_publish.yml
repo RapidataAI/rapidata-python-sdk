@@ -12,13 +12,10 @@ on:
         - minor
         - major
       branch:
-        description: 'Branch to release from'
+        description: 'Branch to release from (main, alpha, beta, rc, 2.x)'
         required: true
         default: 'main'
-        type: choice
-        options:
-        - main
-        - 2.x
+        type: string
 jobs:
   release-and-publish:
     runs-on: ubuntu-latest
@@ -36,15 +33,50 @@ jobs:
       run: |
         git config user.name github-actions
         git config user.email github-actions@github.com
-    
+
+    - name: Determine release type
+      id: release_type
+      run: |
+        branch="${{ github.event.inputs.branch }}"
+        case "$branch" in
+          alpha)  echo "type=alpha" >> $GITHUB_OUTPUT; echo "suffix=a" >> $GITHUB_OUTPUT ;;
+          beta)   echo "type=beta" >> $GITHUB_OUTPUT; echo "suffix=b" >> $GITHUB_OUTPUT ;;
+          rc)     echo "type=rc" >> $GITHUB_OUTPUT; echo "suffix=rc" >> $GITHUB_OUTPUT ;;
+          *)      echo "type=stable" >> $GITHUB_OUTPUT; echo "suffix=" >> $GITHUB_OUTPUT ;;
+        esac
+
     - name: Update version
       id: update_version
       run: |
         old_version=$(uv version --short)
-        uv version --bump ${{ github.event.inputs.version_part }}
-        new_version=$(uv version --short)
-        echo "new_version=$new_version" >>$GITHUB_OUTPUT
-        echo "old_version=$old_version" >>$GITHUB_OUTPUT
+        suffix="${{ steps.release_type.outputs.suffix }}"
+
+        if [ -n "$suffix" ]; then
+          # Pre-release: bump version first to get base
+          uv version --bump ${{ github.event.inputs.version_part }}
+          base_version=$(uv version --short)
+
+          # Find the latest pre-release number for this base version
+          latest_num=$(git tag -l "v${base_version}${suffix}*" | \
+            sed "s/v${base_version}${suffix}//" | \
+            sort -n | tail -1)
+
+          if [ -z "$latest_num" ]; then
+            next_num=1
+          else
+            next_num=$((latest_num + 1))
+          fi
+
+          new_version="${base_version}${suffix}${next_num}"
+          uv version "$new_version"
+        else
+          # Stable release: standard bump
+          uv version --bump ${{ github.event.inputs.version_part }}
+          new_version=$(uv version --short)
+        fi
+
+        echo "new_version=$new_version" >> $GITHUB_OUTPUT
+        echo "old_version=$old_version" >> $GITHUB_OUTPUT
     
     - name: Update version in Python code
       run: |
@@ -97,6 +129,7 @@ jobs:
       with:
         tag_name: v${{ steps.update_version.outputs.new_version }}
         name: Release v${{ steps.update_version.outputs.new_version }}
+        prerelease: ${{ steps.release_type.outputs.type != 'stable' }}
         files: |
           dist/*.whl
           dist/*.tar.gz
