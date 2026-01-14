@@ -5,7 +5,7 @@
       
       
       
-        <link rel="canonical" href="https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/audience/rapidata_results/">
+        <link rel="canonical" href="https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/results/rapidata_results/">
       
       
       
@@ -83,7 +83,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#rapidata.rapidata_client.audience.rapidata_results" class="md-skip">
+        <a href="#rapidata.rapidata_client.results.rapidata_results" class="md-skip">
           Skip to content
         </a>
       
@@ -277,6 +277,25 @@
         </a>
       </li>
     
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../../migration_guide/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  🔄 Migration Guide
+
+      </a>
+    </li>
   
 
       
@@ -851,6 +870,33 @@
   
 
     
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../migration_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔄 Migration Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -877,7 +923,7 @@
 
 
 
-<a id="rapidata.rapidata_client.audience.rapidata_results"></a>
+<a id="rapidata.rapidata_client.results.rapidata_results"></a>
     <div class="doc doc-contents first">
 
 
@@ -903,11 +949,11 @@
 
 
 
-<h2 id="rapidata.rapidata_client.audience.rapidata_results.RapidataResults" class="doc doc-heading">
+<h2 id="rapidata.rapidata_client.results.rapidata_results.RapidataResults" class="doc doc-heading">
             <span class="doc doc-object-name doc-class-name">RapidataResults</span>
 
 
-<a href="#rapidata.rapidata_client.audience.rapidata_results.RapidataResults" class="headerlink" title="Permanent link">#</a></h2>
+<a href="#rapidata.rapidata_client.results.rapidata_results.RapidataResults" class="headerlink" title="Permanent link">#</a></h2>
 
 
     <div class="doc doc-contents ">
@@ -943,11 +989,11 @@ Extends the built-in dict class with specialized methods.</p>
 <div class="doc doc-object doc-function">
 
 
-<h3 id="rapidata.rapidata_client.audience.rapidata_results.RapidataResults.to_pandas" class="doc doc-heading">
+<h3 id="rapidata.rapidata_client.results.rapidata_results.RapidataResults.to_pandas" class="doc doc-heading">
             <span class="doc doc-object-name doc-function-name">to_pandas</span>
 
 
-<a href="#rapidata.rapidata_client.audience.rapidata_results.RapidataResults.to_pandas" class="headerlink" title="Permanent link">#</a></h3>
+<a href="#rapidata.rapidata_client.results.rapidata_results.RapidataResults.to_pandas" class="headerlink" title="Permanent link">#</a></h3>
 <div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">to_pandas</span><span class="p">(</span><span class="n">split_details</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="pandas.DataFrame">DataFrame</span></span>
 </span></code></pre></div>
 
@@ -1042,7 +1088,7 @@ For regular results, flattens nested dictionaries into columns with underscore-s
 
 
             <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/rapidata/rapidata_client/audience/rapidata_results.py</code></summary>
+              <summary>Source code in <code>src/rapidata/rapidata_client/results/rapidata_results.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-16">16</a></span>
 <span class="normal"><a href="#__codelineno-0-17">17</a></span>
 <span class="normal"><a href="#__codelineno-0-18">18</a></span>
@@ -1173,11 +1219,11 @@ For regular results, flattens nested dictionaries into columns with underscore-s
 <div class="doc doc-object doc-function">
 
 
-<h3 id="rapidata.rapidata_client.audience.rapidata_results.RapidataResults.to_json" class="doc doc-heading">
+<h3 id="rapidata.rapidata_client.results.rapidata_results.RapidataResults.to_json" class="doc doc-heading">
             <span class="doc doc-object-name doc-function-name">to_json</span>
 
 
-<a href="#rapidata.rapidata_client.audience.rapidata_results.RapidataResults.to_json" class="headerlink" title="Permanent link">#</a></h3>
+<a href="#rapidata.rapidata_client.results.rapidata_results.RapidataResults.to_json" class="headerlink" title="Permanent link">#</a></h3>
 <div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">to_json</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s1">'./results.json'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 
@@ -1218,7 +1264,7 @@ For regular results, flattens nested dictionaries into columns with underscore-s
 
 
             <details class="mkdocstrings-source">
-              <summary>Source code in <code>src/rapidata/rapidata_client/audience/rapidata_results.py</code></summary>
+              <summary>Source code in <code>src/rapidata/rapidata_client/results/rapidata_results.py</code></summary>
               <div class="language-python highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-243">243</a></span>
 <span class="normal"><a href="#__codelineno-0-244">244</a></span>
 <span class="normal"><a href="#__codelineno-0-245">245</a></span>

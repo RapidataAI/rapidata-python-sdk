@@ -286,6 +286,25 @@
   
 
       
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../migration_guide/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  🔄 Migration Guide
+
+      </a>
+    </li>
+  
+
+      
     </ul>
   </div>
 </nav>
@@ -1062,6 +1081,33 @@
   
 
     
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../migration_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔄 Migration Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -1154,7 +1200,7 @@
 <p>This opens your browser where you can review and adjust the job configuration.</p>
 <h3 id="step-5-assign-job-to-audience">Step 5: Assign Job to Audience<a class="headerlink" href="#step-5-assign-job-to-audience" title="Permanent link">#</a></h3>
 <p>Once you're satisfied with your job definition, assign it to your audience to start collecting responses:</p>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">job</span> <span class="o">=</span> <span class="n">audience</span><span class="o">.</span><span class="n">assign_job_to_audience</span><span class="p">(</span><span class="n">job_definition</span><span class="p">)</span>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">job</span> <span class="o">=</span> <span class="n">audience</span><span class="o">.</span><span class="n">assign_job</span><span class="p">(</span><span class="n">job_definition</span><span class="p">)</span>
 </span></code></pre></div>
 <p>Labelers who have passed your qualification examples will now start working on your data.</p>
 <h3 id="step-6-monitor-progress-and-get-results">Step 6: Monitor Progress and Get Results<a class="headerlink" href="#step-6-monitor-progress-and-get-results" title="Permanent link">#</a></h3>
@@ -1213,7 +1259,7 @@
 </span><span id="__span-12-29"><a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a><span class="n">job_definition</span><span class="o">.</span><span class="n">preview</span><span class="p">()</span>
 </span><span id="__span-12-30"><a id="__codelineno-12-30" name="__codelineno-12-30" href="#__codelineno-12-30"></a>
 </span><span id="__span-12-31"><a id="__codelineno-12-31" name="__codelineno-12-31" href="#__codelineno-12-31"></a><span class="c1"># Assign to audience and get results</span>
-</span><span id="__span-12-32"><a id="__codelineno-12-32" name="__codelineno-12-32" href="#__codelineno-12-32"></a><span class="n">job</span> <span class="o">=</span> <span class="n">audience</span><span class="o">.</span><span class="n">assign_job_to_audience</span><span class="p">(</span><span class="n">job_definition</span><span class="p">)</span>
+</span><span id="__span-12-32"><a id="__codelineno-12-32" name="__codelineno-12-32" href="#__codelineno-12-32"></a><span class="n">job</span> <span class="o">=</span> <span class="n">audience</span><span class="o">.</span><span class="n">assign_job</span><span class="p">(</span><span class="n">job_definition</span><span class="p">)</span>
 </span><span id="__span-12-33"><a id="__codelineno-12-33" name="__codelineno-12-33" href="#__codelineno-12-33"></a><span class="n">job</span><span class="o">.</span><span class="n">display_progress_bar</span><span class="p">()</span>
 </span><span id="__span-12-34"><a id="__codelineno-12-34" name="__codelineno-12-34" href="#__codelineno-12-34"></a><span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span>
 </span><span id="__span-12-35"><a id="__codelineno-12-35" name="__codelineno-12-35" href="#__codelineno-12-35"></a><span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
@@ -1223,6 +1269,7 @@
 <li>Learn about <a href="../examples/classify_job/">Classification Jobs</a> for categorizing data</li>
 <li>Understand the <a href="../understanding_the_results/">Results Format</a></li>
 <li>Configure <a href="../confidence_stopping/">Early Stopping</a> based on confidence thresholds</li>
+<li>Migrating from Orders? See the <a href="../migration_guide/">Migration Guide</a></li>
 </ul>
 
 
