@@ -416,16 +416,6 @@
           "asset": {
             "$ref": "#/components/schemas/IAssetInput"
           },
-          "metadata": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/ListOfIDatasetMetadataInput"
-              }
-            ]
-          },
           "context": {
             "type": "string",
             "nullable": true
@@ -889,82 +879,6 @@
           }
         }
       },
-      "IDatasetMetadataInput": {
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/IDatasetMetadataInputPromptMetadataInput"
-          },
-          {
-            "$ref": "#/components/schemas/IDatasetMetadataInputPromptAssetMetadataInput"
-          },
-          {
-            "$ref": "#/components/schemas/IDatasetMetadataInputTranscriptionMetadataInput"
-          }
-        ],
-        "discriminator": {
-          "propertyName": "_t",
-          "mapping": {
-            "PromptMetadataInput": "#/components/schemas/IDatasetMetadataInputPromptMetadataInput",
-            "PromptAssetMetadataInput": "#/components/schemas/IDatasetMetadataInputPromptAssetMetadataInput",
-            "TranscriptionMetadataInput": "#/components/schemas/IDatasetMetadataInputTranscriptionMetadataInput"
-          }
-        }
-      },
-      "IDatasetMetadataInputPromptAssetMetadataInput": {
-        "required": [
-          "asset",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "PromptAssetMetadataInput"
-            ],
-            "type": "string"
-          },
-          "asset": {
-            "$ref": "#/components/schemas/IAssetInput"
-          }
-        }
-      },
-      "IDatasetMetadataInputPromptMetadataInput": {
-        "required": [
-          "prompt",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "PromptMetadataInput"
-            ],
-            "type": "string"
-          },
-          "prompt": {
-            "type": "string"
-          }
-        }
-      },
-      "IDatasetMetadataInputTranscriptionMetadataInput": {
-        "required": [
-          "transcription",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "TranscriptionMetadataInput"
-            ],
-            "type": "string"
-          },
-          "transcription": {
-            "type": "string"
-          }
-        }
-      },
       "IMetadataInput": {
         "required": [
           "_t"
@@ -1270,12 +1184,6 @@
         "type": "array",
         "items": {
           "$ref": "#/components/schemas/IAssetModel"
-        }
-      },
-      "ListOfIDatasetMetadataInput": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/IDatasetMetadataInput"
         }
       },
       "ListOfQueryDatapointsByDatasetIdResult": {

@@ -3,22 +3,20 @@ on:
   workflow_dispatch:
     inputs:
       version_part:
-        description: 'Version part to bump (patch, minor, major)'
+        description: 'Version part to bump (none = just increment pre-release number)'
         required: true
-        default: 'patch'
+        default: 'none'
         type: choice
         options:
+        - none
         - patch
         - minor
         - major
       branch:
-        description: 'Branch to release from'
+        description: 'Branch to release from (main, alpha, beta, rc, 2.x)'
         required: true
         default: 'main'
-        type: choice
-        options:
-        - main
-        - 2.x
+        type: string
 jobs:
   release-and-publish:
     runs-on: ubuntu-latest
@@ -26,6 +24,8 @@ jobs:
     - uses: actions/checkout@v4
       with:
         ref: ${{ github.event.inputs.branch }}
+        fetch-tags: true
+        fetch-depth: 0
     - name: Set up Python
       uses: actions/setup-python@v6
       with:
@@ -36,15 +36,69 @@ jobs:
       run: |
         git config user.name github-actions
         git config user.email github-actions@github.com
-    
+
+    - name: Determine release type
+      id: release_type
+      run: |
+        branch="${{ github.event.inputs.branch }}"
+        case "$branch" in
+          alpha)  echo "type=alpha" >> $GITHUB_OUTPUT; echo "suffix=a" >> $GITHUB_OUTPUT ;;
+          beta)   echo "type=beta" >> $GITHUB_OUTPUT; echo "suffix=b" >> $GITHUB_OUTPUT ;;
+          rc)     echo "type=rc" >> $GITHUB_OUTPUT; echo "suffix=rc" >> $GITHUB_OUTPUT ;;
+          *)      echo "type=stable" >> $GITHUB_OUTPUT; echo "suffix=" >> $GITHUB_OUTPUT ;;
+        esac
+
     - name: Update version
       id: update_version
       run: |
         old_version=$(uv version --short)
-        uv version --bump ${{ github.event.inputs.version_part }}
-        new_version=$(uv version --short)
-        echo "new_version=$new_version" >>$GITHUB_OUTPUT
-        echo "old_version=$old_version" >>$GITHUB_OUTPUT
+        suffix="${{ steps.release_type.outputs.suffix }}"
+        version_part="${{ github.event.inputs.version_part }}"
+
+        if [ -n "$suffix" ]; then
+          # Pre-release branch (alpha, beta, rc)
+
+          if [ "$version_part" = "none" ]; then
+            # Just increment pre-release number, keep base version
+            # Extract base version (strip any existing pre-release suffix like a1, b2, rc3)
+            base_version=$(echo "$old_version" | sed -E 's/(a|b|rc)[0-9]+$//')
+          else
+            # Bump the base version first
+            uv version --bump $version_part
+            base_version=$(uv version --short)
+          fi
+
+          # Find the latest pre-release number for this base version
+          latest_num=$(git tag -l "v${base_version}${suffix}*" | \
+            sed "s/v${base_version}${suffix}//" | \
+            sort -n | tail -1)
+
+          if [ -z "$latest_num" ]; then
+            next_num=1
+          else
+            next_num=$((latest_num + 1))
+          fi
+
+          new_version="${base_version}${suffix}${next_num}"
+          uv version "$new_version"
+        else
+          # Stable release: standard bump (none not allowed for stable)
+          if [ "$version_part" = "none" ]; then
+            echo "Error: 'none' is only valid for pre-release branches (alpha, beta, rc)"
+            exit 1
+          fi
+          uv version --bump $version_part
+          new_version=$(uv version --short)
+        fi
+
+        # Prevent publishing the same version
+        if [ "$new_version" = "$old_version" ]; then
+          echo "Error: Version unchanged ($old_version). Tag v${new_version} may already exist."
+          exit 1
+        fi
+
+        echo "new_version=$new_version" >> $GITHUB_OUTPUT
+        echo "old_version=$old_version" >> $GITHUB_OUTPUT
     
     - name: Update version in Python code
       run: |
@@ -97,6 +151,7 @@ jobs:
       with:
         tag_name: v${{ steps.update_version.outputs.new_version }}
         name: Release v${{ steps.update_version.outputs.new_version }}
+        prerelease: ${{ steps.release_type.outputs.type != 'stable' }}
         files: |
           dist/*.whl
           dist/*.tar.gz

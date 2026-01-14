@@ -4759,6 +4759,50 @@
         ]
       }
     },
+    "/job/{jobId}/download-results": {
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Downloads the results of a job as a file attachment.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
     "/job/{jobId}": {
       "get": {
         "tags": [
@@ -4792,6 +4836,57 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
+    "/job/{jobId}/results": {
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Gets the results of a job as a JSON string.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -7760,7 +7855,6 @@
         ]
       }
     },
-    "/validation-set/{validationSetId}/rapid-new": {},
     "/validation-set/{validationSetId}/update-labeling-hints": {},
     "/validation-set/{validationSetId}/visibility": {
       "patch": {
@@ -8979,6 +9073,25 @@
                 "$ref": "#/components/schemas/ExistingAssetInput"
               }
             ]
+          },
+          "maxDistillingResponses": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "minDistillingResponses": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "minDistillingScoreFloor": {
+            "type": "number",
+            "format": "double"
+          },
+          "isDistillingCampaignSticky": {
+            "type": "boolean"
+          },
+          "maxDistillingSessions": {
+            "type": "integer",
+            "format": "uint32"
           }
         }
       },
@@ -11078,16 +11191,6 @@
           "asset": {
             "$ref": "#/components/schemas/IAssetInput"
           },
-          "metadata": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/ListOfIDatasetMetadataInput"
-              }
-            ]
-          },
           "context": {
             "type": "string",
             "nullable": true
@@ -11267,92 +11370,10 @@
           }
         }
       },
-      "IDatasetMetadataInput": {
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/IDatasetMetadataInputPromptMetadataInput"
-          },
-          {
-            "$ref": "#/components/schemas/IDatasetMetadataInputPromptAssetMetadataInput"
-          },
-          {
-            "$ref": "#/components/schemas/IDatasetMetadataInputTranscriptionMetadataInput"
-          }
-        ],
-        "discriminator": {
-          "propertyName": "_t",
-          "mapping": {
-            "PromptMetadataInput": "#/components/schemas/IDatasetMetadataInputPromptMetadataInput",
-            "PromptAssetMetadataInput": "#/components/schemas/IDatasetMetadataInputPromptAssetMetadataInput",
-            "TranscriptionMetadataInput": "#/components/schemas/IDatasetMetadataInputTranscriptionMetadataInput"
-          }
-        }
-      },
-      "IDatasetMetadataInputPromptAssetMetadataInput": {
-        "required": [
-          "asset",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "PromptAssetMetadataInput"
-            ],
-            "type": "string"
-          },
-          "asset": {
-            "$ref": "#/components/schemas/IAssetInput"
-          }
-        }
-      },
-      "IDatasetMetadataInputPromptMetadataInput": {
-        "required": [
-          "prompt",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "PromptMetadataInput"
-            ],
-            "type": "string"
-          },
-          "prompt": {
-            "type": "string"
-          }
-        }
-      },
-      "IDatasetMetadataInputTranscriptionMetadataInput": {
-        "required": [
-          "transcription",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "TranscriptionMetadataInput"
-            ],
-            "type": "string"
-          },
-          "transcription": {
-            "type": "string"
-          }
-        }
-      },
       "ListOfGetFailedDatapointsResult_Datapoint": {
         "type": "array",
         "items": {
           "$ref": "#/components/schemas/GetFailedDatapointsResult_Datapoint"
-        }
-      },
-      "ListOfIDatasetMetadataInput": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/IDatasetMetadataInput"
         }
       },
       "ListOfQueryDatapointsByDatasetIdResult": {
@@ -12082,6 +12103,10 @@
             "type": "string",
             "nullable": true
           },
+          "audienceId": {
+            "type": "string",
+            "nullable": true
+          },
           "filters": {
             "oneOf": [
               {
@@ -12391,10 +12416,16 @@
             "$ref": "#/components/schemas/ICampaignFilterCampaignFilter"
           },
           {
+            "$ref": "#/components/schemas/ICampaignFilterCampaignSessionCountFilter"
+          },
+          {
             "$ref": "#/components/schemas/ICampaignFilterCountryFilter"
           },
           {
             "$ref": "#/components/schemas/ICampaignFilterDemographicFilter"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterDeviceFilter"
           },
           {
             "$ref": "#/components/schemas/ICampaignFilterLanguageFilter"
@@ -12423,8 +12454,10 @@
           "mapping": {
             "AndFilter": "#/components/schemas/ICampaignFilterAndFilter",
             "CampaignFilter": "#/components/schemas/ICampaignFilterCampaignFilter",
+            "CampaignSessionCountFilter": "#/components/schemas/ICampaignFilterCampaignSessionCountFilter",
             "CountryFilter": "#/components/schemas/ICampaignFilterCountryFilter",
             "DemographicFilter": "#/components/schemas/ICampaignFilterDemographicFilter",
+            "DeviceFilter": "#/components/schemas/ICampaignFilterDeviceFilter",
             "LanguageFilter": "#/components/schemas/ICampaignFilterLanguageFilter",
             "NewUserFilter": "#/components/schemas/ICampaignFilterNewUserFilter",
             "NotFilter": "#/components/schemas/ICampaignFilterNotFilter",
@@ -12483,6 +12516,32 @@
           }
         }
       },
+      "ICampaignFilterCampaignSessionCountFilter": {
+        "required": [
+          "sessionCount",
+          "operator",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CampaignSessionCountFilter"
+            ],
+            "type": "string"
+          },
+          "sessionCount": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "operator": {
+            "$ref": "#/components/schemas/ComparisonOperator"
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "uint32"
+          }
+        }
+      },
       "ICampaignFilterCountryFilter": {
         "required": [
           "countries",
@@ -12527,6 +12586,34 @@
             "type": "array",
             "items": {
               "type": "string"
+            }
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "uint32"
+          }
+        }
+      },
+      "ICampaignFilterDeviceFilter": {
+        "required": [
+          "deviceTypes",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "DeviceFilter"
+            ],
+            "type": "string"
+          },
+          "deviceTypes": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "Unknown",
+                "Phone",
+                "Tablet"
+              ]
             }
           },
           "executionOrder": {
@@ -12734,6 +12821,9 @@
             "$ref": "#/components/schemas/IUserFilterModelCustomUserFilterModel"
           },
           {
+            "$ref": "#/components/schemas/IUserFilterModelDeviceUserFilterModel"
+          },
+          {
             "$ref": "#/components/schemas/IUserFilterModelGenderUserFilterModel"
           },
           {
@@ -12763,6 +12853,7 @@
             "CampaignFilter": "#/components/schemas/IUserFilterModelCampaignUserFilterModel",
             "CountryFilter": "#/components/schemas/IUserFilterModelCountryUserFilterModel",
             "CustomFilter": "#/components/schemas/IUserFilterModelCustomUserFilterModel",
+            "DeviceFilter": "#/components/schemas/IUserFilterModelDeviceUserFilterModel",
             "GenderFilter": "#/components/schemas/IUserFilterModelGenderUserFilterModel",
             "LanguageFilter": "#/components/schemas/IUserFilterModelLanguageUserFilterModel",
             "NewUserFilter": "#/components/schemas/IUserFilterModelNewUserFilterModel",
@@ -12877,6 +12968,30 @@
             "type": "array",
             "items": {
               "type": "string"
+            }
+          }
+        }
+      },
+      "IUserFilterModelDeviceUserFilterModel": {
+        "required": [
+          "deviceTypes",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "DeviceFilter"
+            ],
+            "type": "string"
+          },
+          "deviceTypes": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "Unknown",
+                "Phone",
+                "Tablet"
+              ]
             }
           }
         }
@@ -13957,7 +14072,8 @@
           "FreeText",
           "Scrub",
           "Ranking",
-          "MultiRanking"
+          "MultiRanking",
+          null
         ]
       },
       "AttachCategoryRapidBlueprint_Category": {
@@ -16058,8 +16174,7 @@
         "enum": [
           "Random",
           "Shuffled",
-          "Sequential",
-          null
+          "Sequential"
         ]
       },
       "StickyState": {
@@ -18129,73 +18244,6 @@
               }
             ]
           },
-          "metadata": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/ListOfIValidationMetadataInput"
-              }
-            ]
-          },
-          "featureFlags": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/ListOfFeatureFlagModel"
-              }
-            ]
-          }
-        }
-      },
-      "AddValidationRapidNewModel": {
-        "required": [
-          "asset",
-          "payload",
-          "metadata",
-          "truth",
-          "randomCorrectProbability",
-          "explanation"
-        ],
-        "type": "object",
-        "properties": {
-          "asset": {
-            "$ref": "#/components/schemas/IAssetInput"
-          },
-          "payload": {
-            "$ref": "#/components/schemas/IRapidPayload"
-          },
-          "metadata": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/ListOfIValidationMetadataInput"
-              }
-            ]
-          },
-          "truth": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/IValidationTruthModel"
-              }
-            ]
-          },
-          "randomCorrectProbability": {
-            "type": "number",
-            "format": "double"
-          },
-          "explanation": {
-            "type": "string",
-            "nullable": true
-          },
           "featureFlags": {
             "oneOf": [
               {
@@ -18381,71 +18429,10 @@
           }
         }
       },
-      "IValidationMetadataInput": {
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/IValidationMetadataInputPromptMetadataInput"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationMetadataInputPromptAssetMetadataInput"
-          }
-        ],
-        "discriminator": {
-          "propertyName": "_t",
-          "mapping": {
-            "PromptMetadataInput": "#/components/schemas/IValidationMetadataInputPromptMetadataInput",
-            "PromptAssetMetadataInput": "#/components/schemas/IValidationMetadataInputPromptAssetMetadataInput"
-          }
-        }
-      },
-      "IValidationMetadataInputPromptAssetMetadataInput": {
-        "required": [
-          "asset",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "PromptAssetMetadataInput"
-            ],
-            "type": "string"
-          },
-          "asset": {
-            "$ref": "#/components/schemas/IAssetInput"
-          }
-        }
-      },
-      "IValidationMetadataInputPromptMetadataInput": {
-        "required": [
-          "prompt",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "PromptMetadataInput"
-            ],
-            "type": "string"
-          },
-          "prompt": {
-            "type": "string"
-          }
-        }
-      },
       "ListOfGetValidationRapidsResult": {
         "type": "array",
         "items": {
           "$ref": "#/components/schemas/GetValidationRapidsResult"
-        }
-      },
-      "ListOfIValidationMetadataInput": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/IValidationMetadataInput"
         }
       },
       "ListOfValidationSetModel": {

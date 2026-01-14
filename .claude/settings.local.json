@@ -6,7 +6,12 @@
       "Bash(find:*)",
       "Bash(cat:*)",
       "Bash(.venv/Scripts/python.exe:*)",
-      "Bash(git ls-tree:*)"
+      "Bash(git ls-tree:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git fetch:*)",
+      "Bash(git rebase:*)",
+      "Bash(git stash:*)"
     ],
     "deny": [],
     "ask": []
