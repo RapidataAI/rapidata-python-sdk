@@ -22,7 +22,6 @@ from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.feature_flag_model import FeatureFlagModel
 from rapidata.api_client.models.i_asset_input import IAssetInput
 from rapidata.api_client.models.i_rapid_payload import IRapidPayload
-from rapidata.api_client.models.i_validation_metadata_input import IValidationMetadataInput
 from rapidata.api_client.models.i_validation_truth_model import IValidationTruthModel
 from typing import Optional, Set
 from typing_extensions import Self
@@ -38,9 +37,8 @@ class AddValidationRapidModel(BaseModel):
     explanation: Optional[StrictStr] = None
     context: Optional[StrictStr] = None
     context_asset: Optional[IAssetInput] = Field(default=None, alias="contextAsset")
-    metadata: Optional[List[IValidationMetadataInput]] = None
     feature_flags: Optional[List[FeatureFlagModel]] = Field(default=None, alias="featureFlags")
-    __properties: ClassVar[List[str]] = ["asset", "payload", "truth", "randomCorrectProbability", "explanation", "context", "contextAsset", "metadata", "featureFlags"]
+    __properties: ClassVar[List[str]] = ["asset", "payload", "truth", "randomCorrectProbability", "explanation", "context", "contextAsset", "featureFlags"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -93,13 +91,6 @@ class AddValidationRapidModel(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of context_asset
         if self.context_asset:
             _dict['contextAsset'] = self.context_asset.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in metadata (list)
-        _items = []
-        if self.metadata:
-            for _item_metadata in self.metadata:
-                if _item_metadata:
-                    _items.append(_item_metadata.to_dict())
-            _dict['metadata'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in feature_flags (list)
         _items = []
         if self.feature_flags:
@@ -146,7 +137,6 @@ class AddValidationRapidModel(BaseModel):
             "explanation": obj.get("explanation"),
             "context": obj.get("context"),
             "contextAsset": IAssetInput.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
-            "metadata": [IValidationMetadataInput.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
             "featureFlags": [FeatureFlagModel.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
         })
         return _obj

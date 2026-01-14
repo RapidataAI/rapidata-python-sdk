@@ -146,7 +146,9 @@ Class | Method | HTTP request | Description
 *JobApi* | [**job_definition_definition_id_revisions_get**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_revisions_get) | **GET** /job/definition/{definitionId}/revisions | Queries job revisions for a specific definition based on filter, page, and sort criteria.
 *JobApi* | [**job_definition_post**](rapidata/api_client/docs/JobApi.md#job_definition_post) | **POST** /job/definition | Creates a new job definition.
 *JobApi* | [**job_definitions_get**](rapidata/api_client/docs/JobApi.md#job_definitions_get) | **GET** /job/definitions | Queries job definitions based on filter, page, and sort criteria.
+*JobApi* | [**job_job_id_download_results_get**](rapidata/api_client/docs/JobApi.md#job_job_id_download_results_get) | **GET** /job/{jobId}/download-results | Downloads the results of a job as a file attachment.
 *JobApi* | [**job_job_id_get**](rapidata/api_client/docs/JobApi.md#job_job_id_get) | **GET** /job/{jobId} | Gets a job by its id.
+*JobApi* | [**job_job_id_results_get**](rapidata/api_client/docs/JobApi.md#job_job_id_results_get) | **GET** /job/{jobId}/results | Gets the results of a job as a JSON string.
 *JobApi* | [**job_post**](rapidata/api_client/docs/JobApi.md#job_post) | **POST** /job | Creates a new job from a job definition and audience.
 *JobApi* | [**jobs_get**](rapidata/api_client/docs/JobApi.md#jobs_get) | **GET** /jobs | Queries jobs based on filter, page, and sort criteria.
 *LeaderboardApi* | [**benchmark_standing_leaderboard_id_participant_id_get**](rapidata/api_client/docs/LeaderboardApi.md#benchmark_standing_leaderboard_id_participant_id_get) | **GET** /benchmark/standing/{leaderboardId}/{participantId} | Gets a standing by leaderboardId and participantId.
@@ -226,7 +228,6 @@ Class | Method | HTTP request | Description
  - [AddRapidToAudienceModel](rapidata/api_client/docs/AddRapidToAudienceModel.md)
  - [AddUserResponseResult](rapidata/api_client/docs/AddUserResponseResult.md)
  - [AddValidationRapidModel](rapidata/api_client/docs/AddValidationRapidModel.md)
- - [AddValidationRapidNewModel](rapidata/api_client/docs/AddValidationRapidNewModel.md)
  - [AggregatedOrdersModel](rapidata/api_client/docs/AggregatedOrdersModel.md)
  - [AggregatorType](rapidata/api_client/docs/AggregatorType.md)
  - [AreRapidsActiveResult](rapidata/api_client/docs/AreRapidsActiveResult.md)
@@ -365,8 +366,10 @@ Class | Method | HTTP request | Description
  - [ICampaignFilter](rapidata/api_client/docs/ICampaignFilter.md)
  - [ICampaignFilterAndFilter](rapidata/api_client/docs/ICampaignFilterAndFilter.md)
  - [ICampaignFilterCampaignFilter](rapidata/api_client/docs/ICampaignFilterCampaignFilter.md)
+ - [ICampaignFilterCampaignSessionCountFilter](rapidata/api_client/docs/ICampaignFilterCampaignSessionCountFilter.md)
  - [ICampaignFilterCountryFilter](rapidata/api_client/docs/ICampaignFilterCountryFilter.md)
  - [ICampaignFilterDemographicFilter](rapidata/api_client/docs/ICampaignFilterDemographicFilter.md)
+ - [ICampaignFilterDeviceFilter](rapidata/api_client/docs/ICampaignFilterDeviceFilter.md)
  - [ICampaignFilterLanguageFilter](rapidata/api_client/docs/ICampaignFilterLanguageFilter.md)
  - [ICampaignFilterNewUserFilter](rapidata/api_client/docs/ICampaignFilterNewUserFilter.md)
  - [ICampaignFilterNotFilter](rapidata/api_client/docs/ICampaignFilterNotFilter.md)
@@ -374,10 +377,6 @@ Class | Method | HTTP request | Description
  - [ICampaignFilterResponseCountFilter](rapidata/api_client/docs/ICampaignFilterResponseCountFilter.md)
  - [ICampaignFilterUserActionRestrictionFilter](rapidata/api_client/docs/ICampaignFilterUserActionRestrictionFilter.md)
  - [ICampaignFilterUserScoreFilter](rapidata/api_client/docs/ICampaignFilterUserScoreFilter.md)
- - [IDatasetMetadataInput](rapidata/api_client/docs/IDatasetMetadataInput.md)
- - [IDatasetMetadataInputPromptAssetMetadataInput](rapidata/api_client/docs/IDatasetMetadataInputPromptAssetMetadataInput.md)
- - [IDatasetMetadataInputPromptMetadataInput](rapidata/api_client/docs/IDatasetMetadataInputPromptMetadataInput.md)
- - [IDatasetMetadataInputTranscriptionMetadataInput](rapidata/api_client/docs/IDatasetMetadataInputTranscriptionMetadataInput.md)
  - [IDatasetModel](rapidata/api_client/docs/IDatasetModel.md)
  - [IDatasetModelCloneDatasetModel](rapidata/api_client/docs/IDatasetModelCloneDatasetModel.md)
  - [IMetadata](rapidata/api_client/docs/IMetadata.md)
@@ -485,6 +484,7 @@ Class | Method | HTTP request | Description
  - [IUserFilterModelCampaignUserFilterModel](rapidata/api_client/docs/IUserFilterModelCampaignUserFilterModel.md)
  - [IUserFilterModelCountryUserFilterModel](rapidata/api_client/docs/IUserFilterModelCountryUserFilterModel.md)
  - [IUserFilterModelCustomUserFilterModel](rapidata/api_client/docs/IUserFilterModelCustomUserFilterModel.md)
+ - [IUserFilterModelDeviceUserFilterModel](rapidata/api_client/docs/IUserFilterModelDeviceUserFilterModel.md)
  - [IUserFilterModelGenderUserFilterModel](rapidata/api_client/docs/IUserFilterModelGenderUserFilterModel.md)
  - [IUserFilterModelLanguageUserFilterModel](rapidata/api_client/docs/IUserFilterModelLanguageUserFilterModel.md)
  - [IUserFilterModelNewUserFilterModel](rapidata/api_client/docs/IUserFilterModelNewUserFilterModel.md)
@@ -492,9 +492,6 @@ Class | Method | HTTP request | Description
  - [IUserFilterModelOrUserFilterModel](rapidata/api_client/docs/IUserFilterModelOrUserFilterModel.md)
  - [IUserFilterModelResponseCountUserFilterModel](rapidata/api_client/docs/IUserFilterModelResponseCountUserFilterModel.md)
  - [IUserFilterModelUserScoreUserFilterModel](rapidata/api_client/docs/IUserFilterModelUserScoreUserFilterModel.md)
- - [IValidationMetadataInput](rapidata/api_client/docs/IValidationMetadataInput.md)
- - [IValidationMetadataInputPromptAssetMetadataInput](rapidata/api_client/docs/IValidationMetadataInputPromptAssetMetadataInput.md)
- - [IValidationMetadataInputPromptMetadataInput](rapidata/api_client/docs/IValidationMetadataInputPromptMetadataInput.md)
  - [IValidationTruth](rapidata/api_client/docs/IValidationTruth.md)
  - [IValidationTruthAttachCategoryTruth](rapidata/api_client/docs/IValidationTruthAttachCategoryTruth.md)
  - [IValidationTruthBoundingBoxTruth](rapidata/api_client/docs/IValidationTruthBoundingBoxTruth.md)

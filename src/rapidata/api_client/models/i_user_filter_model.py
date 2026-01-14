@@ -21,6 +21,7 @@ from rapidata.api_client.models.i_user_filter_model_age_user_filter_model import
 from rapidata.api_client.models.i_user_filter_model_campaign_user_filter_model import IUserFilterModelCampaignUserFilterModel
 from rapidata.api_client.models.i_user_filter_model_country_user_filter_model import IUserFilterModelCountryUserFilterModel
 from rapidata.api_client.models.i_user_filter_model_custom_user_filter_model import IUserFilterModelCustomUserFilterModel
+from rapidata.api_client.models.i_user_filter_model_device_user_filter_model import IUserFilterModelDeviceUserFilterModel
 from rapidata.api_client.models.i_user_filter_model_gender_user_filter_model import IUserFilterModelGenderUserFilterModel
 from rapidata.api_client.models.i_user_filter_model_language_user_filter_model import IUserFilterModelLanguageUserFilterModel
 from rapidata.api_client.models.i_user_filter_model_new_user_filter_model import IUserFilterModelNewUserFilterModel
@@ -30,7 +31,7 @@ from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-IUSERFILTERMODEL_ONE_OF_SCHEMAS = ["IUserFilterModelAgeUserFilterModel", "IUserFilterModelAndUserFilterModel", "IUserFilterModelCampaignUserFilterModel", "IUserFilterModelCountryUserFilterModel", "IUserFilterModelCustomUserFilterModel", "IUserFilterModelGenderUserFilterModel", "IUserFilterModelLanguageUserFilterModel", "IUserFilterModelNewUserFilterModel", "IUserFilterModelNotUserFilterModel", "IUserFilterModelOrUserFilterModel", "IUserFilterModelResponseCountUserFilterModel", "IUserFilterModelUserScoreUserFilterModel"]
+IUSERFILTERMODEL_ONE_OF_SCHEMAS = ["IUserFilterModelAgeUserFilterModel", "IUserFilterModelAndUserFilterModel", "IUserFilterModelCampaignUserFilterModel", "IUserFilterModelCountryUserFilterModel", "IUserFilterModelCustomUserFilterModel", "IUserFilterModelDeviceUserFilterModel", "IUserFilterModelGenderUserFilterModel", "IUserFilterModelLanguageUserFilterModel", "IUserFilterModelNewUserFilterModel", "IUserFilterModelNotUserFilterModel", "IUserFilterModelOrUserFilterModel", "IUserFilterModelResponseCountUserFilterModel", "IUserFilterModelUserScoreUserFilterModel"]
 
 class IUserFilterModel(BaseModel):
     """
@@ -46,22 +47,24 @@ class IUserFilterModel(BaseModel):
     oneof_schema_4_validator: Optional[IUserFilterModelCountryUserFilterModel] = None
     # data type: IUserFilterModelCustomUserFilterModel
     oneof_schema_5_validator: Optional[IUserFilterModelCustomUserFilterModel] = None
+    # data type: IUserFilterModelDeviceUserFilterModel
+    oneof_schema_6_validator: Optional[IUserFilterModelDeviceUserFilterModel] = None
     # data type: IUserFilterModelGenderUserFilterModel
-    oneof_schema_6_validator: Optional[IUserFilterModelGenderUserFilterModel] = None
+    oneof_schema_7_validator: Optional[IUserFilterModelGenderUserFilterModel] = None
     # data type: IUserFilterModelLanguageUserFilterModel
-    oneof_schema_7_validator: Optional[IUserFilterModelLanguageUserFilterModel] = None
+    oneof_schema_8_validator: Optional[IUserFilterModelLanguageUserFilterModel] = None
     # data type: IUserFilterModelNewUserFilterModel
-    oneof_schema_8_validator: Optional[IUserFilterModelNewUserFilterModel] = None
+    oneof_schema_9_validator: Optional[IUserFilterModelNewUserFilterModel] = None
     # data type: IUserFilterModelNotUserFilterModel
-    oneof_schema_9_validator: Optional[IUserFilterModelNotUserFilterModel] = None
+    oneof_schema_10_validator: Optional[IUserFilterModelNotUserFilterModel] = None
     # data type: IUserFilterModelOrUserFilterModel
-    oneof_schema_10_validator: Optional[IUserFilterModelOrUserFilterModel] = None
+    oneof_schema_11_validator: Optional[IUserFilterModelOrUserFilterModel] = None
     # data type: IUserFilterModelResponseCountUserFilterModel
-    oneof_schema_11_validator: Optional[IUserFilterModelResponseCountUserFilterModel] = None
+    oneof_schema_12_validator: Optional[IUserFilterModelResponseCountUserFilterModel] = None
     # data type: IUserFilterModelUserScoreUserFilterModel
-    oneof_schema_12_validator: Optional[IUserFilterModelUserScoreUserFilterModel] = None
-    actual_instance: Optional[Union[IUserFilterModelAgeUserFilterModel, IUserFilterModelAndUserFilterModel, IUserFilterModelCampaignUserFilterModel, IUserFilterModelCountryUserFilterModel, IUserFilterModelCustomUserFilterModel, IUserFilterModelGenderUserFilterModel, IUserFilterModelLanguageUserFilterModel, IUserFilterModelNewUserFilterModel, IUserFilterModelNotUserFilterModel, IUserFilterModelOrUserFilterModel, IUserFilterModelResponseCountUserFilterModel, IUserFilterModelUserScoreUserFilterModel]] = None
-    one_of_schemas: Set[str] = { "IUserFilterModelAgeUserFilterModel", "IUserFilterModelAndUserFilterModel", "IUserFilterModelCampaignUserFilterModel", "IUserFilterModelCountryUserFilterModel", "IUserFilterModelCustomUserFilterModel", "IUserFilterModelGenderUserFilterModel", "IUserFilterModelLanguageUserFilterModel", "IUserFilterModelNewUserFilterModel", "IUserFilterModelNotUserFilterModel", "IUserFilterModelOrUserFilterModel", "IUserFilterModelResponseCountUserFilterModel", "IUserFilterModelUserScoreUserFilterModel" }
+    oneof_schema_13_validator: Optional[IUserFilterModelUserScoreUserFilterModel] = None
+    actual_instance: Optional[Union[IUserFilterModelAgeUserFilterModel, IUserFilterModelAndUserFilterModel, IUserFilterModelCampaignUserFilterModel, IUserFilterModelCountryUserFilterModel, IUserFilterModelCustomUserFilterModel, IUserFilterModelDeviceUserFilterModel, IUserFilterModelGenderUserFilterModel, IUserFilterModelLanguageUserFilterModel, IUserFilterModelNewUserFilterModel, IUserFilterModelNotUserFilterModel, IUserFilterModelOrUserFilterModel, IUserFilterModelResponseCountUserFilterModel, IUserFilterModelUserScoreUserFilterModel]] = None
+    one_of_schemas: Set[str] = { "IUserFilterModelAgeUserFilterModel", "IUserFilterModelAndUserFilterModel", "IUserFilterModelCampaignUserFilterModel", "IUserFilterModelCountryUserFilterModel", "IUserFilterModelCustomUserFilterModel", "IUserFilterModelDeviceUserFilterModel", "IUserFilterModelGenderUserFilterModel", "IUserFilterModelLanguageUserFilterModel", "IUserFilterModelNewUserFilterModel", "IUserFilterModelNotUserFilterModel", "IUserFilterModelOrUserFilterModel", "IUserFilterModelResponseCountUserFilterModel", "IUserFilterModelUserScoreUserFilterModel" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -112,6 +115,11 @@ class IUserFilterModel(BaseModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IUserFilterModelCustomUserFilterModel`")
         else:
             match += 1
+        # validate data type: IUserFilterModelDeviceUserFilterModel
+        if not isinstance(v, IUserFilterModelDeviceUserFilterModel):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IUserFilterModelDeviceUserFilterModel`")
+        else:
+            match += 1
         # validate data type: IUserFilterModelGenderUserFilterModel
         if not isinstance(v, IUserFilterModelGenderUserFilterModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IUserFilterModelGenderUserFilterModel`")
@@ -149,10 +157,10 @@ class IUserFilterModel(BaseModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in IUserFilterModel with oneOf schemas: IUserFilterModelAgeUserFilterModel, IUserFilterModelAndUserFilterModel, IUserFilterModelCampaignUserFilterModel, IUserFilterModelCountryUserFilterModel, IUserFilterModelCustomUserFilterModel, IUserFilterModelGenderUserFilterModel, IUserFilterModelLanguageUserFilterModel, IUserFilterModelNewUserFilterModel, IUserFilterModelNotUserFilterModel, IUserFilterModelOrUserFilterModel, IUserFilterModelResponseCountUserFilterModel, IUserFilterModelUserScoreUserFilterModel. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in IUserFilterModel with oneOf schemas: IUserFilterModelAgeUserFilterModel, IUserFilterModelAndUserFilterModel, IUserFilterModelCampaignUserFilterModel, IUserFilterModelCountryUserFilterModel, IUserFilterModelCustomUserFilterModel, IUserFilterModelDeviceUserFilterModel, IUserFilterModelGenderUserFilterModel, IUserFilterModelLanguageUserFilterModel, IUserFilterModelNewUserFilterModel, IUserFilterModelNotUserFilterModel, IUserFilterModelOrUserFilterModel, IUserFilterModelResponseCountUserFilterModel, IUserFilterModelUserScoreUserFilterModel. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in IUserFilterModel with oneOf schemas: IUserFilterModelAgeUserFilterModel, IUserFilterModelAndUserFilterModel, IUserFilterModelCampaignUserFilterModel, IUserFilterModelCountryUserFilterModel, IUserFilterModelCustomUserFilterModel, IUserFilterModelGenderUserFilterModel, IUserFilterModelLanguageUserFilterModel, IUserFilterModelNewUserFilterModel, IUserFilterModelNotUserFilterModel, IUserFilterModelOrUserFilterModel, IUserFilterModelResponseCountUserFilterModel, IUserFilterModelUserScoreUserFilterModel. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in IUserFilterModel with oneOf schemas: IUserFilterModelAgeUserFilterModel, IUserFilterModelAndUserFilterModel, IUserFilterModelCampaignUserFilterModel, IUserFilterModelCountryUserFilterModel, IUserFilterModelCustomUserFilterModel, IUserFilterModelDeviceUserFilterModel, IUserFilterModelGenderUserFilterModel, IUserFilterModelLanguageUserFilterModel, IUserFilterModelNewUserFilterModel, IUserFilterModelNotUserFilterModel, IUserFilterModelOrUserFilterModel, IUserFilterModelResponseCountUserFilterModel, IUserFilterModelUserScoreUserFilterModel. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -194,6 +202,12 @@ class IUserFilterModel(BaseModel):
         # deserialize data into IUserFilterModelCustomUserFilterModel
         try:
             instance.actual_instance = IUserFilterModelCustomUserFilterModel.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IUserFilterModelDeviceUserFilterModel
+        try:
+            instance.actual_instance = IUserFilterModelDeviceUserFilterModel.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
@@ -242,10 +256,10 @@ class IUserFilterModel(BaseModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into IUserFilterModel with oneOf schemas: IUserFilterModelAgeUserFilterModel, IUserFilterModelAndUserFilterModel, IUserFilterModelCampaignUserFilterModel, IUserFilterModelCountryUserFilterModel, IUserFilterModelCustomUserFilterModel, IUserFilterModelGenderUserFilterModel, IUserFilterModelLanguageUserFilterModel, IUserFilterModelNewUserFilterModel, IUserFilterModelNotUserFilterModel, IUserFilterModelOrUserFilterModel, IUserFilterModelResponseCountUserFilterModel, IUserFilterModelUserScoreUserFilterModel. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into IUserFilterModel with oneOf schemas: IUserFilterModelAgeUserFilterModel, IUserFilterModelAndUserFilterModel, IUserFilterModelCampaignUserFilterModel, IUserFilterModelCountryUserFilterModel, IUserFilterModelCustomUserFilterModel, IUserFilterModelDeviceUserFilterModel, IUserFilterModelGenderUserFilterModel, IUserFilterModelLanguageUserFilterModel, IUserFilterModelNewUserFilterModel, IUserFilterModelNotUserFilterModel, IUserFilterModelOrUserFilterModel, IUserFilterModelResponseCountUserFilterModel, IUserFilterModelUserScoreUserFilterModel. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into IUserFilterModel with oneOf schemas: IUserFilterModelAgeUserFilterModel, IUserFilterModelAndUserFilterModel, IUserFilterModelCampaignUserFilterModel, IUserFilterModelCountryUserFilterModel, IUserFilterModelCustomUserFilterModel, IUserFilterModelGenderUserFilterModel, IUserFilterModelLanguageUserFilterModel, IUserFilterModelNewUserFilterModel, IUserFilterModelNotUserFilterModel, IUserFilterModelOrUserFilterModel, IUserFilterModelResponseCountUserFilterModel, IUserFilterModelUserScoreUserFilterModel. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into IUserFilterModel with oneOf schemas: IUserFilterModelAgeUserFilterModel, IUserFilterModelAndUserFilterModel, IUserFilterModelCampaignUserFilterModel, IUserFilterModelCountryUserFilterModel, IUserFilterModelCustomUserFilterModel, IUserFilterModelDeviceUserFilterModel, IUserFilterModelGenderUserFilterModel, IUserFilterModelLanguageUserFilterModel, IUserFilterModelNewUserFilterModel, IUserFilterModelNotUserFilterModel, IUserFilterModelOrUserFilterModel, IUserFilterModelResponseCountUserFilterModel, IUserFilterModelUserScoreUserFilterModel. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -259,7 +273,7 @@ class IUserFilterModel(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], IUserFilterModelAgeUserFilterModel, IUserFilterModelAndUserFilterModel, IUserFilterModelCampaignUserFilterModel, IUserFilterModelCountryUserFilterModel, IUserFilterModelCustomUserFilterModel, IUserFilterModelGenderUserFilterModel, IUserFilterModelLanguageUserFilterModel, IUserFilterModelNewUserFilterModel, IUserFilterModelNotUserFilterModel, IUserFilterModelOrUserFilterModel, IUserFilterModelResponseCountUserFilterModel, IUserFilterModelUserScoreUserFilterModel]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], IUserFilterModelAgeUserFilterModel, IUserFilterModelAndUserFilterModel, IUserFilterModelCampaignUserFilterModel, IUserFilterModelCountryUserFilterModel, IUserFilterModelCustomUserFilterModel, IUserFilterModelDeviceUserFilterModel, IUserFilterModelGenderUserFilterModel, IUserFilterModelLanguageUserFilterModel, IUserFilterModelNewUserFilterModel, IUserFilterModelNotUserFilterModel, IUserFilterModelOrUserFilterModel, IUserFilterModelResponseCountUserFilterModel, IUserFilterModelUserScoreUserFilterModel]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

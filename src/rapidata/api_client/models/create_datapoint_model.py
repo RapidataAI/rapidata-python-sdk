@@ -20,7 +20,6 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.i_asset_input import IAssetInput
-from rapidata.api_client.models.i_dataset_metadata_input import IDatasetMetadataInput
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -29,13 +28,12 @@ class CreateDatapointModel(BaseModel):
     CreateDatapointModel
     """ # noqa: E501
     asset: IAssetInput
-    metadata: Optional[List[IDatasetMetadataInput]] = None
     context: Optional[StrictStr] = None
     context_asset: Optional[IAssetInput] = Field(default=None, alias="contextAsset")
     sort_index: Optional[StrictInt] = Field(default=None, alias="sortIndex")
     group: Optional[StrictStr] = None
     transcription: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["asset", "metadata", "context", "contextAsset", "sortIndex", "group", "transcription"]
+    __properties: ClassVar[List[str]] = ["asset", "context", "contextAsset", "sortIndex", "group", "transcription"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -79,13 +77,6 @@ class CreateDatapointModel(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of asset
         if self.asset:
             _dict['asset'] = self.asset.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in metadata (list)
-        _items = []
-        if self.metadata:
-            for _item_metadata in self.metadata:
-                if _item_metadata:
-                    _items.append(_item_metadata.to_dict())
-            _dict['metadata'] = _items
         # override the default output from pydantic by calling `to_dict()` of context_asset
         if self.context_asset:
             _dict['contextAsset'] = self.context_asset.to_dict()
@@ -122,7 +113,6 @@ class CreateDatapointModel(BaseModel):
 
         _obj = cls.model_validate({
             "asset": IAssetInput.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
-            "metadata": [IDatasetMetadataInput.from_dict(_item) for _item in obj["metadata"]] if obj.get("metadata") is not None else None,
             "context": obj.get("context"),
             "contextAsset": IAssetInput.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
             "sortIndex": obj.get("sortIndex"),
