@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
 from rapidata.api_client.models.i_audience_filter import IAudienceFilter
@@ -33,7 +33,12 @@ class CreateAudienceRequest(BaseModel):
     minimum_user_score: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="minimumUserScore")
     minimum_size_for_activation: Optional[StrictInt] = Field(default=None, alias="minimumSizeForActivation")
     logo: Optional[ExistingAssetInput] = None
-    __properties: ClassVar[List[str]] = ["name", "filters", "minimumUserScore", "minimumSizeForActivation", "logo"]
+    max_distilling_responses: Optional[StrictInt] = Field(default=None, alias="maxDistillingResponses")
+    min_distilling_responses: Optional[StrictInt] = Field(default=None, alias="minDistillingResponses")
+    min_distilling_score_floor: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="minDistillingScoreFloor")
+    is_distilling_campaign_sticky: Optional[StrictBool] = Field(default=None, alias="isDistillingCampaignSticky")
+    max_distilling_sessions: Optional[StrictInt] = Field(default=None, alias="maxDistillingSessions")
+    __properties: ClassVar[List[str]] = ["name", "filters", "minimumUserScore", "minimumSizeForActivation", "logo", "maxDistillingResponses", "minDistillingResponses", "minDistillingScoreFloor", "isDistillingCampaignSticky", "maxDistillingSessions"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -105,7 +110,12 @@ class CreateAudienceRequest(BaseModel):
             "filters": [IAudienceFilter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
             "minimumUserScore": obj.get("minimumUserScore"),
             "minimumSizeForActivation": obj.get("minimumSizeForActivation"),
-            "logo": ExistingAssetInput.from_dict(obj["logo"]) if obj.get("logo") is not None else None
+            "logo": ExistingAssetInput.from_dict(obj["logo"]) if obj.get("logo") is not None else None,
+            "maxDistillingResponses": obj.get("maxDistillingResponses"),
+            "minDistillingResponses": obj.get("minDistillingResponses"),
+            "minDistillingScoreFloor": obj.get("minDistillingScoreFloor"),
+            "isDistillingCampaignSticky": obj.get("isDistillingCampaignSticky"),
+            "maxDistillingSessions": obj.get("maxDistillingSessions")
         })
         return _obj
 

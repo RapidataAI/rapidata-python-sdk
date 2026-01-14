@@ -419,52 +419,6 @@
         }
       }
     },
-    "/validation-set/{validationSetId}/rapid-new": {
-      "post": {
-        "tags": [
-          "ValidationSet"
-        ],
-        "summary": "Adds a new validation rapid to the validation set using JSON body.",
-        "parameters": [
-          {
-            "name": "validationSetId",
-            "in": "path",
-            "description": "The validation set to add a rapid to.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The validation rapid data including asset, payload, and metadata.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddValidationRapidNewModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddValidationRapidNewModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddValidationRapidNewModel"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/validation-set/{validationSetId}/update-labeling-hints": {
       "post": {
         "tags": [
@@ -704,73 +658,6 @@
                 "$ref": "#/components/schemas/IAssetInput"
               }
             ]
-          },
-          "metadata": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/ListOfIValidationMetadataInput"
-              }
-            ]
-          },
-          "featureFlags": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/ListOfFeatureFlagModel"
-              }
-            ]
-          }
-        }
-      },
-      "AddValidationRapidNewModel": {
-        "required": [
-          "asset",
-          "payload",
-          "metadata",
-          "truth",
-          "randomCorrectProbability",
-          "explanation"
-        ],
-        "type": "object",
-        "properties": {
-          "asset": {
-            "$ref": "#/components/schemas/IAssetInput"
-          },
-          "payload": {
-            "$ref": "#/components/schemas/IRapidPayload"
-          },
-          "metadata": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/ListOfIValidationMetadataInput"
-              }
-            ]
-          },
-          "truth": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/IValidationTruthModel"
-              }
-            ]
-          },
-          "randomCorrectProbability": {
-            "type": "number",
-            "format": "double"
-          },
-          "explanation": {
-            "type": "string",
-            "nullable": true
           },
           "featureFlags": {
             "oneOf": [
@@ -1824,61 +1711,6 @@
           }
         }
       },
-      "IValidationMetadataInput": {
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/IValidationMetadataInputPromptMetadataInput"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationMetadataInputPromptAssetMetadataInput"
-          }
-        ],
-        "discriminator": {
-          "propertyName": "_t",
-          "mapping": {
-            "PromptMetadataInput": "#/components/schemas/IValidationMetadataInputPromptMetadataInput",
-            "PromptAssetMetadataInput": "#/components/schemas/IValidationMetadataInputPromptAssetMetadataInput"
-          }
-        }
-      },
-      "IValidationMetadataInputPromptAssetMetadataInput": {
-        "required": [
-          "asset",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "PromptAssetMetadataInput"
-            ],
-            "type": "string"
-          },
-          "asset": {
-            "$ref": "#/components/schemas/IAssetInput"
-          }
-        }
-      },
-      "IValidationMetadataInputPromptMetadataInput": {
-        "required": [
-          "prompt",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "PromptMetadataInput"
-            ],
-            "type": "string"
-          },
-          "prompt": {
-            "type": "string"
-          }
-        }
-      },
       "IValidationTruthModel": {
         "required": [
           "_t"
@@ -2231,12 +2063,6 @@
         "type": "array",
         "items": {
           "$ref": "#/components/schemas/IAssetModel"
-        }
-      },
-      "ListOfIValidationMetadataInput": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/IValidationMetadataInput"
         }
       },
       "ListOfListOfString": {
