@@ -663,7 +663,7 @@ class JobManager:
                         filter=RootFilter(
                             filters=[
                                 Filter(
-                                    field="DefinitionName",
+                                    field="Name",
                                     operator=FilterOperator.CONTAINS,
                                     value=name,
                                 )
