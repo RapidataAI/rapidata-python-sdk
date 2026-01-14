@@ -12,6 +12,7 @@ if TYPE_CHECKING:
     from rapidata.rapidata_client.job.job_definition import (
         JobDefinition,
     )
+    from rapidata.rapidata_client.job.rapidata_job import RapidataJob
 
 
 class RapidataAudience:
@@ -77,7 +78,7 @@ class RapidataAudience:
             logger.info(f"Started recruiting for audience: {self.id}")
             return self
 
-    def assign_job(self, job: JobDefinition) -> RapidataAudience:
+    def assign_job(self, job_definition: JobDefinition) -> RapidataJob:
         """
         Assign a job to the audience.
 
@@ -88,16 +89,20 @@ class RapidataAudience:
             from rapidata.api_client.models.create_job_endpoint_input import (
                 CreateJobEndpointInput,
             )
+            from rapidata.rapidata_client.job.rapidata_job import RapidataJob
 
             logger.debug(f"Assigning job to audience: {self.id}")
-            self._openapi_service.job_api.job_post(
+            response = self._openapi_service.job_api.job_post(
                 create_job_endpoint_input=CreateJobEndpointInput(
                     audienceId=self.id,
-                    jobDefinitionId=job._id,
+                    jobDefinitionId=job_definition._id,
                 ),
             )
+            job = RapidataJob(
+                response.job_id, job_definition._name, self._openapi_service
+            )
             logger.info(f"Assigned job to audience: {self.id}")
-            return self
+            return job
 
     def add_classification_example(
         self,
@@ -152,6 +157,46 @@ class RapidataAudience:
                 explanation,
             )
             return self
+
+    def find_jobs(self, name: str = "", amount: int = 10) -> list[RapidataJob]:
+        with tracer.start_as_current_span("RapidataAudience.find_jobs"):
+            from rapidata.rapidata_client.job.rapidata_job import RapidataJob
+            from rapidata.api_client.models.query_model import QueryModel
+            from rapidata.api_client.models.root_filter import RootFilter
+            from rapidata.api_client.models.filter import Filter
+            from rapidata.api_client.models.filter_operator import FilterOperator
+            from rapidata.api_client.models.page_info import PageInfo
+            from rapidata.api_client.models.sort_criterion import SortCriterion
+            from rapidata.api_client.models.sort_direction import SortDirection
+
+            response = self._openapi_service.job_api.jobs_get(
+                request=QueryModel(
+                    page=PageInfo(index=1, size=amount),
+                    filter=RootFilter(
+                        filters=[
+                            Filter(
+                                field="AudienceId",
+                                operator=FilterOperator.EQ,
+                                value=self.id,
+                            ),
+                            Filter(
+                                field="Name",
+                                operator=FilterOperator.CONTAINS,
+                                value=name,
+                            ),
+                        ]
+                    ),
+                    sortCriteria=[
+                        SortCriterion(
+                            direction=SortDirection.DESC, propertyName="CreatedAt"
+                        )
+                    ],
+                ),
+            )
+            return [
+                RapidataJob(job.job_id, job.name, self._openapi_service)
+                for job in response.items
+            ]
 
     def __str__(self) -> str:
         return f"RapidataAudience(id={self.id}, name={self._name}, filters={self._filters})"
