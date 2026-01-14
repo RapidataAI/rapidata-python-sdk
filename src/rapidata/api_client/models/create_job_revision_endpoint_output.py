@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
@@ -27,7 +27,8 @@ class CreateJobRevisionEndpointOutput(BaseModel):
     CreateJobRevisionEndpointOutput
     """ # noqa: E501
     revision_number: StrictInt = Field(alias="revisionNumber")
-    __properties: ClassVar[List[str]] = ["revisionNumber"]
+    pipeline_id: StrictStr = Field(alias="pipelineId")
+    __properties: ClassVar[List[str]] = ["revisionNumber", "pipelineId"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -80,7 +81,8 @@ class CreateJobRevisionEndpointOutput(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "revisionNumber": obj.get("revisionNumber")
+            "revisionNumber": obj.get("revisionNumber"),
+            "pipelineId": obj.get("pipelineId")
         })
         return _obj
 
