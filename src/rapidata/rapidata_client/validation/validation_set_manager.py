@@ -369,7 +369,6 @@ class ValidationSetManager:
                 )
 
             logger.debug("Creating locate rapids")
-            rapids = []
             rapids: list[Rapid] = []
             for i in range(len(datapoints)):
                 rapids.append(
