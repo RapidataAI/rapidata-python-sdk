@@ -666,7 +666,8 @@
           "qualifiedUserCount",
           "filters",
           "createdAt",
-          "ownerMail"
+          "ownerMail",
+          "isPublic"
         ],
         "type": "object",
         "properties": {
@@ -696,6 +697,9 @@
           },
           "ownerMail": {
             "type": "string"
+          },
+          "isPublic": {
+            "type": "boolean"
           }
         }
       },
@@ -2164,7 +2168,8 @@
           "qualifiedUserCount",
           "filters",
           "createdAt",
-          "ownerMail"
+          "ownerMail",
+          "isPublic"
         ],
         "type": "object",
         "properties": {
@@ -2194,6 +2199,9 @@
           },
           "ownerMail": {
             "type": "string"
+          },
+          "isPublic": {
+            "type": "boolean"
           }
         }
       },

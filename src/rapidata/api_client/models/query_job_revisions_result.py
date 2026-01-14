@@ -20,6 +20,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.job_definition_revision_state import JobDefinitionRevisionState
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -30,7 +31,8 @@ class QueryJobRevisionsResult(BaseModel):
     definition_id: StrictStr = Field(alias="definitionId")
     revision_number: StrictInt = Field(alias="revisionNumber")
     created_at: datetime = Field(alias="createdAt")
-    __properties: ClassVar[List[str]] = ["definitionId", "revisionNumber", "createdAt"]
+    state: JobDefinitionRevisionState
+    __properties: ClassVar[List[str]] = ["definitionId", "revisionNumber", "createdAt", "state"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -85,7 +87,8 @@ class QueryJobRevisionsResult(BaseModel):
         _obj = cls.model_validate({
             "definitionId": obj.get("definitionId"),
             "revisionNumber": obj.get("revisionNumber"),
-            "createdAt": obj.get("createdAt")
+            "createdAt": obj.get("createdAt"),
+            "state": obj.get("state")
         })
         return _obj
 

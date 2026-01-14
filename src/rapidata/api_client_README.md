@@ -141,6 +141,7 @@ Class | Method | HTTP request | Description
 *JobApi* | [**job_definition_definition_id_delete**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_delete) | **DELETE** /job/definition/{definitionId} | Deletes a job definition and all its revisions.
 *JobApi* | [**job_definition_definition_id_get**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_get) | **GET** /job/definition/{definitionId} | Gets a job definition by its id.
 *JobApi* | [**job_definition_definition_id_patch**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_patch) | **PATCH** /job/definition/{definitionId} | Updates a job definition.
+*JobApi* | [**job_definition_definition_id_revision_get**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_revision_get) | **GET** /job/definition/{definitionId}/revision | Gets the latest revision for a job definition.
 *JobApi* | [**job_definition_definition_id_revision_post**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_revision_post) | **POST** /job/definition/{definitionId}/revision | Creates a new revision for an existing job definition.
 *JobApi* | [**job_definition_definition_id_revision_revision_number_get**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_revision_revision_number_get) | **GET** /job/definition/{definitionId}/revision/{revisionNumber} | Gets a specific revision for a job definition.
 *JobApi* | [**job_definition_definition_id_revisions_get**](rapidata/api_client/docs/JobApi.md#job_definition_definition_id_revisions_get) | **GET** /job/definition/{definitionId}/revisions | Queries job revisions for a specific definition based on filter, page, and sort criteria.
@@ -530,6 +531,7 @@ Class | Method | HTTP request | Description
  - [IWorkflowModelGroupedRankingWorkflowModel](rapidata/api_client/docs/IWorkflowModelGroupedRankingWorkflowModel.md)
  - [IWorkflowModelSimpleWorkflowModel](rapidata/api_client/docs/IWorkflowModelSimpleWorkflowModel.md)
  - [InspectReportResult](rapidata/api_client/docs/InspectReportResult.md)
+ - [JobDefinitionRevisionState](rapidata/api_client/docs/JobDefinitionRevisionState.md)
  - [JsonWebKey](rapidata/api_client/docs/JsonWebKey.md)
  - [JsonWebKeySet](rapidata/api_client/docs/JsonWebKeySet.md)
  - [LeaderboardsQueryResult](rapidata/api_client/docs/LeaderboardsQueryResult.md)

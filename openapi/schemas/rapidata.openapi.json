@@ -5447,6 +5447,65 @@
             ]
           }
         ]
+      },
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Gets the latest revision for a job definition.",
+        "parameters": [
+          {
+            "name": "definitionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetJobRevisionEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
       }
     },
     "/job/definition/{definitionId}": {
@@ -10212,7 +10271,8 @@
           "qualifiedUserCount",
           "filters",
           "createdAt",
-          "ownerMail"
+          "ownerMail",
+          "isPublic"
         ],
         "type": "object",
         "properties": {
@@ -10242,6 +10302,9 @@
           },
           "ownerMail": {
             "type": "string"
+          },
+          "isPublic": {
+            "type": "boolean"
           }
         }
       },
@@ -11696,7 +11759,8 @@
           "qualifiedUserCount",
           "filters",
           "createdAt",
-          "ownerMail"
+          "ownerMail",
+          "isPublic"
         ],
         "type": "object",
         "properties": {
@@ -11726,6 +11790,9 @@
           },
           "ownerMail": {
             "type": "string"
+          },
+          "isPublic": {
+            "type": "boolean"
           }
         }
       },
@@ -15253,11 +15320,15 @@
       },
       "CreateJobDefinitionEndpoint_Output": {
         "required": [
-          "definitionId"
+          "definitionId",
+          "pipelineId"
         ],
         "type": "object",
         "properties": {
           "definitionId": {
+            "type": "string"
+          },
+          "pipelineId": {
             "type": "string"
           }
         }
@@ -15326,13 +15397,17 @@
       },
       "CreateJobRevisionEndpoint_Output": {
         "required": [
-          "revisionNumber"
+          "revisionNumber",
+          "pipelineId"
         ],
         "type": "object",
         "properties": {
           "revisionNumber": {
             "type": "integer",
             "format": "int32"
+          },
+          "pipelineId": {
+            "type": "string"
           }
         }
       },
@@ -16753,6 +16828,13 @@
           }
         }
       },
+      "JobDefinitionRevisionState": {
+        "enum": [
+          "Pending",
+          "Completed",
+          "Failed"
+        ]
+      },
       "ListOfAggregatedOrdersModel": {
         "type": "array",
         "items": {
@@ -17178,7 +17260,8 @@
         "required": [
           "definitionId",
           "revisionNumber",
-          "createdAt"
+          "createdAt",
+          "state"
         ],
         "type": "object",
         "properties": {
@@ -17192,6 +17275,9 @@
           "createdAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "state": {
+            "$ref": "#/components/schemas/JobDefinitionRevisionState"
           }
         }
       },

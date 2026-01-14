@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.audience_status import AudienceStatus
 from rapidata.api_client.models.i_audience_filter import IAudienceFilter
@@ -37,7 +37,8 @@ class QueryAudiencesResult(BaseModel):
     logo: Optional[StrictStr] = None
     created_at: datetime = Field(alias="createdAt")
     owner_mail: StrictStr = Field(alias="ownerMail")
-    __properties: ClassVar[List[str]] = ["id", "name", "status", "qualifiedUserCount", "filters", "logo", "createdAt", "ownerMail"]
+    is_public: StrictBool = Field(alias="isPublic")
+    __properties: ClassVar[List[str]] = ["id", "name", "status", "qualifiedUserCount", "filters", "logo", "createdAt", "ownerMail", "isPublic"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -109,7 +110,8 @@ class QueryAudiencesResult(BaseModel):
             "filters": [IAudienceFilter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
             "logo": obj.get("logo"),
             "createdAt": obj.get("createdAt"),
-            "ownerMail": obj.get("ownerMail")
+            "ownerMail": obj.get("ownerMail"),
+            "isPublic": obj.get("isPublic")
         })
         return _obj
 
