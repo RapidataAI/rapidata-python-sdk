@@ -544,6 +544,25 @@
                 "$ref": "#/components/schemas/ExistingAssetInput"
               }
             ]
+          },
+          "maxDistillingResponses": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "minDistillingResponses": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "minDistillingScoreFloor": {
+            "type": "number",
+            "format": "double"
+          },
+          "isDistillingCampaignSticky": {
+            "type": "boolean"
+          },
+          "maxDistillingSessions": {
+            "type": "integer",
+            "format": "uint32"
           }
         }
       },

@@ -2336,6 +2336,10 @@
             "type": "string",
             "nullable": true
           },
+          "audienceId": {
+            "type": "string",
+            "nullable": true
+          },
           "filters": {
             "oneOf": [
               {
@@ -2944,10 +2948,16 @@
             "$ref": "#/components/schemas/ICampaignFilterCampaignFilter"
           },
           {
+            "$ref": "#/components/schemas/ICampaignFilterCampaignSessionCountFilter"
+          },
+          {
             "$ref": "#/components/schemas/ICampaignFilterCountryFilter"
           },
           {
             "$ref": "#/components/schemas/ICampaignFilterDemographicFilter"
+          },
+          {
+            "$ref": "#/components/schemas/ICampaignFilterDeviceFilter"
           },
           {
             "$ref": "#/components/schemas/ICampaignFilterLanguageFilter"
@@ -2976,8 +2986,10 @@
           "mapping": {
             "AndFilter": "#/components/schemas/ICampaignFilterAndFilter",
             "CampaignFilter": "#/components/schemas/ICampaignFilterCampaignFilter",
+            "CampaignSessionCountFilter": "#/components/schemas/ICampaignFilterCampaignSessionCountFilter",
             "CountryFilter": "#/components/schemas/ICampaignFilterCountryFilter",
             "DemographicFilter": "#/components/schemas/ICampaignFilterDemographicFilter",
+            "DeviceFilter": "#/components/schemas/ICampaignFilterDeviceFilter",
             "LanguageFilter": "#/components/schemas/ICampaignFilterLanguageFilter",
             "NewUserFilter": "#/components/schemas/ICampaignFilterNewUserFilter",
             "NotFilter": "#/components/schemas/ICampaignFilterNotFilter",
@@ -3036,6 +3048,32 @@
           }
         }
       },
+      "ICampaignFilterCampaignSessionCountFilter": {
+        "required": [
+          "sessionCount",
+          "operator",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CampaignSessionCountFilter"
+            ],
+            "type": "string"
+          },
+          "sessionCount": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "operator": {
+            "$ref": "#/components/schemas/ComparisonOperator"
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "uint32"
+          }
+        }
+      },
       "ICampaignFilterCountryFilter": {
         "required": [
           "countries",
@@ -3080,6 +3118,34 @@
             "type": "array",
             "items": {
               "type": "string"
+            }
+          },
+          "executionOrder": {
+            "type": "integer",
+            "format": "uint32"
+          }
+        }
+      },
+      "ICampaignFilterDeviceFilter": {
+        "required": [
+          "deviceTypes",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "DeviceFilter"
+            ],
+            "type": "string"
+          },
+          "deviceTypes": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "Unknown",
+                "Phone",
+                "Tablet"
+              ]
             }
           },
           "executionOrder": {
@@ -3570,6 +3636,9 @@
             "$ref": "#/components/schemas/IUserFilterModelCustomUserFilterModel"
           },
           {
+            "$ref": "#/components/schemas/IUserFilterModelDeviceUserFilterModel"
+          },
+          {
             "$ref": "#/components/schemas/IUserFilterModelGenderUserFilterModel"
           },
           {
@@ -3599,6 +3668,7 @@
             "CampaignFilter": "#/components/schemas/IUserFilterModelCampaignUserFilterModel",
             "CountryFilter": "#/components/schemas/IUserFilterModelCountryUserFilterModel",
             "CustomFilter": "#/components/schemas/IUserFilterModelCustomUserFilterModel",
+            "DeviceFilter": "#/components/schemas/IUserFilterModelDeviceUserFilterModel",
             "GenderFilter": "#/components/schemas/IUserFilterModelGenderUserFilterModel",
             "LanguageFilter": "#/components/schemas/IUserFilterModelLanguageUserFilterModel",
             "NewUserFilter": "#/components/schemas/IUserFilterModelNewUserFilterModel",
@@ -3713,6 +3783,30 @@
             "type": "array",
             "items": {
               "type": "string"
+            }
+          }
+        }
+      },
+      "IUserFilterModelDeviceUserFilterModel": {
+        "required": [
+          "deviceTypes",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "DeviceFilter"
+            ],
+            "type": "string"
+          },
+          "deviceTypes": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "Unknown",
+                "Phone",
+                "Tablet"
+              ]
             }
           }
         }
