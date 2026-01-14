@@ -1,11 +1,12 @@
+from __future__ import annotations
+
 from rapidata.service.openapi_service import OpenAPIService
-from rapidata.rapidata_client.config import logger
-from rapidata.rapidata_client.config.tracer import tracer
+from rapidata.rapidata_client.config import logger, tracer
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.rapidata_client.settings import RapidataSetting
 from rapidata.rapidata_client.job.job_definition import JobDefinition
-from typing import Sequence, Literal
+from typing import Sequence, Literal, TYPE_CHECKING
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 from rapidata.rapidata_client.dataset._rapidata_dataset import RapidataDataset
 from rapidata.rapidata_client.exceptions.failed_upload_exception import (
@@ -14,6 +15,9 @@ from rapidata.rapidata_client.exceptions.failed_upload_exception import (
 from rapidata.rapidata_client.datapoints._datapoints_validator import (
     DatapointsValidator,
 )
+
+if TYPE_CHECKING:
+    from rapidata.rapidata_client.job.rapidata_job import RapidataJob
 
 
 class JobManager:
@@ -624,13 +628,16 @@ class JobManager:
                 )
             )
 
-            latest_revision = self._openapi_service.job_api.job_definition_definition_id_revision_revision_number_get(
-                definition_id=job_definition_id,
-                revision_number=1,
+            latest_revision = (
+                self._openapi_service.job_api.job_definition_definition_id_revision_get(
+                    definition_id=job_definition_id,
+                )
             )
 
+            logger.debug(f"Latest revision: {latest_revision}")
+
             return JobDefinition(
-                id=job_definition.definition_id,
+                id=latest_revision.definition_id,
                 name=job_definition.name,
                 openapi_service=self._openapi_service,
             )
@@ -688,19 +695,53 @@ class JobManager:
             ]
             return jobs
 
-    def _get_definition_object(self, definition_id: str) -> JobDefinition:
-        # get the latest revision number
-        max_number = 1  # TO BE CHANGED
-        definition_name = "something"
-        latest_revision = self._openapi_service.job_api.job_definition_definition_id_revision_revision_number_get(
-            definition_id=definition_id,
-            revision_number=max_number,
-        )
-        return JobDefinition(
-            id=latest_revision.definition_id,
-            name=definition_name,
-            openapi_service=self._openapi_service,
-        )
+    def find_jobs(self, name: str = "", amount: int = 10) -> list[RapidataJob]:
+        with tracer.start_as_current_span("JobManager.find_job"):
+            from rapidata.api_client.models.query_model import QueryModel
+            from rapidata.api_client.models.root_filter import RootFilter
+            from rapidata.api_client.models.filter import Filter
+            from rapidata.api_client.models.filter_operator import FilterOperator
+            from rapidata.api_client.models.page_info import PageInfo
+            from rapidata.api_client.models.sort_criterion import SortCriterion
+            from rapidata.api_client.models.sort_direction import SortDirection
+            from rapidata.rapidata_client.job.rapidata_job import RapidataJob
+            from rapidata.rapidata_client.job.rapidata_job import RapidataJob
+
+            response = self._openapi_service.job_api.jobs_get(
+                request=QueryModel(
+                    page=PageInfo(index=1, size=amount),
+                    filter=RootFilter(
+                        filters=[
+                            Filter(
+                                field="Name",
+                                operator=FilterOperator.CONTAINS,
+                                value=name,
+                            )
+                        ]
+                    ),
+                    sortCriteria=[
+                        SortCriterion(
+                            direction=SortDirection.DESC, propertyName="CreatedAt"
+                        )
+                    ],
+                ),
+            )
+            jobs = [
+                RapidataJob(job.job_id, job.name, self._openapi_service)
+                for job in response.items
+            ]
+            return jobs
+
+    def get_job_by_id(self, job_id: str) -> RapidataJob:
+        with tracer.start_as_current_span("JobManager.get_job_by_id"):
+            from rapidata.rapidata_client.job.rapidata_job import RapidataJob
+
+            job_response = self._openapi_service.job_api.job_job_id_get(
+                job_id=job_id,
+            )
+            return RapidataJob(
+                job_response.job_id, job_response.name, self._openapi_service
+            )
 
     def __str__(self) -> str:
         return "JobManager"
