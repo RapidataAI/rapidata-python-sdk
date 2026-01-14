@@ -50,7 +50,7 @@ job_definition = client.job.create_compare_job_definition(
 job_definition.preview()
 
 # Assign to audience and get results
-job = audience.assign_job_to_audience(job_definition)
+job = audience.assign_job(job_definition)
 job.display_progress_bar()
 results = job.get_results()
 print(results)

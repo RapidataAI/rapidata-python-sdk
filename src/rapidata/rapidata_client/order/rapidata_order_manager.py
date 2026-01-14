@@ -723,9 +723,9 @@ class RapidataOrderManager:
         contexts: list[str] | None = None,
         media_contexts: list[str] | None = None,
         validation_set_id: str | None = None,
-        filters: Sequence[RapidataFilter] = [],
-        settings: Sequence[RapidataSetting] = [],
-        selections: Sequence[RapidataSelection] = [],
+        filters: Sequence[RapidataFilter] | None = None,
+        settings: Sequence[RapidataSetting] | None = None,
+        selections: Sequence[RapidataSelection] | None = None,
         private_notes: list[str] | None = None,
     ) -> RapidataOrder:
         """Create a draw order.

@@ -105,7 +105,7 @@ This opens your browser where you can review and adjust the job configuration.
 Once you're satisfied with your job definition, assign it to your audience to start collecting responses:
 
 ```py
-job = audience.assign_job_to_audience(job_definition)
+job = audience.assign_job(job_definition)
 ```
 
 Labelers who have passed your qualification examples will now start working on your data.
@@ -184,7 +184,7 @@ job_definition = client.job.create_compare_job_definition(
 job_definition.preview()
 
 # Assign to audience and get results
-job = audience.assign_job_to_audience(job_definition)
+job = audience.assign_job(job_definition)
 job.display_progress_bar()
 results = job.get_results()
 print(results)
@@ -195,3 +195,4 @@ print(results)
 - Learn about [Classification Jobs](examples/classify_job.md) for categorizing data
 - Understand the [Results Format](understanding_the_results.md)
 - Configure [Early Stopping](confidence_stopping.md) based on confidence thresholds
+- Migrating from Orders? See the [Migration Guide](migration_guide.md)
