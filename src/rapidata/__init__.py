@@ -1,4 +1,4 @@
-__version__ = "3.0.0a2"
+__version__ = "3.0.0a3"
 
 from .rapidata_client import (
     RapidataClient,
