@@ -77,8 +77,14 @@ class RapidataAudience:
             logger.info(f"Started recruiting for audience: {self.id}")
             return self
 
-    def assign_job_to_audience(self, job: JobDefinition) -> RapidataAudience:
-        with tracer.start_as_current_span("RapidataAudience.assign_job_to_audience"):
+    def assign_job(self, job: JobDefinition) -> RapidataAudience:
+        """
+        Assign a job to the audience.
+
+        Args:
+            job (JobDefinition): The job to assign to the audience.
+        """
+        with tracer.start_as_current_span("RapidataAudience.assign_job"):
             from rapidata.api_client.models.create_job_endpoint_input import (
                 CreateJobEndpointInput,
             )

@@ -3,6 +3,9 @@ from .audience import (
     RapidataAudience,
     RapidataAudienceManager,
 )
+from .order import RapidataOrderManager, RapidataOrder
+from .validation import ValidationSetManager, RapidataValidationSet, Box
+from .results import RapidataResults
 from .selection import (
     DemographicSelection,
     LabelingSelection,
@@ -38,6 +41,13 @@ from .filter import (
     NotFilter,
     OrFilter,
     AndFilter,
+    UserScoreFilter,
+    CampaignFilter,
+    AgeFilter,
+    GenderFilter,
+    CustomFilter,
+    AgeGroup,
+    Gender,
 )
 from .exceptions import FailedUploadException
 from .config import rapidata_config, logger, managed_print

@@ -93,6 +93,7 @@ nav:
     - "📈 Benchmarks":
       - "🧠 Model Ranking Insights": mri.md
       - "🔭 Model Ranking Insights Advanced": mri_advanced.md
+    - "🔄 Migration Guide": migration_guide.md
 
 theme:
   name: material

@@ -1,10 +1,11 @@
 from __future__ import annotations
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
     from rapidata.rapidata_client.dataset._rapidata_dataset import RapidataDataset
     from rapidata.rapidata_client.job.job_definition import JobDefinition
+    from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 
 
 class FailedUploadException(Exception):
@@ -13,10 +14,12 @@ class FailedUploadException(Exception):
     def __init__(
         self,
         dataset: RapidataDataset,
-        job: JobDefinition,
         failed_uploads: list[Datapoint],
+        order: Optional[RapidataOrder] = None,
+        job: Optional[JobDefinition] = None,
     ):
         self.dataset = dataset
+        self.order = order
         self.job = job
         self.failed_uploads = failed_uploads
 

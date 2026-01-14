@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from rapidata.rapidata_client.exceptions.failed_upload_exception import (
     FailedUploadException,
 )
@@ -23,7 +25,7 @@ class JobDefinition:
             f"https://app.{self._openapi_service.environment}/definitions/{self._id}"
         )
 
-    def preview(self) -> None:
+    def preview(self) -> JobDefinition:
         """Will open the browser where you can preview the job definition before giving it to an audience."""
         logger.info("Opening order details page in browser...")
         if not webbrowser.open(self._job_details_page):
@@ -35,6 +37,7 @@ class JobDefinition:
                 + f"Please open this URL in your browser: '{encoded_url}'"
                 + Fore.RESET
             )
+        return self
 
     def update_dataset(
         self,
@@ -44,7 +47,7 @@ class JobDefinition:
         media_contexts: list[str] | None = None,
         sentences: list[str] | None = None,
         private_notes: list[str] | None = None,
-    ) -> None:
+    ) -> JobDefinition:
         """Update the dataset of the job definition.
 
         Args:
@@ -87,7 +90,9 @@ class JobDefinition:
             with tracer.start_as_current_span("update_datapoints"):
                 _, failed_uploads = rapidata_dataset.add_datapoints(datapoints_list)
                 if failed_uploads:
-                    raise FailedUploadException(rapidata_dataset, self, failed_uploads)
+                    raise FailedUploadException(
+                        rapidata_dataset, failed_uploads, job=self
+                    )
 
             self._openapi_service.job_api.job_definition_definition_id_revision_post(
                 definition_id=self._id,
@@ -95,6 +100,8 @@ class JobDefinition:
                     datasetId=rapidata_dataset.id,
                 ),
             )
+
+            return self
 
     def __str__(self) -> str:
         return f"JobDefinition(id={self._id}, name={self._name})"

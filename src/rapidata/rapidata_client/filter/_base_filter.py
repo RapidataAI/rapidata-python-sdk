@@ -11,9 +11,8 @@ class RapidataFilter:
     def _to_model(self) -> IUserFilterModel:
         pass
 
-    @abstractmethod
     def _to_audience_model(self) -> IAudienceFilter:
-        pass
+        raise NotImplementedError("This filter is not supported for audiences")
 
     def __or__(self, other):
         """Enable the | operator to create OrFilter combinations."""
