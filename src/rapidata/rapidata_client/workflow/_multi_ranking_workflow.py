@@ -1,8 +1,3 @@
-from rapidata.api_client import (
-    CompareWorkflowModelPairMakerConfig,
-    OnlinePairMakerConfigModel,
-    EloConfigModel,
-)
 from rapidata.api_client.models.add_validation_rapid_model import IRapidPayload
 from rapidata.api_client.models.i_order_workflow_model import IOrderWorkflowModel
 from rapidata.api_client.models.i_order_workflow_model_grouped_ranking_workflow_model import (
@@ -31,6 +26,14 @@ class MultiRankingWorkflow(Workflow):
         contexts: dict[str, str] | None = None,
         media_contexts: dict[str, IAssetInput] | None = None,
     ):
+        from rapidata.api_client.models.i_pair_maker_config_model import (
+            IPairMakerConfigModel,
+        )
+        from rapidata.api_client.models.i_pair_maker_config_model_online_pair_maker_config_model import (
+            IPairMakerConfigModelOnlinePairMakerConfigModel,
+        )
+        from rapidata.api_client.models.elo_config_model import EloConfigModel
+
         super().__init__(type="CompareWorkflowConfig")
 
         self.contexts = contexts
@@ -43,12 +46,12 @@ class MultiRankingWorkflow(Workflow):
         self.elo_k_factor = elo_k_factor
         self.elo_scaling_factor = elo_scaling_factor
 
-        self.pair_maker_config = CompareWorkflowModelPairMakerConfig(
-            OnlinePairMakerConfigModel(
+        self.pair_maker_config = IPairMakerConfigModel(
+            actual_instance=IPairMakerConfigModelOnlinePairMakerConfigModel(
                 _t="OnlinePairMaker",
                 totalComparisonBudget=comparison_budget_per_ranking,
                 randomMatchesRatio=random_comparisons_ratio,
-            )
+            ),
         )
 
         self.elo_config = EloConfigModel(
