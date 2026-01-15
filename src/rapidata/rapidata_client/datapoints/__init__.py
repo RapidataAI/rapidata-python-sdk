@@ -5,6 +5,5 @@ from .metadata import (
     PrivateTextMetadata,
     PublicTextMetadata,
     SelectWordsMetadata,
-    MediaAssetMetadata,
     PromptIdentifierMetadata,
 )

@@ -2,8 +2,9 @@ from __future__ import annotations
 import urllib.parse
 import webbrowser
 from colorama import Fore
-from typing import Literal, Optional, Sequence, TYPE_CHECKING
+from typing import Optional, Sequence, TYPE_CHECKING
 from rapidata.rapidata_client.config import logger, managed_print, tracer
+from rapidata.rapidata_client.benchmark._detail_mapper import LevelOfDetail
 
 if TYPE_CHECKING:
     import pandas as pd
@@ -13,8 +14,6 @@ if TYPE_CHECKING:
     from rapidata.rapidata_client.filter import RapidataFilter
     from rapidata.rapidata_client.settings import RapidataSetting
     from rapidata.service.openapi_service import OpenAPIService
-
-from rapidata.rapidata_client.benchmark._detail_mapper import LevelOfDetail
 
 
 class RapidataBenchmark:
@@ -202,7 +201,10 @@ class RapidataBenchmark:
             tags: The tags can be used to filter the leaderboard results. They will NOT be shown to the users.
         """
         from rapidata.api_client.models.submit_prompt_model import SubmitPromptModel
-        from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
+        from rapidata.api_client.models.i_asset_input_existing_asset_input import (
+            IAssetInputExistingAssetInput,
+        )
+
         from rapidata.api_client.models.i_asset_input import IAssetInput
 
         with tracer.start_as_current_span("RapidataBenchmark.add_prompt"):
@@ -266,7 +268,7 @@ class RapidataBenchmark:
                     promptAsset=(
                         IAssetInput(
                             actual_instance=(
-                                ExistingAssetInput(
+                                IAssetInputExistingAssetInput(
                                     _t="ExistingAssetInput",
                                     name=self._asset_uploader.upload_asset(
                                         prompt_asset
@@ -322,10 +324,10 @@ class RapidataBenchmark:
         with tracer.start_as_current_span("create_leaderboard"):
             if level_of_detail is not None and (
                 not isinstance(level_of_detail, str)
-                or level_of_detail not in ["debug", "low", "medium", "high", "very high"]
+                or level_of_detail not in ["low", "medium", "high", "very high"]
             ):
                 raise ValueError(
-                    "Level of detail must be a string and one of: 'debug', 'low', 'medium', 'high', 'very high'"
+                    "Level of detail must be a string and one of: 'low', 'medium', 'high', 'very high'"
                 )
 
             if min_responses_per_matchup is not None and (
@@ -369,7 +371,7 @@ class RapidataBenchmark:
                         [filter._to_model() for filter in filters] if filters else None
                     ),
                     featureFlags=(
-                        [setting._to_feature_flag() for setting in settings]
+                        [setting._to_feature_flag() for setting in settings]  # type: ignore - until backend fixes generation
                         if settings
                         else None
                     ),
