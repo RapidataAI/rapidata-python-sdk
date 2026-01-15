@@ -27,7 +27,8 @@ class CreateJobDefinitionEndpointOutput(BaseModel):
     CreateJobDefinitionEndpointOutput
     """ # noqa: E501
     definition_id: StrictStr = Field(alias="definitionId")
-    __properties: ClassVar[List[str]] = ["definitionId"]
+    pipeline_id: StrictStr = Field(alias="pipelineId")
+    __properties: ClassVar[List[str]] = ["definitionId", "pipelineId"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -80,7 +81,8 @@ class CreateJobDefinitionEndpointOutput(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "definitionId": obj.get("definitionId")
+            "definitionId": obj.get("definitionId"),
+            "pipelineId": obj.get("pipelineId")
         })
         return _obj
 

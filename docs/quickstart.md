@@ -148,6 +148,22 @@ job_definitions = client.job.find_job_definitions("Prompt Alignment")
 job_definition = client.job.get_job_defintion_by_id("job_definition_id")
 ```
 
+### Find Jobs
+
+```py
+# Find jobs by name
+jobs = client.job.find_jobs("Prompt Alignment")
+
+# Get a specific job by ID
+job = client.job.get_job_by_id("job_id")
+
+# Find jobs for a specific audience
+audience = client.audience.get_audience_by_id("audience_id")
+jobs = audience.find_jobs("Prompt Alignment")
+```
+
+> **Note**: The `find_*` can be executed without the `name` parameter to return the most recent resources.
+
 ## Complete Example
 
 Here's the full workflow in one script:
