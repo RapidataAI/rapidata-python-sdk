@@ -1,51 +1,13 @@
-import os
-from typing import Literal
+from __future__ import annotations
 
-from rapidata.api_client.models.i_validation_truth_attach_category_truth import (
-    IValidationTruthAttachCategoryTruth,
-)
-from rapidata.api_client.models.i_validation_truth_bounding_box_truth import (
-    IValidationTruthBoundingBoxTruth,
-)
-from rapidata.api_client.models.i_rapid_payload_classify_payload import (
-    IRapidPayloadClassifyPayload,
-)
-from rapidata.api_client.models.classify_payload_category import ClassifyPayloadCategory
-from rapidata.api_client.models.i_rapid_payload_compare_payload import (
-    IRapidPayloadComparePayload,
-)
-from rapidata.api_client.models.i_validation_truth_compare_truth import (
-    IValidationTruthCompareTruth,
-)
-from rapidata.api_client.models.i_rapid_payload_line_payload import (
-    IRapidPayloadLinePayload,
-)
-from rapidata.api_client.models.i_validation_truth_locate_box_truth import (
-    IValidationTruthLocateBoxTruth,
-)
-from rapidata.api_client.models.i_rapid_payload_locate_payload import (
-    IRapidPayloadLocatePayload,
-)
-from rapidata.api_client.models.i_rapid_payload_scrub_payload import (
-    IRapidPayloadScrubPayload,
-)
-from rapidata.api_client.models.scrub_payload import ScrubPayload
-from rapidata.api_client.models.scrub_range import ScrubRange
-from rapidata.api_client.models.i_validation_truth_scrub_truth import (
-    IValidationTruthScrubTruth,
-)
-from rapidata.api_client.models.scrub_truth import ScrubTruth
-from rapidata.api_client.models.i_rapid_payload_transcription_payload import (
-    IRapidPayloadTranscriptionPayload,
-)
-from rapidata.api_client.models.i_validation_truth_transcription_truth import (
-    IValidationTruthTranscriptionTruth,
-)
-from rapidata.api_client.models.transcription_word import TranscriptionWord
+import os
+from typing import Literal, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from rapidata.rapidata_client.validation.rapids.rapids import Rapid
+    from rapidata.service.openapi_service import OpenAPIService
+
 from rapidata.rapidata_client.validation.rapids.box import Box
-from rapidata.rapidata_client.validation.rapids.rapids import Rapid
-from rapidata.service.openapi_service import OpenAPIService
-from rapidata.api_client.models.i_rapid_payload import IRapidPayload
 
 
 class RapidsManager:
@@ -79,6 +41,21 @@ class RapidsManager:
             media_context (str, optional): The media context is a link to an image / video that will be shown in addition to the instruction (can be combined with context). Defaults to None.
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
         """
+        from rapidata.api_client.models.i_rapid_payload import IRapidPayload
+        from rapidata.api_client.models.i_rapid_payload_classify_payload import (
+            IRapidPayloadClassifyPayload,
+        )
+        from rapidata.api_client.models.classify_payload_category import (
+            ClassifyPayloadCategory,
+        )
+        from rapidata.api_client.models.i_validation_truth_model import (
+            IValidationTruthModel,
+        )
+        from rapidata.api_client.models.i_validation_truth_model_attach_category_truth_model import (
+            IValidationTruthModelAttachCategoryTruthModel,
+        )
+        from rapidata.rapidata_client.validation.rapids.rapids import Rapid
+
         if not isinstance(truths, list):
             raise ValueError("Truths must be a list of strings")
 
@@ -95,8 +72,10 @@ class RapidsManager:
                 title=instruction,
             )
         )
-        model_truth = IValidationTruthAttachCategoryTruth(
-            correctCategories=truths, _t="AttachCategoryTruth"
+        model_truth = IValidationTruthModel(
+            actual_instance=IValidationTruthModelAttachCategoryTruthModel(
+                correctCategories=truths, _t="AttachCategoryTruth"
+            )
         )
 
         return Rapid(
@@ -131,14 +110,29 @@ class RapidsManager:
             media_context (str, optional): The media context is a link to an image / video that will be shown in addition to the instruction (can be combined with context). Defaults to None.
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
         """
+        from rapidata.api_client.models.i_rapid_payload import IRapidPayload
+        from rapidata.api_client.models.i_rapid_payload_compare_payload import (
+            IRapidPayloadComparePayload,
+        )
+        from rapidata.api_client.models.i_validation_truth_model import (
+            IValidationTruthModel,
+        )
+        from rapidata.api_client.models.i_validation_truth_model_compare_truth_model import (
+            IValidationTruthModelCompareTruthModel,
+        )
+        from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 
         payload = IRapidPayload(
             actual_instance=IRapidPayloadComparePayload(
                 _t="ComparePayload", criteria=instruction
             )
         )
-        truth = os.path.basename(truth)
-        model_truth = IValidationTruthCompareTruth(_t="CompareTruth", winnerId=truth)
+        truth_basename = os.path.basename(truth)
+        model_truth = IValidationTruthModel(
+            actual_instance=IValidationTruthModelCompareTruthModel(
+                _t="CompareTruth", winnerId=truth_basename
+            )
+        )
 
         if len(datapoint) != 2:
             raise ValueError("Compare rapid requires exactly two media paths")
@@ -175,6 +169,18 @@ class RapidsManager:
             required_completeness (float): The required completeness for the labeler to get the rapid correct (miminum ratio of total correct words selected). defaults to 1. (all correct words need to be selected)
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
         """
+        from rapidata.api_client.models.i_rapid_payload import IRapidPayload
+        from rapidata.api_client.models.i_rapid_payload_transcription_payload import (
+            IRapidPayloadTranscriptionPayload,
+        )
+        from rapidata.api_client.models.transcription_word import TranscriptionWord
+        from rapidata.api_client.models.i_validation_truth_model import (
+            IValidationTruthModel,
+        )
+        from rapidata.api_client.models.i_validation_truth_model_transcription_truth_model import (
+            IValidationTruthModelTranscriptionTruthModel,
+        )
+        from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 
         transcription_words = [
             TranscriptionWord(word=word, wordIndex=i)
@@ -195,11 +201,13 @@ class RapidsManager:
             )
         )
 
-        model_truth = IValidationTruthTranscriptionTruth(
-            _t="TranscriptionTruth",
-            correctWords=correct_transcription_words,
-            requiredPrecision=required_precision,
-            requiredCompleteness=required_completeness,
+        model_truth = IValidationTruthModel(
+            actual_instance=IValidationTruthModelTranscriptionTruthModel(
+                _t="TranscriptionTruth",
+                correctWords=correct_transcription_words,
+                requiredPrecision=required_precision,
+                requiredCompleteness=required_completeness,
+            )
         )
 
         return Rapid(
@@ -231,6 +239,17 @@ class RapidsManager:
             media_context (str, optional): The media context is a link to an image / video that will be shown in addition to the instruction (can be combined with context). Defaults to None.
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
         """
+        from rapidata.api_client.models.i_rapid_payload import IRapidPayload
+        from rapidata.api_client.models.i_rapid_payload_locate_payload import (
+            IRapidPayloadLocatePayload,
+        )
+        from rapidata.api_client.models.i_validation_truth_model import (
+            IValidationTruthModel,
+        )
+        from rapidata.api_client.models.i_validation_truth_model_locate_box_truth_model import (
+            IValidationTruthModelLocateBoxTruthModel,
+        )
+        from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 
         payload = IRapidPayload(
             actual_instance=IRapidPayloadLocatePayload(
@@ -238,9 +257,11 @@ class RapidsManager:
             )
         )
 
-        model_truth = IValidationTruthLocateBoxTruth(
-            _t="LocateBoxTruth",
-            boundingBoxes=[truth.to_model() for truth in truths],
+        model_truth = IValidationTruthModel(
+            actual_instance=IValidationTruthModelLocateBoxTruthModel(
+                _t="LocateBoxTruth",
+                boundingBoxes=[truth.to_model() for truth in truths],
+            )
         )
 
         coverage = self._calculate_boxes_coverage(
@@ -276,6 +297,17 @@ class RapidsManager:
             media_context (str, optional): The media context is a link to an image / video that will be shown in addition to the instruction (can be combined with context). Defaults to None.
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
         """
+        from rapidata.api_client.models.i_rapid_payload import IRapidPayload
+        from rapidata.api_client.models.i_rapid_payload_line_payload import (
+            IRapidPayloadLinePayload,
+        )
+        from rapidata.api_client.models.i_validation_truth_model import (
+            IValidationTruthModel,
+        )
+        from rapidata.api_client.models.i_validation_truth_model_bounding_box_truth_model import (
+            IValidationTruthModelBoundingBoxTruthModel,
+        )
+        from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 
         payload = IRapidPayload(
             actual_instance=IRapidPayloadLinePayload(
@@ -283,12 +315,14 @@ class RapidsManager:
             )
         )
 
-        model_truth = IValidationTruthBoundingBoxTruth(
-            _t="BoundingBoxTruth",
-            xMax=truths[0].x_max * 100,
-            xMin=truths[0].x_min * 100,
-            yMax=truths[0].y_max * 100,
-            yMin=truths[0].y_min * 100,
+        model_truth = IValidationTruthModel(
+            actual_instance=IValidationTruthModelBoundingBoxTruthModel(
+                _t="BoundingBoxTruth",
+                xMax=truths[0].x_max * 100,
+                xMin=truths[0].x_min * 100,
+                yMax=truths[0].y_max * 100,
+                yMin=truths[0].y_min * 100,
+            )
         )
 
         coverage = self._calculate_boxes_coverage(
@@ -325,6 +359,18 @@ class RapidsManager:
             media_context (str, optional): The media context is a link to an image / video that will be shown in addition to the instruction (can be combined with context). Defaults to None.
             explanation (str, optional): The explanation that will be shown to the labeler if the answer is wrong. Defaults to None.
         """
+        from rapidata.api_client.models.i_rapid_payload import IRapidPayload
+        from rapidata.api_client.models.i_rapid_payload_scrub_payload import (
+            IRapidPayloadScrubPayload,
+        )
+        from rapidata.api_client.models.scrub_range import ScrubRange
+        from rapidata.api_client.models.i_validation_truth_model import (
+            IValidationTruthModel,
+        )
+        from rapidata.api_client.models.i_validation_truth_model_scrub_truth_model import (
+            IValidationTruthModelScrubTruthModel,
+        )
+        from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 
         for truth in truths:
             if len(truth) != 2:
@@ -342,9 +388,13 @@ class RapidsManager:
             )
         )
 
-        model_truth = IValidationTruthScrubTruth(
-            _t="ScrubTruth",
-            validRanges=[ScrubRange(start=truth[0], end=truth[1]) for truth in truths],
+        model_truth = IValidationTruthModel(
+            actual_instance=IValidationTruthModelScrubTruthModel(
+                _t="ScrubTruth",
+                validRanges=[
+                    ScrubRange(start=truth[0], end=truth[1]) for truth in truths
+                ],
+            )
         )
 
         return Rapid(
