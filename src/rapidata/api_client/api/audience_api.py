@@ -595,7 +595,7 @@ class AudienceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> PagedResultOfQueryJobsResult:
-        """Queries all jobs for the specified audience.
+        """audience_audience_id_jobs_get
 
 
         :param audience_id: (required)
@@ -664,7 +664,7 @@ class AudienceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[PagedResultOfQueryJobsResult]:
-        """Queries all jobs for the specified audience.
+        """audience_audience_id_jobs_get
 
 
         :param audience_id: (required)
@@ -733,7 +733,7 @@ class AudienceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Queries all jobs for the specified audience.
+        """audience_audience_id_jobs_get
 
 
         :param audience_id: (required)

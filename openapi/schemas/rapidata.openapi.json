@@ -486,7 +486,6 @@
         "tags": [
           "Audience"
         ],
-        "summary": "Queries all jobs for the specified audience.",
         "parameters": [
           {
             "name": "audienceId",
@@ -10077,6 +10076,13 @@
           }
         }
       },
+      "AudienceJobState": {
+        "enum": [
+          "Running",
+          "Completed",
+          "Failed"
+        ]
+      },
       "AudienceStatus": {
         "enum": [
           "Created",
@@ -11829,7 +11835,7 @@
             "type": "string"
           },
           "status": {
-            "type": "string"
+            "$ref": "#/components/schemas/AudienceJobState"
           },
           "createdAt": {
             "type": "string",
@@ -15701,6 +15707,7 @@
         "required": [
           "definitionId",
           "revisionNumber",
+          "state",
           "pipelineId",
           "datasetId",
           "workflow",
@@ -15718,6 +15725,9 @@
           "revisionNumber": {
             "type": "integer",
             "format": "int32"
+          },
+          "state": {
+            "$ref": "#/components/schemas/JobDefinitionRevisionState"
           },
           "pipelineId": {
             "type": "string"

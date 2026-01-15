@@ -24,6 +24,7 @@ from rapidata.api_client.models.aggregator_type import AggregatorType
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.i_order_workflow_model import IOrderWorkflowModel
 from rapidata.api_client.models.i_referee_model import IRefereeModel
+from rapidata.api_client.models.job_definition_revision_state import JobDefinitionRevisionState
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -33,6 +34,7 @@ class GetJobRevisionEndpointOutput(BaseModel):
     """ # noqa: E501
     definition_id: StrictStr = Field(alias="definitionId")
     revision_number: StrictInt = Field(alias="revisionNumber")
+    state: JobDefinitionRevisionState
     pipeline_id: StrictStr = Field(alias="pipelineId")
     dataset_id: StrictStr = Field(alias="datasetId")
     aggregator_type: Optional[AggregatorType] = Field(default=None, alias="aggregatorType")
@@ -42,7 +44,7 @@ class GetJobRevisionEndpointOutput(BaseModel):
     created_at: datetime = Field(alias="createdAt")
     created_by_id: StrictStr = Field(alias="createdById")
     created_by_mail: StrictStr = Field(alias="createdByMail")
-    __properties: ClassVar[List[str]] = ["definitionId", "revisionNumber", "pipelineId", "datasetId", "aggregatorType", "workflow", "referee", "featureFlags", "createdAt", "createdById", "createdByMail"]
+    __properties: ClassVar[List[str]] = ["definitionId", "revisionNumber", "state", "pipelineId", "datasetId", "aggregatorType", "workflow", "referee", "featureFlags", "createdAt", "createdById", "createdByMail"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -115,6 +117,7 @@ class GetJobRevisionEndpointOutput(BaseModel):
         _obj = cls.model_validate({
             "definitionId": obj.get("definitionId"),
             "revisionNumber": obj.get("revisionNumber"),
+            "state": obj.get("state"),
             "pipelineId": obj.get("pipelineId"),
             "datasetId": obj.get("datasetId"),
             "aggregatorType": obj.get("aggregatorType"),
