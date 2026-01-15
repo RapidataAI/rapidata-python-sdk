@@ -628,16 +628,8 @@ class JobManager:
                 )
             )
 
-            latest_revision = (
-                self._openapi_service.job_api.job_definition_definition_id_revision_get(
-                    definition_id=job_definition_id,
-                )
-            )
-
-            logger.debug(f"Latest revision: {latest_revision}")
-
             return JobDefinition(
-                id=latest_revision.definition_id,
+                id=job_definition.definition_id,
                 name=job_definition.name,
                 openapi_service=self._openapi_service,
             )
@@ -696,6 +688,15 @@ class JobManager:
             return jobs
 
     def find_jobs(self, name: str = "", amount: int = 10) -> list[RapidataJob]:
+        """Find your recent jobs given criteria. If nothing is provided, it will return the most recent jobs.
+
+        Args:
+            name (str, optional): The name of the job - matching job will contain the name. Defaults to "" for any job.
+            amount (int, optional): The amount of jobs to return. Defaults to 10.
+
+        Returns:
+            list[RapidataJob]: A list of RapidataJob instances.
+        """
         with tracer.start_as_current_span("JobManager.find_job"):
             from rapidata.api_client.models.query_model import QueryModel
             from rapidata.api_client.models.root_filter import RootFilter
@@ -704,7 +705,6 @@ class JobManager:
             from rapidata.api_client.models.page_info import PageInfo
             from rapidata.api_client.models.sort_criterion import SortCriterion
             from rapidata.api_client.models.sort_direction import SortDirection
-            from rapidata.rapidata_client.job.rapidata_job import RapidataJob
             from rapidata.rapidata_client.job.rapidata_job import RapidataJob
 
             response = self._openapi_service.job_api.jobs_get(
@@ -733,6 +733,14 @@ class JobManager:
             return jobs
 
     def get_job_by_id(self, job_id: str) -> RapidataJob:
+        """Get a job by ID.
+
+        Args:
+            job_id (str): The ID of the job.
+
+        Returns:
+            RapidataJob: The Job instance.
+        """
         with tracer.start_as_current_span("JobManager.get_job_by_id"):
             from rapidata.rapidata_client.job.rapidata_job import RapidataJob
 
