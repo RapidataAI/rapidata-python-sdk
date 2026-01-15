@@ -20,6 +20,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.audience_job_state import AudienceJobState
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -33,7 +34,7 @@ class QueryJobsResult(BaseModel):
     audience_id: StrictStr = Field(alias="audienceId")
     revision_number: StrictInt = Field(alias="revisionNumber")
     pipeline_id: StrictStr = Field(alias="pipelineId")
-    status: StrictStr
+    status: AudienceJobState
     created_at: datetime = Field(alias="createdAt")
     __properties: ClassVar[List[str]] = ["jobId", "name", "definitionId", "audienceId", "revisionNumber", "pipelineId", "status", "createdAt"]
 
