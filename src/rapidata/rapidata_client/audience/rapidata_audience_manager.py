@@ -10,9 +10,10 @@ if TYPE_CHECKING:
 
 
 class RapidataAudienceManager:
-    """
-    A manager for audiences.
-    Used to create and retrieve audiences.
+    """Handles everything regarding audiences from creation to retrieval.
+
+    A manager for creating, retrieving, and searching for audiences.
+    Audiences are groups of annotators that can be recruited based on example tasks and assigned jobs.
     """
 
     def __init__(self, openapi_service: OpenAPIService):
@@ -23,7 +24,17 @@ class RapidataAudienceManager:
         name: str,
         filters: list[RapidataFilter] | None = None,
     ) -> RapidataAudience:
+        """Create a new audience.
 
+        Creates a new audience with the specified name and optional filters.
+
+        Args:
+            name (str): The name of the audience.
+            filters (list[RapidataFilter], optional): The list of filters to apply to the audience. Defaults to None (no filters).
+
+        Returns:
+            RapidataAudience: The created audience instance.
+        """
         with tracer.start_as_current_span("RapidataAudienceManager.create_audience"):
             from rapidata.rapidata_client.audience.rapidata_audience import (
                 RapidataAudience,
@@ -49,6 +60,14 @@ class RapidataAudienceManager:
             )
 
     def get_audience_by_id(self, audience_id: str) -> RapidataAudience:
+        """Get an audience by its ID.
+
+        Args:
+            audience_id (str): The unique identifier of the audience.
+
+        Returns:
+            RapidataAudience: The audience instance.
+        """
         with tracer.start_as_current_span("RapidataAudienceManager.get_audience_by_id"):
             from rapidata.rapidata_client.filter._backend_filter_mapper import (
                 BackendFilterMapper,
@@ -74,6 +93,15 @@ class RapidataAudienceManager:
     def find_audiences(
         self, name: str = "", amount: int = 10
     ) -> list[RapidataAudience]:
+        """Find your audiences by name.
+
+        Args:
+            name (str, optional): Filter audiences by name (matching audiences will contain this string). Defaults to "" for any audience.
+            amount (int, optional): The maximum number of audiences to return. Defaults to 10.
+
+        Returns:
+            list[RapidataAudience]: A list of RapidataAudience instances.
+        """
         with tracer.start_as_current_span("RapidataAudienceManager.find_audiences"):
             from rapidata.rapidata_client.filter._backend_filter_mapper import (
                 BackendFilterMapper,

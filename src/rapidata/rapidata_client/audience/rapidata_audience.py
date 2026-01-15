@@ -16,6 +16,16 @@ if TYPE_CHECKING:
 
 
 class RapidataAudience:
+    """Represents a Rapidata audience.
+
+    An audience is a group of annotators that can be recruited based on example tasks and assigned jobs.
+
+    Attributes:
+        id (str): The unique identifier of the audience.
+        name (str): The name of the audience.
+        filters (list[RapidataFilter]): The list of filters applied to the audience.
+    """
+
     def __init__(
         self,
         id: str,
@@ -31,14 +41,23 @@ class RapidataAudience:
 
     @property
     def name(self) -> str:
+        """The name of the audience."""
         return self._name
 
     @property
     def filters(self) -> list[RapidataFilter]:
+        """The list of filters applied to the audience."""
         return self._filters
 
     def update_filters(self, filters: list[RapidataFilter]) -> RapidataAudience:
-        # will update the filters for the audience as soon as endpoint is ready
+        """Update the filters for this audience.
+
+        Args:
+            filters (list[RapidataFilter]): The new list of filters to apply to the audience.
+
+        Returns:
+            RapidataAudience: The updated audience instance (self) for method chaining.
+        """
         with tracer.start_as_current_span("RapidataAudience.update_filters"):
             from rapidata.api_client.models.update_audience_request import (
                 UpdateAudienceRequest,
@@ -55,6 +74,14 @@ class RapidataAudience:
             return self
 
     def update_name(self, name: str) -> RapidataAudience:
+        """Update the name of this audience.
+
+        Args:
+            name (str): The new name for the audience.
+
+        Returns:
+            RapidataAudience: The updated audience instance (self) for method chaining.
+        """
         with tracer.start_as_current_span("RapidataAudience.update_name"):
             from rapidata.api_client.models.update_audience_request import (
                 UpdateAudienceRequest,
@@ -69,7 +96,13 @@ class RapidataAudience:
             return self
 
     def start_recruiting(self) -> RapidataAudience:
-        # will start the recruiting for the audience as soon as endpoint is ready
+        """Start recruiting annotators for this audience.
+
+        This will begin the process of onboarding annotators for this audience.
+
+        Returns:
+            RapidataAudience: The audience instance (self) for method chaining.
+        """
         with tracer.start_as_current_span("RapidataAudience.start_recruiting"):
             logger.debug(f"Sending request to start recruiting for audience: {self.id}")
             self._openapi_service.audience_api.audience_audience_id_recruit_post(
@@ -79,11 +112,16 @@ class RapidataAudience:
             return self
 
     def assign_job(self, job_definition: JobDefinition) -> RapidataJob:
-        """
-        Assign a job to the audience.
+        """Assign a job to this audience.
+
+        Creates a new job instance from the job definition and assigns it to this audience.
+        The job will be executed by the annotators in this audience.
 
         Args:
-            job (JobDefinition): The job to assign to the audience.
+            job_definition (JobDefinition): The job definition to create and assign to the audience.
+
+        Returns:
+            RapidataJob: The created job instance.
         """
         with tracer.start_as_current_span("RapidataAudience.assign_job"):
             from rapidata.api_client.models.create_job_endpoint_input import (
@@ -115,6 +153,24 @@ class RapidataAudience:
         media_context: str | None = None,
         explanation: str | None = None,
     ) -> RapidataAudience:
+        """Add a classification training example to this audience.
+
+        Training examples help annotators understand the task by showing them
+        a sample datapoint with the correct answer before they start labeling.
+
+        Args:
+            instruction (str): The instruction for how the data should be classified.
+            answer_options (list[str]): The list of possible answer options for the classification.
+            datapoint (str): The datapoint (URL or path) to use as the training example.
+            truth (list[str]): The correct answer(s) for this training example.
+            data_type (Literal["media", "text"], optional): The data type of the datapoint. Defaults to "media".
+            context (str, optional): Additional text context to display with the example. Defaults to None.
+            media_context (str, optional): Additional media (URL or path) to display with the example. Defaults to None.
+            explanation (str, optional): An explanation of why the truth is correct. Defaults to None.
+
+        Returns:
+            RapidataAudience: The audience instance (self) for method chaining.
+        """
         with tracer.start_as_current_span(
             "RapidataAudience.add_classification_example"
         ):
@@ -143,6 +199,23 @@ class RapidataAudience:
         media_context: str | None = None,
         explanation: str | None = None,
     ) -> RapidataAudience:
+        """Add a comparison training example to this audience.
+
+        Training examples help annotators understand the task by showing them
+        a sample comparison with the correct answer before they start labeling.
+
+        Args:
+            instruction (str): The instruction for the comparison task.
+            truth (str): The correct answer for this training example (which option should be selected).
+            datapoint (list[str]): A list of exactly two datapoints (URLs or paths) to compare.
+            data_type (Literal["media", "text"], optional): The data type of the datapoints. Defaults to "media".
+            context (str, optional): Additional text context to display with the example. Defaults to None.
+            media_context (str, optional): Additional media (URL or path) to display with the example. Defaults to None.
+            explanation (str, optional): An explanation of why the truth is correct. Defaults to None.
+
+        Returns:
+            RapidataAudience: The audience instance (self) for method chaining.
+        """
         with tracer.start_as_current_span("RapidataAudience.add_compare_example"):
             logger.debug(
                 f"Adding compare example to audience: {self.id} with instruction: {instruction}, truth: {truth}, datapoint: {datapoint}, data_type: {data_type}, context: {context}, media_context: {media_context}, explanation: {explanation}"
@@ -159,6 +232,15 @@ class RapidataAudience:
             return self
 
     def find_jobs(self, name: str = "", amount: int = 10) -> list[RapidataJob]:
+        """Find jobs assigned to this audience.
+
+        Args:
+            name (str, optional): Filter jobs by name (matching jobs will contain this string). Defaults to "" for any job.
+            amount (int, optional): The maximum number of jobs to return. Defaults to 10.
+
+        Returns:
+            list[RapidataJob]: A list of RapidataJob instances assigned to this audience.
+        """
         with tracer.start_as_current_span("RapidataAudience.find_jobs"):
             from rapidata.rapidata_client.job.rapidata_job import RapidataJob
             from rapidata.api_client.models.query_model import QueryModel
