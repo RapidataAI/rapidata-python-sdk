@@ -80,7 +80,7 @@ Class | Method | HTTP request | Description
 *AssetApi* | [**asset_url_post**](rapidata/api_client/docs/AssetApi.md#asset_url_post) | **POST** /asset/url | Uploads a single asset to S3 and returns the asset details.
 *AudienceApi* | [**audience_audience_id_delete**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_delete) | **DELETE** /audience/{audienceId} | Deletes the specified audience.
 *AudienceApi* | [**audience_audience_id_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_get) | **GET** /audience/{audienceId} | Gets an audience by its Id.
-*AudienceApi* | [**audience_audience_id_jobs_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_jobs_get) | **GET** /audience/{audienceId}/jobs | Queries all jobs for the specified audience.
+*AudienceApi* | [**audience_audience_id_jobs_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_jobs_get) | **GET** /audience/{audienceId}/jobs | 
 *AudienceApi* | [**audience_audience_id_patch**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_patch) | **PATCH** /audience/{audienceId} | Patches an existing audience.
 *AudienceApi* | [**audience_audience_id_rapid_post**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_rapid_post) | **POST** /audience/{audienceId}/rapid | Adds a new rapid to be used to train users for the specified audience.
 *AudienceApi* | [**audience_audience_id_rapids_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_rapids_get) | **GET** /audience/{audienceId}/rapids | Queries all rapids for the specified audience.
@@ -233,6 +233,7 @@ Class | Method | HTTP request | Description
  - [AggregatorType](rapidata/api_client/docs/AggregatorType.md)
  - [AreRapidsActiveResult](rapidata/api_client/docs/AreRapidsActiveResult.md)
  - [AttachCategoryRapidBlueprintCategory](rapidata/api_client/docs/AttachCategoryRapidBlueprintCategory.md)
+ - [AudienceJobState](rapidata/api_client/docs/AudienceJobState.md)
  - [AudienceStatus](rapidata/api_client/docs/AudienceStatus.md)
  - [BenchmarkQueryResult](rapidata/api_client/docs/BenchmarkQueryResult.md)
  - [BoostLeaderboardModel](rapidata/api_client/docs/BoostLeaderboardModel.md)

@@ -1583,6 +1583,13 @@
           }
         }
       },
+      "AudienceJobState": {
+        "enum": [
+          "Running",
+          "Completed",
+          "Failed"
+        ]
+      },
       "CloneOrderModel": {
         "required": [
           "orderName"
@@ -2174,6 +2181,7 @@
         "required": [
           "definitionId",
           "revisionNumber",
+          "state",
           "pipelineId",
           "datasetId",
           "workflow",
@@ -2191,6 +2199,9 @@
           "revisionNumber": {
             "type": "integer",
             "format": "int32"
+          },
+          "state": {
+            "$ref": "#/components/schemas/JobDefinitionRevisionState"
           },
           "pipelineId": {
             "type": "string"
@@ -4399,7 +4410,7 @@
             "type": "string"
           },
           "status": {
-            "type": "string"
+            "$ref": "#/components/schemas/AudienceJobState"
           },
           "createdAt": {
             "type": "string",
