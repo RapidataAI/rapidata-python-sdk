@@ -27,6 +27,7 @@ class AudienceStatus(str, Enum):
     allowed enum values
     """
     CREATED = 'Created'
+    PENDING = 'Pending'
     RECRUITING = 'Recruiting'
     READY = 'Ready'
 

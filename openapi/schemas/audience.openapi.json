@@ -11,6 +11,209 @@
     }
   ],
   "paths": {
+    "/audience/{audienceId}": {
+      "delete": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Deletes the specified audience.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Gets an audience by its Id.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "description": "The id of the audience to get.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAudienceByIdResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAudienceByIdResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAudienceByIdResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Patches an existing audience.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAudienceRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAudienceRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAudienceRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/audience/{audienceId}/jobs": {
+      "get": {
+        "tags": [
+          "Audience"
+        ],
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfQueryJobsResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/audience/{audienceId}/recruit": {
+      "post": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Starts recruiting users for the specified audience.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/audiences": {
       "get": {
         "tags": [
@@ -50,90 +253,6 @@
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/audience/{audienceId}": {
-      "get": {
-        "tags": [
-          "Audience"
-        ],
-        "summary": "Gets an audience by its Id.",
-        "parameters": [
-          {
-            "name": "audienceId",
-            "in": "path",
-            "description": "The id of the audience to get.",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetAudienceByIdResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetAudienceByIdResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetAudienceByIdResult"
-                }
-              }
-            }
-          }
-        }
-      },
-      "patch": {
-        "tags": [
-          "Audience"
-        ],
-        "summary": "Patches an existing audience.",
-        "parameters": [
-          {
-            "name": "audienceId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateAudienceRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateAudienceRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateAudienceRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
           }
         }
       }
@@ -188,38 +307,220 @@
           }
         }
       }
+    },
+    "/audience/{audienceId}/rapids": {
+      "get": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Queries all rapids for the specified audience.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "request",
+            "in": "query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfQueryRapidsForAudienceResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfQueryRapidsForAudienceResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfQueryRapidsForAudienceResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/audience/{audienceId}/rapid": {
+      "post": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Adds a new rapid to be used to train users for the specified audience.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddRapidToAudienceModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddRapidToAudienceModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddRapidToAudienceModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "AddRapidToAudienceModel": {
+        "required": [
+          "asset",
+          "payload",
+          "randomCorrectProbability"
+        ],
+        "type": "object",
+        "properties": {
+          "asset": {
+            "$ref": "#/components/schemas/IAssetInput"
+          },
+          "payload": {
+            "$ref": "#/components/schemas/IRapidPayload"
+          },
+          "truth": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IValidationTruth"
+              }
+            ]
+          },
+          "randomCorrectProbability": {
+            "type": "number",
+            "format": "double"
+          },
+          "explanation": {
+            "type": "string",
+            "nullable": true
+          },
+          "context": {
+            "type": "string",
+            "nullable": true
+          },
+          "contextAsset": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IAssetInput"
+              }
+            ]
+          },
+          "featureFlags": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/ListOfFeatureFlagModel"
+              }
+            ]
+          }
+        }
+      },
+      "AudienceJobState": {
+        "enum": [
+          "Running",
+          "Completed",
+          "Failed"
+        ]
+      },
       "AudienceStatus": {
         "enum": [
           "Created",
+          "Pending",
           "Recruiting",
           "Ready"
         ]
       },
-      "ComparisonOperator": {
-        "enum": [
-          "Equal",
-          "NotEqual",
-          "LessThan",
-          "LessThanOrEqual",
-          "GreaterThan",
-          "GreaterThanOrEqual"
-        ]
+      "BoxShape": {
+        "type": "object",
+        "properties": {
+          "xMin": {
+            "type": "number",
+            "format": "double"
+          },
+          "yMin": {
+            "type": "number",
+            "format": "double"
+          },
+          "xMax": {
+            "type": "number",
+            "format": "double"
+          },
+          "yMax": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "ClassifyPayload_Category": {
+        "required": [
+          "label",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
       },
       "CreateAudienceRequest": {
         "required": [
-          "name",
-          "validationSetId"
+          "name"
         ],
         "type": "object",
         "properties": {
           "name": {
-            "type": "string"
-          },
-          "validationSetId": {
             "type": "string"
           },
           "filters": {
@@ -228,9 +529,46 @@
                 "nullable": true
               },
               {
-                "$ref": "#/components/schemas/ListOfICampaignFilter"
+                "$ref": "#/components/schemas/ListOfIAudienceFilter"
               }
             ]
+          },
+          "minimumUserScore": {
+            "type": "number",
+            "format": "double"
+          },
+          "minimumSizeForActivation": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "logo": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/ExistingAssetInput"
+              }
+            ]
+          },
+          "maxDistillingResponses": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "minDistillingResponses": {
+            "type": "integer",
+            "format": "uint32"
+          },
+          "minDistillingScoreFloor": {
+            "type": "number",
+            "format": "double"
+          },
+          "isDistillingCampaignSticky": {
+            "type": "boolean"
+          },
+          "maxDistillingSessions": {
+            "type": "integer",
+            "format": "uint32"
           }
         }
       },
@@ -241,10 +579,57 @@
         "type": "object",
         "properties": {
           "audienceId": {
-            "type": "string",
-            "format": "uuid"
+            "type": "string"
           }
         }
+      },
+      "ExistingAssetInput": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "metadata": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/MetadataInputCollection"
+              }
+            ]
+          },
+          "identifier": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "FeatureFlagModel": {
+        "required": [
+          "key",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "FileType": {
+        "enum": [
+          "Unknown",
+          "Image",
+          "Video",
+          "Audio"
+        ]
       },
       "Filter": {
         "type": "object",
@@ -283,23 +668,19 @@
         "required": [
           "id",
           "name",
-          "validationSetId",
           "status",
           "qualifiedUserCount",
           "filters",
           "createdAt",
-          "ownerMail"
+          "ownerMail",
+          "isPublic"
         ],
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "name": {
             "type": "string"
           },
-          "validationSetId": {
+          "name": {
             "type": "string"
           },
           "status": {
@@ -310,7 +691,11 @@
             "format": "int64"
           },
           "filters": {
-            "$ref": "#/components/schemas/ListOfICampaignFilter"
+            "$ref": "#/components/schemas/ListOfIAudienceFilter"
+          },
+          "logo": {
+            "type": "string",
+            "nullable": true
           },
           "createdAt": {
             "type": "string",
@@ -318,71 +703,289 @@
           },
           "ownerMail": {
             "type": "string"
+          },
+          "isPublic": {
+            "type": "boolean"
           }
         }
       },
-      "ICampaignFilter": {
+      "IAssetInput": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/ICampaignFilterAndFilter"
+            "$ref": "#/components/schemas/IAssetInputExistingAssetInput"
           },
           {
-            "$ref": "#/components/schemas/ICampaignFilterCampaignFilter"
+            "$ref": "#/components/schemas/IAssetInputMultiAssetInput"
           },
           {
-            "$ref": "#/components/schemas/ICampaignFilterCountryFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterDemographicFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterLanguageFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterNewUserFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterNotFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterOrFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterResponseCountFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterUserActionRestrictionFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterUserScoreFilter"
-          },
-          {
-            "$ref": "#/components/schemas/ICampaignFilterUserStateFilter"
+            "$ref": "#/components/schemas/IAssetInputTextAssetInput"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "AndFilter": "#/components/schemas/ICampaignFilterAndFilter",
-            "CampaignFilter": "#/components/schemas/ICampaignFilterCampaignFilter",
-            "CountryFilter": "#/components/schemas/ICampaignFilterCountryFilter",
-            "DemographicFilter": "#/components/schemas/ICampaignFilterDemographicFilter",
-            "LanguageFilter": "#/components/schemas/ICampaignFilterLanguageFilter",
-            "NewUserFilter": "#/components/schemas/ICampaignFilterNewUserFilter",
-            "NotFilter": "#/components/schemas/ICampaignFilterNotFilter",
-            "OrFilter": "#/components/schemas/ICampaignFilterOrFilter",
-            "ResponseCountFilter": "#/components/schemas/ICampaignFilterResponseCountFilter",
-            "UserActionRestrictionFilter": "#/components/schemas/ICampaignFilterUserActionRestrictionFilter",
-            "UserScoreFilter": "#/components/schemas/ICampaignFilterUserScoreFilter",
-            "UserStateFilter": "#/components/schemas/ICampaignFilterUserStateFilter"
+            "ExistingAssetInput": "#/components/schemas/IAssetInputExistingAssetInput",
+            "MultiAssetInput": "#/components/schemas/IAssetInputMultiAssetInput",
+            "TextAssetInput": "#/components/schemas/IAssetInputTextAssetInput"
           }
         }
       },
-      "ICampaignFilterAndFilter": {
+      "IAssetInputExistingAssetInput": {
+        "required": [
+          "name",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ExistingAssetInput"
+            ],
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "metadata": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/MetadataInputCollection"
+              }
+            ]
+          },
+          "identifier": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "IAssetInputMultiAssetInput": {
+        "required": [
+          "assets",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "MultiAssetInput"
+            ],
+            "type": "string"
+          },
+          "assets": {
+            "$ref": "#/components/schemas/ListOfIAssetInput"
+          },
+          "metadata": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/MetadataInputCollection"
+              }
+            ]
+          },
+          "identifier": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "IAssetInputTextAssetInput": {
+        "required": [
+          "text",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TextAssetInput"
+            ],
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "metadata": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/MetadataInputCollection"
+              }
+            ]
+          },
+          "identifier": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "IAssetModel": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IAssetModelFileAssetModel"
+          },
+          {
+            "$ref": "#/components/schemas/IAssetModelMultiAssetModel"
+          },
+          {
+            "$ref": "#/components/schemas/IAssetModelNullAssetModel"
+          },
+          {
+            "$ref": "#/components/schemas/IAssetModelTextAssetModel"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "FileAsset": "#/components/schemas/IAssetModelFileAssetModel",
+            "MultiAsset": "#/components/schemas/IAssetModelMultiAssetModel",
+            "NullAsset": "#/components/schemas/IAssetModelNullAssetModel",
+            "TextAsset": "#/components/schemas/IAssetModelTextAssetModel"
+          }
+        }
+      },
+      "IAssetModelFileAssetModel": {
+        "required": [
+          "fileName",
+          "metadata",
+          "identifier",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "FileAsset"
+            ],
+            "type": "string"
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataModelCollection"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        }
+      },
+      "IAssetModelMultiAssetModel": {
+        "required": [
+          "assets",
+          "metadata",
+          "identifier",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "MultiAsset"
+            ],
+            "type": "string"
+          },
+          "assets": {
+            "$ref": "#/components/schemas/ListOfIAssetModel"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataModelCollection"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        }
+      },
+      "IAssetModelNullAssetModel": {
+        "required": [
+          "metadata",
+          "identifier",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NullAsset"
+            ],
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataModelCollection"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        }
+      },
+      "IAssetModelTextAssetModel": {
+        "required": [
+          "text",
+          "metadata",
+          "identifier",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TextAsset"
+            ],
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataModelCollection"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        }
+      },
+      "IAudienceFilter": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IAudienceFilterAndAudienceFilter"
+          },
+          {
+            "$ref": "#/components/schemas/IAudienceFilterCountryAudienceFilter"
+          },
+          {
+            "$ref": "#/components/schemas/IAudienceFilterLanguageAudienceFilter"
+          },
+          {
+            "$ref": "#/components/schemas/IAudienceFilterNotAudienceFilter"
+          },
+          {
+            "$ref": "#/components/schemas/IAudienceFilterOrAudienceFilter"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "AndFilter": "#/components/schemas/IAudienceFilterAndAudienceFilter",
+            "CountryFilter": "#/components/schemas/IAudienceFilterCountryAudienceFilter",
+            "LanguageFilter": "#/components/schemas/IAudienceFilterLanguageAudienceFilter",
+            "NotFilter": "#/components/schemas/IAudienceFilterNotAudienceFilter",
+            "OrFilter": "#/components/schemas/IAudienceFilterOrAudienceFilter"
+          }
+        }
+      },
+      "IAudienceFilterAndAudienceFilter": {
         "required": [
           "filters",
           "_t"
@@ -395,42 +998,11 @@
             "type": "string"
           },
           "filters": {
-            "$ref": "#/components/schemas/ListOfICampaignFilter"
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
-          },
-          "innerFilters": {
-            "$ref": "#/components/schemas/ListOfICampaignFilter"
+            "$ref": "#/components/schemas/ListOfIAudienceFilter"
           }
         }
       },
-      "ICampaignFilterCampaignFilter": {
-        "required": [
-          "campaignIds",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "CampaignFilter"
-            ],
-            "type": "string"
-          },
-          "campaignIds": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
-          }
-        }
-      },
-      "ICampaignFilterCountryFilter": {
+      "IAudienceFilterCountryAudienceFilter": {
         "required": [
           "countries",
           "_t"
@@ -447,42 +1019,10 @@
             "items": {
               "type": "string"
             }
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
           }
         }
       },
-      "ICampaignFilterDemographicFilter": {
-        "required": [
-          "identifier",
-          "values",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "DemographicFilter"
-            ],
-            "type": "string"
-          },
-          "identifier": {
-            "type": "string"
-          },
-          "values": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
-          }
-        }
-      },
-      "ICampaignFilterLanguageFilter": {
+      "IAudienceFilterLanguageAudienceFilter": {
         "required": [
           "languages",
           "_t"
@@ -499,31 +1039,10 @@
             "items": {
               "type": "string"
             }
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
           }
         }
       },
-      "ICampaignFilterNewUserFilter": {
-        "required": [
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "NewUserFilter"
-            ],
-            "type": "string"
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
-          }
-        }
-      },
-      "ICampaignFilterNotFilter": {
+      "IAudienceFilterNotAudienceFilter": {
         "required": [
           "filter",
           "_t"
@@ -536,18 +1055,11 @@
             "type": "string"
           },
           "filter": {
-            "$ref": "#/components/schemas/ICampaignFilter"
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
-          },
-          "innerFilters": {
-            "$ref": "#/components/schemas/ListOfICampaignFilter"
+            "$ref": "#/components/schemas/IAudienceFilter"
           }
         }
       },
-      "ICampaignFilterOrFilter": {
+      "IAudienceFilterOrAudienceFilter": {
         "required": [
           "filters",
           "_t"
@@ -560,131 +1072,842 @@
             "type": "string"
           },
           "filters": {
-            "$ref": "#/components/schemas/ListOfICampaignFilter"
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
-          },
-          "innerFilters": {
-            "$ref": "#/components/schemas/ListOfICampaignFilter"
+            "$ref": "#/components/schemas/ListOfIAudienceFilter"
           }
         }
       },
-      "ICampaignFilterResponseCountFilter": {
+      "IMetadataInput": {
         "required": [
-          "responseCount",
-          "dimension",
-          "operator",
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IMetadataInputTextMetadataInput"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "TextMetadataInput": "#/components/schemas/IMetadataInputTextMetadataInput"
+          }
+        }
+      },
+      "IMetadataInputTextMetadataInput": {
+        "required": [
+          "text",
+          "visibilities",
           "_t"
         ],
         "properties": {
           "_t": {
             "enum": [
-              "ResponseCountFilter"
+              "TextMetadataInput"
             ],
             "type": "string"
           },
-          "responseCount": {
-            "type": "integer",
-            "format": "uint32"
+          "text": {
+            "type": "string",
+            "nullable": true
           },
-          "dimension": {
-            "type": "string"
-          },
-          "operator": {
-            "$ref": "#/components/schemas/ComparisonOperator"
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
           }
         }
       },
-      "ICampaignFilterUserActionRestrictionFilter": {
+      "IMetadataModel": {
         "required": [
-          "requiredActions",
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IMetadataModelClassificationMetadataModel"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataModelCountMetadataModel"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataModelFileTypeMetadataModel"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataModelImageDimensionMetadataModel"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataModelLocationMetadataModel"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataModelOriginalFilenameMetadataModel"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataModelSourceUrlMetadataModel"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataModelStreamsMetadataModel"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataModelTextMetadataModel"
+          },
+          {
+            "$ref": "#/components/schemas/IMetadataModelVideoDurationMetadataModel"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "ClassificationMetadata": "#/components/schemas/IMetadataModelClassificationMetadataModel",
+            "CountMetadata": "#/components/schemas/IMetadataModelCountMetadataModel",
+            "FileTypeMetadata": "#/components/schemas/IMetadataModelFileTypeMetadataModel",
+            "ImageDimensionMetadata": "#/components/schemas/IMetadataModelImageDimensionMetadataModel",
+            "LocationMetadata": "#/components/schemas/IMetadataModelLocationMetadataModel",
+            "OriginalFilenameMetadata": "#/components/schemas/IMetadataModelOriginalFilenameMetadataModel",
+            "SourceUrlMetadataModel": "#/components/schemas/IMetadataModelSourceUrlMetadataModel",
+            "StreamsMetadata": "#/components/schemas/IMetadataModelStreamsMetadataModel",
+            "TextMetadata": "#/components/schemas/IMetadataModelTextMetadataModel",
+            "VideoDurationMetadata": "#/components/schemas/IMetadataModelVideoDurationMetadataModel"
+          }
+        }
+      },
+      "IMetadataModelClassificationMetadataModel": {
+        "required": [
+          "classification",
           "_t"
         ],
         "properties": {
           "_t": {
             "enum": [
-              "UserActionRestrictionFilter"
+              "ClassificationMetadata"
             ],
             "type": "string"
           },
-          "requiredActions": {
+          "classification": {
+            "type": "string"
+          }
+        }
+      },
+      "IMetadataModelCountMetadataModel": {
+        "required": [
+          "count",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "CountMetadata"
+            ],
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IMetadataModelFileTypeMetadataModel": {
+        "required": [
+          "fileType",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "FileTypeMetadata"
+            ],
+            "type": "string"
+          },
+          "fileType": {
+            "$ref": "#/components/schemas/FileType"
+          }
+        }
+      },
+      "IMetadataModelImageDimensionMetadataModel": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ImageDimensionMetadata"
+            ],
+            "type": "string"
+          },
+          "height": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "width": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IMetadataModelLocationMetadataModel": {
+        "required": [
+          "x",
+          "y",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LocationMetadata"
+            ],
+            "type": "string"
+          },
+          "x": {
+            "type": "number",
+            "format": "float"
+          },
+          "y": {
+            "type": "number",
+            "format": "float"
+          }
+        }
+      },
+      "IMetadataModelOriginalFilenameMetadataModel": {
+        "required": [
+          "originalFilename",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "OriginalFilenameMetadata"
+            ],
+            "type": "string"
+          },
+          "originalFilename": {
+            "type": "string"
+          }
+        }
+      },
+      "IMetadataModelSourceUrlMetadataModel": {
+        "required": [
+          "url",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "SourceUrlMetadataModel"
+            ],
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      },
+      "IMetadataModelStreamsMetadataModel": {
+        "required": [
+          "hasVideo",
+          "hasAudio",
+          "hasSubtitles",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "StreamsMetadata"
+            ],
+            "type": "string"
+          },
+          "hasVideo": {
+            "type": "boolean"
+          },
+          "hasAudio": {
+            "type": "boolean"
+          },
+          "hasSubtitles": {
+            "type": "boolean"
+          }
+        }
+      },
+      "IMetadataModelTextMetadataModel": {
+        "required": [
+          "text",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TextMetadata"
+            ],
+            "type": "string"
+          },
+          "text": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "IMetadataModelVideoDurationMetadataModel": {
+        "required": [
+          "duration",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "VideoDurationMetadata"
+            ],
+            "type": "string"
+          },
+          "duration": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "IRapidPayload": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IRapidPayloadTranscriptionPayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadScrubPayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadPolygonPayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadNamedEntityPayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadLocatePayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadLinePayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadFreeTextPayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadComparePayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadClassifyPayload"
+          },
+          {
+            "$ref": "#/components/schemas/IRapidPayloadBoundingBoxPayload"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "TranscriptionPayload": "#/components/schemas/IRapidPayloadTranscriptionPayload",
+            "ScrubPayload": "#/components/schemas/IRapidPayloadScrubPayload",
+            "PolygonPayload": "#/components/schemas/IRapidPayloadPolygonPayload",
+            "NamedEntityPayload": "#/components/schemas/IRapidPayloadNamedEntityPayload",
+            "LocatePayload": "#/components/schemas/IRapidPayloadLocatePayload",
+            "LinePayload": "#/components/schemas/IRapidPayloadLinePayload",
+            "FreeTextPayload": "#/components/schemas/IRapidPayloadFreeTextPayload",
+            "ComparePayload": "#/components/schemas/IRapidPayloadComparePayload",
+            "ClassifyPayload": "#/components/schemas/IRapidPayloadClassifyPayload",
+            "BoundingBoxPayload": "#/components/schemas/IRapidPayloadBoundingBoxPayload"
+          }
+        }
+      },
+      "IRapidPayloadBoundingBoxPayload": {
+        "required": [
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "BoundingBoxPayload"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidPayloadClassifyPayload": {
+        "required": [
+          "categories",
+          "title",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ClassifyPayload"
+            ],
+            "type": "string"
+          },
+          "categories": {
+            "$ref": "#/components/schemas/ListOfClassifyPayload_Category"
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidPayloadComparePayload": {
+        "required": [
+          "criteria",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ComparePayload"
+            ],
+            "type": "string"
+          },
+          "criteria": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidPayloadFreeTextPayload": {
+        "required": [
+          "question",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "FreeTextPayload"
+            ],
+            "type": "string"
+          },
+          "question": {
+            "type": "string"
+          },
+          "shouldValidateResponse": {
+            "type": "boolean"
+          },
+          "validationSystemPrompt": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "IRapidPayloadLinePayload": {
+        "required": [
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LinePayload"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidPayloadLocatePayload": {
+        "required": [
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LocatePayload"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidPayloadNamedEntityPayload": {
+        "required": [
+          "target",
+          "classes",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NamedEntityPayload"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          },
+          "classes": {
             "type": "array",
             "items": {
-              "enum": [
-                "Listen",
-                "UseKeyboard"
-              ]
+              "type": "string"
             }
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
           }
         }
       },
-      "ICampaignFilterUserScoreFilter": {
+      "IRapidPayloadPolygonPayload": {
         "required": [
-          "lowerbound",
-          "upperbound",
-          "dimension",
+          "target",
           "_t"
         ],
         "properties": {
           "_t": {
             "enum": [
-              "UserScoreFilter"
+              "PolygonPayload"
             ],
             "type": "string"
           },
-          "lowerbound": {
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidPayloadScrubPayload": {
+        "required": [
+          "target",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ScrubPayload"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        }
+      },
+      "IRapidPayloadTranscriptionPayload": {
+        "required": [
+          "title",
+          "transcription",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TranscriptionPayload"
+            ],
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "transcription": {
+            "$ref": "#/components/schemas/ListOfTranscriptionWord"
+          }
+        }
+      },
+      "IValidationTruth": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IValidationTruthTranscriptionTruth"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthScrubTruth"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthPolygonTruth"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthNamedEntityTruth"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthLocateBoxTruth"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthLineTruth"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthEmptyValidationTruth"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthCompareTruth"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthMultiCompareTruth"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthSkipTruth"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthAttachCategoryTruth"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthBoundingBoxTruth"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "TranscriptionTruth": "#/components/schemas/IValidationTruthTranscriptionTruth",
+            "ScrubTruth": "#/components/schemas/IValidationTruthScrubTruth",
+            "PolygonTruth": "#/components/schemas/IValidationTruthPolygonTruth",
+            "NamedEntityTruth": "#/components/schemas/IValidationTruthNamedEntityTruth",
+            "LocateBoxTruth": "#/components/schemas/IValidationTruthLocateBoxTruth",
+            "LineTruth": "#/components/schemas/IValidationTruthLineTruth",
+            "EmptyValidationTruth": "#/components/schemas/IValidationTruthEmptyValidationTruth",
+            "CompareTruth": "#/components/schemas/IValidationTruthCompareTruth",
+            "MultiCompareTruth": "#/components/schemas/IValidationTruthMultiCompareTruth",
+            "SkipTruth": "#/components/schemas/IValidationTruthSkipTruth",
+            "AttachCategoryTruth": "#/components/schemas/IValidationTruthAttachCategoryTruth",
+            "BoundingBoxTruth": "#/components/schemas/IValidationTruthBoundingBoxTruth"
+          }
+        }
+      },
+      "IValidationTruthAttachCategoryTruth": {
+        "required": [
+          "correctCategories",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "AttachCategoryTruth"
+            ],
+            "type": "string"
+          },
+          "correctCategories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IValidationTruthBoundingBoxTruth": {
+        "required": [
+          "xMin",
+          "yMin",
+          "xMax",
+          "yMax",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "BoundingBoxTruth"
+            ],
+            "type": "string"
+          },
+          "xMin": {
             "type": "number",
             "format": "double"
           },
-          "upperbound": {
+          "yMin": {
             "type": "number",
             "format": "double"
           },
-          "dimension": {
-            "type": "string"
+          "xMax": {
+            "type": "number",
+            "format": "double"
           },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
+          "yMax": {
+            "type": "number",
+            "format": "double"
           }
         }
       },
-      "ICampaignFilterUserStateFilter": {
+      "IValidationTruthCompareTruth": {
         "required": [
-          "states",
+          "winnerId",
           "_t"
         ],
         "properties": {
           "_t": {
             "enum": [
-              "UserStateFilter"
+              "CompareTruth"
             ],
             "type": "string"
           },
-          "states": {
-            "type": "array",
-            "items": {
-              "enum": [
-                "Training",
-                "Blacklist",
-                "Active"
-              ]
-            }
-          },
-          "executionOrder": {
-            "type": "integer",
-            "format": "uint32"
+          "winnerId": {
+            "type": "string"
           }
+        }
+      },
+      "IValidationTruthEmptyValidationTruth": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "EmptyValidationTruth"
+            ],
+            "type": "string"
+          }
+        }
+      },
+      "IValidationTruthLineTruth": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LineTruth"
+            ],
+            "type": "string"
+          }
+        }
+      },
+      "IValidationTruthLocateBoxTruth": {
+        "required": [
+          "boundingBoxes",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "LocateBoxTruth"
+            ],
+            "type": "string"
+          },
+          "boundingBoxes": {
+            "$ref": "#/components/schemas/ListOfBoxShape"
+          },
+          "requiredPrecision": {
+            "type": "number",
+            "format": "double"
+          },
+          "requiredCompleteness": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "IValidationTruthMultiCompareTruth": {
+        "required": [
+          "correctCombinations",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "MultiCompareTruth"
+            ],
+            "type": "string"
+          },
+          "correctCombinations": {
+            "$ref": "#/components/schemas/ListOfListOfString"
+          }
+        }
+      },
+      "IValidationTruthNamedEntityTruth": {
+        "required": [
+          "classifications",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "NamedEntityTruth"
+            ],
+            "type": "string"
+          },
+          "classifications": {
+            "$ref": "#/components/schemas/ListOfNamedClassification"
+          }
+        }
+      },
+      "IValidationTruthPolygonTruth": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "PolygonTruth"
+            ],
+            "type": "string"
+          }
+        }
+      },
+      "IValidationTruthScrubTruth": {
+        "required": [
+          "validRanges",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ScrubTruth"
+            ],
+            "type": "string"
+          },
+          "validRanges": {
+            "$ref": "#/components/schemas/ListOfScrubRange"
+          }
+        }
+      },
+      "IValidationTruthSkipTruth": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "SkipTruth"
+            ],
+            "type": "string"
+          }
+        }
+      },
+      "IValidationTruthTranscriptionTruth": {
+        "required": [
+          "correctWords",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "TranscriptionTruth"
+            ],
+            "type": "string"
+          },
+          "correctWords": {
+            "$ref": "#/components/schemas/ListOfTranscriptionWord"
+          },
+          "strictGrading": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "requiredPrecision": {
+            "type": "number",
+            "format": "double"
+          },
+          "requiredCompleteness": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "ListOfBoxShape": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/BoxShape"
+        }
+      },
+      "ListOfClassifyPayload_Category": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/ClassifyPayload_Category"
+        }
+      },
+      "ListOfFeatureFlagModel": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/FeatureFlagModel"
         }
       },
       "ListOfFilter": {
@@ -693,10 +1916,37 @@
           "$ref": "#/components/schemas/Filter"
         }
       },
-      "ListOfICampaignFilter": {
+      "ListOfIAssetInput": {
         "type": "array",
         "items": {
-          "$ref": "#/components/schemas/ICampaignFilter"
+          "$ref": "#/components/schemas/IAssetInput"
+        }
+      },
+      "ListOfIAssetModel": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/IAssetModel"
+        }
+      },
+      "ListOfIAudienceFilter": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/IAudienceFilter"
+        }
+      },
+      "ListOfListOfString": {
+        "type": "array",
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "ListOfNamedClassification": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/NamedClassification"
         }
       },
       "ListOfQueryAudiencesResult": {
@@ -705,10 +1955,34 @@
           "$ref": "#/components/schemas/QueryAudiencesResult"
         }
       },
+      "ListOfQueryJobsResult": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/QueryJobsResult"
+        }
+      },
+      "ListOfQueryRapidsForAudienceResult": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/QueryRapidsForAudienceResult"
+        }
+      },
+      "ListOfScrubRange": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/ScrubRange"
+        }
+      },
       "ListOfSortCriterion": {
         "type": "array",
         "items": {
           "$ref": "#/components/schemas/SortCriterion"
+        }
+      },
+      "ListOfTranscriptionWord": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/TranscriptionWord"
         }
       },
       "LogicOperator": {
@@ -718,10 +1992,67 @@
           "Not"
         ]
       },
-      "OptionOfIReadOnlyListOfICampaignFilter": {
+      "MetadataInputCollection": {
+        "type": "object",
+        "additionalProperties": {
+          "$ref": "#/components/schemas/IMetadataInput"
+        }
+      },
+      "MetadataModelCollection": {
+        "type": "object",
+        "additionalProperties": {
+          "$ref": "#/components/schemas/IMetadataModel"
+        }
+      },
+      "MetadataVisibilities": {
+        "type": "array",
+        "items": {
+          "enum": [
+            "None",
+            "Users",
+            "Customers",
+            "Admins",
+            "Dashboard",
+            "All"
+          ],
+          "type": "string"
+        }
+      },
+      "NamedClassification": {
+        "required": [
+          "start",
+          "end",
+          "classification"
+        ],
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "end": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "classification": {
+            "type": "string"
+          }
+        }
+      },
+      "OptionOfExistingAssetInput": {
         "oneOf": [
           {
-            "$ref": "#/components/schemas/ListOfICampaignFilter"
+            "$ref": "#/components/schemas/ExistingAssetInput"
+          },
+          {
+            "nullable": true
+          }
+        ]
+      },
+      "OptionOfIReadOnlyListOfIAudienceFilter": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ListOfIAudienceFilter"
           },
           {
             "nullable": true
@@ -762,6 +2093,66 @@
           }
         }
       },
+      "PagedResultOfQueryJobsResult": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "$ref": "#/components/schemas/ListOfQueryJobsResult"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PagedResultOfQueryRapidsForAudienceResult": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "$ref": "#/components/schemas/ListOfQueryRapidsForAudienceResult"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "PageInfo": {
         "type": "object",
         "properties": {
@@ -779,23 +2170,19 @@
         "required": [
           "id",
           "name",
-          "validationSetId",
           "status",
           "qualifiedUserCount",
           "filters",
           "createdAt",
-          "ownerMail"
+          "ownerMail",
+          "isPublic"
         ],
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "name": {
             "type": "string"
           },
-          "validationSetId": {
+          "name": {
             "type": "string"
           },
           "status": {
@@ -806,7 +2193,11 @@
             "format": "int64"
           },
           "filters": {
-            "$ref": "#/components/schemas/ListOfICampaignFilter"
+            "$ref": "#/components/schemas/ListOfIAudienceFilter"
+          },
+          "logo": {
+            "type": "string",
+            "nullable": true
           },
           "createdAt": {
             "type": "string",
@@ -814,6 +2205,50 @@
           },
           "ownerMail": {
             "type": "string"
+          },
+          "isPublic": {
+            "type": "boolean"
+          }
+        }
+      },
+      "QueryJobsResult": {
+        "required": [
+          "jobId",
+          "name",
+          "definitionId",
+          "audienceId",
+          "revisionNumber",
+          "pipelineId",
+          "status",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "jobId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "definitionId": {
+            "type": "string"
+          },
+          "audienceId": {
+            "type": "string"
+          },
+          "revisionNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pipelineId": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/AudienceJobState"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -852,6 +2287,92 @@
           }
         }
       },
+      "QueryRapidsForAudienceResult": {
+        "required": [
+          "id",
+          "type",
+          "asset",
+          "payload",
+          "correctValidationCount",
+          "invalidValidationCount",
+          "state"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "asset": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ]
+          },
+          "payload": {
+            "$ref": "#/components/schemas/IRapidPayload"
+          },
+          "correctValidationCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "invalidValidationCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "state": {
+            "$ref": "#/components/schemas/RapidState"
+          },
+          "truth": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IValidationTruth"
+              }
+            ]
+          },
+          "context": {
+            "type": "string",
+            "nullable": true
+          },
+          "contextAsset": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IAssetModel"
+              }
+            ]
+          },
+          "explanation": {
+            "type": "string",
+            "nullable": true
+          },
+          "randomCorrectProbability": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "RapidState": {
+        "enum": [
+          "Labeling",
+          "Paused",
+          "Incomplete",
+          "Flagged",
+          "Done",
+          "None"
+        ]
+      },
       "RootFilter": {
         "type": "object",
         "properties": {
@@ -860,6 +2381,23 @@
           },
           "logic": {
             "$ref": "#/components/schemas/LogicOperator"
+          }
+        }
+      },
+      "ScrubRange": {
+        "required": [
+          "start",
+          "end"
+        ],
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "end": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -884,6 +2422,22 @@
           "Desc"
         ]
       },
+      "TranscriptionWord": {
+        "required": [
+          "word",
+          "wordIndex"
+        ],
+        "type": "object",
+        "properties": {
+          "word": {
+            "type": "string"
+          },
+          "wordIndex": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "UpdateAudienceRequest": {
         "type": "object",
         "properties": {
@@ -891,7 +2445,44 @@
             "$ref": "#/components/schemas/OptionOfstring"
           },
           "filters": {
-            "$ref": "#/components/schemas/OptionOfIReadOnlyListOfICampaignFilter"
+            "$ref": "#/components/schemas/OptionOfIReadOnlyListOfIAudienceFilter"
+          },
+          "logo": {
+            "$ref": "#/components/schemas/OptionOfExistingAssetInput"
+          }
+        }
+      },
+      "ValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           }
         }
       }

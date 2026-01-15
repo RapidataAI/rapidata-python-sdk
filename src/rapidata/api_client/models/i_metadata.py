@@ -19,6 +19,7 @@ from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, f
 from typing import Any, List, Optional
 from rapidata.api_client.models.i_metadata_classification_metadata import IMetadataClassificationMetadata
 from rapidata.api_client.models.i_metadata_count_metadata import IMetadataCountMetadata
+from rapidata.api_client.models.i_metadata_duration_metadata import IMetadataDurationMetadata
 from rapidata.api_client.models.i_metadata_file_type_metadata import IMetadataFileTypeMetadata
 from rapidata.api_client.models.i_metadata_image_dimension_metadata import IMetadataImageDimensionMetadata
 from rapidata.api_client.models.i_metadata_location_metadata import IMetadataLocationMetadata
@@ -26,12 +27,11 @@ from rapidata.api_client.models.i_metadata_original_filename_metadata import IMe
 from rapidata.api_client.models.i_metadata_source_url_metadata import IMetadataSourceUrlMetadata
 from rapidata.api_client.models.i_metadata_streams_metadata import IMetadataStreamsMetadata
 from rapidata.api_client.models.i_metadata_text_metadata import IMetadataTextMetadata
-from rapidata.api_client.models.i_metadata_video_duration_metadata import IMetadataVideoDurationMetadata
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-IMETADATA_ONE_OF_SCHEMAS = ["IMetadataClassificationMetadata", "IMetadataCountMetadata", "IMetadataFileTypeMetadata", "IMetadataImageDimensionMetadata", "IMetadataLocationMetadata", "IMetadataOriginalFilenameMetadata", "IMetadataSourceUrlMetadata", "IMetadataStreamsMetadata", "IMetadataTextMetadata", "IMetadataVideoDurationMetadata"]
+IMETADATA_ONE_OF_SCHEMAS = ["IMetadataClassificationMetadata", "IMetadataCountMetadata", "IMetadataDurationMetadata", "IMetadataFileTypeMetadata", "IMetadataImageDimensionMetadata", "IMetadataLocationMetadata", "IMetadataOriginalFilenameMetadata", "IMetadataSourceUrlMetadata", "IMetadataStreamsMetadata", "IMetadataTextMetadata"]
 
 class IMetadata(BaseModel):
     """
@@ -41,24 +41,24 @@ class IMetadata(BaseModel):
     oneof_schema_1_validator: Optional[IMetadataClassificationMetadata] = None
     # data type: IMetadataCountMetadata
     oneof_schema_2_validator: Optional[IMetadataCountMetadata] = None
+    # data type: IMetadataDurationMetadata
+    oneof_schema_3_validator: Optional[IMetadataDurationMetadata] = None
     # data type: IMetadataFileTypeMetadata
-    oneof_schema_3_validator: Optional[IMetadataFileTypeMetadata] = None
+    oneof_schema_4_validator: Optional[IMetadataFileTypeMetadata] = None
     # data type: IMetadataImageDimensionMetadata
-    oneof_schema_4_validator: Optional[IMetadataImageDimensionMetadata] = None
+    oneof_schema_5_validator: Optional[IMetadataImageDimensionMetadata] = None
     # data type: IMetadataLocationMetadata
-    oneof_schema_5_validator: Optional[IMetadataLocationMetadata] = None
+    oneof_schema_6_validator: Optional[IMetadataLocationMetadata] = None
     # data type: IMetadataOriginalFilenameMetadata
-    oneof_schema_6_validator: Optional[IMetadataOriginalFilenameMetadata] = None
+    oneof_schema_7_validator: Optional[IMetadataOriginalFilenameMetadata] = None
     # data type: IMetadataSourceUrlMetadata
-    oneof_schema_7_validator: Optional[IMetadataSourceUrlMetadata] = None
+    oneof_schema_8_validator: Optional[IMetadataSourceUrlMetadata] = None
     # data type: IMetadataStreamsMetadata
-    oneof_schema_8_validator: Optional[IMetadataStreamsMetadata] = None
+    oneof_schema_9_validator: Optional[IMetadataStreamsMetadata] = None
     # data type: IMetadataTextMetadata
-    oneof_schema_9_validator: Optional[IMetadataTextMetadata] = None
-    # data type: IMetadataVideoDurationMetadata
-    oneof_schema_10_validator: Optional[IMetadataVideoDurationMetadata] = None
-    actual_instance: Optional[Union[IMetadataClassificationMetadata, IMetadataCountMetadata, IMetadataFileTypeMetadata, IMetadataImageDimensionMetadata, IMetadataLocationMetadata, IMetadataOriginalFilenameMetadata, IMetadataSourceUrlMetadata, IMetadataStreamsMetadata, IMetadataTextMetadata, IMetadataVideoDurationMetadata]] = None
-    one_of_schemas: Set[str] = { "IMetadataClassificationMetadata", "IMetadataCountMetadata", "IMetadataFileTypeMetadata", "IMetadataImageDimensionMetadata", "IMetadataLocationMetadata", "IMetadataOriginalFilenameMetadata", "IMetadataSourceUrlMetadata", "IMetadataStreamsMetadata", "IMetadataTextMetadata", "IMetadataVideoDurationMetadata" }
+    oneof_schema_10_validator: Optional[IMetadataTextMetadata] = None
+    actual_instance: Optional[Union[IMetadataClassificationMetadata, IMetadataCountMetadata, IMetadataDurationMetadata, IMetadataFileTypeMetadata, IMetadataImageDimensionMetadata, IMetadataLocationMetadata, IMetadataOriginalFilenameMetadata, IMetadataSourceUrlMetadata, IMetadataStreamsMetadata, IMetadataTextMetadata]] = None
+    one_of_schemas: Set[str] = { "IMetadataClassificationMetadata", "IMetadataCountMetadata", "IMetadataDurationMetadata", "IMetadataFileTypeMetadata", "IMetadataImageDimensionMetadata", "IMetadataLocationMetadata", "IMetadataOriginalFilenameMetadata", "IMetadataSourceUrlMetadata", "IMetadataStreamsMetadata", "IMetadataTextMetadata" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -92,6 +92,11 @@ class IMetadata(BaseModel):
         # validate data type: IMetadataCountMetadata
         if not isinstance(v, IMetadataCountMetadata):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IMetadataCountMetadata`")
+        else:
+            match += 1
+        # validate data type: IMetadataDurationMetadata
+        if not isinstance(v, IMetadataDurationMetadata):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IMetadataDurationMetadata`")
         else:
             match += 1
         # validate data type: IMetadataFileTypeMetadata
@@ -129,17 +134,12 @@ class IMetadata(BaseModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IMetadataTextMetadata`")
         else:
             match += 1
-        # validate data type: IMetadataVideoDurationMetadata
-        if not isinstance(v, IMetadataVideoDurationMetadata):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IMetadataVideoDurationMetadata`")
-        else:
-            match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in IMetadata with oneOf schemas: IMetadataClassificationMetadata, IMetadataCountMetadata, IMetadataFileTypeMetadata, IMetadataImageDimensionMetadata, IMetadataLocationMetadata, IMetadataOriginalFilenameMetadata, IMetadataSourceUrlMetadata, IMetadataStreamsMetadata, IMetadataTextMetadata, IMetadataVideoDurationMetadata. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in IMetadata with oneOf schemas: IMetadataClassificationMetadata, IMetadataCountMetadata, IMetadataDurationMetadata, IMetadataFileTypeMetadata, IMetadataImageDimensionMetadata, IMetadataLocationMetadata, IMetadataOriginalFilenameMetadata, IMetadataSourceUrlMetadata, IMetadataStreamsMetadata, IMetadataTextMetadata. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in IMetadata with oneOf schemas: IMetadataClassificationMetadata, IMetadataCountMetadata, IMetadataFileTypeMetadata, IMetadataImageDimensionMetadata, IMetadataLocationMetadata, IMetadataOriginalFilenameMetadata, IMetadataSourceUrlMetadata, IMetadataStreamsMetadata, IMetadataTextMetadata, IMetadataVideoDurationMetadata. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in IMetadata with oneOf schemas: IMetadataClassificationMetadata, IMetadataCountMetadata, IMetadataDurationMetadata, IMetadataFileTypeMetadata, IMetadataImageDimensionMetadata, IMetadataLocationMetadata, IMetadataOriginalFilenameMetadata, IMetadataSourceUrlMetadata, IMetadataStreamsMetadata, IMetadataTextMetadata. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -163,6 +163,12 @@ class IMetadata(BaseModel):
         # deserialize data into IMetadataCountMetadata
         try:
             instance.actual_instance = IMetadataCountMetadata.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IMetadataDurationMetadata
+        try:
+            instance.actual_instance = IMetadataDurationMetadata.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
@@ -208,19 +214,13 @@ class IMetadata(BaseModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # deserialize data into IMetadataVideoDurationMetadata
-        try:
-            instance.actual_instance = IMetadataVideoDurationMetadata.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into IMetadata with oneOf schemas: IMetadataClassificationMetadata, IMetadataCountMetadata, IMetadataFileTypeMetadata, IMetadataImageDimensionMetadata, IMetadataLocationMetadata, IMetadataOriginalFilenameMetadata, IMetadataSourceUrlMetadata, IMetadataStreamsMetadata, IMetadataTextMetadata, IMetadataVideoDurationMetadata. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into IMetadata with oneOf schemas: IMetadataClassificationMetadata, IMetadataCountMetadata, IMetadataDurationMetadata, IMetadataFileTypeMetadata, IMetadataImageDimensionMetadata, IMetadataLocationMetadata, IMetadataOriginalFilenameMetadata, IMetadataSourceUrlMetadata, IMetadataStreamsMetadata, IMetadataTextMetadata. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into IMetadata with oneOf schemas: IMetadataClassificationMetadata, IMetadataCountMetadata, IMetadataFileTypeMetadata, IMetadataImageDimensionMetadata, IMetadataLocationMetadata, IMetadataOriginalFilenameMetadata, IMetadataSourceUrlMetadata, IMetadataStreamsMetadata, IMetadataTextMetadata, IMetadataVideoDurationMetadata. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into IMetadata with oneOf schemas: IMetadataClassificationMetadata, IMetadataCountMetadata, IMetadataDurationMetadata, IMetadataFileTypeMetadata, IMetadataImageDimensionMetadata, IMetadataLocationMetadata, IMetadataOriginalFilenameMetadata, IMetadataSourceUrlMetadata, IMetadataStreamsMetadata, IMetadataTextMetadata. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -234,7 +234,7 @@ class IMetadata(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], IMetadataClassificationMetadata, IMetadataCountMetadata, IMetadataFileTypeMetadata, IMetadataImageDimensionMetadata, IMetadataLocationMetadata, IMetadataOriginalFilenameMetadata, IMetadataSourceUrlMetadata, IMetadataStreamsMetadata, IMetadataTextMetadata, IMetadataVideoDurationMetadata]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], IMetadataClassificationMetadata, IMetadataCountMetadata, IMetadataDurationMetadata, IMetadataFileTypeMetadata, IMetadataImageDimensionMetadata, IMetadataLocationMetadata, IMetadataOriginalFilenameMetadata, IMetadataSourceUrlMetadata, IMetadataStreamsMetadata, IMetadataTextMetadata]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

@@ -11,6 +11,494 @@
     }
   ],
   "paths": {
+    "/job/definition": {
+      "post": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Creates a new job definition.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateJobDefinitionEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateJobDefinitionEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/job": {
+      "post": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Creates a new job from a job definition and audience.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateJobEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateJobEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/job/definition/{definitionId}/revision": {
+      "post": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Creates a new revision for an existing job definition.",
+        "parameters": [
+          {
+            "name": "definitionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateJobRevisionEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateJobRevisionEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Gets the latest revision for a job definition.",
+        "parameters": [
+          {
+            "name": "definitionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetJobRevisionEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/job/definition/{definitionId}": {
+      "delete": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Deletes a job definition and all its revisions.",
+        "parameters": [
+          {
+            "name": "definitionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Gets a job definition by its id.",
+        "parameters": [
+          {
+            "name": "definitionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetJobDefinitionByIdEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Updates a job definition.",
+        "parameters": [
+          {
+            "name": "definitionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateJobDefinitionEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/job/{jobId}/download-results": {
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Downloads the results of a job as a file attachment.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/job/{jobId}": {
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Gets a job by its id.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetJobByIdEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/job/{jobId}/results": {
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Gets the results of a job as a JSON string.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/job/definition/{definitionId}/revision/{revisionNumber}": {
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Gets a specific revision for a job definition.",
+        "parameters": [
+          {
+            "name": "definitionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "revisionNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetJobRevisionEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/feedback": {
       "post": {
         "tags": [
@@ -41,6 +529,147 @@
         "responses": {
           "204": {
             "description": "No Content"
+          }
+        }
+      }
+    },
+    "/job/definitions": {
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Queries job definitions based on filter, page, and sort criteria.",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "query",
+            "description": "The parameters for filtering, paging, and sorting",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfQueryJobDefinitionsResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfQueryJobDefinitionsResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfQueryJobDefinitionsResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/job/definition/{definitionId}/revisions": {
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Queries job revisions for a specific definition based on filter, page, and sort criteria.",
+        "parameters": [
+          {
+            "name": "definitionId",
+            "in": "path",
+            "description": "The id of the job definition",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "request",
+            "in": "query",
+            "description": "The parameters for filtering, paging, and sorting",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfQueryJobRevisionsResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfQueryJobRevisionsResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfQueryJobRevisionsResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/jobs": {
+      "get": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Queries jobs based on filter, page, and sort criteria.",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "query",
+            "description": "The parameters for filtering, paging, and sorting",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryModel"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfQueryJobsResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfQueryJobsResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedResultOfQueryJobsResult"
+                }
+              }
+            }
           }
         }
       }
@@ -935,7 +1564,8 @@
           "FreeText",
           "Scrub",
           "Ranking",
-          "MultiRanking"
+          "MultiRanking",
+          null
         ]
       },
       "AttachCategoryRapidBlueprint_Category": {
@@ -952,6 +1582,13 @@
             "type": "string"
           }
         }
+      },
+      "AudienceJobState": {
+        "enum": [
+          "Running",
+          "Completed",
+          "Failed"
+        ]
       },
       "CloneOrderModel": {
         "required": [
@@ -1056,6 +1693,135 @@
           "campaignId": {
             "type": "string",
             "nullable": true
+          },
+          "pipelineId": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateJobDefinitionEndpoint_Input": {
+        "required": [
+          "definitionName",
+          "workflow",
+          "referee",
+          "datasetId"
+        ],
+        "type": "object",
+        "properties": {
+          "definitionName": {
+            "type": "string"
+          },
+          "workflow": {
+            "$ref": "#/components/schemas/IOrderWorkflowModel"
+          },
+          "referee": {
+            "$ref": "#/components/schemas/IRefereeModel"
+          },
+          "datasetId": {
+            "type": "string"
+          },
+          "featureFlags": {
+            "$ref": "#/components/schemas/ListOfFeatureFlag"
+          },
+          "aggregatorType": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/AggregatorType"
+              }
+            ]
+          }
+        }
+      },
+      "CreateJobDefinitionEndpoint_Output": {
+        "required": [
+          "definitionId",
+          "pipelineId"
+        ],
+        "type": "object",
+        "properties": {
+          "definitionId": {
+            "type": "string"
+          },
+          "pipelineId": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateJobEndpoint_Input": {
+        "required": [
+          "jobDefinitionId",
+          "audienceId"
+        ],
+        "type": "object",
+        "properties": {
+          "jobDefinitionId": {
+            "type": "string"
+          },
+          "audienceId": {
+            "type": "string"
+          },
+          "revisionNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "CreateJobEndpoint_Output": {
+        "required": [
+          "jobId",
+          "recruitingStarted"
+        ],
+        "type": "object",
+        "properties": {
+          "jobId": {
+            "type": "string"
+          },
+          "recruitingStarted": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CreateJobRevisionEndpoint_Input": {
+        "type": "object",
+        "properties": {
+          "workflow": {
+            "$ref": "#/components/schemas/OptionOfIOrderWorkflowModel"
+          },
+          "referee": {
+            "$ref": "#/components/schemas/OptionOfIRefereeModel"
+          },
+          "datasetId": {
+            "$ref": "#/components/schemas/OptionOfstring"
+          },
+          "featureFlags": {
+            "$ref": "#/components/schemas/OptionOfIReadOnlyListOfFeatureFlag"
+          },
+          "aggregatorType": {
+            "$ref": "#/components/schemas/OptionOfAggregatorType"
+          }
+        }
+      },
+      "CreateJobRevisionEndpoint_Output": {
+        "required": [
+          "revisionNumber",
+          "pipelineId"
+        ],
+        "type": "object",
+        "properties": {
+          "revisionNumber": {
+            "type": "integer",
+            "format": "int32"
           },
           "pipelineId": {
             "type": "string"
@@ -1207,6 +1973,24 @@
           }
         }
       },
+      "DefinitionType": {
+        "enum": [
+          "Unknown",
+          "Classify",
+          "Compare",
+          "BoundingBox",
+          "Line",
+          "Polygon",
+          "Locate",
+          "Transcription",
+          "NamedEntity",
+          "FreeText",
+          "Scrub",
+          "Ranking",
+          "GroupedRanking",
+          "Evaluation"
+        ]
+      },
       "EloConfigModel": {
         "type": "object",
         "properties": {
@@ -1309,6 +2093,153 @@
           "EndsWith",
           "In"
         ]
+      },
+      "GetJobByIdEndpoint_Output": {
+        "required": [
+          "jobId",
+          "name",
+          "definitionId",
+          "audienceId",
+          "revisionNumber",
+          "pipelineId",
+          "status",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "jobId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "definitionId": {
+            "type": "string"
+          },
+          "audienceId": {
+            "type": "string"
+          },
+          "revisionNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pipelineId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "completedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "resultFileName": {
+            "type": "string",
+            "nullable": true
+          },
+          "failedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "failureMessage": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "GetJobDefinitionByIdEndpoint_Output": {
+        "required": [
+          "definitionId",
+          "name",
+          "definitionType",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "definitionId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "definitionType": {
+            "$ref": "#/components/schemas/DefinitionType"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "GetJobRevisionEndpoint_Output": {
+        "required": [
+          "definitionId",
+          "revisionNumber",
+          "state",
+          "pipelineId",
+          "datasetId",
+          "workflow",
+          "referee",
+          "featureFlags",
+          "createdAt",
+          "createdById",
+          "createdByMail"
+        ],
+        "type": "object",
+        "properties": {
+          "definitionId": {
+            "type": "string"
+          },
+          "revisionNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "state": {
+            "$ref": "#/components/schemas/JobDefinitionRevisionState"
+          },
+          "pipelineId": {
+            "type": "string"
+          },
+          "datasetId": {
+            "type": "string"
+          },
+          "aggregatorType": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/AggregatorType"
+              }
+            ]
+          },
+          "workflow": {
+            "$ref": "#/components/schemas/IOrderWorkflowModel"
+          },
+          "referee": {
+            "$ref": "#/components/schemas/IRefereeModel"
+          },
+          "featureFlags": {
+            "$ref": "#/components/schemas/ListOfFeatureFlag"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdById": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdByMail": {
+            "type": "string"
+          }
+        }
       },
       "GetOrderByIdResult": {
         "required": [
@@ -2099,6 +3030,9 @@
           "question": {
             "type": "string"
           },
+          "shouldValidateResponse": {
+            "type": "boolean"
+          },
           "validationSystemPrompt": {
             "type": "string",
             "nullable": true
@@ -2557,6 +3491,9 @@
             "$ref": "#/components/schemas/IUserFilterModelCustomUserFilterModel"
           },
           {
+            "$ref": "#/components/schemas/IUserFilterModelDeviceUserFilterModel"
+          },
+          {
             "$ref": "#/components/schemas/IUserFilterModelGenderUserFilterModel"
           },
           {
@@ -2586,6 +3523,7 @@
             "CampaignFilter": "#/components/schemas/IUserFilterModelCampaignUserFilterModel",
             "CountryFilter": "#/components/schemas/IUserFilterModelCountryUserFilterModel",
             "CustomFilter": "#/components/schemas/IUserFilterModelCustomUserFilterModel",
+            "DeviceFilter": "#/components/schemas/IUserFilterModelDeviceUserFilterModel",
             "GenderFilter": "#/components/schemas/IUserFilterModelGenderUserFilterModel",
             "LanguageFilter": "#/components/schemas/IUserFilterModelLanguageUserFilterModel",
             "NewUserFilter": "#/components/schemas/IUserFilterModelNewUserFilterModel",
@@ -2700,6 +3638,30 @@
             "type": "array",
             "items": {
               "type": "string"
+            }
+          }
+        }
+      },
+      "IUserFilterModelDeviceUserFilterModel": {
+        "required": [
+          "deviceTypes",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "DeviceFilter"
+            ],
+            "type": "string"
+          },
+          "deviceTypes": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "Unknown",
+                "Phone",
+                "Tablet"
+              ]
             }
           }
         }
@@ -2846,6 +3808,13 @@
           }
         }
       },
+      "JobDefinitionRevisionState": {
+        "enum": [
+          "Pending",
+          "Completed",
+          "Failed"
+        ]
+      },
       "ListOfAggregatedOrdersModel": {
         "type": "array",
         "items": {
@@ -2928,6 +3897,24 @@
         "type": "array",
         "items": {
           "$ref": "#/components/schemas/PublicOrderModel"
+        }
+      },
+      "ListOfQueryJobDefinitionsResult": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/QueryJobDefinitionsResult"
+        }
+      },
+      "ListOfQueryJobRevisionsResult": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/QueryJobRevisionsResult"
+        }
+      },
+      "ListOfQueryJobsResult": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/QueryJobsResult"
         }
       },
       "ListOfSortCriterion": {
@@ -3038,6 +4025,59 @@
           ],
           "type": "string"
         }
+      },
+      "OptionOfAggregatorType": {
+        "enum": [
+          "NonCommittal",
+          "MajorityVote",
+          "SimpleMatchup",
+          "LocateCluster",
+          "Classification",
+          "Locate",
+          "BoundingBox",
+          "Line",
+          "Transcription",
+          "SinglePointLocate",
+          "FreeText",
+          "Scrub",
+          "Ranking",
+          "MultiRanking",
+          null
+        ]
+      },
+      "OptionOfIOrderWorkflowModel": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IOrderWorkflowModel"
+          },
+          {
+            "nullable": true
+          }
+        ]
+      },
+      "OptionOfIReadOnlyListOfFeatureFlag": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ListOfFeatureFlag"
+          },
+          {
+            "nullable": true
+          }
+        ]
+      },
+      "OptionOfIRefereeModel": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IRefereeModel"
+          },
+          {
+            "nullable": true
+          }
+        ]
+      },
+      "OptionOfstring": {
+        "type": "string",
+        "nullable": true
       },
       "OrderModel": {
         "required": [
@@ -3153,6 +4193,96 @@
           }
         }
       },
+      "PagedResultOfQueryJobDefinitionsResult": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "$ref": "#/components/schemas/ListOfQueryJobDefinitionsResult"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PagedResultOfQueryJobRevisionsResult": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "$ref": "#/components/schemas/ListOfQueryJobRevisionsResult"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PagedResultOfQueryJobsResult": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "$ref": "#/components/schemas/ListOfQueryJobsResult"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "PageInfo": {
         "type": "object",
         "properties": {
@@ -3190,6 +4320,101 @@
           },
           "isPublic": {
             "type": "boolean"
+          }
+        }
+      },
+      "QueryJobDefinitionsResult": {
+        "required": [
+          "definitionId",
+          "name",
+          "definitionType",
+          "createdAt",
+          "revisionCount"
+        ],
+        "type": "object",
+        "properties": {
+          "definitionId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "definitionType": {
+            "$ref": "#/components/schemas/DefinitionType"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "revisionCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "QueryJobRevisionsResult": {
+        "required": [
+          "definitionId",
+          "revisionNumber",
+          "createdAt",
+          "state"
+        ],
+        "type": "object",
+        "properties": {
+          "definitionId": {
+            "type": "string"
+          },
+          "revisionNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "state": {
+            "$ref": "#/components/schemas/JobDefinitionRevisionState"
+          }
+        }
+      },
+      "QueryJobsResult": {
+        "required": [
+          "jobId",
+          "name",
+          "definitionId",
+          "audienceId",
+          "revisionNumber",
+          "pipelineId",
+          "status",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "jobId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "definitionId": {
+            "type": "string"
+          },
+          "audienceId": {
+            "type": "string"
+          },
+          "revisionNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pipelineId": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/AudienceJobState"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -3232,8 +4457,7 @@
         "enum": [
           "Random",
           "Shuffled",
-          "Sequential",
-          null
+          "Sequential"
         ]
       },
       "RootFilter": {
@@ -3299,6 +4523,14 @@
           }
         }
       },
+      "UpdateJobDefinitionEndpoint_Input": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/OptionOfstring"
+          }
+        }
+      },
       "UpdateOrderNameModel": {
         "required": [
           "name"
@@ -3307,6 +4539,40 @@
         "properties": {
           "name": {
             "type": "string"
+          }
+        }
+      },
+      "ValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           }
         }
       }
@@ -3359,6 +4625,9 @@
   "tags": [
     {
       "name": "Feedback"
+    },
+    {
+      "name": "Job"
     },
     {
       "name": "Order"

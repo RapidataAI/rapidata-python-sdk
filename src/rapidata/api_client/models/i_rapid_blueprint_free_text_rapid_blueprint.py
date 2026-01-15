@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
@@ -28,8 +28,9 @@ class IRapidBlueprintFreeTextRapidBlueprint(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
     question: StrictStr
+    should_validate_response: Optional[StrictBool] = Field(default=None, alias="shouldValidateResponse")
     validation_system_prompt: Optional[StrictStr] = Field(default=None, alias="validationSystemPrompt")
-    __properties: ClassVar[List[str]] = ["_t", "question", "validationSystemPrompt"]
+    __properties: ClassVar[List[str]] = ["_t", "question", "shouldValidateResponse", "validationSystemPrompt"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -96,6 +97,7 @@ class IRapidBlueprintFreeTextRapidBlueprint(BaseModel):
         _obj = cls.model_validate({
             "_t": obj.get("_t"),
             "question": obj.get("question"),
+            "shouldValidateResponse": obj.get("shouldValidateResponse"),
             "validationSystemPrompt": obj.get("validationSystemPrompt")
         })
         return _obj

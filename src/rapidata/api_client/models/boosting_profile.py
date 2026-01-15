@@ -17,8 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,7 +28,8 @@ class BoostingProfile(BaseModel):
     """ # noqa: E501
     requires_global_boost: Optional[StrictBool] = Field(default=None, alias="requiresGlobalBoost")
     language_boosts: Optional[List[StrictStr]] = Field(default=None, alias="languageBoosts")
-    __properties: ClassVar[List[str]] = ["requiresGlobalBoost", "languageBoosts"]
+    kayzen_audience_ids: Optional[List[Union[StrictFloat, StrictInt]]] = Field(default=None, alias="kayzenAudienceIds")
+    __properties: ClassVar[List[str]] = ["requiresGlobalBoost", "languageBoosts", "kayzenAudienceIds"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -82,7 +83,8 @@ class BoostingProfile(BaseModel):
 
         _obj = cls.model_validate({
             "requiresGlobalBoost": obj.get("requiresGlobalBoost"),
-            "languageBoosts": obj.get("languageBoosts")
+            "languageBoosts": obj.get("languageBoosts"),
+            "kayzenAudienceIds": obj.get("kayzenAudienceIds")
         })
         return _obj
 

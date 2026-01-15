@@ -6,6 +6,7 @@ from rapidata.api_client.models.add_validation_rapid_model import (
 from rapidata.api_client.models.i_asset_input import IAssetInput
 from rapidata.api_client.models.i_rapid_payload import IRapidPayload
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
+from rapidata.api_client.models.i_validation_truth_model import IValidationTruthModel
 
 
 class ValidationRapidUploader:
@@ -32,7 +33,7 @@ class ValidationRapidUploader:
                     else None
                 ),
                 truth=(
-                    IValidationTruth(actual_instance=rapid.truth)
+                    IValidationTruthModel(actual_instance=rapid.truth)
                     if rapid.truth
                     else None
                 ),

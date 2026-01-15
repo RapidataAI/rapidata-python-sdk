@@ -495,6 +495,9 @@
             "$ref": "#/components/schemas/IMetadataCountMetadata"
           },
           {
+            "$ref": "#/components/schemas/IMetadataDurationMetadata"
+          },
+          {
             "$ref": "#/components/schemas/IMetadataFileTypeMetadata"
           },
           {
@@ -514,9 +517,6 @@
           },
           {
             "$ref": "#/components/schemas/IMetadataTextMetadata"
-          },
-          {
-            "$ref": "#/components/schemas/IMetadataVideoDurationMetadata"
           }
         ],
         "discriminator": {
@@ -524,14 +524,14 @@
           "mapping": {
             "ClassificationMetadata": "#/components/schemas/IMetadataClassificationMetadata",
             "CountMetadata": "#/components/schemas/IMetadataCountMetadata",
+            "DurationMetadata": "#/components/schemas/IMetadataDurationMetadata",
             "FileTypeMetadata": "#/components/schemas/IMetadataFileTypeMetadata",
             "ImageDimensionMetadata": "#/components/schemas/IMetadataImageDimensionMetadata",
             "LocationMetadata": "#/components/schemas/IMetadataLocationMetadata",
             "OriginalFilenameMetadata": "#/components/schemas/IMetadataOriginalFilenameMetadata",
             "SourceUrlMetadata": "#/components/schemas/IMetadataSourceUrlMetadata",
             "StreamsMetadata": "#/components/schemas/IMetadataStreamsMetadata",
-            "TextMetadata": "#/components/schemas/IMetadataTextMetadata",
-            "VideoDurationMetadata": "#/components/schemas/IMetadataVideoDurationMetadata"
+            "TextMetadata": "#/components/schemas/IMetadataTextMetadata"
           }
         }
       },
@@ -570,6 +570,27 @@
           "count": {
             "type": "integer",
             "format": "int32"
+          },
+          "visibilities": {
+            "$ref": "#/components/schemas/MetadataVisibilities"
+          }
+        }
+      },
+      "IMetadataDurationMetadata": {
+        "required": [
+          "duration",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "DurationMetadata"
+            ],
+            "type": "string"
+          },
+          "duration": {
+            "type": "string",
+            "format": "date-time"
           },
           "visibilities": {
             "$ref": "#/components/schemas/MetadataVisibilities"
@@ -726,27 +747,6 @@
           "text": {
             "type": "string",
             "nullable": true
-          },
-          "visibilities": {
-            "$ref": "#/components/schemas/MetadataVisibilities"
-          }
-        }
-      },
-      "IMetadataVideoDurationMetadata": {
-        "required": [
-          "duration",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "VideoDurationMetadata"
-            ],
-            "type": "string"
-          },
-          "duration": {
-            "type": "string",
-            "format": "date-time"
           },
           "visibilities": {
             "$ref": "#/components/schemas/MetadataVisibilities"
@@ -924,6 +924,9 @@
           },
           "question": {
             "type": "string"
+          },
+          "shouldValidateResponse": {
+            "type": "boolean"
           },
           "validationSystemPrompt": {
             "type": "string",
