@@ -419,52 +419,6 @@
         }
       }
     },
-    "/validation-set/{validationSetId}/rapid-new": {
-      "post": {
-        "tags": [
-          "ValidationSet"
-        ],
-        "summary": "Adds a new validation rapid to the validation set using JSON body.",
-        "parameters": [
-          {
-            "name": "validationSetId",
-            "in": "path",
-            "description": "The validation set to add a rapid to.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "The validation rapid data including asset, payload, and metadata.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddValidationRapidNewModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddValidationRapidNewModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddValidationRapidNewModel"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        },
-        "deprecated": true
-      }
-    },
     "/validation-set/{validationSetId}/update-labeling-hints": {
       "post": {
         "tags": [
@@ -679,7 +633,7 @@
                 "nullable": true
               },
               {
-                "$ref": "#/components/schemas/IValidationTruth"
+                "$ref": "#/components/schemas/IValidationTruthModel"
               }
             ]
           },
@@ -704,73 +658,6 @@
                 "$ref": "#/components/schemas/IAssetInput"
               }
             ]
-          },
-          "metadata": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/ListOfIValidationMetadataInput"
-              }
-            ]
-          },
-          "featureFlags": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/ListOfFeatureFlagModel"
-              }
-            ]
-          }
-        }
-      },
-      "AddValidationRapidNewModel": {
-        "required": [
-          "asset",
-          "payload",
-          "metadata",
-          "truth",
-          "randomCorrectProbability",
-          "explanation"
-        ],
-        "type": "object",
-        "properties": {
-          "asset": {
-            "$ref": "#/components/schemas/IAssetInput"
-          },
-          "payload": {
-            "$ref": "#/components/schemas/IRapidPayload"
-          },
-          "metadata": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/ListOfIValidationMetadataInput"
-              }
-            ]
-          },
-          "truth": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
-              {
-                "$ref": "#/components/schemas/IValidationTruth"
-              }
-            ]
-          },
-          "randomCorrectProbability": {
-            "type": "number",
-            "format": "double"
-          },
-          "explanation": {
-            "type": "string",
-            "nullable": true
           },
           "featureFlags": {
             "oneOf": [
@@ -971,7 +858,7 @@
                 "nullable": true
               },
               {
-                "$ref": "#/components/schemas/IValidationTruth"
+                "$ref": "#/components/schemas/IValidationTruthModel"
               }
             ]
           },
@@ -1702,6 +1589,9 @@
           "question": {
             "type": "string"
           },
+          "shouldValidateResponse": {
+            "type": "boolean"
+          },
           "validationSystemPrompt": {
             "type": "string",
             "nullable": true
@@ -1821,123 +1711,72 @@
           }
         }
       },
-      "IValidationMetadataInput": {
+      "IValidationTruthModel": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
           {
-            "$ref": "#/components/schemas/IValidationMetadataInputPromptMetadataInput"
+            "$ref": "#/components/schemas/IValidationTruthModelAttachCategoryTruthModel"
           },
           {
-            "$ref": "#/components/schemas/IValidationMetadataInputPromptAssetMetadataInput"
+            "$ref": "#/components/schemas/IValidationTruthModelBoundingBoxTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelClassifyTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelCompareTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelEmptyValidationTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelLineTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelLocateBoxTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelMultiCompareTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelNamedEntityTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelPolygonTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelScrubTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelSkipTruthModel"
+          },
+          {
+            "$ref": "#/components/schemas/IValidationTruthModelTranscriptionTruthModel"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
-            "PromptMetadataInput": "#/components/schemas/IValidationMetadataInputPromptMetadataInput",
-            "PromptAssetMetadataInput": "#/components/schemas/IValidationMetadataInputPromptAssetMetadataInput"
+            "AttachCategoryTruth": "#/components/schemas/IValidationTruthModelAttachCategoryTruthModel",
+            "BoundingBoxTruth": "#/components/schemas/IValidationTruthModelBoundingBoxTruthModel",
+            "ClassifyTruth": "#/components/schemas/IValidationTruthModelClassifyTruthModel",
+            "CompareTruth": "#/components/schemas/IValidationTruthModelCompareTruthModel",
+            "EmptyValidationTruth": "#/components/schemas/IValidationTruthModelEmptyValidationTruthModel",
+            "LineTruth": "#/components/schemas/IValidationTruthModelLineTruthModel",
+            "LocateBoxTruth": "#/components/schemas/IValidationTruthModelLocateBoxTruthModel",
+            "MultiCompareTruth": "#/components/schemas/IValidationTruthModelMultiCompareTruthModel",
+            "NamedEntityTruth": "#/components/schemas/IValidationTruthModelNamedEntityTruthModel",
+            "PolygonTruth": "#/components/schemas/IValidationTruthModelPolygonTruthModel",
+            "ScrubTruth": "#/components/schemas/IValidationTruthModelScrubTruthModel",
+            "SkipTruth": "#/components/schemas/IValidationTruthModelSkipTruthModel",
+            "TranscriptionTruth": "#/components/schemas/IValidationTruthModelTranscriptionTruthModel"
           }
         }
       },
-      "IValidationMetadataInputPromptAssetMetadataInput": {
-        "required": [
-          "asset",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "PromptAssetMetadataInput"
-            ],
-            "type": "string"
-          },
-          "asset": {
-            "$ref": "#/components/schemas/IAssetInput"
-          }
-        }
-      },
-      "IValidationMetadataInputPromptMetadataInput": {
-        "required": [
-          "prompt",
-          "_t"
-        ],
-        "properties": {
-          "_t": {
-            "enum": [
-              "PromptMetadataInput"
-            ],
-            "type": "string"
-          },
-          "prompt": {
-            "type": "string"
-          }
-        }
-      },
-      "IValidationTruth": {
-        "required": [
-          "_t"
-        ],
-        "type": "object",
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/IValidationTruthTranscriptionTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthScrubTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthPolygonTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthNamedEntityTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthLocateBoxTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthLineTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthEmptyValidationTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthCompareTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthMultiCompareTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthSkipTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthAttachCategoryTruth"
-          },
-          {
-            "$ref": "#/components/schemas/IValidationTruthBoundingBoxTruth"
-          }
-        ],
-        "discriminator": {
-          "propertyName": "_t",
-          "mapping": {
-            "TranscriptionTruth": "#/components/schemas/IValidationTruthTranscriptionTruth",
-            "ScrubTruth": "#/components/schemas/IValidationTruthScrubTruth",
-            "PolygonTruth": "#/components/schemas/IValidationTruthPolygonTruth",
-            "NamedEntityTruth": "#/components/schemas/IValidationTruthNamedEntityTruth",
-            "LocateBoxTruth": "#/components/schemas/IValidationTruthLocateBoxTruth",
-            "LineTruth": "#/components/schemas/IValidationTruthLineTruth",
-            "EmptyValidationTruth": "#/components/schemas/IValidationTruthEmptyValidationTruth",
-            "CompareTruth": "#/components/schemas/IValidationTruthCompareTruth",
-            "MultiCompareTruth": "#/components/schemas/IValidationTruthMultiCompareTruth",
-            "SkipTruth": "#/components/schemas/IValidationTruthSkipTruth",
-            "AttachCategoryTruth": "#/components/schemas/IValidationTruthAttachCategoryTruth",
-            "BoundingBoxTruth": "#/components/schemas/IValidationTruthBoundingBoxTruth"
-          }
-        }
-      },
-      "IValidationTruthAttachCategoryTruth": {
+      "IValidationTruthModelAttachCategoryTruthModel": {
         "required": [
           "correctCategories",
           "_t"
@@ -1957,7 +1796,7 @@
           }
         }
       },
-      "IValidationTruthBoundingBoxTruth": {
+      "IValidationTruthModelBoundingBoxTruthModel": {
         "required": [
           "xMin",
           "yMin",
@@ -1990,7 +1829,27 @@
           }
         }
       },
-      "IValidationTruthCompareTruth": {
+      "IValidationTruthModelClassifyTruthModel": {
+        "required": [
+          "correctCategories",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "ClassifyTruth"
+            ],
+            "type": "string"
+          },
+          "correctCategories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "IValidationTruthModelCompareTruthModel": {
         "required": [
           "winnerId",
           "_t"
@@ -2007,7 +1866,7 @@
           }
         }
       },
-      "IValidationTruthEmptyValidationTruth": {
+      "IValidationTruthModelEmptyValidationTruthModel": {
         "required": [
           "_t"
         ],
@@ -2020,7 +1879,7 @@
           }
         }
       },
-      "IValidationTruthLineTruth": {
+      "IValidationTruthModelLineTruthModel": {
         "required": [
           "_t"
         ],
@@ -2033,7 +1892,7 @@
           }
         }
       },
-      "IValidationTruthLocateBoxTruth": {
+      "IValidationTruthModelLocateBoxTruthModel": {
         "required": [
           "boundingBoxes",
           "_t"
@@ -2047,10 +1906,18 @@
           },
           "boundingBoxes": {
             "$ref": "#/components/schemas/ListOfBoxShape"
+          },
+          "requiredPrecision": {
+            "type": "number",
+            "format": "double"
+          },
+          "requiredCompleteness": {
+            "type": "number",
+            "format": "double"
           }
         }
       },
-      "IValidationTruthMultiCompareTruth": {
+      "IValidationTruthModelMultiCompareTruthModel": {
         "required": [
           "correctCombinations",
           "_t"
@@ -2067,7 +1934,7 @@
           }
         }
       },
-      "IValidationTruthNamedEntityTruth": {
+      "IValidationTruthModelNamedEntityTruthModel": {
         "required": [
           "classifications",
           "_t"
@@ -2084,7 +1951,7 @@
           }
         }
       },
-      "IValidationTruthPolygonTruth": {
+      "IValidationTruthModelPolygonTruthModel": {
         "required": [
           "_t"
         ],
@@ -2097,7 +1964,7 @@
           }
         }
       },
-      "IValidationTruthScrubTruth": {
+      "IValidationTruthModelScrubTruthModel": {
         "required": [
           "validRanges",
           "_t"
@@ -2114,7 +1981,7 @@
           }
         }
       },
-      "IValidationTruthSkipTruth": {
+      "IValidationTruthModelSkipTruthModel": {
         "required": [
           "_t"
         ],
@@ -2127,7 +1994,7 @@
           }
         }
       },
-      "IValidationTruthTranscriptionTruth": {
+      "IValidationTruthModelTranscriptionTruthModel": {
         "required": [
           "correctWords",
           "_t"
@@ -2196,12 +2063,6 @@
         "type": "array",
         "items": {
           "$ref": "#/components/schemas/IAssetModel"
-        }
-      },
-      "ListOfIValidationMetadataInput": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/IValidationMetadataInput"
         }
       },
       "ListOfListOfString": {

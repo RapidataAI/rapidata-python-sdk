@@ -17,8 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.box_shape import BoxShape
 from typing import Optional, Set
 from typing_extensions import Self
@@ -29,7 +29,9 @@ class IValidationTruthLocateBoxTruth(BaseModel):
     """ # noqa: E501
     t: StrictStr = Field(alias="_t")
     bounding_boxes: List[BoxShape] = Field(alias="boundingBoxes")
-    __properties: ClassVar[List[str]] = ["_t", "boundingBoxes"]
+    required_precision: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="requiredPrecision")
+    required_completeness: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="requiredCompleteness")
+    __properties: ClassVar[List[str]] = ["_t", "boundingBoxes", "requiredPrecision", "requiredCompleteness"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -97,7 +99,9 @@ class IValidationTruthLocateBoxTruth(BaseModel):
 
         _obj = cls.model_validate({
             "_t": obj.get("_t"),
-            "boundingBoxes": [BoxShape.from_dict(_item) for _item in obj["boundingBoxes"]] if obj.get("boundingBoxes") is not None else None
+            "boundingBoxes": [BoxShape.from_dict(_item) for _item in obj["boundingBoxes"]] if obj.get("boundingBoxes") is not None else None,
+            "requiredPrecision": obj.get("requiredPrecision"),
+            "requiredCompleteness": obj.get("requiredCompleteness")
         })
         return _obj
 

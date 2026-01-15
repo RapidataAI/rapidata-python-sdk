@@ -38,9 +38,10 @@ class CreateLeaderboardModel(BaseModel):
     min_responses: Optional[StrictInt] = Field(default=None, alias="minResponses")
     is_inversed: Optional[StrictBool] = Field(default=None, alias="isInversed")
     validation_set_id: Optional[StrictStr] = Field(default=None, alias="validationSetId")
+    audience_id: Optional[StrictStr] = Field(default=None, alias="audienceId")
     filters: Optional[List[IUserFilterModel]] = None
     feature_flags: Optional[List[FeatureFlagModel]] = Field(default=None, alias="featureFlags")
-    __properties: ClassVar[List[str]] = ["benchmarkId", "benchmarkName", "name", "instruction", "showPrompt", "showPromptAsset", "responseBudget", "minResponses", "isInversed", "validationSetId", "filters", "featureFlags"]
+    __properties: ClassVar[List[str]] = ["benchmarkId", "benchmarkName", "name", "instruction", "showPrompt", "showPromptAsset", "responseBudget", "minResponses", "isInversed", "validationSetId", "audienceId", "filters", "featureFlags"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -110,6 +111,11 @@ class CreateLeaderboardModel(BaseModel):
         if self.validation_set_id is None and "validation_set_id" in self.model_fields_set:
             _dict['validationSetId'] = None
 
+        # set to None if audience_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.audience_id is None and "audience_id" in self.model_fields_set:
+            _dict['audienceId'] = None
+
         return _dict
 
     @classmethod
@@ -132,6 +138,7 @@ class CreateLeaderboardModel(BaseModel):
             "minResponses": obj.get("minResponses"),
             "isInversed": obj.get("isInversed"),
             "validationSetId": obj.get("validationSetId"),
+            "audienceId": obj.get("audienceId"),
             "filters": [IUserFilterModel.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
             "featureFlags": [FeatureFlagModel.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
         })

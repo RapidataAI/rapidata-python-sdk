@@ -1497,6 +1497,9 @@
           "question": {
             "type": "string"
           },
+          "shouldValidateResponse": {
+            "type": "boolean"
+          },
           "validationSystemPrompt": {
             "type": "string",
             "nullable": true
@@ -1734,6 +1737,9 @@
           },
           "question": {
             "type": "string"
+          },
+          "shouldValidateResponse": {
+            "type": "boolean"
           },
           "validationSystemPrompt": {
             "type": "string",

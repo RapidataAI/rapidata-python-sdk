@@ -18,10 +18,10 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.audience_status import AudienceStatus
-from rapidata.api_client.models.i_campaign_filter import ICampaignFilter
+from rapidata.api_client.models.i_audience_filter import IAudienceFilter
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -31,13 +31,14 @@ class QueryAudiencesResult(BaseModel):
     """ # noqa: E501
     id: StrictStr
     name: StrictStr
-    validation_set_id: StrictStr = Field(alias="validationSetId")
     status: AudienceStatus
     qualified_user_count: StrictInt = Field(alias="qualifiedUserCount")
-    filters: List[ICampaignFilter]
+    filters: List[IAudienceFilter]
+    logo: Optional[StrictStr] = None
     created_at: datetime = Field(alias="createdAt")
     owner_mail: StrictStr = Field(alias="ownerMail")
-    __properties: ClassVar[List[str]] = ["id", "name", "validationSetId", "status", "qualifiedUserCount", "filters", "createdAt", "ownerMail"]
+    is_public: StrictBool = Field(alias="isPublic")
+    __properties: ClassVar[List[str]] = ["id", "name", "status", "qualifiedUserCount", "filters", "logo", "createdAt", "ownerMail", "isPublic"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -85,6 +86,11 @@ class QueryAudiencesResult(BaseModel):
                 if _item_filters:
                     _items.append(_item_filters.to_dict())
             _dict['filters'] = _items
+        # set to None if logo (nullable) is None
+        # and model_fields_set contains the field
+        if self.logo is None and "logo" in self.model_fields_set:
+            _dict['logo'] = None
+
         return _dict
 
     @classmethod
@@ -99,12 +105,13 @@ class QueryAudiencesResult(BaseModel):
         _obj = cls.model_validate({
             "id": obj.get("id"),
             "name": obj.get("name"),
-            "validationSetId": obj.get("validationSetId"),
             "status": obj.get("status"),
             "qualifiedUserCount": obj.get("qualifiedUserCount"),
-            "filters": [ICampaignFilter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
+            "filters": [IAudienceFilter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
+            "logo": obj.get("logo"),
             "createdAt": obj.get("createdAt"),
-            "ownerMail": obj.get("ownerMail")
+            "ownerMail": obj.get("ownerMail"),
+            "isPublic": obj.get("isPublic")
         })
         return _obj
 
