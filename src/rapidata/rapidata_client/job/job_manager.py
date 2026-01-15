@@ -611,8 +611,8 @@ class JobManager:
                 settings=settings,
             )
 
-    def get_job_defintion_by_id(self, job_definition_id: str) -> JobDefinition:
-        """Get a job by ID.
+    def get_job_definition_by_id(self, job_definition_id: str) -> JobDefinition:
+        """Get a job definition by ID.
 
         Args:
             job_definition_id (str): The ID of the job definition.
@@ -637,16 +637,16 @@ class JobManager:
     def find_job_definitions(
         self, name: str = "", amount: int = 10
     ) -> list[JobDefinition]:
-        """Find your recent jobs given criteria. If nothing is provided, it will return the most recent job.
+        """Find your recent jobs given criteria. If nothing is provided, it will return the most recent job definitions.
 
         Args:
-            name (str, optional): The name of the job - matching job will contain the name. Defaults to "" for any job.
-            amount (int, optional): The amount of jobs to return. Defaults to 10.
+            name (str, optional): The name of the job definition - matching job definition will contain the name. Defaults to "" for any job definition.
+            amount (int, optional): The amount of job definitions to return. Defaults to 10.
 
         Returns:
             list[JobDefinition]: A list of JobDefinition instances.
         """
-        with tracer.start_as_current_span("JobManager.find_jobs"):
+        with tracer.start_as_current_span("JobManager.find_job_definitions"):
             from rapidata.api_client.models.page_info import PageInfo
             from rapidata.api_client.models.query_model import QueryModel
             from rapidata.api_client.models.root_filter import RootFilter
@@ -686,6 +686,25 @@ class JobManager:
                 for job_def in job_definition_page_result.items
             ]
             return jobs
+
+    def get_job_by_id(self, job_id: str) -> RapidataJob:
+        """Get a job by ID.
+
+        Args:
+            job_id (str): The ID of the job.
+
+        Returns:
+            RapidataJob: The Job instance.
+        """
+        with tracer.start_as_current_span("JobManager.get_job_by_id"):
+            from rapidata.rapidata_client.job.rapidata_job import RapidataJob
+
+            job_response = self._openapi_service.job_api.job_job_id_get(
+                job_id=job_id,
+            )
+            return RapidataJob(
+                job_response.job_id, job_response.name, self._openapi_service
+            )
 
     def find_jobs(self, name: str = "", amount: int = 10) -> list[RapidataJob]:
         """Find your recent jobs given criteria. If nothing is provided, it will return the most recent jobs.
@@ -731,25 +750,6 @@ class JobManager:
                 for job in response.items
             ]
             return jobs
-
-    def get_job_by_id(self, job_id: str) -> RapidataJob:
-        """Get a job by ID.
-
-        Args:
-            job_id (str): The ID of the job.
-
-        Returns:
-            RapidataJob: The Job instance.
-        """
-        with tracer.start_as_current_span("JobManager.get_job_by_id"):
-            from rapidata.rapidata_client.job.rapidata_job import RapidataJob
-
-            job_response = self._openapi_service.job_api.job_job_id_get(
-                job_id=job_id,
-            )
-            return RapidataJob(
-                job_response.job_id, job_response.name, self._openapi_service
-            )
 
     def __str__(self) -> str:
         return "JobManager"
