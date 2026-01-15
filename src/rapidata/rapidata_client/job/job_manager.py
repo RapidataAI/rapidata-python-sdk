@@ -620,7 +620,7 @@ class JobManager:
         Returns:
             JobDefinition: The JobDefinition instance.
         """
-        with tracer.start_as_current_span("JobManager.get_job_by_id"):
+        with tracer.start_as_current_span("JobManager.get_job_definition_by_id"):
 
             job_definition = (
                 self._openapi_service.job_api.job_definition_definition_id_get(
@@ -716,7 +716,7 @@ class JobManager:
         Returns:
             list[RapidataJob]: A list of RapidataJob instances.
         """
-        with tracer.start_as_current_span("JobManager.find_job"):
+        with tracer.start_as_current_span("JobManager.find_jobs"):
             from rapidata.api_client.models.query_model import QueryModel
             from rapidata.api_client.models.root_filter import RootFilter
             from rapidata.api_client.models.filter import Filter

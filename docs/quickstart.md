@@ -162,7 +162,7 @@ audience = client.audience.get_audience_by_id("audience_id")
 jobs = audience.find_jobs("Prompt Alignment")
 ```
 
-> **Note**: The `find_*` can also be executed without the `name` parameter to return the most recent resources.
+> **Note**: The `find_*` can be executed without the `name` parameter to return the most recent resources.
 
 ## Complete Example
 
