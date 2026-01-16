@@ -23,6 +23,7 @@ class AssetUploader:
         timeout=rapidata_config.upload.cacheTimeout,
         size_limit=rapidata_config.upload.cacheSizeLimit,
     )
+    _url_memory_cache: dict[str, str] = {}
 
     def __init__(self, openapi_service: OpenAPIService):
         self.openapi_service = openapi_service
@@ -71,14 +72,27 @@ class AssetUploader:
         stat = os.stat(asset)
         return f"{env}@{asset}:{stat.st_size}:{stat.st_mtime_ns}"
 
+    def _get_url_cache_key(self, url: str) -> str:
+        """Generate cache key for a URL, including environment."""
+        env = self.openapi_service.environment
+        return f"{env}@{url}"
+
     def upload_asset(self, asset: str) -> str:
         with tracer.start_as_current_span("AssetUploader.upload_asset"):
             logger.debug("Uploading asset: %s", asset)
             assert isinstance(asset, str), "Asset must be a string"
             if re.match(r"^https?://", asset):
+                url_key = self._get_url_cache_key(asset)
+                cached_value = self._url_memory_cache.get(url_key)
+                if cached_value is not None:
+                    logger.debug("URL found in memory cache")
+                    return cached_value
+
                 response = self.openapi_service.asset_api.asset_url_post(
                     url=asset,
                 )
+                self._url_memory_cache[url_key] = response.file_name
+                logger.debug("URL added to memory cache")
                 return response.file_name
 
             asset_key = self._get_cache_key(asset)
@@ -160,6 +174,7 @@ class AssetUploader:
 
     def clear_cache(self):
         self._shared_upload_cache.clear()
+        self._url_memory_cache.clear()
         logger.info("Upload cache cleared")
 
     def __str__(self) -> str:

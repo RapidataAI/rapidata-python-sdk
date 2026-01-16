@@ -3,19 +3,9 @@ from rapidata.service.openapi_service import OpenAPIService
 from rapidata.api_client.models.add_validation_rapid_model import (
     AddValidationRapidModel,
 )
-from rapidata.api_client.models.add_validation_rapid_model_truth import (
-    AddValidationRapidModelTruth,
-)
-from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
-from rapidata.api_client.models.add_validation_rapid_model_asset import (
-    AddValidationRapidModelAsset,
-)
-from rapidata.api_client.models.add_validation_rapid_model_context_asset import (
-    AddValidationRapidModelContextAsset,
-)
 from rapidata.api_client.models.i_asset_input import IAssetInput
 from rapidata.api_client.models.i_rapid_payload import IRapidPayload
-from rapidata.api_client.models.i_validation_truth import IValidationTruth
+from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 
 
 class ValidationRapidUploader:
