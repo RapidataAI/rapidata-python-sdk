@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import re
 import os
+import threading
+from concurrent.futures import Future
 from typing import TYPE_CHECKING, cast
 
 from rapidata.rapidata_client.config.upload_config import register_upload_config_handler
@@ -24,6 +26,10 @@ class AssetUploader:
         size_limit=rapidata_config.upload.cacheSizeLimit,
     )
     _url_memory_cache: dict[str, str] = {}
+    _url_in_flight: dict[str, Future[str]] = {}
+    _url_cache_lock: threading.Lock = threading.Lock()
+    _file_in_flight: dict[str, Future[str]] = {}
+    _file_cache_lock: threading.Lock = threading.Lock()
 
     def __init__(self, openapi_service: OpenAPIService):
         self.openapi_service = openapi_service
@@ -83,32 +89,98 @@ class AssetUploader:
             assert isinstance(asset, str), "Asset must be a string"
             if re.match(r"^https?://", asset):
                 url_key = self._get_url_cache_key(asset)
+
+                # Fast path - check cache without lock
                 cached_value = self._url_memory_cache.get(url_key)
                 if cached_value is not None:
                     logger.debug("URL found in memory cache")
                     return cached_value
 
-                response = self.openapi_service.asset_api.asset_url_post(
-                    url=asset,
-                )
-                self._url_memory_cache[url_key] = response.file_name
-                logger.debug("URL added to memory cache")
-                return response.file_name
+                with self._url_cache_lock:
+                    # Double-check cache under lock
+                    cached_value = self._url_memory_cache.get(url_key)
+                    if cached_value is not None:
+                        logger.debug("URL found in memory cache")
+                        return cached_value
+
+                    # Check if there's an in-flight request for this URL
+                    in_flight = self._url_in_flight.get(url_key)
+                    if in_flight is None:
+                        # We're the first - create a future
+                        in_flight = Future()
+                        self._url_in_flight[url_key] = in_flight
+                        should_fetch = True
+                    else:
+                        should_fetch = False
+
+                if not should_fetch:
+                    logger.debug("URL upload already in flight, waiting...")
+                    return in_flight.result()
+
+                # We need to fetch
+                try:
+                    response = self.openapi_service.asset_api.asset_url_post(
+                        url=asset,
+                    )
+                    result = response.file_name
+                    self._url_memory_cache[url_key] = result
+                    in_flight.set_result(result)
+                    logger.debug("URL added to memory cache")
+                    return result
+                except Exception as e:
+                    in_flight.set_exception(e)
+                    raise
+                finally:
+                    with self._url_cache_lock:
+                        self._url_in_flight.pop(url_key, None)
 
             asset_key = self._get_cache_key(asset)
+
+            # Fast path - check cache without lock
             cached_value = self._shared_upload_cache.get(asset_key)
             if cached_value is not None:
                 logger.debug("Asset found in cache")
-                return cast(str, cached_value)  # Type hint for the linter
+                return cast(str, cached_value)
 
-            response = self.openapi_service.asset_api.asset_file_post(
-                file=asset,
-            )
-            if rapidata_config.upload.cacheUploads:
-                self._shared_upload_cache[asset_key] = response.file_name
-                logger.debug("Asset added to cache")
-            logger.info("Asset uploaded: %s", response.file_name)
-            return response.file_name
+            with self._file_cache_lock:
+                # Double-check cache under lock
+                cached_value = self._shared_upload_cache.get(asset_key)
+                if cached_value is not None:
+                    logger.debug("Asset found in cache")
+                    return cast(str, cached_value)
+
+                # Check if there's an in-flight upload for this file
+                in_flight = self._file_in_flight.get(asset_key)
+                if in_flight is None:
+                    # We're the first - create a future
+                    in_flight = Future()
+                    self._file_in_flight[asset_key] = in_flight
+                    should_upload = True
+                else:
+                    should_upload = False
+
+            if not should_upload:
+                logger.debug("File upload already in flight, waiting...")
+                return in_flight.result()
+
+            # We need to upload
+            try:
+                response = self.openapi_service.asset_api.asset_file_post(
+                    file=asset,
+                )
+                result = response.file_name
+                if rapidata_config.upload.cacheUploads:
+                    self._shared_upload_cache[asset_key] = result
+                    logger.debug("Asset added to cache")
+                in_flight.set_result(result)
+                logger.info("Asset uploaded: %s", result)
+                return result
+            except Exception as e:
+                in_flight.set_exception(e)
+                raise
+            finally:
+                with self._file_cache_lock:
+                    self._file_in_flight.pop(asset_key, None)
 
     def get_uploaded_text_input(self, assets: list[str] | str) -> IAssetInput:
         from rapidata.api_client.models.i_asset_input import IAssetInput
