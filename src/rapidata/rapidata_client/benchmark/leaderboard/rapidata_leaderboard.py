@@ -1,10 +1,14 @@
+from __future__ import annotations
 import urllib.parse
 import webbrowser
 from colorama import Fore
-from typing import Literal, Optional, TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING
 
 from rapidata.rapidata_client.config import logger, managed_print, tracer
-from rapidata.rapidata_client.benchmark._detail_mapper import DetailMapper, LevelOfDetail
+from rapidata.rapidata_client.benchmark._detail_mapper import (
+    DetailMapper,
+    LevelOfDetail,
+)
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.api_client.models.update_leaderboard_model import UpdateLeaderboardModel
 
@@ -179,6 +183,40 @@ class RapidataLeaderboard:
                 )
 
             return pd.DataFrame(standings)
+
+    def get_win_loss_matrix(
+        self,
+        tags: Optional[list[str]] = None,
+        use_weighted_scoring: Optional[bool] = None,
+    ) -> pd.DataFrame:
+        """
+        Returns the win/loss matrix for all participants in this leaderboard.
+
+        The matrix shows pairwise comparison results where each cell [i, j] represents
+        the number of wins participant i has against participant j.
+
+        Args:
+            tags: Filter matchups by these tags. If None, all matchups are considered.
+            use_weighted_scoring: Whether to use weighted scoring for the matrix calculation.
+
+        Returns:
+            A pandas DataFrame with participants as both index and columns,
+            containing the pairwise win counts.
+        """
+        with tracer.start_as_current_span("RapidataLeaderboard.get_win_loss_matrix"):
+            result = self.__openapi_service.leaderboard_api.leaderboard_leaderboard_id_matrix_get(
+                leaderboard_id=self.id,
+                tags=tags,
+                use_weighted_scoring=use_weighted_scoring,
+            )
+
+            import pandas as pd
+
+            return pd.DataFrame(
+                data=result.data,
+                index=pd.Index(result.index),
+                columns=pd.Index(result.columns),
+            )
 
     def view(self) -> None:
         """
