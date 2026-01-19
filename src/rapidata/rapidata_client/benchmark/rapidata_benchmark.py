@@ -543,6 +543,48 @@ class RapidataBenchmark:
 
             return pd.DataFrame(standings)
 
+    def get_win_loss_matrix(
+        self,
+        tags: Optional[list[str]] = None,
+        participant_ids: Optional[list[str]] = None,
+        leaderboard_ids: Optional[list[str]] = None,
+        use_weighted_scoring: Optional[bool] = None,
+    ) -> pd.DataFrame:
+        """
+        Returns the win/loss matrix for all participants across all leaderboards in the benchmark.
+
+        The matrix shows pairwise comparison results where each cell [i, j] represents
+        the number of wins participant i has against participant j.
+
+        Args:
+            tags: Filter matchups by these tags. If None, all matchups are considered.
+            participant_ids: Filter to only include these participants.
+            leaderboard_ids: Filter to only include matchups from these leaderboards.
+            use_weighted_scoring: Whether to use weighted scoring for the matrix calculation.
+
+        Returns:
+            A pandas DataFrame with participants as both index and columns,
+            containing the pairwise win counts.
+        """
+        import pandas as pd
+
+        with tracer.start_as_current_span("get_win_loss_matrix"):
+            result = (
+                self._openapi_service.benchmark_api.benchmark_benchmark_id_matrix_get(
+                    benchmark_id=self.id,
+                    tags=tags,
+                    participant_ids=participant_ids,
+                    leaderboard_ids=leaderboard_ids,
+                    use_weighted_scoring=use_weighted_scoring,
+                )
+            )
+
+            return pd.DataFrame(
+                data=result.data,
+                index=pd.Index(result.index),
+                columns=pd.Index(result.columns),
+            )
+
     def __str__(self) -> str:
         return f"RapidataBenchmark(name={self.name}, id={self.id})"
 
