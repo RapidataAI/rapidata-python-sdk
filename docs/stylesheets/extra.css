@@ -293,3 +293,66 @@
     background-color: var(--color-background-secondary);
     font-weight: 600;
 }
+
+/* AI Agent copy button - sticky at top-right of content */
+#llms-copy-button {
+    position: sticky !important;
+    top: 5rem !important;
+    float: right !important;
+    z-index: 10 !important;
+    margin-top: -0.5rem !important;
+    margin-bottom: -2rem !important;
+}
+
+/* Style as subtle icon button */
+#llms-copy-button button {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0.25rem !important;
+    padding: 0.4rem !important;
+    line-height: 1 !important;
+    box-shadow: none !important;
+    transition: all 0.15s ease !important;
+    cursor: pointer;
+    color: var(--color-text-secondary) !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#llms-copy-button button:hover {
+    background: var(--color-background-secondary) !important;
+    color: var(--color-text-primary) !important;
+}
+
+#llms-copy-button button.copied {
+    color: var(--color-text-success) !important;
+}
+
+/* Tooltip on hover - appears to the right */
+#llms-copy-button button::after {
+    content: "Copy for AI Agent";
+    position: absolute;
+    left: calc(100% + 0.5rem);
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--color-background-tertiary);
+    color: var(--color-text-primary);
+    padding: 0.3rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.65rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+    border: 1px solid var(--color-border-primary);
+}
+
+#llms-copy-button button:hover::after {
+    opacity: 1;
+}
+
+/* Hide tooltip when showing checkmark */
+#llms-copy-button button.copied::after {
+    opacity: 0 !important;
+}
