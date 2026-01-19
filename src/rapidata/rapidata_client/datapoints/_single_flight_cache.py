@@ -1,6 +1,7 @@
-from diskcache import FanoutCache
-from diskcache.core import threading
+import threading
 from typing import Callable, cast
+
+from diskcache import FanoutCache
 from rapidata.rapidata_client.config import logger
 
 from concurrent.futures import Future
