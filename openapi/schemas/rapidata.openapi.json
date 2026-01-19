@@ -481,6 +481,67 @@
         ]
       }
     },
+    "/audience/{audienceId}/user-metrics": {
+      "get": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Gets the count of users in each state for the specified audience.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAudienceUserStateMetricsResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
     "/audience/{audienceId}/jobs": {
       "get": {
         "tags": [
@@ -547,6 +608,60 @@
           "Audience"
         ],
         "summary": "Starts recruiting users for the specified audience.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
+    "/audience/{audienceId}/sync-campaign": {
+      "post": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Recalculates and updates the audience's distilling campaign filters and selections\n based on current audience settings (demographic filters, exit conditions, etc.).",
         "parameters": [
           {
             "name": "audienceId",
@@ -2403,6 +2518,184 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
+    "/benchmark/{benchmarkId}/matrix": {
+      "get": {
+        "tags": [
+          "Benchmark"
+        ],
+        "summary": "Returns the pairwise vote matrix for a benchmark.",
+        "parameters": [
+          {
+            "name": "benchmarkId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "participantIds",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "leaderboardIds",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "useWeightedScoring",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VoteMatrixResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
+    "/leaderboard/{leaderboardId}/matrix": {
+      "get": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "summary": "Returns the pairwise vote matrix for a leaderboard.",
+        "parameters": [
+          {
+            "name": "leaderboardId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "useWeightedScoring",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VoteMatrixResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
           }
         },
         "security": [
@@ -5752,6 +6045,68 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Job"
+        ],
+        "summary": "Updates a job.",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateJobEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "description": "Bad Request",
@@ -10314,6 +10669,21 @@
           }
         }
       },
+      "GetAudienceUserStateMetricsResult": {
+        "required": [
+          "usersPerState"
+        ],
+        "type": "object",
+        "properties": {
+          "usersPerState": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
       "IAssetInput": {
         "required": [
           "_t"
@@ -14323,6 +14693,15 @@
           "$ref": "#/components/schemas/LeaderboardsQueryResult"
         }
       },
+      "ListOfListOfDouble": {
+        "type": "array",
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        }
+      },
       "ListOfParticipantByBenchmark": {
         "type": "array",
         "items": {
@@ -15118,6 +15497,31 @@
             "items": {
               "type": "string"
             }
+          }
+        }
+      },
+      "VoteMatrixResult": {
+        "required": [
+          "index",
+          "columns",
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "index": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "columns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "data": {
+            "$ref": "#/components/schemas/ListOfListOfDouble"
           }
         }
       },
@@ -17330,6 +17734,14 @@
         }
       },
       "UpdateJobDefinitionEndpoint_Input": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/OptionOfstring"
+          }
+        }
+      },
+      "UpdateJobEndpoint_Input": {
         "type": "object",
         "properties": {
           "name": {

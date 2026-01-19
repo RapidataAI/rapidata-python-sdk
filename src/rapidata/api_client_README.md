@@ -85,12 +85,15 @@ Class | Method | HTTP request | Description
 *AudienceApi* | [**audience_audience_id_rapid_post**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_rapid_post) | **POST** /audience/{audienceId}/rapid | Adds a new rapid to be used to train users for the specified audience.
 *AudienceApi* | [**audience_audience_id_rapids_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_rapids_get) | **GET** /audience/{audienceId}/rapids | Queries all rapids for the specified audience.
 *AudienceApi* | [**audience_audience_id_recruit_post**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_recruit_post) | **POST** /audience/{audienceId}/recruit | Starts recruiting users for the specified audience.
+*AudienceApi* | [**audience_audience_id_sync_campaign_post**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_sync_campaign_post) | **POST** /audience/{audienceId}/sync-campaign | Recalculates and updates the audience&#39;s distilling campaign filters and selections  based on current audience settings (demographic filters, exit conditions, etc.).
+*AudienceApi* | [**audience_audience_id_user_metrics_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_user_metrics_get) | **GET** /audience/{audienceId}/user-metrics | Gets the count of users in each state for the specified audience.
 *AudienceApi* | [**audience_post**](rapidata/api_client/docs/AudienceApi.md#audience_post) | **POST** /audience | Creates a new empty audience.
 *AudienceApi* | [**audiences_get**](rapidata/api_client/docs/AudienceApi.md#audiences_get) | **GET** /audiences | Queries all available audiences.
 *BenchmarkApi* | [**benchmark_benchmark_id_delete**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_delete) | **DELETE** /benchmark/{benchmarkId} | Deletes a single benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_fork_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_fork_post) | **POST** /benchmark/{benchmarkId}/fork | Creates a copy of a public benchmark and all of its related entities
 *BenchmarkApi* | [**benchmark_benchmark_id_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_get) | **GET** /benchmark/{benchmarkId} | Returns a single benchmark by its ID.
 *BenchmarkApi* | [**benchmark_benchmark_id_leaderboards_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_leaderboards_get) | **GET** /benchmark/{benchmarkId}/leaderboards | Queries all leaderboards for the current user&#39;s benchmarks.
+*BenchmarkApi* | [**benchmark_benchmark_id_matrix_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_matrix_get) | **GET** /benchmark/{benchmarkId}/matrix | Returns the pairwise vote matrix for a benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_participants_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_participants_get) | **GET** /benchmark/{benchmarkId}/participants | Query all participants within a benchmark
 *BenchmarkApi* | [**benchmark_benchmark_id_participants_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_participants_post) | **POST** /benchmark/{benchmarkId}/participants | Creates a participant in a benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_patch**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_patch) | **PATCH** /benchmark/{benchmarkId} | Updates a benchmark using patch semantics.
@@ -149,6 +152,7 @@ Class | Method | HTTP request | Description
 *JobApi* | [**job_definitions_get**](rapidata/api_client/docs/JobApi.md#job_definitions_get) | **GET** /job/definitions | Queries job definitions based on filter, page, and sort criteria.
 *JobApi* | [**job_job_id_download_results_get**](rapidata/api_client/docs/JobApi.md#job_job_id_download_results_get) | **GET** /job/{jobId}/download-results | Downloads the results of a job as a file attachment.
 *JobApi* | [**job_job_id_get**](rapidata/api_client/docs/JobApi.md#job_job_id_get) | **GET** /job/{jobId} | Gets a job by its id.
+*JobApi* | [**job_job_id_patch**](rapidata/api_client/docs/JobApi.md#job_job_id_patch) | **PATCH** /job/{jobId} | Updates a job.
 *JobApi* | [**job_job_id_results_get**](rapidata/api_client/docs/JobApi.md#job_job_id_results_get) | **GET** /job/{jobId}/results | Gets the results of a job as a JSON string.
 *JobApi* | [**job_post**](rapidata/api_client/docs/JobApi.md#job_post) | **POST** /job | Creates a new job from a job definition and audience.
 *JobApi* | [**jobs_get**](rapidata/api_client/docs/JobApi.md#jobs_get) | **GET** /jobs | Queries jobs based on filter, page, and sort criteria.
@@ -156,6 +160,7 @@ Class | Method | HTTP request | Description
 *LeaderboardApi* | [**leaderboard_leaderboard_id_boost_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_boost_post) | **POST** /leaderboard/{leaderboardId}/boost | Boosts a subset of participants within a leaderboard.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_delete**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_delete) | **DELETE** /leaderboard/{leaderboardId} | Deletes a leaderboard by its ID.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_get) | **GET** /leaderboard/{leaderboardId} | Gets a leaderboard by its ID.
+*LeaderboardApi* | [**leaderboard_leaderboard_id_matrix_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_matrix_get) | **GET** /leaderboard/{leaderboardId}/matrix | Returns the pairwise vote matrix for a leaderboard.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_patch**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_patch) | **PATCH** /leaderboard/{leaderboardId} | Updates the response config of a leaderboard.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_runs_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_runs_get) | **GET** /leaderboard/{leaderboardId}/runs | Gets the runs related to a leaderboard
 *LeaderboardApi* | [**leaderboard_leaderboard_id_standings_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_standings_get) | **GET** /leaderboard/{leaderboardId}/standings | 
@@ -297,6 +302,7 @@ Class | Method | HTTP request | Description
  - [FilterOperator](rapidata/api_client/docs/FilterOperator.md)
  - [ForkBenchmarkResult](rapidata/api_client/docs/ForkBenchmarkResult.md)
  - [GetAudienceByIdResult](rapidata/api_client/docs/GetAudienceByIdResult.md)
+ - [GetAudienceUserStateMetricsResult](rapidata/api_client/docs/GetAudienceUserStateMetricsResult.md)
  - [GetAvailableValidationSetsResult](rapidata/api_client/docs/GetAvailableValidationSetsResult.md)
  - [GetBenchmarkByIdResult](rapidata/api_client/docs/GetBenchmarkByIdResult.md)
  - [GetBoostResult](rapidata/api_client/docs/GetBoostResult.md)
@@ -633,6 +639,7 @@ Class | Method | HTTP request | Description
  - [UpdateDatasetNameModel](rapidata/api_client/docs/UpdateDatasetNameModel.md)
  - [UpdateDimensionsModel](rapidata/api_client/docs/UpdateDimensionsModel.md)
  - [UpdateJobDefinitionEndpointInput](rapidata/api_client/docs/UpdateJobDefinitionEndpointInput.md)
+ - [UpdateJobEndpointInput](rapidata/api_client/docs/UpdateJobEndpointInput.md)
  - [UpdateLeaderboardModel](rapidata/api_client/docs/UpdateLeaderboardModel.md)
  - [UpdateLeaderboardNameModel](rapidata/api_client/docs/UpdateLeaderboardNameModel.md)
  - [UpdateLeaderboardResponseConfigModel](rapidata/api_client/docs/UpdateLeaderboardResponseConfigModel.md)
@@ -648,6 +655,7 @@ Class | Method | HTTP request | Description
  - [ValidationProblemDetails](rapidata/api_client/docs/ValidationProblemDetails.md)
  - [ValidationSetModel](rapidata/api_client/docs/ValidationSetModel.md)
  - [ValidationSetOverviewModel](rapidata/api_client/docs/ValidationSetOverviewModel.md)
+ - [VoteMatrixResult](rapidata/api_client/docs/VoteMatrixResult.md)
  - [WorkflowState](rapidata/api_client/docs/WorkflowState.md)
 
 
