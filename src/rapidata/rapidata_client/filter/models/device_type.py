@@ -16,5 +16,5 @@ class DeviceType(Enum):
     PHONE = "Phone"
     TABLET = "Tablet"
 
-    def _to_backend_value(self) -> str:
+    def _to_backend_model(self) -> str:
         return self.value

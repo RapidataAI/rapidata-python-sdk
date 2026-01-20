@@ -30,7 +30,7 @@ class DeviceFilter(RapidataFilter, BaseModel):
         return IUserFilterModel(
             actual_instance=IUserFilterModelDeviceUserFilterModel(
                 _t="DeviceFilter",
-                deviceTypes=[dt._to_backend_value() for dt in self.device_types],
+                deviceTypes=[dt._to_backend_model() for dt in self.device_types],
             )
         )
 
