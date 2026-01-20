@@ -44,6 +44,8 @@ from .rapidata_client import (
     CustomFilter,
     AgeGroup,
     Gender,
+    DeviceFilter,
+    DeviceType,
     Datapoint,
     FailedUploadException,
     rapidata_config,

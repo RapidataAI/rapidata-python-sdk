@@ -49,6 +49,8 @@ from .filter import (
     CustomFilter,
     AgeGroup,
     Gender,
+    DeviceFilter,
+    DeviceType,
 )
 from .exceptions import FailedUploadException
 from .config import rapidata_config, logger, managed_print
