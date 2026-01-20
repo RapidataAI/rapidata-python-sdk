@@ -11,3 +11,5 @@ from .or_filter import OrFilter
 from .and_filter import AndFilter
 from .response_count_filter import ResponseCountFilter
 from .new_user_filter import NewUserFilter
+from .device_filter import DeviceFilter
+from .models.device_type import DeviceType
