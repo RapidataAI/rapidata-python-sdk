@@ -68,6 +68,11 @@ class SubmitOrderModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if ignore_failed_datapoints (nullable) is None
+        # and model_fields_set contains the field
+        if self.ignore_failed_datapoints is None and "ignore_failed_datapoints" in self.model_fields_set:
+            _dict['ignoreFailedDatapoints'] = None
+
         return _dict
 
     @classmethod

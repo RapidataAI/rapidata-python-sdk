@@ -4347,7 +4347,8 @@
         "type": "object",
         "properties": {
           "ignoreFailedDatapoints": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           }
         }
       },
@@ -4552,7 +4553,8 @@
         "type": "object",
         "properties": {
           "ignoreFailedDatapoints": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           }
         }
       },
