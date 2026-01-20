@@ -329,6 +329,10 @@
     color: var(--color-text-success) !important;
 }
 
+#llms-copy-button button.error {
+    color: var(--color-text-error) !important;
+}
+
 /* Tooltip on hover - appears to the right */
 #llms-copy-button button::after {
     content: "Copy for AI Agent";

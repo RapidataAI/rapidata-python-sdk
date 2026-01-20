@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Replace button content with SVG icon
     const copyIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
     const checkIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+    const errorIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>`;
 
     button.innerHTML = copyIcon;
 
@@ -44,6 +45,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         } catch (err) {
             console.error('Failed to copy markdown:', err);
+            button.innerHTML = errorIcon;
+            button.classList.add('error');
+            setTimeout(() => {
+                button.innerHTML = copyIcon;
+                button.classList.remove('error');
+            }, 2000);
         }
     };
 });
