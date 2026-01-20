@@ -3,12 +3,13 @@ on:
   workflow_dispatch:
     inputs:
       version_part:
-        description: 'Version part to bump (none = just increment pre-release number)'
+        description: 'Version part to bump (none = increment pre-release, release = promote to stable)'
         required: true
         default: 'none'
         type: choice
         options:
         - none
+        - release
         - patch
         - minor
         - major
@@ -58,6 +59,11 @@ jobs:
         if [ -n "$suffix" ]; then
           # Pre-release branch (alpha, beta, rc)
 
+          if [ "$version_part" = "release" ]; then
+            echo "Error: 'release' is only valid for stable branches. Use main branch to promote to stable."
+            exit 1
+          fi
+
           if [ "$version_part" = "none" ]; then
             # Just increment pre-release number, keep base version
             # Extract base version (strip any existing pre-release suffix like a1, b2, rc3)
@@ -82,13 +88,23 @@ jobs:
           new_version="${base_version}${suffix}${next_num}"
           uv version "$new_version"
         else
-          # Stable release: standard bump (none not allowed for stable)
+          # Stable release
           if [ "$version_part" = "none" ]; then
             echo "Error: 'none' is only valid for pre-release branches (alpha, beta, rc)"
             exit 1
+          elif [ "$version_part" = "release" ]; then
+            # Promote pre-release to stable by stripping suffix
+            if echo "$old_version" | grep -qE '(a|b|rc)[0-9]+$'; then
+              new_version=$(echo "$old_version" | sed -E 's/(a|b|rc)[0-9]+$//')
+              uv version "$new_version"
+            else
+              echo "Error: 'release' requires current version to be a pre-release (e.g., 3.0.0a1, 3.0.0b2, 3.0.0rc3)"
+              exit 1
+            fi
+          else
+            uv version --bump $version_part
+            new_version=$(uv version --short)
           fi
-          uv version --bump $version_part
-          new_version=$(uv version --short)
         fi
 
         # Prevent publishing the same version
