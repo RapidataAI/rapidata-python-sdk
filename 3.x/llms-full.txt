@@ -1,0 +1,1773 @@
+# Rapidata Python SDK Documentation
+
+# Guides
+
+## 👀 Overview
+
+<div style="display: flex; justify-content: space-between; align-items: center;">
+  <h1 style="margin: 0;">Rapidata developer documentation</h1>
+  <a href="https://www.python.org/downloads/">
+    <img src="https://img.shields.io/badge/python-3.10+-blue.svg?style=flat-square&padding=0" alt="Python 3.10+">
+  </a>
+</div>
+
+## Developer Quickstart
+Set up your environment and make your first API request in minutes.
+
+<div class="grid cards" markdown>
+
+-   __Developer Quickstart__
+
+    ---
+
+    Create qualified audiences and have them label your data.
+
+    ```python
+    pip install -U rapidata
+    ```
+
+    === "Image"
+        ```python
+        from rapidata import RapidataClient
+
+        client = RapidataClient()
+
+        # Create audience with qualification example
+        audience = client.audience.create_audience(name="Image Comparison Audience")
+        audience.add_compare_example(
+            instruction="Which image matches the description better?",
+            datapoint=[
+                "https://assets.rapidata.ai/flux_sign_diffusion.jpg",
+                "https://assets.rapidata.ai/mj_sign_diffusion.jpg"
+            ],
+            truth="https://assets.rapidata.ai/flux_sign_diffusion.jpg",
+            context="A sign that says 'Diffusion'."
+        )
+
+        # Create job definition
+        job_definition = client.job.create_compare_job_definition(
+            name="Example Image Comparison",
+            instruction="Which image matches the description better?",
+            contexts=["A small blue book sitting on a large red book."],
+            datapoints=[["https://assets.rapidata.ai/midjourney-5.2_37_3.jpg",
+                        "https://assets.rapidata.ai/flux-1-pro_37_0.jpg"]],
+        )
+
+        # Preview, then assign to audience
+        job_definition.preview()
+        job = audience.assign_job(job_definition)
+        job.display_progress_bar()
+        results = job.get_results()
+        print(results)
+        ```
+
+    === "Video"
+        ```python
+        from rapidata import RapidataClient
+
+        client = RapidataClient()
+
+        # Create audience with qualification example
+        audience = client.audience.create_audience(name="Video Comparison Audience")
+        audience.add_compare_example(
+            instruction="Which video fits the description better?",
+            datapoint=[
+                "https://assets.rapidata.ai/0074_sora_1.mp4",
+                "https://assets.rapidata.ai/0074_hunyuan_1724.mp4"
+            ],
+            truth="https://assets.rapidata.ai/0074_sora_1.mp4",
+            context="A group of elephants painting murals."
+        )
+
+        # Create job definition
+        job_definition = client.job.create_compare_job_definition(
+            name="Example Video Comparison",
+            instruction="Which video fits the description better?",
+            contexts=["A group of elephants painting vibrant murals on a city wall."],
+            datapoints=[["https://assets.rapidata.ai/0074_sora_1.mp4",
+                        "https://assets.rapidata.ai/0074_hunyuan_1724.mp4"]],
+        )
+
+        # Preview, then assign to audience
+        job_definition.preview()
+        job = audience.assign_job(job_definition)
+        job.display_progress_bar()
+        results = job.get_results()
+        print(results)
+        ```
+
+    === "Audio"
+        ```python
+        from rapidata import RapidataClient, LanguageFilter
+
+        client = RapidataClient()
+
+        # Create audience with qualification example
+        audience = client.audience.create_audience(
+            name="Audio Comparison Audience",
+            filters=[LanguageFilter(["en"])]
+        )
+        audience.add_compare_example(
+            instruction="Which audio clip sounds more natural?",
+            datapoint=[
+                "https://assets.rapidata.ai/Chat_gpt.mp3",
+                "https://assets.rapidata.ai/ElevenLabs.mp3"
+            ],
+            truth="https://assets.rapidata.ai/ElevenLabs.mp3"
+        )
+
+        # Create job definition
+        job_definition = client.job.create_compare_job_definition(
+            name="Example Audio Comparison",
+            instruction="Which audio clip sounds more natural?",
+            datapoints=[["https://assets.rapidata.ai/Chat_gpt.mp3",
+                        "https://assets.rapidata.ai/ElevenLabs.mp3"]],
+        )
+
+        # Preview, then assign to audience
+        job_definition.preview()
+        job = audience.assign_job(job_definition)
+        job.display_progress_bar()
+        results = job.get_results()
+        print(results)
+        ```
+
+    === "Text"
+        ```python
+        from rapidata import RapidataClient, LanguageFilter
+
+        client = RapidataClient()
+
+        # Create audience with qualification example
+        audience = client.audience.create_audience(
+            name="Text Comparison Audience",
+            filters=[LanguageFilter(["en"])]
+        )
+        audience.add_compare_example(
+            instruction="Which sentence is grammatically more correct?",
+            datapoint=[
+                "The children were amazed by the magician's tricks",
+                "The children were amusing by the magician's tricks."
+            ],
+            truth="The children were amazed by the magician's tricks",
+            data_type="text"
+        )
+
+        # Create job definition
+        job_definition = client.job.create_compare_job_definition(
+            name="Example Text Comparison",
+            instruction="Which sentence is grammatically more correct?",
+            datapoints=[["The children were amazed by the magician's tricks",
+                        "The children were amusing by the magician's tricks."]],
+            data_type="text",
+        )
+
+        # Preview, then assign to audience
+        job_definition.preview()
+        job = audience.assign_job(job_definition)
+        job.display_progress_bar()
+        results = job.get_results()
+        print(results)
+        ```
+    [:octicons-arrow-right-24: Let's go](quickstart.md)
+
+</div>
+
+
+## 🚀 Quick Start
+
+# Quickstart Guide
+
+Get real humans to label your data. This guide shows you how to create a labeling job using the Rapidata API.
+
+The workflow consists of three main concepts:
+
+1. **Audience**: A group of qualified labelers who have passed your qualification examples
+2. **Job Definition**: The configuration for your labeling task (instruction, datapoints, settings)
+3. **Job**: A running labeling task assigned to an audience
+
+## Installation
+
+Install Rapidata using pip:
+
+```
+pip install -U rapidata
+```
+
+## Usage
+
+All operations are managed through the [`RapidataClient`](reference/rapidata/rapidata_client/rapidata_client.md#rapidata.rapidata_client.rapidata_client.RapidataClient).
+
+Create a client as follows. This will save your credentials in your `~/.config/rapidata/credentials.json` file so you don't have to log in again on that machine:
+
+```py
+from rapidata import RapidataClient
+
+# The first time executing it on a machine will require you to log in
+client = RapidataClient()
+```
+
+Alternatively you can generate a Client ID and Secret in the [Rapidata Settings](https://app.rapidata.ai/settings/tokens) and pass them to the client constructor:
+
+```py
+from rapidata import RapidataClient
+client = RapidataClient(client_id="Your client ID", client_secret="Your client secret")
+```
+
+### Step 1: Create an Audience
+
+An audience is a pool of labelers who are qualified to work on your tasks. You create an audience and add qualification examples that labelers must answer correctly to join.
+
+```py
+audience = client.audience.create_audience(name="Image Comparison Audience")
+```
+
+### Step 2: Add Qualification Examples
+
+Add examples that labelers must answer correctly to join your audience. This ensures only qualified labelers work on your data.
+
+```py
+audience.add_compare_example(
+    instruction="Which image follows the prompt more accurately?",
+    datapoint=[
+        "https://assets.rapidata.ai/flux_sign_diffusion.jpg",
+        "https://assets.rapidata.ai/mj_sign_diffusion.jpg"
+    ],
+    truth="https://assets.rapidata.ai/flux_sign_diffusion.jpg",
+    context="A sign that says 'Diffusion'."
+)
+```
+
+The parameters are:
+
+- `instruction`: The question shown to labelers
+- `datapoint`: The two items to compare
+- `truth`: The correct answer (must be one of the datapoint items)
+- `context`: Additional context shown alongside the comparison (optional)
+
+### Step 3: Create a Job Definition
+
+A job definition configures what you want labeled. Here we create a compare job to assess image-prompt alignment:
+
+```py
+job_definition = client.job.create_compare_job_definition(
+    name="Prompt Alignment Comparison",
+    instruction="Which image follows the prompt more accurately?",
+    datapoints=[
+        ["https://assets.rapidata.ai/flux_sign_diffusion.jpg",
+         "https://assets.rapidata.ai/mj_sign_diffusion.jpg"],
+        ["https://assets.rapidata.ai/flux_flower.jpg",
+         "https://assets.rapidata.ai/mj_flower.jpg"]
+    ],
+    contexts=[
+        "A sign that says 'Diffusion'.",
+        "A yellow flower sticking out of a green pot."
+    ]
+)
+```
+
+For a detailed explanation of all available parameters (including name, instruction, datapoints, contexts, quality control options, and more), see the [Job Definition Parameters Reference](job_definition_parameters.md).
+
+### Step 4: Preview the Job Definition
+
+Before running your job, preview it to see exactly what labelers will see:
+
+```py
+job_definition.preview()
+```
+
+This opens your browser where you can review and adjust the job configuration.
+
+### Step 5: Assign Job to Audience
+
+Once you're satisfied with your job definition, assign it to your audience to start collecting responses:
+
+```py
+job = audience.assign_job(job_definition)
+```
+
+Labelers who have passed your qualification examples will now start working on your data.
+
+### Step 6: Monitor Progress and Get Results
+
+Monitor progress on the [Rapidata Dashboard](https://app.rapidata.ai/dashboard) or programmatically:
+
+```py
+job.display_progress_bar()
+```
+
+Once complete, retrieve your results:
+
+```py
+results = job.get_results()
+```
+
+To understand the results format, see the [Understanding the Results](understanding_the_results.md) guide.
+
+## Retrieve Existing Resources
+
+### Find Audiences
+
+```py
+# Find audiences by name
+audiences = client.audience.find_audiences("Image Comparison")
+
+# Get a specific audience by ID
+audience = client.audience.get_audience_by_id("audience_id")
+```
+
+### Find Job Definitions
+
+```py
+# Find job definitions by name
+job_definitions = client.job.find_job_definitions("Prompt Alignment")
+
+# Get a specific job definition by ID
+job_definition = client.job.get_job_defintion_by_id("job_definition_id")
+```
+
+### Find Jobs
+
+```py
+# Find jobs by name
+jobs = client.job.find_jobs("Prompt Alignment")
+
+# Get a specific job by ID
+job = client.job.get_job_by_id("job_id")
+
+# Find jobs for a specific audience
+audience = client.audience.get_audience_by_id("audience_id")
+jobs = audience.find_jobs("Prompt Alignment")
+```
+
+> **Note**: The `find_*` can be executed without the `name` parameter to return the most recent resources.
+
+## Complete Example
+
+Here's the full workflow in one script:
+
+```py
+from rapidata import RapidataClient
+
+client = RapidataClient()
+
+# Create and configure audience
+audience = client.audience.create_audience(name="Prompt Alignment Audience")
+audience.add_compare_example(
+    instruction="Which image follows the prompt more accurately?",
+    datapoint=[
+        "https://assets.rapidata.ai/flux_sign_diffusion.jpg",
+        "https://assets.rapidata.ai/mj_sign_diffusion.jpg"
+    ],
+    truth="https://assets.rapidata.ai/flux_sign_diffusion.jpg",
+    context="A sign that says 'Diffusion'."
+)
+
+# Create job definition
+job_definition = client.job.create_compare_job_definition(
+    name="Prompt Alignment Job",
+    instruction="Which image follows the prompt more accurately?",
+    datapoints=[
+        ["https://assets.rapidata.ai/flux_flower.jpg",
+         "https://assets.rapidata.ai/mj_flower.jpg"]
+    ],
+    contexts=["A yellow flower sticking out of a green pot."]
+)
+
+# Preview before running
+job_definition.preview()
+
+# Assign to audience and get results
+job = audience.assign_job(job_definition)
+job.display_progress_bar()
+results = job.get_results()
+print(results)
+```
+
+## Next Steps
+
+- Learn about [Classification Jobs](examples/classify_job.md) for categorizing data
+- Understand the [Results Format](understanding_the_results.md)
+- Configure [Early Stopping](confidence_stopping.md) based on confidence thresholds
+- Migrating from Orders? See the [Migration Guide](migration_guide.md)
+
+
+## 📖 Parameter Reference
+
+# Job Definition Parameter Reference
+
+This guide provides a comprehensive reference for all parameters available when creating job definitions in the Rapidata Python SDK.
+
+## Overview
+
+When creating a job definition, you'll use parameters to control:
+
+- **What data** is shown to labelers (datapoints, contexts)
+- **How many responses** you need (responses_per_datapoint)
+- **How tasks are displayed** (settings)
+- **Quality assurance** (confidence_threshold)
+
+---
+
+## Core Parameters
+
+These parameters are required or commonly used across all job types.
+
+### `name`
+
+| Property | Value |
+|----------|-------|
+| **Type** | `str` |
+| **Required** | Yes |
+
+A descriptive name for your job definition. Used to identify the job in the Rapidata Dashboard and when retrieving jobs programmatically. This name is **not shown to labelers**.
+
+```python
+name="Image Quality Rating v2 - January Batch"
+```
+
+---
+
+### `instruction`
+
+| Property | Value |
+|----------|-------|
+| **Type** | `str` |
+| **Required** | Yes |
+
+The task instruction shown to labelers. This should clearly explain what action they need to take.
+
+**Best Practices:**
+
+- Be specific and unambiguous
+- Use action verbs ("Select", "Choose", "Identify")
+- For comparisons, use comparative language ("Which looks better?")
+- See [Human Prompting](human_prompting.md) for detailed guidance
+
+```python
+instruction="Which image follows the prompt more accurately?"
+```
+
+---
+
+### `datapoints`
+
+| Property | Value |
+|----------|-------|
+| **Type** | `list[str]` or `list[list[str]]` |
+| **Required** | Yes |
+
+The data to be labeled. The format depends on the job type:
+
+| Job Type | Format | Description |
+|----------|--------|-------------|
+| Classification | `list[str]` | Single items to classify |
+| Compare | `list[list[str]]` | Pairs of items (exactly 2 per inner list) |
+
+**Supported Formats:**
+
+- Public URLs (https://...)
+- Local file paths (will be uploaded automatically)
+
+```python
+# Classification - list of single items
+datapoints=["https://example.com/img1.jpg", "https://example.com/img2.jpg"]
+
+# Compare - list of pairs
+datapoints=[
+    ["https://example.com/a1.jpg", "https://example.com/b1.jpg"],
+    ["https://example.com/a2.jpg", "https://example.com/b2.jpg"],
+]
+```
+
+---
+
+### `responses_per_datapoint`
+
+| Property | Value |
+|----------|-------|
+| **Type** | `int` |
+| **Required** | No |
+| **Default** | `10` |
+
+The minimum number of responses to collect for each datapoint. The actual number may slightly exceed this due to concurrent labelers.
+
+**Best Practices:**
+
+- Use 15-25 for ambiguous or subjective tasks
+- Use 5-10 for clear-cut decisions
+
+```python
+responses_per_datapoint=15
+```
+
+---
+
+## Data Type
+
+### `data_type`
+
+| Property | Value |
+|----------|-------|
+| **Type** | `Literal["media", "text"]` |
+| **Required** | No |
+| **Default** | `"media"` |
+
+Specifies how datapoints should be interpreted and displayed.
+
+| Value | Description |
+|-------|-------------|
+| `"media"` | Datapoints are URLs or paths to images, videos, or audio files |
+| `"text"` | Datapoints are raw text strings to be displayed directly |
+
+```python
+# Comparing two text responses
+job_definition = client.job.create_compare_job_definition(
+    name="LLM Response Comparison",
+    instruction="Which response is more helpful?",
+    datapoints=[
+        ["Response A text here...", "Response B text here..."],
+    ],
+    data_type="text",
+)
+```
+
+---
+
+## Context Parameters
+
+Context parameters allow you to provide additional information alongside each datapoint.
+
+### `contexts`
+
+| Property | Value |
+|----------|-------|
+| **Type** | `Optional[list[str]]` |
+| **Required** | No |
+| **Default** | `None` |
+
+Text context shown alongside each datapoint. Commonly used to provide prompts, descriptions, or additional instructions specific to each item.
+
+**Constraints:** If provided, must have the same length as `datapoints`.
+
+```python
+datapoints=["image1.jpg", "image2.jpg"],
+contexts=["A cat sitting on a red couch", "A blue car in the rain"]
+```
+
+---
+
+### `media_contexts`
+
+| Property | Value |
+|----------|-------|
+| **Type** | `Optional[list[str]]` |
+| **Required** | No |
+| **Default** | `None` |
+
+Media URLs shown as reference context alongside each datapoint. Useful when you need to show a reference image or video alongside the item being evaluated.
+
+**Constraints:** If provided, must have the same length as `datapoints`.
+
+```python
+# Show original image as context while evaluating edited versions
+datapoints=["edited1.jpg", "edited2.jpg"],
+media_contexts=["original1.jpg", "original2.jpg"]
+```
+
+---
+
+## Quality Control Parameters
+
+### `confidence_threshold`
+
+| Property | Value |
+|----------|-------|
+| **Type** | `Optional[float]` |
+| **Required** | No |
+| **Default** | `None` |
+| **Range** | `0.0` to `1.0` (typically `0.99` to `0.999`) |
+
+Enables early stopping when a specified confidence level is reached. The system stops collecting responses once consensus is achieved, reducing costs while maintaining quality.
+
+**How It Works:** Uses labeler trust scores (`userScore`) to calculate statistical confidence for each category.
+
+**Related:** [Confidence Stopping](confidence_stopping.md)
+
+```python
+job_definition = client.job.create_classification_job_definition(
+    name="Cat or Dog with Early Stopping",
+    instruction="What animal is in this image?",
+    answer_options=["Cat", "Dog"],
+    datapoints=["pet1.jpg", "pet2.jpg"],
+    responses_per_datapoint=50,  # Maximum responses
+    confidence_threshold=0.99,   # Stop at 99% confidence
+)
+```
+
+---
+
+## Settings
+
+Settings allow you to customize how tasks are displayed.
+
+| Property | Value |
+|----------|-------|
+| **Type** | `Sequence[RapidataSetting]` |
+| **Required** | No |
+| **Default** | `[]` |
+
+### Commonly Used Settings
+
+#### `NoShuffle()`
+
+Keeps answer options in the order you specified. By default, options are randomized to reduce bias. Use this for Likert scales or any ordered options.
+
+```python
+from rapidata import NoShuffle
+
+job_definition = client.job.create_classification_job_definition(
+    instruction="Rate the quality of this image",
+    answer_options=["1: Poor", "2: Fair", "3: Good", "4: Excellent"],
+    datapoints=["image.jpg"],
+    settings=[NoShuffle()]
+)
+```
+
+#### `Markdown()`
+
+Enables limited markdown rendering for text datapoints. Useful when comparing formatted text like LLM outputs.
+
+```python
+from rapidata import Markdown
+
+job_definition = client.job.create_compare_job_definition(
+    name="LLM Response Comparison",
+    instruction="Which response is better formatted?",
+    datapoints=[["**Bold** and _italic_", "Plain text only"]],
+    data_type="text",
+    settings=[Markdown()]
+)
+```
+
+#### `AllowNeitherBoth()`
+
+For Compare jobs, allows labelers to select "Neither" or "Both" instead of forcing a choice.
+
+```python
+from rapidata import AllowNeitherBoth
+
+job_definition = client.job.create_compare_job_definition(
+    name="Image Quality Comparison",
+    instruction="Which image is higher quality?",
+    datapoints=[["img_a.jpg", "img_b.jpg"]],
+    settings=[AllowNeitherBoth()]
+)
+```
+
+---
+
+## Job-Specific Parameters
+
+### Classification Job
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `answer_options` | `list[str]` | List of categories to classify into |
+
+```python
+job_definition = client.job.create_classification_job_definition(
+    name="Animal Classification",
+    instruction="What animal is in the image?",
+    answer_options=["Cat", "Dog", "Bird", "Other"],
+    datapoints=["image1.jpg", "image2.jpg"],
+)
+```
+
+### Compare Job
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `a_b_names` | `Optional[list[str]]` | Custom labels for the two options (list of exactly 2 strings) |
+
+```python
+job_definition = client.job.create_compare_job_definition(
+    name="Model Comparison",
+    instruction="Which image is better?",
+    datapoints=[["model_a.jpg", "model_b.jpg"]],
+    a_b_names=["Flux", "Midjourney"],  # Results will show these names
+)
+```
+
+---
+
+## Parameter Availability Matrix
+
+| Parameter | Classification | Compare |
+|-----------|:-:|:-:|
+| `name` | :white_check_mark: | :white_check_mark: |
+| `instruction` | :white_check_mark: | :white_check_mark: |
+| `datapoints` | :white_check_mark: | :white_check_mark: |
+| `responses_per_datapoint` | :white_check_mark: | :white_check_mark: |
+| `data_type` | :white_check_mark: | :white_check_mark: |
+| `contexts` | :white_check_mark: | :white_check_mark: |
+| `media_contexts` | :white_check_mark: | :white_check_mark: |
+| `confidence_threshold` | :white_check_mark: | :white_check_mark: |
+| `settings` | :white_check_mark: | :white_check_mark: |
+| `answer_options` | :white_check_mark: | :x: |
+| `a_b_names` | :x: | :white_check_mark: |
+
+
+## 📊 Understanding Results
+
+# Interpreting the Results
+
+After running your job and collecting responses, you'll receive a structured result containing valuable insights from the labelers. Understanding each component of this result is crucial for analyzing and utilizing the data effectively.
+
+Here's an example of the results you might receive when running a COMPARE task (for simplicity, this example uses 3 responses):
+
+```json
+{
+  "info": {
+    "createdAt": "2025-02-11T07:31:59.353232+00:00",
+    "version": "3.0.0"
+  },
+  "summary": {
+    "A_wins_total": 0,
+    "B_wins_total": 1
+  },
+  "results": [
+    {
+      "context": "A small blue book sitting on a large red book.",
+      "winner_index": 1,
+      "winner": "dalle-3_37_2.jpg",
+      "aggregatedResults": {
+        "aurora-20-1-25_37_4.png": 0,
+        "dalle-3_37_2.jpg": 3
+      },
+      "aggregatedResultsRatios": {
+        "aurora-20-1-25_37_4.png": 0.0,
+        "dalle-3_37_2.jpg": 1.0
+      },
+      "summedUserScores": {
+        "aurora-20-1-25_37_4.png": 0.0,
+        "dalle-3_37_2.jpg": 1.196
+      },
+      "summedUserScoresRatios": {
+        "aurora-20-1-25_37_4.png": 0.0,
+        "dalle-3_37_2.jpg": 1.0
+      },
+      "detailedResults": [
+          {
+              "votedFor": "dalle-3_37_2.jpg",
+              "userDetails": {
+                  "country": "BY",
+                  "language": "ru",
+                  "userScores": {
+                      "global": 0.4469
+                  },
+                  "age": "Unknown",
+                  "gender": "Unknown",
+                  "occupation": "Unknown"
+              }
+          },
+          {
+              "votedFor": "dalle-3_37_2.jpg",
+              "userDetails": {
+                  "country": "LY",
+                  "language": "ar",
+                  "userScores": {
+                      "global": 0.3923
+                  },
+                  "age": "0-17",
+                  "gender": "Other",
+                  "occupation": "Other Employment"
+              }
+          },
+          {
+              "votedFor": "dalle-3_37_2.jpg",
+              "userDetails": {
+                  "country": "BY",
+                  "language": "ru",
+                  "userScores": {
+                      "global": 0.3568
+                  },
+                  "age": "0-17",
+                  "gender": "Other",
+                  "occupation": "Healthcare"
+              }
+          }
+      ]
+    }
+  ]
+}
+```
+
+## Breakdown of the Results
+
+1. `info`
+    - `createdAt`: The timestamp indicating when the results overview was generated, in UTC time.
+    - `version`: The version of the aggregator system that produced the results.
+
+2. `summary`
+    - `A_wins_total`: The total number of comparisons won by option A (index 0) across all pairs
+    - `B_wins_total`: The total number of comparisons won by option B (index 1) across all pairs
+
+3. `results`: This section contains the actual comparison data collected from the labelers. For comparison jobs, each item includes:
+
+    - `context`: The prompt or description provided for the comparison task
+    - `winner_index`: Index of the winning option (0 for first option, 1 for second option)
+    - `winner`: Filename or identifier of the winning option
+    
+    - `aggregatedResults`: The total number of responses each option received for this specific comparison.
+        ```json
+        "aggregatedResults": {
+            "aurora-20-1-25_37_4.png": 0,
+            "dalle-3_37_2.jpg": 3
+        }
+        ```
+
+    - `aggregatedResultsRatios`: The proportion of responses each option received, calculated as the number of responses for the option divided by the total number of responses.
+        ```json
+        "aggregatedResultsRatios": {
+            "aurora-20-1-25_37_4.png": 0.0,
+            "dalle-3_37_2.jpg": 1.0
+        }
+        ```
+
+    - `summedUserScores`: The sum of the labelers' global userScore values for each option. This metric accounts for the reliability of each labeler's response.
+        ```json
+        "summedUserScores": {
+            "aurora-20-1-25_37_4.png": 0.0,
+            "dalle-3_37_2.jpg": 1.196
+        }
+        ```
+
+    - `summedUserScoresRatios`: The proportion of the summed global userScores for each option, providing a weighted ratio based on labeler reliability.
+        ```json
+        "summedUserScoresRatios": {
+            "aurora-20-1-25_37_4.png": 0.0,
+            "dalle-3_37_2.jpg": 1.0
+        }
+        ```
+
+    - `detailedResults`: A list of individual responses from each labeler, including:
+        - `votedFor`: The option chosen by the labeler
+        - `userDetails`: Information about the labeler
+            - `country`: Country code of the labeler
+            - `language`: Language in which the labeler viewed the task
+            - `userScores`: A score representing the labeler's reliability across different dimensions
+                - `global`: The global userScore of the labeler, which is a measure of their overall reliability
+            - `age`: Age group of the labeler
+            - `gender`: The gender of the labeler
+            - `occupation`: The occupation of the labeler
+
+## Understanding the User Scores
+
+The `userScore` is a value between 0 and 1 (1 can never be reached, but can appear because of rounding) that indicates the reliability or trustworthiness of a labeler's responses. A higher score suggests that the labeler consistently provides accurate and reliable answers.
+
+### How is it Calculated?
+
+The `userScore` is derived from the labeler's performance on **Qualification Tasks**—tasks with known correct answers. By evaluating how accurately a labeler completes these tasks, we assign a score that reflects their understanding and adherence to the task requirements. It is not simply the accuracy, as it also takes into account the difficulties of the tasks, but strongly related to it.
+
+For most tasks, the `global` userScore is the most relevant and can be used per default. If you need more specific information, you may contact us directly at <info@rapidata.ai>.
+
+Qualification tasks are examples with known correct answers that labelers must pass before working on your data.
+
+### Why is it Important?
+
+- **Weighted Analysis**: Responses from labelers with higher `userScores` can be given more weight, improving the overall quality of the aggregated results.
+- **Quality Control**: It helps in identifying and filtering for the most reliable responses.
+- **Insight into Labeler Performance**: Provides transparency into who is contributing to your data and how reliably.
+
+## Utilizing the Results
+
+- **Clear Winners**: Use `winner` and `winner_index` to quickly identify which option was preferred. It is calculated based on the global userScores.
+- **Aggregated Insights**: Use `aggregatedResults` and `aggregatedResultsRatios` to understand the strength of preference between options
+- **Weighted Decisions**: Consider `summedUserScores` and `summedUserScoresRatios` to make decisions based on annotator reliability
+- **Detailed Analysis**: Explore `detailedResults` to see individual responses and gather insights about labeler demographics and performance
+
+## Conclusion
+
+By thoroughly understanding each component of the results, you can effectively interpret the data and make informed decisions. Leveraging the userScore and qualification examples ensures high-quality, reliable data for your projects.
+
+
+## 🛑 Confidence Stopping
+
+# Early Stopping Based on Confidence
+
+To improve the efficiency and cost-effectiveness of your data labeling tasks, Rapidata offers an Early Stopping feature based on confidence thresholds. This feature allows you to automatically stop collecting responses for a datapoint once a specified confidence level is reached, saving time and resources without compromising quality.
+
+
+## Why Use Early Stopping?
+
+In traditional data labeling workflows, you might request a fixed number of responses per datapoint to ensure accuracy. However, once a consensus is reached with high confidence, continuing to collect more responses becomes redundant and incurs unnecessary costs.
+
+Early Stopping addresses this by:
+
+- **Reducing Costs**: Stop collecting responses when sufficient confidence is achieved.
+- **Improving Efficiency**: Accelerate the labeling process by focusing resources where they are most needed.
+- **Maintaining Quality**: Ensure that each datapoint meets your specified confidence level before stopping.
+
+## How it Works
+
+The Early Stopping feature leverages the trustworthiness, quantified through their `userScores`, to calculate the confidence level of each category for any given datapoint.
+
+### Confidence Calculation
+- **UserScores**: Each labeler has a `userScore` between 0 and 1, representing their reliability. [More information](understanding_the_results.md#understanding-the-user-scores)
+- **Aggregated Confidence**: By combining the userScores of labelers who selected a particular category, the system computes the probability that this category is the correct one.
+- **Threshold Comparison**: If the calculated confidence exceeds your specified threshold, the system stops collecting further responses for that datapoint.
+
+## Understanding the Confidence Threshold
+
+We've created a plot based on empirical data aided by simulations to give you an estimate of the number of responses required to reach a certain confidence level.
+
+There are a few things to keep in mind when interpreting the results:
+
+- **Unambiguous Scenario**: The graph represents an ideal situation such as in the [example below](#using-early-stopping-in-your-job) with no ambiguity which category is the correct one. A counter-example would be subjective tasks like "Which image do you prefer?", where there's no clear correct answer.
+- **Real-World Variability**: Actual required responses may vary based on task complexity.
+- **Guidance Tool**: Use the graph as a reference to set realistic expectations for your jobs.
+- **Response Overflow**: The number of responses per datapoint may exceed the specified amount due to multiple users answering simultaneously.
+
+
+<div style="width: 780px; height: 650px; overflow: hidden;">
+    <iframe src="/plots/confidence_threshold_plot_with_slider_darkmode.html"
+            width="100%"
+            height="100%"
+            frameborder="0"
+            scrolling="no"
+            style="overflow: hidden;">
+    </iframe>
+</div>
+
+>**Note:** The Early Stopping feature is supported for the Classification and Comparison workflows. The number of categories is the number of options in the Classification task. For the Comparison task, the number of categories is always 2.
+
+## Using Early Stopping in Your Job
+
+Implementing Early Stopping is straightforward. You simply add the confidence threshold as a parameter when creating the job definition.
+
+### Example: Classification Job with Early Stopping
+
+```python
+from rapidata import RapidataClient
+
+client = RapidataClient()
+
+# Create audience with qualification example
+audience = client.audience.create_audience(name="Animal Classification Audience")
+audience.add_classification_example(
+    instruction="What do you see in the image?",
+    answer_options=["Cat", "Dog"],
+    datapoint="https://assets.rapidata.ai/cat.jpeg",
+    truth=["Cat"]
+)
+
+# Create job definition with early stopping
+job_definition = client.job.create_classification_job_definition(
+    name="Test Classification with Early Stopping",
+    instruction="What do you see in the image?",
+    answer_options=["Cat", "Dog"],
+    datapoints=["https://assets.rapidata.ai/dog.jpeg"],
+    responses_per_datapoint=50,
+    confidence_threshold=0.99,
+)
+
+# Preview and run
+job_definition.preview()
+job = audience.assign_job(job_definition)
+job.display_progress_bar()
+results = job.get_results()
+print(results)
+```
+
+In this example:
+
+- `responses_per_datapoint=50`: Sets the maximum number of responses per datapoint.
+- `confidence_threshold=0.99`: Specifies that data collection for a datapoint should stop once a 99% confidence level is reached.
+
+We'd expect this to take roughly 4 responses to reach the 99% confidence level.
+
+## When to Use Early Stopping
+
+We recommend using Early Stopping when:
+
+- **Cost Efficiency**: You want to optimize costs by reducing the number of responses per datapoint.
+- **Clear Correct Answer**: The task has a clear correct answer, and you're not interested in a distribution.
+
+## Analyzing Early Stopping Results
+
+When using Early Stopping, the [results](understanding_the_results.md) will additionally include a `confidencePerCategory` field for each datapoint. This field shows the confidence level for each of the categories in the task.
+
+Example:
+```json
+{
+    "info": {
+        "createdAt": "2099-12-30T00:00:00.000000+00:00",
+        "version": "3.0.0"
+    },
+    "results": {
+        "globalAggregatedData": {
+            "Dog": 4,
+            "Cat": 0
+        },
+        "data": [
+            {
+                "originalFileName": "dog.jpeg",
+                "aggregatedResults": {
+                    "Dog": 4,
+                    "Cat": 0
+                },
+                "aggregatedResultsRatios": {
+                    "Dog": 1.0,
+                    "Cat": 0.0
+                },
+                "summedUserScores": {
+                    "Dog": 2.0865,
+                    "Cat": 0.0
+                },
+                "summedUserScoresRatios": {
+                    "Dog": 1.0,
+                    "Cat": 0.0
+                },
+                # this only appears when using early stopping
+                "confidencePerCategory": {
+                    "Dog": 0.9943,
+                    "Cat": 0.0057
+                },
+                "detailedResults": [
+                    {
+                        "selectedCategory": "Dog",
+                        "userDetails": {
+                            "country": "PT",
+                            "language": "pt",
+                            "userScore": 0.3
+                        }
+                    },
+                    {
+                        "selectedCategory": "Dog",
+                        "userDetails": {
+                            "country": "RS",
+                            "language": "sr",
+                            "userScore": 0.8486
+                        }
+                    },
+                    {
+                        "selectedCategory": "Dog",
+                        "userDetails": {
+                            "country": "SG",
+                            "language": "en",
+                            "userScore": 0.4469
+                        }
+                    },
+                    {
+                        "selectedCategory": "Dog",
+                        "userDetails": {
+                            "country": "IN",
+                            "language": "en",
+                            "userScore": 0.4911
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}
+```
+
+
+## 💡 Human Prompting
+
+# Effective Instruction Design for Rapidata Tasks
+
+When creating tasks for human labelers using the Rapidata API, phrasing your instructions well can significantly improve quality and consistency of the responses you receive. This guide provides best practices for designing effective instructions for your Rapidata tasks.
+
+## Time Constraints
+
+Each labeler session has a limited time window of 25 seconds to complete all tasks. With this in mind:
+
+- **Be concise**: Keep instructions as brief as possible while maintaining clarity
+- **Use simple language**: Avoid complex terminology or jargon
+- **Focus on the essentials**: Include only what is needed to complete the task
+
+## Language Clarity
+
+Since Rapidata tasks are presented to a diverse audience of labelers:
+
+- **Use accessible language**: The average person should be able to understand your instructions clearly
+- **Avoid ambiguity**: Ensure there's only one way to interpret your instructions
+- **Be specific**: Clearly state what you're looking for in the responses
+
+## Question Framing
+
+The way you frame questions significantly impacts response quality:
+
+### Use Positive Framing
+Frame questions in the positive rather than negative. Positive questions are easier to process quickly.
+
+**Better:**
+```
+"Which image looks more realistic?"
+```
+
+**Avoid:**
+```
+"Which image looks less AI-generated?"
+```
+
+### Limit Decision Criteria
+Don't overload labelers with multiple criteria in a single question.
+
+**Better:**
+```
+"What animal is in the image? - rabbit/dog/cat/other"
+```
+
+**Avoid:**
+```
+"Does this image contain a rabbit, a dog, or a cat? - yes/no"
+```
+
+### Use Clear Response Options
+Provide distinct, non-overlapping response options.
+
+**Better:**
+```
+"Rate the image quality: poor/acceptable/excellent"
+```
+
+**Avoid:**
+```
+"Rate the image quality: bad/not good/fine/good/great"
+```
+
+## Example Implementation
+
+When creating a Rapidata job, implement these principles as follows:
+
+```python
+from rapidata import RapidataClient
+
+client = RapidataClient()
+
+# Create audience with clear qualification example
+audience = client.audience.create_audience(name="Image Coherence Audience")
+audience.add_compare_example(
+    instruction="Which image has more glitches and is more likely to be AI generated?",
+    datapoint=[
+        "https://assets.rapidata.ai/good_ai_generated_image.png",
+        "https://assets.rapidata.ai/bad_ai_generated_image.png"
+    ],
+    truth="https://assets.rapidata.ai/bad_ai_generated_image.png"
+)
+
+# Create job definition with clear instruction
+job_definition = client.job.create_compare_job_definition(
+    name="Image Coherence Comparison",
+    instruction="Which image has more glitches and is more likely to be AI generated?",
+    datapoints=[
+        ["https://assets.rapidata.ai/flux-1.1-pro/33_2.jpg",
+         "https://assets.rapidata.ai/stable-diffusion-3/33_0.jpg"]
+    ]
+)
+
+# Preview before running
+job_definition.preview()
+```
+
+## Common Task Types and Recommended Instructions
+
+### Image Comparison Tasks
+
+```python
+# Comparing image preference
+instruction="Which image do you prefer?"
+
+# Comparing prompt adherence
+instruction="Which image matches the description better?"
+
+# Comparing image coherence
+instruction="Which image has more glitches and is more likely to be AI generated?"
+
+# Comparing two texts
+instruction="Which of these sentences makes more sense?"
+```
+
+### Classification Tasks
+
+```python
+# Simple classification
+instruction="What object is in the image?"
+
+# Likert classification (add NoShuffle setting)
+instruction="How well does the video match the description?"
+answer_options=["1: Perfectly",
+                "2: Very well",
+                "3: Moderately",
+                "4: A little",
+                "5: Not at all"]
+```
+
+## Monitoring and Iteration
+
+After assigning your job to an audience, monitor the initial responses to see if labelers are understanding your instructions as intended.
+
+You can preview how users will see the task by calling the `.preview()` method on the job definition:
+```python
+job_definition.preview()
+```
+
+If you see that labelers are giving inconsistent or incorrect answers:
+
+1. Review and simplify your instructions
+2. Update your audience's qualification examples if needed
+3. Create a new job definition with the improved settings
+
+This helps ensure you get high quality results from labelers.
+
+For more information on creating and managing jobs, refer to the [Rapidata API documentation](starting_page.md) and [Understanding the Results](understanding_the_results.md) guide.
+
+
+## 📝 Logging & Config
+
+# Configuration and Logging
+
+The Rapidata SDK provides a centralized configuration system through the **global** `rapidata_config` object that controls all aspects of the SDK's behavior including logging, output management, upload settings, and data sharing.
+
+## Rapidata Configuration System
+
+All configuration is managed through the **global** `rapidata_config` object, which provides a unified way to configure:
+
+1. **Logging Configuration**: Log levels, file output, formatting, silent mode and OpenTelemetry integration
+2. **Upload Configuration**: Worker threads and retry settings
+
+### Basic Usage
+
+```python
+from rapidata import rapidata_config, logger
+
+logger.info("This will not be shown")
+rapidata_config.logging.level = "INFO"
+logger.info("This will be shown")
+```
+>Note: The logging system is now fully managed through `rapidata_config.logging`. Changes to the configuration are automatically applied to the logger in real-time.
+
+### Logging Configuration Options
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `level` | `str` | `"WARNING"` | Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL) |
+| `log_file` | `Optional[str]` | `None` | Optional file path for log output |
+| `format` | `str` | `"%(asctime)s - %(name)s - %(levelname)s - %(message)s"` | Log message format |
+| `silent_mode` | `bool` | `False` | Suppress prints and progress bars (doesn't affect logging) |
+| `enable_otlp` | `bool` | `True` | Enable OpenTelemetry trace logs to Rapidata |
+
+>Note: Rapidata SDK tracking is limited exclusively to SDK-generated logs and traces. No other data is collected.
+
+
+# Examples
+
+## 🏷️ Classification
+
+# Classification Job Example
+
+To learn about the basics of creating a job, please refer to the [quickstart guide](../quickstart.md).
+
+In this example, we want to rate different images based on a Likert scale to assess how well generated images match their descriptions. The `NoShuffle` setting ensures answer options remain in order since they represent a scale.
+
+```python
+from rapidata import RapidataClient, NoShuffle
+
+IMAGE_URLS = [
+    "https://assets.rapidata.ai/tshirt-4o.png",
+    "https://assets.rapidata.ai/tshirt-aurora.jpg",
+    "https://assets.rapidata.ai/teamleader-aurora.jpg",
+]
+
+CONTEXTS = ["A t-shirt with the text 'Running on caffeine & dreams'"] * len(IMAGE_URLS)
+
+client = RapidataClient()
+
+# Create audience with qualification example
+audience = client.audience.create_audience(name="Likert Scale Audience")
+audience.add_classification_example(
+    instruction="How well does the image match the description?",
+    answer_options=["1: Not at all", "2: A little", "3: Moderately", "4: Very well", "5: Perfectly"],
+    datapoint="https://assets.rapidata.ai/tshirt-4o.png",
+    truth=["5: Perfectly"],
+    context="A t-shirt with the text 'Running on caffeine & dreams'"
+)
+
+# Create job definition
+job_definition = client.job.create_classification_job_definition(
+    name="Likert Scale Example",
+    instruction="How well does the image match the description?",
+    answer_options=["1: Not at all", "2: A little", "3: Moderately", "4: Very well", "5: Perfectly"],
+    contexts=CONTEXTS,
+    datapoints=IMAGE_URLS,
+    responses_per_datapoint=25,
+    settings=[NoShuffle()]
+)
+
+# Preview the job definition
+job_definition.preview()
+
+# Assign to audience and get results
+job = audience.assign_job(job_definition)
+job.display_progress_bar()
+results = job.get_results()
+print(results)
+```
+
+
+## ⚖️ Compare
+
+# Compare Job Example
+
+To learn about the basics of creating a job, please refer to the [quickstart guide](../quickstart.md).
+
+In this example, we compare images from two image generation models (Flux and Midjourney) to determine which more accurately follows the given prompts.
+
+```python
+from rapidata import RapidataClient
+
+PROMPTS = [
+    "A sign that says 'Diffusion'.",
+    "A yellow flower sticking out of a green pot.",
+    "hyperrealism render of a surreal alien humanoid.",
+    "psychedelic duck",
+    "A small blue book sitting on a large red book."
+]
+
+IMAGE_PAIRS = [
+    ["https://assets.rapidata.ai/flux_sign_diffusion.jpg", "https://assets.rapidata.ai/mj_sign_diffusion.jpg"],
+    ["https://assets.rapidata.ai/flux_flower.jpg", "https://assets.rapidata.ai/mj_flower.jpg"],
+    ["https://assets.rapidata.ai/flux_alien.jpg", "https://assets.rapidata.ai/mj_alien.jpg"],
+    ["https://assets.rapidata.ai/flux_duck.jpg", "https://assets.rapidata.ai/mj_duck.jpg"],
+    ["https://assets.rapidata.ai/flux_book.jpg", "https://assets.rapidata.ai/mj_book.jpg"]
+]
+
+client = RapidataClient()
+
+# Create audience with qualification example
+audience = client.audience.create_audience(name="Prompt Alignment Audience")
+audience.add_compare_example(
+    instruction="Which image follows the prompt more accurately?",
+    datapoint=[
+        "https://assets.rapidata.ai/flux_sign_diffusion.jpg",
+        "https://assets.rapidata.ai/mj_sign_diffusion.jpg"
+    ],
+    truth="https://assets.rapidata.ai/flux_sign_diffusion.jpg",
+    context="A sign that says 'Diffusion'."
+)
+
+# Create job definition
+job_definition = client.job.create_compare_job_definition(
+    name="Example Image Prompt Alignment Job",
+    instruction="Which image follows the prompt more accurately?",
+    datapoints=IMAGE_PAIRS,
+    responses_per_datapoint=25,
+    contexts=PROMPTS
+)
+
+# Preview the job definition
+job_definition.preview()
+
+# Assign to audience and get results
+job = audience.assign_job(job_definition)
+job.display_progress_bar()
+results = job.get_results()
+print(results)
+```
+
+
+# Benchmarks
+
+## 🧠 Model Ranking Insights
+
+# Model Ranking Insights
+
+## Overview
+
+Model Ranking Insights (MRI) provides a powerful way to compare and rank different AI models based on their performance on specific tasks. They allow you to create standardized evaluation environments where multiple models can be tested against each other and ranked based on human feedback.
+
+![MRI Process Flow](../media/benchmark.svg)
+
+> **Note:** Can be used with Images, Videos, and Audio.
+
+Each evaluation aspect results in a leaderboard and these leaderboards are grouped under a benchmark. This allows convenient extensibility because when you would like to evaluate the models under a new criteria, it is as easy as adding a new leaderboard to your benchmark.
+
+## How to use MRI
+
+### 1. Benchmark Creation
+You start by creating a benchmark with specific settings:
+
+- **Name**: Identifies your benchmark in the overview
+- **Prompts**: A list of prompts that will be used to generate the media to evaluate the models.
+
+Use the `RapidataClient` to authenticate yourself and create a new leaderboard:
+
+```python
+from rapidata import RapidataClient
+
+# Initialize the client
+# Running this the first time will open a browser window and ask you to login
+client = RapidataClient() 
+
+# Create a new benchmark
+benchmark = client.mri.create_new_benchmark(
+    name="AI Art Competition",
+    prompts=[
+        "A serene mountain landscape at sunset",
+        "A futuristic city with flying cars",
+        "A portrait of a wise old wizard"
+    ]
+)
+```
+### 2. Leaderboard Creation
+Once your benchmark is set up, you can create leaderboards for it.
+
+- **Name**: Identifies your leaderboard in the overview
+- **Instruction**: The criteria upon which labelers choose the better model
+- **Show Prompt**: Whether to display the prompt to evaluators. Including this option adds complexity and cost, so it is advised to only include it in settings where the prompt is necessary for the labelers to follow the instruction (e.g., prompt alignment).
+
+> **Note:** You can find all leaderboards for a benchmark by using the `leaderboards` attribute of the benchmark.
+
+
+```python
+# Create a new leaderboard on a benchmark
+leaderboard = benchmark.create_leaderboard(
+    name="Realism", 
+    instruction="Which image is more realistic?", 
+    show_prompt=False
+)
+
+```
+
+### 3. Model Evaluation
+Once your benchmark and leaderboard are set up, you can evaluate models by the following:
+
+- **Media**: Images, videos, or audio files generated by your model
+- **Prompts**: Each media file must be paired with a prompt
+
+All prompts must be from the benchmark's registered prompt set (available through the `prompts` attribute of the benchmark)
+
+> **Note:** You are not limited to one media per prompt; you can supply the same prompt multiple times.
+
+
+```python
+# Evaluate a model
+benchmark.evaluate_model(
+    name="MyAIModel_v2.1",
+    media=[
+        "https://assets.rapidata.ai/mountain_sunset1.png",
+        "https://assets.rapidata.ai/mountain_sunset2.png",
+        "https://assets.rapidata.ai/futuristic_city.png", 
+        "https://assets.rapidata.ai/wizard_portrait.png"
+    ],
+    prompts=[
+        "A serene mountain landscape at sunset",
+        "A serene mountain landscape at sunset",
+        "A futuristic city with flying cars",
+        "A portrait of a wise old wizard"
+    ]
+)
+```
+
+### 4. Matchmaking and Ranking
+MRI creates fair comparisons by:
+
+- **Prompt-based matching**: Only media with the same prompt are compared against each other
+- **Mixed evaluation**: New models are matched up with existing models to maximize the information gained
+- **User-driven assessment**: Human evaluators compare model outputs based on the instruction to determine rankings
+
+### 5. Results and Visibility
+Your leaderboard results are:
+
+- **Directly viewable** on the Rapidata dashboard at [app.rapidata.ai/mri/benchmarks](https://app.rapidata.ai/mri/benchmarks)
+- **Continuously updated** as new models are added and evaluated
+- **Provides deeper insights** into model performances over time
+
+### Retrieving Existing Benchmarks
+
+You can retrieve benchmarks by ID or search for them:
+
+```python
+# Get a specific benchmark by ID
+benchmark = client.mri.get_benchmark_by_id("benchmark_id_here")
+
+# Find benchmarks by name
+recent_benchmarks = client.mri.find_benchmarks(
+    name="AI Art",
+    amount=10
+)
+```
+
+### Retrieving Results
+
+```python
+# Get the leaderboard
+leaderboard = benchmark.leaderboards[0]
+
+# Get the standings
+standings = leaderboard.get_standings() # Returns a pandas dataframe
+```
+
+
+## 🔭 Model Ranking Insights Advanced
+
+# Model Ranking Insights Advanced
+
+## Overview
+
+To unlock the full potential of Model Ranking Insights (MRI), you can use the advanced features. These include sophisticated configuration options for benchmarks, leaderboards, and evaluation settings that give you fine-grained control over your model evaluation process.
+
+## Benchmark Configuration
+
+### Using Identifiers
+
+In the MRI quickstart we used the prompts to identify the media and create the appropriate matchups. However, more generally you might not have an exact 1-to-1 relationship between prompts and media (e.g., you may have different settings or inputs for the same prompt - for example input images for image-to-video models. More about this below). To handle this case, we allow you to supply your own identifiers, which will then be used when creating the matchups.
+
+```python
+# Example 1: Explicit identifiers
+benchmark = benchmark_manager.create_new_benchmark(
+    name="Preference Benchmark",
+    identifiers=["scene_1", "scene_2", "scene_3"],
+    prompts=[
+        "A serene mountain landscape at sunset",
+        "A futuristic city with flying cars",
+        "A portrait of a wise old wizard"
+    ],
+    prompt_assets=[
+        "https://assets.rapidata.ai/mountain_sunset.png",
+        "https://assets.rapidata.ai/futuristic_city.png", 
+        "https://assets.rapidata.ai/wizard_portrait.png"
+    ]
+)
+
+# Example 2: Identifiers used for the same prompts but different seeding
+benchmark = benchmark_manager.create_new_benchmark(
+    name="Preference Benchmark",
+    identifiers=["seed_1", "seed_2", "seed_3"],
+    prompts=["prompt_1", "prompt_1", "prompt_1"],
+    prompt_assets=["https://example.com/asset1.jpg", "https://example.com/asset1.jpg", "https://example.com/asset1.jpg"]
+)
+
+# Example 3: Using only prompt assets
+benchmark = benchmark_manager.create_new_benchmark(
+    name="Preference Benchmark",
+    identifiers=["image_1", "image_2", "image_3"],   
+    prompt_assets=["https://example.com/asset1.jpg", "https://example.com/asset2.jpg", "https://example.com/asset3.jpg"]
+)
+```
+
+> **Note:** Media assets are images, videos, or audio files that provide visual or auditory context for your evaluation prompts. For example when evaluating image to video models.
+
+### Tagging System
+
+Tags provide metadata for filtering and organizing benchmark results without showing them to evaluators. These tags can also be set and used in the frontend. To view the frontend, you can use the `view` method of the benchmark or leaderboard.
+
+```python
+# Tags for filtering leaderboard results
+tags = [
+    ["landscape", "outdoor", "beach"],
+    ["landscape", "outdoor", "mountain"],
+    ["outdoor", "city"],
+    ["indoor", "vehicle"]
+]
+
+benchmark = benchmark_manager.create_new_benchmark(
+    name="Tagged Benchmark",
+    identifiers=["scene_1", "scene_2", "scene_3", "scene_4"],
+    prompts=["A sunny beach", "A mountain landscape", "A city skyline", "A car in a garage"],
+    tags=tags
+)
+
+# Filter leaderboard results by tags
+standings = leaderboard.get_standings(tags=["landscape", "outdoor"])
+```
+
+### Adding prompts and assets after benchmark creation
+
+If you have already created a benchmark and want to add new prompts and assets after the fact. Note however that these will only take effect for new models.
+
+```python
+# Adding individual prompts with assets
+benchmark.add_prompt(
+    identifier="new_style",
+    prompt="Generate artwork in this new style",
+    prompt_asset="https://assets.rapidata.ai/new_style_ref.jpg",
+    tags=["abstract", "modern"]
+)
+```
+
+## Leaderboard Configuration
+
+### Inverse Ranking
+
+For evaluation questions where lower scores are better (e.g., "Which image is worse?"), use inverse ranking.
+
+```python
+leaderboard = benchmark.create_leaderboard(
+    name="Quality Assessment",
+    instruction="Which image has lower quality?",
+    inverse_ranking=True,  # Lower scores = better performance
+    show_prompt=True,
+    show_prompt_asset=True
+)
+```
+
+### Level of Detail
+
+Controls the number of comparisons performed, affecting accuracy vs. speed.
+
+```python
+# Different detail levels
+leaderboard_fast = benchmark.create_leaderboard(
+    name="Quick Evaluation", 
+    instruction="Which image do you prefer?",
+    level_of_detail="low"      # Fewer comparisons, faster results
+)
+
+leaderboard_precise = benchmark.create_leaderboard(
+    name="Precise Evaluation",
+    instruction="Which image do you prefer?", 
+    level_of_detail="very high"  # More comparisons, higher accuracy
+)
+```
+
+### Prompt and Asset Display
+
+Control what evaluators see during comparison.
+
+```python
+leaderboard = benchmark.create_leaderboard(
+    name="Context-Aware Evaluation",
+    instruction="Which generated image better matches the prompt?",
+    show_prompt=True,           # Show the original text prompt
+    show_prompt_asset=True,     # Show reference images/videos
+    level_of_detail="medium"
+)
+```
+
+## References
+- [RapidataBenchmarkManager](/reference/rapidata/rapidata_client/benchmark/rapidata_benchmark_manager/)
+- [RapidataBenchmark](/reference/rapidata/rapidata_client/benchmark/rapidata_benchmark/)
+- [RapidataLeaderboard](/reference/rapidata/rapidata_client/benchmark/leaderboard/rapidata_leaderboard/)
+
+
+
+# Migration
+
+## 🔄 Migration Guide
+
+# Migration Guide: Orders to Audiences
+
+This guide helps you migrate from the legacy Order API to the recommended Audience & Job API.
+
+> **Note:** The Order and Validation APIs (`client.order`, `client.validation`) remain available for backwards compatibility in the near term.
+
+We observe higher quality responses when first curating an audience that is vetted on your specific task. While it was possible to do this with the previous Order API, the new Audience & Job API puts the recommended workflow front and center. The new paradigm revolves around two steps:
+
+1. **Curate an Audience**: Out of the millions of people available through Rapidata, select an audience that performs especially well on your task. This audience is curated by giving people validation examples and only accepting high performers.
+
+2. **Define the Job**: Define the annotation task in a Job Definition, which can then be assigned to an audience for processing.
+
+## Side-by-Side Comparison
+
+### Legacy: Orders
+
+```python
+from rapidata import RapidataClient
+
+client = RapidataClient()
+
+# Step 1: Create validation set with quality control examples
+validation_set = client.validation.create_compare_set(
+    name="Image Comparison Validation",
+    instruction="Which image follows the prompt better?",
+    datapoints=[["good_example.jpg", "bad_example.jpg"]],
+    truths=["good_example.jpg"],
+    contexts=["A sign that says 'Diffusion'."]
+)
+
+# Step 2: Create order with validation set reference
+order = client.order.create_compare_order(
+    name="Prompt Alignment Comparison",
+    instruction="Which image follows the prompt better?",
+    datapoints=[
+        ["flux_image.jpg", "midjourney_image.jpg"],
+        ["flux_image2.jpg", "midjourney_image2.jpg"]
+    ],
+    contexts=["A cat on a chair", "A sunset over mountains"],
+    validation_set_id=validation_set.id,
+    responses_per_datapoint=10
+)
+
+# Step 3: Run and get results
+order.run()
+results = order.get_results()
+```
+
+### New: Audiences & Jobs
+
+```python
+from rapidata import RapidataClient
+
+client = RapidataClient()
+
+# Step 1: Create audience with qualification examples built-in
+audience = client.audience.create_audience(name="Prompt Alignment Judges")
+audience.add_compare_example(
+    instruction="Which image follows the prompt better?",
+    datapoint=["good_example.jpg", "bad_example.jpg"],
+    truth="good_example.jpg",
+    context="A sign that says 'Diffusion'."
+)
+
+# Step 2: Create job definition
+job_definition = client.job.create_compare_job_definition(
+    name="Prompt Alignment Comparison",
+    instruction="Which image follows the prompt better?",
+    datapoints=[
+        ["flux_image.jpg", "midjourney_image.jpg"],
+        ["flux_image2.jpg", "midjourney_image2.jpg"]
+    ],
+    contexts=["A cat on a chair", "A sunset over mountains"],
+    responses_per_datapoint=10
+)
+
+# Step 3: Assign and get results
+job = audience.assign_job(job_definition)
+results = job.get_results()
+```
+
+## What Changed
+
+| Legacy | Recommended | Notes |
+|--------|-------------|-------|
+| `client.order.create_*_order()` | `client.job.create_*_job_definition()` | Same parameters |
+| `client.validation.create_*_set()` | `audience.add_*_example()` | Simpler API |
+| `validation_set_id` parameter | Not needed | Built into audience |
+| `filters` parameter | `filters` on audience creation | Applied at audience level |
+| `order.run()` | `audience.assign_job(job_def)` | Automatic |
+
+## Key Benefits
+
+- **Simpler**: No separate validation set management
+- **Reusable**: One audience can run multiple jobs or a job on multiple audiences
+- **Previewable & Editable**: `job_definition.preview()` before assigning
+- **Result Alignment**: The labelers in an audience are filtered according to your examples, improving the quality of the results
+
+## Quick Reference
+
+**Classification:**
+
+- `create_classification_order()` → `create_classification_job_definition()`
+- `create_classification_set()` → `audience.add_classification_example()`
+
+**Compare:**
+
+- `create_compare_order()` → `create_compare_job_definition()`
+- `create_compare_set()` → `audience.add_compare_example()`
+
+Results work the same way: `results.to_pandas()`, `results.to_json()`

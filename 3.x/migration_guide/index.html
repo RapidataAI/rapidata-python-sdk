@@ -1043,8 +1043,17 @@
 <h1 id="migration-guide-orders-to-audiences">Migration Guide: Orders to Audiences<a class="headerlink" href="#migration-guide-orders-to-audiences" title="Permanent link">#</a></h1>
 <p>This guide helps you migrate from the legacy Order API to the recommended Audience &amp; Job API.</p>
 <blockquote>
-<p><strong>Note:</strong> The Order and Validation APIs (<code>client.order</code>, <code>client.validation</code>) remain available for backwards compatibility in the near term</p>
+<p><strong>Note:</strong> The Order and Validation APIs (<code>client.order</code>, <code>client.validation</code>) remain available for backwards compatibility in the near term.</p>
 </blockquote>
+<p>We observe higher quality responses when first curating an audience that is vetted on your specific task. While it was possible to do this with the previous Order API, the new Audience &amp; Job API puts the recommended workflow front and center. The new paradigm revolves around two steps:</p>
+<ol>
+<li>
+<p><strong>Curate an Audience</strong>: Out of the millions of people available through Rapidata, select an audience that performs especially well on your task. This audience is curated by giving people validation examples and only accepting high performers.</p>
+</li>
+<li>
+<p><strong>Define the Job</strong>: Define the annotation task in a Job Definition, which can then be assigned to an audience for processing.</p>
+</li>
+</ol>
 <h2 id="side-by-side-comparison">Side-by-Side Comparison<a class="headerlink" href="#side-by-side-comparison" title="Permanent link">#</a></h2>
 <h3 id="legacy-orders">Legacy: Orders<a class="headerlink" href="#legacy-orders" title="Permanent link">#</a></h3>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span>
@@ -1163,6 +1172,38 @@
 <li><code>create_compare_set()</code> → <code>audience.add_compare_example()</code></li>
 </ul>
 <p>Results work the same way: <code>results.to_pandas()</code>, <code>results.to_json()</code></p>
+        <div id="llms-copy-button" style="position: fixed; z-index: 1100; top: 80px; right: 20px;">
+            <button onclick="copyMarkdownToClipboard()" style="cursor: pointer; background: #007acc; color: white; border: none; padding: 8px 16px; border-radius: 4px; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">📋</button>
+        </div>
+        <script>
+        async function copyMarkdownToClipboard() {
+            try {
+                const currentPath = window.location.pathname;
+                const mdPath = currentPath.endsWith('/') ? currentPath + 'index.md' : currentPath.replace(/\.html$/, '.md');
+
+                const response = await fetch(mdPath);
+                if (response.ok) {
+                    const markdown = await response.text();
+                    await navigator.clipboard.writeText(markdown);
+                    // Show feedback
+                    const button = document.querySelector('#llms-copy-button button');
+                    const originalText = button.textContent;
+                    button.textContent = 'Copied!';
+                    button.style.background = '#28a745';
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                        button.style.background = '#007acc';
+                    }, 2000);
+                } else {
+                    throw new Error('Markdown file not found');
+                }
+            } catch (err) {
+                console.error('Failed to copy markdown:', err);
+                alert('Failed to copy markdown content');
+            }
+        }
+        </script>
+        
 
 
 
@@ -1229,6 +1270,8 @@
         <script src="../js/tawk.js"></script>
       
         <script src="../js/login.js"></script>
+      
+        <script src="../js/ai-copy-button.js"></script>
       
     
   

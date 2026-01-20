@@ -1,0 +1,25 @@
+# Rapidata Python SDK Documentation
+
+## Guides
+
+- [👀 Overview](https://docs.rapidata.ai/3.x/starting_page/index.md)
+- [🚀 Quick Start](https://docs.rapidata.ai/3.x/quickstart/index.md)
+- [📖 Parameter Reference](https://docs.rapidata.ai/3.x/job_definition_parameters/index.md)
+- [📊 Understanding Results](https://docs.rapidata.ai/3.x/understanding_the_results/index.md)
+- [🛑 Confidence Stopping](https://docs.rapidata.ai/3.x/confidence_stopping/index.md)
+- [💡 Human Prompting](https://docs.rapidata.ai/3.x/human_prompting/index.md)
+- [📝 Logging & Config](https://docs.rapidata.ai/3.x/config/index.md)
+
+## Examples
+
+- [🏷️ Classification](https://docs.rapidata.ai/3.x/examples/classify_job/index.md)
+- [⚖️ Compare](https://docs.rapidata.ai/3.x/examples/compare_job/index.md)
+
+## Benchmarks
+
+- [🧠 Model Ranking Insights](https://docs.rapidata.ai/3.x/mri/index.md)
+- [🔭 Model Ranking Insights Advanced](https://docs.rapidata.ai/3.x/mri_advanced/index.md)
+
+## Migration
+
+- [🔄 Migration Guide](https://docs.rapidata.ai/3.x/migration_guide/index.md)
