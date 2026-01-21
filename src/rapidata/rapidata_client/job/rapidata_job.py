@@ -46,19 +46,21 @@ class RapidataJob:
         self,
         job_id: str,
         name: str,
+        audience_id: str,
+        created_at: datetime,
+        definition_id: str,
         openapi_service: OpenAPIService,
+        pipeline_id: str | None = None,
     ):
         self.id = job_id
         self.name = name
+        self.audience_id = audience_id
         self._openapi_service = openapi_service
-        self.__created_at: datetime | None = None
-        self.__completed_at: datetime | None = None
-        self.__pipeline_id: str = ""
-        self.__definition_id: str = ""
-        self.__audience_id: str = ""
-        self.job_details_page = (
-            f"https://app.{self._openapi_service.environment}/job/{self.id}"
-        )
+        self.created_at = created_at
+        self.definition_id = definition_id
+        self.__pipeline_id = pipeline_id
+        self.__completed_at = None
+        self.job_details_page = f"https://app.{self._openapi_service.environment}/audiences/{self.audience_id}/job/{self.id}"
         logger.debug("RapidataJob initialized")
 
     def _get_job_failure_message(self) -> str | None:
@@ -133,15 +135,6 @@ class RapidataJob:
         return current_status
 
     @property
-    def created_at(self) -> datetime:
-        """Returns the creation date of the job."""
-        if not self.__created_at:
-            self.__created_at = self._openapi_service.job_api.job_job_id_get(
-                self.id
-            ).created_at
-        return self.__created_at
-
-    @property
     def completed_at(self) -> datetime | None:
         """Returns the completion date of the job, or None if not completed."""
         if not self.__completed_at:
@@ -149,24 +142,6 @@ class RapidataJob:
                 self.id
             ).completed_at
         return self.__completed_at
-
-    @property
-    def definition_id(self) -> str:
-        """Returns the definition ID of the job."""
-        if not self.__definition_id:
-            self.__definition_id = self._openapi_service.job_api.job_job_id_get(
-                self.id
-            ).definition_id
-        return self.__definition_id
-
-    @property
-    def audience_id(self) -> str:
-        """Returns the audience ID of the job."""
-        if not self.__audience_id:
-            self.__audience_id = self._openapi_service.job_api.job_job_id_get(
-                self.id
-            ).audience_id
-        return self.__audience_id
 
     @property
     def pipeline_id(self) -> str:

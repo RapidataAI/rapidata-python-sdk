@@ -703,7 +703,13 @@ class JobManager:
                 job_id=job_id,
             )
             return RapidataJob(
-                job_response.job_id, job_response.name, self._openapi_service
+                job_id=job_response.job_id,
+                name=job_response.name,
+                audience_id=job_response.audience_id,
+                created_at=job_response.created_at,
+                definition_id=job_response.definition_id,
+                openapi_service=self._openapi_service,
+                pipeline_id=job_response.pipeline_id,
             )
 
     def find_jobs(self, name: str = "", amount: int = 10) -> list[RapidataJob]:
@@ -746,7 +752,15 @@ class JobManager:
                 ),
             )
             jobs = [
-                RapidataJob(job.job_id, job.name, self._openapi_service)
+                RapidataJob(
+                    job_id=job.job_id,
+                    name=job.name,
+                    audience_id=job.audience_id,
+                    created_at=job.created_at,
+                    definition_id=job.definition_id,
+                    openapi_service=self._openapi_service,
+                    pipeline_id=job.pipeline_id,
+                )
                 for job in response.items
             ]
             return jobs
