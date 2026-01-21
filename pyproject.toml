@@ -1,6 +1,6 @@
 [project]
 name = "rapidata"
-version = "3.0.0"
+version = "3.0.1"
 description = "Rapidata package containing the Rapidata Python Client to interact with the Rapidata Web API in an easy way."
 authors = [{ name = "Rapidata AG", email = "info@rapidata.ai" }]
 requires-python = ">=3.10,<4"
@@ -45,6 +45,7 @@ docs = [
     "mike>=2.1.3,<3",
     "mkdocs-redirects>=1.2.2,<2",
     "mkdocs-glightbox>=0.4.0,<1",
+    "mkdocs-llmstxt-md>=0.1.0",
 ]
 
 [tool.hatch.build.targets.sdist]

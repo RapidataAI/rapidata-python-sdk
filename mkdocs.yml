@@ -5,6 +5,7 @@ repo_name: rapidata-python-sdk
 extra_javascript:
   - js/tawk.js
   - js/login.js
+  - js/ai-copy-button.js
 extra_css:
   - stylesheets/extra.css
 
@@ -50,6 +51,29 @@ plugins:
   - redirects:
       redirect_maps:
         'index.md': 'starting_page.md'
+  - llmstxt-md:
+      sections:
+        Guides:
+          - starting_page.md
+          - quickstart.md
+          - job_definition_parameters.md
+          - understanding_the_results.md
+          - confidence_stopping.md
+          - human_prompting.md
+          - config.md
+        Examples:
+          - examples/classify_job.md
+          - examples/compare_job.md
+        Benchmarks:
+          - mri.md
+          - mri_advanced.md
+        Migration:
+          - migration_guide.md
+      enable_markdown_urls: true
+      enable_llms_txt: true
+      enable_llms_full: true
+      enable_copy_button: true
+      copy_button_text: "📋"
 
 extra:
   version:

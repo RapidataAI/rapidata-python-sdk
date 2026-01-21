@@ -1,4 +1,4 @@
-__version__ = "3.0.0"
+__version__ = "3.0.1"
 
 from .rapidata_client import (
     RapidataClient,
@@ -44,6 +44,8 @@ from .rapidata_client import (
     CustomFilter,
     AgeGroup,
     Gender,
+    DeviceFilter,
+    DeviceType,
     Datapoint,
     FailedUploadException,
     rapidata_config,
