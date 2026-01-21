@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Literal, Optional, Sequence, get_args, TYPE_CHECKING
 
+from opentelemetry import trace
+
 from rapidata.rapidata_client.config import logger
 from rapidata.rapidata_client.config.tracer import tracer
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
@@ -108,18 +110,28 @@ class RapidataOrderManager:
                 "Warning: Both selections and validation_set_id provided. Ignoring validation_set_id."
             )
 
-        order = (
-            order_builder._set_workflow(workflow)
-            ._set_datapoints(datapoints=datapoints)
-            ._set_referee(referee)
-            ._set_filters(filters)
-            ._set_selections(selections)
-            ._set_settings(settings)
-            ._set_validation_set_id(validation_set_id if not selections else None)
-            ._set_priority(self.__priority)
-            ._set_sticky_state(self.__sticky_state)
-            ._create()
-        )
+        def create_order() -> RapidataOrder:
+            return (
+                order_builder._set_workflow(workflow)
+                ._set_datapoints(datapoints=datapoints)
+                ._set_referee(referee)
+                ._set_filters(filters)
+                ._set_selections(selections)
+                ._set_settings(settings)
+                ._set_validation_set_id(validation_set_id if not selections else None)
+                ._set_priority(self.__priority)
+                ._set_sticky_state(self.__sticky_state)
+                ._create()
+            )
+
+        # Only create a new trace if there isn't already an active one
+        current_span = trace.get_current_span()
+        if current_span.is_recording():
+            order = create_order()
+        else:
+            with tracer.start_as_current_span("create_order"):
+                order = create_order()
+
         logger.debug("Order created: %s", order)
         return order
 
