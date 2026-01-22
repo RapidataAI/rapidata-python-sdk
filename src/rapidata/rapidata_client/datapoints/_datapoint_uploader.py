@@ -43,5 +43,6 @@ class DatapointUploader:
                 transcription=datapoint.sentence,
                 sortIndex=index,
                 group=datapoint.group,
+                privateTags=datapoint.private_tags,
             ),
         )
