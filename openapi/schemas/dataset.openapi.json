@@ -441,6 +441,13 @@
           "transcription": {
             "type": "string",
             "nullable": true
+          },
+          "privateTags": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "nullable": true
           }
         }
       },

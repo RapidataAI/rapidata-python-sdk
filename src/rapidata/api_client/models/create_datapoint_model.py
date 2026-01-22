@@ -33,7 +33,8 @@ class CreateDatapointModel(BaseModel):
     sort_index: Optional[StrictInt] = Field(default=None, alias="sortIndex")
     group: Optional[StrictStr] = None
     transcription: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["asset", "context", "contextAsset", "sortIndex", "group", "transcription"]
+    private_tags: Optional[Dict[str, StrictStr]] = Field(default=None, alias="privateTags")
+    __properties: ClassVar[List[str]] = ["asset", "context", "contextAsset", "sortIndex", "group", "transcription", "privateTags"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -100,6 +101,11 @@ class CreateDatapointModel(BaseModel):
         if self.transcription is None and "transcription" in self.model_fields_set:
             _dict['transcription'] = None
 
+        # set to None if private_tags (nullable) is None
+        # and model_fields_set contains the field
+        if self.private_tags is None and "private_tags" in self.model_fields_set:
+            _dict['privateTags'] = None
+
         return _dict
 
     @classmethod
@@ -117,7 +123,8 @@ class CreateDatapointModel(BaseModel):
             "contextAsset": IAssetInput.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
             "sortIndex": obj.get("sortIndex"),
             "group": obj.get("group"),
-            "transcription": obj.get("transcription")
+            "transcription": obj.get("transcription"),
+            "privateTags": obj.get("privateTags")
         })
         return _obj
 
