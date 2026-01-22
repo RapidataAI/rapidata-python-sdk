@@ -57,15 +57,16 @@ configuration = rapidata.api_client.Configuration(
 with rapidata.api_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = rapidata.api_client.AssetApi(api_client)
-    file_name = 'file_name_example' # str | The name of the file to retrieve metadata for.
+    file = None # bytearray | 
+    library = rapidata.api_client.CompressionLibrary() # CompressionLibrary |  (optional)
+    quality = 85 # int |  (optional) (default to 85)
+    maxdim = 800 # int |  (optional) (default to 800)
 
     try:
-        # Gets the metadata for an asset by file name.
-        api_response = api_instance.asset_file_name_metadata_get(file_name)
-        print("The response of AssetApi->asset_file_name_metadata_get:\n")
-        pprint(api_response)
+        # Compresses an image and returns the WebP result with compression metrics.
+        api_instance.asset_compress_post(file, library=library, quality=quality, maxdim=maxdim)
     except ApiException as e:
-        print("Exception when calling AssetApi->asset_file_name_metadata_get: %s\n" % e)
+        print("Exception when calling AssetApi->asset_compress_post: %s\n" % e)
 
 ```
 
@@ -75,6 +76,7 @@ All URIs are relative to *https://api.rabbitdata.ch*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*AssetApi* | [**asset_compress_post**](rapidata/api_client/docs/AssetApi.md#asset_compress_post) | **POST** /asset/compress | Compresses an image and returns the WebP result with compression metrics.
 *AssetApi* | [**asset_file_name_metadata_get**](rapidata/api_client/docs/AssetApi.md#asset_file_name_metadata_get) | **GET** /asset/{fileName}/metadata | Gets the metadata for an asset by file name.
 *AssetApi* | [**asset_file_post**](rapidata/api_client/docs/AssetApi.md#asset_file_post) | **POST** /asset/file | Uploads a single asset to S3 and returns the asset details.
 *AssetApi* | [**asset_url_post**](rapidata/api_client/docs/AssetApi.md#asset_url_post) | **POST** /asset/url | Uploads a single asset to S3 and returns the asset details.
@@ -254,6 +256,7 @@ Class | Method | HTTP request | Description
  - [CloneOrderModel](rapidata/api_client/docs/CloneOrderModel.md)
  - [CloneOrderResult](rapidata/api_client/docs/CloneOrderResult.md)
  - [ComparisonOperator](rapidata/api_client/docs/ComparisonOperator.md)
+ - [CompressionLibrary](rapidata/api_client/docs/CompressionLibrary.md)
  - [ConditionalValidationSelectionValidationChance](rapidata/api_client/docs/ConditionalValidationSelectionValidationChance.md)
  - [ConfidenceInterval](rapidata/api_client/docs/ConfidenceInterval.md)
  - [CreateAudienceRequest](rapidata/api_client/docs/CreateAudienceRequest.md)

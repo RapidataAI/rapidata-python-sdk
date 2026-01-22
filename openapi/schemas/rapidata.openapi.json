@@ -121,6 +121,92 @@
     }
   ],
   "paths": {
+    "/asset/compress": {
+      "post": {
+        "tags": [
+          "Asset"
+        ],
+        "summary": "Compresses an image and returns the WebP result with compression metrics.",
+        "parameters": [
+          {
+            "name": "library",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/CompressionLibrary"
+            }
+          },
+          {
+            "name": "quality",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 85
+            }
+          },
+          {
+            "name": "maxdim",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 800
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "file"
+                ],
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "$ref": "#/components/schemas/IFormFile"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
     "/asset/file": {
       "post": {
         "tags": [
@@ -10023,6 +10109,12 @@
   },
   "components": {
     "schemas": {
+      "CompressionLibrary": {
+        "enum": [
+          "ImageSharp",
+          "NetVips"
+        ]
+      },
       "FileType": {
         "enum": [
           "Unknown",
@@ -10370,6 +10462,23 @@
         "properties": {
           "fileName": {
             "type": "string"
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "wasCompressed": {
+            "type": "boolean"
+          },
+          "originalSizeBytes": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "finalSizeBytes": {
+            "type": "integer",
+            "format": "int64"
           }
         }
       },
@@ -12683,6 +12792,13 @@
           },
           "transcription": {
             "type": "string",
+            "nullable": true
+          },
+          "privateTags": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
             "nullable": true
           }
         }

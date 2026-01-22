@@ -17,8 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,7 +27,11 @@ class UploadFileResult(BaseModel):
     UploadFileResult
     """ # noqa: E501
     file_name: StrictStr = Field(alias="fileName")
-    __properties: ClassVar[List[str]] = ["fileName"]
+    warnings: Optional[List[StrictStr]] = None
+    was_compressed: Optional[StrictBool] = Field(default=None, alias="wasCompressed")
+    original_size_bytes: Optional[StrictInt] = Field(default=None, alias="originalSizeBytes")
+    final_size_bytes: Optional[StrictInt] = Field(default=None, alias="finalSizeBytes")
+    __properties: ClassVar[List[str]] = ["fileName", "warnings", "wasCompressed", "originalSizeBytes", "finalSizeBytes"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -80,7 +84,11 @@ class UploadFileResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "fileName": obj.get("fileName")
+            "fileName": obj.get("fileName"),
+            "warnings": obj.get("warnings"),
+            "wasCompressed": obj.get("wasCompressed"),
+            "originalSizeBytes": obj.get("originalSizeBytes"),
+            "finalSizeBytes": obj.get("finalSizeBytes")
         })
         return _obj
 
