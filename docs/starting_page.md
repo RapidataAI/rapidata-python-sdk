@@ -5,15 +5,9 @@
   </a>
 </div>
 
-Set up your environment and make your first API request in minutes.
-
 <div class="grid cards" markdown>
 
--   __Quick Start__
-
-    ---
-
-    Get real humans to label your data in minutes.
+-   Get real humans to label your data in minutes.
 
     ```python
     pip install -U rapidata
