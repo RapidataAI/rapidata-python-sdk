@@ -10,13 +10,15 @@ if TYPE_CHECKING:
 class QuorumReferee(Referee):
     """A referee that completes a task when a specified number of responses agree.
 
-    This referee implements a quorum-based approach where a task is completed
-    when a minimum number of responses (threshold) agree on the same answer,
-    or when the maximum number of votes is reached.
+    This referee implements a quorum-based approach where a task is completed when:
+    1. A minimum number of responses (threshold) agree on the same answer, OR
+    2. Quorum becomes mathematically impossible to reach, OR
+    3. The maximum number of votes is reached
 
-    For example, with threshold=3 and max_votes=5, the task completes when
-    3 responses agree on the same answer, or after 5 total votes if no
-    quorum is reached.
+    For example, with threshold=7 and max_votes=10:
+    - Task completes when 7 responses agree (quorum reached)
+    - Task completes when both options have 4+ responses (quorum impossible: 4+4=8 > 10-7)
+    - Task completes after 10 total votes if neither condition is met
 
     Args:
         threshold (int, optional): The number of matching responses required
