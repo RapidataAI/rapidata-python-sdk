@@ -5,13 +5,13 @@
       
       
       
-        <link rel="canonical" href="https://docs.rapidata.ai/3.x/quickstart/">
+        <link rel="canonical" href="https://docs.rapidata.ai/3.x/audiences/">
       
       
-        <link rel="prev" href="../starting_page/">
+        <link rel="prev" href="../quickstart/">
       
       
-        <link rel="next" href="../audiences/">
+        <link rel="next" href="../job_definition_parameters/">
       
       
         
@@ -22,7 +22,7 @@
     
     
       
-        <title>🚀 Quick Start - Rapidata Python SDK Documentation</title>
+        <title>👥 Custom Audiences - Rapidata Python SDK Documentation</title>
       
     
     
@@ -87,7 +87,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#quickstart-guide" class="md-skip">
+        <a href="#custom-audiences" class="md-skip">
           Skip to content
         </a>
       
@@ -126,7 +126,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              🚀 Quick Start
+              👥 Custom Audiences
             
           </span>
         </div>
@@ -464,6 +464,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🚀 Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -483,7 +511,7 @@
   <span class="md-ellipsis">
     
   
-    🚀 Quick Start
+    👥 Custom Audiences
   
 
     
@@ -501,7 +529,7 @@
   <span class="md-ellipsis">
     
   
-    🚀 Quick Start
+    👥 Custom Audiences
   
 
     
@@ -527,10 +555,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
+  <a href="#global-vs-custom-audiences" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Installation
+        Global vs Custom Audiences
       
     </span>
   </a>
@@ -538,22 +566,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#usage" class="md-nav__link">
+  <a href="#creating-a-custom-audience" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Usage
+        Creating a Custom Audience
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Usage">
+    <nav class="md-nav" aria-label="Creating a Custom Audience">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#step-1-get-an-audience" class="md-nav__link">
+  <a href="#step-1-create-the-audience" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 1: Get an Audience
+        Step 1: Create the Audience
       
     </span>
   </a>
@@ -561,82 +589,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#step-2-create-a-job-definition" class="md-nav__link">
+  <a href="#step-2-add-qualification-examples" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 2: Create a Job Definition
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-3-preview-the-job-definition" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 3: Preview the Job Definition
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-4-run-and-get-results" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 4: Run and Get Results
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#retrieve-existing-resources" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Retrieve Existing Resources
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Retrieve Existing Resources">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#find-audiences" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Find Audiences
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#find-job-definitions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Find Job Definitions
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#find-jobs" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Find Jobs
+        Step 2: Add Qualification Examples
       
     </span>
   </a>
@@ -660,6 +616,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#reusing-audiences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reusing Audiences
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -674,34 +641,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../audiences/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    👥 Custom Audiences
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -1147,130 +1086,121 @@
   
 
 
-<h1 id="quickstart-guide">Quickstart Guide<a class="headerlink" href="#quickstart-guide" title="Permanent link">#</a></h1>
-<p>Get real humans to label your data. This guide shows you how to create a labeling job using the Rapidata API.</p>
-<p>The workflow consists of three main concepts:</p>
-<ol>
-<li><strong>Audience</strong>: A group of labelers who will work on your tasks</li>
-<li><strong>Job Definition</strong>: The configuration for your labeling task (instruction, datapoints, settings)</li>
-<li><strong>Job</strong>: A running labeling task assigned to an audience</li>
-</ol>
-<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">#</a></h2>
-<p>Install Rapidata using pip:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip install -U rapidata
+<h1 id="custom-audiences">Custom Audiences<a class="headerlink" href="#custom-audiences" title="Permanent link">#</a></h1>
+<p>Custom audiences let you train labelers with qualification examples specific to your task, resulting in higher quality labels.</p>
+<h2 id="global-vs-custom-audiences">Global vs Custom Audiences<a class="headerlink" href="#global-vs-custom-audiences" title="Permanent link">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Audience Type</th>
+<th>Speed</th>
+<th>Quality</th>
+<th>Best For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Global</strong></td>
+<td>Fast</td>
+<td>Good</td>
+<td>Quick prototyping, simple tasks</td>
+</tr>
+<tr>
+<td><strong>Custom</strong></td>
+<td>Slower initial setup</td>
+<td>Higher</td>
+<td>Production workloads, nuanced tasks</td>
+</tr>
+</tbody>
+</table>
+<p>The <strong>global audience</strong> is a pre-existing pool of labelers ready to work immediately. Use it when you need results quickly and your task is straightforward.</p>
+<p>A <strong>custom audience</strong> filters labelers through qualification examples before they can work on your data. Only labelers who demonstrate they understand your tasks will be included, leading to more accurate results.</p>
+<h2 id="creating-a-custom-audience">Creating a Custom Audience<a class="headerlink" href="#creating-a-custom-audience" title="Permanent link">#</a></h2>
+<h3 id="step-1-create-the-audience">Step 1: Create the Audience<a class="headerlink" href="#step-1-create-the-audience" title="Permanent link">#</a></h3>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">RapidataClient</span><span class="p">()</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">audience</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">create_audience</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Image Comparison Audience"</span><span class="p">)</span>
 </span></code></pre></div>
-<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">#</a></h2>
-<p>All operations are managed through the <a href="../reference/rapidata/rapidata_client/rapidata_client/#rapidata.rapidata_client.rapidata_client.RapidataClient"><code>RapidataClient</code></a>.</p>
-<p>Create a client as follows. This will save your credentials in your <code>~/.config/rapidata/credentials.json</code> file so you don't have to log in again on that machine:</p>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># The first time executing it on a machine will require you to log in</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">client</span> <span class="o">=</span> <span class="n">RapidataClient</span><span class="p">()</span>
-</span></code></pre></div>
-<p>Alternatively you can generate a Client ID and Secret in the <a href="https://app.rapidata.ai/settings/tokens">Rapidata Settings</a> and pass them to the client constructor:</p>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">client</span> <span class="o">=</span> <span class="n">RapidataClient</span><span class="p">(</span><span class="n">client_id</span><span class="o">=</span><span class="s2">"Your client ID"</span><span class="p">,</span> <span class="n">client_secret</span><span class="o">=</span><span class="s2">"Your client secret"</span><span class="p">)</span>
-</span></code></pre></div>
-<h3 id="step-1-get-an-audience">Step 1: Get an Audience<a class="headerlink" href="#step-1-get-an-audience" title="Permanent link">#</a></h3>
-<p>The simplest way to get started is with the global audience - a pre-existing pool of labelers ready to work on your tasks:</p>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">audience</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">get_audience_by_id</span><span class="p">(</span><span class="s2">"global"</span><span class="p">)</span>
-</span></code></pre></div>
-<blockquote>
-<p><strong>Note</strong>: The global audience gets you started quickly, but results may be less accurate than a custom audience trained with examples specific to your task. For higher quality, see <a href="../audiences/">Custom Audiences</a>.</p>
-</blockquote>
-<h3 id="step-2-create-a-job-definition">Step 2: Create a Job Definition<a class="headerlink" href="#step-2-create-a-job-definition" title="Permanent link">#</a></h3>
-<p>A job definition configures what you want labeled. Here we create a compare job to assess image-prompt alignment:</p>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_compare_job_definition</span><span class="p">(</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Example Image Comparison"</span><span class="p">,</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image matches the description better?"</span><span class="p">,</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>        <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/midjourney-5.2_37_3.jpg"</span><span class="p">,</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>         <span class="s2">"https://assets.rapidata.ai/flux-1-pro_37_0.jpg"</span><span class="p">]</span>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="p">],</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="n">contexts</span><span class="o">=</span><span class="p">[</span><span class="s2">"A small blue book sitting on a large red book."</span><span class="p">]</span>
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="p">)</span>
-</span></code></pre></div>
-<p>For a detailed explanation of all available parameters (including name, instruction, datapoints, contexts, quality control options, and more), see the <a href="../job_definition_parameters/">Job Definition Parameters Reference</a>.</p>
-<h3 id="step-3-preview-the-job-definition">Step 3: Preview the Job Definition<a class="headerlink" href="#step-3-preview-the-job-definition" title="Permanent link">#</a></h3>
-<p>Before running your job, preview it to see exactly what labelers will see:</p>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">job_definition</span><span class="o">.</span><span class="n">preview</span><span class="p">()</span>
-</span></code></pre></div>
-<p>This opens your browser where you can review and adjust the job configuration.</p>
-<h3 id="step-4-run-and-get-results">Step 4: Run and Get Results<a class="headerlink" href="#step-4-run-and-get-results" title="Permanent link">#</a></h3>
-<p>Assign your job definition to the audience and monitor progress:</p>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">job</span> <span class="o">=</span> <span class="n">audience</span><span class="o">.</span><span class="n">assign_job</span><span class="p">(</span><span class="n">job_definition</span><span class="p">)</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">job</span><span class="o">.</span><span class="n">display_progress_bar</span><span class="p">()</span>
-</span></code></pre></div>
-<p>Once complete, retrieve your results:</p>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span>
-</span></code></pre></div>
-<p>You can also monitor progress on the <a href="https://app.rapidata.ai/dashboard">Rapidata Dashboard</a>.</p>
-<p>To understand the results format, see the <a href="../understanding_the_results/">Understanding the Results</a> guide.</p>
-<h2 id="retrieve-existing-resources">Retrieve Existing Resources<a class="headerlink" href="#retrieve-existing-resources" title="Permanent link">#</a></h2>
-<h3 id="find-audiences">Find Audiences<a class="headerlink" href="#find-audiences" title="Permanent link">#</a></h3>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Find audiences by name</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">audiences</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">find_audiences</span><span class="p">(</span><span class="s2">"Image Comparison"</span><span class="p">)</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Get a specific audience by ID</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="n">audience</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">get_audience_by_id</span><span class="p">(</span><span class="s2">"audience_id"</span><span class="p">)</span>
-</span></code></pre></div>
-<h3 id="find-job-definitions">Find Job Definitions<a class="headerlink" href="#find-job-definitions" title="Permanent link">#</a></h3>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Find job definitions by name</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">job_definitions</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">find_job_definitions</span><span class="p">(</span><span class="s2">"Prompt Alignment"</span><span class="p">)</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Get a specific job definition by ID</span>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">get_job_defintion_by_id</span><span class="p">(</span><span class="s2">"job_definition_id"</span><span class="p">)</span>
-</span></code></pre></div>
-<h3 id="find-jobs">Find Jobs<a class="headerlink" href="#find-jobs" title="Permanent link">#</a></h3>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Find jobs by name</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">jobs</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">find_jobs</span><span class="p">(</span><span class="s2">"Prompt Alignment"</span><span class="p">)</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Get a specific job by ID</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="n">job</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">get_job_by_id</span><span class="p">(</span><span class="s2">"job_id"</span><span class="p">)</span>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Find jobs for a specific audience</span>
-</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="n">audience</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">get_audience_by_id</span><span class="p">(</span><span class="s2">"audience_id"</span><span class="p">)</span>
-</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="n">jobs</span> <span class="o">=</span> <span class="n">audience</span><span class="o">.</span><span class="n">find_jobs</span><span class="p">(</span><span class="s2">"Prompt Alignment"</span><span class="p">)</span>
+<h3 id="step-2-add-qualification-examples">Step 2: Add Qualification Examples<a class="headerlink" href="#step-2-add-qualification-examples" title="Permanent link">#</a></h3>
+<p>Qualification examples are questions with known correct answers. Labelers must answer these correctly to join your audience:</p>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">audience</span><span class="o">.</span><span class="n">add_compare_example</span><span class="p">(</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>        <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image follows the prompt more accurately?"</span><span class="p">,</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>        <span class="n">datapoint</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>            <span class="s2">"https://assets.rapidata.ai/flux_sign_diffusion.jpg"</span><span class="p">,</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>            <span class="s2">"https://assets.rapidata.ai/mj_sign_diffusion.jpg"</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>        <span class="p">],</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>        <span class="n">truth</span><span class="o">=</span><span class="s2">"https://assets.rapidata.ai/flux_sign_diffusion.jpg"</span><span class="p">,</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>        <span class="n">context</span><span class="o">=</span><span class="s2">"A sign that says 'Diffusion'."</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="p">)</span>
 </span></code></pre></div>
 <blockquote>
-<p><strong>Note</strong>: The <code>find_*</code> can be executed without the <code>name</code> parameter to return the most recent resources.</p>
+<p><strong>Note</strong>: You need at least 3 examples to create an audience. In this example, we're adding the same qualification example 5 times for demonstration purposes only. Adding duplicates doesn't improve quality beyond adding it once. For best results, provide diverse, unique examples that cover different aspects of your task.</p>
 </blockquote>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>instruction</code>: The question shown to labelers</li>
+<li><code>datapoint</code>: The items to compare (list of URLs, local paths or text)</li>
+<li><code>truth</code>: The correct answer (must match one of the datapoint items exactly)</li>
+<li><code>context</code>: Additional context shown alongside the comparison (optional)</li>
+</ul>
 <h2 id="complete-example">Complete Example<a class="headerlink" href="#complete-example" title="Permanent link">#</a></h2>
-<p>Here's the full workflow using the global audience:</p>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">RapidataClient</span><span class="p">()</span>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Get the global audience</span>
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="n">audience</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">get_audience_by_id</span><span class="p">(</span><span class="s2">"global"</span><span class="p">)</span>
-</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
-</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="c1"># Create job definition</span>
-</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_compare_job_definition</span><span class="p">(</span>
-</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Example Image Comparison"</span><span class="p">,</span>
-</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image matches the description better?"</span><span class="p">,</span>
-</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span>
-</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>        <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/midjourney-5.2_37_3.jpg"</span><span class="p">,</span>
-</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>         <span class="s2">"https://assets.rapidata.ai/flux-1-pro_37_0.jpg"</span><span class="p">]</span>
-</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>    <span class="p">],</span>
-</span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>    <span class="n">contexts</span><span class="o">=</span><span class="p">[</span><span class="s2">"A small blue book sitting on a large red book."</span><span class="p">]</span>
-</span><span id="__span-11-17"><a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="p">)</span>
-</span><span id="__span-11-18"><a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>
-</span><span id="__span-11-19"><a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a><span class="c1"># Preview before running</span>
-</span><span id="__span-11-20"><a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a><span class="n">job_definition</span><span class="o">.</span><span class="n">preview</span><span class="p">()</span>
-</span><span id="__span-11-21"><a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>
-</span><span id="__span-11-22"><a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a><span class="c1"># Assign to audience and get results</span>
-</span><span id="__span-11-23"><a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a><span class="n">job</span> <span class="o">=</span> <span class="n">audience</span><span class="o">.</span><span class="n">assign_job</span><span class="p">(</span><span class="n">job_definition</span><span class="p">)</span>
-</span><span id="__span-11-24"><a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a><span class="n">job</span><span class="o">.</span><span class="n">display_progress_bar</span><span class="p">()</span>
-</span><span id="__span-11-25"><a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a><span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span>
-</span><span id="__span-11-26"><a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a><span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+<p>Here's the full workflow for creating a custom audience and running a labeling job:</p>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataClient</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">RapidataClient</span><span class="p">()</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Create and configure audience with qualification examples</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">audience</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">create_audience</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Prompt Alignment Audience"</span><span class="p">)</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="n">audience</span><span class="o">.</span><span class="n">add_compare_example</span><span class="p">(</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>        <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image follows the prompt more accurately?"</span><span class="p">,</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>        <span class="n">datapoint</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>            <span class="s2">"https://assets.rapidata.ai/flux_sign_diffusion.jpg"</span><span class="p">,</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>            <span class="s2">"https://assets.rapidata.ai/mj_sign_diffusion.jpg"</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>        <span class="p">],</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>        <span class="n">truth</span><span class="o">=</span><span class="s2">"https://assets.rapidata.ai/flux_sign_diffusion.jpg"</span><span class="p">,</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>        <span class="n">context</span><span class="o">=</span><span class="s2">"A sign that says 'Diffusion'."</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>    <span class="p">)</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># Create job definition</span>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="n">job_definition</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">create_compare_job_definition</span><span class="p">(</span>
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Prompt Alignment Job"</span><span class="p">,</span>
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image follows the prompt more accurately?"</span><span class="p">,</span>
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>        <span class="p">[</span><span class="s2">"https://assets.rapidata.ai/flux_flower.jpg"</span><span class="p">,</span>
+</span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>         <span class="s2">"https://assets.rapidata.ai/mj_flower.jpg"</span><span class="p">]</span>
+</span><span id="__span-2-26"><a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>    <span class="p">],</span>
+</span><span id="__span-2-27"><a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>    <span class="n">contexts</span><span class="o">=</span><span class="p">[</span><span class="s2">"A yellow flower sticking out of a green pot."</span><span class="p">]</span>
+</span><span id="__span-2-28"><a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="p">)</span>
+</span><span id="__span-2-29"><a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>
+</span><span id="__span-2-30"><a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="c1"># Preview before running</span>
+</span><span id="__span-2-31"><a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="n">job_definition</span><span class="o">.</span><span class="n">preview</span><span class="p">()</span>
+</span><span id="__span-2-32"><a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>
+</span><span id="__span-2-33"><a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="c1"># Assign to audience and get results</span>
+</span><span id="__span-2-34"><a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="n">job</span> <span class="o">=</span> <span class="n">audience</span><span class="o">.</span><span class="n">assign_job</span><span class="p">(</span><span class="n">job_definition</span><span class="p">)</span>
+</span><span id="__span-2-35"><a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a><span class="n">job</span><span class="o">.</span><span class="n">display_progress_bar</span><span class="p">()</span>
+</span><span id="__span-2-36"><a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a><span class="n">results</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span>
+</span><span id="__span-2-37"><a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a><span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+</span></code></pre></div>
+<h2 id="reusing-audiences">Reusing Audiences<a class="headerlink" href="#reusing-audiences" title="Permanent link">#</a></h2>
+<p>Once created, you can reuse your audience for multiple jobs:</p>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Find existing audiences by name</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">audiences</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">find_audiences</span><span class="p">(</span><span class="s2">"Prompt Alignment"</span><span class="p">)</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Or get by ID</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">audience</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">audience</span><span class="o">.</span><span class="n">get_audience_by_id</span><span class="p">(</span><span class="s2">"audience_id"</span><span class="p">)</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Assign new jobs to the same audience</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="n">job</span> <span class="o">=</span> <span class="n">audience</span><span class="o">.</span><span class="n">assign_job</span><span class="p">(</span><span class="n">new_job_definition</span><span class="p">)</span>
 </span></code></pre></div>
 <h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">#</a></h2>
 <ul>
-<li>Create <a href="../audiences/">Custom Audiences</a> for higher quality results</li>
 <li>Learn about <a href="../examples/classify_job/">Classification Jobs</a> for categorizing data</li>
 <li>Understand the <a href="../understanding_the_results/">Results Format</a></li>
 <li>Configure <a href="../confidence_stopping/">Early Stopping</a> based on confidence thresholds</li>
-<li>Migrating from Orders? See the <a href="../migration_guide/">Migration Guide</a></li>
 </ul>
         <div id="llms-copy-button" style="position: fixed; z-index: 1100; top: 80px; right: 20px;">
             <button onclick="copyMarkdownToClipboard()" style="cursor: pointer; background: #007acc; color: white; border: none; padding: 8px 16px; border-radius: 4px; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">📋</button>

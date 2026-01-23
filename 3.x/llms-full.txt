@@ -11,16 +11,9 @@
   </a>
 </div>
 
-## Developer Quickstart
-Set up your environment and make your first API request in minutes.
-
 <div class="grid cards" markdown>
 
--   __Developer Quickstart__
-
-    ---
-
-    Create qualified audiences and have them label your data.
+-   Get real humans to label your data in minutes.
 
     ```python
     pip install -U rapidata
@@ -32,17 +25,8 @@ Set up your environment and make your first API request in minutes.
 
         client = RapidataClient()
 
-        # Create audience with qualification example
-        audience = client.audience.create_audience(name="Image Comparison Audience")
-        audience.add_compare_example(
-            instruction="Which image matches the description better?",
-            datapoint=[
-                "https://assets.rapidata.ai/flux_sign_diffusion.jpg",
-                "https://assets.rapidata.ai/mj_sign_diffusion.jpg"
-            ],
-            truth="https://assets.rapidata.ai/flux_sign_diffusion.jpg",
-            context="A sign that says 'Diffusion'."
-        )
+        # Get the global audience
+        audience = client.audience.get_audience_by_id("global")
 
         # Create job definition
         job_definition = client.job.create_compare_job_definition(
@@ -53,9 +37,11 @@ Set up your environment and make your first API request in minutes.
                         "https://assets.rapidata.ai/flux-1-pro_37_0.jpg"]],
         )
 
-        # Preview, then assign to audience
-        job_definition.preview()
+        # Assign to audience
         job = audience.assign_job(job_definition)
+        
+        # View the job in the browser
+        job.view()
         job.display_progress_bar()
         results = job.get_results()
         print(results)
@@ -67,17 +53,8 @@ Set up your environment and make your first API request in minutes.
 
         client = RapidataClient()
 
-        # Create audience with qualification example
-        audience = client.audience.create_audience(name="Video Comparison Audience")
-        audience.add_compare_example(
-            instruction="Which video fits the description better?",
-            datapoint=[
-                "https://assets.rapidata.ai/0074_sora_1.mp4",
-                "https://assets.rapidata.ai/0074_hunyuan_1724.mp4"
-            ],
-            truth="https://assets.rapidata.ai/0074_sora_1.mp4",
-            context="A group of elephants painting murals."
-        )
+        # Get the global audience
+        audience = client.audience.get_audience_by_id("global")
 
         # Create job definition
         job_definition = client.job.create_compare_job_definition(
@@ -88,9 +65,11 @@ Set up your environment and make your first API request in minutes.
                         "https://assets.rapidata.ai/0074_hunyuan_1724.mp4"]],
         )
 
-        # Preview, then assign to audience
-        job_definition.preview()
+        # Assign to audience
         job = audience.assign_job(job_definition)
+        
+        # View the job in the browser
+        job.view()
         job.display_progress_bar()
         results = job.get_results()
         print(results)
@@ -102,19 +81,8 @@ Set up your environment and make your first API request in minutes.
 
         client = RapidataClient()
 
-        # Create audience with qualification example
-        audience = client.audience.create_audience(
-            name="Audio Comparison Audience",
-            filters=[LanguageFilter(["en"])]
-        )
-        audience.add_compare_example(
-            instruction="Which audio clip sounds more natural?",
-            datapoint=[
-                "https://assets.rapidata.ai/Chat_gpt.mp3",
-                "https://assets.rapidata.ai/ElevenLabs.mp3"
-            ],
-            truth="https://assets.rapidata.ai/ElevenLabs.mp3"
-        )
+        # Get the global audience
+        audience = client.audience.get_audience_by_id("global")
 
         # Create job definition
         job_definition = client.job.create_compare_job_definition(
@@ -124,9 +92,11 @@ Set up your environment and make your first API request in minutes.
                         "https://assets.rapidata.ai/ElevenLabs.mp3"]],
         )
 
-        # Preview, then assign to audience
-        job_definition.preview()
+        # Assign to audience
         job = audience.assign_job(job_definition)
+        
+        # View the job in the browser
+        job.view()
         job.display_progress_bar()
         results = job.get_results()
         print(results)
@@ -138,20 +108,8 @@ Set up your environment and make your first API request in minutes.
 
         client = RapidataClient()
 
-        # Create audience with qualification example
-        audience = client.audience.create_audience(
-            name="Text Comparison Audience",
-            filters=[LanguageFilter(["en"])]
-        )
-        audience.add_compare_example(
-            instruction="Which sentence is grammatically more correct?",
-            datapoint=[
-                "The children were amazed by the magician's tricks",
-                "The children were amusing by the magician's tricks."
-            ],
-            truth="The children were amazed by the magician's tricks",
-            data_type="text"
-        )
+        # Get the global audience
+        audience = client.audience.get_audience_by_id("global")
 
         # Create job definition
         job_definition = client.job.create_compare_job_definition(
@@ -162,14 +120,19 @@ Set up your environment and make your first API request in minutes.
             data_type="text",
         )
 
-        # Preview, then assign to audience
-        job_definition.preview()
+        # Assign to audience
         job = audience.assign_job(job_definition)
+        
+        # View the job in the browser
+        job.view()
         job.display_progress_bar()
         results = job.get_results()
         print(results)
         ```
-    [:octicons-arrow-right-24: Let's go](quickstart.md)
+
+    > **Note**: The global audience gets you started quickly. For higher quality results, use a [custom audience](audiences.md) with qualification examples.
+
+    [:octicons-arrow-right-24: Quickstart Guide](quickstart.md)
 
 </div>
 
@@ -182,9 +145,10 @@ Get real humans to label your data. This guide shows you how to create a labelin
 
 The workflow consists of three main concepts:
 
-1. **Audience**: A group of qualified labelers who have passed your qualification examples
+1. **Audience**: A group of labelers who will work on your tasks
 2. **Job Definition**: The configuration for your labeling task (instruction, datapoints, settings)
 3. **Job**: A running labeling task assigned to an audience
+
 
 ## Installation
 
@@ -214,61 +178,35 @@ from rapidata import RapidataClient
 client = RapidataClient(client_id="Your client ID", client_secret="Your client secret")
 ```
 
-### Step 1: Create an Audience
+### Step 1: Get an Audience
 
-An audience is a pool of labelers who are qualified to work on your tasks. You create an audience and add qualification examples that labelers must answer correctly to join.
-
-```py
-audience = client.audience.create_audience(name="Image Comparison Audience")
-```
-
-### Step 2: Add Qualification Examples
-
-Add examples that labelers must answer correctly to join your audience. This ensures only qualified labelers work on your data.
+The simplest way to get started is with the global audience - a pre-existing pool of labelers ready to work on your tasks:
 
 ```py
-audience.add_compare_example(
-    instruction="Which image follows the prompt more accurately?",
-    datapoint=[
-        "https://assets.rapidata.ai/flux_sign_diffusion.jpg",
-        "https://assets.rapidata.ai/mj_sign_diffusion.jpg"
-    ],
-    truth="https://assets.rapidata.ai/flux_sign_diffusion.jpg",
-    context="A sign that says 'Diffusion'."
-)
+audience = client.audience.get_audience_by_id("global")
 ```
 
-The parameters are:
+> **Note**: The global audience gets you started quickly, but results may be less accurate than a custom audience trained with examples specific to your task. For higher quality, see [Custom Audiences](audiences.md).
 
-- `instruction`: The question shown to labelers
-- `datapoint`: The two items to compare
-- `truth`: The correct answer (must be one of the datapoint items)
-- `context`: Additional context shown alongside the comparison (optional)
-
-### Step 3: Create a Job Definition
+### Step 2: Create a Job Definition
 
 A job definition configures what you want labeled. Here we create a compare job to assess image-prompt alignment:
 
 ```py
 job_definition = client.job.create_compare_job_definition(
-    name="Prompt Alignment Comparison",
-    instruction="Which image follows the prompt more accurately?",
+    name="Example Image Comparison",
+    instruction="Which image matches the description better?",
     datapoints=[
-        ["https://assets.rapidata.ai/flux_sign_diffusion.jpg",
-         "https://assets.rapidata.ai/mj_sign_diffusion.jpg"],
-        ["https://assets.rapidata.ai/flux_flower.jpg",
-         "https://assets.rapidata.ai/mj_flower.jpg"]
+        ["https://assets.rapidata.ai/midjourney-5.2_37_3.jpg",
+         "https://assets.rapidata.ai/flux-1-pro_37_0.jpg"]
     ],
-    contexts=[
-        "A sign that says 'Diffusion'.",
-        "A yellow flower sticking out of a green pot."
-    ]
+    contexts=["A small blue book sitting on a large red book."]
 )
 ```
 
 For a detailed explanation of all available parameters (including name, instruction, datapoints, contexts, quality control options, and more), see the [Job Definition Parameters Reference](job_definition_parameters.md).
 
-### Step 4: Preview the Job Definition
+### Step 3: Preview the Job Definition
 
 Before running your job, preview it to see exactly what labelers will see:
 
@@ -278,21 +216,12 @@ job_definition.preview()
 
 This opens your browser where you can review and adjust the job configuration.
 
-### Step 5: Assign Job to Audience
+### Step 4: Run and Get Results
 
-Once you're satisfied with your job definition, assign it to your audience to start collecting responses:
+Assign your job definition to the audience and monitor progress:
 
 ```py
 job = audience.assign_job(job_definition)
-```
-
-Labelers who have passed your qualification examples will now start working on your data.
-
-### Step 6: Monitor Progress and Get Results
-
-Monitor progress on the [Rapidata Dashboard](https://app.rapidata.ai/dashboard) or programmatically:
-
-```py
 job.display_progress_bar()
 ```
 
@@ -301,6 +230,8 @@ Once complete, retrieve your results:
 ```py
 results = job.get_results()
 ```
+
+You can also monitor progress on the [Rapidata Dashboard](https://app.rapidata.ai/dashboard).
 
 To understand the results format, see the [Understanding the Results](understanding_the_results.md) guide.
 
@@ -344,24 +275,121 @@ jobs = audience.find_jobs("Prompt Alignment")
 
 ## Complete Example
 
-Here's the full workflow in one script:
+Here's the full workflow using the global audience:
 
 ```py
 from rapidata import RapidataClient
 
 client = RapidataClient()
 
-# Create and configure audience
-audience = client.audience.create_audience(name="Prompt Alignment Audience")
-audience.add_compare_example(
-    instruction="Which image follows the prompt more accurately?",
-    datapoint=[
-        "https://assets.rapidata.ai/flux_sign_diffusion.jpg",
-        "https://assets.rapidata.ai/mj_sign_diffusion.jpg"
+# Get the global audience
+audience = client.audience.get_audience_by_id("global")
+
+# Create job definition
+job_definition = client.job.create_compare_job_definition(
+    name="Example Image Comparison",
+    instruction="Which image matches the description better?",
+    datapoints=[
+        ["https://assets.rapidata.ai/midjourney-5.2_37_3.jpg",
+         "https://assets.rapidata.ai/flux-1-pro_37_0.jpg"]
     ],
-    truth="https://assets.rapidata.ai/flux_sign_diffusion.jpg",
-    context="A sign that says 'Diffusion'."
+    contexts=["A small blue book sitting on a large red book."]
 )
+
+# Preview before running
+job_definition.preview()
+
+# Assign to audience and get results
+job = audience.assign_job(job_definition)
+job.display_progress_bar()
+results = job.get_results()
+print(results)
+```
+
+## Next Steps
+
+- Create [Custom Audiences](audiences.md) for higher quality results
+- Learn about [Classification Jobs](examples/classify_job.md) for categorizing data
+- Understand the [Results Format](understanding_the_results.md)
+- Configure [Early Stopping](confidence_stopping.md) based on confidence thresholds
+- Migrating from Orders? See the [Migration Guide](migration_guide.md)
+
+
+## 👥 Custom Audiences
+
+# Custom Audiences
+
+Custom audiences let you train labelers with qualification examples specific to your task, resulting in higher quality labels.
+
+## Global vs Custom Audiences
+
+| Audience Type | Speed | Quality | Best For |
+|---------------|-------|---------|----------|
+| **Global** | Fast | Good | Quick prototyping, simple tasks |
+| **Custom** | Slower initial setup | Higher | Production workloads, nuanced tasks |
+
+The **global audience** is a pre-existing pool of labelers ready to work immediately. Use it when you need results quickly and your task is straightforward.
+
+A **custom audience** filters labelers through qualification examples before they can work on your data. Only labelers who demonstrate they understand your tasks will be included, leading to more accurate results.
+
+## Creating a Custom Audience
+
+### Step 1: Create the Audience
+
+```py
+from rapidata import RapidataClient
+
+client = RapidataClient()
+audience = client.audience.create_audience(name="Image Comparison Audience")
+```
+
+### Step 2: Add Qualification Examples
+
+Qualification examples are questions with known correct answers. Labelers must answer these correctly to join your audience:
+
+```py
+for _ in range(3):
+    audience.add_compare_example(
+        instruction="Which image follows the prompt more accurately?",
+        datapoint=[
+            "https://assets.rapidata.ai/flux_sign_diffusion.jpg",
+            "https://assets.rapidata.ai/mj_sign_diffusion.jpg"
+        ],
+        truth="https://assets.rapidata.ai/flux_sign_diffusion.jpg",
+        context="A sign that says 'Diffusion'."
+    )
+```
+> **Note**: You need at least 3 examples to create an audience. In this example, we're adding the same qualification example 5 times for demonstration purposes only. Adding duplicates doesn't improve quality beyond adding it once. For best results, provide diverse, unique examples that cover different aspects of your task.
+
+**Parameters:**
+
+- `instruction`: The question shown to labelers
+- `datapoint`: The items to compare (list of URLs, local paths or text)
+- `truth`: The correct answer (must match one of the datapoint items exactly)
+- `context`: Additional context shown alongside the comparison (optional)
+
+## Complete Example
+
+Here's the full workflow for creating a custom audience and running a labeling job:
+
+```py
+from rapidata import RapidataClient
+
+client = RapidataClient()
+
+# Create and configure audience with qualification examples
+audience = client.audience.create_audience(name="Prompt Alignment Audience")
+
+for _ in range(3):
+    audience.add_compare_example(
+        instruction="Which image follows the prompt more accurately?",
+        datapoint=[
+            "https://assets.rapidata.ai/flux_sign_diffusion.jpg",
+            "https://assets.rapidata.ai/mj_sign_diffusion.jpg"
+        ],
+        truth="https://assets.rapidata.ai/flux_sign_diffusion.jpg",
+        context="A sign that says 'Diffusion'."
+    )
 
 # Create job definition
 job_definition = client.job.create_compare_job_definition(
@@ -384,12 +412,26 @@ results = job.get_results()
 print(results)
 ```
 
+## Reusing Audiences
+
+Once created, you can reuse your audience for multiple jobs:
+
+```py
+# Find existing audiences by name
+audiences = client.audience.find_audiences("Prompt Alignment")
+
+# Or get by ID
+audience = client.audience.get_audience_by_id("audience_id")
+
+# Assign new jobs to the same audience
+job = audience.assign_job(new_job_definition)
+```
+
 ## Next Steps
 
 - Learn about [Classification Jobs](examples/classify_job.md) for categorizing data
 - Understand the [Results Format](understanding_the_results.md)
 - Configure [Early Stopping](confidence_stopping.md) based on confidence thresholds
-- Migrating from Orders? See the [Migration Guide](migration_guide.md)
 
 
 ## 📖 Parameter Reference

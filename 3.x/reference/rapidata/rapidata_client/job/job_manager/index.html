@@ -374,6 +374,8 @@
       
         
       
+        
+      
     
     
     
@@ -464,6 +466,34 @@
     
   
     🚀 Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../audiences/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    👥 Custom Audiences
   
 
     
@@ -2172,7 +2202,13 @@ If not provided, the results will be shown as "A" and "B".<p></p>
 <span class="normal"><a href="#__codelineno-0-704">704</a></span>
 <span class="normal"><a href="#__codelineno-0-705">705</a></span>
 <span class="normal"><a href="#__codelineno-0-706">706</a></span>
-<span class="normal"><a href="#__codelineno-0-707">707</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-690"><a id="__codelineno-0-690" name="__codelineno-0-690"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_job_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RapidataJob</span><span class="p">:</span>
+<span class="normal"><a href="#__codelineno-0-707">707</a></span>
+<span class="normal"><a href="#__codelineno-0-708">708</a></span>
+<span class="normal"><a href="#__codelineno-0-709">709</a></span>
+<span class="normal"><a href="#__codelineno-0-710">710</a></span>
+<span class="normal"><a href="#__codelineno-0-711">711</a></span>
+<span class="normal"><a href="#__codelineno-0-712">712</a></span>
+<span class="normal"><a href="#__codelineno-0-713">713</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-690"><a id="__codelineno-0-690" name="__codelineno-0-690"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_job_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RapidataJob</span><span class="p">:</span>
 </span><span id="__span-0-691"><a id="__codelineno-0-691" name="__codelineno-0-691"></a><span class="w">    </span><span class="sd">"""Get a job by ID.</span>
 </span><span id="__span-0-692"><a id="__codelineno-0-692" name="__codelineno-0-692"></a>
 </span><span id="__span-0-693"><a id="__codelineno-0-693" name="__codelineno-0-693"></a><span class="sd">    Args:</span>
@@ -2188,8 +2224,14 @@ If not provided, the results will be shown as "A" and "B".<p></p>
 </span><span id="__span-0-703"><a id="__codelineno-0-703" name="__codelineno-0-703"></a>            <span class="n">job_id</span><span class="o">=</span><span class="n">job_id</span><span class="p">,</span>
 </span><span id="__span-0-704"><a id="__codelineno-0-704" name="__codelineno-0-704"></a>        <span class="p">)</span>
 </span><span id="__span-0-705"><a id="__codelineno-0-705" name="__codelineno-0-705"></a>        <span class="k">return</span> <span class="n">RapidataJob</span><span class="p">(</span>
-</span><span id="__span-0-706"><a id="__codelineno-0-706" name="__codelineno-0-706"></a>            <span class="n">job_response</span><span class="o">.</span><span class="n">job_id</span><span class="p">,</span> <span class="n">job_response</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_openapi_service</span>
-</span><span id="__span-0-707"><a id="__codelineno-0-707" name="__codelineno-0-707"></a>        <span class="p">)</span>
+</span><span id="__span-0-706"><a id="__codelineno-0-706" name="__codelineno-0-706"></a>            <span class="n">job_id</span><span class="o">=</span><span class="n">job_response</span><span class="o">.</span><span class="n">job_id</span><span class="p">,</span>
+</span><span id="__span-0-707"><a id="__codelineno-0-707" name="__codelineno-0-707"></a>            <span class="n">name</span><span class="o">=</span><span class="n">job_response</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+</span><span id="__span-0-708"><a id="__codelineno-0-708" name="__codelineno-0-708"></a>            <span class="n">audience_id</span><span class="o">=</span><span class="n">job_response</span><span class="o">.</span><span class="n">audience_id</span><span class="p">,</span>
+</span><span id="__span-0-709"><a id="__codelineno-0-709" name="__codelineno-0-709"></a>            <span class="n">created_at</span><span class="o">=</span><span class="n">job_response</span><span class="o">.</span><span class="n">created_at</span><span class="p">,</span>
+</span><span id="__span-0-710"><a id="__codelineno-0-710" name="__codelineno-0-710"></a>            <span class="n">definition_id</span><span class="o">=</span><span class="n">job_response</span><span class="o">.</span><span class="n">definition_id</span><span class="p">,</span>
+</span><span id="__span-0-711"><a id="__codelineno-0-711" name="__codelineno-0-711"></a>            <span class="n">openapi_service</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_openapi_service</span><span class="p">,</span>
+</span><span id="__span-0-712"><a id="__codelineno-0-712" name="__codelineno-0-712"></a>            <span class="n">pipeline_id</span><span class="o">=</span><span class="n">job_response</span><span class="o">.</span><span class="n">pipeline_id</span><span class="p">,</span>
+</span><span id="__span-0-713"><a id="__codelineno-0-713" name="__codelineno-0-713"></a>        <span class="p">)</span>
 </span></code></pre></div></td></tr></tbody></table></div>
             </details>
     </div>
@@ -2286,13 +2328,7 @@ If not provided, the results will be shown as "A" and "B".<p></p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src/rapidata/rapidata_client/job/job_manager.py</code></summary>
-              <div class="language-python highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-709">709</a></span>
-<span class="normal"><a href="#__codelineno-0-710">710</a></span>
-<span class="normal"><a href="#__codelineno-0-711">711</a></span>
-<span class="normal"><a href="#__codelineno-0-712">712</a></span>
-<span class="normal"><a href="#__codelineno-0-713">713</a></span>
-<span class="normal"><a href="#__codelineno-0-714">714</a></span>
-<span class="normal"><a href="#__codelineno-0-715">715</a></span>
+              <div class="language-python highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-715">715</a></span>
 <span class="normal"><a href="#__codelineno-0-716">716</a></span>
 <span class="normal"><a href="#__codelineno-0-717">717</a></span>
 <span class="normal"><a href="#__codelineno-0-718">718</a></span>
@@ -2329,50 +2365,72 @@ If not provided, the results will be shown as "A" and "B".<p></p>
 <span class="normal"><a href="#__codelineno-0-749">749</a></span>
 <span class="normal"><a href="#__codelineno-0-750">750</a></span>
 <span class="normal"><a href="#__codelineno-0-751">751</a></span>
-<span class="normal"><a href="#__codelineno-0-752">752</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-709"><a id="__codelineno-0-709" name="__codelineno-0-709"></a><span class="k">def</span><span class="w"> </span><span class="nf">find_jobs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">RapidataJob</span><span class="p">]:</span>
-</span><span id="__span-0-710"><a id="__codelineno-0-710" name="__codelineno-0-710"></a><span class="w">    </span><span class="sd">"""Find your recent jobs given criteria. If nothing is provided, it will return the most recent jobs.</span>
-</span><span id="__span-0-711"><a id="__codelineno-0-711" name="__codelineno-0-711"></a>
-</span><span id="__span-0-712"><a id="__codelineno-0-712" name="__codelineno-0-712"></a><span class="sd">    Args:</span>
-</span><span id="__span-0-713"><a id="__codelineno-0-713" name="__codelineno-0-713"></a><span class="sd">        name (str, optional): The name of the job - matching job will contain the name. Defaults to "" for any job.</span>
-</span><span id="__span-0-714"><a id="__codelineno-0-714" name="__codelineno-0-714"></a><span class="sd">        amount (int, optional): The amount of jobs to return. Defaults to 10.</span>
-</span><span id="__span-0-715"><a id="__codelineno-0-715" name="__codelineno-0-715"></a>
-</span><span id="__span-0-716"><a id="__codelineno-0-716" name="__codelineno-0-716"></a><span class="sd">    Returns:</span>
-</span><span id="__span-0-717"><a id="__codelineno-0-717" name="__codelineno-0-717"></a><span class="sd">        list[RapidataJob]: A list of RapidataJob instances.</span>
-</span><span id="__span-0-718"><a id="__codelineno-0-718" name="__codelineno-0-718"></a><span class="sd">    """</span>
-</span><span id="__span-0-719"><a id="__codelineno-0-719" name="__codelineno-0-719"></a>    <span class="k">with</span> <span class="n">tracer</span><span class="o">.</span><span class="n">start_as_current_span</span><span class="p">(</span><span class="s2">"JobManager.find_jobs"</span><span class="p">):</span>
-</span><span id="__span-0-720"><a id="__codelineno-0-720" name="__codelineno-0-720"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">rapidata.api_client.models.query_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">QueryModel</span>
-</span><span id="__span-0-721"><a id="__codelineno-0-721" name="__codelineno-0-721"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">rapidata.api_client.models.root_filter</span><span class="w"> </span><span class="kn">import</span> <span class="n">RootFilter</span>
-</span><span id="__span-0-722"><a id="__codelineno-0-722" name="__codelineno-0-722"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">rapidata.api_client.models.filter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Filter</span>
-</span><span id="__span-0-723"><a id="__codelineno-0-723" name="__codelineno-0-723"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">rapidata.api_client.models.filter_operator</span><span class="w"> </span><span class="kn">import</span> <span class="n">FilterOperator</span>
-</span><span id="__span-0-724"><a id="__codelineno-0-724" name="__codelineno-0-724"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">rapidata.api_client.models.page_info</span><span class="w"> </span><span class="kn">import</span> <span class="n">PageInfo</span>
-</span><span id="__span-0-725"><a id="__codelineno-0-725" name="__codelineno-0-725"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">rapidata.api_client.models.sort_criterion</span><span class="w"> </span><span class="kn">import</span> <span class="n">SortCriterion</span>
-</span><span id="__span-0-726"><a id="__codelineno-0-726" name="__codelineno-0-726"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">rapidata.api_client.models.sort_direction</span><span class="w"> </span><span class="kn">import</span> <span class="n">SortDirection</span>
-</span><span id="__span-0-727"><a id="__codelineno-0-727" name="__codelineno-0-727"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">rapidata.rapidata_client.job.rapidata_job</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataJob</span>
-</span><span id="__span-0-728"><a id="__codelineno-0-728" name="__codelineno-0-728"></a>
-</span><span id="__span-0-729"><a id="__codelineno-0-729" name="__codelineno-0-729"></a>        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_openapi_service</span><span class="o">.</span><span class="n">job_api</span><span class="o">.</span><span class="n">jobs_get</span><span class="p">(</span>
-</span><span id="__span-0-730"><a id="__codelineno-0-730" name="__codelineno-0-730"></a>            <span class="n">request</span><span class="o">=</span><span class="n">QueryModel</span><span class="p">(</span>
-</span><span id="__span-0-731"><a id="__codelineno-0-731" name="__codelineno-0-731"></a>                <span class="n">page</span><span class="o">=</span><span class="n">PageInfo</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">amount</span><span class="p">),</span>
-</span><span id="__span-0-732"><a id="__codelineno-0-732" name="__codelineno-0-732"></a>                <span class="nb">filter</span><span class="o">=</span><span class="n">RootFilter</span><span class="p">(</span>
-</span><span id="__span-0-733"><a id="__codelineno-0-733" name="__codelineno-0-733"></a>                    <span class="n">filters</span><span class="o">=</span><span class="p">[</span>
-</span><span id="__span-0-734"><a id="__codelineno-0-734" name="__codelineno-0-734"></a>                        <span class="n">Filter</span><span class="p">(</span>
-</span><span id="__span-0-735"><a id="__codelineno-0-735" name="__codelineno-0-735"></a>                            <span class="n">field</span><span class="o">=</span><span class="s2">"Name"</span><span class="p">,</span>
-</span><span id="__span-0-736"><a id="__codelineno-0-736" name="__codelineno-0-736"></a>                            <span class="n">operator</span><span class="o">=</span><span class="n">FilterOperator</span><span class="o">.</span><span class="n">CONTAINS</span><span class="p">,</span>
-</span><span id="__span-0-737"><a id="__codelineno-0-737" name="__codelineno-0-737"></a>                            <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
-</span><span id="__span-0-738"><a id="__codelineno-0-738" name="__codelineno-0-738"></a>                        <span class="p">)</span>
-</span><span id="__span-0-739"><a id="__codelineno-0-739" name="__codelineno-0-739"></a>                    <span class="p">]</span>
-</span><span id="__span-0-740"><a id="__codelineno-0-740" name="__codelineno-0-740"></a>                <span class="p">),</span>
-</span><span id="__span-0-741"><a id="__codelineno-0-741" name="__codelineno-0-741"></a>                <span class="n">sortCriteria</span><span class="o">=</span><span class="p">[</span>
-</span><span id="__span-0-742"><a id="__codelineno-0-742" name="__codelineno-0-742"></a>                    <span class="n">SortCriterion</span><span class="p">(</span>
-</span><span id="__span-0-743"><a id="__codelineno-0-743" name="__codelineno-0-743"></a>                        <span class="n">direction</span><span class="o">=</span><span class="n">SortDirection</span><span class="o">.</span><span class="n">DESC</span><span class="p">,</span> <span class="n">propertyName</span><span class="o">=</span><span class="s2">"CreatedAt"</span>
-</span><span id="__span-0-744"><a id="__codelineno-0-744" name="__codelineno-0-744"></a>                    <span class="p">)</span>
-</span><span id="__span-0-745"><a id="__codelineno-0-745" name="__codelineno-0-745"></a>                <span class="p">],</span>
-</span><span id="__span-0-746"><a id="__codelineno-0-746" name="__codelineno-0-746"></a>            <span class="p">),</span>
-</span><span id="__span-0-747"><a id="__codelineno-0-747" name="__codelineno-0-747"></a>        <span class="p">)</span>
-</span><span id="__span-0-748"><a id="__codelineno-0-748" name="__codelineno-0-748"></a>        <span class="n">jobs</span> <span class="o">=</span> <span class="p">[</span>
-</span><span id="__span-0-749"><a id="__codelineno-0-749" name="__codelineno-0-749"></a>            <span class="n">RapidataJob</span><span class="p">(</span><span class="n">job</span><span class="o">.</span><span class="n">job_id</span><span class="p">,</span> <span class="n">job</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_openapi_service</span><span class="p">)</span>
-</span><span id="__span-0-750"><a id="__codelineno-0-750" name="__codelineno-0-750"></a>            <span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">items</span>
-</span><span id="__span-0-751"><a id="__codelineno-0-751" name="__codelineno-0-751"></a>        <span class="p">]</span>
-</span><span id="__span-0-752"><a id="__codelineno-0-752" name="__codelineno-0-752"></a>        <span class="k">return</span> <span class="n">jobs</span>
+<span class="normal"><a href="#__codelineno-0-752">752</a></span>
+<span class="normal"><a href="#__codelineno-0-753">753</a></span>
+<span class="normal"><a href="#__codelineno-0-754">754</a></span>
+<span class="normal"><a href="#__codelineno-0-755">755</a></span>
+<span class="normal"><a href="#__codelineno-0-756">756</a></span>
+<span class="normal"><a href="#__codelineno-0-757">757</a></span>
+<span class="normal"><a href="#__codelineno-0-758">758</a></span>
+<span class="normal"><a href="#__codelineno-0-759">759</a></span>
+<span class="normal"><a href="#__codelineno-0-760">760</a></span>
+<span class="normal"><a href="#__codelineno-0-761">761</a></span>
+<span class="normal"><a href="#__codelineno-0-762">762</a></span>
+<span class="normal"><a href="#__codelineno-0-763">763</a></span>
+<span class="normal"><a href="#__codelineno-0-764">764</a></span>
+<span class="normal"><a href="#__codelineno-0-765">765</a></span>
+<span class="normal"><a href="#__codelineno-0-766">766</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-715"><a id="__codelineno-0-715" name="__codelineno-0-715"></a><span class="k">def</span><span class="w"> </span><span class="nf">find_jobs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">RapidataJob</span><span class="p">]:</span>
+</span><span id="__span-0-716"><a id="__codelineno-0-716" name="__codelineno-0-716"></a><span class="w">    </span><span class="sd">"""Find your recent jobs given criteria. If nothing is provided, it will return the most recent jobs.</span>
+</span><span id="__span-0-717"><a id="__codelineno-0-717" name="__codelineno-0-717"></a>
+</span><span id="__span-0-718"><a id="__codelineno-0-718" name="__codelineno-0-718"></a><span class="sd">    Args:</span>
+</span><span id="__span-0-719"><a id="__codelineno-0-719" name="__codelineno-0-719"></a><span class="sd">        name (str, optional): The name of the job - matching job will contain the name. Defaults to "" for any job.</span>
+</span><span id="__span-0-720"><a id="__codelineno-0-720" name="__codelineno-0-720"></a><span class="sd">        amount (int, optional): The amount of jobs to return. Defaults to 10.</span>
+</span><span id="__span-0-721"><a id="__codelineno-0-721" name="__codelineno-0-721"></a>
+</span><span id="__span-0-722"><a id="__codelineno-0-722" name="__codelineno-0-722"></a><span class="sd">    Returns:</span>
+</span><span id="__span-0-723"><a id="__codelineno-0-723" name="__codelineno-0-723"></a><span class="sd">        list[RapidataJob]: A list of RapidataJob instances.</span>
+</span><span id="__span-0-724"><a id="__codelineno-0-724" name="__codelineno-0-724"></a><span class="sd">    """</span>
+</span><span id="__span-0-725"><a id="__codelineno-0-725" name="__codelineno-0-725"></a>    <span class="k">with</span> <span class="n">tracer</span><span class="o">.</span><span class="n">start_as_current_span</span><span class="p">(</span><span class="s2">"JobManager.find_jobs"</span><span class="p">):</span>
+</span><span id="__span-0-726"><a id="__codelineno-0-726" name="__codelineno-0-726"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">rapidata.api_client.models.query_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">QueryModel</span>
+</span><span id="__span-0-727"><a id="__codelineno-0-727" name="__codelineno-0-727"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">rapidata.api_client.models.root_filter</span><span class="w"> </span><span class="kn">import</span> <span class="n">RootFilter</span>
+</span><span id="__span-0-728"><a id="__codelineno-0-728" name="__codelineno-0-728"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">rapidata.api_client.models.filter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Filter</span>
+</span><span id="__span-0-729"><a id="__codelineno-0-729" name="__codelineno-0-729"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">rapidata.api_client.models.filter_operator</span><span class="w"> </span><span class="kn">import</span> <span class="n">FilterOperator</span>
+</span><span id="__span-0-730"><a id="__codelineno-0-730" name="__codelineno-0-730"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">rapidata.api_client.models.page_info</span><span class="w"> </span><span class="kn">import</span> <span class="n">PageInfo</span>
+</span><span id="__span-0-731"><a id="__codelineno-0-731" name="__codelineno-0-731"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">rapidata.api_client.models.sort_criterion</span><span class="w"> </span><span class="kn">import</span> <span class="n">SortCriterion</span>
+</span><span id="__span-0-732"><a id="__codelineno-0-732" name="__codelineno-0-732"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">rapidata.api_client.models.sort_direction</span><span class="w"> </span><span class="kn">import</span> <span class="n">SortDirection</span>
+</span><span id="__span-0-733"><a id="__codelineno-0-733" name="__codelineno-0-733"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">rapidata.rapidata_client.job.rapidata_job</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidataJob</span>
+</span><span id="__span-0-734"><a id="__codelineno-0-734" name="__codelineno-0-734"></a>
+</span><span id="__span-0-735"><a id="__codelineno-0-735" name="__codelineno-0-735"></a>        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_openapi_service</span><span class="o">.</span><span class="n">job_api</span><span class="o">.</span><span class="n">jobs_get</span><span class="p">(</span>
+</span><span id="__span-0-736"><a id="__codelineno-0-736" name="__codelineno-0-736"></a>            <span class="n">request</span><span class="o">=</span><span class="n">QueryModel</span><span class="p">(</span>
+</span><span id="__span-0-737"><a id="__codelineno-0-737" name="__codelineno-0-737"></a>                <span class="n">page</span><span class="o">=</span><span class="n">PageInfo</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">amount</span><span class="p">),</span>
+</span><span id="__span-0-738"><a id="__codelineno-0-738" name="__codelineno-0-738"></a>                <span class="nb">filter</span><span class="o">=</span><span class="n">RootFilter</span><span class="p">(</span>
+</span><span id="__span-0-739"><a id="__codelineno-0-739" name="__codelineno-0-739"></a>                    <span class="n">filters</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-0-740"><a id="__codelineno-0-740" name="__codelineno-0-740"></a>                        <span class="n">Filter</span><span class="p">(</span>
+</span><span id="__span-0-741"><a id="__codelineno-0-741" name="__codelineno-0-741"></a>                            <span class="n">field</span><span class="o">=</span><span class="s2">"Name"</span><span class="p">,</span>
+</span><span id="__span-0-742"><a id="__codelineno-0-742" name="__codelineno-0-742"></a>                            <span class="n">operator</span><span class="o">=</span><span class="n">FilterOperator</span><span class="o">.</span><span class="n">CONTAINS</span><span class="p">,</span>
+</span><span id="__span-0-743"><a id="__codelineno-0-743" name="__codelineno-0-743"></a>                            <span class="n">value</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+</span><span id="__span-0-744"><a id="__codelineno-0-744" name="__codelineno-0-744"></a>                        <span class="p">)</span>
+</span><span id="__span-0-745"><a id="__codelineno-0-745" name="__codelineno-0-745"></a>                    <span class="p">]</span>
+</span><span id="__span-0-746"><a id="__codelineno-0-746" name="__codelineno-0-746"></a>                <span class="p">),</span>
+</span><span id="__span-0-747"><a id="__codelineno-0-747" name="__codelineno-0-747"></a>                <span class="n">sortCriteria</span><span class="o">=</span><span class="p">[</span>
+</span><span id="__span-0-748"><a id="__codelineno-0-748" name="__codelineno-0-748"></a>                    <span class="n">SortCriterion</span><span class="p">(</span>
+</span><span id="__span-0-749"><a id="__codelineno-0-749" name="__codelineno-0-749"></a>                        <span class="n">direction</span><span class="o">=</span><span class="n">SortDirection</span><span class="o">.</span><span class="n">DESC</span><span class="p">,</span> <span class="n">propertyName</span><span class="o">=</span><span class="s2">"CreatedAt"</span>
+</span><span id="__span-0-750"><a id="__codelineno-0-750" name="__codelineno-0-750"></a>                    <span class="p">)</span>
+</span><span id="__span-0-751"><a id="__codelineno-0-751" name="__codelineno-0-751"></a>                <span class="p">],</span>
+</span><span id="__span-0-752"><a id="__codelineno-0-752" name="__codelineno-0-752"></a>            <span class="p">),</span>
+</span><span id="__span-0-753"><a id="__codelineno-0-753" name="__codelineno-0-753"></a>        <span class="p">)</span>
+</span><span id="__span-0-754"><a id="__codelineno-0-754" name="__codelineno-0-754"></a>        <span class="n">jobs</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-0-755"><a id="__codelineno-0-755" name="__codelineno-0-755"></a>            <span class="n">RapidataJob</span><span class="p">(</span>
+</span><span id="__span-0-756"><a id="__codelineno-0-756" name="__codelineno-0-756"></a>                <span class="n">job_id</span><span class="o">=</span><span class="n">job</span><span class="o">.</span><span class="n">job_id</span><span class="p">,</span>
+</span><span id="__span-0-757"><a id="__codelineno-0-757" name="__codelineno-0-757"></a>                <span class="n">name</span><span class="o">=</span><span class="n">job</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+</span><span id="__span-0-758"><a id="__codelineno-0-758" name="__codelineno-0-758"></a>                <span class="n">audience_id</span><span class="o">=</span><span class="n">job</span><span class="o">.</span><span class="n">audience_id</span><span class="p">,</span>
+</span><span id="__span-0-759"><a id="__codelineno-0-759" name="__codelineno-0-759"></a>                <span class="n">created_at</span><span class="o">=</span><span class="n">job</span><span class="o">.</span><span class="n">created_at</span><span class="p">,</span>
+</span><span id="__span-0-760"><a id="__codelineno-0-760" name="__codelineno-0-760"></a>                <span class="n">definition_id</span><span class="o">=</span><span class="n">job</span><span class="o">.</span><span class="n">definition_id</span><span class="p">,</span>
+</span><span id="__span-0-761"><a id="__codelineno-0-761" name="__codelineno-0-761"></a>                <span class="n">openapi_service</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_openapi_service</span><span class="p">,</span>
+</span><span id="__span-0-762"><a id="__codelineno-0-762" name="__codelineno-0-762"></a>                <span class="n">pipeline_id</span><span class="o">=</span><span class="n">job</span><span class="o">.</span><span class="n">pipeline_id</span><span class="p">,</span>
+</span><span id="__span-0-763"><a id="__codelineno-0-763" name="__codelineno-0-763"></a>            <span class="p">)</span>
+</span><span id="__span-0-764"><a id="__codelineno-0-764" name="__codelineno-0-764"></a>            <span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">items</span>
+</span><span id="__span-0-765"><a id="__codelineno-0-765" name="__codelineno-0-765"></a>        <span class="p">]</span>
+</span><span id="__span-0-766"><a id="__codelineno-0-766" name="__codelineno-0-766"></a>        <span class="k">return</span> <span class="n">jobs</span>
 </span></code></pre></div></td></tr></tbody></table></div>
             </details>
     </div>
