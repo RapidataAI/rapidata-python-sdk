@@ -5,16 +5,15 @@
   </a>
 </div>
 
-## Developer Quickstart
 Set up your environment and make your first API request in minutes.
 
 <div class="grid cards" markdown>
 
--   __Developer Quickstart__
+-   __Quick Start__
 
     ---
 
-    Create qualified audiences and have them label your data.
+    Get real humans to label your data in minutes.
 
     ```python
     pip install -U rapidata
@@ -130,6 +129,9 @@ Set up your environment and make your first API request in minutes.
         results = job.get_results()
         print(results)
         ```
-    [:octicons-arrow-right-24: Let's go](quickstart.md)
+
+    > **Note**: The global audience gets you started quickly. For higher quality results, use a [custom audience](audiences.md) with qualification examples.
+
+    [:octicons-arrow-right-24: Quickstart Guide](quickstart.md)
 
 </div>

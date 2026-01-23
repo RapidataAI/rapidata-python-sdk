@@ -8,7 +8,6 @@ The workflow consists of three main concepts:
 2. **Job Definition**: The configuration for your labeling task (instruction, datapoints, settings)
 3. **Job**: A running labeling task assigned to an audience
 
-> **Two audience options**: Use the **global audience** to get started quickly, or create a **custom audience** with qualification examples for highest quality results.
 
 ## Installation
 
@@ -46,7 +45,7 @@ The simplest way to get started is with the global audience - a pre-existing poo
 audience = client.audience.get_audience_by_id("global")
 ```
 
-This is the quickest path to get your data labeled. For higher quality results, see [Upgrading to a Custom Audience](#upgrading-to-a-custom-audience) below.
+> **Note**: The global audience gets you started quickly, but results may be less accurate than a custom audience trained with examples specific to your task. For higher quality, see [Custom Audiences](audiences.md).
 
 ### Step 2: Create a Job Definition
 
@@ -94,41 +93,6 @@ results = job.get_results()
 You can also monitor progress on the [Rapidata Dashboard](https://app.rapidata.ai/dashboard).
 
 To understand the results format, see the [Understanding the Results](understanding_the_results.md) guide.
-
-## Upgrading to a Custom Audience
-
-For the highest quality results, create your own audience with qualification examples. Qualification examples filter out labelers who don't understand your task before they work on your actual data.
-
-### Create an Audience
-
-```py
-audience = client.audience.create_audience(name="Image Comparison Audience")
-```
-
-### Add Qualification Examples
-
-Add examples that labelers must answer correctly to join your audience:
-
-```py
-audience.add_compare_example(
-    instruction="Which image follows the prompt more accurately?",
-    datapoint=[
-        "https://assets.rapidata.ai/flux_sign_diffusion.jpg",
-        "https://assets.rapidata.ai/mj_sign_diffusion.jpg"
-    ],
-    truth="https://assets.rapidata.ai/flux_sign_diffusion.jpg",
-    context="A sign that says 'Diffusion'."
-)
-```
-
-The parameters are:
-
-- `instruction`: The question shown to labelers
-- `datapoint`: The two items to compare
-- `truth`: The correct answer (must be one of the datapoint items)
-- `context`: Additional context shown alongside the comparison (optional)
-
-You can add multiple qualification examples to better filter your audience. Only labelers who pass these examples will work on your data.
 
 ## Retrieve Existing Resources
 
@@ -201,50 +165,9 @@ results = job.get_results()
 print(results)
 ```
 
-## Complete Example with Custom Audience
-
-For highest quality results, create a custom audience with qualification examples:
-
-```py
-from rapidata import RapidataClient
-
-client = RapidataClient()
-
-# Create and configure audience
-audience = client.audience.create_audience(name="Prompt Alignment Audience")
-audience.add_compare_example(
-    instruction="Which image follows the prompt more accurately?",
-    datapoint=[
-        "https://assets.rapidata.ai/flux_sign_diffusion.jpg",
-        "https://assets.rapidata.ai/mj_sign_diffusion.jpg"
-    ],
-    truth="https://assets.rapidata.ai/flux_sign_diffusion.jpg",
-    context="A sign that says 'Diffusion'."
-)
-
-# Create job definition
-job_definition = client.job.create_compare_job_definition(
-    name="Prompt Alignment Job",
-    instruction="Which image follows the prompt more accurately?",
-    datapoints=[
-        ["https://assets.rapidata.ai/flux_flower.jpg",
-         "https://assets.rapidata.ai/mj_flower.jpg"]
-    ],
-    contexts=["A yellow flower sticking out of a green pot."]
-)
-
-# Preview before running
-job_definition.preview()
-
-# Assign to audience and get results
-job = audience.assign_job(job_definition)
-job.display_progress_bar()
-results = job.get_results()
-print(results)
-```
-
 ## Next Steps
 
+- Create [Custom Audiences](audiences.md) for higher quality results
 - Learn about [Classification Jobs](examples/classify_job.md) for categorizing data
 - Understand the [Results Format](understanding_the_results.md)
 - Configure [Early Stopping](confidence_stopping.md) based on confidence thresholds
