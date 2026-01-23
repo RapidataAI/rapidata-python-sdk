@@ -172,3 +172,4 @@ customers/
 *.ipynb
 
 .idea/
+.claude/
