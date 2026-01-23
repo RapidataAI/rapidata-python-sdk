@@ -17,6 +17,7 @@ from rapidata.service.openapi_service import OpenAPIService
 from rapidata.api_client.models.i_rapid_payload import IRapidPayload
 from rapidata.api_client.models.i_validation_truth import IValidationTruth
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
+from rapidata.rapidata_client.datapoints._asset_mapper import AssetMapper
 
 
 class AudienceExampleHandler:
@@ -28,6 +29,7 @@ class AudienceExampleHandler:
         self._openapi_service = openapi_service
         self._audience_id = audience_id
         self._asset_uploader = AssetUploader(openapi_service)
+        self._asset_mapper = AssetMapper()
 
     def add_classification_example(
         self,
@@ -63,9 +65,10 @@ class AudienceExampleHandler:
             raise ValueError("Truth must be part of the answer options")
 
         if data_type == "media":
-            asset_input = self._asset_uploader.get_uploaded_asset_input(datapoint)
+            uploaded_name = self._asset_uploader.upload_asset(datapoint)
+            asset_input = self._asset_mapper.create_existing_asset_input(uploaded_name)
         else:
-            asset_input = self._asset_uploader.get_uploaded_text_input(datapoint)
+            asset_input = self._asset_mapper.create_text_input(datapoint)
 
         payload = IRapidPayload(
             actual_instance=IRapidPayloadClassifyPayload(
@@ -91,7 +94,9 @@ class AudienceExampleHandler:
                 truth=model_truth,
                 context=context,
                 contextAsset=(
-                    self._asset_uploader.get_uploaded_asset_input(media_context)
+                    self._asset_mapper.create_existing_asset_input(
+                        self._asset_uploader.upload_asset(media_context)
+                    )
                     if media_context
                     else None
                 ),
@@ -130,16 +135,27 @@ class AudienceExampleHandler:
                 _t="ComparePayload", criteria=instruction
             )
         )
+
+        uploaded_names: list[str] = []
+        if data_type == "media":
+            uploaded_names = [self._asset_uploader.upload_asset(dp) for dp in datapoint]
+            asset_input = self._asset_mapper.create_existing_asset_input(uploaded_names)
+        else:
+            asset_input = self._asset_mapper.create_text_input(datapoint)
+
+        if truth not in datapoint:
+            raise ValueError("Truth must be one of the datapoints")
+
+        truth_index = datapoint.index(truth)
+        if data_type == "media":
+            winner_id = uploaded_names[truth_index]
+        else:
+            winner_id = truth
         model_truth = IValidationTruth(
             actual_instance=IValidationTruthCompareTruth(
-                _t="CompareTruth", winnerId=truth
+                _t="CompareTruth", winnerId=winner_id
             )
         )
-
-        if data_type == "media":
-            asset_input = self._asset_uploader.get_uploaded_asset_input(datapoint)
-        else:
-            asset_input = self._asset_uploader.get_uploaded_text_input(datapoint)
 
         if len(datapoint) != 2:
             raise ValueError("Compare rapid requires exactly two media paths")
@@ -152,7 +168,9 @@ class AudienceExampleHandler:
                 truth=model_truth,
                 context=context,
                 contextAsset=(
-                    self._asset_uploader.get_uploaded_asset_input(media_context)
+                    self._asset_mapper.create_existing_asset_input(
+                        self._asset_uploader.upload_asset(media_context)
+                    )
                     if media_context
                     else None
                 ),

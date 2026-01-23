@@ -120,68 +120,6 @@ class AssetUploader:
 
             return self._upload_file_asset(asset)
 
-    def get_uploaded_text_input(self, assets: list[str] | str) -> IAssetInput:
-        from rapidata.api_client.models.i_asset_input import IAssetInput
-        from rapidata.api_client.models.i_asset_input_text_asset_input import (
-            IAssetInputTextAssetInput,
-        )
-        from rapidata.api_client.models.i_asset_input_multi_asset_input import (
-            IAssetInputMultiAssetInput,
-        )
-
-        if isinstance(assets, list):
-            return IAssetInput(
-                actual_instance=IAssetInputMultiAssetInput(
-                    _t="MultiAssetInput",
-                    assets=[
-                        IAssetInput(
-                            actual_instance=IAssetInputTextAssetInput(
-                                _t="TextAssetInput", text=asset
-                            )
-                        )
-                        for asset in assets
-                    ],
-                )
-            )
-        else:
-            return IAssetInput(
-                actual_instance=IAssetInputTextAssetInput(
-                    _t="TextAssetInput", text=assets
-                )
-            )
-
-    def get_uploaded_asset_input(self, assets: list[str] | str) -> IAssetInput:
-        from rapidata.api_client.models.i_asset_input import IAssetInput
-        from rapidata.api_client.models.i_asset_input_existing_asset_input import (
-            IAssetInputExistingAssetInput,
-        )
-        from rapidata.api_client.models.i_asset_input_multi_asset_input import (
-            IAssetInputMultiAssetInput,
-        )
-
-        if isinstance(assets, list):
-            return IAssetInput(
-                actual_instance=IAssetInputMultiAssetInput(
-                    _t="MultiAssetInput",
-                    assets=[
-                        IAssetInput(
-                            actual_instance=IAssetInputExistingAssetInput(
-                                _t="ExistingAssetInput",
-                                name=self.upload_asset(asset),
-                            )
-                        )
-                        for asset in assets
-                    ],
-                )
-            )
-        else:
-            return IAssetInput(
-                actual_instance=IAssetInputExistingAssetInput(
-                    _t="ExistingAssetInput",
-                    name=self.upload_asset(assets),
-                )
-            )
-
     def clear_cache(self):
         self._file_cache.clear()
         self._url_cache.clear()
