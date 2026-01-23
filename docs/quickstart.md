@@ -4,9 +4,10 @@ Get real humans to label your data. This guide shows you how to create a labelin
 
 The workflow consists of three main concepts:
 
-1. **Audience**: A group of qualified labelers who have passed your qualification examples
+1. **Audience**: A group of labelers who will work on your tasks
 2. **Job Definition**: The configuration for your labeling task (instruction, datapoints, settings)
 3. **Job**: A running labeling task assigned to an audience
+
 
 ## Installation
 
@@ -36,61 +37,35 @@ from rapidata import RapidataClient
 client = RapidataClient(client_id="Your client ID", client_secret="Your client secret")
 ```
 
-### Step 1: Create an Audience
+### Step 1: Get an Audience
 
-An audience is a pool of labelers who are qualified to work on your tasks. You create an audience and add qualification examples that labelers must answer correctly to join.
-
-```py
-audience = client.audience.create_audience(name="Image Comparison Audience")
-```
-
-### Step 2: Add Qualification Examples
-
-Add examples that labelers must answer correctly to join your audience. This ensures only qualified labelers work on your data.
+The simplest way to get started is with the global audience - a pre-existing pool of labelers ready to work on your tasks:
 
 ```py
-audience.add_compare_example(
-    instruction="Which image follows the prompt more accurately?",
-    datapoint=[
-        "https://assets.rapidata.ai/flux_sign_diffusion.jpg",
-        "https://assets.rapidata.ai/mj_sign_diffusion.jpg"
-    ],
-    truth="https://assets.rapidata.ai/flux_sign_diffusion.jpg",
-    context="A sign that says 'Diffusion'."
-)
+audience = client.audience.get_audience_by_id("global")
 ```
 
-The parameters are:
+> **Note**: The global audience gets you started quickly, but results may be less accurate than a custom audience trained with examples specific to your task. For higher quality, see [Custom Audiences](audiences.md).
 
-- `instruction`: The question shown to labelers
-- `datapoint`: The two items to compare
-- `truth`: The correct answer (must be one of the datapoint items)
-- `context`: Additional context shown alongside the comparison (optional)
-
-### Step 3: Create a Job Definition
+### Step 2: Create a Job Definition
 
 A job definition configures what you want labeled. Here we create a compare job to assess image-prompt alignment:
 
 ```py
 job_definition = client.job.create_compare_job_definition(
-    name="Prompt Alignment Comparison",
-    instruction="Which image follows the prompt more accurately?",
+    name="Example Image Comparison",
+    instruction="Which image matches the description better?",
     datapoints=[
-        ["https://assets.rapidata.ai/flux_sign_diffusion.jpg",
-         "https://assets.rapidata.ai/mj_sign_diffusion.jpg"],
-        ["https://assets.rapidata.ai/flux_flower.jpg",
-         "https://assets.rapidata.ai/mj_flower.jpg"]
+        ["https://assets.rapidata.ai/midjourney-5.2_37_3.jpg",
+         "https://assets.rapidata.ai/flux-1-pro_37_0.jpg"]
     ],
-    contexts=[
-        "A sign that says 'Diffusion'.",
-        "A yellow flower sticking out of a green pot."
-    ]
+    contexts=["A small blue book sitting on a large red book."]
 )
 ```
 
 For a detailed explanation of all available parameters (including name, instruction, datapoints, contexts, quality control options, and more), see the [Job Definition Parameters Reference](job_definition_parameters.md).
 
-### Step 4: Preview the Job Definition
+### Step 3: Preview the Job Definition
 
 Before running your job, preview it to see exactly what labelers will see:
 
@@ -100,21 +75,12 @@ job_definition.preview()
 
 This opens your browser where you can review and adjust the job configuration.
 
-### Step 5: Assign Job to Audience
+### Step 4: Run and Get Results
 
-Once you're satisfied with your job definition, assign it to your audience to start collecting responses:
+Assign your job definition to the audience and monitor progress:
 
 ```py
 job = audience.assign_job(job_definition)
-```
-
-Labelers who have passed your qualification examples will now start working on your data.
-
-### Step 6: Monitor Progress and Get Results
-
-Monitor progress on the [Rapidata Dashboard](https://app.rapidata.ai/dashboard) or programmatically:
-
-```py
 job.display_progress_bar()
 ```
 
@@ -123,6 +89,8 @@ Once complete, retrieve your results:
 ```py
 results = job.get_results()
 ```
+
+You can also monitor progress on the [Rapidata Dashboard](https://app.rapidata.ai/dashboard).
 
 To understand the results format, see the [Understanding the Results](understanding_the_results.md) guide.
 
@@ -166,34 +134,25 @@ jobs = audience.find_jobs("Prompt Alignment")
 
 ## Complete Example
 
-Here's the full workflow in one script:
+Here's the full workflow using the global audience:
 
 ```py
 from rapidata import RapidataClient
 
 client = RapidataClient()
 
-# Create and configure audience
-audience = client.audience.create_audience(name="Prompt Alignment Audience")
-audience.add_compare_example(
-    instruction="Which image follows the prompt more accurately?",
-    datapoint=[
-        "https://assets.rapidata.ai/flux_sign_diffusion.jpg",
-        "https://assets.rapidata.ai/mj_sign_diffusion.jpg"
-    ],
-    truth="https://assets.rapidata.ai/flux_sign_diffusion.jpg",
-    context="A sign that says 'Diffusion'."
-)
+# Get the global audience
+audience = client.audience.get_audience_by_id("global")
 
 # Create job definition
 job_definition = client.job.create_compare_job_definition(
-    name="Prompt Alignment Job",
-    instruction="Which image follows the prompt more accurately?",
+    name="Example Image Comparison",
+    instruction="Which image matches the description better?",
     datapoints=[
-        ["https://assets.rapidata.ai/flux_flower.jpg",
-         "https://assets.rapidata.ai/mj_flower.jpg"]
+        ["https://assets.rapidata.ai/midjourney-5.2_37_3.jpg",
+         "https://assets.rapidata.ai/flux-1-pro_37_0.jpg"]
     ],
-    contexts=["A yellow flower sticking out of a green pot."]
+    contexts=["A small blue book sitting on a large red book."]
 )
 
 # Preview before running
@@ -208,6 +167,7 @@ print(results)
 
 ## Next Steps
 
+- Create [Custom Audiences](audiences.md) for higher quality results
 - Learn about [Classification Jobs](examples/classify_job.md) for categorizing data
 - Understand the [Results Format](understanding_the_results.md)
 - Configure [Early Stopping](confidence_stopping.md) based on confidence thresholds

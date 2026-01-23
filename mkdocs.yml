@@ -56,6 +56,7 @@ plugins:
         Guides:
           - starting_page.md
           - quickstart.md
+          - audiences.md
           - job_definition_parameters.md
           - understanding_the_results.md
           - confidence_stopping.md
@@ -106,6 +107,7 @@ nav:
     - "🏠 Guides":
       - "👀 Overview": starting_page.md
       - "🚀 Quick Start": quickstart.md
+      - "👥 Custom Audiences": audiences.md
       - "📖 Parameter Reference": job_definition_parameters.md
       - "📊 Understanding Results": understanding_the_results.md
       - "🛑 Confidence Stopping": confidence_stopping.md

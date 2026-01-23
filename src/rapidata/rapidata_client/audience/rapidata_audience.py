@@ -128,6 +128,7 @@ class RapidataAudience:
                 CreateJobEndpointInput,
             )
             from rapidata.rapidata_client.job.rapidata_job import RapidataJob
+            from datetime import datetime
 
             logger.debug(f"Assigning job to audience: {self.id}")
             response = self._openapi_service.job_api.job_post(
@@ -137,7 +138,12 @@ class RapidataAudience:
                 ),
             )
             job = RapidataJob(
-                response.job_id, job_definition._name, self._openapi_service
+                job_id=response.job_id,
+                name=job_definition._name,
+                audience_id=self.id,
+                created_at=datetime.now(),
+                definition_id=job_definition._id,
+                openapi_service=self._openapi_service,
             )
             logger.info(f"Assigned job to audience: {self.id}")
             return job
@@ -276,7 +282,15 @@ class RapidataAudience:
                 ),
             )
             return [
-                RapidataJob(job.job_id, job.name, self._openapi_service)
+                RapidataJob(
+                    job_id=job.job_id,
+                    name=job.name,
+                    audience_id=job.audience_id,
+                    created_at=job.created_at,
+                    definition_id=job.definition_id,
+                    openapi_service=self._openapi_service,
+                    pipeline_id=job.pipeline_id,
+                )
                 for job in response.items
             ]
 
