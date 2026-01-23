@@ -16,7 +16,8 @@
       "Bash(uv run python:*)",
       "Bash(uv run mkdocs:*)",
       "Bash(dir \"C:\\\\Rapidata\\\\Git\\\\rapidata-python-sdk\\\\docs\")",
-      "Bash(git -C \"C:\\\\Rapidata\\\\Git\\\\rapidata-python-sdk\" log --oneline --all -- docs/llms.txt)"
+      "Bash(git -C \"C:\\\\Rapidata\\\\Git\\\\rapidata-python-sdk\" log --oneline --all -- docs/llms.txt)",
+      "Bash(git log:*)"
     ],
     "deny": [],
     "ask": []
