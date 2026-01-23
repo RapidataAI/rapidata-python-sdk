@@ -48,7 +48,7 @@ class AudienceExampleHandler:
             instruction (str): The instruction/question to be shown to the labeler.
             answer_options (list[str]): The options that the labeler can choose from to answer the question.
             datapoint (str): The datapoint that the labeler will be labeling.
-            truts (list[str]): The correct answers to the question.
+            truth (list[str]): The correct answers to the question.
             data_type (str, optional): The type of the datapoint. Defaults to "media" (any form of image, video or audio).
             context (str, optional): The context is text that will be shown in addition to the instruction. Defaults to None.
             media_context (str, optional): The media context is a link to an image / video that will be shown in addition to the instruction (can be combined with context). Defaults to None.
