@@ -35,6 +35,7 @@ class RapidataDataset:
         uploader: ThreadedUploader[Datapoint] = ThreadedUploader(
             upload_fn=upload_single_datapoint,
             description="Uploading datapoints",
+            environment=self.openapi_service.environment,
         )
 
         successful_uploads, failed_uploads = uploader.upload(datapoints)
