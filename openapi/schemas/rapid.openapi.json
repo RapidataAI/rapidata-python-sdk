@@ -1963,6 +1963,9 @@
         "type": "object",
         "oneOf": [
           {
+            "$ref": "#/components/schemas/IRefereeInfoQuorumRefereeInfo"
+          },
+          {
             "$ref": "#/components/schemas/IRefereeInfoProbabilisticAttachCategoryRefereeInfo"
           },
           {
@@ -1975,6 +1978,7 @@
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
+            "QuorumRefereeInfo": "#/components/schemas/IRefereeInfoQuorumRefereeInfo",
             "ProbabilisticAttachCategoryRefereeInfo": "#/components/schemas/IRefereeInfoProbabilisticAttachCategoryRefereeInfo",
             "NeverEndingRefereeInfo": "#/components/schemas/IRefereeInfoNeverEndingRefereeInfo",
             "NaiveRefereeInfo": "#/components/schemas/IRefereeInfoNaiveRefereeInfo"
@@ -2029,6 +2033,29 @@
             "format": "double"
           },
           "maxVotes": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IRefereeInfoQuorumRefereeInfo": {
+        "required": [
+          "maxVotes",
+          "threshold",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "QuorumRefereeInfo"
+            ],
+            "type": "string"
+          },
+          "maxVotes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "threshold": {
             "type": "integer",
             "format": "int32"
           }

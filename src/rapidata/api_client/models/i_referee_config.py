@@ -20,11 +20,12 @@ from typing import Any, List, Optional
 from rapidata.api_client.models.i_referee_config_naive_referee_config import IRefereeConfigNaiveRefereeConfig
 from rapidata.api_client.models.i_referee_config_never_ending_referee_config import IRefereeConfigNeverEndingRefereeConfig
 from rapidata.api_client.models.i_referee_config_probabilistic_attach_category_referee_config import IRefereeConfigProbabilisticAttachCategoryRefereeConfig
+from rapidata.api_client.models.i_referee_config_quorum_referee_config import IRefereeConfigQuorumRefereeConfig
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-IREFEREECONFIG_ONE_OF_SCHEMAS = ["IRefereeConfigNaiveRefereeConfig", "IRefereeConfigNeverEndingRefereeConfig", "IRefereeConfigProbabilisticAttachCategoryRefereeConfig"]
+IREFEREECONFIG_ONE_OF_SCHEMAS = ["IRefereeConfigNaiveRefereeConfig", "IRefereeConfigNeverEndingRefereeConfig", "IRefereeConfigProbabilisticAttachCategoryRefereeConfig", "IRefereeConfigQuorumRefereeConfig"]
 
 class IRefereeConfig(BaseModel):
     """
@@ -36,8 +37,10 @@ class IRefereeConfig(BaseModel):
     oneof_schema_2_validator: Optional[IRefereeConfigNeverEndingRefereeConfig] = None
     # data type: IRefereeConfigProbabilisticAttachCategoryRefereeConfig
     oneof_schema_3_validator: Optional[IRefereeConfigProbabilisticAttachCategoryRefereeConfig] = None
-    actual_instance: Optional[Union[IRefereeConfigNaiveRefereeConfig, IRefereeConfigNeverEndingRefereeConfig, IRefereeConfigProbabilisticAttachCategoryRefereeConfig]] = None
-    one_of_schemas: Set[str] = { "IRefereeConfigNaiveRefereeConfig", "IRefereeConfigNeverEndingRefereeConfig", "IRefereeConfigProbabilisticAttachCategoryRefereeConfig" }
+    # data type: IRefereeConfigQuorumRefereeConfig
+    oneof_schema_4_validator: Optional[IRefereeConfigQuorumRefereeConfig] = None
+    actual_instance: Optional[Union[IRefereeConfigNaiveRefereeConfig, IRefereeConfigNeverEndingRefereeConfig, IRefereeConfigProbabilisticAttachCategoryRefereeConfig, IRefereeConfigQuorumRefereeConfig]] = None
+    one_of_schemas: Set[str] = { "IRefereeConfigNaiveRefereeConfig", "IRefereeConfigNeverEndingRefereeConfig", "IRefereeConfigProbabilisticAttachCategoryRefereeConfig", "IRefereeConfigQuorumRefereeConfig" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -78,12 +81,17 @@ class IRefereeConfig(BaseModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IRefereeConfigProbabilisticAttachCategoryRefereeConfig`")
         else:
             match += 1
+        # validate data type: IRefereeConfigQuorumRefereeConfig
+        if not isinstance(v, IRefereeConfigQuorumRefereeConfig):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRefereeConfigQuorumRefereeConfig`")
+        else:
+            match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in IRefereeConfig with oneOf schemas: IRefereeConfigNaiveRefereeConfig, IRefereeConfigNeverEndingRefereeConfig, IRefereeConfigProbabilisticAttachCategoryRefereeConfig. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in IRefereeConfig with oneOf schemas: IRefereeConfigNaiveRefereeConfig, IRefereeConfigNeverEndingRefereeConfig, IRefereeConfigProbabilisticAttachCategoryRefereeConfig, IRefereeConfigQuorumRefereeConfig. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in IRefereeConfig with oneOf schemas: IRefereeConfigNaiveRefereeConfig, IRefereeConfigNeverEndingRefereeConfig, IRefereeConfigProbabilisticAttachCategoryRefereeConfig. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in IRefereeConfig with oneOf schemas: IRefereeConfigNaiveRefereeConfig, IRefereeConfigNeverEndingRefereeConfig, IRefereeConfigProbabilisticAttachCategoryRefereeConfig, IRefereeConfigQuorumRefereeConfig. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -116,13 +124,19 @@ class IRefereeConfig(BaseModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
+        # deserialize data into IRefereeConfigQuorumRefereeConfig
+        try:
+            instance.actual_instance = IRefereeConfigQuorumRefereeConfig.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into IRefereeConfig with oneOf schemas: IRefereeConfigNaiveRefereeConfig, IRefereeConfigNeverEndingRefereeConfig, IRefereeConfigProbabilisticAttachCategoryRefereeConfig. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into IRefereeConfig with oneOf schemas: IRefereeConfigNaiveRefereeConfig, IRefereeConfigNeverEndingRefereeConfig, IRefereeConfigProbabilisticAttachCategoryRefereeConfig, IRefereeConfigQuorumRefereeConfig. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into IRefereeConfig with oneOf schemas: IRefereeConfigNaiveRefereeConfig, IRefereeConfigNeverEndingRefereeConfig, IRefereeConfigProbabilisticAttachCategoryRefereeConfig. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into IRefereeConfig with oneOf schemas: IRefereeConfigNaiveRefereeConfig, IRefereeConfigNeverEndingRefereeConfig, IRefereeConfigProbabilisticAttachCategoryRefereeConfig, IRefereeConfigQuorumRefereeConfig. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -136,7 +150,7 @@ class IRefereeConfig(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], IRefereeConfigNaiveRefereeConfig, IRefereeConfigNeverEndingRefereeConfig, IRefereeConfigProbabilisticAttachCategoryRefereeConfig]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], IRefereeConfigNaiveRefereeConfig, IRefereeConfigNeverEndingRefereeConfig, IRefereeConfigProbabilisticAttachCategoryRefereeConfig, IRefereeConfigQuorumRefereeConfig]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

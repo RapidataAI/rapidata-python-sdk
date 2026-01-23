@@ -2163,6 +2163,9 @@
           },
           {
             "$ref": "#/components/schemas/IRefereeConfigProbabilisticAttachCategoryRefereeConfig"
+          },
+          {
+            "$ref": "#/components/schemas/IRefereeConfigQuorumRefereeConfig"
           }
         ],
         "discriminator": {
@@ -2170,7 +2173,8 @@
           "mapping": {
             "NaiveRefereeConfig": "#/components/schemas/IRefereeConfigNaiveRefereeConfig",
             "NeverEndingRefereeConfig": "#/components/schemas/IRefereeConfigNeverEndingRefereeConfig",
-            "ProbabilisticAttachCategoryRefereeConfig": "#/components/schemas/IRefereeConfigProbabilisticAttachCategoryRefereeConfig"
+            "ProbabilisticAttachCategoryRefereeConfig": "#/components/schemas/IRefereeConfigProbabilisticAttachCategoryRefereeConfig",
+            "QuorumRefereeConfig": "#/components/schemas/IRefereeConfigQuorumRefereeConfig"
           }
         }
       },
@@ -2222,6 +2226,29 @@
             "format": "double"
           },
           "maxVotes": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IRefereeConfigQuorumRefereeConfig": {
+        "required": [
+          "maxVotes",
+          "threshold",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "QuorumRefereeConfig"
+            ],
+            "type": "string"
+          },
+          "maxVotes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "threshold": {
             "type": "integer",
             "format": "int32"
           }

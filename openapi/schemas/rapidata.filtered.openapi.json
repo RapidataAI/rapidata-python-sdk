@@ -16023,13 +16023,17 @@
           },
           {
             "$ref": "#/components/schemas/IRefereeModelNaiveRefereeModel"
+          },
+          {
+            "$ref": "#/components/schemas/IRefereeModelQuorumRefereeModel"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
             "EarlyStoppingReferee": "#/components/schemas/IRefereeModelEarlyStoppingRefereeModel",
-            "NaiveReferee": "#/components/schemas/IRefereeModelNaiveRefereeModel"
+            "NaiveReferee": "#/components/schemas/IRefereeModelNaiveRefereeModel",
+            "QuorumReferee": "#/components/schemas/IRefereeModelQuorumRefereeModel"
           }
         }
       },
@@ -16069,6 +16073,29 @@
             "type": "string"
           },
           "totalVotes": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IRefereeModelQuorumRefereeModel": {
+        "required": [
+          "maxVotes",
+          "threshold",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "QuorumReferee"
+            ],
+            "type": "string"
+          },
+          "maxVotes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "threshold": {
             "type": "integer",
             "format": "int32"
           }
@@ -16135,10 +16162,6 @@
               "AbTestSelection"
             ],
             "type": "string"
-          },
-          "userSegment": {
-            "type": "string",
-            "nullable": true
           },
           "a": {
             "$ref": "#/components/schemas/ListOfISelection"
@@ -17183,6 +17206,9 @@
           },
           {
             "$ref": "#/components/schemas/IRefereeConfigProbabilisticAttachCategoryRefereeConfig"
+          },
+          {
+            "$ref": "#/components/schemas/IRefereeConfigQuorumRefereeConfig"
           }
         ],
         "discriminator": {
@@ -17190,7 +17216,8 @@
           "mapping": {
             "NaiveRefereeConfig": "#/components/schemas/IRefereeConfigNaiveRefereeConfig",
             "NeverEndingRefereeConfig": "#/components/schemas/IRefereeConfigNeverEndingRefereeConfig",
-            "ProbabilisticAttachCategoryRefereeConfig": "#/components/schemas/IRefereeConfigProbabilisticAttachCategoryRefereeConfig"
+            "ProbabilisticAttachCategoryRefereeConfig": "#/components/schemas/IRefereeConfigProbabilisticAttachCategoryRefereeConfig",
+            "QuorumRefereeConfig": "#/components/schemas/IRefereeConfigQuorumRefereeConfig"
           }
         }
       },
@@ -17242,6 +17269,29 @@
             "format": "double"
           },
           "maxVotes": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IRefereeConfigQuorumRefereeConfig": {
+        "required": [
+          "maxVotes",
+          "threshold",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "QuorumRefereeConfig"
+            ],
+            "type": "string"
+          },
+          "maxVotes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "threshold": {
             "type": "integer",
             "format": "int32"
           }
@@ -17988,6 +18038,9 @@
         "type": "object",
         "oneOf": [
           {
+            "$ref": "#/components/schemas/IRefereeInfoQuorumRefereeInfo"
+          },
+          {
             "$ref": "#/components/schemas/IRefereeInfoProbabilisticAttachCategoryRefereeInfo"
           },
           {
@@ -18000,6 +18053,7 @@
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
+            "QuorumRefereeInfo": "#/components/schemas/IRefereeInfoQuorumRefereeInfo",
             "ProbabilisticAttachCategoryRefereeInfo": "#/components/schemas/IRefereeInfoProbabilisticAttachCategoryRefereeInfo",
             "NeverEndingRefereeInfo": "#/components/schemas/IRefereeInfoNeverEndingRefereeInfo",
             "NaiveRefereeInfo": "#/components/schemas/IRefereeInfoNaiveRefereeInfo"
@@ -18054,6 +18108,29 @@
             "format": "double"
           },
           "maxVotes": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IRefereeInfoQuorumRefereeInfo": {
+        "required": [
+          "maxVotes",
+          "threshold",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "QuorumRefereeInfo"
+            ],
+            "type": "string"
+          },
+          "maxVotes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "threshold": {
             "type": "integer",
             "format": "int32"
           }

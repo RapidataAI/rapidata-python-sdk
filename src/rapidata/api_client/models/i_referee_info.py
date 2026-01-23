@@ -20,24 +20,27 @@ from typing import Any, List, Optional
 from rapidata.api_client.models.i_referee_info_naive_referee_info import IRefereeInfoNaiveRefereeInfo
 from rapidata.api_client.models.i_referee_info_never_ending_referee_info import IRefereeInfoNeverEndingRefereeInfo
 from rapidata.api_client.models.i_referee_info_probabilistic_attach_category_referee_info import IRefereeInfoProbabilisticAttachCategoryRefereeInfo
+from rapidata.api_client.models.i_referee_info_quorum_referee_info import IRefereeInfoQuorumRefereeInfo
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-IREFEREEINFO_ONE_OF_SCHEMAS = ["IRefereeInfoNaiveRefereeInfo", "IRefereeInfoNeverEndingRefereeInfo", "IRefereeInfoProbabilisticAttachCategoryRefereeInfo"]
+IREFEREEINFO_ONE_OF_SCHEMAS = ["IRefereeInfoNaiveRefereeInfo", "IRefereeInfoNeverEndingRefereeInfo", "IRefereeInfoProbabilisticAttachCategoryRefereeInfo", "IRefereeInfoQuorumRefereeInfo"]
 
 class IRefereeInfo(BaseModel):
     """
     IRefereeInfo
     """
+    # data type: IRefereeInfoQuorumRefereeInfo
+    oneof_schema_1_validator: Optional[IRefereeInfoQuorumRefereeInfo] = None
     # data type: IRefereeInfoProbabilisticAttachCategoryRefereeInfo
-    oneof_schema_1_validator: Optional[IRefereeInfoProbabilisticAttachCategoryRefereeInfo] = None
+    oneof_schema_2_validator: Optional[IRefereeInfoProbabilisticAttachCategoryRefereeInfo] = None
     # data type: IRefereeInfoNeverEndingRefereeInfo
-    oneof_schema_2_validator: Optional[IRefereeInfoNeverEndingRefereeInfo] = None
+    oneof_schema_3_validator: Optional[IRefereeInfoNeverEndingRefereeInfo] = None
     # data type: IRefereeInfoNaiveRefereeInfo
-    oneof_schema_3_validator: Optional[IRefereeInfoNaiveRefereeInfo] = None
-    actual_instance: Optional[Union[IRefereeInfoNaiveRefereeInfo, IRefereeInfoNeverEndingRefereeInfo, IRefereeInfoProbabilisticAttachCategoryRefereeInfo]] = None
-    one_of_schemas: Set[str] = { "IRefereeInfoNaiveRefereeInfo", "IRefereeInfoNeverEndingRefereeInfo", "IRefereeInfoProbabilisticAttachCategoryRefereeInfo" }
+    oneof_schema_4_validator: Optional[IRefereeInfoNaiveRefereeInfo] = None
+    actual_instance: Optional[Union[IRefereeInfoNaiveRefereeInfo, IRefereeInfoNeverEndingRefereeInfo, IRefereeInfoProbabilisticAttachCategoryRefereeInfo, IRefereeInfoQuorumRefereeInfo]] = None
+    one_of_schemas: Set[str] = { "IRefereeInfoNaiveRefereeInfo", "IRefereeInfoNeverEndingRefereeInfo", "IRefereeInfoProbabilisticAttachCategoryRefereeInfo", "IRefereeInfoQuorumRefereeInfo" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -63,6 +66,11 @@ class IRefereeInfo(BaseModel):
         instance = IRefereeInfo.model_construct()
         error_messages = []
         match = 0
+        # validate data type: IRefereeInfoQuorumRefereeInfo
+        if not isinstance(v, IRefereeInfoQuorumRefereeInfo):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRefereeInfoQuorumRefereeInfo`")
+        else:
+            match += 1
         # validate data type: IRefereeInfoProbabilisticAttachCategoryRefereeInfo
         if not isinstance(v, IRefereeInfoProbabilisticAttachCategoryRefereeInfo):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IRefereeInfoProbabilisticAttachCategoryRefereeInfo`")
@@ -80,10 +88,10 @@ class IRefereeInfo(BaseModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in IRefereeInfo with oneOf schemas: IRefereeInfoNaiveRefereeInfo, IRefereeInfoNeverEndingRefereeInfo, IRefereeInfoProbabilisticAttachCategoryRefereeInfo. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in IRefereeInfo with oneOf schemas: IRefereeInfoNaiveRefereeInfo, IRefereeInfoNeverEndingRefereeInfo, IRefereeInfoProbabilisticAttachCategoryRefereeInfo, IRefereeInfoQuorumRefereeInfo. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in IRefereeInfo with oneOf schemas: IRefereeInfoNaiveRefereeInfo, IRefereeInfoNeverEndingRefereeInfo, IRefereeInfoProbabilisticAttachCategoryRefereeInfo. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in IRefereeInfo with oneOf schemas: IRefereeInfoNaiveRefereeInfo, IRefereeInfoNeverEndingRefereeInfo, IRefereeInfoProbabilisticAttachCategoryRefereeInfo, IRefereeInfoQuorumRefereeInfo. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -98,6 +106,12 @@ class IRefereeInfo(BaseModel):
         error_messages = []
         match = 0
 
+        # deserialize data into IRefereeInfoQuorumRefereeInfo
+        try:
+            instance.actual_instance = IRefereeInfoQuorumRefereeInfo.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
         # deserialize data into IRefereeInfoProbabilisticAttachCategoryRefereeInfo
         try:
             instance.actual_instance = IRefereeInfoProbabilisticAttachCategoryRefereeInfo.from_json(json_str)
@@ -119,10 +133,10 @@ class IRefereeInfo(BaseModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into IRefereeInfo with oneOf schemas: IRefereeInfoNaiveRefereeInfo, IRefereeInfoNeverEndingRefereeInfo, IRefereeInfoProbabilisticAttachCategoryRefereeInfo. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into IRefereeInfo with oneOf schemas: IRefereeInfoNaiveRefereeInfo, IRefereeInfoNeverEndingRefereeInfo, IRefereeInfoProbabilisticAttachCategoryRefereeInfo, IRefereeInfoQuorumRefereeInfo. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into IRefereeInfo with oneOf schemas: IRefereeInfoNaiveRefereeInfo, IRefereeInfoNeverEndingRefereeInfo, IRefereeInfoProbabilisticAttachCategoryRefereeInfo. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into IRefereeInfo with oneOf schemas: IRefereeInfoNaiveRefereeInfo, IRefereeInfoNeverEndingRefereeInfo, IRefereeInfoProbabilisticAttachCategoryRefereeInfo, IRefereeInfoQuorumRefereeInfo. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -136,7 +150,7 @@ class IRefereeInfo(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], IRefereeInfoNaiveRefereeInfo, IRefereeInfoNeverEndingRefereeInfo, IRefereeInfoProbabilisticAttachCategoryRefereeInfo]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], IRefereeInfoNaiveRefereeInfo, IRefereeInfoNeverEndingRefereeInfo, IRefereeInfoProbabilisticAttachCategoryRefereeInfo, IRefereeInfoQuorumRefereeInfo]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

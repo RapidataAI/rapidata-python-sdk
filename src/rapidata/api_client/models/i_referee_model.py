@@ -19,11 +19,12 @@ from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, f
 from typing import Any, List, Optional
 from rapidata.api_client.models.i_referee_model_early_stopping_referee_model import IRefereeModelEarlyStoppingRefereeModel
 from rapidata.api_client.models.i_referee_model_naive_referee_model import IRefereeModelNaiveRefereeModel
+from rapidata.api_client.models.i_referee_model_quorum_referee_model import IRefereeModelQuorumRefereeModel
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-IREFEREEMODEL_ONE_OF_SCHEMAS = ["IRefereeModelEarlyStoppingRefereeModel", "IRefereeModelNaiveRefereeModel"]
+IREFEREEMODEL_ONE_OF_SCHEMAS = ["IRefereeModelEarlyStoppingRefereeModel", "IRefereeModelNaiveRefereeModel", "IRefereeModelQuorumRefereeModel"]
 
 class IRefereeModel(BaseModel):
     """
@@ -33,8 +34,10 @@ class IRefereeModel(BaseModel):
     oneof_schema_1_validator: Optional[IRefereeModelEarlyStoppingRefereeModel] = None
     # data type: IRefereeModelNaiveRefereeModel
     oneof_schema_2_validator: Optional[IRefereeModelNaiveRefereeModel] = None
-    actual_instance: Optional[Union[IRefereeModelEarlyStoppingRefereeModel, IRefereeModelNaiveRefereeModel]] = None
-    one_of_schemas: Set[str] = { "IRefereeModelEarlyStoppingRefereeModel", "IRefereeModelNaiveRefereeModel" }
+    # data type: IRefereeModelQuorumRefereeModel
+    oneof_schema_3_validator: Optional[IRefereeModelQuorumRefereeModel] = None
+    actual_instance: Optional[Union[IRefereeModelEarlyStoppingRefereeModel, IRefereeModelNaiveRefereeModel, IRefereeModelQuorumRefereeModel]] = None
+    one_of_schemas: Set[str] = { "IRefereeModelEarlyStoppingRefereeModel", "IRefereeModelNaiveRefereeModel", "IRefereeModelQuorumRefereeModel" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -70,12 +73,17 @@ class IRefereeModel(BaseModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IRefereeModelNaiveRefereeModel`")
         else:
             match += 1
+        # validate data type: IRefereeModelQuorumRefereeModel
+        if not isinstance(v, IRefereeModelQuorumRefereeModel):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRefereeModelQuorumRefereeModel`")
+        else:
+            match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in IRefereeModel with oneOf schemas: IRefereeModelEarlyStoppingRefereeModel, IRefereeModelNaiveRefereeModel. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in IRefereeModel with oneOf schemas: IRefereeModelEarlyStoppingRefereeModel, IRefereeModelNaiveRefereeModel, IRefereeModelQuorumRefereeModel. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in IRefereeModel with oneOf schemas: IRefereeModelEarlyStoppingRefereeModel, IRefereeModelNaiveRefereeModel. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in IRefereeModel with oneOf schemas: IRefereeModelEarlyStoppingRefereeModel, IRefereeModelNaiveRefereeModel, IRefereeModelQuorumRefereeModel. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -102,13 +110,19 @@ class IRefereeModel(BaseModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
+        # deserialize data into IRefereeModelQuorumRefereeModel
+        try:
+            instance.actual_instance = IRefereeModelQuorumRefereeModel.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into IRefereeModel with oneOf schemas: IRefereeModelEarlyStoppingRefereeModel, IRefereeModelNaiveRefereeModel. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into IRefereeModel with oneOf schemas: IRefereeModelEarlyStoppingRefereeModel, IRefereeModelNaiveRefereeModel, IRefereeModelQuorumRefereeModel. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into IRefereeModel with oneOf schemas: IRefereeModelEarlyStoppingRefereeModel, IRefereeModelNaiveRefereeModel. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into IRefereeModel with oneOf schemas: IRefereeModelEarlyStoppingRefereeModel, IRefereeModelNaiveRefereeModel, IRefereeModelQuorumRefereeModel. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -122,7 +136,7 @@ class IRefereeModel(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], IRefereeModelEarlyStoppingRefereeModel, IRefereeModelNaiveRefereeModel]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], IRefereeModelEarlyStoppingRefereeModel, IRefereeModelNaiveRefereeModel, IRefereeModelQuorumRefereeModel]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None
