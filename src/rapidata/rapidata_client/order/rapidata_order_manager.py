@@ -187,7 +187,7 @@ class RapidataOrderManager:
         filters: Sequence[RapidataFilter] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         selections: Sequence[RapidataSelection] | None = None,
-        private_tags: list[dict[str, str]] | None = None,
+        private_metadata: list[dict[str, str]] | None = None,
     ) -> RapidataOrder:
         """Create a classification order.
 
@@ -214,7 +214,7 @@ class RapidataOrderManager:
             filters (Sequence[RapidataFilter], optional): The list of filters for the classification. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the classification. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the classification. Defaults to []. Decides in what order the tasks should be shown.
-            private_tags (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.
+            private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
 
@@ -249,7 +249,7 @@ class RapidataOrderManager:
                 datapoints=datapoints,
                 contexts=contexts,
                 media_contexts=media_contexts,
-                private_tags=private_tags,
+                private_metadata=private_metadata,
                 data_type=data_type,
             )
             return self._create_general_order(
@@ -282,7 +282,7 @@ class RapidataOrderManager:
         filters: Sequence[RapidataFilter] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         selections: Sequence[RapidataSelection] | None = None,
-        private_tags: list[dict[str, str]] | None = None,
+        private_metadata: list[dict[str, str]] | None = None,
     ) -> RapidataOrder:
         """Create a compare order.
 
@@ -326,7 +326,7 @@ class RapidataOrderManager:
             filters (Sequence[RapidataFilter], optional): The list of filters for the comparison. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the comparison. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the comparison. Defaults to []. Decides in what order the tasks should be shown.
-            private_tags (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
+            private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
 
@@ -370,7 +370,7 @@ class RapidataOrderManager:
                 datapoints=datapoints,
                 contexts=contexts,
                 media_contexts=media_contexts,
-                private_tags=private_tags,
+                private_metadata=private_metadata,
                 data_type=data_type,
             )
             return self._create_general_order(
@@ -539,7 +539,7 @@ class RapidataOrderManager:
         filters: Sequence[RapidataFilter] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         selections: Sequence[RapidataSelection] | None = None,
-        private_tags: list[dict[str, str]] | None = None,
+        private_metadata: list[dict[str, str]] | None = None,
     ) -> RapidataOrder:
         """Create a free text order.
 
@@ -562,7 +562,7 @@ class RapidataOrderManager:
             filters (Sequence[RapidataFilter], optional): The list of filters for the free text. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the free text. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the free text. Defaults to []. Decides in what order the tasks should be shown.
-            private_tags (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
+            private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
 
@@ -591,7 +591,7 @@ class RapidataOrderManager:
                 datapoints=datapoints,
                 contexts=contexts,
                 media_contexts=media_contexts,
-                private_tags=private_tags,
+                private_metadata=private_metadata,
                 data_type=data_type,
             )
             return self._create_general_order(
@@ -615,7 +615,7 @@ class RapidataOrderManager:
         filters: Sequence[RapidataFilter] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         selections: Sequence[RapidataSelection] | None = None,
-        private_tags: list[dict[str, str]] | None = None,
+        private_metadata: list[dict[str, str]] | None = None,
     ) -> RapidataOrder:
         """Create a select words order.
 
@@ -635,7 +635,7 @@ class RapidataOrderManager:
             filters (Sequence[RapidataFilter], optional): The list of filters for the select words. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the select words. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the select words. Defaults to []. Decides in what order the tasks should be shown.
-            private_tags (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
+            private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
 
@@ -663,7 +663,7 @@ class RapidataOrderManager:
             datapoints_instances = DatapointsValidator.map_datapoints(
                 datapoints=datapoints,
                 sentences=sentences,
-                private_tags=private_tags,
+                private_metadata=private_metadata,
             )
             return self._create_general_order(
                 name=name,
@@ -690,7 +690,7 @@ class RapidataOrderManager:
         filters: Sequence[RapidataFilter] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         selections: Sequence[RapidataSelection] | None = None,
-        private_tags: list[dict[str, str]] | None = None,
+        private_metadata: list[dict[str, str]] | None = None,
     ) -> RapidataOrder:
         """Create a locate order.
 
@@ -712,7 +712,7 @@ class RapidataOrderManager:
             filters (Sequence[RapidataFilter], optional): The list of filters for the locate. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the locate. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the locate. Defaults to []. Decides in what order the tasks should be shown.
-            private_tags (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
+            private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
 
@@ -738,7 +738,7 @@ class RapidataOrderManager:
                 datapoints=datapoints,
                 contexts=contexts,
                 media_contexts=media_contexts,
-                private_tags=private_tags,
+                private_metadata=private_metadata,
             )
             return self._create_general_order(
                 name=name,
@@ -763,7 +763,7 @@ class RapidataOrderManager:
         filters: Sequence[RapidataFilter] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         selections: Sequence[RapidataSelection] | None = None,
-        private_tags: list[dict[str, str]] | None = None,
+        private_metadata: list[dict[str, str]] | None = None,
     ) -> RapidataOrder:
         """Create a draw order.
 
@@ -785,7 +785,7 @@ class RapidataOrderManager:
             filters (Sequence[RapidataFilter], optional): The list of filters for the draw lines. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the draw lines. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the draw lines. Defaults to []. Decides in what order the tasks should be shown.
-            private_tags (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
+            private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
 
@@ -811,7 +811,7 @@ class RapidataOrderManager:
                 datapoints=datapoints,
                 contexts=contexts,
                 media_contexts=media_contexts,
-                private_tags=private_tags,
+                private_metadata=private_metadata,
             )
             return self._create_general_order(
                 name=name,
@@ -836,7 +836,7 @@ class RapidataOrderManager:
         filters: Sequence[RapidataFilter] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         selections: Sequence[RapidataSelection] | None = None,
-        private_tags: list[dict[str, str]] | None = None,
+        private_metadata: list[dict[str, str]] | None = None,
     ) -> RapidataOrder:
         """Create a timestamp order.
 
@@ -861,7 +861,7 @@ class RapidataOrderManager:
             filters (Sequence[RapidataFilter], optional): The list of filters for the timestamp. Defaults to []. Decides who the tasks should be shown to.
             settings (Sequence[RapidataSetting], optional): The list of settings for the timestamp. Defaults to []. Decides how the tasks should be shown.
             selections (Sequence[RapidataSelection], optional): The list of selections for the timestamp. Defaults to []. Decides in what order the tasks should be shown.
-            private_tags (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
+            private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
@@ -875,7 +875,7 @@ class RapidataOrderManager:
                 datapoints=datapoints,
                 contexts=contexts,
                 media_contexts=media_contexts,
-                private_tags=private_tags,
+                private_metadata=private_metadata,
             )
             return self._create_general_order(
                 name=name,

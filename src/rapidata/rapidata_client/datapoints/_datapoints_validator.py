@@ -10,7 +10,7 @@ class DatapointsValidator:
         contexts: list[str] | None = None,
         media_contexts: list[str] | None = None,
         sentences: list[str] | None = None,
-        private_tags: list[dict[str, str]] | None = None,
+        private_metadata: list[dict[str, str]] | None = None,
         groups: list[str] | None = None,
     ) -> None:
         if contexts and len(contexts) != len(datapoints):
@@ -19,8 +19,8 @@ class DatapointsValidator:
             raise ValueError("Number of media contexts must match number of datapoints")
         if sentences and len(sentences) != len(datapoints):
             raise ValueError("Number of sentences must match number of datapoints")
-        if private_tags and len(private_tags) != len(datapoints):
-            raise ValueError("Number of private tags must match number of datapoints")
+        if private_metadata and len(private_metadata) != len(datapoints):
+            raise ValueError("Number of private metadata entries must match number of datapoints")
         if groups and (
             len(groups) != len(datapoints) or len(groups) != len(set(groups))
         ):
@@ -34,7 +34,7 @@ class DatapointsValidator:
         contexts: list[str] | None = None,
         media_contexts: list[str] | None = None,
         sentences: list[str] | None = None,
-        private_tags: list[dict[str, str]] | None = None,
+        private_metadata: list[dict[str, str]] | None = None,
         groups: list[str] | None = None,
         data_type: Literal["text", "media"] = "media",
     ) -> list[Datapoint]:
@@ -43,7 +43,7 @@ class DatapointsValidator:
             contexts=contexts,
             media_contexts=media_contexts,
             sentences=sentences,
-            private_tags=private_tags,
+            private_metadata=private_metadata,
             groups=groups,
         )
         return [
@@ -53,7 +53,7 @@ class DatapointsValidator:
                 context=context,
                 media_context=media_context,
                 sentence=sentence,
-                private_tags=private_tag,
+                private_metadata=private_tag,
                 group=group,
             )
             for asset, context, media_context, sentence, private_tag, group in cast(
@@ -63,7 +63,7 @@ class DatapointsValidator:
                     contexts or [],
                     media_contexts or [],
                     sentences or [],
-                    private_tags or [],
+                    private_metadata or [],
                     groups or [],
                 ),
             )
