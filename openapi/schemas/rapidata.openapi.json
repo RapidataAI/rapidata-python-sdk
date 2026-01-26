@@ -16,6 +16,10 @@
       "x-displayName": "Asset"
     },
     {
+      "name": "BatchUpload",
+      "x-displayName": "BatchUpload"
+    },
+    {
       "name": "Audience",
       "x-displayName": "Audience"
     },
@@ -179,6 +183,246 @@
               "application/json": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
+    "/asset/batch-upload/{batchUploadId}/abort": {
+      "post": {
+        "tags": [
+          "BatchUpload"
+        ],
+        "summary": "Aborts the specified batch upload.",
+        "parameters": [
+          {
+            "name": "batchUploadId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
+    "/asset/batch-upload": {
+      "post": {
+        "tags": [
+          "BatchUpload"
+        ],
+        "summary": "Creates a batch upload and queues processing for each URL.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBatchUploadEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBatchUploadEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
+    "/asset/batch-upload/{batchUploadId}": {
+      "get": {
+        "tags": [
+          "BatchUpload"
+        ],
+        "summary": "Gets the full result of a batch upload including all items.",
+        "parameters": [
+          {
+            "name": "batchUploadId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBatchUploadResultEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
+    "/asset/batch-upload/status": {
+      "get": {
+        "tags": [
+          "BatchUpload"
+        ],
+        "summary": "Gets aggregated status (counts) for the specified batch uploads.",
+        "parameters": [
+          {
+            "name": "batchUploadIds",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBatchUploadStatusEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
                 }
               }
             }
@@ -10109,11 +10353,47 @@
   },
   "components": {
     "schemas": {
+      "BatchUploadStatus": {
+        "enum": [
+          "Processing",
+          "Completed",
+          "Aborted"
+        ]
+      },
+      "BatchUploadUrlStatus": {
+        "enum": [
+          "Pending",
+          "Completed",
+          "Failed"
+        ]
+      },
       "CompressionLibrary": {
         "enum": [
           "ImageSharp",
           "NetVips"
         ]
+      },
+      "CreateBatchUploadEndpoint_Input": {
+        "required": [
+          "urls"
+        ],
+        "type": "object",
+        "properties": {
+          "urls": {
+            "$ref": "#/components/schemas/ListOfUri"
+          }
+        }
+      },
+      "CreateBatchUploadEndpoint_Output": {
+        "required": [
+          "batchUploadId"
+        ],
+        "type": "object",
+        "properties": {
+          "batchUploadId": {
+            "type": "string"
+          }
+        }
       },
       "FileType": {
         "enum": [
@@ -10122,6 +10402,89 @@
           "Video",
           "Audio"
         ]
+      },
+      "GetBatchUploadResultEndpoint_Output": {
+        "required": [
+          "batchUploadId",
+          "status",
+          "totalCount",
+          "completedCount",
+          "failedCount",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "batchUploadId": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/BatchUploadStatus"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "completedCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "failedCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "$ref": "#/components/schemas/ListOfGetBatchUploadResultEndpoint_UrlOutput"
+          }
+        }
+      },
+      "GetBatchUploadResultEndpoint_UrlOutput": {
+        "required": [
+          "url",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "fileName": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "$ref": "#/components/schemas/BatchUploadUrlStatus"
+          },
+          "errorMessage": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "GetBatchUploadStatusEndpoint_Output": {
+        "required": [
+          "status",
+          "totalCount",
+          "completedCount",
+          "failedCount"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/BatchUploadStatus"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "completedCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "failedCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
       },
       "GetFileMetadataResult": {
         "required": [
@@ -10409,6 +10772,19 @@
           }
         }
       },
+      "ListOfGetBatchUploadResultEndpoint_UrlOutput": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/GetBatchUploadResultEndpoint_UrlOutput"
+        }
+      },
+      "ListOfUri": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
       "MetadataCollection": {
         "type": "object",
         "additionalProperties": {
@@ -10479,6 +10855,40 @@
           "finalSizeBytes": {
             "type": "integer",
             "format": "int64"
+          }
+        }
+      },
+      "ValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           }
         }
       },
@@ -12519,40 +12929,6 @@
           },
           "logo": {
             "$ref": "#/components/schemas/OptionOfExistingAssetInput"
-          }
-        }
-      },
-      "ValidationProblemDetails": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string",
-            "nullable": true
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "status": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "detail": {
-            "type": "string",
-            "nullable": true
-          },
-          "instance": {
-            "type": "string",
-            "nullable": true
-          },
-          "errors": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
           }
         }
       },
@@ -20396,7 +20772,8 @@
       },
       "GetCompareAbSummaryResult": {
         "required": [
-          "winCounter"
+          "winCounter",
+          "allTargetGroupsCompleted"
         ],
         "type": "object",
         "properties": {
@@ -20406,6 +20783,9 @@
               "type": "number",
               "format": "double"
             }
+          },
+          "allTargetGroupsCompleted": {
+            "type": "boolean"
           }
         }
       },
@@ -21205,7 +21585,8 @@
     {
       "name": "Rapidata Asset API",
       "tags": [
-        "Asset"
+        "Asset",
+        "BatchUpload"
       ]
     },
     {

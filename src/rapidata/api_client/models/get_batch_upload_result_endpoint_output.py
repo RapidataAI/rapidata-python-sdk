@@ -17,18 +17,24 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt
-from typing import Any, ClassVar, Dict, List, Union
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.batch_upload_status import BatchUploadStatus
+from rapidata.api_client.models.get_batch_upload_result_endpoint_url_output import GetBatchUploadResultEndpointUrlOutput
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetCompareAbSummaryResult(BaseModel):
+class GetBatchUploadResultEndpointOutput(BaseModel):
     """
-    GetCompareAbSummaryResult
+    GetBatchUploadResultEndpointOutput
     """ # noqa: E501
-    win_counter: Dict[str, Union[StrictFloat, StrictInt]] = Field(alias="winCounter")
-    all_target_groups_completed: StrictBool = Field(alias="allTargetGroupsCompleted")
-    __properties: ClassVar[List[str]] = ["winCounter", "allTargetGroupsCompleted"]
+    batch_upload_id: StrictStr = Field(alias="batchUploadId")
+    status: BatchUploadStatus
+    total_count: StrictInt = Field(alias="totalCount")
+    completed_count: StrictInt = Field(alias="completedCount")
+    failed_count: StrictInt = Field(alias="failedCount")
+    items: List[GetBatchUploadResultEndpointUrlOutput]
+    __properties: ClassVar[List[str]] = ["batchUploadId", "status", "totalCount", "completedCount", "failedCount", "items"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +54,7 @@ class GetCompareAbSummaryResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetCompareAbSummaryResult from a JSON string"""
+        """Create an instance of GetBatchUploadResultEndpointOutput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,11 +75,18 @@ class GetCompareAbSummaryResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in items (list)
+        _items = []
+        if self.items:
+            for _item_items in self.items:
+                if _item_items:
+                    _items.append(_item_items.to_dict())
+            _dict['items'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetCompareAbSummaryResult from a dict"""
+        """Create an instance of GetBatchUploadResultEndpointOutput from a dict"""
         if obj is None:
             return None
 
@@ -81,8 +94,12 @@ class GetCompareAbSummaryResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "winCounter": obj.get("winCounter"),
-            "allTargetGroupsCompleted": obj.get("allTargetGroupsCompleted")
+            "batchUploadId": obj.get("batchUploadId"),
+            "status": obj.get("status"),
+            "totalCount": obj.get("totalCount"),
+            "completedCount": obj.get("completedCount"),
+            "failedCount": obj.get("failedCount"),
+            "items": [GetBatchUploadResultEndpointUrlOutput.from_dict(_item) for _item in obj["items"]] if obj.get("items") is not None else None
         })
         return _obj
 

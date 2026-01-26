@@ -91,6 +91,10 @@ Class | Method | HTTP request | Description
 *AudienceApi* | [**audience_audience_id_user_metrics_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_user_metrics_get) | **GET** /audience/{audienceId}/user-metrics | Gets the count of users in each state for the specified audience.
 *AudienceApi* | [**audience_post**](rapidata/api_client/docs/AudienceApi.md#audience_post) | **POST** /audience | Creates a new empty audience.
 *AudienceApi* | [**audiences_get**](rapidata/api_client/docs/AudienceApi.md#audiences_get) | **GET** /audiences | Queries all available audiences.
+*BatchUploadApi* | [**asset_batch_upload_batch_upload_id_abort_post**](rapidata/api_client/docs/BatchUploadApi.md#asset_batch_upload_batch_upload_id_abort_post) | **POST** /asset/batch-upload/{batchUploadId}/abort | Aborts the specified batch upload.
+*BatchUploadApi* | [**asset_batch_upload_batch_upload_id_get**](rapidata/api_client/docs/BatchUploadApi.md#asset_batch_upload_batch_upload_id_get) | **GET** /asset/batch-upload/{batchUploadId} | Gets the full result of a batch upload including all items.
+*BatchUploadApi* | [**asset_batch_upload_post**](rapidata/api_client/docs/BatchUploadApi.md#asset_batch_upload_post) | **POST** /asset/batch-upload | Creates a batch upload and queues processing for each URL.
+*BatchUploadApi* | [**asset_batch_upload_status_get**](rapidata/api_client/docs/BatchUploadApi.md#asset_batch_upload_status_get) | **GET** /asset/batch-upload/status | Gets aggregated status (counts) for the specified batch uploads.
 *BenchmarkApi* | [**benchmark_benchmark_id_delete**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_delete) | **DELETE** /benchmark/{benchmarkId} | Deletes a single benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_fork_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_fork_post) | **POST** /benchmark/{benchmarkId}/fork | Creates a copy of a public benchmark and all of its related entities
 *BenchmarkApi* | [**benchmark_benchmark_id_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_get) | **GET** /benchmark/{benchmarkId} | Returns a single benchmark by its ID.
@@ -242,6 +246,8 @@ Class | Method | HTTP request | Description
  - [AttachCategoryRapidBlueprintCategory](rapidata/api_client/docs/AttachCategoryRapidBlueprintCategory.md)
  - [AudienceJobState](rapidata/api_client/docs/AudienceJobState.md)
  - [AudienceStatus](rapidata/api_client/docs/AudienceStatus.md)
+ - [BatchUploadStatus](rapidata/api_client/docs/BatchUploadStatus.md)
+ - [BatchUploadUrlStatus](rapidata/api_client/docs/BatchUploadUrlStatus.md)
  - [BenchmarkQueryResult](rapidata/api_client/docs/BenchmarkQueryResult.md)
  - [BoostLeaderboardModel](rapidata/api_client/docs/BoostLeaderboardModel.md)
  - [BoostingProfile](rapidata/api_client/docs/BoostingProfile.md)
@@ -261,6 +267,8 @@ Class | Method | HTTP request | Description
  - [ConfidenceInterval](rapidata/api_client/docs/ConfidenceInterval.md)
  - [CreateAudienceRequest](rapidata/api_client/docs/CreateAudienceRequest.md)
  - [CreateAudienceResult](rapidata/api_client/docs/CreateAudienceResult.md)
+ - [CreateBatchUploadEndpointInput](rapidata/api_client/docs/CreateBatchUploadEndpointInput.md)
+ - [CreateBatchUploadEndpointOutput](rapidata/api_client/docs/CreateBatchUploadEndpointOutput.md)
  - [CreateBenchmarkModel](rapidata/api_client/docs/CreateBenchmarkModel.md)
  - [CreateBenchmarkParticipantModel](rapidata/api_client/docs/CreateBenchmarkParticipantModel.md)
  - [CreateBenchmarkParticipantResult](rapidata/api_client/docs/CreateBenchmarkParticipantResult.md)
@@ -307,6 +315,9 @@ Class | Method | HTTP request | Description
  - [GetAudienceByIdResult](rapidata/api_client/docs/GetAudienceByIdResult.md)
  - [GetAudienceUserStateMetricsResult](rapidata/api_client/docs/GetAudienceUserStateMetricsResult.md)
  - [GetAvailableValidationSetsResult](rapidata/api_client/docs/GetAvailableValidationSetsResult.md)
+ - [GetBatchUploadResultEndpointOutput](rapidata/api_client/docs/GetBatchUploadResultEndpointOutput.md)
+ - [GetBatchUploadResultEndpointUrlOutput](rapidata/api_client/docs/GetBatchUploadResultEndpointUrlOutput.md)
+ - [GetBatchUploadStatusEndpointOutput](rapidata/api_client/docs/GetBatchUploadStatusEndpointOutput.md)
  - [GetBenchmarkByIdResult](rapidata/api_client/docs/GetBenchmarkByIdResult.md)
  - [GetBoostResult](rapidata/api_client/docs/GetBoostResult.md)
  - [GetBoostResultBoostMode](rapidata/api_client/docs/GetBoostResultBoostMode.md)

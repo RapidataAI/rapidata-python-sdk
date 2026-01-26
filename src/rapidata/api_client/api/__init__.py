@@ -3,6 +3,7 @@
 # import apis into api package
 from rapidata.api_client.api.asset_api import AssetApi
 from rapidata.api_client.api.audience_api import AudienceApi
+from rapidata.api_client.api.batch_upload_api import BatchUploadApi
 from rapidata.api_client.api.benchmark_api import BenchmarkApi
 from rapidata.api_client.api.campaign_api import CampaignApi
 from rapidata.api_client.api.client_api import ClientApi
