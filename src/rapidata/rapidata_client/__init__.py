@@ -52,5 +52,5 @@ from .filter import (
     DeviceFilter,
     DeviceType,
 )
-from .exceptions import FailedUploadException
+from .exceptions import FailedUploadException, FailedUpload
 from .config import rapidata_config, logger, managed_print

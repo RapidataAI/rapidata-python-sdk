@@ -48,6 +48,7 @@ from .rapidata_client import (
     DeviceType,
     Datapoint,
     FailedUploadException,
+    FailedUpload,
     rapidata_config,
     logger,
     managed_print,

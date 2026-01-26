@@ -5,6 +5,7 @@ import time
 
 from rapidata.rapidata_client.config import logger
 from rapidata.rapidata_client.config.rapidata_config import rapidata_config
+from rapidata.rapidata_client.exceptions.failed_upload import FailedUpload
 
 from opentelemetry import context as otel_context
 
@@ -35,7 +36,7 @@ class ThreadedUploader(Generic[T]):
         self.upload_fn = upload_fn
         self.description = description
 
-    def upload(self, items: list[T]) -> tuple[list[T], list[T]]:
+    def upload(self, items: list[T]) -> tuple[list[T], list[FailedUpload[T]]]:
         """
         Upload items in parallel using multiple threads.
 
@@ -43,10 +44,10 @@ class ThreadedUploader(Generic[T]):
             items: List of items to upload.
 
         Returns:
-            tuple[list[T], list[T]]: Lists of successful and failed uploads.
+            tuple[list[T], list[FailedUpload[T]]]: Lists of successful uploads and failed uploads with error details.
         """
         successful_uploads: list[T] = []
-        failed_uploads: list[T] = []
+        failed_uploads: list[FailedUpload[T]] = []
 
         with tqdm(
             total=len(items),
@@ -56,7 +57,7 @@ class ThreadedUploader(Generic[T]):
 
             def process_upload_with_context(
                 context: otel_context.Context, item: T, index: int
-            ) -> tuple[list[T], list[T]]:
+            ) -> tuple[list[T], list[FailedUpload[T]]]:
                 """Wrapper function that runs upload with the provided context."""
                 token = otel_context.attach(context)
                 try:
@@ -102,7 +103,7 @@ class ThreadedUploader(Generic[T]):
         self,
         item: T,
         index: int,
-    ) -> tuple[list[T], list[T]]:
+    ) -> tuple[list[T], list[FailedUpload[T]]]:
         """
         Process single upload with retry logic and error tracking.
 
@@ -111,12 +112,12 @@ class ThreadedUploader(Generic[T]):
             index: Sort index for the upload.
 
         Returns:
-            tuple[list[T], list[T]]: Lists of successful and failed items.
+            tuple[list[T], list[FailedUpload[T]]]: Lists of successful items and failed items with error details.
         """
         logger.debug("Processing single upload for %s with index %s", item, index)
 
         local_successful: list[T] = []
-        local_failed: list[T] = []
+        local_failed: list[FailedUpload[T]] = []
 
         last_exception = None
         for attempt in range(rapidata_config.upload.maxRetries):
@@ -145,9 +146,10 @@ class ThreadedUploader(Generic[T]):
                     )
 
         # If we get here, all retries failed
-        local_failed.append(item)
+        failed_upload = FailedUpload.from_exception(item, last_exception)
+        local_failed.append(failed_upload)
         tqdm.write(
-            f"Upload failed for {item} after {rapidata_config.upload.maxRetries} attempts. \nFinal error: \n{str(last_exception)}"
+            f"Upload failed for {item} after {rapidata_config.upload.maxRetries} attempts. \nFinal error ({failed_upload.error_type}): \n{failed_upload.error_message}"
         )
 
         return local_successful, local_failed

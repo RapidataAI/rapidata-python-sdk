@@ -80,6 +80,7 @@ from rapidata.rapidata_client.config.logging_config import LoggingConfig
 from rapidata.rapidata_client.exceptions.failed_upload_exception import (
     FailedUploadException,
 )
+from rapidata.rapidata_client.exceptions.rapidata_error import RapidataError
 
 # Utility Types
 from rapidata.rapidata_client.demographic.demographic_manager import DemographicManager
@@ -141,9 +142,7 @@ __all__ = [
     "LoggingConfig",
     # Exception Types
     "FailedUploadException",
-    # Utility Types
-    "CountryCodes",
-    "DemographicManager",
+    "RapidataError",
     # API Client Types
     "RapidataApiClient",
 ]

@@ -1,8 +1,8 @@
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.service.openapi_service import OpenAPIService
-from rapidata.rapidata_client.config import logger
 from rapidata.rapidata_client.datapoints._datapoint_uploader import DatapointUploader
 from rapidata.rapidata_client.utils.threaded_uploader import ThreadedUploader
+from rapidata.rapidata_client.exceptions.failed_upload import FailedUpload
 
 
 class RapidataDataset:
@@ -14,7 +14,7 @@ class RapidataDataset:
     def add_datapoints(
         self,
         datapoints: list[Datapoint],
-    ) -> tuple[list[Datapoint], list[Datapoint]]:
+    ) -> tuple[list[Datapoint], list[FailedUpload[Datapoint]]]:
         """
         Process uploads in chunks with a ThreadPoolExecutor.
 
@@ -22,7 +22,7 @@ class RapidataDataset:
             datapoints: List of datapoints to upload
 
         Returns:
-            tuple[list[Datapoint], list[Datapoint]]: Lists of successful and failed uploads
+            tuple[list[Datapoint], list[FailedUpload[Datapoint]]]: Lists of successful uploads and failed uploads with error details
         """
 
         def upload_single_datapoint(datapoint: Datapoint, index: int) -> None:
@@ -38,13 +38,6 @@ class RapidataDataset:
         )
 
         successful_uploads, failed_uploads = uploader.upload(datapoints)
-
-        if failed_uploads:
-            logger.error(
-                "Upload failed for %s datapoints: %s",
-                len(failed_uploads),
-                failed_uploads,
-            )
 
         return successful_uploads, failed_uploads
 
