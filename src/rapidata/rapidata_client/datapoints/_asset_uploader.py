@@ -26,7 +26,6 @@ class AssetUploader:
             rapidata_config.upload.cacheLocation,
             shards=rapidata_config.upload.cacheShards,
             timeout=rapidata_config.upload.cacheTimeout,
-            size_limit=rapidata_config.upload.cacheSizeLimit,
         ),
     )
     _url_cache: SingleFlightCache = SingleFlightCache("URL cache")
@@ -51,7 +50,6 @@ class AssetUploader:
                 needs_recreation = (
                     current_storage.directory != str(config.cacheLocation)
                     or current_storage.timeout != config.cacheTimeout
-                    or current_storage.size_limit != config.cacheSizeLimit / config.cacheShards
                     or len(current_storage._shards) != config.cacheShards
                 )
 
@@ -65,15 +63,13 @@ class AssetUploader:
                         config.cacheLocation,
                         shards=config.cacheShards,
                         timeout=config.cacheTimeout,
-                        size_limit=config.cacheSizeLimit,
                     )
                 )
                 logger.info(
-                    "AssetUploader file cache updated: location=%s, shards=%s, timeout=%s, size_limit=%s",
+                    "AssetUploader file cache updated: location=%s, shards=%s, timeout=%s",
                     config.cacheLocation,
                     config.cacheShards,
                     config.cacheTimeout,
-                    config.cacheSizeLimit,
                 )
             except Exception as e:
                 logger.warning(f"Failed to update AssetUploader file cache: {e}")
