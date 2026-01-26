@@ -4,10 +4,6 @@ import re
 import os
 from typing import TYPE_CHECKING
 
-from rapidata.rapidata_client.config.upload_config import (
-    register_upload_config_handler,
-    UploadConfig,
-)
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.config import logger, rapidata_config, tracer
 from rapidata.rapidata_client.datapoints._single_flight_cache import SingleFlightCache
@@ -22,39 +18,14 @@ class AssetUploader:
         "File cache",
         storage=FanoutCache(
             rapidata_config.upload.cacheLocation,
-            shards=rapidata_config.upload.maxWorkers,
+            shards=rapidata_config.upload.cacheShards,
             timeout=rapidata_config.upload.cacheTimeout,
-            size_limit=rapidata_config.upload.cacheSizeLimit,
         ),
     )
     _url_cache: SingleFlightCache = SingleFlightCache("URL cache")
 
     def __init__(self, openapi_service: OpenAPIService):
         self.openapi_service = openapi_service
-        register_upload_config_handler(self._handle_config_update)
-
-    @classmethod
-    def _handle_config_update(cls, config: UploadConfig):
-        """Handle updates to the upload config by re-creating the file cache storage."""
-        logger.debug("Updating AssetUploader file cache with new config")
-        try:
-            cls._file_cache.set_storage(
-                FanoutCache(
-                    config.cacheLocation,
-                    shards=config.maxWorkers,
-                    timeout=config.cacheTimeout,
-                    size_limit=config.cacheSizeLimit,
-                )
-            )
-            logger.info(
-                "AssetUploader file cache updated: location=%s, shards=%s, timeout=%s, size_limit=%s",
-                config.cacheLocation,
-                config.maxWorkers,
-                config.cacheTimeout,
-                config.cacheSizeLimit,
-            )
-        except Exception as e:
-            logger.warning(f"Failed to update AssetUploader file cache: {e}")
 
     def _get_file_cache_key(self, asset: str) -> str:
         """Generate cache key for a file, including environment."""
