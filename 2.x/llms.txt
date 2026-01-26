@@ -5,7 +5,7 @@
 ## Installation
 
 ```bash
-pip install "rapidata<3.0.0"
+pip install rapidata
 ```
 
 ## Quick Start
