@@ -10,6 +10,7 @@ import json
 import threading
 from contextlib import contextmanager
 from rapidata.rapidata_client.config import logger, tracer
+from rapidata.rapidata_client.exceptions.rapidata_error import RapidataError
 from opentelemetry import trace
 from opentelemetry.trace import format_trace_id, format_span_id, Link, SpanContext
 from opentelemetry.sdk.trace.id_generator import RandomIdGenerator
@@ -33,68 +34,6 @@ def suppress_rapidata_error_logging():
 def _should_suppress_error_logging() -> bool:
     """Check if error logging should be suppressed for the current thread."""
     return getattr(_thread_local, "suppress_error_logging", False)
-
-
-class RapidataError(Exception):
-    """Custom error class for Rapidata API errors."""
-
-    def __init__(
-        self,
-        status_code: Optional[int] = None,
-        message: str | None = None,
-        original_exception: Exception | None = None,
-        details: Any = None,
-    ):
-        self.status_code = status_code
-        self.message = message
-        self.original_exception = original_exception
-        self.details = details
-
-        # Create a nice error message
-        error_msg = "Rapidata API Error"
-        if status_code:
-            error_msg += f" ({status_code})"
-        if message:
-            error_msg += f": {message}"
-
-        super().__init__(error_msg)
-
-    def __str__(self):
-        """Return a string representation of the error."""
-        # Extract information from message if available
-        title = None
-        errors = None
-        trace_id = None
-
-        # Try to extract from details if available and is a dict
-        if self.details and isinstance(self.details, dict):
-            title = self.details.get("title")
-            errors = self.details.get("errors")
-            trace_id = self.details.get("traceId")
-
-        # Build the error string
-        error_parts = []
-
-        # Main error line
-        if title:
-            error_parts.append(f"{title}")
-        else:
-            error_parts.append(f"{self.message or 'Unknown error'}")
-
-        # Reasons
-        if errors:
-            if isinstance(errors, dict):
-                error_parts.append(f"Reasons: {json.dumps({'errors': errors})}")
-            else:
-                error_parts.append(f"Reasons: {errors}")
-
-        # Trace ID
-        if trace_id:
-            error_parts.append(f"Trace Id: {trace_id}")
-        else:
-            error_parts.append("Trace Id: N/A")
-
-        return "\n".join(error_parts)
 
 
 class RapidataApiClient(ApiClient):
