@@ -119,7 +119,7 @@ class JobManager:
         media_contexts: list[str] | None = None,
         confidence_threshold: float | None = None,
         settings: Sequence[RapidataSetting] | None = None,
-        private_tags: list[dict[str, str]] | None = None,
+        private_metadata: list[dict[str, str]] | None = None,
     ) -> JobDefinition:
         """Create a classification job definition.
 
@@ -142,7 +142,7 @@ class JobManager:
             confidence_threshold (float, optional): The probability threshold for the classification. Defaults to None.\n
                 If provided, the classification datapoint will stop after the threshold is reached or at the number of responses, whatever happens first.
             settings (Sequence[RapidataSetting], optional): The list of settings for the classification. Defaults to []. Decides how the tasks should be shown.
-            private_tags (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.
+            private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
@@ -158,7 +158,7 @@ class JobManager:
                 datapoints=datapoints,
                 contexts=contexts,
                 media_contexts=media_contexts,
-                private_tags=private_tags,
+                private_metadata=private_metadata,
                 data_type=data_type,
             )
             return self._create_general_job_definition(
@@ -184,7 +184,7 @@ class JobManager:
         a_b_names: list[str] | None = None,
         confidence_threshold: float | None = None,
         settings: Sequence[RapidataSetting] | None = None,
-        private_tags: list[dict[str, str]] | None = None,
+        private_metadata: list[dict[str, str]] | None = None,
     ) -> JobDefinition:
         """Create a compare job definition.
 
@@ -215,7 +215,7 @@ class JobManager:
             confidence_threshold (float, optional): The probability threshold for the comparison. Defaults to None.\n
                 If provided, the comparison datapoint will stop after the threshold is reached or at the number of responses, whatever happens first.
             settings (Sequence[RapidataSetting], optional): The list of settings for the comparison. Defaults to []. Decides how the tasks should be shown.
-            private_tags (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
+            private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
@@ -239,7 +239,7 @@ class JobManager:
                 datapoints=datapoints,
                 contexts=contexts,
                 media_contexts=media_contexts,
-                private_tags=private_tags,
+                private_metadata=private_metadata,
                 data_type=data_type,
             )
             return self._create_general_job_definition(
@@ -375,7 +375,7 @@ class JobManager:
         contexts: list[str] | None = None,
         media_contexts: list[str] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
-        private_tags: list[dict[str, str]] | None = None,
+        private_metadata: list[dict[str, str]] | None = None,
     ) -> JobDefinition:
         """Create a free text job definition.
 
@@ -396,7 +396,7 @@ class JobManager:
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
                 Will be matched up with the datapoints using the list index.
             settings (Sequence[RapidataSetting], optional): The list of settings for the free text. Defaults to []. Decides how the tasks should be shown.
-            private_tags (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
+            private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
@@ -407,7 +407,7 @@ class JobManager:
                 datapoints=datapoints,
                 contexts=contexts,
                 media_contexts=media_contexts,
-                private_tags=private_tags,
+                private_metadata=private_metadata,
                 data_type=data_type,
             )
             return self._create_general_job_definition(
@@ -426,7 +426,7 @@ class JobManager:
         sentences: list[str],
         responses_per_datapoint: int = 10,
         settings: Sequence[RapidataSetting] | None = None,
-        private_tags: list[dict[str, str]] | None = None,
+        private_metadata: list[dict[str, str]] | None = None,
     ) -> JobDefinition:
         """Create a select words job definition.
 
@@ -442,7 +442,7 @@ class JobManager:
                 Must be the same length as datapoints.
             responses_per_datapoint (int, optional): The number of responses that will be collected per datapoint. Defaults to 10.
             settings (Sequence[RapidataSetting], optional): The list of settings for the select words. Defaults to []. Decides how the tasks should be shown.
-            private_tags (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
+            private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
@@ -452,7 +452,7 @@ class JobManager:
             datapoints_instances = DatapointsValidator.map_datapoints(
                 datapoints=datapoints,
                 sentences=sentences,
-                private_tags=private_tags,
+                private_metadata=private_metadata,
             )
             return self._create_general_job_definition(
                 name=name,
@@ -473,7 +473,7 @@ class JobManager:
         contexts: list[str] | None = None,
         media_contexts: list[str] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
-        private_tags: list[dict[str, str]] | None = None,
+        private_metadata: list[dict[str, str]] | None = None,
     ) -> JobDefinition:
         """Create a locate job definition.
 
@@ -491,7 +491,7 @@ class JobManager:
             media_contexts (list[str], optional): The list of media contexts for the locate i.e links to the images / videos. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
             settings (Sequence[RapidataSetting], optional): The list of settings for the locate. Defaults to []. Decides how the tasks should be shown.
-            private_tags (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
+            private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
@@ -502,7 +502,7 @@ class JobManager:
                 datapoints=datapoints,
                 contexts=contexts,
                 media_contexts=media_contexts,
-                private_tags=private_tags,
+                private_metadata=private_metadata,
             )
             return self._create_general_job_definition(
                 name=name,
@@ -521,7 +521,7 @@ class JobManager:
         contexts: list[str] | None = None,
         media_contexts: list[str] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
-        private_tags: list[dict[str, str]] | None = None,
+        private_metadata: list[dict[str, str]] | None = None,
     ) -> JobDefinition:
         """Create a draw job definition.
 
@@ -539,7 +539,7 @@ class JobManager:
             media_contexts (list[str], optional): The list of media contexts for the draw lines i.e links to the images / videos. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
             settings (Sequence[RapidataSetting], optional): The list of settings for the draw lines. Defaults to []. Decides how the tasks should be shown.
-            private_tags (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
+            private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
@@ -550,7 +550,7 @@ class JobManager:
                 datapoints=datapoints,
                 contexts=contexts,
                 media_contexts=media_contexts,
-                private_tags=private_tags,
+                private_metadata=private_metadata,
             )
             return self._create_general_job_definition(
                 name=name,
@@ -569,7 +569,7 @@ class JobManager:
         contexts: list[str] | None = None,
         media_contexts: list[str] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
-        private_tags: list[dict[str, str]] | None = None,
+        private_metadata: list[dict[str, str]] | None = None,
     ) -> JobDefinition:
         """Create a timestamp job definition.
 
@@ -590,7 +590,7 @@ class JobManager:
             media_contexts (list[str], optional): The list of media contexts for the timestamp i.e links to the images / videos. Defaults to None.\n
                 If provided has to be the same length as datapoints and will be shown in addition to the instruction. (Therefore will be different for each datapoint)
             settings (Sequence[RapidataSetting], optional): The list of settings for the timestamp. Defaults to []. Decides how the tasks should be shown.
-            private_tags (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
+            private_metadata (list[dict[str, str]], optional): Key-value string pairs for each datapoint. Defaults to None.\n
                 If provided has to be the same length as datapoints.\n
                 This will NOT be shown to the labelers but will be included in the result purely for your own reference.
         """
@@ -601,7 +601,7 @@ class JobManager:
                 datapoints=datapoints,
                 contexts=contexts,
                 media_contexts=media_contexts,
-                private_tags=private_tags,
+                private_metadata=private_metadata,
             )
             return self._create_general_job_definition(
                 name=name,

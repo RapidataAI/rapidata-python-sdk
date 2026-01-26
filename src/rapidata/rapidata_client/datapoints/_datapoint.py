@@ -22,7 +22,7 @@ class Datapoint(BaseModel):
     context: str | None = None
     media_context: str | None = None
     sentence: str | None = None
-    private_tags: dict[str, str] | None = None
+    private_metadata: dict[str, str] | None = None
     group: str | None = None
 
     @field_validator("context")

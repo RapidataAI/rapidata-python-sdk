@@ -46,7 +46,7 @@ class JobDefinition:
         contexts: list[str] | None = None,
         media_contexts: list[str] | None = None,
         sentences: list[str] | None = None,
-        private_tags: list[dict[str, str]] | None = None,
+        private_metadata: list[dict[str, str]] | None = None,
     ) -> JobDefinition:
         """Update the dataset of the job definition.
 
@@ -73,7 +73,7 @@ class JobDefinition:
                 contexts=contexts,
                 media_contexts=media_contexts,
                 sentences=sentences,
-                private_tags=private_tags,
+                private_metadata=private_metadata,
                 data_type=data_type,
             )
 
