@@ -11769,7 +11769,7 @@
             "type": "string",
             "nullable": true
           },
-          "privateTags": {
+          "privateMetadata": {
             "type": "object",
             "additionalProperties": {
               "type": "string"

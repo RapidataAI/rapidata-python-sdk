@@ -33,8 +33,8 @@ class CreateDatapointModel(BaseModel):
     sort_index: Optional[StrictInt] = Field(default=None, alias="sortIndex")
     group: Optional[StrictStr] = None
     transcription: Optional[StrictStr] = None
-    private_tags: Optional[Dict[str, StrictStr]] = Field(default=None, alias="privateTags")
-    __properties: ClassVar[List[str]] = ["asset", "context", "contextAsset", "sortIndex", "group", "transcription", "privateTags"]
+    private_metadata: Optional[Dict[str, StrictStr]] = Field(default=None, alias="privateMetadata")
+    __properties: ClassVar[List[str]] = ["asset", "context", "contextAsset", "sortIndex", "group", "transcription", "privateMetadata"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -101,10 +101,10 @@ class CreateDatapointModel(BaseModel):
         if self.transcription is None and "transcription" in self.model_fields_set:
             _dict['transcription'] = None
 
-        # set to None if private_tags (nullable) is None
+        # set to None if private_metadata (nullable) is None
         # and model_fields_set contains the field
-        if self.private_tags is None and "private_tags" in self.model_fields_set:
-            _dict['privateTags'] = None
+        if self.private_metadata is None and "private_metadata" in self.model_fields_set:
+            _dict['privateMetadata'] = None
 
         return _dict
 
@@ -124,7 +124,7 @@ class CreateDatapointModel(BaseModel):
             "sortIndex": obj.get("sortIndex"),
             "group": obj.get("group"),
             "transcription": obj.get("transcription"),
-            "privateTags": obj.get("privateTags")
+            "privateMetadata": obj.get("privateMetadata")
         })
         return _obj
 
