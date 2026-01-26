@@ -2,13 +2,8 @@ from __future__ import annotations
 
 import re
 import os
-import threading
 from typing import TYPE_CHECKING
 
-from rapidata.rapidata_client.config.upload_config import (
-    register_upload_config_handler,
-    UploadConfig,
-)
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.config import logger, rapidata_config, tracer
 from rapidata.rapidata_client.datapoints._single_flight_cache import SingleFlightCache
@@ -19,7 +14,6 @@ if TYPE_CHECKING:
 
 
 class AssetUploader:
-    _cache_update_lock = threading.RLock()  # RLock allows reentrant locking
     _file_cache: SingleFlightCache = SingleFlightCache(
         "File cache",
         storage=FanoutCache(
@@ -32,47 +26,6 @@ class AssetUploader:
 
     def __init__(self, openapi_service: OpenAPIService):
         self.openapi_service = openapi_service
-
-    @classmethod
-    def _handle_config_update(cls, config: UploadConfig):
-        """Handle updates to the upload config by re-creating the file cache storage if needed."""
-        with cls._cache_update_lock:
-            # Only recreate cache if cache-related parameters changed
-            # maxWorkers changes don't affect cache structure
-            logger.debug("Upload config updated, checking if cache recreation needed")
-            try:
-                # Get current cache config
-                current_storage = cls._file_cache._storage
-                if not isinstance(current_storage, FanoutCache):
-                    return
-
-                # Check if cache parameters changed
-                needs_recreation = (
-                    current_storage.directory != str(config.cacheLocation)
-                    or current_storage.timeout != config.cacheTimeout
-                    or len(current_storage._shards) != config.cacheShards
-                )
-
-                if not needs_recreation:
-                    logger.debug("Cache parameters unchanged, skipping recreation")
-                    return
-
-                logger.info("Cache parameters changed, recreating cache")
-                cls._file_cache.set_storage(
-                    FanoutCache(
-                        config.cacheLocation,
-                        shards=config.cacheShards,
-                        timeout=config.cacheTimeout,
-                    )
-                )
-                logger.info(
-                    "AssetUploader file cache updated: location=%s, shards=%s, timeout=%s",
-                    config.cacheLocation,
-                    config.cacheShards,
-                    config.cacheTimeout,
-                )
-            except Exception as e:
-                logger.warning(f"Failed to update AssetUploader file cache: {e}")
 
     def _get_file_cache_key(self, asset: str) -> str:
         """Generate cache key for a file, including environment."""
@@ -148,7 +101,3 @@ class AssetUploader:
 
     def __repr__(self) -> str:
         return f"AssetUploader(openapi_service={self.openapi_service})"
-
-
-# Register the config update handler at module level (once, not per instance)
-register_upload_config_handler(AssetUploader._handle_config_update)

@@ -1,29 +1,7 @@
 from pathlib import Path
-import threading
 import shutil
-from typing import Callable
 from pydantic import BaseModel, Field, field_validator
 from rapidata.rapidata_client.config import logger
-
-# Type alias for config update handlers
-UploadConfigUpdateHandler = Callable[["UploadConfig"], None]
-
-# Global list to store registered handlers with thread-safe access
-_handlers_lock = threading.Lock()
-_upload_config_handlers: list[UploadConfigUpdateHandler] = []
-
-
-def register_upload_config_handler(handler: UploadConfigUpdateHandler) -> None:
-    """Register a handler to be called when the upload configuration updates."""
-    with _handlers_lock:
-        _upload_config_handlers.append(handler)
-
-
-def unregister_upload_config_handler(handler: UploadConfigUpdateHandler) -> None:
-    """Unregister a previously registered handler."""
-    with _handlers_lock:
-        if handler in _upload_config_handlers:
-            _upload_config_handlers.remove(handler)
 
 
 class UploadConfig(BaseModel):
@@ -36,8 +14,10 @@ class UploadConfig(BaseModel):
         cacheUploads (bool): Enable/disable upload caching. Defaults to True.
         cacheTimeout (float): Cache operation timeout in seconds. Defaults to 0.1.
         cacheLocation (Path): Directory for cache storage. Defaults to ~/.cache/rapidata/upload_cache.
+            This is immutable
         cacheShards (int): Number of cache shards for parallel access. Defaults to 128.
             Higher values improve concurrency but increase file handles. Must be positive.
+            This is immutable
     """
 
     maxWorkers: int = Field(default=25)
@@ -45,9 +25,13 @@ class UploadConfig(BaseModel):
     cacheUploads: bool = Field(default=True)
     cacheTimeout: float = Field(default=0.1)
     cacheLocation: Path = Field(
-        default=Path.home() / ".cache" / "rapidata" / "upload_cache"
+        default=Path.home() / ".cache" / "rapidata" / "upload_cache",
+        frozen=True,
     )
-    cacheShards: int = Field(default=128)
+    cacheShards: int = Field(
+        default=128,
+        frozen=True,
+    )
 
     @field_validator("maxWorkers")
     @classmethod
@@ -72,35 +56,24 @@ class UploadConfig(BaseModel):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self._notify_handlers()
         self._migrate_cache()
-
-    def __setattr__(self, name: str, value) -> None:
-        super().__setattr__(name, value)
-        self._notify_handlers()
-
-    def _notify_handlers(self) -> None:
-        """Notify all registered handlers that the configuration has updated."""
-        # Snapshot handlers under lock to prevent modifications during iteration
-        with _handlers_lock:
-            handlers = _upload_config_handlers.copy()
-
-        # Execute handlers outside lock to avoid deadlocks
-        for handler in handlers:
-            try:
-                handler(self)
-            except Exception as e:
-                logger.warning(f"Warning: UploadConfig handler failed: {e}")
 
     def _migrate_cache(self) -> None:
         """Migrate the cache from the old location to the new location."""
         old_cache = Path.home() / ".rapidata" / "upload_cache"
         new_cache = self.cacheLocation
         if old_cache.exists() and not new_cache.exists():
-            logger.info(f"Migrating cache from {old_cache} to {self.cacheLocation}")
-            self.cacheLocation.parent.mkdir(parents=True, exist_ok=True)
-            shutil.move(str(old_cache), str(self.cacheLocation))
+            try:
+                logger.info(f"Migrating cache from {old_cache} to {self.cacheLocation}")
+                self.cacheLocation.parent.mkdir(parents=True, exist_ok=True)
+                shutil.move(str(old_cache), str(self.cacheLocation))
 
-            # Clean up old directory if empty
-            if old_cache.parent.exists() and not any(old_cache.parent.iterdir()):
-                old_cache.parent.rmdir()
+                # Clean up old directory if empty
+                if old_cache.parent.exists() and not any(old_cache.parent.iterdir()):
+                    old_cache.parent.rmdir()
+                logger.info("Cache migration completed successfully")
+            except Exception as e:
+                logger.warning(
+                    f"Failed to migrate cache from {old_cache} to {new_cache}: {e}. "
+                    "Starting with empty cache. You may want to manually move the old cache."
+                )
