@@ -18,7 +18,7 @@ from typing import Dict, Optional
 
 import httpx
 from authlib.integrations.httpx_client import OAuth2Client
-from httpx import Timeout, ConnectError
+from httpx import Timeout, ConnectError, Limits
 
 from rapidata.api_client.exceptions import ApiException, ApiValueError
 
@@ -239,12 +239,16 @@ class RESTClientObject:
         return RESTResponse(r)
 
     def _get_session_defaults(self):
+        # Set connection pool limits to support high concurrency uploads
+        limits = Limits(max_connections=200, max_keepalive_connections=200)
+
         client_kwargs = {
             "verify": (
                 self.configuration.ssl_ca_cert
                 if self.configuration.ssl_ca_cert
                 else self.configuration.verify_ssl
-            )
+            ),
+            "limits": limits,
         }
 
         if self.configuration.proxy:
@@ -257,7 +261,7 @@ class RESTClientObject:
             client_kwargs["headers"] = existing_headers
 
         if self.configuration.retries is not None:
-            transport = httpx.HTTPTransport(retries=self.configuration.retries)
+            transport = httpx.HTTPTransport(retries=self.configuration.retries, limits=limits)
             client_kwargs["transport"] = transport
 
         return client_kwargs
