@@ -46,6 +46,11 @@ class ThreadedUploader(Generic[T]):
         Returns:
             tuple[list[T], list[FailedUpload[T]]]: Lists of successful uploads and failed uploads with error details.
         """
+        logger.debug(
+            "Uploading %s items with %s configuration",
+            len(items),
+            rapidata_config.upload,
+        )
         successful_uploads: list[T] = []
         failed_uploads: list[FailedUpload[T]] = []
 
