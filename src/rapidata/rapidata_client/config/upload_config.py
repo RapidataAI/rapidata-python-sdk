@@ -18,6 +18,11 @@ class UploadConfig(BaseModel):
         cacheShards (int): Number of cache shards for parallel access. Defaults to 128.
             Higher values improve concurrency but increase file handles. Must be positive.
             This is immutable
+        enableBatchUpload (bool): Enable batch URL uploading (two-step process). Defaults to True.
+        batchSize (int): Number of URLs per batch (10-500). Defaults to 100.
+        batchPollInterval (float): Polling interval in seconds. Defaults to 0.5.
+        batchPollMaxInterval (float): Maximum polling interval. Defaults to 5.0.
+        batchTimeout (float): Batch upload timeout in seconds. Defaults to 300.0.
     """
 
     maxWorkers: int = Field(default=25)
@@ -31,6 +36,26 @@ class UploadConfig(BaseModel):
     cacheShards: int = Field(
         default=128,
         frozen=True,
+    )
+    enableBatchUpload: bool = Field(
+        default=True,
+        description="Enable batch URL uploading (two-step process)",
+    )
+    batchSize: int = Field(
+        default=100,
+        description="Number of URLs per batch (10-500)",
+    )
+    batchPollInterval: float = Field(
+        default=0.5,
+        description="Polling interval in seconds",
+    )
+    batchPollMaxInterval: float = Field(
+        default=5.0,
+        description="Maximum polling interval",
+    )
+    batchTimeout: float = Field(
+        default=300.0,
+        description="Batch upload timeout in seconds",
     )
 
     @field_validator("maxWorkers")
@@ -51,6 +76,17 @@ class UploadConfig(BaseModel):
         if v & (v - 1) != 0:
             logger.warning(
                 f"cacheShards={v} is not a power of 2. Power-of-2 values provide better hash distribution."
+            )
+        return v
+
+    @field_validator("batchSize")
+    @classmethod
+    def validate_batch_size(cls, v: int) -> int:
+        if v < 10:
+            raise ValueError("batchSize must be at least 10")
+        if v > 500:
+            logger.warning(
+                f"batchSize={v} may cause timeouts. Recommend 50-200."
             )
         return v
 

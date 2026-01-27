@@ -24,6 +24,7 @@ if TYPE_CHECKING:
     from rapidata.api_client.api.workflow_api import WorkflowApi
     from rapidata.api_client.api.participant_api import ParticipantApi
     from rapidata.api_client.api.audience_api import AudienceApi
+    from rapidata.api_client.api.batch_upload_api import BatchUploadApi
 
 
 class OpenAPIService:
@@ -141,6 +142,12 @@ class OpenAPIService:
         from rapidata.api_client.api.asset_api import AssetApi
 
         return AssetApi(self.api_client)
+
+    @property
+    def batch_upload_api(self) -> BatchUploadApi:
+        from rapidata.api_client.api.batch_upload_api import BatchUploadApi
+
+        return BatchUploadApi(self.api_client)
 
     @property
     def dataset_api(self) -> DatasetApi:
