@@ -49,10 +49,6 @@ class UploadConfig(BaseModel):
         default=0.5,
         description="Polling interval in seconds",
     )
-    batchPollMaxInterval: float = Field(
-        default=5.0,
-        description="Maximum polling interval",
-    )
     batchTimeout: float = Field(
         default=300.0,
         description="Batch upload timeout in seconds",
@@ -85,9 +81,7 @@ class UploadConfig(BaseModel):
         if v < 10:
             raise ValueError("batchSize must be at least 10")
         if v > 500:
-            logger.warning(
-                f"batchSize={v} may cause timeouts. Recommend 50-200."
-            )
+            logger.warning(f"batchSize={v} may cause timeouts. Recommend 50-200.")
         return v
 
     def __init__(self, **kwargs):

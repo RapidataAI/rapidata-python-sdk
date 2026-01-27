@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import TYPE_CHECKING
+from typing import Callable, TYPE_CHECKING
 
 from tqdm import tqdm
 
@@ -84,8 +84,12 @@ class AssetUploadOrchestrator:
             # 4a. Batch upload URLs
             if uncached_urls:
                 logger.debug(f"Batch uploading {len(uncached_urls)} URL(s)")
+
+                def update_progress(n: int) -> None:
+                    pbar.update(n)
+
                 url_failures = self.batch_uploader.batch_upload_urls(
-                    uncached_urls, progress_callback=lambda n: pbar.update(n)
+                    uncached_urls, progress_callback=update_progress
                 )
                 failed_uploads.extend(url_failures)
             else:
@@ -94,8 +98,12 @@ class AssetUploadOrchestrator:
             # 4b. Parallel upload files
             if uncached_files:
                 logger.debug(f"Parallel uploading {len(uncached_files)} file(s)")
+
+                def update_file_progress() -> None:
+                    pbar.update(1)
+
                 file_failures = self._upload_files_parallel(
-                    uncached_files, progress_callback=lambda: pbar.update(1)
+                    uncached_files, progress_callback=update_file_progress
                 )
                 failed_uploads.extend(file_failures)
             else:
@@ -150,7 +158,7 @@ class AssetUploadOrchestrator:
     def _upload_files_parallel(
         self,
         files: list[str],
-        progress_callback: callable | None = None,
+        progress_callback: Callable[[], None] | None = None,
     ) -> list[FailedUpload[str]]:
         """
         Upload files in parallel using ThreadPoolExecutor.

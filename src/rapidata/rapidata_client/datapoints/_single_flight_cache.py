@@ -77,6 +77,10 @@ class SingleFlightCache:
             with self._lock:
                 self._in_flight.pop(key, None)
 
+    def set(self, key: str, value: str) -> None:
+        """Set a value in the cache."""
+        self._storage[key] = value
+
     def clear(self) -> None:
         """Clear the cache."""
         self._storage.clear()
