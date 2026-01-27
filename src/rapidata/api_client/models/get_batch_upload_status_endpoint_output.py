@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.batch_upload_status import BatchUploadStatus
 from typing import Optional, Set
@@ -31,7 +31,8 @@ class GetBatchUploadStatusEndpointOutput(BaseModel):
     total_count: StrictInt = Field(alias="totalCount")
     completed_count: StrictInt = Field(alias="completedCount")
     failed_count: StrictInt = Field(alias="failedCount")
-    __properties: ClassVar[List[str]] = ["status", "totalCount", "completedCount", "failedCount"]
+    completed_batches: List[StrictStr] = Field(alias="completedBatches")
+    __properties: ClassVar[List[str]] = ["status", "totalCount", "completedCount", "failedCount", "completedBatches"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -87,7 +88,8 @@ class GetBatchUploadStatusEndpointOutput(BaseModel):
             "status": obj.get("status"),
             "totalCount": obj.get("totalCount"),
             "completedCount": obj.get("completedCount"),
-            "failedCount": obj.get("failedCount")
+            "failedCount": obj.get("failedCount"),
+            "completedBatches": obj.get("completedBatches")
         })
         return _obj
 

@@ -9440,7 +9440,8 @@
           "status",
           "totalCount",
           "completedCount",
-          "failedCount"
+          "failedCount",
+          "completedBatches"
         ],
         "type": "object",
         "properties": {
@@ -9458,6 +9459,12 @@
           "failedCount": {
             "type": "integer",
             "format": "int32"
+          },
+          "completedBatches": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
