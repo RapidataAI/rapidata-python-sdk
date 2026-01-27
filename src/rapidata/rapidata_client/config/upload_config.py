@@ -1,6 +1,6 @@
 from pathlib import Path
 import shutil
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 from rapidata.rapidata_client.config import logger
 
 
@@ -24,6 +24,8 @@ class UploadConfig(BaseModel):
         batchPollMaxInterval (float): Maximum polling interval. Defaults to 5.0.
         batchTimeout (float): Batch upload timeout in seconds. Defaults to 300.0.
     """
+
+    model_config = ConfigDict(validate_assignment=True)
 
     maxWorkers: int = Field(default=25)
     maxRetries: int = Field(default=3)
