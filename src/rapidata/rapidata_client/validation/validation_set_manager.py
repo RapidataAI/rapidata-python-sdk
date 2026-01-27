@@ -30,7 +30,7 @@ from rapidata.rapidata_client.config import (
     rapidata_config,
     tracer,
 )
-from tqdm import tqdm
+from tqdm.auto import tqdm
 from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 
 if TYPE_CHECKING:

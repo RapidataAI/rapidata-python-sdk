@@ -4,7 +4,7 @@ import re
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Callable, TYPE_CHECKING
 
-from tqdm import tqdm
+from tqdm.auto import tqdm
 
 from rapidata.rapidata_client.config import logger, rapidata_config
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
@@ -132,16 +132,16 @@ class AssetUploadOrchestrator:
                 assets.add(dp.media_context)
         return assets
 
-    def _filter_uncached(
-        self, assets: list[str], cache
-    ) -> list[str]:
+    def _filter_uncached(self, assets: list[str], cache) -> list[str]:
         """Filter out assets that are already cached."""
         uncached = []
         for asset in assets:
             try:
                 # Try to get cache key
                 if re.match(r"^https?://", asset):
-                    cache_key = f"{self.asset_uploader.openapi_service.environment}@{asset}"
+                    cache_key = (
+                        f"{self.asset_uploader.openapi_service.environment}@{asset}"
+                    )
                 else:
                     cache_key = self.asset_uploader._get_file_cache_key(asset)
 

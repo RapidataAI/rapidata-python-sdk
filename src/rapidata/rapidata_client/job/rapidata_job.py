@@ -7,7 +7,7 @@ from datetime import datetime
 from time import sleep
 from typing import Callable, TypeVar, TYPE_CHECKING
 from colorama import Fore
-from tqdm import tqdm
+from tqdm.auto import tqdm
 
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.config import (

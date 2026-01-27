@@ -71,7 +71,6 @@ from rapidata.rapidata_client.settings.models.translation_behaviour_options impo
 
 
 # Configuration Types
-from rapidata.rapidata_client.config.order_config import OrderConfig
 from rapidata.rapidata_client.config.upload_config import UploadConfig
 from rapidata.rapidata_client.config.rapidata_config import RapidataConfig
 from rapidata.rapidata_client.config.logging_config import LoggingConfig
@@ -136,7 +135,6 @@ __all__ = [
     "TranslationBehaviour",
     "TranslationBehaviourOptions",
     # Configuration Types
-    "OrderConfig",
     "UploadConfig",
     "RapidataConfig",
     "LoggingConfig",
