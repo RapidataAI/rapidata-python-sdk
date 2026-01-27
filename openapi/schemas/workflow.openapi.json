@@ -595,7 +595,8 @@
       },
       "GetCompareAbSummaryResult": {
         "required": [
-          "winCounter"
+          "winCounter",
+          "allTargetGroupsCompleted"
         ],
         "type": "object",
         "properties": {
@@ -605,6 +606,9 @@
               "type": "number",
               "format": "double"
             }
+          },
+          "allTargetGroupsCompleted": {
+            "type": "boolean"
           }
         }
       },

@@ -17,18 +17,17 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt
-from typing import Any, ClassVar, Dict, List, Union
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetCompareAbSummaryResult(BaseModel):
+class CreateBatchUploadEndpointOutput(BaseModel):
     """
-    GetCompareAbSummaryResult
+    CreateBatchUploadEndpointOutput
     """ # noqa: E501
-    win_counter: Dict[str, Union[StrictFloat, StrictInt]] = Field(alias="winCounter")
-    all_target_groups_completed: StrictBool = Field(alias="allTargetGroupsCompleted")
-    __properties: ClassVar[List[str]] = ["winCounter", "allTargetGroupsCompleted"]
+    batch_upload_id: StrictStr = Field(alias="batchUploadId")
+    __properties: ClassVar[List[str]] = ["batchUploadId"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +47,7 @@ class GetCompareAbSummaryResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetCompareAbSummaryResult from a JSON string"""
+        """Create an instance of CreateBatchUploadEndpointOutput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,7 +72,7 @@ class GetCompareAbSummaryResult(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetCompareAbSummaryResult from a dict"""
+        """Create an instance of CreateBatchUploadEndpointOutput from a dict"""
         if obj is None:
             return None
 
@@ -81,8 +80,7 @@ class GetCompareAbSummaryResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "winCounter": obj.get("winCounter"),
-            "allTargetGroupsCompleted": obj.get("allTargetGroupsCompleted")
+            "batchUploadId": obj.get("batchUploadId")
         })
         return _obj
 

@@ -17,18 +17,21 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt
-from typing import Any, ClassVar, Dict, List, Union
+from pydantic import BaseModel, ConfigDict, Field, StrictInt
+from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.batch_upload_status import BatchUploadStatus
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetCompareAbSummaryResult(BaseModel):
+class GetBatchUploadStatusEndpointOutput(BaseModel):
     """
-    GetCompareAbSummaryResult
+    GetBatchUploadStatusEndpointOutput
     """ # noqa: E501
-    win_counter: Dict[str, Union[StrictFloat, StrictInt]] = Field(alias="winCounter")
-    all_target_groups_completed: StrictBool = Field(alias="allTargetGroupsCompleted")
-    __properties: ClassVar[List[str]] = ["winCounter", "allTargetGroupsCompleted"]
+    status: BatchUploadStatus
+    total_count: StrictInt = Field(alias="totalCount")
+    completed_count: StrictInt = Field(alias="completedCount")
+    failed_count: StrictInt = Field(alias="failedCount")
+    __properties: ClassVar[List[str]] = ["status", "totalCount", "completedCount", "failedCount"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +51,7 @@ class GetCompareAbSummaryResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetCompareAbSummaryResult from a JSON string"""
+        """Create an instance of GetBatchUploadStatusEndpointOutput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,7 +76,7 @@ class GetCompareAbSummaryResult(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetCompareAbSummaryResult from a dict"""
+        """Create an instance of GetBatchUploadStatusEndpointOutput from a dict"""
         if obj is None:
             return None
 
@@ -81,8 +84,10 @@ class GetCompareAbSummaryResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "winCounter": obj.get("winCounter"),
-            "allTargetGroupsCompleted": obj.get("allTargetGroupsCompleted")
+            "status": obj.get("status"),
+            "totalCount": obj.get("totalCount"),
+            "completedCount": obj.get("completedCount"),
+            "failedCount": obj.get("failedCount")
         })
         return _obj
 

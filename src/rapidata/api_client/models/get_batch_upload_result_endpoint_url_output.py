@@ -17,18 +17,21 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt
-from typing import Any, ClassVar, Dict, List, Union
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.batch_upload_url_status import BatchUploadUrlStatus
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetCompareAbSummaryResult(BaseModel):
+class GetBatchUploadResultEndpointUrlOutput(BaseModel):
     """
-    GetCompareAbSummaryResult
+    GetBatchUploadResultEndpointUrlOutput
     """ # noqa: E501
-    win_counter: Dict[str, Union[StrictFloat, StrictInt]] = Field(alias="winCounter")
-    all_target_groups_completed: StrictBool = Field(alias="allTargetGroupsCompleted")
-    __properties: ClassVar[List[str]] = ["winCounter", "allTargetGroupsCompleted"]
+    url: StrictStr
+    file_name: Optional[StrictStr] = Field(default=None, alias="fileName")
+    status: BatchUploadUrlStatus
+    error_message: Optional[StrictStr] = Field(default=None, alias="errorMessage")
+    __properties: ClassVar[List[str]] = ["url", "fileName", "status", "errorMessage"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +51,7 @@ class GetCompareAbSummaryResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetCompareAbSummaryResult from a JSON string"""
+        """Create an instance of GetBatchUploadResultEndpointUrlOutput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,11 +72,21 @@ class GetCompareAbSummaryResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if file_name (nullable) is None
+        # and model_fields_set contains the field
+        if self.file_name is None and "file_name" in self.model_fields_set:
+            _dict['fileName'] = None
+
+        # set to None if error_message (nullable) is None
+        # and model_fields_set contains the field
+        if self.error_message is None and "error_message" in self.model_fields_set:
+            _dict['errorMessage'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetCompareAbSummaryResult from a dict"""
+        """Create an instance of GetBatchUploadResultEndpointUrlOutput from a dict"""
         if obj is None:
             return None
 
@@ -81,8 +94,10 @@ class GetCompareAbSummaryResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "winCounter": obj.get("winCounter"),
-            "allTargetGroupsCompleted": obj.get("allTargetGroupsCompleted")
+            "url": obj.get("url"),
+            "fileName": obj.get("fileName"),
+            "status": obj.get("status"),
+            "errorMessage": obj.get("errorMessage")
         })
         return _obj
 

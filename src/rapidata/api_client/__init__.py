@@ -31,6 +31,7 @@ from rapidata.api_client.exceptions import ApiException
 _API_IMPORTS = {
     "AssetApi": "rapidata.api_client.api.asset_api",
     "AudienceApi": "rapidata.api_client.api.audience_api",
+    "BatchUploadApi": "rapidata.api_client.api.batch_upload_api",
     "BenchmarkApi": "rapidata.api_client.api.benchmark_api",
     "CampaignApi": "rapidata.api_client.api.campaign_api",
     "ClientApi": "rapidata.api_client.api.client_api",
