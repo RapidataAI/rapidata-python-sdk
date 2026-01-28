@@ -84,7 +84,9 @@ class AssetUploadOrchestrator:
         with tqdm(
             total=total,
             desc="Step 1/2: Uploading assets",
+            position=0,
             disable=rapidata_config.logging.silent_mode,
+            leave=True,
         ) as pbar:
             # 4a. Batch upload URLs
             if uncached_urls:

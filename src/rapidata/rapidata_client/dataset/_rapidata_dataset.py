@@ -3,6 +3,8 @@ from __future__ import annotations
 import threading
 from concurrent.futures import ThreadPoolExecutor, Future
 
+from tqdm.auto import tqdm
+
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.datapoints._datapoint_uploader import DatapointUploader
@@ -65,7 +67,16 @@ class RapidataDataset:
         # 3. Create executor for datapoint creation
         executor = ThreadPoolExecutor(max_workers=rapidata_config.upload.maxWorkers)
 
-        # 4. Define callback for asset completion
+        # 4. Create progress bar for datapoint creation (position=1 to show below asset upload bar)
+        datapoint_pbar = tqdm(
+            total=len(datapoints),
+            desc="Step 2/2: Creating datapoints",
+            position=1,
+            disable=rapidata_config.logging.silent_mode,
+            leave=True,
+        )
+
+        # 5. Define callback for asset completion
         def on_assets_complete(assets: list[str]) -> None:
             """Called when a batch of assets completes uploading."""
             with lock:
@@ -81,12 +92,19 @@ class RapidataDataset:
 
             # Submit ready datapoints for creation (outside lock to avoid blocking)
             for idx in ready_datapoints:
-                future = executor.submit(
-                    self.datapoint_uploader.upload_datapoint,
-                    dataset_id=self.id,
-                    datapoint=datapoints[idx],
-                    index=idx,
-                )
+
+                def upload_and_update(dp_idx):
+                    """Upload datapoint and update progress bar when done."""
+                    try:
+                        self.datapoint_uploader.upload_datapoint(
+                            dataset_id=self.id,
+                            datapoint=datapoints[dp_idx],
+                            index=dp_idx,
+                        )
+                    finally:
+                        datapoint_pbar.update(1)
+
+                future = executor.submit(upload_and_update, idx)
                 with lock:
                     creation_futures.append((idx, future))
 
@@ -95,17 +113,18 @@ class RapidataDataset:
                     f"Asset batch completed, {len(ready_datapoints)} datapoints now ready for creation"
                 )
 
-        # 5. Start uploads (blocking, but triggers callbacks as assets complete)
+        # 6. Start uploads (blocking, but triggers callbacks as assets complete)
         logger.info("Starting incremental datapoint creation")
         self.asset_orchestrator.upload_all_assets(
             datapoints, asset_completion_callback=on_assets_complete
         )
 
-        # 6. Wait for all datapoint creation to complete
+        # 7. Wait for all datapoint creation to complete
         executor.shutdown(wait=True)
+        datapoint_pbar.close()
         logger.debug("All datapoint creation tasks completed")
 
-        # 7. Collect results
+        # 8. Collect results
         successful_uploads: list[Datapoint] = []
         failed_uploads: list[FailedUpload[Datapoint]] = []
 
@@ -123,7 +142,7 @@ class RapidataDataset:
                     )
                 )
 
-        # 8. Handle datapoints whose assets failed to upload
+        # 9. Handle datapoints whose assets failed to upload
         with lock:
             for idx in pending_datapoints:
                 logger.warning(f"Datapoint {idx} assets failed to upload")
