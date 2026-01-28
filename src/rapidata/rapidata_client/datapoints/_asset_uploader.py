@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 import os
+import threading
 from typing import TYPE_CHECKING
 
 from rapidata.service.openapi_service import OpenAPIService
@@ -14,15 +15,46 @@ if TYPE_CHECKING:
 
 
 class AssetUploader:
-    _file_cache: SingleFlightCache = SingleFlightCache(
-        "File cache",
-        storage=FanoutCache(
-            rapidata_config.upload.cacheLocation,
-            shards=rapidata_config.upload.cacheShards,
-            timeout=rapidata_config.upload.cacheTimeout,
-        ),
-    )
-    _url_cache: SingleFlightCache = SingleFlightCache("URL cache")
+    # Class-level caches shared across all instances
+    # URL cache: Always in-memory (URLs are lightweight, no benefit to disk caching)
+    # File cache: Lazily initialized based on cacheToDisk config
+    _url_cache: SingleFlightCache = SingleFlightCache("URL cache", storage={})
+    _file_cache: SingleFlightCache | None = None
+    _file_cache_lock: threading.Lock = threading.Lock()
+
+    @classmethod
+    def _get_file_cache(cls) -> SingleFlightCache:
+        """
+        Get or create the file cache based on current config.
+
+        Uses lazy initialization to respect cacheToDisk setting at runtime.
+        Thread-safe with double-checked locking pattern.
+
+        Returns:
+            Configured file cache (disk or memory based on cacheToDisk).
+        """
+        if cls._file_cache is not None:
+            return cls._file_cache
+
+        with cls._file_cache_lock:
+            # Double-check after acquiring lock
+            if cls._file_cache is not None:
+                return cls._file_cache
+
+            # Create cache storage based on current config
+            if rapidata_config.upload.cacheToDisk:
+                storage: dict[str, str] | FanoutCache = FanoutCache(
+                    rapidata_config.upload.cacheLocation,
+                    shards=rapidata_config.upload.cacheShards,
+                    timeout=rapidata_config.upload.cacheTimeout,
+                )
+                logger.debug("Initialized file cache with disk storage")
+            else:
+                storage = {}
+                logger.debug("Initialized file cache with in-memory storage")
+
+            cls._file_cache = SingleFlightCache("File cache", storage=storage)
+            return cls._file_cache
 
     def __init__(self, openapi_service: OpenAPIService) -> None:
         self.openapi_service = openapi_service
@@ -42,7 +74,12 @@ class AssetUploader:
         return f"{env}@{url}"
 
     def _upload_url_asset(self, url: str) -> str:
-        """Upload a URL asset, with optional caching."""
+        """
+        Upload a URL asset with caching.
+
+        URLs are always cached in-memory (lightweight, no disk I/O overhead).
+        Caching is required for the two-step upload flow and cannot be disabled.
+        """
 
         def upload_url() -> str:
             response = self.openapi_service.asset_api.asset_url_post(url=url)
@@ -51,17 +88,15 @@ class AssetUploader:
             )
             return response.file_name
 
-        if not rapidata_config.upload.cacheUploads:
-            return upload_url()
-
-        return self._url_cache.get_or_fetch(
-            self.get_url_cache_key(url),
-            upload_url,
-            should_cache=rapidata_config.upload.cacheUploads,
-        )
+        return self._url_cache.get_or_fetch(self.get_url_cache_key(url), upload_url)
 
     def _upload_file_asset(self, file_path: str) -> str:
-        """Upload a local file asset, with optional caching."""
+        """
+        Upload a local file asset with caching.
+
+        Caching is always enabled as it's required for the two-step upload flow.
+        Use cacheToDisk config to control whether cache is stored to disk or memory.
+        """
 
         def upload_file() -> str:
             response = self.openapi_service.asset_api.asset_file_post(file=file_path)
@@ -72,13 +107,8 @@ class AssetUploader:
             )
             return response.file_name
 
-        if not rapidata_config.upload.cacheUploads:
-            return upload_file()
-
-        return self._file_cache.get_or_fetch(
-            self.get_file_cache_key(file_path),
-            upload_file,
-            should_cache=rapidata_config.upload.cacheUploads,
+        return self._get_file_cache().get_or_fetch(
+            self.get_file_cache_key(file_path), upload_file
         )
 
     def upload_asset(self, asset: str) -> str:
@@ -92,7 +122,8 @@ class AssetUploader:
             return self._upload_file_asset(asset)
 
     def clear_cache(self) -> None:
-        self._file_cache.clear()
+        """Clear both URL and file caches."""
+        self._get_file_cache().clear()
         self._url_cache.clear()
         logger.info("Upload cache cleared")
 

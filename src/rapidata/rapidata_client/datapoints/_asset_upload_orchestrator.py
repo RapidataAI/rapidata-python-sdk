@@ -128,7 +128,9 @@ class AssetUploadOrchestrator:
             Tuple of (uncached_urls, uncached_files).
         """
         uncached_urls = self._filter_uncached(urls, self.asset_uploader._url_cache)
-        uncached_files = self._filter_uncached(files, self.asset_uploader._file_cache)
+        uncached_files = self._filter_uncached(
+            files, self.asset_uploader._get_file_cache()
+        )
 
         logger.info(
             f"Assets to upload: {len(uncached_urls)} URL(s), {len(uncached_files)} file(s) "
