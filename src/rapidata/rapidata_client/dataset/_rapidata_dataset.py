@@ -356,13 +356,8 @@ class RapidataDataset:
                 successful_uploads.append(datapoints[idx])
             except Exception as e:
                 logger.warning(f"Failed to create datapoint {idx}: {e}")
-                failed_uploads.append(
-                    FailedUpload(
-                        item=datapoints[idx],
-                        error_type="DatapointCreationFailed",
-                        error_message=str(e),
-                    )
-                )
+                # Use from_exception to extract proper error reason from RapidataError
+                failed_uploads.append(FailedUpload.from_exception(datapoints[idx], e))
 
         # Handle datapoints whose assets failed to upload
         with lock:

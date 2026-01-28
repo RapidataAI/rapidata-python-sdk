@@ -249,23 +249,14 @@ class BatchAssetUploader:
         except Exception as e:
             logger.error(f"Failed to fetch results for batch {batch_id}: {e}")
             # Create individual FailedUpload for each URL in the failed batch
+            # Use from_exception to extract proper error reason from RapidataError
             if batch_id in batch_to_urls:
                 for url in batch_to_urls[batch_id]:
-                    failed_uploads.append(
-                        FailedUpload(
-                            item=url,
-                            error_type="BatchResultFetchFailed",
-                            error_message=f"Failed to fetch batch results: {str(e)}",
-                        )
-                    )
+                    failed_uploads.append(FailedUpload.from_exception(url, e))
             else:
                 # Fallback if batch_id not found in mapping
                 failed_uploads.append(
-                    FailedUpload(
-                        item=f"batch_{batch_id}",
-                        error_type="BatchResultFetchFailed",
-                        error_message=f"Failed to fetch batch results: {str(e)}",
-                    )
+                    FailedUpload.from_exception(f"batch_{batch_id}", e)
                 )
 
         if successful_urls:
