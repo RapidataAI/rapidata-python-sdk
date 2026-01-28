@@ -111,14 +111,21 @@ class RapidataDataset:
         Build efficient reverse mapping: asset -> datapoint indices that need it.
         This allows O(1) lookup instead of checking all pending datapoints.
 
+        Note on using indices: We use integer indices instead of datapoint objects because:
+        - Indices are hashable (required for dict keys and sets)
+        - Lightweight and fast to compare
+        - Provides stable references to datapoints in the list
+        - The datapoint objects remain in a single location (the datapoints list)
+
         Args:
-            datapoints: List of datapoints to process.
+            datapoints: List of datapoints to process. Indices into this list are used as identifiers.
 
         Returns:
             Tuple of (asset_to_datapoints, datapoint_pending_count):
-                - asset_to_datapoints: Maps asset to set of datapoint indices waiting for it
-                - datapoint_pending_count: Maps datapoint index to count of remaining assets needed
+                - asset_to_datapoints: Maps each asset to set of datapoint indices (positions in datapoints list) that need it
+                - datapoint_pending_count: Maps each datapoint index to count of remaining assets it needs
         """
+        # Using indices instead of datapoints directly for hashability and performance
         asset_to_datapoints: dict[str, set[int]] = {}
         datapoint_pending_count: dict[int, int] = {}
 
@@ -179,10 +186,13 @@ class RapidataDataset:
                 datapoint_pbar,
             )
 
+            # Extract all unique assets from the mapping
+            all_assets = set(asset_to_datapoints.keys())
+
             # Start uploads (blocking, but triggers callbacks as assets complete)
             logger.info("Starting incremental datapoint creation")
             asset_failures = self.asset_orchestrator.upload_all_assets(
-                datapoints, asset_completion_callback=on_assets_complete
+                all_assets, asset_completion_callback=on_assets_complete
             )
 
             if asset_failures:
@@ -228,13 +238,13 @@ class RapidataDataset:
 
         def on_assets_complete(assets: list[str]) -> None:
             """Called when a batch of assets completes uploading."""
-            ready_datapoints = self._find_ready_datapoints(
+            ready_datapoint_indices = self._find_ready_datapoints(
                 assets, asset_to_datapoints, datapoint_pending_count, lock
             )
 
             # Submit ready datapoints for creation (outside lock to avoid blocking)
             self._submit_datapoints_for_creation(
-                ready_datapoints,
+                ready_datapoint_indices,
                 datapoints,
                 creation_futures,
                 lock,
@@ -254,40 +264,43 @@ class RapidataDataset:
         """
         Find datapoints that are ready for creation after asset completion.
 
+        Returns indices into the original datapoints list for datapoints whose
+        assets are now all complete.
+
         Args:
             assets: List of completed assets.
             asset_to_datapoints: Mapping from asset to datapoint indices.
-            datapoint_pending_count: Pending asset count per datapoint.
+            datapoint_pending_count: Pending asset count per datapoint index.
             lock: Lock protecting shared state.
 
         Returns:
-            List of datapoint indices ready for creation.
+            List of datapoint indices (positions in the datapoints list) ready for creation.
         """
-        ready_datapoints = []
+        ready_datapoint_indices = []
 
         with lock:
             # For each completed asset, find datapoints that need it
             for asset in assets:
                 if asset in asset_to_datapoints:
-                    # Get all datapoints waiting for this asset
-                    for idx in list(asset_to_datapoints[asset]):
-                        if idx in datapoint_pending_count:
-                            # Decrement the count
-                            datapoint_pending_count[idx] -= 1
+                    # Get all datapoint indices waiting for this asset
+                    for datapoint_idx in list(asset_to_datapoints[asset]):
+                        if datapoint_idx in datapoint_pending_count:
+                            # Decrement the remaining asset count for this datapoint
+                            datapoint_pending_count[datapoint_idx] -= 1
 
-                            # If all assets are ready, mark for creation
-                            if datapoint_pending_count[idx] == 0:
-                                ready_datapoints.append(idx)
-                                del datapoint_pending_count[idx]
+                            # If all assets are now ready, mark this datapoint for creation
+                            if datapoint_pending_count[datapoint_idx] == 0:
+                                ready_datapoint_indices.append(datapoint_idx)
+                                del datapoint_pending_count[datapoint_idx]
 
                             # Remove this datapoint from this asset's waiting list
-                            asset_to_datapoints[asset].discard(idx)
+                            asset_to_datapoints[asset].discard(datapoint_idx)
 
-        return ready_datapoints
+        return ready_datapoint_indices
 
     def _submit_datapoints_for_creation(
         self,
-        ready_datapoints: list[int],
+        ready_datapoint_indices: list[int],
         datapoints: list[Datapoint],
         creation_futures: list[tuple[int, Future]],
         lock: threading.Lock,
@@ -298,14 +311,14 @@ class RapidataDataset:
         Submit ready datapoints for creation.
 
         Args:
-            ready_datapoints: Indices of datapoints ready for creation.
-            datapoints: List of all datapoints.
+            ready_datapoint_indices: Indices (positions in datapoints list) of datapoints ready for creation.
+            datapoints: List of all datapoints (indexed by ready_datapoint_indices).
             creation_futures: List to store creation futures.
             lock: Lock protecting creation_futures.
             executor: Thread pool executor for datapoint creation.
             datapoint_pbar: Progress bar for datapoint creation.
         """
-        for idx in ready_datapoints:
+        for datapoint_idx in ready_datapoint_indices:
 
             def upload_and_update(dp_idx):
                 """Upload datapoint and update progress bar when done."""
@@ -318,13 +331,13 @@ class RapidataDataset:
                 finally:
                     datapoint_pbar.update(1)
 
-            future = executor.submit(upload_and_update, idx)
+            future = executor.submit(upload_and_update, datapoint_idx)
             with lock:
-                creation_futures.append((idx, future))
+                creation_futures.append((datapoint_idx, future))
 
-        if ready_datapoints:
+        if ready_datapoint_indices:
             logger.debug(
-                f"Asset batch completed, {len(ready_datapoints)} datapoints now ready for creation"
+                f"Asset batch completed, {len(ready_datapoint_indices)} datapoints now ready for creation"
             )
 
     def _collect_and_return_results(

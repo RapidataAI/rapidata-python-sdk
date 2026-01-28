@@ -60,23 +60,23 @@ class AssetUploadOrchestrator:
 
     def upload_all_assets(
         self,
-        datapoints: list[Datapoint],
+        assets: set[str] | list[str],
         asset_completion_callback: Callable[[list[str]], None] | None = None,
     ) -> list[FailedUpload[str]]:
         """
-        Step 1/2: Upload ALL assets from ALL datapoints.
+        Step 1/2: Upload ALL assets.
         Returns list of failed uploads for any assets that fail.
 
         Args:
-            datapoints: List of datapoints to extract assets from.
+            assets: Set or list of asset identifiers (URLs or file paths) to upload.
             asset_completion_callback: Optional callback to notify when assets complete (called with list of successful assets).
 
         Returns:
             List of FailedUpload instances for any assets that failed.
         """
-        # 1. Extract and validate assets
-        all_assets = self._extract_unique_assets(datapoints)
-        logger.info(f"Extracted {len(all_assets)} unique asset(s) from datapoints")
+        # 1. Validate assets
+        all_assets = set(assets) if isinstance(assets, list) else assets
+        logger.info(f"Uploading {len(all_assets)} unique asset(s)")
 
         if not all_assets:
             logger.debug("No assets to upload")
@@ -229,13 +229,6 @@ class AssetUploadOrchestrator:
             logger.warning(f"Step 1/2: {len(failed_uploads)} asset(s) failed to upload")
         else:
             logger.info("Step 1/2: All assets uploaded successfully")
-
-    def _extract_unique_assets(self, datapoints: list[Datapoint]) -> set[str]:
-        """Extract all unique assets from all datapoints."""
-        assets: set[str] = set()
-        for dp in datapoints:
-            assets.update(extract_assets_from_datapoint(dp))
-        return assets
 
     def _filter_uncached(self, assets: list[str], cache) -> list[str]:
         """Filter out assets that are already cached."""
