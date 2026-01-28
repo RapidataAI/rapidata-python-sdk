@@ -44,8 +44,11 @@ class RapidataDataset:
         if not datapoints:
             return [], []
 
-        # 1. Build mapping: datapoint_index -> required_assets
-        datapoint_assets: dict[int, set[str]] = {}
+        # 1. Build efficient reverse mapping: asset -> datapoint indices that need it
+        # This allows O(1) lookup instead of checking all pending datapoints
+        asset_to_datapoints: dict[str, set[int]] = {}
+        datapoint_pending_count: dict[int, int] = {}  # How many assets each datapoint still needs
+
         for idx, dp in enumerate(datapoints):
             assets = set()
             if isinstance(dp.asset, list):
@@ -54,13 +57,19 @@ class RapidataDataset:
                 assets.add(dp.asset)
             if dp.media_context:
                 assets.add(dp.media_context)
-            datapoint_assets[idx] = assets
+
+            # Track how many assets this datapoint needs
+            datapoint_pending_count[idx] = len(assets)
+
+            # Build reverse mapping
+            for asset in assets:
+                if asset not in asset_to_datapoints:
+                    asset_to_datapoints[asset] = set()
+                asset_to_datapoints[asset].add(idx)
 
         logger.debug(f"Mapped {len(datapoints)} datapoints to their required assets")
 
         # 2. Track state (thread-safe)
-        completed_assets: set[str] = set()
-        pending_datapoints: set[int] = set(range(len(datapoints)))
         creation_futures: list[tuple[int, Future]] = []
         lock = threading.Lock()
 
@@ -79,16 +88,25 @@ class RapidataDataset:
         # 5. Define callback for asset completion
         def on_assets_complete(assets: list[str]) -> None:
             """Called when a batch of assets completes uploading."""
-            with lock:
-                completed_assets.update(assets)
+            ready_datapoints = []
 
-                # Find newly ready datapoints
-                ready_datapoints = []
-                for idx in list(pending_datapoints):
-                    required = datapoint_assets[idx]
-                    if required.issubset(completed_assets):
-                        pending_datapoints.remove(idx)
-                        ready_datapoints.append(idx)
+            with lock:
+                # For each completed asset, find datapoints that need it
+                for asset in assets:
+                    if asset in asset_to_datapoints:
+                        # Get all datapoints waiting for this asset
+                        for idx in list(asset_to_datapoints[asset]):
+                            if idx in datapoint_pending_count:
+                                # Decrement the count
+                                datapoint_pending_count[idx] -= 1
+
+                                # If all assets are ready, mark for creation
+                                if datapoint_pending_count[idx] == 0:
+                                    ready_datapoints.append(idx)
+                                    del datapoint_pending_count[idx]
+
+                                # Remove this datapoint from this asset's waiting list
+                                asset_to_datapoints[asset].discard(idx)
 
             # Submit ready datapoints for creation (outside lock to avoid blocking)
             for idx in ready_datapoints:
@@ -144,7 +162,7 @@ class RapidataDataset:
 
         # 9. Handle datapoints whose assets failed to upload
         with lock:
-            for idx in pending_datapoints:
+            for idx in datapoint_pending_count:
                 logger.warning(f"Datapoint {idx} assets failed to upload")
                 failed_uploads.append(
                     FailedUpload(
