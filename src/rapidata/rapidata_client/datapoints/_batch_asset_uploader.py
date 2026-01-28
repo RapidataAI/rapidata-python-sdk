@@ -35,6 +35,7 @@ class BatchAssetUploader:
         self,
         urls: list[str],
         progress_callback: Callable[[int], None] | None = None,
+        completion_callback: Callable[[list[str]], None] | None = None,
     ) -> list[FailedUpload[str]]:
         """
         Upload URLs in batches. Returns list of failed uploads.
@@ -43,6 +44,7 @@ class BatchAssetUploader:
         Args:
             urls: List of URLs to upload.
             progress_callback: Optional callback to report progress (called with number of newly completed items).
+            completion_callback: Optional callback to notify when URLs complete (called with list of successful URLs).
 
         Returns:
             List of FailedUpload instances for any URLs that failed.
@@ -52,17 +54,14 @@ class BatchAssetUploader:
 
         # Split and submit batches
         batches = self._split_into_batches(urls)
-        batch_ids = self._submit_batches(batches)
+        batch_ids, batch_to_urls = self._submit_batches(batches)
 
         if not batch_ids:
             logger.error("No batches were successfully submitted")
             return self._create_submission_failures(urls)
 
         # Poll until complete
-        self._poll_until_complete(batch_ids, progress_callback)
-
-        # Fetch and process results
-        return self._fetch_and_process_results(batch_ids)
+        return self._poll_until_complete(batch_ids, batch_to_urls, progress_callback, completion_callback)
 
     def _split_into_batches(self, urls: list[str]) -> list[list[str]]:
         """Split URLs into batches of configured size."""
@@ -71,7 +70,7 @@ class BatchAssetUploader:
         logger.info(f"Submitting {len(urls)} URLs in {len(batches)} batch(es)")
         return batches
 
-    def _submit_batches(self, batches: list[list[str]]) -> list[str]:
+    def _submit_batches(self, batches: list[list[str]]) -> tuple[list[str], dict[str, list[str]]]:
         """
         Submit all batches to the API.
 
@@ -79,9 +78,10 @@ class BatchAssetUploader:
             batches: List of URL batches to submit.
 
         Returns:
-            List of batch IDs that were successfully submitted.
+            Tuple of (batch_ids, batch_to_urls) where batch_to_urls maps batch_id to its URL list.
         """
         batch_ids: list[str] = []
+        batch_to_urls: dict[str, list[str]] = {}
 
         for batch_idx, batch in enumerate(batches):
             try:
@@ -90,28 +90,37 @@ class BatchAssetUploader:
                         urls=batch
                     )
                 )
-                batch_ids.append(result.batch_upload_id)
+                batch_id = result.batch_upload_id
+                batch_ids.append(batch_id)
+                batch_to_urls[batch_id] = batch
                 logger.debug(
-                    f"Submitted batch {batch_idx + 1}/{len(batches)}: {result.batch_upload_id}"
+                    f"Submitted batch {batch_idx + 1}/{len(batches)}: {batch_id}"
                 )
             except Exception as e:
                 logger.error(f"Failed to submit batch {batch_idx + 1}: {e}")
                 # Continue trying to submit remaining batches
 
         logger.info(f"Successfully submitted {len(batch_ids)}/{len(batches)} batches")
-        return batch_ids
+        return batch_ids, batch_to_urls
 
     def _poll_until_complete(
         self,
         batch_ids: list[str],
+        batch_to_urls: dict[str, list[str]],
         progress_callback: Callable[[int], None] | None,
-    ) -> None:
+        completion_callback: Callable[[list[str]], None] | None,
+    ) -> list[FailedUpload[str]]:
         """
-        Poll batches until all complete.
+        Poll batches until all complete. Process batches incrementally as they complete.
 
         Args:
             batch_ids: List of batch IDs to poll.
+            batch_to_urls: Mapping from batch_id to list of URLs in that batch.
             progress_callback: Optional callback to report progress.
+            completion_callback: Optional callback to notify when URLs complete.
+
+        Returns:
+            List of FailedUpload instances for any URLs that failed.
         """
         logger.debug(f"Polling {len(batch_ids)} batch(es) for completion")
 
@@ -121,6 +130,8 @@ class BatchAssetUploader:
 
         last_completed = 0
         start_time = time.time()
+        processed_batches: set[str] = set()
+        all_failures: list[FailedUpload[str]] = []
 
         while True:
             try:
@@ -129,6 +140,17 @@ class BatchAssetUploader:
                         batch_upload_ids=batch_ids
                     )
                 )
+
+                # Process newly completed batches
+                for batch_id in status.completed_batches:
+                    if batch_id not in processed_batches:
+                        successful_urls, failures = self._process_single_batch(batch_id)
+                        processed_batches.add(batch_id)
+                        all_failures.extend(failures)
+
+                        # Notify callback with completed URLs
+                        if completion_callback and successful_urls:
+                            completion_callback(successful_urls)
 
                 # Update progress
                 self._update_progress(status, last_completed, progress_callback)
@@ -141,7 +163,7 @@ class BatchAssetUploader:
                         f"All batches completed in {elapsed:.1f}s: "
                         f"{status.completed_count} succeeded, {status.failed_count} failed"
                     )
-                    return
+                    return all_failures
 
                 # Wait before next poll (exponential backoff)
                 time.sleep(poll_interval)
@@ -162,78 +184,75 @@ class BatchAssetUploader:
             if new_completed > last_completed:
                 progress_callback(new_completed - last_completed)
 
-    def _fetch_and_process_results(
-        self, batch_ids: list[str]
-    ) -> list[FailedUpload[str]]:
+    def _process_single_batch(self, batch_id: str) -> tuple[list[str], list[FailedUpload[str]]]:
         """
-        Fetch results from all batches and process them.
+        Fetch and cache results for a single batch.
 
         Args:
-            batch_ids: List of batch IDs to fetch results from.
+            batch_id: The batch ID to process.
 
         Returns:
-            List of failed uploads.
+            Tuple of (successful_urls, failed_uploads).
         """
-        logger.debug(f"Fetching results from {len(batch_ids)} batch(es)")
+        successful_urls: list[str] = []
         failed_uploads: list[FailedUpload[str]] = []
-        successful_count = 0
 
-        for batch_idx, batch_id in enumerate(batch_ids):
-            try:
-                result = self.openapi_service.batch_upload_api.asset_batch_upload_batch_upload_id_get(
-                    batch_upload_id=batch_id
-                )
+        try:
+            result = self.openapi_service.batch_upload_api.asset_batch_upload_batch_upload_id_get(
+                batch_upload_id=batch_id
+            )
 
-                # Process each URL in the batch result
-                for item in result.items:
-                    if item.status == BatchUploadUrlStatus.COMPLETED:
-                        # Cache successful upload using proper API
-                        if item.file_name is not None:
-                            cache_key = self._get_url_cache_key(item.url)
-                            self.url_cache.set(cache_key, item.file_name)
-                            successful_count += 1
-                            logger.debug(
-                                f"Cached successful upload: {item.url} -> {item.file_name}"
-                            )
-                        else:
-                            logger.warning(
-                                f"Batch upload completed but file_name is None for URL: {item.url}"
-                            )
-                            failed_uploads.append(
-                                FailedUpload(
-                                    item=item.url,
-                                    error_type="BatchUploadFailed",
-                                    error_message="Upload completed but file_name is None",
-                                )
-                            )
+            # Process each URL in the batch result
+            for item in result.items:
+                if item.status == BatchUploadUrlStatus.COMPLETED:
+                    # Cache successful upload using proper API
+                    if item.file_name is not None:
+                        cache_key = self._get_url_cache_key(item.url)
+                        self.url_cache.set(cache_key, item.file_name)
+                        successful_urls.append(item.url)
+                        logger.debug(
+                            f"Cached successful upload: {item.url} -> {item.file_name}"
+                        )
                     else:
-                        # Track failure
+                        logger.warning(
+                            f"Batch upload completed but file_name is None for URL: {item.url}"
+                        )
                         failed_uploads.append(
                             FailedUpload(
                                 item=item.url,
                                 error_type="BatchUploadFailed",
-                                error_message=item.error_message
-                                or "Unknown batch upload error",
+                                error_message="Upload completed but file_name is None",
                             )
                         )
-                        logger.warning(
-                            f"URL failed in batch: {item.url} - {item.error_message}"
+                else:
+                    # Track failure
+                    failed_uploads.append(
+                        FailedUpload(
+                            item=item.url,
+                            error_type="BatchUploadFailed",
+                            error_message=item.error_message
+                            or "Unknown batch upload error",
                         )
-
-            except Exception as e:
-                logger.error(f"Failed to fetch results for batch {batch_id}: {e}")
-                failed_uploads.append(
-                    FailedUpload(
-                        item=f"batch_{batch_idx}",
-                        error_type="BatchResultFetchFailed",
-                        error_message=f"Failed to fetch batch results: {str(e)}",
                     )
-                )
+                    logger.warning(
+                        f"URL failed in batch: {item.url} - {item.error_message}"
+                    )
 
-        logger.info(
-            f"Batch upload complete: {successful_count} succeeded, {len(failed_uploads)} failed"
-        )
-        return failed_uploads
+        except Exception as e:
+            logger.error(f"Failed to fetch results for batch {batch_id}: {e}")
+            failed_uploads.append(
+                FailedUpload(
+                    item=f"batch_{batch_id}",
+                    error_type="BatchResultFetchFailed",
+                    error_message=f"Failed to fetch batch results: {str(e)}",
+                )
+            )
+
+        if successful_urls:
+            logger.debug(f"Batch {batch_id}: {len(successful_urls)} succeeded, {len(failed_uploads)} failed")
+
+        return successful_urls, failed_uploads
+
 
     def _create_submission_failures(self, urls: list[str]) -> list[FailedUpload[str]]:
         """Create FailedUpload instances for all URLs when submission fails."""

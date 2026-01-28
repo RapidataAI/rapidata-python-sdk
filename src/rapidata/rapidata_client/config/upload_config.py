@@ -39,10 +39,6 @@ class UploadConfig(BaseModel):
         default=128,
         frozen=True,
     )
-    enableBatchUpload: bool = Field(
-        default=True,
-        description="Enable batch URL uploading (two-step process)",
-    )
     batchSize: int = Field(
         default=100,
         description="Number of URLs per batch (10-500)",

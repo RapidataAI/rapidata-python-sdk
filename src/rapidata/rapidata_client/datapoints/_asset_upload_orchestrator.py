@@ -36,13 +36,18 @@ class AssetUploadOrchestrator:
         self.asset_uploader = AssetUploader(openapi_service)
         self.batch_uploader = BatchAssetUploader(openapi_service)
 
-    def upload_all_assets(self, datapoints: list[Datapoint]) -> None:
+    def upload_all_assets(
+        self,
+        datapoints: list[Datapoint],
+        asset_completion_callback: Callable[[list[str]], None] | None = None,
+    ) -> None:
         """
         Step 1/2: Upload ALL assets from ALL datapoints.
         Throws AssetUploadException if any uploads fail.
 
         Args:
             datapoints: List of datapoints to extract assets from.
+            asset_completion_callback: Optional callback to notify when assets complete (called with list of successful assets).
 
         Raises:
             AssetUploadException: If any asset uploads fail.
@@ -89,7 +94,9 @@ class AssetUploadOrchestrator:
                     pbar.update(n)
 
                 url_failures = self.batch_uploader.batch_upload_urls(
-                    uncached_urls, progress_callback=update_progress
+                    uncached_urls,
+                    progress_callback=update_progress,
+                    completion_callback=asset_completion_callback,
                 )
                 failed_uploads.extend(url_failures)
             else:
@@ -103,7 +110,9 @@ class AssetUploadOrchestrator:
                     pbar.update(1)
 
                 file_failures = self._upload_files_parallel(
-                    uncached_files, progress_callback=update_file_progress
+                    uncached_files,
+                    progress_callback=update_file_progress,
+                    completion_callback=asset_completion_callback,
                 )
                 failed_uploads.extend(file_failures)
             else:
@@ -159,6 +168,7 @@ class AssetUploadOrchestrator:
         self,
         files: list[str],
         progress_callback: Callable[[], None] | None = None,
+        completion_callback: Callable[[list[str]], None] | None = None,
     ) -> list[FailedUpload[str]]:
         """
         Upload files in parallel using ThreadPoolExecutor.
@@ -166,6 +176,7 @@ class AssetUploadOrchestrator:
         Args:
             files: List of file paths to upload.
             progress_callback: Optional callback to report progress (called once per completed file).
+            completion_callback: Optional callback to notify when files complete (called with list of successful files).
 
         Returns:
             List of FailedUpload instances for any files that failed.
@@ -190,9 +201,14 @@ class AssetUploadOrchestrator:
             }
 
             for future in as_completed(futures):
+                file_path = futures[future]
                 result = future.result()
                 if result is not None:
                     failed_uploads.append(result)
+                else:
+                    # File uploaded successfully, notify callback
+                    if completion_callback:
+                        completion_callback([file_path])
 
                 if progress_callback:
                     progress_callback()
