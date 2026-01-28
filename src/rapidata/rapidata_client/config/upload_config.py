@@ -43,8 +43,8 @@ class UploadConfig(BaseModel):
         frozen=True,
     )
     batchSize: int = Field(
-        default=100,
-        description="Number of URLs per batch (10-500)",
+        default=1000,
+        description="Number of URLs per batch (100-5000)",
     )
     batchPollInterval: float = Field(
         default=0.5,
@@ -75,10 +75,8 @@ class UploadConfig(BaseModel):
     @field_validator("batchSize")
     @classmethod
     def validate_batch_size(cls, v: int) -> int:
-        if v < 10:
-            raise ValueError("batchSize must be at least 10")
-        if v > 500:
-            logger.warning(f"batchSize={v} may cause timeouts. Recommend 50-200.")
+        if v < 100:
+            raise ValueError("batchSize must be at least 100")
         return v
 
     def __init__(self, **kwargs):
