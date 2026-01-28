@@ -128,7 +128,6 @@ class BatchAssetUploader:
         # More batches = longer expected completion time = less frequent polling
         poll_interval = rapidata_config.upload.batchPollInterval
 
-        last_completed = 0
         start_time = time.time()
         processed_batches: set[str] = set()
         all_failures: list[FailedUpload[str]] = []
@@ -148,13 +147,13 @@ class BatchAssetUploader:
                         processed_batches.add(batch_id)
                         all_failures.extend(failures)
 
+                        # Update progress bar immediately based on actual processed URLs
+                        if progress_callback:
+                            progress_callback(len(successful_urls) + len(failures))
+
                         # Notify callback with completed URLs
                         if completion_callback and successful_urls:
                             completion_callback(successful_urls)
-
-                # Update progress
-                self._update_progress(status, last_completed, progress_callback)
-                last_completed = status.completed_count + status.failed_count
 
                 # Check completion
                 if status.status == BatchUploadStatus.COMPLETED:
@@ -171,18 +170,6 @@ class BatchAssetUploader:
             except Exception as e:
                 logger.error(f"Error polling batch status: {e}")
                 time.sleep(poll_interval)
-
-    def _update_progress(
-        self,
-        status: GetBatchUploadStatusEndpointOutput,
-        last_completed: int,
-        progress_callback: Callable[[int], None] | None,
-    ) -> None:
-        """Update progress callback if provided."""
-        if progress_callback:
-            new_completed = status.completed_count + status.failed_count
-            if new_completed > last_completed:
-                progress_callback(new_completed - last_completed)
 
     def _process_single_batch(self, batch_id: str) -> tuple[list[str], list[FailedUpload[str]]]:
         """
