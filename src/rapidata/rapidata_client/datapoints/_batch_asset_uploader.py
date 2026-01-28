@@ -27,8 +27,9 @@ class BatchAssetUploader:
     the shared URL cache with successful uploads.
     """
 
-    def __init__(self, openapi_service: OpenAPIService):
+    def __init__(self, openapi_service: OpenAPIService) -> None:
         self.openapi_service = openapi_service
+        self.asset_uploader = AssetUploader(openapi_service)
         self.url_cache = AssetUploader._url_cache
 
     def batch_upload_urls(
@@ -61,7 +62,9 @@ class BatchAssetUploader:
             return self._create_submission_failures(urls)
 
         # Poll until complete
-        return self._poll_until_complete(batch_ids, batch_to_urls, progress_callback, completion_callback)
+        return self._poll_until_complete(
+            batch_ids, batch_to_urls, progress_callback, completion_callback
+        )
 
     def _split_into_batches(self, urls: list[str]) -> list[list[str]]:
         """Split URLs into batches of configured size."""
@@ -70,7 +73,9 @@ class BatchAssetUploader:
         logger.info(f"Submitting {len(urls)} URLs in {len(batches)} batch(es)")
         return batches
 
-    def _submit_batches(self, batches: list[list[str]]) -> tuple[list[str], dict[str, list[str]]]:
+    def _submit_batches(
+        self, batches: list[list[str]]
+    ) -> tuple[list[str], dict[str, list[str]]]:
         """
         Submit all batches to the API.
 
@@ -124,8 +129,6 @@ class BatchAssetUploader:
         """
         logger.debug(f"Polling {len(batch_ids)} batch(es) for completion")
 
-        # Scale initial polling interval based on batch count
-        # More batches = longer expected completion time = less frequent polling
         poll_interval = rapidata_config.upload.batchPollInterval
 
         last_completed = 0
@@ -144,7 +147,9 @@ class BatchAssetUploader:
                 # Process newly completed batches
                 for batch_id in status.completed_batches:
                     if batch_id not in processed_batches:
-                        successful_urls, failures = self._process_single_batch(batch_id)
+                        successful_urls, failures = self._process_single_batch(
+                            batch_id, batch_to_urls
+                        )
                         processed_batches.add(batch_id)
                         all_failures.extend(failures)
 
@@ -165,7 +170,7 @@ class BatchAssetUploader:
                     )
                     return all_failures
 
-                # Wait before next poll (exponential backoff)
+                # Wait before next poll
                 time.sleep(poll_interval)
 
             except Exception as e:
@@ -184,12 +189,15 @@ class BatchAssetUploader:
             if new_completed > last_completed:
                 progress_callback(new_completed - last_completed)
 
-    def _process_single_batch(self, batch_id: str) -> tuple[list[str], list[FailedUpload[str]]]:
+    def _process_single_batch(
+        self, batch_id: str, batch_to_urls: dict[str, list[str]]
+    ) -> tuple[list[str], list[FailedUpload[str]]]:
         """
         Fetch and cache results for a single batch.
 
         Args:
             batch_id: The batch ID to process.
+            batch_to_urls: Mapping from batch_id to list of URLs in that batch.
 
         Returns:
             Tuple of (successful_urls, failed_uploads).
@@ -207,7 +215,7 @@ class BatchAssetUploader:
                 if item.status == BatchUploadUrlStatus.COMPLETED:
                     # Cache successful upload using proper API
                     if item.file_name is not None:
-                        cache_key = self._get_url_cache_key(item.url)
+                        cache_key = self.asset_uploader.get_url_cache_key(item.url)
                         self.url_cache.set(cache_key, item.file_name)
                         successful_urls.append(item.url)
                         logger.debug(
@@ -240,19 +248,32 @@ class BatchAssetUploader:
 
         except Exception as e:
             logger.error(f"Failed to fetch results for batch {batch_id}: {e}")
-            failed_uploads.append(
-                FailedUpload(
-                    item=f"batch_{batch_id}",
-                    error_type="BatchResultFetchFailed",
-                    error_message=f"Failed to fetch batch results: {str(e)}",
+            # Create individual FailedUpload for each URL in the failed batch
+            if batch_id in batch_to_urls:
+                for url in batch_to_urls[batch_id]:
+                    failed_uploads.append(
+                        FailedUpload(
+                            item=url,
+                            error_type="BatchResultFetchFailed",
+                            error_message=f"Failed to fetch batch results: {str(e)}",
+                        )
+                    )
+            else:
+                # Fallback if batch_id not found in mapping
+                failed_uploads.append(
+                    FailedUpload(
+                        item=f"batch_{batch_id}",
+                        error_type="BatchResultFetchFailed",
+                        error_message=f"Failed to fetch batch results: {str(e)}",
+                    )
                 )
-            )
 
         if successful_urls:
-            logger.debug(f"Batch {batch_id}: {len(successful_urls)} succeeded, {len(failed_uploads)} failed")
+            logger.debug(
+                f"Batch {batch_id}: {len(successful_urls)} succeeded, {len(failed_uploads)} failed"
+            )
 
         return successful_urls, failed_uploads
-
 
     def _create_submission_failures(self, urls: list[str]) -> list[FailedUpload[str]]:
         """Create FailedUpload instances for all URLs when submission fails."""
@@ -264,8 +285,3 @@ class BatchAssetUploader:
             )
             for url in urls
         ]
-
-    def _get_url_cache_key(self, url: str) -> str:
-        """Generate cache key for a URL, including environment."""
-        env = self.openapi_service.environment
-        return f"{env}@{url}"

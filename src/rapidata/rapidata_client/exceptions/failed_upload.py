@@ -1,6 +1,7 @@
 from __future__ import annotations
-from dataclasses import dataclass
-from typing import TypeVar, Generic, TYPE_CHECKING
+from dataclasses import dataclass, field
+from datetime import datetime
+from typing import TypeVar, Generic, TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
     from rapidata.rapidata_client.exceptions.rapidata_error import RapidataError
@@ -17,11 +18,15 @@ class FailedUpload(Generic[T]):
         item: The item that failed to upload.
         error_message: The error message describing the failure reason.
         error_type: The type of the exception (e.g., "RapidataError").
+        timestamp: Optional timestamp when the failure occurred.
+        exception: Optional original exception for richer error context.
     """
 
     item: T
     error_message: str
     error_type: str
+    timestamp: Optional[datetime] = field(default_factory=datetime.now)
+    exception: Optional[Exception] = None
 
     @classmethod
     def from_exception(cls, item: T, exception: Exception | None) -> FailedUpload[T]:
@@ -43,6 +48,7 @@ class FailedUpload(Generic[T]):
                 item=item,
                 error_message="Unknown error",
                 error_type="Unknown",
+                exception=None,
             )
 
         from rapidata.rapidata_client.exceptions.rapidata_error import RapidataError
@@ -58,7 +64,26 @@ class FailedUpload(Generic[T]):
             item=item,
             error_message=error_message,
             error_type=error_type,
+            exception=exception,
         )
+
+    def format_error_details(self) -> str:
+        """
+        Format error details for logging or display.
+
+        Returns:
+            Formatted string with all error details including timestamp.
+        """
+        details = [
+            f"Item: {self.item}",
+            f"Error Type: {self.error_type}",
+            f"Error Message: {self.error_message}",
+        ]
+
+        if self.timestamp:
+            details.append(f"Timestamp: {self.timestamp.isoformat()}")
+
+        return "\n".join(details)
 
     def __str__(self) -> str:
         return f"{self.item}"

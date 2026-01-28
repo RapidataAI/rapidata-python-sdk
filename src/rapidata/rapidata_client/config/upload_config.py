@@ -21,7 +21,6 @@ class UploadConfig(BaseModel):
         enableBatchUpload (bool): Enable batch URL uploading (two-step process). Defaults to True.
         batchSize (int): Number of URLs per batch (10-500). Defaults to 100.
         batchPollInterval (float): Polling interval in seconds. Defaults to 0.5.
-        batchPollMaxInterval (float): Maximum polling interval. Defaults to 5.0.
         batchTimeout (float): Batch upload timeout in seconds. Defaults to 300.0.
     """
 

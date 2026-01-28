@@ -11,14 +11,36 @@ from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 from rapidata.rapidata_client.datapoints._batch_asset_uploader import (
     BatchAssetUploader,
 )
-from rapidata.rapidata_client.exceptions.asset_upload_exception import (
-    AssetUploadException,
-)
 from rapidata.rapidata_client.exceptions.failed_upload import FailedUpload
 
 if TYPE_CHECKING:
     from rapidata.rapidata_client.datapoints._datapoint import Datapoint
     from rapidata.service.openapi_service import OpenAPIService
+
+
+def extract_assets_from_datapoint(datapoint: Datapoint) -> set[str]:
+    """
+    Extract all assets from a single datapoint.
+
+    Args:
+        datapoint: The datapoint to extract assets from.
+
+    Returns:
+        Set of asset identifiers (URLs or file paths).
+    """
+    assets: set[str] = set()
+
+    # Main asset(s)
+    if isinstance(datapoint.asset, list):
+        assets.update(datapoint.asset)
+    else:
+        assets.add(datapoint.asset)
+
+    # Context asset
+    if datapoint.media_context:
+        assets.add(datapoint.media_context)
+
+    return assets
 
 
 class AssetUploadOrchestrator:
@@ -29,10 +51,10 @@ class AssetUploadOrchestrator:
     filters cached assets, and uploads uncached assets using batch
     upload for URLs and parallel upload for files.
 
-    Raises AssetUploadException if any uploads fail.
+    Returns list of failed uploads for any assets that fail.
     """
 
-    def __init__(self, openapi_service: OpenAPIService):
+    def __init__(self, openapi_service: OpenAPIService) -> None:
         self.asset_uploader = AssetUploader(openapi_service)
         self.batch_uploader = BatchAssetUploader(openapi_service)
 
@@ -40,47 +62,102 @@ class AssetUploadOrchestrator:
         self,
         datapoints: list[Datapoint],
         asset_completion_callback: Callable[[list[str]], None] | None = None,
-    ) -> None:
+    ) -> list[FailedUpload[str]]:
         """
         Step 1/2: Upload ALL assets from ALL datapoints.
-        Throws AssetUploadException if any uploads fail.
+        Returns list of failed uploads for any assets that fail.
 
         Args:
             datapoints: List of datapoints to extract assets from.
             asset_completion_callback: Optional callback to notify when assets complete (called with list of successful assets).
 
-        Raises:
-            AssetUploadException: If any asset uploads fail.
+        Returns:
+            List of FailedUpload instances for any assets that failed.
         """
-        # 1. Extract all unique assets (deduplicate)
+        # 1. Extract and validate assets
         all_assets = self._extract_unique_assets(datapoints)
         logger.info(f"Extracted {len(all_assets)} unique asset(s) from datapoints")
 
         if not all_assets:
             logger.debug("No assets to upload")
-            return
+            return []
 
-        # 2. Separate URLs vs files
-        urls = [a for a in all_assets if re.match(r"^https?://", a)]
-        files = [a for a in all_assets if not re.match(r"^https?://", a)]
+        # 2. Separate and filter assets
+        urls, files = self._separate_urls_and_files(all_assets)
+        uncached_urls, uncached_files = self._filter_and_log_cached_assets(urls, files)
+
+        if len(uncached_urls) + len(uncached_files) == 0:
+            logger.debug("All assets cached, nothing to upload")
+            return []
+
+        # 3. Perform uploads
+        failed_uploads = self._perform_uploads(
+            uncached_urls, uncached_files, asset_completion_callback
+        )
+
+        # 4. Report results
+        self._log_upload_results(failed_uploads)
+        return failed_uploads
+
+    def _separate_urls_and_files(self, assets: set[str]) -> tuple[list[str], list[str]]:
+        """
+        Separate assets into URLs and file paths.
+
+        Args:
+            assets: Set of asset identifiers.
+
+        Returns:
+            Tuple of (urls, files).
+        """
+        urls = [a for a in assets if re.match(r"^https?://", a)]
+        files = [a for a in assets if not re.match(r"^https?://", a)]
         logger.debug(f"Asset breakdown: {len(urls)} URL(s), {len(files)} file(s)")
+        return urls, files
 
-        # 3. Filter cached (skip already-uploaded assets)
+    def _filter_and_log_cached_assets(
+        self, urls: list[str], files: list[str]
+    ) -> tuple[list[str], list[str]]:
+        """
+        Filter out cached assets and log statistics.
+
+        Args:
+            urls: List of URL assets.
+            files: List of file assets.
+
+        Returns:
+            Tuple of (uncached_urls, uncached_files).
+        """
         uncached_urls = self._filter_uncached(urls, self.asset_uploader._url_cache)
         uncached_files = self._filter_uncached(files, self.asset_uploader._file_cache)
+
         logger.info(
             f"Assets to upload: {len(uncached_urls)} URL(s), {len(uncached_files)} file(s) "
             f"(skipped {len(urls) - len(uncached_urls)} cached URL(s), "
             f"{len(files) - len(uncached_files)} cached file(s))"
         )
 
-        total = len(uncached_urls) + len(uncached_files)
-        if total == 0:
-            logger.debug("All assets cached, nothing to upload")
-            return
+        return uncached_urls, uncached_files
 
-        # 4. Upload with single progress bar
+    def _perform_uploads(
+        self,
+        uncached_urls: list[str],
+        uncached_files: list[str],
+        asset_completion_callback: Callable[[list[str]], None] | None,
+    ) -> list[FailedUpload[str]]:
+        """
+        Execute asset uploads with progress tracking.
+
+        Args:
+            uncached_urls: URLs to upload.
+            uncached_files: Files to upload.
+            asset_completion_callback: Callback for completed assets.
+
+        Returns:
+            List of failed uploads.
+        """
         failed_uploads: list[FailedUpload[str]] = []
+        total = len(uncached_urls) + len(uncached_files)
+
         with tqdm(
             total=total,
             desc="Step 1/2: Uploading assets",
@@ -88,59 +165,74 @@ class AssetUploadOrchestrator:
             disable=rapidata_config.logging.silent_mode,
             leave=True,
         ) as pbar:
-            # 4a. Batch upload URLs
+            # Upload URLs
             if uncached_urls:
-                logger.debug(f"Batch uploading {len(uncached_urls)} URL(s)")
-
-                def update_progress(n: int) -> None:
-                    pbar.update(n)
-
-                url_failures = self.batch_uploader.batch_upload_urls(
-                    uncached_urls,
-                    progress_callback=update_progress,
-                    completion_callback=asset_completion_callback,
+                url_failures = self._upload_urls_with_progress(
+                    uncached_urls, pbar, asset_completion_callback
                 )
                 failed_uploads.extend(url_failures)
             else:
                 logger.debug("No uncached URLs to upload")
 
-            # 4b. Parallel upload files
+            # Upload files
             if uncached_files:
-                logger.debug(f"Parallel uploading {len(uncached_files)} file(s)")
-
-                def update_file_progress() -> None:
-                    pbar.update(1)
-
-                file_failures = self._upload_files_parallel(
-                    uncached_files,
-                    progress_callback=update_file_progress,
-                    completion_callback=asset_completion_callback,
+                file_failures = self._upload_files_with_progress(
+                    uncached_files, pbar, asset_completion_callback
                 )
                 failed_uploads.extend(file_failures)
             else:
                 logger.debug("No uncached files to upload")
 
-        # 5. If any failures, throw exception (before Step 2)
-        if failed_uploads:
-            logger.error(
-                f"Asset upload failed for {len(failed_uploads)} asset(s) in Step 1/2"
-            )
-            raise AssetUploadException(failed_uploads)
+        return failed_uploads
 
-        logger.info("Step 1/2: All assets uploaded successfully")
+    def _upload_urls_with_progress(
+        self,
+        urls: list[str],
+        pbar: tqdm,
+        completion_callback: Callable[[list[str]], None] | None,
+    ) -> list[FailedUpload[str]]:
+        """Upload URLs with progress bar updates."""
+        logger.debug(f"Batch uploading {len(urls)} URL(s)")
+
+        def update_progress(n: int) -> None:
+            pbar.update(n)
+
+        return self.batch_uploader.batch_upload_urls(
+            urls,
+            progress_callback=update_progress,
+            completion_callback=completion_callback,
+        )
+
+    def _upload_files_with_progress(
+        self,
+        files: list[str],
+        pbar: tqdm,
+        completion_callback: Callable[[list[str]], None] | None,
+    ) -> list[FailedUpload[str]]:
+        """Upload files with progress bar updates."""
+        logger.debug(f"Parallel uploading {len(files)} file(s)")
+
+        def update_progress() -> None:
+            pbar.update(1)
+
+        return self._upload_files_parallel(
+            files,
+            progress_callback=update_progress,
+            completion_callback=completion_callback,
+        )
+
+    def _log_upload_results(self, failed_uploads: list[FailedUpload[str]]) -> None:
+        """Log the results of asset uploads."""
+        if failed_uploads:
+            logger.warning(f"Step 1/2: {len(failed_uploads)} asset(s) failed to upload")
+        else:
+            logger.info("Step 1/2: All assets uploaded successfully")
 
     def _extract_unique_assets(self, datapoints: list[Datapoint]) -> set[str]:
         """Extract all unique assets from all datapoints."""
         assets: set[str] = set()
         for dp in datapoints:
-            # Main asset(s)
-            if isinstance(dp.asset, list):
-                assets.update(dp.asset)
-            else:
-                assets.add(dp.asset)
-            # Context asset
-            if dp.media_context:
-                assets.add(dp.media_context)
+            assets.update(extract_assets_from_datapoint(dp))
         return assets
 
     def _filter_uncached(self, assets: list[str], cache) -> list[str]:
@@ -148,20 +240,18 @@ class AssetUploadOrchestrator:
         uncached = []
         for asset in assets:
             try:
-                # Try to get cache key
+                # Try to get cache key using centralized methods
                 if re.match(r"^https?://", asset):
-                    cache_key = (
-                        f"{self.asset_uploader.openapi_service.environment}@{asset}"
-                    )
+                    cache_key = self.asset_uploader.get_url_cache_key(asset)
                 else:
-                    cache_key = self.asset_uploader._get_file_cache_key(asset)
+                    cache_key = self.asset_uploader.get_file_cache_key(asset)
 
                 # Check if in cache
                 if cache_key not in cache._storage:
                     uncached.append(asset)
             except Exception as e:
                 # If cache check fails, include in upload list
-                logger.debug(f"Cache check failed for {asset}: {e}")
+                logger.warning(f"Cache check failed for {asset}: {e}")
                 uncached.append(asset)
 
         return uncached

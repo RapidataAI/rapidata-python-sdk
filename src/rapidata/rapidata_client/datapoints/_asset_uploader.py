@@ -24,10 +24,10 @@ class AssetUploader:
     )
     _url_cache: SingleFlightCache = SingleFlightCache("URL cache")
 
-    def __init__(self, openapi_service: OpenAPIService):
+    def __init__(self, openapi_service: OpenAPIService) -> None:
         self.openapi_service = openapi_service
 
-    def _get_file_cache_key(self, asset: str) -> str:
+    def get_file_cache_key(self, asset: str) -> str:
         """Generate cache key for a file, including environment."""
         env = self.openapi_service.environment
         if not os.path.exists(asset):
@@ -36,7 +36,7 @@ class AssetUploader:
         stat = os.stat(asset)
         return f"{env}@{asset}:{stat.st_size}:{stat.st_mtime_ns}"
 
-    def _get_url_cache_key(self, url: str) -> str:
+    def get_url_cache_key(self, url: str) -> str:
         """Generate cache key for a URL, including environment."""
         env = self.openapi_service.environment
         return f"{env}@{url}"
@@ -55,7 +55,7 @@ class AssetUploader:
             return upload_url()
 
         return self._url_cache.get_or_fetch(
-            self._get_url_cache_key(url),
+            self.get_url_cache_key(url),
             upload_url,
             should_cache=rapidata_config.upload.cacheUploads,
         )
@@ -76,7 +76,7 @@ class AssetUploader:
             return upload_file()
 
         return self._file_cache.get_or_fetch(
-            self._get_file_cache_key(file_path),
+            self.get_file_cache_key(file_path),
             upload_file,
             should_cache=rapidata_config.upload.cacheUploads,
         )
@@ -91,7 +91,7 @@ class AssetUploader:
 
             return self._upload_file_asset(asset)
 
-    def clear_cache(self):
+    def clear_cache(self) -> None:
         self._file_cache.clear()
         self._url_cache.clear()
         logger.info("Upload cache cleared")
