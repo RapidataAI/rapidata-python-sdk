@@ -23,7 +23,6 @@ class UploadConfig(BaseModel):
         enableBatchUpload (bool): Enable batch URL uploading (two-step process). Defaults to True.
         batchSize (int): Number of URLs per batch (10-500). Defaults to 100.
         batchPollInterval (float): Polling interval in seconds. Defaults to 0.5.
-        batchTimeout (float): Batch upload timeout in seconds. Defaults to 300.0.
     """
 
     model_config = ConfigDict(validate_assignment=True)
@@ -50,10 +49,6 @@ class UploadConfig(BaseModel):
     batchPollInterval: float = Field(
         default=0.5,
         description="Polling interval in seconds",
-    )
-    batchTimeout: float = Field(
-        default=300.0,
-        description="Batch upload timeout in seconds",
     )
 
     @field_validator("maxWorkers")
