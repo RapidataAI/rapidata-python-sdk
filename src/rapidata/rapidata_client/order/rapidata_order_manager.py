@@ -102,7 +102,7 @@ class RapidataOrderManager:
             "Creating order with parameters: name %s, workflow %s, datapoints %s, responses_per_datapoint %s, validation_set_id %s, confidence_threshold %s, filters %s, settings %s, selections %s",
             name,
             workflow,
-            datapoints,
+            len(datapoints),
             responses_per_datapoint,
             validation_set_id,
             confidence_threshold,
