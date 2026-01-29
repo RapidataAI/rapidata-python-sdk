@@ -29,6 +29,10 @@ class SingleFlightCache:
                 except Exception:
                     pass
 
+    def get_storage(self) -> dict[str, str] | FanoutCache:
+        """Get the cache storage."""
+        return self._storage
+
     def get_or_fetch(
         self,
         key: str,

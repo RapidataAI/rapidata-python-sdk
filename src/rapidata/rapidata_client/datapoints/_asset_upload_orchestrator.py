@@ -12,6 +12,7 @@ from rapidata.rapidata_client.datapoints._batch_asset_uploader import (
     BatchAssetUploader,
 )
 from rapidata.rapidata_client.exceptions.failed_upload import FailedUpload
+from rapidata.rapidata_client.datapoints._single_flight_cache import SingleFlightCache
 
 if TYPE_CHECKING:
     from rapidata.rapidata_client.datapoints._datapoint import Datapoint
@@ -239,7 +240,9 @@ class AssetUploadOrchestrator:
         else:
             logger.info("Step 1/2: All assets uploaded successfully")
 
-    def _filter_uncached(self, assets: list[str], cache) -> list[str]:
+    def _filter_uncached(
+        self, assets: list[str], cache: SingleFlightCache
+    ) -> list[str]:
         """Filter out assets that are already cached."""
         uncached = []
         for asset in assets:
@@ -251,7 +254,7 @@ class AssetUploadOrchestrator:
                     cache_key = self.asset_uploader.get_file_cache_key(asset)
 
                 # Check if in cache
-                if cache_key not in cache._storage:
+                if cache_key not in cache.get_storage():
                     uncached.append(asset)
             except Exception as e:
                 # If cache check fails, include in upload list
