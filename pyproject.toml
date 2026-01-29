@@ -1,6 +1,6 @@
 [project]
 name = "rapidata"
-version = "3.0.6"
+version = "3.0.7"
 description = "Rapidata package containing the Rapidata Python Client to interact with the Rapidata Web API in an easy way."
 authors = [{ name = "Rapidata AG", email = "info@rapidata.ai" }]
 requires-python = ">=3.10,<4"
