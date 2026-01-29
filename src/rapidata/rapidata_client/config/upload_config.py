@@ -33,7 +33,7 @@ class UploadConfig(BaseModel):
         default=True,
         description="Enable disk-based caching for file uploads. URLs are always cached in-memory.",
     )
-    cacheTimeout: float = Field(default=0.1)
+    cacheTimeout: float = Field(default=1)
     cacheLocation: Path = Field(
         default=Path.home() / ".cache" / "rapidata" / "upload_cache",
         frozen=True,
