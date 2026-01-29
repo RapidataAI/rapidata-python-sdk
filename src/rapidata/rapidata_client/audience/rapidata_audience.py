@@ -95,22 +95,6 @@ class RapidataAudience:
             self._name = name
             return self
 
-    def start_recruiting(self) -> RapidataAudience:
-        """Start recruiting annotators for this audience.
-
-        This will begin the process of onboarding annotators for this audience.
-
-        Returns:
-            RapidataAudience: The audience instance (self) for method chaining.
-        """
-        with tracer.start_as_current_span("RapidataAudience.start_recruiting"):
-            logger.debug(f"Sending request to start recruiting for audience: {self.id}")
-            self._openapi_service.audience_api.audience_audience_id_recruit_post(
-                audience_id=self.id,
-            )
-            logger.info(f"Started recruiting for audience: {self.id}")
-            return self
-
     def assign_job(self, job_definition: JobDefinition) -> RapidataJob:
         """Assign a job to this audience.
 
@@ -293,6 +277,18 @@ class RapidataAudience:
                 )
                 for job in response.items
             ]
+
+    def _start_recruiting(self) -> None:
+        """Start recruiting annotators for this audience.
+
+        This will begin the process of onboarding annotators for this audience.
+        """
+        with tracer.start_as_current_span("RapidataAudience._start_recruiting"):
+            logger.debug(f"Sending request to start recruiting for audience: {self.id}")
+            self._openapi_service.audience_api.audience_audience_id_recruit_post(
+                audience_id=self.id,
+            )
+            logger.info(f"Started recruiting for audience: {self.id}")
 
     def __str__(self) -> str:
         return f"RapidataAudience(id={self.id}, name={self._name}, filters={self._filters})"
