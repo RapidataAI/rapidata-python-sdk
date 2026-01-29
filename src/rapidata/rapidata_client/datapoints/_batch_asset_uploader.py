@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import time
+import threading
 from typing import Callable, TYPE_CHECKING
 
 from rapidata.rapidata_client.config import logger, rapidata_config
@@ -42,6 +43,9 @@ class BatchAssetUploader:
         Upload URLs in batches. Returns list of failed uploads.
         Successful uploads are cached automatically.
 
+        Batches are submitted concurrently with polling - polling starts as soon
+        as the first batch is submitted, allowing progress to be visible immediately.
+
         Args:
             urls: List of URLs to upload.
             progress_callback: Optional callback to report progress (called with number of newly completed items).
@@ -53,17 +57,67 @@ class BatchAssetUploader:
         if not urls:
             return []
 
-        # Split and submit batches
+        # Split into batches
         batches = self._split_into_batches(urls)
-        batch_ids, batch_to_urls = self._submit_batches(batches)
 
-        if not batch_ids:
+        # Thread-safe collections for concurrent submission and polling
+        batch_ids_lock = threading.Lock()
+        batch_ids: list[str] = []
+        batch_to_urls: dict[str, list[str]] = {}
+        submission_complete = threading.Event()
+
+        # Submit batches in background thread
+        def submit_batches_background():
+            """Submit all batches and signal completion."""
+            for batch_idx, batch in enumerate(batches):
+                try:
+                    result = self.openapi_service.batch_upload_api.asset_batch_upload_post(
+                        create_batch_upload_endpoint_input=CreateBatchUploadEndpointInput(
+                            urls=batch
+                        )
+                    )
+                    batch_id = result.batch_upload_id
+
+                    # Add to shared collections (thread-safe)
+                    with batch_ids_lock:
+                        batch_ids.append(batch_id)
+                        batch_to_urls[batch_id] = batch
+
+                    logger.debug(
+                        f"Submitted batch {batch_idx + 1}/{len(batches)}: {batch_id}"
+                    )
+                except Exception as e:
+                    logger.error(f"Failed to submit batch {batch_idx + 1}: {e}")
+
+            # Signal that all batches have been submitted
+            submission_complete.set()
+            with batch_ids_lock:
+                logger.info(
+                    f"Successfully submitted {len(batch_ids)}/{len(batches)} batches"
+                )
+
+        # Start background submission
+        submission_thread = threading.Thread(
+            target=submit_batches_background, daemon=True
+        )
+        submission_thread.start()
+
+        # Wait for at least one batch to be submitted before starting poll
+        while len(batch_ids) == 0 and not submission_complete.is_set():
+            time.sleep(0.5)
+
+        if len(batch_ids) == 0:
             logger.error("No batches were successfully submitted")
             return self._create_submission_failures(urls)
 
-        # Poll until complete
+        # Poll until complete (will handle dynamically growing batch list)
         return self._poll_until_complete(
-            batch_ids, batch_to_urls, progress_callback, completion_callback
+            batch_ids,
+            batch_to_urls,
+            batch_ids_lock,
+            submission_complete,
+            progress_callback,
+            completion_callback,
         )
 
     def _split_into_batches(self, urls: list[str]) -> list[list[str]]:
@@ -73,62 +127,32 @@ class BatchAssetUploader:
         logger.info(f"Submitting {len(urls)} URLs in {len(batches)} batch(es)")
         return batches
 
-    def _submit_batches(
-        self, batches: list[list[str]]
-    ) -> tuple[list[str], dict[str, list[str]]]:
-        """
-        Submit all batches to the API.
-
-        Args:
-            batches: List of URL batches to submit.
-
-        Returns:
-            Tuple of (batch_ids, batch_to_urls) where batch_to_urls maps batch_id to its URL list.
-        """
-        batch_ids: list[str] = []
-        batch_to_urls: dict[str, list[str]] = {}
-
-        for batch_idx, batch in enumerate(batches):
-            try:
-                result = self.openapi_service.batch_upload_api.asset_batch_upload_post(
-                    create_batch_upload_endpoint_input=CreateBatchUploadEndpointInput(
-                        urls=batch
-                    )
-                )
-                batch_id = result.batch_upload_id
-                batch_ids.append(batch_id)
-                batch_to_urls[batch_id] = batch
-                logger.debug(
-                    f"Submitted batch {batch_idx + 1}/{len(batches)}: {batch_id}"
-                )
-            except Exception as e:
-                logger.error(f"Failed to submit batch {batch_idx + 1}: {e}")
-                # Continue trying to submit remaining batches
-
-        logger.info(f"Successfully submitted {len(batch_ids)}/{len(batches)} batches")
-        return batch_ids, batch_to_urls
-
     def _poll_until_complete(
         self,
         batch_ids: list[str],
         batch_to_urls: dict[str, list[str]],
+        batch_ids_lock: threading.Lock,
+        submission_complete: threading.Event,
         progress_callback: Callable[[int], None] | None,
         completion_callback: Callable[[list[str]], None] | None,
     ) -> list[FailedUpload[str]]:
         """
         Poll batches until all complete. Process batches incrementally as they complete.
 
+        Supports concurrent batch submission - will poll currently submitted batches
+        and continue until all batches are submitted and completed.
+
         Args:
-            batch_ids: List of batch IDs to poll.
-            batch_to_urls: Mapping from batch_id to list of URLs in that batch.
+            batch_ids: Shared list of batch IDs (grows as batches are submitted).
+            batch_to_urls: Shared mapping from batch_id to list of URLs in that batch.
+            batch_ids_lock: Lock protecting batch_ids and batch_to_urls.
+            submission_complete: Event signaling all batches have been submitted.
             progress_callback: Optional callback to report progress.
             completion_callback: Optional callback to notify when URLs complete.
 
         Returns:
             List of FailedUpload instances for any URLs that failed.
         """
-        logger.debug(f"Polling {len(batch_ids)} batch(es) for completion")
-
         poll_interval = rapidata_config.upload.batchPollInterval
 
         last_completed = 0
@@ -137,10 +161,23 @@ class BatchAssetUploader:
         all_failures: list[FailedUpload[str]] = []
 
         while True:
+            # Get current batch IDs (thread-safe)
+            with batch_ids_lock:
+                current_batch_ids = batch_ids.copy()
+                total_batches_submitted = len(current_batch_ids)
+
+            if not current_batch_ids:
+                # No batches yet, wait a bit
+                time.sleep(poll_interval)
+                continue
+
+            logger.debug(
+                f"Polling {total_batches_submitted} submitted batch(es) for completion"
+            )
             try:
                 status = (
                     self.openapi_service.batch_upload_api.asset_batch_upload_status_get(
-                        batch_upload_ids=batch_ids
+                        batch_upload_ids=current_batch_ids
                     )
                 )
 
@@ -161,8 +198,12 @@ class BatchAssetUploader:
                 self._update_progress(status, last_completed, progress_callback)
                 last_completed = status.completed_count + status.failed_count
 
-                # Check completion
-                if status.status == BatchUploadStatus.COMPLETED:
+                # Check if we're done:
+                # 1. All batches have been submitted
+                # 2. All submitted batches have been processed
+                if submission_complete.is_set() and len(processed_batches) == len(
+                    current_batch_ids
+                ):
                     elapsed = time.time() - start_time
                     logger.info(
                         f"All batches completed in {elapsed:.1f}s: "
