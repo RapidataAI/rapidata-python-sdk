@@ -86,6 +86,15 @@ class AssetUploadOrchestrator:
         urls, files = self._separate_urls_and_files(all_assets)
         uncached_urls, uncached_files = self._filter_and_log_cached_assets(urls, files)
 
+        # Notify callback about cached assets (already complete)
+        cached_assets = []
+        cached_assets.extend([url for url in urls if url not in uncached_urls])
+        cached_assets.extend([file for file in files if file not in uncached_files])
+
+        if cached_assets and asset_completion_callback:
+            logger.debug(f"Notifying callback of {len(cached_assets)} cached asset(s)")
+            asset_completion_callback(cached_assets)
+
         if len(uncached_urls) + len(uncached_files) == 0:
             logger.debug("All assets cached, nothing to upload")
             return []
