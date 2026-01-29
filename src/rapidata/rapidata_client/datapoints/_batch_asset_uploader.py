@@ -32,6 +32,7 @@ class BatchAssetUploader:
         self.openapi_service = openapi_service
         self.asset_uploader = AssetUploader(openapi_service)
         self.url_cache = AssetUploader._url_cache
+        self._interrupted = False
 
     def batch_upload_urls(
         self,
@@ -66,59 +67,75 @@ class BatchAssetUploader:
         batch_to_urls: dict[str, list[str]] = {}
         submission_complete = threading.Event()
 
-        # Submit batches in background thread
-        def submit_batches_background():
-            """Submit all batches and signal completion."""
-            for batch_idx, batch in enumerate(batches):
-                try:
-                    result = self.openapi_service.batch_upload_api.asset_batch_upload_post(
-                        create_batch_upload_endpoint_input=CreateBatchUploadEndpointInput(
-                            urls=batch
+        try:
+            # Submit batches in background thread
+            def submit_batches_background():
+                """Submit all batches and signal completion."""
+                for batch_idx, batch in enumerate(batches):
+                    # Check if interrupted before submitting next batch
+                    if self._interrupted:
+                        logger.debug("Batch submission stopped due to interruption")
+                        break
+
+                    try:
+                        result = self.openapi_service.batch_upload_api.asset_batch_upload_post(
+                            create_batch_upload_endpoint_input=CreateBatchUploadEndpointInput(
+                                urls=batch
+                            )
                         )
+                        batch_id = result.batch_upload_id
+
+                        # Add to shared collections (thread-safe)
+                        with batch_ids_lock:
+                            batch_ids.append(batch_id)
+                            batch_to_urls[batch_id] = batch
+
+                        logger.debug(
+                            f"Submitted batch {batch_idx + 1}/{len(batches)}: {batch_id}"
+                        )
+                    except Exception as e:
+                        logger.error(f"Failed to submit batch {batch_idx + 1}: {e}")
+
+                # Signal that all batches have been submitted
+                submission_complete.set()
+                with batch_ids_lock:
+                    logger.info(
+                        f"Successfully submitted {len(batch_ids)}/{len(batches)} batches"
                     )
-                    batch_id = result.batch_upload_id
 
-                    # Add to shared collections (thread-safe)
-                    with batch_ids_lock:
-                        batch_ids.append(batch_id)
-                        batch_to_urls[batch_id] = batch
+            # Start background submission
+            submission_thread = threading.Thread(
+                target=submit_batches_background, daemon=True
+            )
+            submission_thread.start()
 
-                    logger.debug(
-                        f"Submitted batch {batch_idx + 1}/{len(batches)}: {batch_id}"
-                    )
-                except Exception as e:
-                    logger.error(f"Failed to submit batch {batch_idx + 1}: {e}")
+            # Wait for at least one batch to be submitted before starting poll
+            while len(batch_ids) == 0 and not submission_complete.is_set():
+                time.sleep(0.5)
 
-            # Signal that all batches have been submitted
-            submission_complete.set()
-            with batch_ids_lock:
-                logger.info(
-                    f"Successfully submitted {len(batch_ids)}/{len(batches)} batches"
-                )
+            if len(batch_ids) == 0:
+                logger.error("No batches were successfully submitted")
+                return self._create_submission_failures(urls)
 
-        # Start background submission
-        submission_thread = threading.Thread(
-            target=submit_batches_background, daemon=True
-        )
-        submission_thread.start()
+            # Poll until complete (will handle dynamically growing batch list)
+            return self._poll_until_complete(
+                batch_ids,
+                batch_to_urls,
+                batch_ids_lock,
+                submission_complete,
+                progress_callback,
+                completion_callback,
+            )
 
-        # Wait for at least one batch to be submitted before starting poll
-        while len(batch_ids) == 0 and not submission_complete.is_set():
-            time.sleep(0.5)
+        except KeyboardInterrupt:
+            logger.warning("Batch upload interrupted by user (Ctrl+C)")
+            self._interrupted = True
+            raise  # Re-raise to propagate interruption
 
-        if len(batch_ids) == 0:
-            logger.error("No batches were successfully submitted")
-            return self._create_submission_failures(urls)
-
-        # Poll until complete (will handle dynamically growing batch list)
-        return self._poll_until_complete(
-            batch_ids,
-            batch_to_urls,
-            batch_ids_lock,
-            submission_complete,
-            progress_callback,
-            completion_callback,
-        )
+        finally:
+            # Cleanup: abort batches if interrupted
+            if self._interrupted:
+                self._abort_batches(batch_ids, batch_ids_lock)
 
     def _split_into_batches(self, urls: list[str]) -> list[list[str]]:
         """Split URLs into batches of configured size."""
@@ -161,6 +178,11 @@ class BatchAssetUploader:
         all_failures: list[FailedUpload[str]] = []
 
         while True:
+            # Check for interruption at start of each iteration
+            if self._interrupted:
+                logger.debug("Polling stopped due to interruption")
+                break
+
             # Get current batch IDs (thread-safe)
             with batch_ids_lock:
                 current_batch_ids = batch_ids.copy()
@@ -217,6 +239,9 @@ class BatchAssetUploader:
             except Exception as e:
                 logger.error(f"Error polling batch status: {e}")
                 time.sleep(poll_interval)
+
+        # Return failures collected so far (reached via break on interruption)
+        return all_failures
 
     def _update_progress(
         self,
@@ -317,3 +342,48 @@ class BatchAssetUploader:
             )
             for url in urls
         ]
+
+    def _abort_batches(
+        self,
+        batch_ids: list[str],
+        batch_ids_lock: threading.Lock,
+    ) -> None:
+        """
+        Abort all submitted batches by calling the abort endpoint.
+
+        This method is called during cleanup when the upload process is interrupted.
+        It attempts to abort all batches that were successfully submitted.
+
+        Args:
+            batch_ids: Shared list of batch IDs (thread-safe access required).
+            batch_ids_lock: Lock protecting batch_ids list.
+        """
+        # Get snapshot of current batch IDs
+        with batch_ids_lock:
+            batches_to_abort = batch_ids.copy()
+
+        if not batches_to_abort:
+            logger.info("No batches to abort")
+            return
+
+        logger.info(
+            f"Aborting {len(batches_to_abort)} batch(es) due to interruption..."
+        )
+
+        abort_successes = 0
+        abort_failures = 0
+
+        for batch_id in batches_to_abort:
+            try:
+                self.openapi_service.batch_upload_api.asset_batch_upload_batch_upload_id_abort_post(
+                    batch_upload_id=batch_id
+                )
+                abort_successes += 1
+                logger.debug(f"Successfully aborted batch: {batch_id}")
+            except Exception as e:
+                abort_failures += 1
+                logger.warning(f"Failed to abort batch {batch_id}: {e}")
+
+        logger.info(
+            f"Batch abort completed: {abort_successes} succeeded, {abort_failures} failed"
+        )
