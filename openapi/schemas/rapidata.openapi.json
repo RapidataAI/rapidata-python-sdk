@@ -10972,6 +10972,14 @@
           "Ready"
         ]
       },
+      "BoostLevel": {
+        "enum": [
+          "None",
+          "Stable",
+          "Distilling",
+          "Global"
+        ]
+      },
       "BoxShape": {
         "type": "object",
         "properties": {
@@ -11159,7 +11167,9 @@
           "filters",
           "createdAt",
           "ownerMail",
-          "isPublic"
+          "isPublic",
+          "isDistilling",
+          "boostLevel"
         ],
         "type": "object",
         "properties": {
@@ -11192,6 +11202,20 @@
           },
           "isPublic": {
             "type": "boolean"
+          },
+          "isDistilling": {
+            "type": "boolean"
+          },
+          "minGraduatedForDistillingBoost": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minDistillingForGlobalBoost": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "boostLevel": {
+            "$ref": "#/components/schemas/BoostLevel"
           }
         }
       },
@@ -12536,6 +12560,11 @@
           }
         ]
       },
+      "OptionOfint": {
+        "type": "integer",
+        "format": "int32",
+        "nullable": true
+      },
       "OptionOfIReadOnlyListOfIAudienceFilter": {
         "oneOf": [
           {
@@ -12662,7 +12691,8 @@
           "filters",
           "createdAt",
           "ownerMail",
-          "isPublic"
+          "isPublic",
+          "isDistilling"
         ],
         "type": "object",
         "properties": {
@@ -12694,6 +12724,9 @@
             "type": "string"
           },
           "isPublic": {
+            "type": "boolean"
+          },
+          "isDistilling": {
             "type": "boolean"
           }
         }
@@ -12936,6 +12969,12 @@
           },
           "logo": {
             "$ref": "#/components/schemas/OptionOfExistingAssetInput"
+          },
+          "minGraduatedForDistillingBoost": {
+            "$ref": "#/components/schemas/OptionOfint"
+          },
+          "minDistillingForGlobalBoost": {
+            "$ref": "#/components/schemas/OptionOfint"
           }
         }
       },
@@ -13082,11 +13121,6 @@
       },
       "OptionOfboolean": {
         "type": "boolean",
-        "nullable": true
-      },
-      "OptionOfint": {
-        "type": "integer",
-        "format": "int32",
         "nullable": true
       },
       "PagedResultOfCampaignQueryResult": {
@@ -16921,6 +16955,10 @@
           "blueprint": {
             "$ref": "#/components/schemas/IRapidBlueprint"
           },
+          "batchSize": {
+            "type": "integer",
+            "format": "int32"
+          },
           "featureFlags": {
             "$ref": "#/components/schemas/ListOfFeatureFlag"
           }
@@ -18880,6 +18918,10 @@
           },
           "blueprint": {
             "$ref": "#/components/schemas/IRapidBlueprint"
+          },
+          "batchSize": {
+            "type": "integer",
+            "format": "int32"
           },
           "featureFlags": {
             "$ref": "#/components/schemas/ListOfFeatureFlag"
