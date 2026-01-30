@@ -89,8 +89,10 @@ class AssetUploadOrchestrator:
 
         # Notify callback about cached assets (already complete)
         cached_assets = []
-        cached_assets.extend([url for url in urls if url not in uncached_urls])
-        cached_assets.extend([file for file in files if file not in uncached_files])
+        if uncached_urls:
+            cached_assets.extend(urls - uncached_urls)
+        if uncached_files:
+            cached_assets.extend(files - uncached_files)
 
         if cached_assets and asset_completion_callback:
             logger.debug(f"Notifying callback of {len(cached_assets)} cached asset(s)")
@@ -109,7 +111,7 @@ class AssetUploadOrchestrator:
         self._log_upload_results(failed_uploads)
         return failed_uploads
 
-    def _separate_urls_and_files(self, assets: set[str]) -> tuple[list[str], list[str]]:
+    def _separate_urls_and_files(self, assets: set[str]) -> tuple[set[str], set[str]]:
         """
         Separate assets into URLs and file paths.
 
@@ -119,20 +121,20 @@ class AssetUploadOrchestrator:
         Returns:
             Tuple of (urls, files).
         """
-        urls = [a for a in assets if re.match(r"^https?://", a)]
-        files = [a for a in assets if not re.match(r"^https?://", a)]
+        urls = {a for a in assets if re.match(r"^https?://", a)}
+        files = {a for a in assets if not re.match(r"^https?://", a)}
         logger.debug(f"Asset breakdown: {len(urls)} URL(s), {len(files)} file(s)")
         return urls, files
 
     def _filter_and_log_cached_assets(
-        self, urls: list[str], files: list[str]
-    ) -> tuple[list[str], list[str]]:
+        self, urls: set[str], files: set[str]
+    ) -> tuple[set[str], set[str]]:
         """
         Filter out cached assets and log statistics.
 
         Args:
-            urls: List of URL assets.
-            files: List of file assets.
+            urls: Set of URL assets.
+            files: Set of file assets.
 
         Returns:
             Tuple of (uncached_urls, uncached_files).
@@ -152,8 +154,8 @@ class AssetUploadOrchestrator:
 
     def _perform_uploads(
         self,
-        uncached_urls: list[str],
-        uncached_files: list[str],
+        uncached_urls: set[str],
+        uncached_files: set[str],
         asset_completion_callback: Callable[[list[str]], None] | None,
     ) -> list[FailedUpload[str]]:
         """
@@ -199,7 +201,7 @@ class AssetUploadOrchestrator:
 
     def _upload_urls_with_progress(
         self,
-        urls: list[str],
+        urls: set[str],
         pbar: tqdm,
         completion_callback: Callable[[list[str]], None] | None,
     ) -> list[FailedUpload[str]]:
@@ -210,14 +212,14 @@ class AssetUploadOrchestrator:
             pbar.update(n)
 
         return self.batch_uploader.batch_upload_urls(
-            urls,
+            list(urls),
             progress_callback=update_progress,
             completion_callback=completion_callback,
         )
 
     def _upload_files_with_progress(
         self,
-        files: list[str],
+        files: set[str],
         pbar: tqdm,
         completion_callback: Callable[[list[str]], None] | None,
     ) -> list[FailedUpload[str]]:
@@ -240,11 +242,9 @@ class AssetUploadOrchestrator:
         else:
             logger.info("Step 1/2: All assets uploaded successfully")
 
-    def _filter_uncached(
-        self, assets: list[str], cache: SingleFlightCache
-    ) -> list[str]:
+    def _filter_uncached(self, assets: set[str], cache: SingleFlightCache) -> set[str]:
         """Filter out assets that are already cached."""
-        uncached = []
+        uncached = set()
         for asset in assets:
             try:
                 # Try to get cache key using centralized methods
@@ -255,17 +255,17 @@ class AssetUploadOrchestrator:
 
                 # Check if in cache
                 if cache_key not in cache.get_storage():
-                    uncached.append(asset)
+                    uncached.add(asset)
             except Exception as e:
                 # If cache check fails, include in upload list
                 logger.warning(f"Cache check failed for {asset}: {e}")
-                uncached.append(asset)
+                uncached.add(asset)
 
         return uncached
 
     def _upload_files_parallel(
         self,
-        files: list[str],
+        files: set[str],
         progress_callback: Callable[[], None] | None = None,
         completion_callback: Callable[[list[str]], None] | None = None,
     ) -> list[FailedUpload[str]]:
@@ -273,7 +273,7 @@ class AssetUploadOrchestrator:
         Upload files in parallel using ThreadPoolExecutor.
 
         Args:
-            files: List of file paths to upload.
+            files: Set of file paths to upload.
             progress_callback: Optional callback to report progress (called once per completed file).
             completion_callback: Optional callback to notify when files complete (called with list of successful files).
 
