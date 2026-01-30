@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import time
-from tqdm import tqdm
+from tqdm.auto import tqdm
 
 from rapidata.rapidata_client.config import logger
 from rapidata.rapidata_client.config.rapidata_config import rapidata_config

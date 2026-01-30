@@ -1,6 +1,6 @@
 from pathlib import Path
 import shutil
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 from rapidata.rapidata_client.config import logger
 
 
@@ -11,19 +11,29 @@ class UploadConfig(BaseModel):
     Attributes:
         maxWorkers (int): The maximum number of worker threads for concurrent uploads. Defaults to 25.
         maxRetries (int): The maximum number of retries for failed uploads. Defaults to 3.
-        cacheUploads (bool): Enable/disable upload caching. Defaults to True.
+        cacheToDisk (bool): Enable disk-based caching for file uploads. If False, uses in-memory cache only. Defaults to True.
+            Note: URL assets are always cached in-memory regardless of this setting.
+            Caching cannot be disabled entirely as it's required for the two-step upload flow.
         cacheTimeout (float): Cache operation timeout in seconds. Defaults to 0.1.
         cacheLocation (Path): Directory for cache storage. Defaults to ~/.cache/rapidata/upload_cache.
-            This is immutable
+            This is immutable. Only used for file uploads when cacheToDisk=True.
         cacheShards (int): Number of cache shards for parallel access. Defaults to 128.
             Higher values improve concurrency but increase file handles. Must be positive.
-            This is immutable
+            This is immutable. Only used for file uploads when cacheToDisk=True.
+        enableBatchUpload (bool): Enable batch URL uploading (two-step process). Defaults to True.
+        batchSize (int): Number of URLs per batch (100-5000). Defaults to 1000.
+        batchPollInterval (float): Polling interval in seconds. Defaults to 0.5.
     """
+
+    model_config = ConfigDict(validate_assignment=True)
 
     maxWorkers: int = Field(default=25)
     maxRetries: int = Field(default=3)
-    cacheUploads: bool = Field(default=True)
-    cacheTimeout: float = Field(default=0.1)
+    cacheToDisk: bool = Field(
+        default=True,
+        description="Enable disk-based caching for file uploads. URLs are always cached in-memory.",
+    )
+    cacheTimeout: float = Field(default=1)
     cacheLocation: Path = Field(
         default=Path.home() / ".cache" / "rapidata" / "upload_cache",
         frozen=True,
@@ -31,6 +41,14 @@ class UploadConfig(BaseModel):
     cacheShards: int = Field(
         default=128,
         frozen=True,
+    )
+    batchSize: int = Field(
+        default=1000,
+        description="Number of URLs per batch (100-5000)",
+    )
+    batchPollInterval: float = Field(
+        default=0.5,
+        description="Polling interval in seconds",
     )
 
     @field_validator("maxWorkers")
@@ -52,6 +70,13 @@ class UploadConfig(BaseModel):
             logger.warning(
                 f"cacheShards={v} is not a power of 2. Power-of-2 values provide better hash distribution."
             )
+        return v
+
+    @field_validator("batchSize")
+    @classmethod
+    def validate_batch_size(cls, v: int) -> int:
+        if v < 100:
+            raise ValueError("batchSize must be at least 100")
         return v
 
     def __init__(self, **kwargs):

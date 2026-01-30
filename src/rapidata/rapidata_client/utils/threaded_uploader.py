@@ -1,6 +1,6 @@
 from typing import TypeVar, Generic, Callable
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from tqdm import tqdm
+from tqdm.auto import tqdm
 import time
 
 from rapidata.rapidata_client.config import logger

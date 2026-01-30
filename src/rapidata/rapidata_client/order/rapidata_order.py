@@ -9,7 +9,7 @@ from time import sleep
 from typing import cast, Callable, TypeVar, TYPE_CHECKING
 from colorama import Fore
 from datetime import datetime
-from tqdm import tqdm
+from tqdm.auto import tqdm
 
 # Local/application imports
 from rapidata.service.openapi_service import OpenAPIService
@@ -336,7 +336,9 @@ class RapidataOrder:
         with tracer.start_as_current_span("RapidataOrder.get_results"):
             from rapidata.api_client.models.order_state import OrderState
             from rapidata.api_client.exceptions import ApiException
-            from rapidata.rapidata_client.results.rapidata_results import RapidataResults
+            from rapidata.rapidata_client.results.rapidata_results import (
+                RapidataResults,
+            )
 
             logger.info("Getting results for order '%s'...", self)
 

@@ -29,6 +29,10 @@ class SingleFlightCache:
                 except Exception:
                     pass
 
+    def get_storage(self) -> dict[str, str] | FanoutCache:
+        """Get the cache storage."""
+        return self._storage
+
     def get_or_fetch(
         self,
         key: str,
@@ -76,6 +80,10 @@ class SingleFlightCache:
         finally:
             with self._lock:
                 self._in_flight.pop(key, None)
+
+    def set(self, key: str, value: str) -> None:
+        """Set a value in the cache."""
+        self._storage[key] = value
 
     def clear(self) -> None:
         """Clear the cache."""
