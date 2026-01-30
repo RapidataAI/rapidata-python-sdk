@@ -250,6 +250,7 @@ Class | Method | HTTP request | Description
  - [BatchUploadUrlStatus](rapidata/api_client/docs/BatchUploadUrlStatus.md)
  - [BenchmarkQueryResult](rapidata/api_client/docs/BenchmarkQueryResult.md)
  - [BoostLeaderboardModel](rapidata/api_client/docs/BoostLeaderboardModel.md)
+ - [BoostLevel](rapidata/api_client/docs/BoostLevel.md)
  - [BoostingProfile](rapidata/api_client/docs/BoostingProfile.md)
  - [BoxShape](rapidata/api_client/docs/BoxShape.md)
  - [CampaignQueryResult](rapidata/api_client/docs/CampaignQueryResult.md)

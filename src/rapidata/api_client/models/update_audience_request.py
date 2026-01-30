@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.existing_asset_input import ExistingAssetInput
 from rapidata.api_client.models.i_audience_filter import IAudienceFilter
@@ -31,7 +31,9 @@ class UpdateAudienceRequest(BaseModel):
     name: Optional[StrictStr] = None
     filters: Optional[List[IAudienceFilter]] = None
     logo: Optional[ExistingAssetInput] = None
-    __properties: ClassVar[List[str]] = ["name", "filters", "logo"]
+    min_graduated_for_distilling_boost: Optional[StrictInt] = Field(default=None, alias="minGraduatedForDistillingBoost")
+    min_distilling_for_global_boost: Optional[StrictInt] = Field(default=None, alias="minDistillingForGlobalBoost")
+    __properties: ClassVar[List[str]] = ["name", "filters", "logo", "minGraduatedForDistillingBoost", "minDistillingForGlobalBoost"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -92,6 +94,16 @@ class UpdateAudienceRequest(BaseModel):
         if self.logo is None and "logo" in self.model_fields_set:
             _dict['logo'] = None
 
+        # set to None if min_graduated_for_distilling_boost (nullable) is None
+        # and model_fields_set contains the field
+        if self.min_graduated_for_distilling_boost is None and "min_graduated_for_distilling_boost" in self.model_fields_set:
+            _dict['minGraduatedForDistillingBoost'] = None
+
+        # set to None if min_distilling_for_global_boost (nullable) is None
+        # and model_fields_set contains the field
+        if self.min_distilling_for_global_boost is None and "min_distilling_for_global_boost" in self.model_fields_set:
+            _dict['minDistillingForGlobalBoost'] = None
+
         return _dict
 
     @classmethod
@@ -106,7 +118,9 @@ class UpdateAudienceRequest(BaseModel):
         _obj = cls.model_validate({
             "name": obj.get("name"),
             "filters": [IAudienceFilter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
-            "logo": ExistingAssetInput.from_dict(obj["logo"]) if obj.get("logo") is not None else None
+            "logo": ExistingAssetInput.from_dict(obj["logo"]) if obj.get("logo") is not None else None,
+            "minGraduatedForDistillingBoost": obj.get("minGraduatedForDistillingBoost"),
+            "minDistillingForGlobalBoost": obj.get("minDistillingForGlobalBoost")
         })
         return _obj
 

@@ -21,6 +21,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.audience_status import AudienceStatus
+from rapidata.api_client.models.boost_level import BoostLevel
 from rapidata.api_client.models.i_audience_filter import IAudienceFilter
 from typing import Optional, Set
 from typing_extensions import Self
@@ -38,7 +39,11 @@ class GetAudienceByIdResult(BaseModel):
     created_at: datetime = Field(alias="createdAt")
     owner_mail: StrictStr = Field(alias="ownerMail")
     is_public: StrictBool = Field(alias="isPublic")
-    __properties: ClassVar[List[str]] = ["id", "name", "status", "qualifiedUserCount", "filters", "logo", "createdAt", "ownerMail", "isPublic"]
+    is_distilling: StrictBool = Field(alias="isDistilling")
+    min_graduated_for_distilling_boost: Optional[StrictInt] = Field(default=None, alias="minGraduatedForDistillingBoost")
+    min_distilling_for_global_boost: Optional[StrictInt] = Field(default=None, alias="minDistillingForGlobalBoost")
+    boost_level: BoostLevel = Field(alias="boostLevel")
+    __properties: ClassVar[List[str]] = ["id", "name", "status", "qualifiedUserCount", "filters", "logo", "createdAt", "ownerMail", "isPublic", "isDistilling", "minGraduatedForDistillingBoost", "minDistillingForGlobalBoost", "boostLevel"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -111,7 +116,11 @@ class GetAudienceByIdResult(BaseModel):
             "logo": obj.get("logo"),
             "createdAt": obj.get("createdAt"),
             "ownerMail": obj.get("ownerMail"),
-            "isPublic": obj.get("isPublic")
+            "isPublic": obj.get("isPublic"),
+            "isDistilling": obj.get("isDistilling"),
+            "minGraduatedForDistillingBoost": obj.get("minGraduatedForDistillingBoost"),
+            "minDistillingForGlobalBoost": obj.get("minDistillingForGlobalBoost"),
+            "boostLevel": obj.get("boostLevel")
         })
         return _obj
 

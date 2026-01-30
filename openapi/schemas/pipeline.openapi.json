@@ -1324,6 +1324,10 @@
           "blueprint": {
             "$ref": "#/components/schemas/IRapidBlueprint"
           },
+          "batchSize": {
+            "type": "integer",
+            "format": "int32"
+          },
           "featureFlags": {
             "$ref": "#/components/schemas/ListOfFeatureFlag"
           }

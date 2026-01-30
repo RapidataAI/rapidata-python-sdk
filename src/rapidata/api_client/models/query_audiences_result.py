@@ -38,7 +38,8 @@ class QueryAudiencesResult(BaseModel):
     created_at: datetime = Field(alias="createdAt")
     owner_mail: StrictStr = Field(alias="ownerMail")
     is_public: StrictBool = Field(alias="isPublic")
-    __properties: ClassVar[List[str]] = ["id", "name", "status", "qualifiedUserCount", "filters", "logo", "createdAt", "ownerMail", "isPublic"]
+    is_distilling: StrictBool = Field(alias="isDistilling")
+    __properties: ClassVar[List[str]] = ["id", "name", "status", "qualifiedUserCount", "filters", "logo", "createdAt", "ownerMail", "isPublic", "isDistilling"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -111,7 +112,8 @@ class QueryAudiencesResult(BaseModel):
             "logo": obj.get("logo"),
             "createdAt": obj.get("createdAt"),
             "ownerMail": obj.get("ownerMail"),
-            "isPublic": obj.get("isPublic")
+            "isPublic": obj.get("isPublic"),
+            "isDistilling": obj.get("isDistilling")
         })
         return _obj
 

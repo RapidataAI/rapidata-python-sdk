@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.i_rapid_blueprint import IRapidBlueprint
@@ -32,8 +32,9 @@ class IWorkflowConfigSimpleWorkflowConfig(BaseModel):
     t: StrictStr = Field(alias="_t")
     referee: IRefereeConfig
     blueprint: IRapidBlueprint
+    batch_size: Optional[StrictInt] = Field(default=None, alias="batchSize")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
-    __properties: ClassVar[List[str]] = ["_t", "referee", "blueprint", "featureFlags"]
+    __properties: ClassVar[List[str]] = ["_t", "referee", "blueprint", "batchSize", "featureFlags"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -109,6 +110,7 @@ class IWorkflowConfigSimpleWorkflowConfig(BaseModel):
             "_t": obj.get("_t"),
             "referee": IRefereeConfig.from_dict(obj["referee"]) if obj.get("referee") is not None else None,
             "blueprint": IRapidBlueprint.from_dict(obj["blueprint"]) if obj.get("blueprint") is not None else None,
+            "batchSize": obj.get("batchSize"),
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
         })
         return _obj
