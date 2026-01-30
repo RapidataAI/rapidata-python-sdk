@@ -21,7 +21,7 @@ class UploadConfig(BaseModel):
             Higher values improve concurrency but increase file handles. Must be positive.
             This is immutable. Only used for file uploads when cacheToDisk=True.
         enableBatchUpload (bool): Enable batch URL uploading (two-step process). Defaults to True.
-        batchSize (int): Number of URLs per batch (10-500). Defaults to 100.
+        batchSize (int): Number of URLs per batch (100-5000). Defaults to 1000.
         batchPollInterval (float): Polling interval in seconds. Defaults to 0.5.
     """
 
