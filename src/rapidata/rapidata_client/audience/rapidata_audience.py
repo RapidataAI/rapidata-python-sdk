@@ -177,6 +177,7 @@ class RapidataAudience:
                 media_context,
                 explanation,
             )
+            self._start_recruiting()
             return self
 
     def add_compare_example(
@@ -219,6 +220,7 @@ class RapidataAudience:
                 media_context,
                 explanation,
             )
+            self._start_recruiting()
             return self
 
     def find_jobs(self, name: str = "", amount: int = 10) -> list[RapidataJob]:
@@ -285,10 +287,13 @@ class RapidataAudience:
         """
         with tracer.start_as_current_span("RapidataAudience._start_recruiting"):
             logger.debug(f"Sending request to start recruiting for audience: {self.id}")
-            self._openapi_service.audience_api.audience_audience_id_recruit_post(
-                audience_id=self.id,
-            )
-            logger.info(f"Started recruiting for audience: {self.id}")
+            try:
+                self._openapi_service.audience_api.audience_audience_id_recruit_post(
+                    audience_id=self.id,
+                )
+                logger.info(f"Started recruiting for audience: {self.id}")
+            except Exception as e:
+                logger.debug(f"Error starting recruiting for audience: {self.id} - {e}")
 
     def __str__(self) -> str:
         return f"RapidataAudience(id={self.id}, name={self._name}, filters={self._filters})"

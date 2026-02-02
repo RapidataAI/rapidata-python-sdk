@@ -58,7 +58,6 @@ class RapidataAudienceManager:
                 filters=filters,
                 openapi_service=self._openapi_service,
             )
-            audience._start_recruiting()
             return audience
 
     def get_audience_by_id(self, audience_id: str) -> RapidataAudience:
