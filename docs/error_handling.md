@@ -107,3 +107,17 @@ except FailedUploadException as e:
     print(f"{len(successful_retries)} datapoints successfully retried")
     print(f"{len(failed_retries)} datapoints failed to retry")
 ```
+
+## Run Order after error occurred:
+
+If you have already created an order and have not caught the exception, you can still run the order either through code or the app.rapidata.ai UI.
+
+The order will run without the failed datapoints.
+
+```python
+from rapidata import RapidataClient
+
+rapidata_client = RapidataClient()
+order = rapidata_client.order.get_order_by_id(order_id)
+order.run()
+```
