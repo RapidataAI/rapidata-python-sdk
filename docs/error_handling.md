@@ -2,19 +2,19 @@
 
 ## Introduction
 
-When creating jobs or orders with the Rapidata SDK, datapoints may fail to upload due to various reasons such as missing files, invalid formats, or network issues. Understanding how to handle these failures gracefully is essential for building robust integration.
+When creating job_definitions or orders with the Rapidata SDK, datapoints may fail to upload due to various reasons such as missing files, invalid formats, or network issues. Understanding how to handle these failures gracefully is essential for building robust integration.
 
 When one or more datapoints fail to upload, the SDK raises a `FailedUploadException`. This exception provides detailed information about what went wrong and gives you several options for recovery:
 
 - Inspect which datapoints failed and why
 - Retry the failed datapoints
-- Proceed with the job/order using only the successfully uploaded datapoints
+- Proceed with the job_definition/order using only the successfully uploaded datapoints
 
 This guide shows you how to handle upload failures effectively.
 
 ## Understanding FailedUploadException
 
-The `FailedUploadException` is raised during job or order creation when the SDK cannot upload one or more datapoints. Despite the exception, a job or order object may still be created with the successfully uploaded datapoints.
+The `FailedUploadException` is raised during job_definition or order creation when the SDK cannot upload one or more datapoints. Despite the exception, a job_definition or order object may still be created with the successfully uploaded datapoints.
 
 ### Key Properties
 
@@ -25,7 +25,7 @@ The exception provides three properties to help you understand and recover from 
 - **`failures_by_reason`**: Dictionary grouping datapoints by failure reason (useful for bulk analysis)
 
 Additionally:
-- **`job`** or **`order`**: The created job/order object
+- **`job_definition`** or **`order`**: The created job_definition/order object
 
 ## Exception Properties Explained
 
@@ -39,7 +39,7 @@ A simple list of datapoints that failed:
 
 ### detailed_failures
 
-A dictionary mapping each failed datapoint to its specific error message:
+A list of FailedUpload objects, each containing the failed datapoint and its specific error message:
 
 ```python
 [FailedUpload(item=Datapoint(asset=['https://assets.rapidata.ai/midjourney-5.2_37_3NOT_FOUND.jpg', 'https://assets.rapidata.ai/flux-1-pro_37_0.jpg'], data_type='media', context='A small blue book sitting on a large red book.', media_context=None, sentence=None, private_metadata=None, group=None), error_message='One or more required assets failed to upload', error_type='AssetUploadFailed', timestamp=datetime.datetime(2026, 2, 2, 15, 32, 30, 855335), exception=None)]
@@ -57,7 +57,7 @@ Groups datapoints by their failure reason, making it easy to identify patterns:
 
 ## Strategy 1: Proceeding Without Failures
 
-If you want to proceed with only the successfully uploaded datapoints, use the job object from the exception:
+If you want to proceed with only the successfully uploaded datapoints, use the job_definition object from the exception:
 
 ```python
 from rapidata import RapidataClient
