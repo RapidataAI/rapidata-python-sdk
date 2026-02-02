@@ -72,4 +72,11 @@ class FailedUploadException(Exception):
                 lines.append(f"    {dp},")
             lines.append("  ]")
 
-        return "\n".join(lines)
+        failed_upload_message = "\n".join(lines)
+        if self.order:
+            failed_upload_message += f"\nTo run the order without the failed datapoints, call: rapidata_client.order.get_order_by_id('{self.order.id}').run()"
+        if self.job:
+            failed_upload_message += f"\nTo run the job definition without the failed datapoints, call: audience.assign_job(rapidata_client.job.get_job_definition_by_id('{self.job.id}'))"
+
+        failed_upload_message += f"\nFor more information, visit the Rapidata documentation: https://rapidata.ai/docs"
+        return failed_upload_message
