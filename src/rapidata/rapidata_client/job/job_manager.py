@@ -103,7 +103,9 @@ class JobManager:
         )
 
         if failed_uploads:
-            raise FailedUploadException(rapidata_dataset, failed_uploads, job=job_model)
+            raise FailedUploadException(
+                rapidata_dataset, failed_uploads, job_definition=job_model
+            )
 
         return job_model
 

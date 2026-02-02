@@ -91,7 +91,7 @@ class JobDefinition:
                 _, failed_uploads = rapidata_dataset.add_datapoints(datapoints_list)
                 if failed_uploads:
                     raise FailedUploadException(
-                        rapidata_dataset, failed_uploads, job=self
+                        rapidata_dataset, failed_uploads, job_definition=self
                     )
 
             self._openapi_service.job_api.job_definition_definition_id_revision_post(

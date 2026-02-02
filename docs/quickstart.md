@@ -63,6 +63,8 @@ job_definition = client.job.create_compare_job_definition(
 )
 ```
 
+> **Tip**: If some datapoints fail to upload, a `FailedUploadException` will be raised. Learn how to handle this in the [Error Handling Guide](error_handling.md).
+
 For a detailed explanation of all available parameters (including name, instruction, datapoints, contexts, quality control options, and more), see the [Job Definition Parameters Reference](job_definition_parameters.md).
 
 ### Step 3: Preview the Job Definition

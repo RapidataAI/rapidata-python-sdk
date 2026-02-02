@@ -59,6 +59,7 @@ plugins:
           - audiences.md
           - job_definition_parameters.md
           - understanding_the_results.md
+          - error_handling.md
           - confidence_stopping.md
           - human_prompting.md
           - config.md
@@ -110,6 +111,7 @@ nav:
       - "👥 Custom Audiences": audiences.md
       - "📖 Parameter Reference": job_definition_parameters.md
       - "📊 Understanding Results": understanding_the_results.md
+      - "❌ Error Handling": error_handling.md
       - "🛑 Confidence Stopping": confidence_stopping.md
       - "💡 Human Prompting": human_prompting.md
       - "📝 Logging & Config": config.md
