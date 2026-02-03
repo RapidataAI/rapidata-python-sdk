@@ -8,7 +8,7 @@ When one or more datapoints fail to upload, the SDK raises a `FailedUploadExcept
 
 - Inspect which datapoints failed and why
 - Retry the failed datapoints
-- Proceed with the job_definition/order using only the successfully uploaded datapoints
+- Proceed with the `JobDefinition`/`Order` using only the successfully uploaded datapoints
 
 This guide shows you how to handle upload failures effectively.
 
