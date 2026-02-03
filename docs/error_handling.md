@@ -14,7 +14,7 @@ This guide shows you how to handle upload failures effectively.
 
 ## Understanding FailedUploadException
 
-The `FailedUploadException` is raised during job_definition or order creation when the SDK cannot upload one or more datapoints. Despite the exception, a job_definition or order object may still be created with the successfully uploaded datapoints.
+The `FailedUploadException` is raised during `JobDefinition` or order creation when the SDK cannot upload one or more datapoints. Despite the exception, a `JobDefinition` or order object may still be created with the successfully uploaded datapoints.
 
 ### Key Properties
 
