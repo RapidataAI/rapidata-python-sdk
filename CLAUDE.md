@@ -16,3 +16,5 @@ Note that if there are any changes that have to be made in those files you MUST 
 please note that there is the RapidataApiClient that wraps every api call to handel backend tracing and error handling.
 
 The backend errors follow a specific format that you can see in the RapidataError class.
+
+when doing type annotations use the "from __future__ import annotations" statement and TYPE_CHECKING to check the types - that way you can eliminate the quotation marks around the types.
