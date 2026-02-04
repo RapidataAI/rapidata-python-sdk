@@ -23,6 +23,7 @@ from authlib.integrations.httpx_client import OAuth2Client
 from httpx import Timeout, ConnectError, Limits
 
 from rapidata.api_client.exceptions import ApiException, ApiValueError
+from rapidata.service.token_cache import TokenCache
 
 
 class RESTResponse(io.IOBase):
@@ -52,15 +53,36 @@ RESTResponseType = RESTResponse
 
 class RESTClientObject:
 
-    def __init__(self, configuration) -> None:
+    def __init__(self, configuration, environment: Optional[str] = None) -> None:
         self.configuration = configuration
+        self.environment = environment
+        self.token_cache = TokenCache(environment) if environment else None
 
         self.session: Optional[OAuth2Client] = None
 
     def setup_oauth_client_credentials(
-        self, client_id: str, client_secret: str, token_endpoint: str, scope: str
+        self, client_id: str, client_secret: str, token_endpoint: str, scope: str, leeway: int = 60
     ):
         client_args = self._get_session_defaults()
+
+        # Try to get cached token first
+        cached_token = None
+        if self.token_cache:
+            cached_token = self.token_cache.get_token(client_id, leeway=leeway)
+
+        if cached_token:
+            # Use cached token
+            self.session = OAuth2Client(
+                token=cached_token,
+                token_endpoint=token_endpoint,
+                client_id=client_id,
+                client_secret=client_secret,
+                leeway=leeway,
+                **client_args,
+            )
+            return
+
+        # No cached token, fetch a new one
         self.session = OAuth2Client(
             client_id=client_id,
             client_secret=client_secret,
@@ -78,6 +100,11 @@ class RESTClientObject:
                 # Add timeout for token fetch to prevent connection timeout issues
                 # (connect timeout, read timeout)
                 self.session.fetch_token(timeout=(10.0, 30.0))
+
+                # Cache the token for other processes to use
+                if self.token_cache and self.session.token:
+                    self.token_cache.store_token(client_id, self.session.token)
+
                 return  # Success, exit early
             except ConnectError as e:
                 if self._is_certificate_validation_error(e):
@@ -87,6 +114,21 @@ class RESTClientObject:
                 if attempt == max_retries:
                     raise
 
+                # Before retrying, check if another process cached a token
+                if self.token_cache and attempt < max_retries:
+                    cached_token = self.token_cache.get_token(client_id, leeway=leeway)
+                    if cached_token:
+                        # Another process fetched the token, use it!
+                        self.session = OAuth2Client(
+                            token=cached_token,
+                            token_endpoint=token_endpoint,
+                            client_id=client_id,
+                            client_secret=client_secret,
+                            leeway=leeway,
+                            **client_args,
+                        )
+                        return
+
                 # Calculate exponential backoff with jitter
                 delay = base_delay * (2 ** attempt) + random.uniform(0, 0.5)
                 time.sleep(delay)
@@ -94,6 +136,21 @@ class RESTClientObject:
                 # If this is the last attempt, raise the error
                 if attempt == max_retries:
                     raise
+
+                # Before retrying, check if another process cached a token
+                if self.token_cache and attempt < max_retries:
+                    cached_token = self.token_cache.get_token(client_id, leeway=leeway)
+                    if cached_token:
+                        # Another process fetched the token, use it!
+                        self.session = OAuth2Client(
+                            token=cached_token,
+                            token_endpoint=token_endpoint,
+                            client_id=client_id,
+                            client_secret=client_secret,
+                            leeway=leeway,
+                            **client_args,
+                        )
+                        return
 
                 # Calculate exponential backoff with jitter
                 delay = base_delay * (2 ** attempt) + random.uniform(0, 0.5)
