@@ -1,12 +1,12 @@
 import logging
-from typing import Protocol, runtime_checkable
+from typing import Protocol, runtime_checkable, Sequence
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from opentelemetry._logs import set_logger_provider
 from opentelemetry.exporter.otlp.proto.http._log_exporter import OTLPLogExporter
-from opentelemetry.sdk._logs import LoggerProvider, LoggingHandler
-from opentelemetry.sdk._logs.export import BatchLogRecordProcessor
+from opentelemetry.sdk._logs import LoggerProvider, LoggingHandler, LogRecord
+from opentelemetry.sdk._logs.export import BatchLogRecordProcessor, LogExportResult
 from opentelemetry.sdk.resources import Resource
 from rapidata import __version__
 from .logging_config import LoggingConfig, register_config_handler
@@ -34,6 +34,45 @@ def _create_resilient_session() -> requests.Session:
     session.mount("http://", adapter)
 
     return session
+
+
+class SilentLogExporter:
+    """
+    Wrapper around OTLPLogExporter that swallows all exceptions.
+
+    This prevents telemetry failures from affecting the main application
+    or spamming error logs during stress tests.
+    """
+
+    def __init__(self, wrapped_exporter: OTLPLogExporter):
+        self._exporter = wrapped_exporter
+        # Get a basic logger to avoid circular dependency
+        self._logger = logging.getLogger("rapidata")
+
+    def export(self, batch: Sequence[LogRecord]) -> LogExportResult:
+        """Export log records, swallowing any exceptions."""
+        try:
+            return self._exporter.export(batch)
+        except Exception as e:
+            # Silently log at debug level only
+            self._logger.debug(f"Telemetry log export failed (ignored): {e}")
+            # Return success to prevent retries
+            return LogExportResult.SUCCESS
+
+    def shutdown(self) -> None:
+        """Shutdown the exporter."""
+        try:
+            self._exporter.shutdown()
+        except Exception as e:
+            self._logger.debug(f"Telemetry log shutdown failed (ignored): {e}")
+
+    def force_flush(self, timeout_millis: int = 30000) -> bool:
+        """Force flush the exporter."""
+        try:
+            return self._exporter.force_flush(timeout_millis)
+        except Exception as e:
+            self._logger.debug(f"Telemetry log flush failed (ignored): {e}")
+            return True
 
 
 @runtime_checkable
@@ -95,11 +134,14 @@ class RapidataLogger:
                 # Create exporter with resilient session
                 # Lower timeout (10s) to avoid blocking on telemetry
                 session = _create_resilient_session()
-                exporter = OTLPLogExporter(
+                base_exporter = OTLPLogExporter(
                     endpoint="https://otlp-sdk.rapidata.ai/v1/logs",
                     timeout=10,  # Reduced from 30s
                     session=session,
                 )
+
+                # Wrap in SilentLogExporter to swallow all errors
+                exporter = SilentLogExporter(base_exporter)
 
                 # Use BatchLogRecordProcessor with longer delays to batch more logs
                 # and reduce the number of export calls
