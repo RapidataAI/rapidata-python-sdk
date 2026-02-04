@@ -2,63 +2,105 @@
 
 ## Introduction
 
-When creating job_definitions or orders with the Rapidata SDK, datapoints may fail to upload due to various reasons such as missing files, invalid formats, or network issues. Understanding how to handle these failures gracefully is essential for building robust integration.
+When creating job definitions or orders with the Rapidata SDK, datapoints may fail to upload due to various reasons such as missing files, invalid formats, or network issues. Understanding how to handle these failures is essential for building robust integrations.
 
-When one or more datapoints fail to upload, the SDK raises a `FailedUploadException`. This exception provides detailed information about what went wrong and gives you several options for recovery:
+When one or more datapoints fail to upload, the SDK raises a `FailedUploadException`. This exception provides detailed information about what went wrong and gives you several recovery options:
 
 - Inspect which datapoints failed and why
 - Retry the failed datapoints
-- Proceed with the `JobDefinition`/`Order` using only the successfully uploaded datapoints
+- Continue with the successfully uploaded datapoints
 
 This guide shows you how to handle upload failures effectively.
 
 ## Understanding FailedUploadException
 
-The `FailedUploadException` is raised during `JobDefinition` or order creation when the SDK cannot upload one or more datapoints. Despite the exception, a `JobDefinition` or order object may still be created with the successfully uploaded datapoints.
+The `FailedUploadException` is raised during `JobDefinition` or `Order` creation when one or more datapoints cannot be uploaded. 
+**Important**: Despite the exception being raised, a `JobDefinition` or `Order` object is still created with the successfully uploaded datapoints, allowing you to continue if you catch the exception.
 
-### Key Properties
+### Exception Properties
 
-The exception provides three properties to help you understand and recover from failures:
-
-- **`failed_uploads`**: List of datapoints that failed to upload
-- **`detailed_failures`**: Dictionary mapping each failed datapoint to its error message
-- **`failures_by_reason`**: Dictionary grouping datapoints by failure reason (useful for bulk analysis)
-
-Additionally:
-- **`job_definition`** or **`order`**: The created job_definition/order object
-
-## Exception Properties Explained
-
-### failed_uploads
-
-A simple list of datapoints that failed:
+The exception provides these properties to help you understand and recover from failures:
 
 ```python
-[Datapoint(asset=['https://assets.rapidata.ai/midjourney-5.2_37_3NOT_FOUND.jpg', 'https://assets.rapidata.ai/flux-1-pro_37_0.jpg'], data_type='media', context='A small blue book sitting on a large red book.', media_context=None, sentence=None, private_metadata=None, group=None)]
+FailedUploadException(
+    dataset: RapidataDataset,              # The dataset that was being created
+    failed_uploads: list[FailedUpload],    # Basic list of failed datapoints
+    order: Optional[RapidataOrder],        # The order object (if order creation)
+    job_definition: Optional[JobDefinition] # The job definition object (if job creation)
+)
 ```
 
-### detailed_failures
+### Understanding Failure Information
 
-A list of FailedUpload objects, each containing the failed datapoint and its specific error message:
+The exception provides two ways to inspect failures, depending on your needs:
+
+#### `detailed_failures` - Full Error Details
+
+Use this when you need complete information about each failure, including error type, timestamp, and the original exception:
 
 ```python
-[FailedUpload(item=Datapoint(asset=['https://assets.rapidata.ai/midjourney-5.2_37_3NOT_FOUND.jpg', 'https://assets.rapidata.ai/flux-1-pro_37_0.jpg'], data_type='media', context='A small blue book sitting on a large red book.', media_context=None, sentence=None, private_metadata=None, group=None), error_message='One or more required assets failed to upload', error_type='AssetUploadFailed', timestamp=datetime.datetime(2026, 2, 2, 15, 32, 30, 855335), exception=None)]
+exception.detailed_failures
+# Returns: list[FailedUpload[Datapoint]]
 ```
 
-### failures_by_reason
+Each `FailedUpload` object contains:
 
-Groups datapoints by their failure reason, making it easy to identify patterns:
+- `item`: The datapoint that failed
+- `error_message`: Human-readable explanation of what went wrong
+- `error_type`: The type of error (e.g., "AssetUploadFailed", "RapidataError")
+- `timestamp`: When the failure occurred
+- `exception`: The original exception (if available)
 
+**Example:**
+```python
+[
+    FailedUpload(
+        item=Datapoint(asset=['missing.jpg', 'valid.jpg'], ...),
+        error_message='One or more required assets failed to upload',
+        error_type='AssetUploadFailed',
+        timestamp=datetime(2026, 2, 2, 15, 32, 30),
+        exception=None
+    )
+]
+```
+
+#### `failures_by_reason` - Grouped by Error Type
+
+Use this when you want to identify patterns and handle different failure types differently:
+
+```python
+exception.failures_by_reason
+# Returns: dict[str, list[Datapoint]]
+```
+
+This groups all failed datapoints by their error message, making it easy to see common issues at a glance.
+
+**Example:**
 ```python
 {
-    'One or more assets failed to upload': [Datapoint(asset=['https://assets.rapidata.ai/midjourney-5.2_37_3NOT_FOUND.jpg', 'https://assets.rapidata.ai/flux-1-pro_37_0.jpg'], data_type='media', context='A small blue book sitting on a large red book.', media_context=None, sentence=None, private_metadata=None, group=None)],
+    'One or more required assets failed to upload': [
+        Datapoint(asset=['missing1.jpg', 'valid.jpg'], ...),
+        Datapoint(asset=['missing2.jpg', 'valid.jpg'], ...)
+    ],
+    'Invalid datapoint format': [
+        Datapoint(asset=['test.jpg'], ...)
+    ]
 }
 ```
 
-## Strategy 1: Proceeding Without Failures
+### Types of Failures
 
-If you want to proceed with only the successfully uploaded datapoints, use the job_definition object from the exception:
+**Asset Upload Failures**: When assets (images, videos, etc.) fail to upload, all affected datapoints will have the same error message: `"One or more required assets failed to upload"`. This happens before datapoint creation begins.
 
+**Datapoint Creation Failures**: After assets are successfully uploaded, datapoints are created. These failures can have different reasons depending on what went wrong (e.g., validation errors, format issues, backend constraints). Each datapoint may fail for a unique reason.
+
+## Recovery Strategies
+
+### Strategy 1: Continue with Successfully Uploaded Datapoints
+
+When a `FailedUploadException` is raised, the `JobDefinition` or `Order` is still created with the successfully uploaded datapoints. You can catch the exception and continue using the created object:
+
+**For Job Definitions:**
 ```python
 from rapidata import RapidataClient
 from rapidata.rapidata_client.exceptions import FailedUploadException
@@ -72,20 +114,45 @@ try:
         answer_options=["Cat", "Dog", "Bird"],
         datapoints=["cat1.jpg", "dog1.jpg", "missing.jpg"]
     )
-
 except FailedUploadException as e:
     print(f"Warning: {len(e.failed_uploads)} datapoints failed to upload")
-    # Acceptable failure rate:
-    if len(e.failed_uploads) > 10:
+
+    # Check if failure rate is acceptable
+    if len(e.failed_uploads) > len(datapoints) * 0.1:  # More than 10% failed
         raise ValueError("Too many failures, aborting")
 
-    # Use the job that was created with successful datapoints
+    # Continue with the job definition that was created with successful datapoints
     job_def = e.job_definition
+    # You can now use job_def normally - it contains the successfully uploaded datapoints
 ```
 
-## Strategy 2: Retrying Failed Datapoints
+**For Orders:**
+```python
+from rapidata import RapidataClient
+from rapidata.rapidata_client.exceptions import FailedUploadException
 
-If you want to retry the failed datapoints, you can use the `dataset` that is in the exception to retry the failed datapoints:
+client = RapidataClient()
+
+try:
+    order = client.order.create(
+        name="Image Classification Order",
+        instruction="What animal is in this image?",
+        answer_options=["Cat", "Dog", "Bird"],
+        datapoints=["cat1.jpg", "dog1.jpg", "missing.jpg"]
+    )
+except FailedUploadException as e:
+    print(f"Warning: {len(e.failed_uploads)} datapoints failed")
+
+    # Continue with the order that was created with successful datapoints
+    order = e.order
+
+    # Run the order with the successfully uploaded datapoints
+    order.run()
+```
+
+### Strategy 2: Retry Failed Datapoints
+
+After catching the exception, you can fix the issues (e.g., correct file paths, fix formats) and retry the failed datapoints by adding them to the dataset:
 
 ```python
 from rapidata import RapidataClient
@@ -100,24 +167,47 @@ try:
         answer_options=["Cat", "Dog", "Bird"],
         datapoints=["cat1.jpg", "dog1.jpg", "missing.jpg"]
     )
-
 except FailedUploadException as e:
-    print(f"{len(e.failed_uploads)} datapoints failed. Attempting to fix and retry...")
+    # Inspect what failed
+    print(f"{len(e.failed_uploads)} datapoints failed:")
+    for reason, datapoints in e.failures_by_reason.items():
+        print(f"  {reason}: {len(datapoints)} datapoints")
+
+    # Fix the issues (e.g., correct file paths), then retry
+    # Note: You need to fix the issues before retrying
     successful_retries, failed_retries = e.dataset.add_datapoints(e.failed_uploads)
-    print(f"{len(successful_retries)} datapoints successfully retried")
-    print(f"{len(failed_retries)} datapoints failed to retry")
+    print(f"{len(successful_retries)} datapoints successfully added on retry")
+
+    if failed_retries:
+        print(f"{len(failed_retries)} datapoints still failed after retry")
 ```
 
-## Run Order after error occurred:
+### Strategy 3: Retrieve and Use After Exception (If Not Caught)
 
-If you have already created an order and have not caught the exception, you can still run the order either through code or the app.rapidata.ai UI.
+If you didn't catch the exception during creation, you can still retrieve and use the job definition or order. They were created with the successfully uploaded datapoints and can be used through code or the app.rapidata.ai UI:
 
-The order will run without the failed datapoints.
-
+**For Orders:**
 ```python
 from rapidata import RapidataClient
 
-rapidata_client = RapidataClient()
-order = rapidata_client.order.get_order_by_id(order_id)
+client = RapidataClient()
+
+# Retrieve the order using its ID (from the exception message or UI)
+order = client.order.get_order_by_id(order_id)
+
+# Run the order with the successfully uploaded datapoints
 order.run()
+```
+
+**For Job Definitions:**
+```python
+from rapidata import RapidataClient
+
+client = RapidataClient()
+
+# Retrieve the job definition using its ID (from the exception message or UI)
+job_def = client.job.get_job_definition_by_id(job_definition_id)
+
+# Use the job definition normally (e.g., assign it to an audience)
+audience.assign_job(job_def)
 ```
