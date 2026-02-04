@@ -3,15 +3,24 @@ import os
 import time
 import urllib.parse
 import webbrowser
+import platform
 from datetime import datetime, timezone
 from pathlib import Path
 from socket import gethostname
 from typing import Dict, List, Optional, Tuple
 
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 from colorama import Fore
 from pydantic import BaseModel
 from rapidata.rapidata_client.config import logger, managed_print
+
+# Import platform-specific file locking
+if platform.system() == "Windows":
+    import msvcrt
+else:
+    import fcntl
 
 
 class ClientCredential(BaseModel):
@@ -49,6 +58,66 @@ class CredentialManager:
 
         # Ensure config directory exists
         self.config_dir.mkdir(parents=True, exist_ok=True)
+
+        # Create session with connection pooling and retry logic
+        self._session = self._create_session()
+
+    def _create_session(self) -> requests.Session:
+        """Create a session with connection pooling and retry logic."""
+        session = requests.Session()
+
+        # Configure retry strategy
+        retry_strategy = Retry(
+            total=3,
+            backoff_factor=0.5,
+            status_forcelist=[429, 500, 502, 503, 504],
+            allowed_methods=["GET", "POST"],  # Retry on both GET and POST
+        )
+
+        # Mount adapter with connection pooling
+        adapter = HTTPAdapter(
+            max_retries=retry_strategy,
+            pool_connections=10,  # Number of connection pools
+            pool_maxsize=10,  # Connections per pool
+        )
+        session.mount("https://", adapter)
+        session.mount("http://", adapter)
+
+        return session
+
+    def close(self) -> None:
+        """Close the session and cleanup resources."""
+        if self._session:
+            self._session.close()
+
+    def __enter__(self):
+        """Support context manager usage."""
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """Cleanup when exiting context manager."""
+        self.close()
+        return False
+
+    def _lock_file(self, file_handle):
+        """
+        Acquire an exclusive lock on the file.
+        Works cross-platform (Unix and Windows).
+        """
+        if platform.system() == "Windows":
+            msvcrt.locking(file_handle.fileno(), msvcrt.LK_LOCK, 1)
+        else:
+            fcntl.flock(file_handle.fileno(), fcntl.LOCK_EX)
+
+    def _unlock_file(self, file_handle):
+        """
+        Release the lock on the file.
+        Works cross-platform (Unix and Windows).
+        """
+        if platform.system() == "Windows":
+            msvcrt.locking(file_handle.fileno(), msvcrt.LK_UNLCK, 1)
+        else:
+            fcntl.flock(file_handle.fileno(), fcntl.LOCK_UN)
 
     def _read_credentials(self) -> Dict[str, List[ClientCredential]]:
         """Read all stored credentials from the config file."""
@@ -108,21 +177,33 @@ class CredentialManager:
 
     def get_client_credentials(self) -> Optional[ClientCredential]:
         """Gets stored client credentials or create new ones via browser auth."""
-        credentials = self._read_credentials()
-        logger.debug("Stored credentials: %s", credentials)
-        env_credentials = credentials.get(self.endpoint, [])
+        # Create a lock file to prevent multiple processes from creating credentials simultaneously
+        lock_file_path = self.config_dir / "credentials.lock"
 
-        if env_credentials:
-            logger.debug("Found credentials for %s: %s", self.endpoint, env_credentials)
-            credential = self._select_credential(env_credentials)
-            logger.debug("Selected credential: %s", credential)
-            if credential:
-                credential.last_used = datetime.now(timezone.utc)
-                self._write_credentials(credentials)
-                return credential
+        with open(lock_file_path, "w") as lock_file:
+            try:
+                # Acquire exclusive lock
+                self._lock_file(lock_file)
 
-        logger.debug("No credentials found for %s. Creating new ones.", self.endpoint)
-        return self._create_new_credentials()
+                # Re-read credentials after acquiring lock (another process might have created them)
+                credentials = self._read_credentials()
+                logger.debug("Stored credentials: %s", credentials)
+                env_credentials = credentials.get(self.endpoint, [])
+
+                if env_credentials:
+                    logger.debug("Found credentials for %s: %s", self.endpoint, env_credentials)
+                    credential = self._select_credential(env_credentials)
+                    logger.debug("Selected credential: %s", credential)
+                    if credential:
+                        credential.last_used = datetime.now(timezone.utc)
+                        self._write_credentials(credentials)
+                        return credential
+
+                logger.debug("No credentials found for %s. Creating new ones.", self.endpoint)
+                return self._create_new_credentials()
+            finally:
+                # Release lock
+                self._unlock_file(lock_file)
 
     def reset_credentials(self) -> None:
         """Reset the stored credentials for current environment."""
@@ -139,7 +220,9 @@ class CredentialManager:
             bridge_endpoint = (
                 f"{self.endpoint}/identity/bridge-token?clientId=rapidata-cli"
             )
-            response = requests.post(bridge_endpoint, verify=self.cert_path)
+            response = self._session.post(
+                bridge_endpoint, verify=self.cert_path, timeout=(5, 30)
+            )
             if not response.ok:
                 logger.error("Failed to get bridge tokens: %s", response.status_code)
                 return None
@@ -157,8 +240,11 @@ class CredentialManager:
 
         while time.time() - start_time < self.poll_timeout:
             try:
-                response = requests.get(
-                    read_endpoint, params={"readKey": read_key}, verify=self.cert_path
+                response = self._session.get(
+                    read_endpoint,
+                    params={"readKey": read_key},
+                    verify=self.cert_path,
+                    timeout=(5, 30),
                 )
 
                 if response.status_code == 200:
@@ -184,7 +270,7 @@ class CredentialManager:
         try:
             # set the display name to the hostname
             display_name = f"{gethostname()} - Python API Client"
-            response = requests.post(
+            response = self._session.post(
                 f"{self.endpoint}/Client",
                 headers={
                     "Authorization": f"Bearer {access_token}",
@@ -193,6 +279,7 @@ class CredentialManager:
                 },
                 json={"displayName": display_name},
                 verify=self.cert_path,
+                timeout=(5, 30),
             )
             response.raise_for_status()
             data = response.json()

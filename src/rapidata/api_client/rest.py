@@ -14,6 +14,8 @@
 import io
 import json
 import re
+import time
+import random
 from typing import Dict, Optional
 
 import httpx
@@ -67,13 +69,35 @@ class RESTClientObject:
             **client_args,
         )
 
-        try:
-            self.session.fetch_token()
-        except ConnectError as e:
-            if self._is_certificate_validation_error(e):
-                exit(self._get_ssl_verify_error_message())
-            else:
-                raise
+        # Retry token fetch with exponential backoff to handle concurrent load
+        max_retries = 3
+        base_delay = 0.5
+
+        for attempt in range(max_retries + 1):
+            try:
+                # Add timeout for token fetch to prevent connection timeout issues
+                # (connect timeout, read timeout)
+                self.session.fetch_token(timeout=(10.0, 30.0))
+                return  # Success, exit early
+            except ConnectError as e:
+                if self._is_certificate_validation_error(e):
+                    exit(self._get_ssl_verify_error_message())
+
+                # If this is the last attempt, raise the error
+                if attempt == max_retries:
+                    raise
+
+                # Calculate exponential backoff with jitter
+                delay = base_delay * (2 ** attempt) + random.uniform(0, 0.5)
+                time.sleep(delay)
+            except (httpx.TimeoutException, httpx.ConnectTimeout) as e:
+                # If this is the last attempt, raise the error
+                if attempt == max_retries:
+                    raise
+
+                # Calculate exponential backoff with jitter
+                delay = base_delay * (2 ** attempt) + random.uniform(0, 0.5)
+                time.sleep(delay)
 
     def setup_oauth_with_token(
         self,
@@ -242,6 +266,10 @@ class RESTClientObject:
         # Set connection pool limits to support high concurrency uploads
         limits = Limits(max_connections=200, max_keepalive_connections=200)
 
+        # Set default timeouts (connect timeout, read timeout, write timeout, pool timeout)
+        # Higher connect timeout to handle concurrent connections
+        default_timeout = Timeout(10.0, read=30.0)
+
         client_kwargs = {
             "verify": (
                 self.configuration.ssl_ca_cert
@@ -249,20 +277,22 @@ class RESTClientObject:
                 else self.configuration.verify_ssl
             ),
             "limits": limits,
+            "timeout": default_timeout,
         }
 
         if self.configuration.proxy:
             client_kwargs["proxy"] = self.configuration.proxy
 
-            existing_headers = client_kwargs.pop("headers")
+            existing_headers = client_kwargs.pop("headers", {})
             if self.configuration.proxy_headers:
                 for key, value in self.configuration.proxy_headers.items():
                     existing_headers[key] = value
             client_kwargs["headers"] = existing_headers
 
-        if self.configuration.retries is not None:
-            transport = httpx.HTTPTransport(retries=self.configuration.retries, limits=limits)
-            client_kwargs["transport"] = transport
+        # Use configured retries or default to 3 for resilience
+        retries = self.configuration.retries if self.configuration.retries is not None else 3
+        transport = httpx.HTTPTransport(retries=retries, limits=limits)
+        client_kwargs["transport"] = transport
 
         return client_kwargs
 
