@@ -35,6 +35,15 @@ class ClientCredential(BaseModel):
         return f"{self.display_name} - Client ID: {self.client_id} (Created: {self.created_at.strftime('%Y-%m-%d %H:%M:%S')})"
 
 
+class CachedToken(BaseModel):
+    """Represents a cached OAuth2 token."""
+    access_token: str
+    token_type: str
+    expires_at: float  # Unix timestamp
+    refresh_token: Optional[str] = None
+    scope: Optional[str] = None
+
+
 class BridgeToken(BaseModel):
     read_key: str
     write_key: str
@@ -128,20 +137,44 @@ class CredentialManager:
         try:
             with open(self.config_path, "r") as f:
                 data = json.load(f)
-                return {
-                    env: [ClientCredential.model_validate(cred) for cred in creds]
-                    for env, creds in data.items()
-                }
+                # Handle both old format (just credentials) and new format (with tokens)
+                result = {}
+                for env, env_data in data.items():
+                    if isinstance(env_data, list):
+                        # Old format: just a list of credentials
+                        result[env] = [ClientCredential.model_validate(cred) for cred in env_data]
+                    elif isinstance(env_data, dict) and "credentials" in env_data:
+                        # New format: dict with credentials and tokens
+                        result[env] = [ClientCredential.model_validate(cred) for cred in env_data["credentials"]]
+                    else:
+                        # Fallback: treat as list
+                        result[env] = []
+                return result
         except json.JSONDecodeError:
             return {}
 
     def _write_credentials(
         self, credentials: Dict[str, List[ClientCredential]]
     ) -> None:
-        data = {
-            env: [cred.model_dump(mode="json") for cred in creds]
-            for env, creds in credentials.items()
-        }
+        # Read existing file to preserve tokens if they exist
+        existing_tokens = {}
+        if self.config_path.exists():
+            try:
+                with open(self.config_path, "r") as f:
+                    existing_data = json.load(f)
+                    for env, env_data in existing_data.items():
+                        if isinstance(env_data, dict) and "tokens" in env_data:
+                            existing_tokens[env] = env_data["tokens"]
+            except (json.JSONDecodeError, IOError):
+                pass
+
+        # Write in new format with both credentials and tokens
+        data = {}
+        for env, creds in credentials.items():
+            data[env] = {
+                "credentials": [cred.model_dump(mode="json") for cred in creds],
+                "tokens": existing_tokens.get(env, {})
+            }
 
         with open(self.config_path, "w") as f:
             json.dump(data, f, indent=2)
@@ -206,12 +239,176 @@ class CredentialManager:
                 self._unlock_file(lock_file)
 
     def reset_credentials(self) -> None:
-        """Reset the stored credentials for current environment."""
-        credentials = self._read_credentials()
-        if self.endpoint in credentials:
-            del credentials[self.endpoint]
-            self._write_credentials(credentials)
-            logger.info("Credentials for %s have been reset.", self.endpoint)
+        """Reset the stored credentials and tokens for current environment."""
+        lock_file_path = self.config_dir / "credentials.lock"
+
+        with open(lock_file_path, "w") as lock_file:
+            try:
+                self._lock_file(lock_file)
+
+                # Read existing data
+                data = {}
+                if self.config_path.exists():
+                    try:
+                        with open(self.config_path, "r") as f:
+                            data = json.load(f)
+                    except (json.JSONDecodeError, IOError):
+                        pass
+
+                # Remove credentials and tokens for this endpoint
+                if self.endpoint in data:
+                    del data[self.endpoint]
+
+                    # Write back
+                    with open(self.config_path, "w") as f:
+                        json.dump(data, f, indent=2)
+
+                    os.chmod(self.config_path, 0o600)
+                    logger.info("Credentials and tokens for %s have been reset.", self.endpoint)
+
+            finally:
+                self._unlock_file(lock_file)
+
+    def get_cached_token(self, client_id: str, leeway: int = 60) -> Optional[dict]:
+        """
+        Get a cached token for the given client_id if it exists and is still valid.
+
+        Args:
+            client_id: The client ID to get the token for
+            leeway: Number of seconds before expiry to consider token invalid (default: 60)
+
+        Returns:
+            Token dict if valid, None otherwise
+        """
+        lock_file_path = self.config_dir / "credentials.lock"
+
+        with open(lock_file_path, "w") as lock_file:
+            try:
+                self._lock_file(lock_file)
+
+                if not self.config_path.exists():
+                    return None
+
+                try:
+                    with open(self.config_path, "r") as f:
+                        data = json.load(f)
+
+                    env_data = data.get(self.endpoint)
+                    if not env_data or not isinstance(env_data, dict):
+                        return None
+
+                    tokens = env_data.get("tokens", {})
+                    token_data = tokens.get(client_id)
+
+                    if not token_data:
+                        logger.debug("No cached token found for client_id: %s", client_id)
+                        return None
+
+                    # Validate token
+                    cached_token = CachedToken.model_validate(token_data)
+                    current_time = time.time()
+
+                    # Check if token is expired (with leeway)
+                    if cached_token.expires_at <= current_time + leeway:
+                        logger.debug(
+                            "Cached token for client_id %s is expired or expiring soon (expires_at: %s, current_time: %s, leeway: %s)",
+                            client_id, cached_token.expires_at, current_time, leeway
+                        )
+                        return None
+
+                    logger.debug("Found valid cached token for client_id: %s", client_id)
+                    # Return token in the format expected by OAuth2Client
+                    return cached_token.model_dump()
+
+                except (json.JSONDecodeError, IOError) as e:
+                    logger.debug("Error reading cached token: %s", e)
+                    return None
+
+            finally:
+                self._unlock_file(lock_file)
+
+    def store_token(self, client_id: str, token: dict) -> None:
+        """
+        Store a token for the given client_id.
+
+        Args:
+            client_id: The client ID to store the token for
+            token: Token dict from OAuth2Client (must contain access_token, token_type, expires_at)
+        """
+        # Validate required fields
+        if not token or not isinstance(token, dict):
+            logger.warning("Invalid token provided for caching: %s", token)
+            return
+
+        if "access_token" not in token or "token_type" not in token:
+            logger.warning("Token missing required fields (access_token, token_type)")
+            return
+
+        # expires_at should always be present from OAuth2Client, but handle missing case
+        if "expires_at" not in token:
+            # Try to calculate it from expires_in if available
+            if "expires_in" in token:
+                expires_at = time.time() + token["expires_in"]
+            else:
+                logger.warning("Token missing expires_at and expires_in, cannot cache")
+                return
+        else:
+            expires_at = token["expires_at"]
+
+        lock_file_path = self.config_dir / "credentials.lock"
+
+        with open(lock_file_path, "w") as lock_file:
+            try:
+                self._lock_file(lock_file)
+
+                # Read existing data
+                data = {}
+                if self.config_path.exists():
+                    try:
+                        with open(self.config_path, "r") as f:
+                            data = json.load(f)
+                    except (json.JSONDecodeError, IOError):
+                        pass
+
+                # Ensure endpoint entry exists
+                if self.endpoint not in data:
+                    data[self.endpoint] = {"credentials": [], "tokens": {}}
+                elif isinstance(data[self.endpoint], list):
+                    # Migrate old format
+                    data[self.endpoint] = {
+                        "credentials": data[self.endpoint],
+                        "tokens": {}
+                    }
+                elif not isinstance(data[self.endpoint], dict):
+                    data[self.endpoint] = {"credentials": [], "tokens": {}}
+
+                if "tokens" not in data[self.endpoint]:
+                    data[self.endpoint]["tokens"] = {}
+
+                # Store token
+                try:
+                    cached_token = CachedToken(
+                        access_token=token["access_token"],
+                        token_type=token["token_type"],
+                        expires_at=expires_at,
+                        refresh_token=token.get("refresh_token"),
+                        scope=token.get("scope")
+                    )
+
+                    data[self.endpoint]["tokens"][client_id] = cached_token.model_dump()
+
+                    # Write back to file
+                    with open(self.config_path, "w") as f:
+                        json.dump(data, f, indent=2)
+
+                    os.chmod(self.config_path, 0o600)
+                    logger.debug("Stored token for client_id: %s (expires_at: %s)", client_id, expires_at)
+
+                except Exception as e:
+                    logger.warning("Failed to cache token: %s", e)
+
+            finally:
+                self._unlock_file(lock_file)
 
     def _get_bridge_tokens(self) -> Optional[BridgeToken]:
         """Get bridge tokens from the identity endpoint."""

@@ -88,13 +88,42 @@ class OpenAPIService:
                 raise ValueError("Failed to fetch client credentials")
             client_id = credentials.client_id
             client_secret = credentials.client_secret
+
+        # Try to use cached token first
+        cached_token = self.credential_manager.get_cached_token(
+            client_id=client_id, leeway=leeway
+        )
+
+        if cached_token:
+            logger.debug("Using cached token for client_id: %s", client_id)
+            try:
+                self.api_client.rest_client.setup_oauth_with_token(
+                    token=cached_token,
+                    token_endpoint=f"{auth_endpoint}/connect/token",
+                    client_id=client_id,
+                    client_secret=client_secret,
+                    leeway=leeway,
+                )
+                logger.debug("Cached token authentication setup complete")
+                return
+            except Exception as e:
+                logger.warning(
+                    "Failed to use cached token, will fetch a new one: %s", e
+                )
+                # Continue to fetch a new token
+
+        # No cached token or cached token failed, fetch a new one
         try:
-            self.api_client.rest_client.setup_oauth_client_credentials(
+            logger.debug("Fetching new token for client_id: %s", client_id)
+            token = self.api_client.rest_client.setup_oauth_client_credentials(
                 client_id=client_id,
                 client_secret=client_secret,
                 token_endpoint=f"{auth_endpoint}/connect/token",
                 scope=oauth_scope,
             )
+            # Cache the newly fetched token
+            self.credential_manager.store_token(client_id=client_id, token=token)
+            logger.debug("New token fetched and cached for client_id: %s", client_id)
         except OAuthError as e:
             if e.error != "invalid_client":
                 raise
@@ -110,12 +139,14 @@ class OpenAPIService:
                     "Failed to fetch client credentials after reset"
                 ) from e
 
-            self.api_client.rest_client.setup_oauth_client_credentials(
+            token = self.api_client.rest_client.setup_oauth_client_credentials(
                 client_id=credentials.client_id,
                 client_secret=credentials.client_secret,
                 token_endpoint=f"{auth_endpoint}/connect/token",
                 scope=oauth_scope,
             )
+            # Cache the token from the retry
+            self.credential_manager.store_token(client_id=credentials.client_id, token=token)
             managed_print("Credentials were reset and re-authenticated successfully")
 
         logger.debug("Client credentials authentication setup complete")

@@ -59,7 +59,13 @@ class RESTClientObject:
 
     def setup_oauth_client_credentials(
         self, client_id: str, client_secret: str, token_endpoint: str, scope: str
-    ):
+    ) -> dict:
+        """
+        Setup OAuth2 client credentials flow and fetch a token.
+
+        Returns:
+            Token dictionary containing access_token, token_type, expires_at, etc.
+        """
         client_args = self._get_session_defaults()
         self.session = OAuth2Client(
             client_id=client_id,
@@ -78,7 +84,8 @@ class RESTClientObject:
                 # Add timeout for token fetch to prevent connection timeout issues
                 # (connect timeout, read timeout)
                 self.session.fetch_token(timeout=(10.0, 30.0))
-                return  # Success, exit early
+                # Return the token after successful fetch
+                return self.session.token
             except ConnectError as e:
                 if self._is_certificate_validation_error(e):
                     exit(self._get_ssl_verify_error_message())
