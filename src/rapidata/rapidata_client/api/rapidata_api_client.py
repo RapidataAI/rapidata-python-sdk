@@ -39,9 +39,13 @@ def _should_suppress_error_logging() -> bool:
 class RapidataApiClient(ApiClient):
     """Custom API client that wraps errors in RapidataError."""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, environment: Optional[str] = None, **kwargs):
         super().__init__(*args, **kwargs)
         self.id_generator = RandomIdGenerator()
+
+        # Override the rest_client with environment support for token caching
+        if environment:
+            self.rest_client = rest.RESTClientObject(self.configuration, environment=environment)
 
     def call_api(
         self,

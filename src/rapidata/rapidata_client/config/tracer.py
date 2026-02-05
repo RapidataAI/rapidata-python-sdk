@@ -1,14 +1,78 @@
-from typing import Protocol, runtime_checkable, Any
+from typing import Protocol, runtime_checkable, Any, Sequence
 import platform
 import sys
 import os
+import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import BatchSpanProcessor
+from opentelemetry.sdk.trace import TracerProvider, ReadableSpan
+from opentelemetry.sdk.trace.export import BatchSpanProcessor, SpanExportResult
 from opentelemetry.sdk.resources import Resource
 from rapidata import __version__
 from .logging_config import LoggingConfig, register_config_handler
 from rapidata.rapidata_client.config import logger
+
+
+def _create_resilient_session() -> requests.Session:
+    """Create a session with connection pooling and retry logic for OTLP exporter."""
+    session = requests.Session()
+
+    # Configure retry strategy - be more lenient for telemetry
+    retry_strategy = Retry(
+        total=2,  # Only 2 retries for telemetry to avoid delays
+        backoff_factor=0.3,
+        status_forcelist=[429, 500, 502, 503, 504],
+        allowed_methods=["POST"],
+    )
+
+    # Mount adapter with connection pooling
+    adapter = HTTPAdapter(
+        max_retries=retry_strategy,
+        pool_connections=5,  # Fewer connections for telemetry
+        pool_maxsize=10,
+    )
+    session.mount("https://", adapter)
+    session.mount("http://", adapter)
+
+    return session
+
+
+class SilentSpanExporter:
+    """
+    Wrapper around OTLPSpanExporter that swallows all exceptions.
+
+    This prevents telemetry failures from affecting the main application
+    or spamming error logs during stress tests.
+    """
+
+    def __init__(self, wrapped_exporter: OTLPSpanExporter):
+        self._exporter = wrapped_exporter
+
+    def export(self, spans: Sequence[ReadableSpan]) -> SpanExportResult:
+        """Export spans, swallowing any exceptions."""
+        try:
+            return self._exporter.export(spans)
+        except Exception as e:
+            # Silently log at debug level only
+            logger.debug(f"Telemetry export failed (ignored): {e}")
+            # Return success to prevent retries
+            return SpanExportResult.SUCCESS
+
+    def shutdown(self) -> None:
+        """Shutdown the exporter."""
+        try:
+            self._exporter.shutdown()
+        except Exception as e:
+            logger.debug(f"Telemetry shutdown failed (ignored): {e}")
+
+    def force_flush(self, timeout_millis: int = 30000) -> bool:
+        """Force flush the exporter."""
+        try:
+            return self._exporter.force_flush(timeout_millis)
+        except Exception as e:
+            logger.debug(f"Telemetry flush failed (ignored): {e}")
+            return True
 
 
 def get_system_attributes() -> dict[str, str | int | None]:
@@ -133,19 +197,38 @@ class RapidataTracer:
 
                 self._tracer_provider = TracerProvider(resource=resource)
 
-                exporter = OTLPSpanExporter(
+                # Create exporter with resilient session
+                # Lower timeout (10s) to avoid blocking on telemetry
+                session = _create_resilient_session()
+                base_exporter = OTLPSpanExporter(
                     endpoint="https://otlp-sdk.rapidata.ai/v1/traces",
-                    timeout=30,
+                    timeout=10,  # Reduced from 30s
+                    session=session,
                 )
 
-                span_processor = BatchSpanProcessor(exporter)
+                # Wrap in SilentSpanExporter to swallow all errors
+                exporter = SilentSpanExporter(base_exporter)
+
+                # Use BatchSpanProcessor with longer delays to batch more spans
+                # and reduce the number of export calls
+                span_processor = BatchSpanProcessor(
+                    exporter,
+                    max_queue_size=2048,  # Larger queue
+                    schedule_delay_millis=5000,  # Wait 5s before exporting
+                    max_export_batch_size=512,  # Export more at once
+                )
                 self._tracer_provider.add_span_processor(span_processor)
 
                 self._real_tracer = self._tracer_provider.get_tracer(self._name)
                 self._otlp_initialized = True
 
+                logger.debug("OTLP tracing initialized successfully")
+
             except Exception as e:
-                logger.warning(f"Failed to initialize tracing: {e}")
+                # Log as debug instead of warning to avoid spam
+                logger.debug(
+                    f"Failed to initialize tracing (will use no-op tracer): {e}"
+                )
                 self._enabled = False
 
     def _add_session_id_to_span(self, span: Any) -> Any:
