@@ -1,5 +1,4 @@
 import json
-import os
 from typing import Any
 import requests
 from packaging import version
