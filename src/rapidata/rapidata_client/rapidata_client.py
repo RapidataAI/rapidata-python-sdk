@@ -1,4 +1,5 @@
 import json
+import os
 from typing import Any
 import requests
 from packaging import version
@@ -30,7 +31,7 @@ from rapidata.rapidata_client.config import (
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 from rapidata.rapidata_client.job.job_manager import JobManager
 
-
+print("adjusted version")
 class RapidataClient:
     """The Rapidata client is the main entry point for interacting with the Rapidata API. It allows you to create orders and validation sets."""
 
@@ -123,29 +124,33 @@ class RapidataClient:
 
     def _check_beta_features(self):
         """Enable beta features for the client."""
-        with tracer.start_as_current_span("RapidataClient.check_beta_features"):
-            result: dict[str, Any] = json.loads(
-                self._openapi_service.api_client.call_api(
-                    "GET",
-                    f"https://auth.{self._openapi_service.environment}/connect/userinfo",
+        try:
+            with tracer.start_as_current_span("RapidataClient.check_beta_features"):
+                result: dict[str, Any] = json.loads(
+                    self._openapi_service.api_client.call_api(
+                        "GET",
+                        f"https://auth.{self._openapi_service.environment}/connect/userinfo",
+                        _request_timeout=1,  # 1 second timeout
+                    )
+                    .read()
+                    .decode("utf-8")
                 )
-                .read()
-                .decode("utf-8")
-            )
-            logger.debug("Userinfo: %s", result)
-            if "Admin" not in result.get("role", []):
-                logger.debug("User is not an admin, not enabling beta features")
-                return
+                logger.debug("Userinfo: %s", result)
+                if "Admin" not in result.get("role", []):
+                    logger.debug("User is not an admin, not enabling beta features")
+                    return
 
-            logger.debug("User is an admin, enabling beta features")
-            rapidata_config.enableBetaFeatures = True
+                logger.debug("User is an admin, enabling beta features")
+                rapidata_config.enableBetaFeatures = True
+        except Exception as e:
+            logger.debug("Failed to check beta features: %s", e)
 
     def _check_version(self):
         try:
             response = requests.get(
                 "https://api.github.com/repos/RapidataAI/rapidata-python-sdk/releases/latest",
                 headers={"Accept": "application/vnd.github.v3+json"},
-                timeout=3,
+                timeout=1,  # 1 second timeout
             )
             if response.status_code == 200:
                 latest_version = response.json()["tag_name"].lstrip("v")
