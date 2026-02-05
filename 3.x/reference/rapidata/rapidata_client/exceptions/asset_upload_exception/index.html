@@ -5,7 +5,7 @@
       
       
       
-        <link rel="canonical" href="https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/config/order_config/">
+        <link rel="canonical" href="https://docs.rapidata.ai/3.x/reference/rapidata/rapidata_client/exceptions/asset_upload_exception/">
       
       
       
@@ -18,7 +18,7 @@
     
     
       
-        <title>Order config - Rapidata Python SDK Documentation</title>
+        <title>Asset upload exception - Rapidata Python SDK Documentation</title>
       
     
     
@@ -83,7 +83,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#rapidata.rapidata_client.config.order_config" class="md-skip">
+        <a href="#rapidata.rapidata_client.exceptions.asset_upload_exception" class="md-skip">
           Skip to content
         </a>
       
@@ -122,7 +122,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Order config
+              Asset upload exception
             
           </span>
         </div>
@@ -376,6 +376,8 @@
       
         
       
+        
+      
     
     
     
@@ -550,6 +552,34 @@
     
   
     📊 Understanding Results
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../error_handling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ❌ Error Handling
   
 
     
@@ -947,13 +977,13 @@
   
 
 
-  <h1>Order config</h1>
+  <h1>Asset upload exception</h1>
 
 <div class="doc doc-object doc-module">
 
 
 
-<a id="rapidata.rapidata_client.config.order_config"></a>
+<a id="rapidata.rapidata_client.exceptions.asset_upload_exception"></a>
     <div class="doc doc-contents first">
 
 
@@ -979,20 +1009,30 @@
 
 
 
-<h2 id="rapidata.rapidata_client.config.order_config.OrderConfig" class="doc doc-heading">
-            <span class="doc doc-object-name doc-class-name">OrderConfig</span>
+<h2 id="rapidata.rapidata_client.exceptions.asset_upload_exception.AssetUploadException" class="doc doc-heading">
+            <span class="doc doc-object-name doc-class-name">AssetUploadException</span>
 
 
-<a href="#rapidata.rapidata_client.config.order_config.OrderConfig" class="headerlink" title="Permanent link">#</a></h2>
+<a href="#rapidata.rapidata_client.exceptions.asset_upload_exception.AssetUploadException" class="headerlink" title="Permanent link">#</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">AssetUploadException</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">failed_uploads</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="FailedUpload
 
+
+  
+      dataclass
+   (rapidata.rapidata_client.exceptions.failed_upload.FailedUpload)" href="../failed_upload/#rapidata.rapidata_client.exceptions.failed_upload.FailedUpload">FailedUpload</a></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">]],</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span>
+</span></code></pre></div>
 
     <div class="doc doc-contents ">
             <p class="doc doc-class-bases">
-              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
+              Bases: <code><span title="Exception">Exception</span></code></p>
 
 
 
-        <p>Holds the configuration for the order process.</p>
+        <p>Exception raised when asset uploads fail in Step 1/2 of the two-step upload process.</p>
+<p>This exception contains details about which assets failed to upload,
+allowing users to decide how to proceed (retry, skip, or abort).</p>
 
 
 <p><span class="doc-section-title">Attributes:</span></p>
@@ -1006,24 +1046,12 @@
       </thead>
       <tbody>
           <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.config.order_config.OrderConfig.minOrderDatapointsForValidation">minOrderDatapointsForValidation</span></code></td>
+            <td><code><span title="rapidata.rapidata_client.exceptions.asset_upload_exception.AssetUploadException.failed_uploads">failed_uploads</span></code></td>
             <td>
-                  <code><span title="int">int</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>The minimum number of datapoints required so that an automatic validationset gets created if no recommended was found. Defaults to 50.</p>
-              </div>
-            </td>
-          </tr>
-          <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.config.order_config.OrderConfig.autoValidationSetSize">autoValidationSetSize</span></code></td>
-            <td>
-                  <code><span title="int">int</span></code>
-            </td>
-            <td>
-              <div class="doc-md-description">
-                <p>The maximum size of the auto-generated validation set. Defaults to 20.</p>
+                <p>List of FailedUpload instances containing the failed assets and error details.</p>
               </div>
             </td>
           </tr>
@@ -1037,6 +1065,23 @@
 
 
 
+                  <details class="mkdocstrings-source">
+                    <summary>Source code in <code>src/rapidata/rapidata_client/exceptions/asset_upload_exception.py</code></summary>
+                    <div class="language-python highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-17">17</a></span>
+<span class="normal"><a href="#__codelineno-0-18">18</a></span>
+<span class="normal"><a href="#__codelineno-0-19">19</a></span>
+<span class="normal"><a href="#__codelineno-0-20">20</a></span>
+<span class="normal"><a href="#__codelineno-0-21">21</a></span>
+<span class="normal"><a href="#__codelineno-0-22">22</a></span>
+<span class="normal"><a href="#__codelineno-0-23">23</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">failed_uploads</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">FailedUpload</span><span class="p">[</span><span class="nb">str</span><span class="p">]]):</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">failed_uploads</span> <span class="o">=</span> <span class="n">failed_uploads</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19"></a>    <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20"></a>        <span class="sa">f</span><span class="s2">"Failed to upload </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">failed_uploads</span><span class="p">)</span><span class="si">}</span><span class="s2"> asset(s) in Step 1/2. "</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21"></a>        <span class="sa">f</span><span class="s2">"See failed_uploads attribute for details."</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22"></a>    <span class="p">)</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+</span></code></pre></div></td></tr></tbody></table></div>
+                  </details>
 
 
 

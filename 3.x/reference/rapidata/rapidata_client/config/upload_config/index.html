@@ -376,6 +376,8 @@
       
         
       
+        
+      
     
     
     
@@ -550,6 +552,34 @@
     
   
     📊 Understanding Results
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../error_handling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ❌ Error Handling
   
 
     
@@ -1029,13 +1059,15 @@
             </td>
           </tr>
           <tr class="doc-section-item">
-            <td><code><span title="rapidata.rapidata_client.config.upload_config.UploadConfig.cacheUploads">cacheUploads</span></code></td>
+            <td><code><span title="rapidata.rapidata_client.config.upload_config.UploadConfig.cacheToDisk">cacheToDisk</span></code></td>
             <td>
                   <code><span title="bool">bool</span></code>
             </td>
             <td>
               <div class="doc-md-description">
-                <p>Enable/disable upload caching. Defaults to True.</p>
+                <p>Enable disk-based caching for file uploads. If False, uses in-memory cache only. Defaults to True.
+Note: URL assets are always cached in-memory regardless of this setting.
+Caching cannot be disabled entirely as it's required for the two-step upload flow.</p>
               </div>
             </td>
           </tr>
@@ -1058,7 +1090,7 @@
             <td>
               <div class="doc-md-description">
                 <p>Directory for cache storage. Defaults to ~/.cache/rapidata/upload_cache.
-This is immutable</p>
+This is immutable. Only used for file uploads when cacheToDisk=True.</p>
               </div>
             </td>
           </tr>
@@ -1071,7 +1103,40 @@ This is immutable</p>
               <div class="doc-md-description">
                 <p>Number of cache shards for parallel access. Defaults to 128.
 Higher values improve concurrency but increase file handles. Must be positive.
-This is immutable</p>
+This is immutable. Only used for file uploads when cacheToDisk=True.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="rapidata.rapidata_client.config.upload_config.UploadConfig.enableBatchUpload">enableBatchUpload</span></code></td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Enable batch URL uploading (two-step process). Defaults to True.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="rapidata.rapidata_client.config.upload_config.UploadConfig.batchSize">batchSize</span></code></td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of URLs per batch (100-5000). Defaults to 1000.</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code><span title="rapidata.rapidata_client.config.upload_config.UploadConfig.batchPollInterval">batchPollInterval</span></code></td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Polling interval in seconds. Defaults to 0.5.</p>
               </div>
             </td>
           </tr>
@@ -1087,11 +1152,11 @@ This is immutable</p>
 
                   <details class="mkdocstrings-source">
                     <summary>Source code in <code>src/rapidata/rapidata_client/config/upload_config.py</code></summary>
-                    <div class="language-python highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-57">57</a></span>
-<span class="normal"><a href="#__codelineno-0-58">58</a></span>
-<span class="normal"><a href="#__codelineno-0-59">59</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-57"><a id="__codelineno-0-57" name="__codelineno-0-57"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-</span><span id="__span-0-58"><a id="__codelineno-0-58" name="__codelineno-0-58"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</span><span id="__span-0-59"><a id="__codelineno-0-59" name="__codelineno-0-59"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_migrate_cache</span><span class="p">()</span>
+                    <div class="language-python highlight"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-82">82</a></span>
+<span class="normal"><a href="#__codelineno-0-83">83</a></span>
+<span class="normal"><a href="#__codelineno-0-84">84</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-82"><a id="__codelineno-0-82" name="__codelineno-0-82"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span id="__span-0-83"><a id="__codelineno-0-83" name="__codelineno-0-83"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span><span id="__span-0-84"><a id="__codelineno-0-84" name="__codelineno-0-84"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_migrate_cache</span><span class="p">()</span>
 </span></code></pre></div></td></tr></tbody></table></div>
                   </details>
 

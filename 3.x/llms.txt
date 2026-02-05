@@ -7,6 +7,7 @@
 - [👥 Custom Audiences](https://docs.rapidata.ai/3.x/audiences/index.md)
 - [📖 Parameter Reference](https://docs.rapidata.ai/3.x/job_definition_parameters/index.md)
 - [📊 Understanding Results](https://docs.rapidata.ai/3.x/understanding_the_results/index.md)
+- [❌ Error Handling](https://docs.rapidata.ai/3.x/error_handling/index.md)
 - [🛑 Confidence Stopping](https://docs.rapidata.ai/3.x/confidence_stopping/index.md)
 - [💡 Human Prompting](https://docs.rapidata.ai/3.x/human_prompting/index.md)
 - [📝 Logging & Config](https://docs.rapidata.ai/3.x/config/index.md)
