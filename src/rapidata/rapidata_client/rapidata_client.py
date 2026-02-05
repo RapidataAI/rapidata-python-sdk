@@ -31,7 +31,7 @@ from rapidata.rapidata_client.config import (
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 from rapidata.rapidata_client.job.job_manager import JobManager
 
-print("adjusted version")
+
 class RapidataClient:
     """The Rapidata client is the main entry point for interacting with the Rapidata API. It allows you to create orders and validation sets."""
 
@@ -91,7 +91,9 @@ class RapidataClient:
             self.order = RapidataOrderManager(openapi_service=self._openapi_service)
 
             logger.debug("Initializing ValidationSetManager")
-            self.validation = ValidationSetManager(openapi_service=self._openapi_service)
+            self.validation = ValidationSetManager(
+                openapi_service=self._openapi_service
+            )
 
             logger.debug("Initializing JobManager")
             self.job = JobManager(openapi_service=self._openapi_service)
@@ -130,7 +132,7 @@ class RapidataClient:
                     self._openapi_service.api_client.call_api(
                         "GET",
                         f"https://auth.{self._openapi_service.environment}/connect/userinfo",
-                        _request_timeout=1,  # 1 second timeout
+                        _request_timeout=1,
                     )
                     .read()
                     .decode("utf-8")
@@ -150,7 +152,7 @@ class RapidataClient:
             response = requests.get(
                 "https://api.github.com/repos/RapidataAI/rapidata-python-sdk/releases/latest",
                 headers={"Accept": "application/vnd.github.v3+json"},
-                timeout=1,  # 1 second timeout
+                timeout=1,
             )
             if response.status_code == 200:
                 latest_version = response.json()["tag_name"].lstrip("v")
