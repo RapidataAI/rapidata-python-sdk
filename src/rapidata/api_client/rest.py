@@ -16,6 +16,7 @@ import json
 import re
 import time
 import random
+import threading
 from typing import Dict, Optional
 
 import httpx
@@ -23,6 +24,11 @@ from authlib.integrations.httpx_client import OAuth2Client
 from httpx import Timeout, ConnectError, Limits
 
 from rapidata.api_client.exceptions import ApiException, ApiValueError
+
+# Global semaphore to limit concurrent OAuth token fetches
+# This prevents overwhelming the auth server when many clients initialize simultaneously
+# 20 concurrent is safe - tested to work reliably even on fast hardware
+_TOKEN_FETCH_SEMAPHORE = threading.Semaphore(20)
 
 
 class RESTResponse(io.IOBase):
@@ -75,36 +81,23 @@ class RESTClientObject:
             **client_args,
         )
 
-        # Retry token fetch with exponential backoff to handle concurrent load
-        max_retries = 3
-        base_delay = 0.5
-
-        for attempt in range(max_retries + 1):
-            try:
-                # Add timeout for token fetch to prevent connection timeout issues
-                # (connect timeout, read timeout)
-                self.session.fetch_token(timeout=(10.0, 30.0))
-                # Return the token after successful fetch
-                return self.session.token
-            except ConnectError as e:
-                if self._is_certificate_validation_error(e):
-                    exit(self._get_ssl_verify_error_message())
-
-                # If this is the last attempt, raise the error
-                if attempt == max_retries:
-                    raise
-
-                # Calculate exponential backoff with jitter
-                delay = base_delay * (2 ** attempt) + random.uniform(0, 0.5)
-                time.sleep(delay)
-            except (httpx.TimeoutException, httpx.ConnectTimeout) as e:
-                # If this is the last attempt, raise the error
-                if attempt == max_retries:
-                    raise
-
-                # Calculate exponential backoff with jitter
-                delay = base_delay * (2 ** attempt) + random.uniform(0, 0.5)
-                time.sleep(delay)
+        # Use semaphore to limit concurrent token fetches from client side
+        with _TOKEN_FETCH_SEMAPHORE:
+            max_retries = 3
+            for attempt in range(max_retries + 1):
+                try:
+                    self.session.fetch_token(timeout=(3.0, 5.0))
+                    return  # Success
+                except ConnectError as e:
+                    if self._is_certificate_validation_error(e):
+                        exit(self._get_ssl_verify_error_message())
+                    if attempt == max_retries:
+                        raise
+                    time.sleep(0.1 * (attempt + 1))
+                except Exception:
+                    if attempt == max_retries:
+                        raise
+                    time.sleep(0.1 * (attempt + 1))
 
     def setup_oauth_with_token(
         self,
@@ -270,12 +263,12 @@ class RESTClientObject:
         return RESTResponse(r)
 
     def _get_session_defaults(self):
-        # Set connection pool limits to support high concurrency uploads
-        limits = Limits(max_connections=200, max_keepalive_connections=200)
+        # High connection pool limits for concurrency
+        limits = Limits(max_connections=200, max_keepalive_connections=100)
 
-        # Set default timeouts (connect timeout, read timeout, write timeout, pool timeout)
-        # Higher connect timeout to handle concurrent connections
-        default_timeout = Timeout(10.0, read=30.0)
+        # Set default timeouts - connections either succeed fast or fail
+        # pool=5.0 prevents waiting too long for a connection from the pool
+        default_timeout = Timeout(connect=5.0, read=15.0, write=10.0, pool=5.0)
 
         client_kwargs = {
             "verify": (

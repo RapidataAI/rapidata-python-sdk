@@ -1,9 +1,13 @@
+import os
 from typing import Callable
 from pydantic import BaseModel, Field
 from rapidata.rapidata_client.config import logger
 
 # Type alias for config update handlers
 ConfigUpdateHandler = Callable[["LoggingConfig"], None]
+
+# Check environment variable for OTLP default - allows disabling before import
+_OTLP_DEFAULT = os.environ.get("RAPIDATA_DISABLE_OTLP", "").lower() not in ("1", "true", "yes")
 
 # Global list to store registered handlers
 _config_handlers: list[ConfigUpdateHandler] = []
@@ -36,7 +40,7 @@ class LoggingConfig(BaseModel):
     log_file: str | None = Field(default=None)
     format: str = Field(default="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     silent_mode: bool = Field(default=False)
-    enable_otlp: bool = Field(default=True)
+    enable_otlp: bool = Field(default=_OTLP_DEFAULT)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
