@@ -89,10 +89,8 @@ class AssetUploadOrchestrator:
 
         # Notify callback about cached assets (already complete)
         cached_assets = []
-        if uncached_urls:
-            cached_assets.extend(urls - uncached_urls)
-        if uncached_files:
-            cached_assets.extend(files - uncached_files)
+        cached_assets.extend(urls - uncached_urls)
+        cached_assets.extend(files - uncached_files)
 
         if cached_assets and asset_completion_callback:
             logger.debug(f"Notifying callback of {len(cached_assets)} cached asset(s)")

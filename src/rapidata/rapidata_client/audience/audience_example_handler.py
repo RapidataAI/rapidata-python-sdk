@@ -1,4 +1,9 @@
-from typing import Literal
+from __future__ import annotations
+
+from typing import Literal, TYPE_CHECKING, Any, cast
+
+if TYPE_CHECKING:
+    from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 
 from rapidata.api_client.models.i_validation_truth_attach_category_truth import (
     IValidationTruthAttachCategoryTruth,
@@ -176,6 +181,61 @@ class AudienceExampleHandler:
                 ),
                 explanation=explanation,
                 randomCorrectProbability=0.5,
+            ),
+        )
+
+    def _add_rapid_example(self, rapid: Rapid) -> None:
+        """Add a rapid example to the audience (private method).
+
+        Args:
+            rapid (Rapid): The rapid object to add as an example.
+        """
+        from rapidata.api_client.models.add_rapid_to_audience_model import (
+            AddRapidToAudienceModel,
+        )
+
+        # Handle asset uploading based on data type
+        if rapid.data_type == "media":
+            if isinstance(rapid.asset, list):
+                uploaded_names = [
+                    self._asset_uploader.upload_asset(asset) for asset in rapid.asset
+                ]
+                asset_input = self._asset_mapper.create_existing_asset_input(
+                    uploaded_names
+                )
+            else:
+                uploaded_name = self._asset_uploader.upload_asset(rapid.asset)
+                asset_input = self._asset_mapper.create_existing_asset_input(
+                    uploaded_name
+                )
+        else:
+            asset_input = self._asset_mapper.create_text_input(rapid.asset)
+
+        # Handle media context if present
+        context_asset = None
+        if rapid.media_context:
+            context_asset = self._asset_mapper.create_existing_asset_input(
+                self._asset_uploader.upload_asset(rapid.media_context)
+            )
+
+        # Convert IValidationTruthModel to IValidationTruth
+        # Both types are structurally identical (same JSON schema), differing only in class names
+        # The dict-based conversion is safe and preserves all data
+        model_truth: IValidationTruth | None = None
+        if rapid.truth:
+            truth_dict = cast(dict[str, Any], rapid.truth.to_dict())
+            model_truth = IValidationTruth.from_dict(truth_dict)
+
+        self._openapi_service.audience_api.audience_audience_id_rapid_post(
+            audience_id=self._audience_id,
+            add_rapid_to_audience_model=AddRapidToAudienceModel(
+                asset=asset_input,
+                payload=rapid.payload,
+                truth=model_truth,
+                context=rapid.context,
+                contextAsset=context_asset,
+                explanation=rapid.explanation,
+                randomCorrectProbability=rapid.random_correct_probability or 0.5,
             ),
         )
 

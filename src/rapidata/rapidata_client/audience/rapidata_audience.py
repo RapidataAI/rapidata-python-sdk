@@ -13,6 +13,7 @@ if TYPE_CHECKING:
         JobDefinition,
     )
     from rapidata.rapidata_client.job.rapidata_job import RapidataJob
+    from rapidata.rapidata_client.validation.rapids.rapids import Rapid
 
 
 class RapidataAudience:
@@ -281,6 +282,21 @@ class RapidataAudience:
                 for job in response.items
             ]
 
+    def _add_rapid_example(self, rapid: "Rapid") -> RapidataAudience:
+        """Add a rapid example to this audience (private method).
+
+        Args:
+            rapid (Rapid): The rapid object created via RapidsManager to add as an example.
+
+        Returns:
+            RapidataAudience: The audience instance (self) for method chaining.
+        """
+        with tracer.start_as_current_span("RapidataAudience._add_rapid_example"):
+            logger.debug(f"Adding rapid example to audience: {self.id}")
+            self._example_handler._add_rapid_example(rapid)
+            self._try_start_recruiting()
+            return self
+
     def _try_start_recruiting(self) -> None:
         """Try to start recruiting annotators for this audience.
 
@@ -294,15 +310,22 @@ class RapidataAudience:
             return
 
         with tracer.start_as_current_span("RapidataAudience._try_start_recruiting"):
+            from rapidata.rapidata_client.api.rapidata_api_client import (
+                suppress_rapidata_error_logging,
+            )
+
             logger.debug(f"Sending request to start recruiting for audience: {self.id}")
-            try:
-                self._openapi_service.audience_api.audience_audience_id_recruit_post(
-                    audience_id=self.id,
-                )
-                logger.info(f"Started recruiting for audience: {self.id}")
-                self._recruiting_started = True
-            except RapidataError as e:
-                logger.debug(f"Error starting recruiting for audience: {self.id} - {e}")
+            with suppress_rapidata_error_logging():
+                try:
+                    self._openapi_service.audience_api.audience_audience_id_recruit_post(
+                        audience_id=self.id,
+                    )
+                    logger.info(f"Started recruiting for audience: {self.id}")
+                    self._recruiting_started = True
+                except RapidataError as e:
+                    logger.debug(
+                        f"Error starting recruiting for audience: {self.id} - {e}"
+                    )
 
     def __str__(self) -> str:
         return f"RapidataAudience(id={self.id}, name={self._name}, filters={self._filters})"
