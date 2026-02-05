@@ -17,7 +17,9 @@ please note that there is the RapidataApiClient that wraps every api call to han
 
 The backend errors follow a specific format that you can see in the RapidataError class.
 
+when doing type annotations use the "from __future__ import annotations" statement and TYPE_CHECKING to check the types - that way you can eliminate the quotation marks around the types.
+
+## Documentation
 When building the docs make sure you use 'uv run --group docs mkdocs build' - otherwise check out the pyproject.toml file for the dependencies.
 
 When writing documentation, make sure to keep focused, easy to understand, and not repeat information. it should highlight the capabilities while not overexaggerating or falling into hyperbole.
-when doing type annotations use the "from __future__ import annotations" statement and TYPE_CHECKING to check the types - that way you can eliminate the quotation marks around the types.
