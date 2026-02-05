@@ -169,8 +169,8 @@ class RapidataOrderBuilder:
         logger.debug("Setting order to preview")
         try:
             self._openapi_service.order_api.order_order_id_preview_post(order.id)
-        except Exception:
-            raise FailedUploadException(self._dataset, failed_uploads, order=order)
+        except Exception as e:
+            logger.error("Failed to set order to preview: %s", e)
         return order
 
     def _set_workflow(self, workflow: Workflow) -> RapidataOrderBuilder:

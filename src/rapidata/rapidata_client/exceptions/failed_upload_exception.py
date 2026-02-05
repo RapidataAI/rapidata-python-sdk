@@ -18,11 +18,11 @@ class FailedUploadException(Exception):
         dataset: RapidataDataset,
         failed_uploads: list[FailedUpload[Datapoint]],
         order: Optional[RapidataOrder] = None,
-        job: Optional[JobDefinition] = None,
+        job_definition: Optional[JobDefinition] = None,
     ):
         self.dataset = dataset
         self.order = order
-        self.job = job
+        self.job_definition = job_definition
         self._failed_uploads = failed_uploads
         super().__init__(str(self))
 
@@ -72,4 +72,11 @@ class FailedUploadException(Exception):
                 lines.append(f"    {dp},")
             lines.append("  ]")
 
-        return "\n".join(lines)
+        failed_upload_message = "\n".join(lines)
+        if self.order:
+            failed_upload_message += f"\n\nTo run the order without the failed datapoints, call: \n\trapidata_client.order.get_order_by_id('{self.order.id}').run()"
+        if self.job_definition:
+            failed_upload_message += f"\n\nTo run the job definition without the failed datapoints, call: \n\taudience.assign_job(rapidata_client.job.get_job_definition_by_id('{self.job_definition.id}'))"
+
+        failed_upload_message += f"\n\nFor recovery strategies, see: https://docs.rapidata.ai/3.x/error_handling/"
+        return failed_upload_message

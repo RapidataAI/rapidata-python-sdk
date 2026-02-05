@@ -120,15 +120,15 @@ class RapidataAudience:
             response = self._openapi_service.job_api.job_post(
                 create_job_endpoint_input=CreateJobEndpointInput(
                     audienceId=self.id,
-                    jobDefinitionId=job_definition._id,
+                    jobDefinitionId=job_definition.id,
                 ),
             )
             job = RapidataJob(
                 job_id=response.job_id,
-                name=job_definition._name,
+                name=job_definition.name,
                 audience_id=self.id,
                 created_at=datetime.now(),
-                definition_id=job_definition._id,
+                definition_id=job_definition.id,
                 openapi_service=self._openapi_service,
             )
             logger.info(f"Assigned job to audience: {self.id}")

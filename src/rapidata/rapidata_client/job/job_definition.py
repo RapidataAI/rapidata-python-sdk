@@ -18,11 +18,11 @@ class JobDefinition:
         name: str,
         openapi_service: OpenAPIService,
     ):
-        self._id = id
-        self._name = name
+        self.id = id
+        self.name = name
         self._openapi_service = openapi_service
         self._job_details_page = (
-            f"https://app.{self._openapi_service.environment}/definitions/{self._id}"
+            f"https://app.{self._openapi_service.environment}/definitions/{self.id}"
         )
 
     def preview(self) -> JobDefinition:
@@ -79,7 +79,7 @@ class JobDefinition:
 
             dataset = self._openapi_service.dataset_api.dataset_post(
                 create_dataset_endpoint_input=CreateDatasetEndpointInput(
-                    name=self._name + "_dataset"
+                    name=self.name + "_dataset"
                 )
             )
 
@@ -91,11 +91,11 @@ class JobDefinition:
                 _, failed_uploads = rapidata_dataset.add_datapoints(datapoints_list)
                 if failed_uploads:
                     raise FailedUploadException(
-                        rapidata_dataset, failed_uploads, job=self
+                        rapidata_dataset, failed_uploads, job_definition=self
                     )
 
             self._openapi_service.job_api.job_definition_definition_id_revision_post(
-                definition_id=self._id,
+                definition_id=self.id,
                 create_job_revision_endpoint_input=CreateJobRevisionEndpointInput(
                     datasetId=rapidata_dataset.id,
                 ),
@@ -104,7 +104,7 @@ class JobDefinition:
             return self
 
     def __str__(self) -> str:
-        return f"JobDefinition(id={self._id}, name={self._name})"
+        return f"JobDefinition(id={self.id}, name={self.name})"
 
     def __repr__(self) -> str:
         return self.__str__()
