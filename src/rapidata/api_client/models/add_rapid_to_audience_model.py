@@ -119,6 +119,11 @@ class AddRapidToAudienceModel(BaseModel):
         if self.context_asset is None and "context_asset" in self.model_fields_set:
             _dict['contextAsset'] = None
 
+        # set to None if is_common_sense (nullable) is None
+        # and model_fields_set contains the field
+        if self.is_common_sense is None and "is_common_sense" in self.model_fields_set:
+            _dict['isCommonSense'] = None
+
         return _dict
 
     @classmethod

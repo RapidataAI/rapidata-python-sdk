@@ -546,10 +546,16 @@
           "Failed"
         ]
       },
+      "FlowType": {
+        "enum": [
+          "Ranking"
+        ]
+      },
       "GetFlowByIdEndpoint_Output": {
         "required": [
           "id",
           "name",
+          "type",
           "ownerId",
           "ownerMail",
           "createdAt"
@@ -561,6 +567,9 @@
           },
           "name": {
             "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/FlowType"
           },
           "ownerId": {
             "type": "string",
@@ -1177,6 +1186,7 @@
         "required": [
           "id",
           "name",
+          "type",
           "ownerId",
           "createdAt"
         ],
@@ -1187,6 +1197,9 @@
           },
           "name": {
             "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/FlowType"
           },
           "ownerId": {
             "type": "string",
