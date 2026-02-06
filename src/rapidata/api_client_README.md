@@ -80,6 +80,7 @@ Class | Method | HTTP request | Description
 *AssetApi* | [**asset_file_name_metadata_get**](rapidata/api_client/docs/AssetApi.md#asset_file_name_metadata_get) | **GET** /asset/{fileName}/metadata | Gets the metadata for an asset by file name.
 *AssetApi* | [**asset_file_post**](rapidata/api_client/docs/AssetApi.md#asset_file_post) | **POST** /asset/file | Uploads a single asset to S3 and returns the asset details.
 *AssetApi* | [**asset_url_post**](rapidata/api_client/docs/AssetApi.md#asset_url_post) | **POST** /asset/url | Uploads a single asset to S3 and returns the asset details.
+*AudienceApi* | [**audience_audience_id_boost_config_patch**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_boost_config_patch) | **PATCH** /audience/{audienceId}/boost-config | Updates the boost configuration for the specified audience.
 *AudienceApi* | [**audience_audience_id_delete**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_delete) | **DELETE** /audience/{audienceId} | Deletes the specified audience.
 *AudienceApi* | [**audience_audience_id_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_get) | **GET** /audience/{audienceId} | Gets an audience by its Id.
 *AudienceApi* | [**audience_audience_id_jobs_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_jobs_get) | **GET** /audience/{audienceId}/jobs | 
@@ -330,6 +331,7 @@ Class | Method | HTTP request | Description
  - [Filter](rapidata/api_client/docs/Filter.md)
  - [FilterOperator](rapidata/api_client/docs/FilterOperator.md)
  - [FlowItemState](rapidata/api_client/docs/FlowItemState.md)
+ - [FlowType](rapidata/api_client/docs/FlowType.md)
  - [ForkBenchmarkResult](rapidata/api_client/docs/ForkBenchmarkResult.md)
  - [GetAudienceByIdResult](rapidata/api_client/docs/GetAudienceByIdResult.md)
  - [GetAudienceUserStateMetricsResult](rapidata/api_client/docs/GetAudienceUserStateMetricsResult.md)
@@ -683,6 +685,7 @@ Class | Method | HTTP request | Description
  - [UpdateAudienceRequest](rapidata/api_client/docs/UpdateAudienceRequest.md)
  - [UpdateBenchmarkModel](rapidata/api_client/docs/UpdateBenchmarkModel.md)
  - [UpdateBenchmarkNameModel](rapidata/api_client/docs/UpdateBenchmarkNameModel.md)
+ - [UpdateBoostConfigEndpointInput](rapidata/api_client/docs/UpdateBoostConfigEndpointInput.md)
  - [UpdateCampaignModel](rapidata/api_client/docs/UpdateCampaignModel.md)
  - [UpdateConfigEndpointInput](rapidata/api_client/docs/UpdateConfigEndpointInput.md)
  - [UpdateDatasetNameModel](rapidata/api_client/docs/UpdateDatasetNameModel.md)
