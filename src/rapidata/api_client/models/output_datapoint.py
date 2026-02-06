@@ -17,24 +17,20 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.flow_type import FlowType
+from rapidata.api_client.models.i_asset_model import IAssetModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetFlowByIdEndpointOutput(BaseModel):
+class OutputDatapoint(BaseModel):
     """
-    GetFlowByIdEndpointOutput
+    OutputDatapoint
     """ # noqa: E501
     id: StrictStr
-    name: StrictStr
-    type: FlowType
-    owner_id: StrictStr = Field(alias="ownerId")
-    owner_mail: StrictStr = Field(alias="ownerMail")
-    created_at: datetime = Field(alias="createdAt")
-    __properties: ClassVar[List[str]] = ["id", "name", "type", "ownerId", "ownerMail", "createdAt"]
+    asset: IAssetModel
+    elo: StrictInt
+    __properties: ClassVar[List[str]] = ["id", "asset", "elo"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -54,7 +50,7 @@ class GetFlowByIdEndpointOutput(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetFlowByIdEndpointOutput from a JSON string"""
+        """Create an instance of OutputDatapoint from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -75,11 +71,14 @@ class GetFlowByIdEndpointOutput(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of asset
+        if self.asset:
+            _dict['asset'] = self.asset.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetFlowByIdEndpointOutput from a dict"""
+        """Create an instance of OutputDatapoint from a dict"""
         if obj is None:
             return None
 
@@ -88,11 +87,8 @@ class GetFlowByIdEndpointOutput(BaseModel):
 
         _obj = cls.model_validate({
             "id": obj.get("id"),
-            "name": obj.get("name"),
-            "type": obj.get("type"),
-            "ownerId": obj.get("ownerId"),
-            "ownerMail": obj.get("ownerMail"),
-            "createdAt": obj.get("createdAt")
+            "asset": IAssetModel.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
+            "elo": obj.get("elo")
         })
         return _obj
 

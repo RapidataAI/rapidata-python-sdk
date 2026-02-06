@@ -1168,6 +1168,70 @@
         ]
       }
     },
+    "/audience/{audienceId}/boost-config": {
+      "patch": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Updates the boost configuration for the specified audience.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBoostConfigEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
     "/audience/{audienceId}/rapid/{rapidId}": {
       "patch": {
         "tags": [
@@ -2862,6 +2926,77 @@
           },
           "403": {
             "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
+    "/flow/ranking/item/{flowItemId}/results": {
+      "get": {
+        "tags": [
+          "RankingFlowItem"
+        ],
+        "summary": "Retrieves ranking results (assets with Elo scores) for a completed flow item.\n Returns 409 Conflict if the flow item is not completed or has no associated workflow.",
+        "parameters": [
+          {
+            "name": "flowItemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRankingFlowItemResultsEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -11752,7 +11887,8 @@
             ]
           },
           "isCommonSense": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           }
         }
       },
@@ -11876,6 +12012,14 @@
           "maxDistillingSessions": {
             "type": "integer",
             "format": "uint32"
+          },
+          "minDistillingForGlobalBoost": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minGraduatedForDistillingBoost": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -14141,6 +14285,19 @@
           }
         }
       },
+      "UpdateBoostConfigEndpoint_Input": {
+        "type": "object",
+        "properties": {
+          "minDistillingForGlobalBoost": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minGraduatedForDistillingBoost": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "BoostingProfile": {
         "type": "object",
         "properties": {
@@ -14704,10 +14861,16 @@
           "Failed"
         ]
       },
+      "FlowType": {
+        "enum": [
+          "Ranking"
+        ]
+      },
       "GetFlowByIdEndpoint_Output": {
         "required": [
           "id",
           "name",
+          "type",
           "ownerId",
           "ownerMail",
           "createdAt"
@@ -14719,6 +14882,9 @@
           },
           "name": {
             "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/FlowType"
           },
           "ownerId": {
             "type": "string",
@@ -14779,6 +14945,17 @@
           }
         }
       },
+      "GetRankingFlowItemResultsEndpoint_Output": {
+        "required": [
+          "datapoints"
+        ],
+        "type": "object",
+        "properties": {
+          "datapoints": {
+            "$ref": "#/components/schemas/Output_ListOfOutput_Datapoint"
+          }
+        }
+      },
       "ListOfFeatureFlag": {
         "type": "array",
         "items": {
@@ -14794,6 +14971,32 @@
             "nullable": true
           }
         ]
+      },
+      "Output_Datapoint": {
+        "required": [
+          "id",
+          "asset",
+          "elo"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAssetModel"
+          },
+          "elo": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "Output_ListOfOutput_Datapoint": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Output_Datapoint"
+        }
       },
       "QueryFlowItemsEndpoint_ListOfQueryFlowItemsEndpoint_Output": {
         "type": "array",
@@ -14883,6 +15086,7 @@
         "required": [
           "id",
           "name",
+          "type",
           "ownerId",
           "createdAt"
         ],
@@ -14893,6 +15097,9 @@
           },
           "name": {
             "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/FlowType"
           },
           "ownerId": {
             "type": "string",

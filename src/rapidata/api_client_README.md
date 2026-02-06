@@ -80,6 +80,7 @@ Class | Method | HTTP request | Description
 *AssetApi* | [**asset_file_name_metadata_get**](rapidata/api_client/docs/AssetApi.md#asset_file_name_metadata_get) | **GET** /asset/{fileName}/metadata | Gets the metadata for an asset by file name.
 *AssetApi* | [**asset_file_post**](rapidata/api_client/docs/AssetApi.md#asset_file_post) | **POST** /asset/file | Uploads a single asset to S3 and returns the asset details.
 *AssetApi* | [**asset_url_post**](rapidata/api_client/docs/AssetApi.md#asset_url_post) | **POST** /asset/url | Uploads a single asset to S3 and returns the asset details.
+*AudienceApi* | [**audience_audience_id_boost_config_patch**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_boost_config_patch) | **PATCH** /audience/{audienceId}/boost-config | Updates the boost configuration for the specified audience.
 *AudienceApi* | [**audience_audience_id_delete**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_delete) | **DELETE** /audience/{audienceId} | Deletes the specified audience.
 *AudienceApi* | [**audience_audience_id_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_get) | **GET** /audience/{audienceId} | Gets an audience by its Id.
 *AudienceApi* | [**audience_audience_id_jobs_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_jobs_get) | **GET** /audience/{audienceId}/jobs | 
@@ -218,6 +219,7 @@ Class | Method | HTTP request | Description
 *RankingFlowItemApi* | [**flow_ranking_flow_id_item_get**](rapidata/api_client/docs/RankingFlowItemApi.md#flow_ranking_flow_id_item_get) | **GET** /flow/ranking/{flowId}/item | 
 *RankingFlowItemApi* | [**flow_ranking_flow_id_item_post**](rapidata/api_client/docs/RankingFlowItemApi.md#flow_ranking_flow_id_item_post) | **POST** /flow/ranking/{flowId}/item | Creates a new flow item for the specified flow.
 *RankingFlowItemApi* | [**flow_ranking_item_flow_item_id_get**](rapidata/api_client/docs/RankingFlowItemApi.md#flow_ranking_item_flow_item_id_get) | **GET** /flow/ranking/item/{flowItemId} | Retrieves a flow item by its ID.
+*RankingFlowItemApi* | [**flow_ranking_item_flow_item_id_results_get**](rapidata/api_client/docs/RankingFlowItemApi.md#flow_ranking_item_flow_item_id_results_get) | **GET** /flow/ranking/item/{flowItemId}/results | Retrieves ranking results (assets with Elo scores) for a completed flow item.  Returns 409 Conflict if the flow item is not completed or has no associated workflow.
 *RapidataIdentityAPIApi* | [**root_get**](rapidata/api_client/docs/RapidataIdentityAPIApi.md#root_get) | **GET** / | 
 *RapidsApi* | [**audience_audience_id_rapid_rapid_id_patch**](rapidata/api_client/docs/RapidsApi.md#audience_audience_id_rapid_rapid_id_patch) | **PATCH** /audience/{audienceId}/rapid/{rapidId} | Updates a rapid&#39;s validation properties within an audience.
 *SampleApi* | [**benchmark_sample_sample_id_get**](rapidata/api_client/docs/SampleApi.md#benchmark_sample_sample_id_get) | **GET** /benchmark-sample/{sampleId} | Gets a sample by its Id.
@@ -329,6 +331,7 @@ Class | Method | HTTP request | Description
  - [Filter](rapidata/api_client/docs/Filter.md)
  - [FilterOperator](rapidata/api_client/docs/FilterOperator.md)
  - [FlowItemState](rapidata/api_client/docs/FlowItemState.md)
+ - [FlowType](rapidata/api_client/docs/FlowType.md)
  - [ForkBenchmarkResult](rapidata/api_client/docs/ForkBenchmarkResult.md)
  - [GetAudienceByIdResult](rapidata/api_client/docs/GetAudienceByIdResult.md)
  - [GetAudienceUserStateMetricsResult](rapidata/api_client/docs/GetAudienceUserStateMetricsResult.md)
@@ -364,6 +367,7 @@ Class | Method | HTTP request | Description
  - [GetPublicOrdersResult](rapidata/api_client/docs/GetPublicOrdersResult.md)
  - [GetPublicResponsesResult](rapidata/api_client/docs/GetPublicResponsesResult.md)
  - [GetPublicResponsesResultResponse](rapidata/api_client/docs/GetPublicResponsesResultResponse.md)
+ - [GetRankingFlowItemResultsEndpointOutput](rapidata/api_client/docs/GetRankingFlowItemResultsEndpointOutput.md)
  - [GetRecommendedValidationSetResult](rapidata/api_client/docs/GetRecommendedValidationSetResult.md)
  - [GetResponsesForRapidResult](rapidata/api_client/docs/GetResponsesForRapidResult.md)
  - [GetResponsesForRapidResultResponse](rapidata/api_client/docs/GetResponsesForRapidResultResponse.md)
@@ -593,6 +597,7 @@ Class | Method | HTTP request | Description
  - [OptionOfAggregatorType](rapidata/api_client/docs/OptionOfAggregatorType.md)
  - [OrderModel](rapidata/api_client/docs/OrderModel.md)
  - [OrderState](rapidata/api_client/docs/OrderState.md)
+ - [OutputDatapoint](rapidata/api_client/docs/OutputDatapoint.md)
  - [PageInfo](rapidata/api_client/docs/PageInfo.md)
  - [PagedResultOfAggregatedOrdersModel](rapidata/api_client/docs/PagedResultOfAggregatedOrdersModel.md)
  - [PagedResultOfBenchmarkQueryResult](rapidata/api_client/docs/PagedResultOfBenchmarkQueryResult.md)
@@ -680,6 +685,7 @@ Class | Method | HTTP request | Description
  - [UpdateAudienceRequest](rapidata/api_client/docs/UpdateAudienceRequest.md)
  - [UpdateBenchmarkModel](rapidata/api_client/docs/UpdateBenchmarkModel.md)
  - [UpdateBenchmarkNameModel](rapidata/api_client/docs/UpdateBenchmarkNameModel.md)
+ - [UpdateBoostConfigEndpointInput](rapidata/api_client/docs/UpdateBoostConfigEndpointInput.md)
  - [UpdateCampaignModel](rapidata/api_client/docs/UpdateCampaignModel.md)
  - [UpdateConfigEndpointInput](rapidata/api_client/docs/UpdateConfigEndpointInput.md)
  - [UpdateDatasetNameModel](rapidata/api_client/docs/UpdateDatasetNameModel.md)

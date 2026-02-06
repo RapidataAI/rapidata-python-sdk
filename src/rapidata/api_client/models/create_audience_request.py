@@ -38,7 +38,9 @@ class CreateAudienceRequest(BaseModel):
     min_distilling_score_floor: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="minDistillingScoreFloor")
     is_distilling_campaign_sticky: Optional[StrictBool] = Field(default=None, alias="isDistillingCampaignSticky")
     max_distilling_sessions: Optional[StrictInt] = Field(default=None, alias="maxDistillingSessions")
-    __properties: ClassVar[List[str]] = ["name", "filters", "minimumUserScore", "minimumSizeForActivation", "logo", "maxDistillingResponses", "minDistillingResponses", "minDistillingScoreFloor", "isDistillingCampaignSticky", "maxDistillingSessions"]
+    min_distilling_for_global_boost: Optional[StrictInt] = Field(default=None, alias="minDistillingForGlobalBoost")
+    min_graduated_for_distilling_boost: Optional[StrictInt] = Field(default=None, alias="minGraduatedForDistillingBoost")
+    __properties: ClassVar[List[str]] = ["name", "filters", "minimumUserScore", "minimumSizeForActivation", "logo", "maxDistillingResponses", "minDistillingResponses", "minDistillingScoreFloor", "isDistillingCampaignSticky", "maxDistillingSessions", "minDistillingForGlobalBoost", "minGraduatedForDistillingBoost"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -115,7 +117,9 @@ class CreateAudienceRequest(BaseModel):
             "minDistillingResponses": obj.get("minDistillingResponses"),
             "minDistillingScoreFloor": obj.get("minDistillingScoreFloor"),
             "isDistillingCampaignSticky": obj.get("isDistillingCampaignSticky"),
-            "maxDistillingSessions": obj.get("maxDistillingSessions")
+            "maxDistillingSessions": obj.get("maxDistillingSessions"),
+            "minDistillingForGlobalBoost": obj.get("minDistillingForGlobalBoost"),
+            "minGraduatedForDistillingBoost": obj.get("minGraduatedForDistillingBoost")
         })
         return _obj
 

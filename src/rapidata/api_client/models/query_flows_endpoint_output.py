@@ -20,6 +20,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.flow_type import FlowType
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -29,9 +30,10 @@ class QueryFlowsEndpointOutput(BaseModel):
     """ # noqa: E501
     id: StrictStr
     name: StrictStr
+    type: FlowType
     owner_id: StrictStr = Field(alias="ownerId")
     created_at: datetime = Field(alias="createdAt")
-    __properties: ClassVar[List[str]] = ["id", "name", "ownerId", "createdAt"]
+    __properties: ClassVar[List[str]] = ["id", "name", "type", "ownerId", "createdAt"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -86,6 +88,7 @@ class QueryFlowsEndpointOutput(BaseModel):
         _obj = cls.model_validate({
             "id": obj.get("id"),
             "name": obj.get("name"),
+            "type": obj.get("type"),
             "ownerId": obj.get("ownerId"),
             "createdAt": obj.get("createdAt")
         })

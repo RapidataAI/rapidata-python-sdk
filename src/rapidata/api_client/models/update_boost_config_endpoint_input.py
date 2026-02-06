@@ -17,24 +17,18 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.flow_type import FlowType
+from pydantic import BaseModel, ConfigDict, Field, StrictInt
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetFlowByIdEndpointOutput(BaseModel):
+class UpdateBoostConfigEndpointInput(BaseModel):
     """
-    GetFlowByIdEndpointOutput
+    UpdateBoostConfigEndpointInput
     """ # noqa: E501
-    id: StrictStr
-    name: StrictStr
-    type: FlowType
-    owner_id: StrictStr = Field(alias="ownerId")
-    owner_mail: StrictStr = Field(alias="ownerMail")
-    created_at: datetime = Field(alias="createdAt")
-    __properties: ClassVar[List[str]] = ["id", "name", "type", "ownerId", "ownerMail", "createdAt"]
+    min_distilling_for_global_boost: Optional[StrictInt] = Field(default=None, alias="minDistillingForGlobalBoost")
+    min_graduated_for_distilling_boost: Optional[StrictInt] = Field(default=None, alias="minGraduatedForDistillingBoost")
+    __properties: ClassVar[List[str]] = ["minDistillingForGlobalBoost", "minGraduatedForDistillingBoost"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -54,7 +48,7 @@ class GetFlowByIdEndpointOutput(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetFlowByIdEndpointOutput from a JSON string"""
+        """Create an instance of UpdateBoostConfigEndpointInput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -79,7 +73,7 @@ class GetFlowByIdEndpointOutput(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetFlowByIdEndpointOutput from a dict"""
+        """Create an instance of UpdateBoostConfigEndpointInput from a dict"""
         if obj is None:
             return None
 
@@ -87,12 +81,8 @@ class GetFlowByIdEndpointOutput(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "id": obj.get("id"),
-            "name": obj.get("name"),
-            "type": obj.get("type"),
-            "ownerId": obj.get("ownerId"),
-            "ownerMail": obj.get("ownerMail"),
-            "createdAt": obj.get("createdAt")
+            "minDistillingForGlobalBoost": obj.get("minDistillingForGlobalBoost"),
+            "minGraduatedForDistillingBoost": obj.get("minGraduatedForDistillingBoost")
         })
         return _obj
 

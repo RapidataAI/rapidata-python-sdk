@@ -17,24 +17,18 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.flow_type import FlowType
+from rapidata.api_client.models.output_datapoint import OutputDatapoint
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetFlowByIdEndpointOutput(BaseModel):
+class GetRankingFlowItemResultsEndpointOutput(BaseModel):
     """
-    GetFlowByIdEndpointOutput
+    GetRankingFlowItemResultsEndpointOutput
     """ # noqa: E501
-    id: StrictStr
-    name: StrictStr
-    type: FlowType
-    owner_id: StrictStr = Field(alias="ownerId")
-    owner_mail: StrictStr = Field(alias="ownerMail")
-    created_at: datetime = Field(alias="createdAt")
-    __properties: ClassVar[List[str]] = ["id", "name", "type", "ownerId", "ownerMail", "createdAt"]
+    datapoints: List[OutputDatapoint]
+    __properties: ClassVar[List[str]] = ["datapoints"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -54,7 +48,7 @@ class GetFlowByIdEndpointOutput(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetFlowByIdEndpointOutput from a JSON string"""
+        """Create an instance of GetRankingFlowItemResultsEndpointOutput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -75,11 +69,18 @@ class GetFlowByIdEndpointOutput(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in datapoints (list)
+        _items = []
+        if self.datapoints:
+            for _item_datapoints in self.datapoints:
+                if _item_datapoints:
+                    _items.append(_item_datapoints.to_dict())
+            _dict['datapoints'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetFlowByIdEndpointOutput from a dict"""
+        """Create an instance of GetRankingFlowItemResultsEndpointOutput from a dict"""
         if obj is None:
             return None
 
@@ -87,12 +88,7 @@ class GetFlowByIdEndpointOutput(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "id": obj.get("id"),
-            "name": obj.get("name"),
-            "type": obj.get("type"),
-            "ownerId": obj.get("ownerId"),
-            "ownerMail": obj.get("ownerMail"),
-            "createdAt": obj.get("createdAt")
+            "datapoints": [OutputDatapoint.from_dict(_item) for _item in obj["datapoints"]] if obj.get("datapoints") is not None else None
         })
         return _obj
 

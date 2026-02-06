@@ -377,6 +377,55 @@
         }
       }
     },
+    "/audience/{audienceId}/boost-config": {
+      "patch": {
+        "tags": [
+          "Audience"
+        ],
+        "summary": "Updates the boost configuration for the specified audience.",
+        "parameters": [
+          {
+            "name": "audienceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBoostConfigEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/audience/{audienceId}/rapid/{rapidId}": {
       "patch": {
         "tags": [
@@ -682,7 +731,8 @@
             ]
           },
           "isCommonSense": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           }
         }
       },
@@ -806,6 +856,14 @@
           "maxDistillingSessions": {
             "type": "integer",
             "format": "uint32"
+          },
+          "minDistillingForGlobalBoost": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minGraduatedForDistillingBoost": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -3090,6 +3148,19 @@
           },
           "minDistillingForGlobalBoost": {
             "$ref": "#/components/schemas/OptionOfint"
+          }
+        }
+      },
+      "UpdateBoostConfigEndpoint_Input": {
+        "type": "object",
+        "properties": {
+          "minDistillingForGlobalBoost": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minGraduatedForDistillingBoost": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
