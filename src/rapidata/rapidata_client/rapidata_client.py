@@ -29,6 +29,7 @@ from rapidata.rapidata_client.config import (
 
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 from rapidata.rapidata_client.job.rapidata_job_manager import RapidataJobManager
+from rapidata.rapidata_client.flow.rapidata_flow_manager import RapidataFlowManager
 
 
 class RapidataClient:
@@ -95,7 +96,7 @@ class RapidataClient:
             )
 
             # logger.debug("Initializing FlowManager")
-            # self.flow = FlowManager(openapi_service=self._openapi_service)
+            # self.flow = RapidataFlowManager(openapi_service=self._openapi_service)
 
             logger.debug("Initializing JobManager")
             self.job = RapidataJobManager(openapi_service=self._openapi_service)
