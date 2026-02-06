@@ -641,7 +641,7 @@
         "type": "object",
         "properties": {
           "categories": {
-            "$ref": "#/components/schemas/ListOfClassifyPayload_Category"
+            "$ref": "#/components/schemas/ClassifyPayload_ListOfClassifyPayload_Category"
           },
           "title": {
             "type": "string"
@@ -661,6 +661,12 @@
           "value": {
             "type": "string"
           }
+        }
+      },
+      "ClassifyPayload_ListOfClassifyPayload_Category": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/ClassifyPayload_Category"
         }
       },
       "CreateDemographicRapidModel": {
@@ -786,8 +792,14 @@
         "type": "object",
         "properties": {
           "responses": {
-            "$ref": "#/components/schemas/ListOfGetPublicResponsesResult_Response"
+            "$ref": "#/components/schemas/GetPublicResponsesResult_ListOfGetPublicResponsesResult_Response"
           }
+        }
+      },
+      "GetPublicResponsesResult_ListOfGetPublicResponsesResult_Response": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/GetPublicResponsesResult_Response"
         }
       },
       "GetPublicResponsesResult_Response": {
@@ -837,11 +849,17 @@
             "$ref": "#/components/schemas/IAssetModel"
           },
           "responses": {
-            "$ref": "#/components/schemas/ListOfGetResponsesForRapidResult_Response"
+            "$ref": "#/components/schemas/GetResponsesForRapidResult_ListOfGetResponsesForRapidResult_Response"
           },
           "state": {
             "$ref": "#/components/schemas/RapidState"
           }
+        }
+      },
+      "GetResponsesForRapidResult_ListOfGetResponsesForRapidResult_Response": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/GetResponsesForRapidResult_Response"
         }
       },
       "GetResponsesForRapidResult_Response": {
@@ -1506,7 +1524,7 @@
             "type": "string"
           },
           "categories": {
-            "$ref": "#/components/schemas/ListOfClassifyPayload_Category"
+            "$ref": "#/components/schemas/ClassifyPayload_ListOfClassifyPayload_Category"
           },
           "title": {
             "type": "string"
@@ -1824,7 +1842,7 @@
             "type": "string"
           },
           "lines": {
-            "$ref": "#/components/schemas/ListOfLineResult_Line"
+            "$ref": "#/components/schemas/LineResult_ListOfLineResult_Line"
           },
           "rapidId": {
             "type": "string"
@@ -1887,7 +1905,7 @@
             "type": "string"
           },
           "shapes": {
-            "$ref": "#/components/schemas/ListOfPolygonResult_Shape"
+            "$ref": "#/components/schemas/PolygonResult_ListOfPolygonResult_Shape"
           },
           "rapidId": {
             "type": "string"
@@ -2673,7 +2691,7 @@
             "format": "double"
           },
           "points": {
-            "$ref": "#/components/schemas/ListOfLineResult_LinePoint"
+            "$ref": "#/components/schemas/LineResult_ListOfLineResult_LinePoint"
           }
         }
       },
@@ -2694,16 +2712,22 @@
           }
         }
       },
+      "LineResult_ListOfLineResult_Line": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/LineResult_Line"
+        }
+      },
+      "LineResult_ListOfLineResult_LinePoint": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/LineResult_LinePoint"
+        }
+      },
       "ListOfBoxShape": {
         "type": "array",
         "items": {
           "$ref": "#/components/schemas/BoxShape"
-        }
-      },
-      "ListOfClassifyPayload_Category": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/ClassifyPayload_Category"
         }
       },
       "ListOfFeatureFlag": {
@@ -2718,18 +2742,6 @@
           "$ref": "#/components/schemas/Filter"
         }
       },
-      "ListOfGetPublicResponsesResult_Response": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/GetPublicResponsesResult_Response"
-        }
-      },
-      "ListOfGetResponsesForRapidResult_Response": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/GetResponsesForRapidResult_Response"
-        }
-      },
       "ListOfIAssetInput": {
         "type": "array",
         "items": {
@@ -2740,18 +2752,6 @@
         "type": "array",
         "items": {
           "$ref": "#/components/schemas/IAssetModel"
-        }
-      },
-      "ListOfLineResult_Line": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/LineResult_Line"
-        }
-      },
-      "ListOfLineResult_LinePoint": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/LineResult_LinePoint"
         }
       },
       "ListOfListOfString": {
@@ -2773,18 +2773,6 @@
         "type": "array",
         "items": {
           "$ref": "#/components/schemas/NamedClassification"
-        }
-      },
-      "ListOfPolygonResult_Coordinate": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/PolygonResult_Coordinate"
-        }
-      },
-      "ListOfPolygonResult_Shape": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/PolygonResult_Shape"
         }
       },
       "ListOfQueryValidationRapidEligibilityResult": {
@@ -3007,6 +2995,18 @@
           }
         }
       },
+      "PolygonResult_ListOfPolygonResult_Coordinate": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/PolygonResult_Coordinate"
+        }
+      },
+      "PolygonResult_ListOfPolygonResult_Shape": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/PolygonResult_Shape"
+        }
+      },
       "PolygonResult_Shape": {
         "required": [
           "edges"
@@ -3014,7 +3014,7 @@
         "type": "object",
         "properties": {
           "edges": {
-            "$ref": "#/components/schemas/ListOfPolygonResult_Coordinate"
+            "$ref": "#/components/schemas/PolygonResult_ListOfPolygonResult_Coordinate"
           }
         }
       },

@@ -610,7 +610,7 @@
         "type": "object",
         "properties": {
           "datapoints": {
-            "$ref": "#/components/schemas/ListOfGetFailedDatapointsResult_Datapoint"
+            "$ref": "#/components/schemas/GetFailedDatapointsResult_ListOfGetFailedDatapointsResult_Datapoint"
           }
         }
       },
@@ -641,6 +641,12 @@
             "type": "string",
             "format": "date-time"
           }
+        }
+      },
+      "GetFailedDatapointsResult_ListOfGetFailedDatapointsResult_Datapoint": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/GetFailedDatapointsResult_Datapoint"
         }
       },
       "IAssetInput": {
@@ -1173,12 +1179,6 @@
         "type": "array",
         "items": {
           "$ref": "#/components/schemas/Filter"
-        }
-      },
-      "ListOfGetFailedDatapointsResult_Datapoint": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/GetFailedDatapointsResult_Datapoint"
         }
       },
       "ListOfIAssetInput": {

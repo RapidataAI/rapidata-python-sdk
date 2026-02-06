@@ -26,6 +26,7 @@ from rapidata.api_client.models.i_referee_model import IRefereeModel
 from rapidata.api_client.models.i_selection import ISelection
 from rapidata.api_client.models.i_user_filter_model import IUserFilterModel
 from rapidata.api_client.models.retrieval_mode import RetrievalMode
+from rapidata.api_client.models.sticky_config import StickyConfig
 from rapidata.api_client.models.sticky_state import StickyState
 from typing import Optional, Set
 from typing_extensions import Self
@@ -41,6 +42,7 @@ class CreateOrderModel(BaseModel):
     feature_flags: Optional[List[FeatureFlagModel]] = Field(default=None, alias="featureFlags")
     priority: Optional[StrictInt] = None
     sticky_state: Optional[StickyState] = Field(default=None, alias="stickyState")
+    sticky_config: Optional[StickyConfig] = Field(default=None, alias="stickyConfig")
     user_score_dimensions: Optional[List[StrictStr]] = Field(default=None, alias="userScoreDimensions")
     demographic_keys: Optional[List[StrictStr]] = Field(default=None, alias="demographicKeys")
     user_filters: Optional[List[IUserFilterModel]] = Field(default=None, alias="userFilters")
@@ -48,7 +50,8 @@ class CreateOrderModel(BaseModel):
     selections: Optional[List[ISelection]] = None
     retrieval_mode: Optional[RetrievalMode] = Field(default=None, alias="retrievalMode")
     max_iterations: Optional[StrictInt] = Field(default=None, alias="maxIterations")
-    __properties: ClassVar[List[str]] = ["orderName", "workflow", "referee", "aggregator", "featureFlags", "priority", "stickyState", "userScoreDimensions", "demographicKeys", "userFilters", "validationSetId", "selections", "retrievalMode", "maxIterations"]
+    preceding_order_id: Optional[StrictStr] = Field(default=None, alias="precedingOrderId")
+    __properties: ClassVar[List[str]] = ["orderName", "workflow", "referee", "aggregator", "featureFlags", "priority", "stickyState", "stickyConfig", "userScoreDimensions", "demographicKeys", "userFilters", "validationSetId", "selections", "retrievalMode", "maxIterations", "precedingOrderId"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -102,6 +105,9 @@ class CreateOrderModel(BaseModel):
                 if _item_feature_flags:
                     _items.append(_item_feature_flags.to_dict())
             _dict['featureFlags'] = _items
+        # override the default output from pydantic by calling `to_dict()` of sticky_config
+        if self.sticky_config:
+            _dict['stickyConfig'] = self.sticky_config.to_dict()
         # override the default output from pydantic by calling `to_dict()` of each item in user_filters (list)
         _items = []
         if self.user_filters:
@@ -136,6 +142,11 @@ class CreateOrderModel(BaseModel):
         if self.retrieval_mode is None and "retrieval_mode" in self.model_fields_set:
             _dict['retrievalMode'] = None
 
+        # set to None if preceding_order_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.preceding_order_id is None and "preceding_order_id" in self.model_fields_set:
+            _dict['precedingOrderId'] = None
+
         return _dict
 
     @classmethod
@@ -155,13 +166,15 @@ class CreateOrderModel(BaseModel):
             "featureFlags": [FeatureFlagModel.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
             "priority": obj.get("priority"),
             "stickyState": obj.get("stickyState"),
+            "stickyConfig": StickyConfig.from_dict(obj["stickyConfig"]) if obj.get("stickyConfig") is not None else None,
             "userScoreDimensions": obj.get("userScoreDimensions"),
             "demographicKeys": obj.get("demographicKeys"),
             "userFilters": [IUserFilterModel.from_dict(_item) for _item in obj["userFilters"]] if obj.get("userFilters") is not None else None,
             "validationSetId": obj.get("validationSetId"),
             "selections": [ISelection.from_dict(_item) for _item in obj["selections"]] if obj.get("selections") is not None else None,
             "retrievalMode": obj.get("retrievalMode"),
-            "maxIterations": obj.get("maxIterations")
+            "maxIterations": obj.get("maxIterations"),
+            "precedingOrderId": obj.get("precedingOrderId")
         })
         return _obj
 

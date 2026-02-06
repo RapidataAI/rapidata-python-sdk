@@ -1,0 +1,830 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Rapidata Flow API",
+    "description": "The API for the Rapidata Flow service",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "https://api.rabbitdata.ch/"
+    }
+  ],
+  "paths": {
+    "/flow/{flowId}": {
+      "delete": {
+        "tags": [
+          "Flow"
+        ],
+        "summary": "Soft deletes a flow by its ID.",
+        "parameters": [
+          {
+            "name": "flowId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Flow"
+        ],
+        "summary": "Retrieves a flow by its ID.",
+        "parameters": [
+          {
+            "name": "flowId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetFlowByIdEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/flow": {
+      "get": {
+        "tags": [
+          "Flow"
+        ],
+        "summary": "Queries flows. Admins see all flows, regular users see only their own.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryFlowsEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/flow/ranking": {
+      "post": {
+        "tags": [
+          "RankingFlow"
+        ],
+        "summary": "Creates a new flow with the specified parameters.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFlowEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateFlowEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/flow/ranking/{flowId}/config": {
+      "patch": {
+        "tags": [
+          "RankingFlow"
+        ],
+        "summary": "Updates the configuration of a ranking flow.",
+        "parameters": [
+          {
+            "name": "flowId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateConfigEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/flow/ranking/{flowId}/item": {
+      "post": {
+        "tags": [
+          "RankingFlowItem"
+        ],
+        "summary": "Creates a new flow item for the specified flow.",
+        "parameters": [
+          {
+            "name": "flowId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFlowItemEndpoint_Input"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateFlowItemEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "RankingFlowItem"
+        ],
+        "parameters": [
+          {
+            "name": "flowId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/FlowItemState"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryFlowItemsEndpoint_PagedResultOfOutput"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/flow/ranking/item/{flowItemId}": {
+      "get": {
+        "tags": [
+          "RankingFlowItem"
+        ],
+        "summary": "Retrieves a flow item by its ID.",
+        "parameters": [
+          {
+            "name": "flowItemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetFlowItemByIdEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CreateFlowEndpoint_Input": {
+        "required": [
+          "name",
+          "criteria",
+          "responsesRequired"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "criteria": {
+            "type": "string"
+          },
+          "context": {
+            "type": "string",
+            "nullable": true
+          },
+          "startingElo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "kFactor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "scalingFactor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "responsesRequired": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "featureFlags": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/ListOfFeatureFlag"
+              }
+            ]
+          }
+        }
+      },
+      "CreateFlowEndpoint_Output": {
+        "required": [
+          "flowId"
+        ],
+        "type": "object",
+        "properties": {
+          "flowId": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateFlowItemEndpoint_Input": {
+        "required": [
+          "datasetId"
+        ],
+        "type": "object",
+        "properties": {
+          "datasetId": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateFlowItemEndpoint_Output": {
+        "required": [
+          "flowItemId"
+        ],
+        "type": "object",
+        "properties": {
+          "flowItemId": {
+            "type": "string"
+          }
+        }
+      },
+      "FeatureFlag": {
+        "required": [
+          "key",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "FlowItemState": {
+        "enum": [
+          "Pending",
+          "Running",
+          "Completed",
+          "Failed"
+        ]
+      },
+      "GetFlowByIdEndpoint_Output": {
+        "required": [
+          "id",
+          "name",
+          "ownerId",
+          "ownerMail",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "ownerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "GetFlowItemByIdEndpoint_Output": {
+        "required": [
+          "id",
+          "flowId",
+          "datasetId",
+          "state",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "flowId": {
+            "type": "string"
+          },
+          "datasetId": {
+            "type": "string"
+          },
+          "workflowId": {
+            "type": "string",
+            "nullable": true
+          },
+          "state": {
+            "$ref": "#/components/schemas/FlowItemState"
+          },
+          "failureMessage": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "failedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "ListOfFeatureFlag": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/FeatureFlag"
+        }
+      },
+      "OptionOfint": {
+        "type": "integer",
+        "format": "int32",
+        "nullable": true
+      },
+      "OptionOfIReadOnlyListOfFeatureFlag": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ListOfFeatureFlag"
+          },
+          {
+            "nullable": true
+          }
+        ]
+      },
+      "OptionOfstring": {
+        "type": "string",
+        "nullable": true
+      },
+      "QueryFlowItemsEndpoint_ListOfQueryFlowItemsEndpoint_Output": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/QueryFlowItemsEndpoint_Output"
+        }
+      },
+      "QueryFlowItemsEndpoint_Output": {
+        "required": [
+          "id",
+          "datasetId",
+          "state",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "datasetId": {
+            "type": "string"
+          },
+          "workflowId": {
+            "type": "string",
+            "nullable": true
+          },
+          "state": {
+            "$ref": "#/components/schemas/FlowItemState"
+          },
+          "failureMessage": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "failedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "QueryFlowItemsEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "$ref": "#/components/schemas/QueryFlowItemsEndpoint_ListOfQueryFlowItemsEndpoint_Output"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "QueryFlowsEndpoint_ListOfQueryFlowsEndpoint_Output": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/QueryFlowsEndpoint_Output"
+        }
+      },
+      "QueryFlowsEndpoint_Output": {
+        "required": [
+          "id",
+          "name",
+          "ownerId",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "ownerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "QueryFlowsEndpoint_PagedResultOfOutput": {
+        "required": [
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "$ref": "#/components/schemas/QueryFlowsEndpoint_ListOfQueryFlowsEndpoint_Output"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "UpdateConfigEndpoint_Input": {
+        "type": "object",
+        "properties": {
+          "criteria": {
+            "$ref": "#/components/schemas/OptionOfstring"
+          },
+          "context": {
+            "$ref": "#/components/schemas/OptionOfstring"
+          },
+          "startingElo": {
+            "$ref": "#/components/schemas/OptionOfint"
+          },
+          "kFactor": {
+            "$ref": "#/components/schemas/OptionOfint"
+          },
+          "scalingFactor": {
+            "$ref": "#/components/schemas/OptionOfint"
+          },
+          "responsesRequired": {
+            "$ref": "#/components/schemas/OptionOfint"
+          },
+          "featureFlags": {
+            "$ref": "#/components/schemas/OptionOfIReadOnlyListOfFeatureFlag"
+          }
+        }
+      },
+      "ValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "JWT Authorization header using the Bearer scheme",
+        "scheme": "bearer",
+        "bearerFormat": "Json Web Token"
+      },
+      "OpenIdConnect": {
+        "type": "openIdConnect",
+        "description": "OpenId Connect connection flow",
+        "openIdConnectUrl": "https://auth.rabbitdata.ch/.well-known/openid-configuration"
+      },
+      "OAuth2": {
+        "type": "oauth2",
+        "description": "OAuth2 authorization header using the Bearer scheme",
+        "flows": {
+          "authorizationCode": {
+            "authorizationUrl": "https://auth.rabbitdata.ch/connect/authorize",
+            "tokenUrl": "https://auth.rabbitdata.ch/connect/token",
+            "refreshUrl": "https://auth.rabbitdata.ch/connect/token",
+            "scopes": {
+              "openid": "OpenID",
+              "profile": "Profile",
+              "email": "Email"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "Bearer": [ ],
+      "OpenIdConnect": [
+        "openid",
+        "profile",
+        "email"
+      ],
+      "OAuth2": [
+        "openid",
+        "profile",
+        "email"
+      ]
+    }
+  ]
+}
