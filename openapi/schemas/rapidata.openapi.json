@@ -2881,6 +2881,77 @@
         ]
       }
     },
+    "/flow/ranking/item/{flowItemId}/results": {
+      "get": {
+        "tags": [
+          "RankingFlowItem"
+        ],
+        "summary": "Retrieves ranking results (assets with Elo scores) for a completed flow item.\n Returns 409 Conflict if the flow item is not completed or has no associated workflow.",
+        "parameters": [
+          {
+            "name": "flowItemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRankingFlowItemResultsEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
     "/": {
       "get": {
         "tags": [
@@ -14779,6 +14850,17 @@
           }
         }
       },
+      "GetRankingFlowItemResultsEndpoint_Output": {
+        "required": [
+          "datapoints"
+        ],
+        "type": "object",
+        "properties": {
+          "datapoints": {
+            "$ref": "#/components/schemas/Output_ListOfOutput_Datapoint"
+          }
+        }
+      },
       "ListOfFeatureFlag": {
         "type": "array",
         "items": {
@@ -14794,6 +14876,32 @@
             "nullable": true
           }
         ]
+      },
+      "Output_Datapoint": {
+        "required": [
+          "id",
+          "asset",
+          "elo"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/IAssetModel"
+          },
+          "elo": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "Output_ListOfOutput_Datapoint": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Output_Datapoint"
+        }
       },
       "QueryFlowItemsEndpoint_ListOfQueryFlowItemsEndpoint_Output": {
         "type": "array",
