@@ -48,15 +48,21 @@ flow_item = flow.create_new_flow_batch(
 )
 ```
 
-### 3. Check Flow Item Status
+### 3. Get Results
 
-Each batch is processed as a flow item. You can check its status:
+Call `get_results()` on a flow item to retrieve the ranking results. If the flow item is still processing, this will automatically wait until it completes:
+
+```python
+results = flow_item.get_results()
+```
+
+You can also check the status without blocking:
 
 ```python
 status = flow_item.get_status()  # Pending, Running, Completed, or Failed
 ```
 
-You can also query all flow items for a flow, optionally filtering by state:
+To query all flow items for a flow, optionally filtering by state:
 
 ```python
 from rapidata.api_client.models.flow_item_state import FlowItemState
