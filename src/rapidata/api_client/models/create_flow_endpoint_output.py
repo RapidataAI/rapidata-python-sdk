@@ -18,17 +18,16 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class UpdateOrderModel(BaseModel):
+class CreateFlowEndpointOutput(BaseModel):
     """
-    UpdateOrderModel
+    CreateFlowEndpointOutput
     """ # noqa: E501
-    name: Optional[StrictStr] = None
-    preceding_order_id: Optional[StrictStr] = Field(default=None, alias="precedingOrderId")
-    __properties: ClassVar[List[str]] = ["name", "precedingOrderId"]
+    flow_id: StrictStr = Field(alias="flowId")
+    __properties: ClassVar[List[str]] = ["flowId"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +47,7 @@ class UpdateOrderModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of UpdateOrderModel from a JSON string"""
+        """Create an instance of CreateFlowEndpointOutput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,21 +68,11 @@ class UpdateOrderModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if name (nullable) is None
-        # and model_fields_set contains the field
-        if self.name is None and "name" in self.model_fields_set:
-            _dict['name'] = None
-
-        # set to None if preceding_order_id (nullable) is None
-        # and model_fields_set contains the field
-        if self.preceding_order_id is None and "preceding_order_id" in self.model_fields_set:
-            _dict['precedingOrderId'] = None
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of UpdateOrderModel from a dict"""
+        """Create an instance of CreateFlowEndpointOutput from a dict"""
         if obj is None:
             return None
 
@@ -91,8 +80,7 @@ class UpdateOrderModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "precedingOrderId": obj.get("precedingOrderId")
+            "flowId": obj.get("flowId")
         })
         return _obj
 

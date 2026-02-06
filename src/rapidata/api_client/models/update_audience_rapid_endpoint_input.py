@@ -19,27 +19,22 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional, Union
-from rapidata.api_client.models.feature_flag_model import FeatureFlagModel
 from rapidata.api_client.models.i_asset_input import IAssetInput
-from rapidata.api_client.models.i_rapid_payload import IRapidPayload
-from rapidata.api_client.models.i_validation_truth import IValidationTruth
+from rapidata.api_client.models.i_validation_truth_model import IValidationTruthModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class AddRapidToAudienceModel(BaseModel):
+class UpdateAudienceRapidEndpointInput(BaseModel):
     """
-    AddRapidToAudienceModel
+    UpdateAudienceRapidEndpointInput
     """ # noqa: E501
-    asset: IAssetInput
-    payload: IRapidPayload
-    truth: Optional[IValidationTruth] = None
-    random_correct_probability: Union[StrictFloat, StrictInt] = Field(alias="randomCorrectProbability")
+    truth: Optional[IValidationTruthModel] = None
     explanation: Optional[StrictStr] = None
     context: Optional[StrictStr] = None
     context_asset: Optional[IAssetInput] = Field(default=None, alias="contextAsset")
-    feature_flags: Optional[List[FeatureFlagModel]] = Field(default=None, alias="featureFlags")
+    random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="randomCorrectProbability")
     is_common_sense: Optional[StrictBool] = Field(default=None, alias="isCommonSense")
-    __properties: ClassVar[List[str]] = ["asset", "payload", "truth", "randomCorrectProbability", "explanation", "context", "contextAsset", "featureFlags", "isCommonSense"]
+    __properties: ClassVar[List[str]] = ["truth", "explanation", "context", "contextAsset", "randomCorrectProbability", "isCommonSense"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -59,7 +54,7 @@ class AddRapidToAudienceModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of AddRapidToAudienceModel from a JSON string"""
+        """Create an instance of UpdateAudienceRapidEndpointInput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -80,25 +75,12 @@ class AddRapidToAudienceModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of asset
-        if self.asset:
-            _dict['asset'] = self.asset.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of payload
-        if self.payload:
-            _dict['payload'] = self.payload.to_dict()
         # override the default output from pydantic by calling `to_dict()` of truth
         if self.truth:
             _dict['truth'] = self.truth.to_dict()
         # override the default output from pydantic by calling `to_dict()` of context_asset
         if self.context_asset:
             _dict['contextAsset'] = self.context_asset.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of each item in feature_flags (list)
-        _items = []
-        if self.feature_flags:
-            for _item_feature_flags in self.feature_flags:
-                if _item_feature_flags:
-                    _items.append(_item_feature_flags.to_dict())
-            _dict['featureFlags'] = _items
         # set to None if truth (nullable) is None
         # and model_fields_set contains the field
         if self.truth is None and "truth" in self.model_fields_set:
@@ -119,11 +101,21 @@ class AddRapidToAudienceModel(BaseModel):
         if self.context_asset is None and "context_asset" in self.model_fields_set:
             _dict['contextAsset'] = None
 
+        # set to None if random_correct_probability (nullable) is None
+        # and model_fields_set contains the field
+        if self.random_correct_probability is None and "random_correct_probability" in self.model_fields_set:
+            _dict['randomCorrectProbability'] = None
+
+        # set to None if is_common_sense (nullable) is None
+        # and model_fields_set contains the field
+        if self.is_common_sense is None and "is_common_sense" in self.model_fields_set:
+            _dict['isCommonSense'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of AddRapidToAudienceModel from a dict"""
+        """Create an instance of UpdateAudienceRapidEndpointInput from a dict"""
         if obj is None:
             return None
 
@@ -131,14 +123,11 @@ class AddRapidToAudienceModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "asset": IAssetInput.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
-            "payload": IRapidPayload.from_dict(obj["payload"]) if obj.get("payload") is not None else None,
-            "truth": IValidationTruth.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
-            "randomCorrectProbability": obj.get("randomCorrectProbability"),
+            "truth": IValidationTruthModel.from_dict(obj["truth"]) if obj.get("truth") is not None else None,
             "explanation": obj.get("explanation"),
             "context": obj.get("context"),
             "contextAsset": IAssetInput.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
-            "featureFlags": [FeatureFlagModel.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
+            "randomCorrectProbability": obj.get("randomCorrectProbability"),
             "isCommonSense": obj.get("isCommonSense")
         })
         return _obj
