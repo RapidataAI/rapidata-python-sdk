@@ -60,6 +60,7 @@ class RapidataClient:
         Attributes:
             order (RapidataOrderManager): The RapidataOrderManager instance.
             validation (ValidationSetManager): The ValidationSetManager instance.
+            flow (RapidataFlowManager): The RapidataFlowManager instance.
             audience (RapidataAudienceManager): The RapidataAudienceManager instance.
             job (JobManager): The JobManager instance.
             mri (RapidataBenchmarkManager): The RapidataBenchmarkManager instance.
@@ -95,8 +96,8 @@ class RapidataClient:
                 openapi_service=self._openapi_service
             )
 
-            # logger.debug("Initializing FlowManager")
-            # self.flow = RapidataFlowManager(openapi_service=self._openapi_service)
+            logger.debug("Initializing FlowManager")
+            self.flow = RapidataFlowManager(openapi_service=self._openapi_service)
 
             logger.debug("Initializing JobManager")
             self.job = RapidataJobManager(openapi_service=self._openapi_service)

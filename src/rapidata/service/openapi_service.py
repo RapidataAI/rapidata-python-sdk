@@ -25,6 +25,10 @@ if TYPE_CHECKING:
     from rapidata.api_client.api.participant_api import ParticipantApi
     from rapidata.api_client.api.audience_api import AudienceApi
     from rapidata.api_client.api.batch_upload_api import BatchUploadApi
+    from rapidata.api_client.api.flow_api import FlowApi
+    from rapidata.api_client.api.ranking_flow_api import RankingFlowApi
+    from rapidata.api_client.api.ranking_flow_item_api import RankingFlowItemApi
+    from rapidata.api_client.api.customer_rapid_api import CustomerRapidApi
 
 
 class OpenAPIService:
@@ -160,6 +164,24 @@ class OpenAPIService:
         from rapidata.api_client.api.validation_set_api import ValidationSetApi
 
         return ValidationSetApi(self.api_client)
+
+    @property
+    def flow_api(self) -> FlowApi:
+        from rapidata.api_client.api.flow_api import FlowApi
+
+        return FlowApi(self.api_client)
+
+    @property
+    def ranking_flow_api(self) -> RankingFlowApi:
+        from rapidata.api_client.api.ranking_flow_api import RankingFlowApi
+
+        return RankingFlowApi(self.api_client)
+
+    @property
+    def ranking_flow_item_api(self) -> RankingFlowItemApi:
+        from rapidata.api_client.api.ranking_flow_item_api import RankingFlowItemApi
+
+        return RankingFlowItemApi(self.api_client)
 
     @property
     def rapid_api(self) -> CustomerRapidApi:
