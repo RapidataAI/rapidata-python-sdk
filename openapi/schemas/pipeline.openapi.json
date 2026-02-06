@@ -177,6 +177,12 @@
           }
         }
       },
+      "AttachCategoryRapidBlueprint_ListOfAttachCategoryRapidBlueprint_Category": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/AttachCategoryRapidBlueprint_Category"
+        }
+      },
       "EloConfig": {
         "type": "object",
         "properties": {
@@ -863,7 +869,7 @@
             }
           },
           "categories": {
-            "$ref": "#/components/schemas/ListOfAttachCategoryRapidBlueprint_Category"
+            "$ref": "#/components/schemas/AttachCategoryRapidBlueprint_ListOfAttachCategoryRapidBlueprint_Category"
           },
           "title": {
             "type": "string"
@@ -1331,12 +1337,6 @@
           "featureFlags": {
             "$ref": "#/components/schemas/ListOfFeatureFlag"
           }
-        }
-      },
-      "ListOfAttachCategoryRapidBlueprint_Category": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/AttachCategoryRapidBlueprint_Category"
         }
       },
       "ListOfFeatureFlag": {

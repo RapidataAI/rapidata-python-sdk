@@ -18,28 +18,22 @@ from enum import Enum
 from typing_extensions import Self
 
 
-class OrderState(str, Enum):
+class FlowItemState(str, Enum):
     """
-    OrderState
+    FlowItemState
     """
 
     """
     allowed enum values
     """
-    CREATED = 'Created'
-    PREVIEW = 'Preview'
-    SUBMITTED = 'Submitted'
-    MANUALREVIEW = 'ManualReview'
-    QUEUED = 'Queued'
-    PROCESSING = 'Processing'
-    PAUSED = 'Paused'
+    PENDING = 'Pending'
+    RUNNING = 'Running'
     COMPLETED = 'Completed'
-    CANCELLED = 'Cancelled'
     FAILED = 'Failed'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of OrderState from a JSON string"""
+        """Create an instance of FlowItemState from a JSON string"""
         return cls(json.loads(json_str))
 
 

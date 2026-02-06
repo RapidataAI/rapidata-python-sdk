@@ -466,6 +466,12 @@
           "Audio"
         ]
       },
+      "GetBatchUploadResultEndpoint_ListOfGetBatchUploadResultEndpoint_UrlOutput": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/GetBatchUploadResultEndpoint_UrlOutput"
+        }
+      },
       "GetBatchUploadResultEndpoint_Output": {
         "required": [
           "batchUploadId",
@@ -496,7 +502,7 @@
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/ListOfGetBatchUploadResultEndpoint_UrlOutput"
+            "$ref": "#/components/schemas/GetBatchUploadResultEndpoint_ListOfGetBatchUploadResultEndpoint_UrlOutput"
           }
         }
       },
@@ -840,12 +846,6 @@
           "visibilities": {
             "$ref": "#/components/schemas/MetadataVisibilities"
           }
-        }
-      },
-      "ListOfGetBatchUploadResultEndpoint_UrlOutput": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/GetBatchUploadResultEndpoint_UrlOutput"
         }
       },
       "ListOfUri": {

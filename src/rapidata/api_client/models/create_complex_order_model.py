@@ -30,7 +30,8 @@ class CreateComplexOrderModel(BaseModel):
     order_name: StrictStr = Field(alias="orderName")
     pipeline: IPipelineModel
     is_demo: Optional[StrictBool] = Field(default=None, alias="isDemo")
-    __properties: ClassVar[List[str]] = ["orderName", "pipeline", "isDemo"]
+    preceding_order_id: Optional[StrictStr] = Field(default=None, alias="precedingOrderId")
+    __properties: ClassVar[List[str]] = ["orderName", "pipeline", "isDemo", "precedingOrderId"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -74,6 +75,11 @@ class CreateComplexOrderModel(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of pipeline
         if self.pipeline:
             _dict['pipeline'] = self.pipeline.to_dict()
+        # set to None if preceding_order_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.preceding_order_id is None and "preceding_order_id" in self.model_fields_set:
+            _dict['precedingOrderId'] = None
+
         return _dict
 
     @classmethod
@@ -88,7 +94,8 @@ class CreateComplexOrderModel(BaseModel):
         _obj = cls.model_validate({
             "orderName": obj.get("orderName"),
             "pipeline": IPipelineModel.from_dict(obj["pipeline"]) if obj.get("pipeline") is not None else None,
-            "isDemo": obj.get("isDemo")
+            "isDemo": obj.get("isDemo"),
+            "precedingOrderId": obj.get("precedingOrderId")
         })
         return _obj
 

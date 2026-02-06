@@ -17,18 +17,26 @@ import pprint
 import re  # noqa: F401
 import json
 
+from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from rapidata.api_client.models.flow_item_state import FlowItemState
 from typing import Optional, Set
 from typing_extensions import Self
 
-class UpdateOrderModel(BaseModel):
+class QueryFlowItemsEndpointOutput(BaseModel):
     """
-    UpdateOrderModel
+    QueryFlowItemsEndpointOutput
     """ # noqa: E501
-    name: Optional[StrictStr] = None
-    preceding_order_id: Optional[StrictStr] = Field(default=None, alias="precedingOrderId")
-    __properties: ClassVar[List[str]] = ["name", "precedingOrderId"]
+    id: StrictStr
+    dataset_id: StrictStr = Field(alias="datasetId")
+    workflow_id: Optional[StrictStr] = Field(default=None, alias="workflowId")
+    state: FlowItemState
+    failure_message: Optional[StrictStr] = Field(default=None, alias="failureMessage")
+    created_at: datetime = Field(alias="createdAt")
+    completed_at: Optional[datetime] = Field(default=None, alias="completedAt")
+    failed_at: Optional[datetime] = Field(default=None, alias="failedAt")
+    __properties: ClassVar[List[str]] = ["id", "datasetId", "workflowId", "state", "failureMessage", "createdAt", "completedAt", "failedAt"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +56,7 @@ class UpdateOrderModel(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of UpdateOrderModel from a JSON string"""
+        """Create an instance of QueryFlowItemsEndpointOutput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -69,21 +77,31 @@ class UpdateOrderModel(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if name (nullable) is None
+        # set to None if workflow_id (nullable) is None
         # and model_fields_set contains the field
-        if self.name is None and "name" in self.model_fields_set:
-            _dict['name'] = None
+        if self.workflow_id is None and "workflow_id" in self.model_fields_set:
+            _dict['workflowId'] = None
 
-        # set to None if preceding_order_id (nullable) is None
+        # set to None if failure_message (nullable) is None
         # and model_fields_set contains the field
-        if self.preceding_order_id is None and "preceding_order_id" in self.model_fields_set:
-            _dict['precedingOrderId'] = None
+        if self.failure_message is None and "failure_message" in self.model_fields_set:
+            _dict['failureMessage'] = None
+
+        # set to None if completed_at (nullable) is None
+        # and model_fields_set contains the field
+        if self.completed_at is None and "completed_at" in self.model_fields_set:
+            _dict['completedAt'] = None
+
+        # set to None if failed_at (nullable) is None
+        # and model_fields_set contains the field
+        if self.failed_at is None and "failed_at" in self.model_fields_set:
+            _dict['failedAt'] = None
 
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of UpdateOrderModel from a dict"""
+        """Create an instance of QueryFlowItemsEndpointOutput from a dict"""
         if obj is None:
             return None
 
@@ -91,8 +109,14 @@ class UpdateOrderModel(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "name": obj.get("name"),
-            "precedingOrderId": obj.get("precedingOrderId")
+            "id": obj.get("id"),
+            "datasetId": obj.get("datasetId"),
+            "workflowId": obj.get("workflowId"),
+            "state": obj.get("state"),
+            "failureMessage": obj.get("failureMessage"),
+            "createdAt": obj.get("createdAt"),
+            "completedAt": obj.get("completedAt"),
+            "failedAt": obj.get("failedAt")
         })
         return _obj
 

@@ -34,7 +34,7 @@ from rapidata.api_client.models.preview_order_model import PreviewOrderModel
 from rapidata.api_client.models.query_model import QueryModel
 from rapidata.api_client.models.submit_order_model import SubmitOrderModel
 from rapidata.api_client.models.unlock_order_result import UnlockOrderResult
-from rapidata.api_client.models.update_order_name_model import UpdateOrderNameModel
+from rapidata.api_client.models.update_order_model import UpdateOrderModel
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -1933,10 +1933,10 @@ class OrderApi:
 
 
     @validate_call
-    def order_order_id_name_patch(
+    def order_order_id_patch(
         self,
         order_id: Annotated[StrictStr, Field(description="The id of the order to update")],
-        update_order_name_model: Annotated[UpdateOrderNameModel, Field(description="The body content of the request")],
+        update_order_model: Annotated[UpdateOrderModel, Field(description="The body content of the request")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1950,13 +1950,13 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Updates the name of an order.
+        """Updates properties of an order.
 
 
         :param order_id: The id of the order to update (required)
         :type order_id: str
-        :param update_order_name_model: The body content of the request (required)
-        :type update_order_name_model: UpdateOrderNameModel
+        :param update_order_model: The body content of the request (required)
+        :type update_order_model: UpdateOrderModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1979,9 +1979,9 @@ class OrderApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._order_order_id_name_patch_serialize(
+        _param = self._order_order_id_patch_serialize(
             order_id=order_id,
-            update_order_name_model=update_order_name_model,
+            update_order_model=update_order_model,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2003,10 +2003,10 @@ class OrderApi:
 
 
     @validate_call
-    def order_order_id_name_patch_with_http_info(
+    def order_order_id_patch_with_http_info(
         self,
         order_id: Annotated[StrictStr, Field(description="The id of the order to update")],
-        update_order_name_model: Annotated[UpdateOrderNameModel, Field(description="The body content of the request")],
+        update_order_model: Annotated[UpdateOrderModel, Field(description="The body content of the request")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2020,13 +2020,13 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Updates the name of an order.
+        """Updates properties of an order.
 
 
         :param order_id: The id of the order to update (required)
         :type order_id: str
-        :param update_order_name_model: The body content of the request (required)
-        :type update_order_name_model: UpdateOrderNameModel
+        :param update_order_model: The body content of the request (required)
+        :type update_order_model: UpdateOrderModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2049,9 +2049,9 @@ class OrderApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._order_order_id_name_patch_serialize(
+        _param = self._order_order_id_patch_serialize(
             order_id=order_id,
-            update_order_name_model=update_order_name_model,
+            update_order_model=update_order_model,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2073,10 +2073,10 @@ class OrderApi:
 
 
     @validate_call
-    def order_order_id_name_patch_without_preload_content(
+    def order_order_id_patch_without_preload_content(
         self,
         order_id: Annotated[StrictStr, Field(description="The id of the order to update")],
-        update_order_name_model: Annotated[UpdateOrderNameModel, Field(description="The body content of the request")],
+        update_order_model: Annotated[UpdateOrderModel, Field(description="The body content of the request")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2090,13 +2090,13 @@ class OrderApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Updates the name of an order.
+        """Updates properties of an order.
 
 
         :param order_id: The id of the order to update (required)
         :type order_id: str
-        :param update_order_name_model: The body content of the request (required)
-        :type update_order_name_model: UpdateOrderNameModel
+        :param update_order_model: The body content of the request (required)
+        :type update_order_model: UpdateOrderModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2119,9 +2119,9 @@ class OrderApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._order_order_id_name_patch_serialize(
+        _param = self._order_order_id_patch_serialize(
             order_id=order_id,
-            update_order_name_model=update_order_name_model,
+            update_order_model=update_order_model,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2138,10 +2138,10 @@ class OrderApi:
         return response_data.response
 
 
-    def _order_order_id_name_patch_serialize(
+    def _order_order_id_patch_serialize(
         self,
         order_id,
-        update_order_name_model,
+        update_order_model,
         _request_auth,
         _content_type,
         _headers,
@@ -2169,8 +2169,8 @@ class OrderApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if update_order_name_model is not None:
-            _body_params = update_order_name_model
+        if update_order_model is not None:
+            _body_params = update_order_model
 
 
 
@@ -2199,7 +2199,7 @@ class OrderApi:
 
         return self.api_client.param_serialize(
             method='PATCH',
-            resource_path='/order/{orderId}/name',
+            resource_path='/order/{orderId}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

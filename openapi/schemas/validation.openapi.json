@@ -720,6 +720,12 @@
           }
         }
       },
+      "ClassifyPayload_ListOfClassifyPayload_Category": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/ClassifyPayload_Category"
+        }
+      },
       "CreateEmptyValidationSetResult": {
         "required": [
           "validationSetId"
@@ -1550,7 +1556,7 @@
             "type": "string"
           },
           "categories": {
-            "$ref": "#/components/schemas/ListOfClassifyPayload_Category"
+            "$ref": "#/components/schemas/ClassifyPayload_ListOfClassifyPayload_Category"
           },
           "title": {
             "type": "string"
@@ -2027,12 +2033,6 @@
         "type": "array",
         "items": {
           "$ref": "#/components/schemas/BoxShape"
-        }
-      },
-      "ListOfClassifyPayload_Category": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/ClassifyPayload_Category"
         }
       },
       "ListOfFeatureFlagModel": {

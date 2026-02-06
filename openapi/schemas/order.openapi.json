@@ -878,6 +878,49 @@
           }
         }
       },
+      "patch": {
+        "tags": [
+          "Order"
+        ],
+        "summary": "Updates properties of an order.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "The id of the order to update",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The body content of the request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateOrderModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateOrderModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateOrderModel"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      },
       "delete": {
         "tags": [
           "Order"
@@ -1419,7 +1462,8 @@
           "204": {
             "description": "No Content"
           }
-        }
+        },
+        "deprecated": true
       }
     },
     "/order/{orderId}/retry": {
@@ -1630,6 +1674,12 @@
           }
         }
       },
+      "AttachCategoryRapidBlueprint_ListOfAttachCategoryRapidBlueprint_Category": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/AttachCategoryRapidBlueprint_Category"
+        }
+      },
       "AudienceJobState": {
         "enum": [
           "Running",
@@ -1672,6 +1722,12 @@
           "GreaterThan",
           "GreaterThanOrEqual"
         ]
+      },
+      "ConditionalValidationSelection_ListOfConditionalValidationSelection_ValidationChance": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/ConditionalValidationSelection_ValidationChance"
+        }
       },
       "ConditionalValidationSelection_ValidationChance": {
         "required": [
@@ -1720,6 +1776,10 @@
           },
           "isDemo": {
             "type": "boolean"
+          },
+          "precedingOrderId": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -1926,6 +1986,9 @@
               }
             ]
           },
+          "stickyConfig": {
+            "$ref": "#/components/schemas/StickyConfig"
+          },
           "userScoreDimensions": {
             "type": "array",
             "items": {
@@ -1975,6 +2038,10 @@
           "maxIterations": {
             "type": "integer",
             "format": "int32"
+          },
+          "precedingOrderId": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -2604,7 +2671,7 @@
                 "nullable": true
               },
               {
-                "$ref": "#/components/schemas/ListOfMetadata_IOrderMetadataInput"
+                "$ref": "#/components/schemas/Metadata_ListOfMetadata_IOrderMetadataInput"
               }
             ]
           },
@@ -3019,7 +3086,7 @@
             }
           },
           "categories": {
-            "$ref": "#/components/schemas/ListOfAttachCategoryRapidBlueprint_Category"
+            "$ref": "#/components/schemas/AttachCategoryRapidBlueprint_ListOfAttachCategoryRapidBlueprint_Category"
           },
           "title": {
             "type": "string"
@@ -3397,7 +3464,7 @@
             "type": "string"
           },
           "validationChances": {
-            "$ref": "#/components/schemas/ListOfConditionalValidationSelection_ValidationChance"
+            "$ref": "#/components/schemas/ConditionalValidationSelection_ListOfConditionalValidationSelection_ValidationChance"
           },
           "dimensions": {
             "type": "array",
@@ -3895,18 +3962,6 @@
           "$ref": "#/components/schemas/AggregatedOrdersModel"
         }
       },
-      "ListOfAttachCategoryRapidBlueprint_Category": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/AttachCategoryRapidBlueprint_Category"
-        }
-      },
-      "ListOfConditionalValidationSelection_ValidationChance": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/ConditionalValidationSelection_ValidationChance"
-        }
-      },
       "ListOfFeatureFlag": {
         "type": "array",
         "items": {
@@ -3953,12 +4008,6 @@
         "type": "array",
         "items": {
           "$ref": "#/components/schemas/IUserFilterModel"
-        }
-      },
-      "ListOfMetadata_IOrderMetadataInput": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/Metadata_IOrderMetadataInput"
         }
       },
       "ListOfOrderModel": {
@@ -4078,6 +4127,12 @@
           "transcription": {
             "type": "string"
           }
+        }
+      },
+      "Metadata_ListOfMetadata_IOrderMetadataInput": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Metadata_IOrderMetadataInput"
         }
       },
       "MetadataInputCollection": {
@@ -4200,6 +4255,7 @@
           "Preview",
           "Submitted",
           "ManualReview",
+          "Queued",
           "Processing",
           "Paused",
           "Completed",
@@ -4567,6 +4623,26 @@
           "Desc"
         ]
       },
+      "StickyConfig": {
+        "type": "object",
+        "properties": {
+          "isEnabled": {
+            "type": "boolean"
+          },
+          "bypassFilters": {
+            "type": "boolean"
+          },
+          "bypassPrioritySelection": {
+            "type": "boolean"
+          },
+          "blockOtherStickyCampaigns": {
+            "type": "boolean"
+          },
+          "clearOnPause": {
+            "type": "boolean"
+          }
+        }
+      },
       "StickyState": {
         "enum": [
           "None",
@@ -4611,6 +4687,17 @@
         "type": "object",
         "properties": {
           "name": {
+            "$ref": "#/components/schemas/OptionOfstring"
+          }
+        }
+      },
+      "UpdateOrderModel": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/OptionOfstring"
+          },
+          "precedingOrderId": {
             "$ref": "#/components/schemas/OptionOfstring"
           }
         }
