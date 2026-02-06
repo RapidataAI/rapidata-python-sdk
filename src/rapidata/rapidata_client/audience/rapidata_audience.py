@@ -9,8 +9,8 @@ from rapidata.rapidata_client.audience.audience_example_handler import (
 if TYPE_CHECKING:
     from rapidata.service.openapi_service import OpenAPIService
     from rapidata.rapidata_client.filter import RapidataFilter
-    from rapidata.rapidata_client.job.job_definition import (
-        JobDefinition,
+    from rapidata.rapidata_client.job.rapidata_job_definition import (
+        RapidataJobDefinition,
     )
     from rapidata.rapidata_client.job.rapidata_job import RapidataJob
     from rapidata.rapidata_client.validation.rapids.rapids import Rapid
@@ -97,7 +97,7 @@ class RapidataAudience:
             self._name = name
             return self
 
-    def assign_job(self, job_definition: JobDefinition) -> RapidataJob:
+    def assign_job(self, job_definition: RapidataJobDefinition) -> RapidataJob:
         """Assign a job to this audience.
 
         Creates a new job instance from the job definition and assigns it to this audience.

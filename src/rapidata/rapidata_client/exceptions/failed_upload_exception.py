@@ -6,7 +6,9 @@ from collections import defaultdict
 
 if TYPE_CHECKING:
     from rapidata.rapidata_client.dataset._rapidata_dataset import RapidataDataset
-    from rapidata.rapidata_client.job.job_definition import JobDefinition
+    from rapidata.rapidata_client.job.rapidata_job_definition import (
+        RapidataJobDefinition,
+    )
     from rapidata.rapidata_client.order.rapidata_order import RapidataOrder
 
 
@@ -18,7 +20,7 @@ class FailedUploadException(Exception):
         dataset: RapidataDataset,
         failed_uploads: list[FailedUpload[Datapoint]],
         order: Optional[RapidataOrder] = None,
-        job_definition: Optional[JobDefinition] = None,
+        job_definition: Optional[RapidataJobDefinition] = None,
     ):
         self.dataset = dataset
         self.order = order

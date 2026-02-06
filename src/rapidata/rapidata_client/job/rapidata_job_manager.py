@@ -5,7 +5,7 @@ from rapidata.rapidata_client.config import logger, tracer
 from rapidata.rapidata_client.datapoints._datapoint import Datapoint
 from rapidata.rapidata_client.workflow import Workflow
 from rapidata.rapidata_client.settings import RapidataSetting
-from rapidata.rapidata_client.job.job_definition import JobDefinition
+from rapidata.rapidata_client.job.rapidata_job_definition import RapidataJobDefinition
 from typing import Sequence, Literal, TYPE_CHECKING
 from rapidata.rapidata_client.datapoints._asset_uploader import AssetUploader
 from rapidata.rapidata_client.dataset._rapidata_dataset import RapidataDataset
@@ -20,7 +20,7 @@ if TYPE_CHECKING:
     from rapidata.rapidata_client.job.rapidata_job import RapidataJob
 
 
-class JobManager:
+class RapidataJobManager:
     """
     A manager for job definitions.
     Used to create and retrieve job definitions.
@@ -41,7 +41,7 @@ class JobManager:
         responses_per_datapoint: int = 10,
         confidence_threshold: float | None = None,
         settings: Sequence[RapidataSetting] | None = None,
-    ) -> JobDefinition:
+    ) -> RapidataJobDefinition:
         if settings is None:
             settings = []
 
@@ -96,7 +96,7 @@ class JobManager:
                 ),
             )
         )
-        job_model = JobDefinition(
+        job_model = RapidataJobDefinition(
             id=job_definition_response.definition_id,
             name=name,
             openapi_service=self._openapi_service,
@@ -122,7 +122,7 @@ class JobManager:
         confidence_threshold: float | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
-    ) -> JobDefinition:
+    ) -> RapidataJobDefinition:
         """Create a classification job definition.
 
         With this order you can have a datapoint (image, text, video, audio) be classified into one of the answer options.
@@ -187,7 +187,7 @@ class JobManager:
         confidence_threshold: float | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
-    ) -> JobDefinition:
+    ) -> RapidataJobDefinition:
         """Create a compare job definition.
 
         With this order you compare two datapoints (image, text, video, audio) and the annotators will choose one of the two based on the instruction.
@@ -265,7 +265,7 @@ class JobManager:
         contexts: list[str] | None = None,
         media_contexts: list[str] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
-    ) -> JobDefinition:
+    ) -> RapidataJobDefinition:
         """
         Create a ranking job definition.
 
@@ -378,7 +378,7 @@ class JobManager:
         media_contexts: list[str] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
-    ) -> JobDefinition:
+    ) -> RapidataJobDefinition:
         """Create a free text job definition.
 
         With this order you can have a datapoint (image, text, video, audio) be labeled with free text.
@@ -429,7 +429,7 @@ class JobManager:
         responses_per_datapoint: int = 10,
         settings: Sequence[RapidataSetting] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
-    ) -> JobDefinition:
+    ) -> RapidataJobDefinition:
         """Create a select words job definition.
 
         With this order you can have a datapoint (image, text, video, audio) be labeled with a list of words.
@@ -476,7 +476,7 @@ class JobManager:
         media_contexts: list[str] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
-    ) -> JobDefinition:
+    ) -> RapidataJobDefinition:
         """Create a locate job definition.
 
         With this order you can have people locate specific objects in a datapoint (image, text, video, audio).
@@ -524,7 +524,7 @@ class JobManager:
         media_contexts: list[str] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
-    ) -> JobDefinition:
+    ) -> RapidataJobDefinition:
         """Create a draw job definition.
 
         With this order you can have people draw lines on a datapoint (image, text, video, audio).
@@ -572,7 +572,7 @@ class JobManager:
         media_contexts: list[str] | None = None,
         settings: Sequence[RapidataSetting] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
-    ) -> JobDefinition:
+    ) -> RapidataJobDefinition:
         """Create a timestamp job definition.
 
         Warning:
@@ -613,7 +613,7 @@ class JobManager:
                 settings=settings,
             )
 
-    def get_job_definition_by_id(self, job_definition_id: str) -> JobDefinition:
+    def get_job_definition_by_id(self, job_definition_id: str) -> RapidataJobDefinition:
         """Get a job definition by ID.
 
         Args:
@@ -630,7 +630,7 @@ class JobManager:
                 )
             )
 
-            return JobDefinition(
+            return RapidataJobDefinition(
                 id=job_definition.definition_id,
                 name=job_definition.name,
                 openapi_service=self._openapi_service,
@@ -638,7 +638,7 @@ class JobManager:
 
     def find_job_definitions(
         self, name: str = "", amount: int = 10
-    ) -> list[JobDefinition]:
+    ) -> list[RapidataJobDefinition]:
         """Find your recent jobs given criteria. If nothing is provided, it will return the most recent job definitions.
 
         Args:
@@ -680,7 +680,7 @@ class JobManager:
             )
 
             jobs = [
-                JobDefinition(
+                RapidataJobDefinition(
                     id=job_def.definition_id,
                     name=job_def.name,
                     openapi_service=self._openapi_service,
