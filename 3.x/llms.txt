@@ -22,6 +22,10 @@
 - [🧠 Model Ranking Insights](https://docs.rapidata.ai/3.x/mri/index.md)
 - [🔭 Model Ranking Insights Advanced](https://docs.rapidata.ai/3.x/mri_advanced/index.md)
 
+## Flows
+
+- [Overview](https://docs.rapidata.ai/3.x/flows/index.md)
+
 ## Migration
 
 - [🔄 Migration Guide](https://docs.rapidata.ai/3.x/migration_guide/index.md)
