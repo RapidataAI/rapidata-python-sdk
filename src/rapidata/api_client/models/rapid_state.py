@@ -32,6 +32,7 @@ class RapidState(str, Enum):
     FLAGGED = 'Flagged'
     DONE = 'Done'
     NONE = 'None'
+    REJECTED = 'Rejected'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

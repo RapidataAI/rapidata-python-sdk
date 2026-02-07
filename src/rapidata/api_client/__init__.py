@@ -54,6 +54,7 @@ _API_IMPORTS = {
     "PromptApi": "rapidata.api_client.api.prompt_api",
     "RankingFlowApi": "rapidata.api_client.api.ranking_flow_api",
     "RankingFlowItemApi": "rapidata.api_client.api.ranking_flow_item_api",
+    "RapidApi": "rapidata.api_client.api.rapid_api",
     "RapidataIdentityAPIApi": "rapidata.api_client.api.rapidata_identity_api_api",
     "RapidsApi": "rapidata.api_client.api.rapids_api",
     "SampleApi": "rapidata.api_client.api.sample_api",

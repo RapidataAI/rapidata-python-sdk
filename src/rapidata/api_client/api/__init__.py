@@ -26,6 +26,7 @@ from rapidata.api_client.api.pipeline_api import PipelineApi
 from rapidata.api_client.api.prompt_api import PromptApi
 from rapidata.api_client.api.ranking_flow_api import RankingFlowApi
 from rapidata.api_client.api.ranking_flow_item_api import RankingFlowItemApi
+from rapidata.api_client.api.rapid_api import RapidApi
 from rapidata.api_client.api.rapidata_identity_api_api import RapidataIdentityAPIApi
 from rapidata.api_client.api.rapids_api import RapidsApi
 from rapidata.api_client.api.sample_api import SampleApi
