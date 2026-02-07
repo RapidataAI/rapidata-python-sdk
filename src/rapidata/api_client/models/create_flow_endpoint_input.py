@@ -30,12 +30,13 @@ class CreateFlowEndpointInput(BaseModel):
     name: StrictStr
     criteria: StrictStr
     context: Optional[StrictStr] = None
+    validation_set_id: Optional[StrictStr] = Field(default=None, alias="validationSetId")
     starting_elo: Optional[StrictInt] = Field(default=None, alias="startingElo")
     k_factor: Optional[StrictInt] = Field(default=None, alias="kFactor")
     scaling_factor: Optional[StrictInt] = Field(default=None, alias="scalingFactor")
     responses_required: StrictInt = Field(alias="responsesRequired")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
-    __properties: ClassVar[List[str]] = ["name", "criteria", "context", "startingElo", "kFactor", "scalingFactor", "responsesRequired", "featureFlags"]
+    __properties: ClassVar[List[str]] = ["name", "criteria", "context", "validationSetId", "startingElo", "kFactor", "scalingFactor", "responsesRequired", "featureFlags"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -88,6 +89,11 @@ class CreateFlowEndpointInput(BaseModel):
         if self.context is None and "context" in self.model_fields_set:
             _dict['context'] = None
 
+        # set to None if validation_set_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.validation_set_id is None and "validation_set_id" in self.model_fields_set:
+            _dict['validationSetId'] = None
+
         return _dict
 
     @classmethod
@@ -103,6 +109,7 @@ class CreateFlowEndpointInput(BaseModel):
             "name": obj.get("name"),
             "criteria": obj.get("criteria"),
             "context": obj.get("context"),
+            "validationSetId": obj.get("validationSetId"),
             "startingElo": obj.get("startingElo"),
             "kFactor": obj.get("kFactor"),
             "scalingFactor": obj.get("scalingFactor"),

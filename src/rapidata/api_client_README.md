@@ -148,7 +148,7 @@ Class | Method | HTTP request | Description
 *FeedbackApi* | [**feedback_post**](rapidata/api_client/docs/FeedbackApi.md#feedback_post) | **POST** /feedback | Submits feedback about our services.
 *FlowApi* | [**flow_flow_id_delete**](rapidata/api_client/docs/FlowApi.md#flow_flow_id_delete) | **DELETE** /flow/{flowId} | Soft deletes a flow by its ID.
 *FlowApi* | [**flow_flow_id_get**](rapidata/api_client/docs/FlowApi.md#flow_flow_id_get) | **GET** /flow/{flowId} | Retrieves a flow by its ID.
-*FlowApi* | [**flow_get**](rapidata/api_client/docs/FlowApi.md#flow_get) | **GET** /flow | Queries flows. Admins see all flows, regular users see only their own.
+*FlowApi* | [**flow_get**](rapidata/api_client/docs/FlowApi.md#flow_get) | **GET** /flow | 
 *GroupedRankingWorkflowApi* | [**workflow_grouped_ranking_workflow_id_results_get**](rapidata/api_client/docs/GroupedRankingWorkflowApi.md#workflow_grouped_ranking_workflow_id_results_get) | **GET** /workflow/grouped-ranking/{workflowId}/results | Get the result overview for a multi compare workflow.
 *IdentityApi* | [**identity_bridge_token_get**](rapidata/api_client/docs/IdentityApi.md#identity_bridge_token_get) | **GET** /identity/bridge-token | Tries to read the bridge token keys for a given read key.  The read key is used to retrieve the authentication result written by the write key.
 *IdentityApi* | [**identity_bridge_token_post**](rapidata/api_client/docs/IdentityApi.md#identity_bridge_token_post) | **POST** /identity/bridge-token | Creates a pair of read and write keys for a client.  The write key is used to store the authentication result.  The read key is used to retrieve the authentication result.
@@ -220,6 +220,7 @@ Class | Method | HTTP request | Description
 *RankingFlowItemApi* | [**flow_ranking_flow_id_item_post**](rapidata/api_client/docs/RankingFlowItemApi.md#flow_ranking_flow_id_item_post) | **POST** /flow/ranking/{flowId}/item | Creates a new flow item for the specified flow.
 *RankingFlowItemApi* | [**flow_ranking_item_flow_item_id_get**](rapidata/api_client/docs/RankingFlowItemApi.md#flow_ranking_item_flow_item_id_get) | **GET** /flow/ranking/item/{flowItemId} | Retrieves a flow item by its ID.
 *RankingFlowItemApi* | [**flow_ranking_item_flow_item_id_results_get**](rapidata/api_client/docs/RankingFlowItemApi.md#flow_ranking_item_flow_item_id_results_get) | **GET** /flow/ranking/item/{flowItemId}/results | Retrieves ranking results (assets with Elo scores) for a completed flow item.  Returns 409 Conflict if the flow item is not completed or has no associated workflow.
+*RapidApi* | [**rapid_rapid_id_reject_post**](rapidata/api_client/docs/RapidApi.md#rapid_rapid_id_reject_post) | **POST** /rapid/{rapidId}/reject | Rejects a rapid, transitioning it from Done to Rejected state and propagating staleness.
 *RapidataIdentityAPIApi* | [**root_get**](rapidata/api_client/docs/RapidataIdentityAPIApi.md#root_get) | **GET** / | 
 *RapidsApi* | [**audience_audience_id_rapid_rapid_id_patch**](rapidata/api_client/docs/RapidsApi.md#audience_audience_id_rapid_rapid_id_patch) | **PATCH** /audience/{audienceId}/rapid/{rapidId} | Updates a rapid&#39;s validation properties within an audience.
 *SampleApi* | [**benchmark_sample_sample_id_get**](rapidata/api_client/docs/SampleApi.md#benchmark_sample_sample_id_get) | **GET** /benchmark-sample/{sampleId} | Gets a sample by its Id.
@@ -330,6 +331,7 @@ Class | Method | HTTP request | Description
  - [FileType](rapidata/api_client/docs/FileType.md)
  - [Filter](rapidata/api_client/docs/Filter.md)
  - [FilterOperator](rapidata/api_client/docs/FilterOperator.md)
+ - [FlowGetNameParameter](rapidata/api_client/docs/FlowGetNameParameter.md)
  - [FlowItemState](rapidata/api_client/docs/FlowItemState.md)
  - [FlowType](rapidata/api_client/docs/FlowType.md)
  - [ForkBenchmarkResult](rapidata/api_client/docs/ForkBenchmarkResult.md)

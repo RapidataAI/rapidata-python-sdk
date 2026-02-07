@@ -691,7 +691,8 @@
                 "Incomplete",
                 "Flagged",
                 "Done",
-                "None"
+                "None",
+                "Rejected"
               ]
             }
           },
@@ -837,7 +838,8 @@
                 "Incomplete",
                 "Flagged",
                 "Done",
-                "None"
+                "None",
+                "Rejected"
               ]
             }
           },
@@ -2868,7 +2870,8 @@
           "Incomplete",
           "Flagged",
           "Done",
-          "None"
+          "None",
+          "Rejected"
         ]
       },
       "RootFilter": {
