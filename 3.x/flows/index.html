@@ -1244,7 +1244,7 @@
 
 <h1 id="ranking-flows">Ranking Flows<a class="headerlink" href="#ranking-flows" title="Permanent link">#</a></h1>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">#</a></h2>
-<p>Ranking Flows provide a lightweight way to continuously rank items using human comparisons without the overhead of creating full orders. They are ideal for ongoing evaluation where new items are added over time and ranked against existing ones using an ELO-based rating system.</p>
+<p>Ranking Flows provide a lightweight way to continuously rank items using human comparisons without the overhead of creating full orders. They are ideal for ongoing evaluation where new items are added over time and ranked against existing ones using a bradley terry paired comparison based rating system.</p>
 <blockquote>
 <p><strong>Note:</strong> Can be used with Images, Videos, Audio, and Text.</p>
 </blockquote>
@@ -1258,8 +1258,7 @@
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">flow</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">flow</span><span class="o">.</span><span class="n">create_ranking_flow</span><span class="p">(</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">name</span><span class="o">=</span><span class="s2">"Image Quality Ranking"</span><span class="p">,</span>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image looks better?"</span><span class="p">,</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">responses_per_comparison</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">)</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="2-add-a-flow-batch">2. Add a Flow Batch<a class="headerlink" href="#2-add-a-flow-batch" title="Permanent link">#</a></h3>
 <p>Submit datapoints to the flow by creating a batch. Each batch uploads a set of items that will be compared and ranked:</p>
@@ -1271,46 +1270,41 @@
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="p">],</span>
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="p">)</span>
 </span></code></pre></div>
-<p>You can also provide text datapoints or add context:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">flow_item</span> <span class="o">=</span> <span class="n">flow</span><span class="o">.</span><span class="n">create_new_flow_batch</span><span class="p">(</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">datapoints</span><span class="o">=</span><span class="p">[</span><span class="s2">"Response from Model A"</span><span class="p">,</span> <span class="s2">"Response from Model B"</span><span class="p">],</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">contexts</span><span class="o">=</span><span class="p">[</span><span class="s2">"Prompt: Explain quantum computing"</span><span class="p">,</span> <span class="s2">"Prompt: Explain quantum computing"</span><span class="p">],</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">data_type</span><span class="o">=</span><span class="s2">"text"</span><span class="p">,</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">)</span>
-</span></code></pre></div>
 <h3 id="3-get-results">3. Get Results<a class="headerlink" href="#3-get-results" title="Permanent link">#</a></h3>
 <p>Call <code>get_results()</code> on a flow item to retrieve the ranking results. If the flow item is still processing, this will automatically wait until it completes:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">results</span> <span class="o">=</span> <span class="n">flow_item</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">results</span> <span class="o">=</span> <span class="n">flow_item</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span>
 </span></code></pre></div>
 <p>You can also check the status without blocking:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">status</span> <span class="o">=</span> <span class="n">flow_item</span><span class="o">.</span><span class="n">get_status</span><span class="p">()</span>  <span class="c1"># Pending, Running, Completed, or Failed</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">status</span> <span class="o">=</span> <span class="n">flow_item</span><span class="o">.</span><span class="n">get_status</span><span class="p">()</span>  <span class="c1"># Pending, Running, Completed, or Failed</span>
 </span></code></pre></div>
 <p>To query all flow items for a flow, optionally filtering by state:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata.api_client.models.flow_item_state</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlowItemState</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Get all completed items</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">completed_items</span> <span class="o">=</span> <span class="n">flow</span><span class="o">.</span><span class="n">get_flow_items</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">FlowItemState</span><span class="o">.</span><span class="n">COMPLETED</span><span class="p">)</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Get all items</span>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="n">all_items</span> <span class="o">=</span> <span class="n">flow</span><span class="o">.</span><span class="n">get_flow_items</span><span class="p">()</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">rapidata.api_client.models.flow_item_state</span><span class="w"> </span><span class="kn">import</span> <span class="n">FlowItemState</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Get all completed items</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">completed_items</span> <span class="o">=</span> <span class="n">flow</span><span class="o">.</span><span class="n">get_flow_items</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="n">FlowItemState</span><span class="o">.</span><span class="n">COMPLETED</span><span class="p">)</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Get all items</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="n">all_items</span> <span class="o">=</span> <span class="n">flow</span><span class="o">.</span><span class="n">get_flow_items</span><span class="p">()</span>
 </span></code></pre></div>
 <h3 id="4-update-flow-configuration">4. Update Flow Configuration<a class="headerlink" href="#4-update-flow-configuration" title="Permanent link">#</a></h3>
 <p>You can update the flow configuration at any time:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">flow</span><span class="o">.</span><span class="n">update_config</span><span class="p">(</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image has higher visual quality?"</span><span class="p">,</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="n">responses_per_comparison</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">flow</span><span class="o">.</span><span class="n">update_config</span><span class="p">(</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="n">instruction</span><span class="o">=</span><span class="s2">"Which image has higher visual quality?"</span><span class="p">,</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="p">)</span>
 </span></code></pre></div>
+<blockquote>
+<p><strong>Note:</strong> This config will only effect new flow items and not modify existing ones.</p>
+</blockquote>
 <h3 id="retrieving-existing-flows">Retrieving Existing Flows<a class="headerlink" href="#retrieving-existing-flows" title="Permanent link">#</a></h3>
 <p>You can retrieve flows by ID or list your recent flows:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Get a specific flow by ID</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">flow</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">flow</span><span class="o">.</span><span class="n">get_flow_by_id</span><span class="p">(</span><span class="s2">"flow_id_here"</span><span class="p">)</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># List recent flows</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="n">recent_flows</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">flow</span><span class="o">.</span><span class="n">find_flows</span><span class="p">(</span><span class="n">amount</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Get a specific flow by ID</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">flow</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">flow</span><span class="o">.</span><span class="n">get_flow_by_id</span><span class="p">(</span><span class="s2">"flow_id_here"</span><span class="p">)</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># List recent flows</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">recent_flows</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">flow</span><span class="o">.</span><span class="n">find_flows</span><span class="p">(</span><span class="n">amount</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 </span></code></pre></div>
 <h3 id="deleting-a-flow">Deleting a Flow<a class="headerlink" href="#deleting-a-flow" title="Permanent link">#</a></h3>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">flow</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">flow</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
 </span></code></pre></div>
         <div id="llms-copy-button" style="position: fixed; z-index: 1100; top: 80px; right: 20px;">
             <button onclick="copyMarkdownToClipboard()" style="cursor: pointer; background: #007acc; color: white; border: none; padding: 8px 16px; border-radius: 4px; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">📋</button>

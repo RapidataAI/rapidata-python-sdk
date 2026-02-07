@@ -2,7 +2,7 @@
 
 ## Overview
 
-Ranking Flows provide a lightweight way to continuously rank items using human comparisons without the overhead of creating full orders. They are ideal for ongoing evaluation where new items are added over time and ranked against existing ones using an ELO-based rating system.
+Ranking Flows provide a lightweight way to continuously rank items using human comparisons without the overhead of creating full orders. They are ideal for ongoing evaluation where new items are added over time and ranked against existing ones using a bradley terry paired comparison based rating system.
 
 > **Note:** Can be used with Images, Videos, Audio, and Text.
 
@@ -20,7 +20,6 @@ client = RapidataClient()
 flow = client.flow.create_ranking_flow(
     name="Image Quality Ranking",
     instruction="Which image looks better?",
-    responses_per_comparison=1,
 )
 ```
 
@@ -35,16 +34,6 @@ flow_item = flow.create_new_flow_batch(
         "https://example.com/image_b.jpg",
         "https://example.com/image_c.jpg",
     ],
-)
-```
-
-You can also provide text datapoints or add context:
-
-```python
-flow_item = flow.create_new_flow_batch(
-    datapoints=["Response from Model A", "Response from Model B"],
-    contexts=["Prompt: Explain quantum computing", "Prompt: Explain quantum computing"],
-    data_type="text",
 )
 ```
 
@@ -81,9 +70,11 @@ You can update the flow configuration at any time:
 ```python
 flow.update_config(
     instruction="Which image has higher visual quality?",
-    responses_per_comparison=3,
 )
 ```
+
+> **Note:** This config will only effect new flow items and not modify existing ones.
+
 
 ### Retrieving Existing Flows
 
