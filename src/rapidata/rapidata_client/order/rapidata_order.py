@@ -214,7 +214,14 @@ class RapidataOrder:
         )
 
     def run(self, after: RapidataOrder | str | None = None) -> RapidataOrder:
-        """Runs the order to start collecting responses."""
+        """Runs the order to start collecting responses.
+        Args:
+            after: The order to set as the preceding order. So order will only start collecting responses after the preceding order is completed.
+                Can be a RapidataOrder instance, a string order ID, or None.
+                If None, the order will start collecting responses immediately.
+        Returns:
+            The order itself.
+        """
         with tracer.start_as_current_span("RapidataOrder.run"):
             from rapidata.api_client.models.submit_order_model import SubmitOrderModel
 
