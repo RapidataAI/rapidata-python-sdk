@@ -7,9 +7,6 @@ from rapidata.service.openapi_service import OpenAPIService
 
 
 if TYPE_CHECKING:
-    from rapidata.api_client.models.get_ranking_flow_item_results_endpoint_output import (
-        GetRankingFlowItemResultsEndpointOutput,
-    )
     from rapidata.api_client.models.flow_item_state import FlowItemState
     from rapidata.api_client.models.get_flow_item_by_id_endpoint_output import (
         GetFlowItemByIdEndpointOutput,
@@ -33,9 +30,16 @@ class RapidataFlowItem:
             details = self._get_details()
             return details.state
 
-    def get_results(self) -> list[dict[str, Any]]:
-        """Get the results of this flow item from the API."""
+    def get_results(self) -> dict[str, int]:
+        """Get the results of this flow item from the API.
+
+        Returns:
+            dict[str, int]: A mapping of asset identifier to elo score.
+                The key is the source URL if available, otherwise the original filename.
+        """
         with tracer.start_as_current_span("RapidataFlowItem.get_results"):
+            from rapidata.api_client.models.flow_item_state import FlowItemState
+
             logger.debug("Getting results for flow item '%s'", self.id)
             self._wait_for_state(
                 target_states=[FlowItemState.COMPLETED],
@@ -46,7 +50,30 @@ class RapidataFlowItem:
             results = self._openapi_service.ranking_flow_item_api.flow_ranking_item_flow_item_id_results_get(
                 flow_item_id=self.id,
             )
-            return [result.to_dict() for result in results.datapoints]
+
+            return {
+                self._extract_asset_key(dp): dp.get("elo", 0)
+                for dp in (datapoint.to_dict() for datapoint in results.datapoints)
+            }
+
+    @staticmethod
+    def _extract_asset_key(datapoint: dict[str, Any]) -> str:
+        """Extract a human-readable key from a datapoint dict.
+
+        Uses the source URL if available, otherwise the original filename,
+        falling back to the asset identifier or datapoint id.
+        """
+        asset = datapoint.get("asset", {})
+        metadata = asset.get("metadata", {})
+
+        source_url = metadata.get("sourceUrl", {}).get("url")
+        original_filename = metadata.get("originalFilename", {}).get("originalFilename")
+
+        return (
+            source_url
+            or original_filename
+            or asset.get("identifier", datapoint.get("id", "unknown"))
+        )
 
     def _wait_for_state(
         self,
