@@ -22,7 +22,7 @@ if TYPE_CHECKING:
 
 class RapidataJobManager:
     """
-    A manager for job definitions.
+    A rapidata manager for job definitions.
     Used to create and retrieve job definitions.
     """
 
