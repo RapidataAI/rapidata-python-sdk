@@ -4260,7 +4260,8 @@
           "Paused",
           "Completed",
           "Cancelled",
-          "Failed"
+          "Failed",
+          "StaleResults"
         ]
       },
       "PagedResultOfAggregatedOrdersModel": {

@@ -16,7 +16,10 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import StrictStr
+from pydantic import Field, StrictInt, StrictStr, field_validator
+from typing import List, Optional
+from typing_extensions import Annotated
+from rapidata.api_client.models.flow_get_name_parameter import FlowGetNameParameter
 from rapidata.api_client.models.get_flow_by_id_endpoint_output import GetFlowByIdEndpointOutput
 from rapidata.api_client.models.query_flows_endpoint_paged_result_of_output import QueryFlowsEndpointPagedResultOfOutput
 
@@ -579,6 +582,11 @@ class FlowApi:
     @validate_call
     def flow_get(
         self,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        name: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by name.")] = None,
+        created_at: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -592,9 +600,19 @@ class FlowApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> QueryFlowsEndpointPagedResultOfOutput:
-        """Queries flows. Admins see all flows, regular users see only their own.
+        """flow_get
 
 
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param name: Filter by name.
+        :type name: FlowGetNameParameter
+        :param created_at: Filter by created_at.
+        :type created_at: FlowGetNameParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -618,6 +636,11 @@ class FlowApi:
         """ # noqa: E501
 
         _param = self._flow_get_serialize(
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            name=name,
+            created_at=created_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -644,6 +667,11 @@ class FlowApi:
     @validate_call
     def flow_get_with_http_info(
         self,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        name: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by name.")] = None,
+        created_at: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -657,9 +685,19 @@ class FlowApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[QueryFlowsEndpointPagedResultOfOutput]:
-        """Queries flows. Admins see all flows, regular users see only their own.
+        """flow_get
 
 
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param name: Filter by name.
+        :type name: FlowGetNameParameter
+        :param created_at: Filter by created_at.
+        :type created_at: FlowGetNameParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -683,6 +721,11 @@ class FlowApi:
         """ # noqa: E501
 
         _param = self._flow_get_serialize(
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            name=name,
+            created_at=created_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -709,6 +752,11 @@ class FlowApi:
     @validate_call
     def flow_get_without_preload_content(
         self,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        name: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by name.")] = None,
+        created_at: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -722,9 +770,19 @@ class FlowApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Queries flows. Admins see all flows, regular users see only their own.
+        """flow_get
 
 
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param name: Filter by name.
+        :type name: FlowGetNameParameter
+        :param created_at: Filter by created_at.
+        :type created_at: FlowGetNameParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -748,6 +806,11 @@ class FlowApi:
         """ # noqa: E501
 
         _param = self._flow_get_serialize(
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            name=name,
+            created_at=created_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -769,6 +832,11 @@ class FlowApi:
 
     def _flow_get_serialize(
         self,
+        page,
+        page_size,
+        sort,
+        name,
+        created_at,
         _request_auth,
         _content_type,
         _headers,
@@ -778,6 +846,7 @@ class FlowApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
+            'sort': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
@@ -791,6 +860,26 @@ class FlowApi:
 
         # process the path parameters
         # process the query parameters
+        if page is not None:
+            
+            _query_params.append(('page', page))
+            
+        if page_size is not None:
+            
+            _query_params.append(('page_size', page_size))
+            
+        if sort is not None:
+            
+            _query_params.append(('sort', sort))
+            
+        if name is not None:
+            
+            _query_params.append(('name', name))
+            
+        if created_at is not None:
+            
+            _query_params.append(('created_at', created_at))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter

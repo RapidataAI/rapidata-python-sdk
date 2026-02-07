@@ -40,8 +40,8 @@ class GetSimpleWorkflowResultsModel(BaseModel):
             return value
 
         for i in value:
-            if i not in set(['Labeling', 'Paused', 'Incomplete', 'Flagged', 'Done', 'None']):
-                raise ValueError("each list item must be one of ('Labeling', 'Paused', 'Incomplete', 'Flagged', 'Done', 'None')")
+            if i not in set(['Labeling', 'Paused', 'Incomplete', 'Flagged', 'Done', 'None', 'Rejected']):
+                raise ValueError("each list item must be one of ('Labeling', 'Paused', 'Incomplete', 'Flagged', 'Done', 'None', 'Rejected')")
         return value
 
     model_config = ConfigDict(

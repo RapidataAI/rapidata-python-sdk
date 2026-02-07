@@ -36,6 +36,7 @@ class OrderState(str, Enum):
     COMPLETED = 'Completed'
     CANCELLED = 'Cancelled'
     FAILED = 'Failed'
+    STALERESULTS = 'StaleResults'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

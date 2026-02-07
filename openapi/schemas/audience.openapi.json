@@ -3040,7 +3040,8 @@
           "Incomplete",
           "Flagged",
           "Done",
-          "None"
+          "None",
+          "Rejected"
         ]
       },
       "RootFilter": {
