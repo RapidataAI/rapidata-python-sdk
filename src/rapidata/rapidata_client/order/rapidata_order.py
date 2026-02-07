@@ -201,10 +201,6 @@ class RapidataOrder:
         """Gets the workflow progress (internal use only)."""
 
         def get_progress():
-            from rapidata.api_client.models.get_workflow_progress_result import (
-                GetWorkflowProgressResult,
-            )
-
             with suppress_rapidata_error_logging():
                 workflow_id = self.__get_workflow_id()
                 return self._openapi_service.workflow_api.workflow_workflow_id_progress_get(
@@ -217,10 +213,27 @@ class RapidataOrder:
             retry_delay=4,
         )
 
-    def run(self) -> RapidataOrder:
+    def run(self, after: RapidataOrder | str | None = None) -> RapidataOrder:
         """Runs the order to start collecting responses."""
         with tracer.start_as_current_span("RapidataOrder.run"):
             from rapidata.api_client.models.submit_order_model import SubmitOrderModel
+
+            if after:
+                logger.info(
+                    "Setting preceding order for order '%s' to '%s'", self, after
+                )
+                from rapidata.api_client.models.update_order_model import (
+                    UpdateOrderModel,
+                )
+
+                self._openapi_service.order_api.order_order_id_patch(
+                    self.id,
+                    UpdateOrderModel(
+                        precedingOrderId=(
+                            after.id if isinstance(after, RapidataOrder) else after
+                        )
+                    ),
+                )
 
             logger.info("Starting order '%s'", self)
             self._openapi_service.order_api.order_order_id_submit_post(
