@@ -26,7 +26,6 @@ class RapidataFlow:
     def create_new_flow_batch(
         self,
         datapoints: list[str],
-        contexts: list[str] | None = None,
         data_type: Literal["media", "text"] = "media",
         private_metadata: list[dict[str, str]] | None = None,
         accept_failed_uploads: bool = False,
@@ -35,7 +34,6 @@ class RapidataFlow:
 
         Args:
             datapoints: The list of datapoints (paths or URLs) to upload.
-            contexts: Optional list of contexts, one per datapoint.
             data_type: The data type of the datapoints. Defaults to "media".
             private_metadata: Optional key-value metadata per datapoint.
             accept_failed_uploads: If True, continues even if some uploads fail.
@@ -58,7 +56,6 @@ class RapidataFlow:
 
             datapoints_instances = DatapointsValidator.map_datapoints(
                 datapoints=datapoints,
-                contexts=contexts,
                 data_type=data_type,
                 private_metadata=private_metadata,
             )
