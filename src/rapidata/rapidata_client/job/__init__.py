@@ -1,3 +1,3 @@
-from .job_definition import JobDefinition
-from .job_manager import JobManager
+from .rapidata_job_definition import RapidataJobDefinition
+from .rapidata_job_manager import RapidataJobManager
 from .rapidata_job import RapidataJob

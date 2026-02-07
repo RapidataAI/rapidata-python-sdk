@@ -4,7 +4,7 @@ from .audience import (
     RapidataAudienceManager,
 )
 from .order import RapidataOrderManager, RapidataOrder
-from .job import RapidataJob, JobDefinition, JobManager
+from .job import RapidataJob, RapidataJobDefinition, RapidataJobManager
 from .validation import ValidationSetManager, RapidataValidationSet, Box
 from .results import RapidataResults
 from .selection import (

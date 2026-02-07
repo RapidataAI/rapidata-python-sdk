@@ -23,3 +23,7 @@ when doing type annotations use the "from __future__ import annotations" stateme
 When building the docs make sure you use 'uv run --group docs mkdocs build' - otherwise check out the pyproject.toml file for the dependencies.
 
 When writing documentation, make sure to keep focused, easy to understand, and not repeat information. it should highlight the capabilities while not overexaggerating or falling into hyperbole.
+
+
+## General rules
+at the end of your edits make sure to run 'pyright src/rapidata/rapidata_client' and make sure there are no errors.

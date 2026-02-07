@@ -11,7 +11,7 @@ import urllib.parse
 from colorama import Fore
 
 
-class JobDefinition:
+class RapidataJobDefinition:
     def __init__(
         self,
         id: str,
@@ -25,7 +25,7 @@ class JobDefinition:
             f"https://app.{self._openapi_service.environment}/definitions/{self.id}"
         )
 
-    def preview(self) -> JobDefinition:
+    def preview(self) -> RapidataJobDefinition:
         """Will open the browser where you can preview the job definition before giving it to an audience."""
         logger.info("Opening order details page in browser...")
         if not webbrowser.open(self._job_details_page):
@@ -47,7 +47,7 @@ class JobDefinition:
         media_contexts: list[str] | None = None,
         sentences: list[str] | None = None,
         private_metadata: list[dict[str, str]] | None = None,
-    ) -> JobDefinition:
+    ) -> RapidataJobDefinition:
         """Update the dataset of the job definition.
 
         Args:

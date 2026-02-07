@@ -69,6 +69,8 @@ plugins:
         Benchmarks:
           - mri.md
           - mri_advanced.md
+        Flows:
+          - flows.md
         Migration:
           - migration_guide.md
       enable_markdown_urls: true
@@ -121,6 +123,8 @@ nav:
     - "📈 Benchmarks":
       - "🧠 Model Ranking Insights": mri.md
       - "🔭 Model Ranking Insights Advanced": mri_advanced.md
+    - "♻️ Flows":
+      - "Overview": flows.md
     - "🔄 Migration Guide": migration_guide.md
 
 theme:
