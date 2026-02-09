@@ -54,7 +54,7 @@ class RapidataFlowManager:
                     criteria=instruction,
                     context=context,
                     validationSetId=validation_set_id,
-                    responsesRequired=1,
+                    responsesRequired=100,
                     featureFlags=(
                         [setting._to_feature_flag() for setting in settings]
                         if settings
