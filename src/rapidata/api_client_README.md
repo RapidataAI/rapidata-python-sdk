@@ -220,6 +220,7 @@ Class | Method | HTTP request | Description
 *RankingFlowItemApi* | [**flow_ranking_flow_id_item_post**](rapidata/api_client/docs/RankingFlowItemApi.md#flow_ranking_flow_id_item_post) | **POST** /flow/ranking/{flowId}/item | Creates a new flow item for the specified flow.
 *RankingFlowItemApi* | [**flow_ranking_item_flow_item_id_get**](rapidata/api_client/docs/RankingFlowItemApi.md#flow_ranking_item_flow_item_id_get) | **GET** /flow/ranking/item/{flowItemId} | Retrieves a flow item by its ID.
 *RankingFlowItemApi* | [**flow_ranking_item_flow_item_id_results_get**](rapidata/api_client/docs/RankingFlowItemApi.md#flow_ranking_item_flow_item_id_results_get) | **GET** /flow/ranking/item/{flowItemId}/results | Retrieves ranking results (assets with Elo scores) for a completed flow item.  Returns 409 Conflict if the flow item is not completed or has no associated workflow.
+*RankingFlowItemApi* | [**flow_ranking_item_flow_item_id_stop_post**](rapidata/api_client/docs/RankingFlowItemApi.md#flow_ranking_item_flow_item_id_stop_post) | **POST** /flow/ranking/item/{flowItemId}/stop | Stops the specified flow item.
 *RapidApi* | [**rapid_rapid_id_reject_post**](rapidata/api_client/docs/RapidApi.md#rapid_rapid_id_reject_post) | **POST** /rapid/{rapidId}/reject | Rejects a rapid, transitioning it from Done to Rejected state and propagating staleness.
 *RapidataIdentityAPIApi* | [**root_get**](rapidata/api_client/docs/RapidataIdentityAPIApi.md#root_get) | **GET** / | 
 *RapidsApi* | [**audience_audience_id_rapid_rapid_id_patch**](rapidata/api_client/docs/RapidsApi.md#audience_audience_id_rapid_rapid_id_patch) | **PATCH** /audience/{audienceId}/rapid/{rapidId} | Updates a rapid&#39;s validation properties within an audience.
@@ -457,10 +458,12 @@ Class | Method | HTTP request | Description
  - [IOrderWorkflowModelGroupedRankingWorkflowModel](rapidata/api_client/docs/IOrderWorkflowModelGroupedRankingWorkflowModel.md)
  - [IOrderWorkflowModelSimpleWorkflowModel](rapidata/api_client/docs/IOrderWorkflowModelSimpleWorkflowModel.md)
  - [IPairMakerConfig](rapidata/api_client/docs/IPairMakerConfig.md)
+ - [IPairMakerConfigFullPermutationPairMakerConfig](rapidata/api_client/docs/IPairMakerConfigFullPermutationPairMakerConfig.md)
  - [IPairMakerConfigModel](rapidata/api_client/docs/IPairMakerConfigModel.md)
  - [IPairMakerConfigModelOnlinePairMakerConfigModel](rapidata/api_client/docs/IPairMakerConfigModelOnlinePairMakerConfigModel.md)
  - [IPairMakerConfigOnlinePairMakerConfig](rapidata/api_client/docs/IPairMakerConfigOnlinePairMakerConfig.md)
  - [IPairMakerInformation](rapidata/api_client/docs/IPairMakerInformation.md)
+ - [IPairMakerInformationFullPermutationPairMakerInformation](rapidata/api_client/docs/IPairMakerInformationFullPermutationPairMakerInformation.md)
  - [IPairMakerInformationOnlinePairMakerInformation](rapidata/api_client/docs/IPairMakerInformationOnlinePairMakerInformation.md)
  - [IPipelineArtifactModel](rapidata/api_client/docs/IPipelineArtifactModel.md)
  - [IPipelineArtifactModelCreateDatasetArtifactModel](rapidata/api_client/docs/IPipelineArtifactModelCreateDatasetArtifactModel.md)
@@ -471,6 +474,12 @@ Class | Method | HTTP request | Description
  - [IPipelineStepModelSendCompletionMailStepModel](rapidata/api_client/docs/IPipelineStepModelSendCompletionMailStepModel.md)
  - [IPipelineStepModelWorkflowAggregationStepModel](rapidata/api_client/docs/IPipelineStepModelWorkflowAggregationStepModel.md)
  - [IPipelineStepModelWorkflowLabelingStepModel](rapidata/api_client/docs/IPipelineStepModelWorkflowLabelingStepModel.md)
+ - [IRankingConfig](rapidata/api_client/docs/IRankingConfig.md)
+ - [IRankingConfigBradleyTerryRankingConfig](rapidata/api_client/docs/IRankingConfigBradleyTerryRankingConfig.md)
+ - [IRankingConfigEloConfig](rapidata/api_client/docs/IRankingConfigEloConfig.md)
+ - [IRankingConfigModel](rapidata/api_client/docs/IRankingConfigModel.md)
+ - [IRankingConfigModelBradleyTerryRankingConfigModel](rapidata/api_client/docs/IRankingConfigModelBradleyTerryRankingConfigModel.md)
+ - [IRankingConfigModelEloConfigModel](rapidata/api_client/docs/IRankingConfigModelEloConfigModel.md)
  - [IRapidBlueprint](rapidata/api_client/docs/IRapidBlueprint.md)
  - [IRapidBlueprintAttachCategoryRapidBlueprint](rapidata/api_client/docs/IRapidBlueprintAttachCategoryRapidBlueprint.md)
  - [IRapidBlueprintBoundingBoxRapidBlueprint](rapidata/api_client/docs/IRapidBlueprintBoundingBoxRapidBlueprint.md)
@@ -506,6 +515,7 @@ Class | Method | HTTP request | Description
  - [IRapidResultSkipResult](rapidata/api_client/docs/IRapidResultSkipResult.md)
  - [IRapidResultTranscriptionResult](rapidata/api_client/docs/IRapidResultTranscriptionResult.md)
  - [IRefereeConfig](rapidata/api_client/docs/IRefereeConfig.md)
+ - [IRefereeConfigBudgetRefereeConfig](rapidata/api_client/docs/IRefereeConfigBudgetRefereeConfig.md)
  - [IRefereeConfigNaiveRefereeConfig](rapidata/api_client/docs/IRefereeConfigNaiveRefereeConfig.md)
  - [IRefereeConfigNeverEndingRefereeConfig](rapidata/api_client/docs/IRefereeConfigNeverEndingRefereeConfig.md)
  - [IRefereeConfigProbabilisticAttachCategoryRefereeConfig](rapidata/api_client/docs/IRefereeConfigProbabilisticAttachCategoryRefereeConfig.md)
@@ -516,6 +526,7 @@ Class | Method | HTTP request | Description
  - [IRefereeInfoProbabilisticAttachCategoryRefereeInfo](rapidata/api_client/docs/IRefereeInfoProbabilisticAttachCategoryRefereeInfo.md)
  - [IRefereeInfoQuorumRefereeInfo](rapidata/api_client/docs/IRefereeInfoQuorumRefereeInfo.md)
  - [IRefereeModel](rapidata/api_client/docs/IRefereeModel.md)
+ - [IRefereeModelBudgetRefereeModel](rapidata/api_client/docs/IRefereeModelBudgetRefereeModel.md)
  - [IRefereeModelEarlyStoppingRefereeModel](rapidata/api_client/docs/IRefereeModelEarlyStoppingRefereeModel.md)
  - [IRefereeModelNaiveRefereeModel](rapidata/api_client/docs/IRefereeModelNaiveRefereeModel.md)
  - [IRefereeModelQuorumRefereeModel](rapidata/api_client/docs/IRefereeModelQuorumRefereeModel.md)

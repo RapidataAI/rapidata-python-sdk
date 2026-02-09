@@ -17,18 +17,25 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateFlowItemEndpointInput(BaseModel):
+class IRankingConfigBradleyTerryRankingConfig(BaseModel):
     """
-    CreateFlowItemEndpointInput
+    IRankingConfigBradleyTerryRankingConfig
     """ # noqa: E501
-    dataset_id: StrictStr = Field(alias="datasetId")
-    time_to_live_in_seconds: Optional[StrictInt] = Field(default=None, alias="timeToLiveInSeconds")
-    __properties: ClassVar[List[str]] = ["datasetId", "timeToLiveInSeconds"]
+    t: StrictStr = Field(alias="_t")
+    starting_score: Optional[StrictInt] = Field(default=None, alias="startingScore")
+    __properties: ClassVar[List[str]] = ["_t", "startingScore"]
+
+    @field_validator('t')
+    def t_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['BradleyTerryRankingConfig']):
+            raise ValueError("must be one of enum values ('BradleyTerryRankingConfig')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +55,7 @@ class CreateFlowItemEndpointInput(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateFlowItemEndpointInput from a JSON string"""
+        """Create an instance of IRankingConfigBradleyTerryRankingConfig from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,7 +80,7 @@ class CreateFlowItemEndpointInput(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateFlowItemEndpointInput from a dict"""
+        """Create an instance of IRankingConfigBradleyTerryRankingConfig from a dict"""
         if obj is None:
             return None
 
@@ -81,8 +88,8 @@ class CreateFlowItemEndpointInput(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "datasetId": obj.get("datasetId"),
-            "timeToLiveInSeconds": obj.get("timeToLiveInSeconds")
+            "_t": obj.get("_t"),
+            "startingScore": obj.get("startingScore")
         })
         return _obj
 

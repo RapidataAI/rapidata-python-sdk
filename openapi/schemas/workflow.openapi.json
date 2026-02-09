@@ -554,6 +554,10 @@
             "type": "integer",
             "format": "int32"
           },
+          "startingScore": {
+            "type": "integer",
+            "format": "int32"
+          },
           "kFactor": {
             "type": "integer",
             "format": "int32"
@@ -1358,13 +1362,30 @@
         "type": "object",
         "oneOf": [
           {
+            "$ref": "#/components/schemas/IPairMakerInformationFullPermutationPairMakerInformation"
+          },
+          {
             "$ref": "#/components/schemas/IPairMakerInformationOnlinePairMakerInformation"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
+            "FullPermutationPairMakerInformation": "#/components/schemas/IPairMakerInformationFullPermutationPairMakerInformation",
             "OnlinePairMakerInformation": "#/components/schemas/IPairMakerInformationOnlinePairMakerInformation"
+          }
+        }
+      },
+      "IPairMakerInformationFullPermutationPairMakerInformation": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "FullPermutationPairMakerInformation"
+            ],
+            "type": "string"
           }
         }
       },
@@ -1388,6 +1409,73 @@
             "format": "int32"
           },
           "currentComparisonBudget": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IRankingConfig": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IRankingConfigBradleyTerryRankingConfig"
+          },
+          {
+            "$ref": "#/components/schemas/IRankingConfigEloConfig"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "BradleyTerryRankingConfig": "#/components/schemas/IRankingConfigBradleyTerryRankingConfig",
+            "EloConfig": "#/components/schemas/IRankingConfigEloConfig"
+          }
+        }
+      },
+      "IRankingConfigBradleyTerryRankingConfig": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "BradleyTerryRankingConfig"
+            ],
+            "type": "string"
+          },
+          "startingScore": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IRankingConfigEloConfig": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "EloConfig"
+            ],
+            "type": "string"
+          },
+          "startingElo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "startingScore": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "kFactor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "scalingFactor": {
             "type": "integer",
             "format": "int32"
           }
@@ -2186,6 +2274,9 @@
         "type": "object",
         "oneOf": [
           {
+            "$ref": "#/components/schemas/IRefereeConfigBudgetRefereeConfig"
+          },
+          {
             "$ref": "#/components/schemas/IRefereeConfigNaiveRefereeConfig"
           },
           {
@@ -2201,10 +2292,29 @@
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
+            "BudgetRefereeConfig": "#/components/schemas/IRefereeConfigBudgetRefereeConfig",
             "NaiveRefereeConfig": "#/components/schemas/IRefereeConfigNaiveRefereeConfig",
             "NeverEndingRefereeConfig": "#/components/schemas/IRefereeConfigNeverEndingRefereeConfig",
             "ProbabilisticAttachCategoryRefereeConfig": "#/components/schemas/IRefereeConfigProbabilisticAttachCategoryRefereeConfig",
             "QuorumRefereeConfig": "#/components/schemas/IRefereeConfigQuorumRefereeConfig"
+          }
+        }
+      },
+      "IRefereeConfigBudgetRefereeConfig": {
+        "required": [
+          "totalBudget",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "BudgetRefereeConfig"
+            ],
+            "type": "string"
+          },
+          "totalBudget": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -2321,7 +2431,6 @@
           "state",
           "criteria",
           "name",
-          "eloConfig",
           "context",
           "contextAsset",
           "ownerMail",
@@ -2354,6 +2463,16 @@
           },
           "eloConfig": {
             "$ref": "#/components/schemas/EloConfig"
+          },
+          "rankingConfig": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IRankingConfig"
+              }
+            ]
           },
           "context": {
             "type": "string",
@@ -2421,7 +2540,6 @@
           "criteria",
           "name",
           "ownerMail",
-          "eloConfig",
           "_t"
         ],
         "properties": {
@@ -2452,6 +2570,16 @@
           },
           "eloConfig": {
             "$ref": "#/components/schemas/EloConfig"
+          },
+          "rankingConfig": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IRankingConfig"
+              }
+            ]
           }
         }
       },

@@ -32,8 +32,9 @@ class QueryFlowsEndpointOutput(BaseModel):
     name: StrictStr
     type: FlowType
     owner_id: StrictStr = Field(alias="ownerId")
+    owner_mail: StrictStr = Field(alias="ownerMail")
     created_at: datetime = Field(alias="createdAt")
-    __properties: ClassVar[List[str]] = ["id", "name", "type", "ownerId", "createdAt"]
+    __properties: ClassVar[List[str]] = ["id", "name", "type", "ownerId", "ownerMail", "createdAt"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -90,6 +91,7 @@ class QueryFlowsEndpointOutput(BaseModel):
             "name": obj.get("name"),
             "type": obj.get("type"),
             "ownerId": obj.get("ownerId"),
+            "ownerMail": obj.get("ownerMail"),
             "createdAt": obj.get("createdAt")
         })
         return _obj

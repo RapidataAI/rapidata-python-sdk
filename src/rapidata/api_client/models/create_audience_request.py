@@ -29,6 +29,7 @@ class CreateAudienceRequest(BaseModel):
     CreateAudienceRequest
     """ # noqa: E501
     name: StrictStr
+    description: Optional[StrictStr] = None
     filters: Optional[List[IAudienceFilter]] = None
     minimum_user_score: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="minimumUserScore")
     minimum_size_for_activation: Optional[StrictInt] = Field(default=None, alias="minimumSizeForActivation")
@@ -40,7 +41,7 @@ class CreateAudienceRequest(BaseModel):
     max_distilling_sessions: Optional[StrictInt] = Field(default=None, alias="maxDistillingSessions")
     min_distilling_for_global_boost: Optional[StrictInt] = Field(default=None, alias="minDistillingForGlobalBoost")
     min_graduated_for_distilling_boost: Optional[StrictInt] = Field(default=None, alias="minGraduatedForDistillingBoost")
-    __properties: ClassVar[List[str]] = ["name", "filters", "minimumUserScore", "minimumSizeForActivation", "logo", "maxDistillingResponses", "minDistillingResponses", "minDistillingScoreFloor", "isDistillingCampaignSticky", "maxDistillingSessions", "minDistillingForGlobalBoost", "minGraduatedForDistillingBoost"]
+    __properties: ClassVar[List[str]] = ["name", "description", "filters", "minimumUserScore", "minimumSizeForActivation", "logo", "maxDistillingResponses", "minDistillingResponses", "minDistillingScoreFloor", "isDistillingCampaignSticky", "maxDistillingSessions", "minDistillingForGlobalBoost", "minGraduatedForDistillingBoost"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -91,6 +92,11 @@ class CreateAudienceRequest(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of logo
         if self.logo:
             _dict['logo'] = self.logo.to_dict()
+        # set to None if description (nullable) is None
+        # and model_fields_set contains the field
+        if self.description is None and "description" in self.model_fields_set:
+            _dict['description'] = None
+
         # set to None if logo (nullable) is None
         # and model_fields_set contains the field
         if self.logo is None and "logo" in self.model_fields_set:
@@ -109,6 +115,7 @@ class CreateAudienceRequest(BaseModel):
 
         _obj = cls.model_validate({
             "name": obj.get("name"),
+            "description": obj.get("description"),
             "filters": [IAudienceFilter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
             "minimumUserScore": obj.get("minimumUserScore"),
             "minimumSizeForActivation": obj.get("minimumSizeForActivation"),

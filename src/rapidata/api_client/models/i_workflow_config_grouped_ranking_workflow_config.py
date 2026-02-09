@@ -23,6 +23,7 @@ from rapidata.api_client.models.elo_config import EloConfig
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.i_asset import IAsset
 from rapidata.api_client.models.i_pair_maker_config import IPairMakerConfig
+from rapidata.api_client.models.i_ranking_config import IRankingConfig
 from rapidata.api_client.models.i_referee_config import IRefereeConfig
 from typing import Optional, Set
 from typing_extensions import Self
@@ -39,9 +40,10 @@ class IWorkflowConfigGroupedRankingWorkflowConfig(BaseModel):
     contexts: Optional[Dict[str, StrictStr]] = None
     context_assets: Optional[Dict[str, IAsset]] = Field(default=None, alias="contextAssets")
     elo_config: Optional[EloConfig] = Field(default=None, alias="eloConfig")
+    ranking_config: Optional[IRankingConfig] = Field(default=None, alias="rankingConfig")
     pair_maker_config: Optional[IPairMakerConfig] = Field(default=None, alias="pairMakerConfig")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
-    __properties: ClassVar[List[str]] = ["_t", "criteria", "referee", "targetCountryCodes", "maxParallelism", "contexts", "contextAssets", "eloConfig", "pairMakerConfig", "featureFlags"]
+    __properties: ClassVar[List[str]] = ["_t", "criteria", "referee", "targetCountryCodes", "maxParallelism", "contexts", "contextAssets", "eloConfig", "rankingConfig", "pairMakerConfig", "featureFlags"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -102,6 +104,9 @@ class IWorkflowConfigGroupedRankingWorkflowConfig(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of elo_config
         if self.elo_config:
             _dict['eloConfig'] = self.elo_config.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of ranking_config
+        if self.ranking_config:
+            _dict['rankingConfig'] = self.ranking_config.to_dict()
         # override the default output from pydantic by calling `to_dict()` of pair_maker_config
         if self.pair_maker_config:
             _dict['pairMakerConfig'] = self.pair_maker_config.to_dict()
@@ -121,6 +126,11 @@ class IWorkflowConfigGroupedRankingWorkflowConfig(BaseModel):
         # and model_fields_set contains the field
         if self.context_assets is None and "context_assets" in self.model_fields_set:
             _dict['contextAssets'] = None
+
+        # set to None if ranking_config (nullable) is None
+        # and model_fields_set contains the field
+        if self.ranking_config is None and "ranking_config" in self.model_fields_set:
+            _dict['rankingConfig'] = None
 
         return _dict
 
@@ -147,6 +157,7 @@ class IWorkflowConfigGroupedRankingWorkflowConfig(BaseModel):
             if obj.get("contextAssets") is not None
             else None,
             "eloConfig": EloConfig.from_dict(obj["eloConfig"]) if obj.get("eloConfig") is not None else None,
+            "rankingConfig": IRankingConfig.from_dict(obj["rankingConfig"]) if obj.get("rankingConfig") is not None else None,
             "pairMakerConfig": IPairMakerConfig.from_dict(obj["pairMakerConfig"]) if obj.get("pairMakerConfig") is not None else None,
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
         })

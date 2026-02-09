@@ -17,24 +17,24 @@ import json
 import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
-from rapidata.api_client.models.i_pair_maker_config_full_permutation_pair_maker_config import IPairMakerConfigFullPermutationPairMakerConfig
-from rapidata.api_client.models.i_pair_maker_config_online_pair_maker_config import IPairMakerConfigOnlinePairMakerConfig
+from rapidata.api_client.models.i_ranking_config_bradley_terry_ranking_config import IRankingConfigBradleyTerryRankingConfig
+from rapidata.api_client.models.i_ranking_config_elo_config import IRankingConfigEloConfig
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-IPAIRMAKERCONFIG_ONE_OF_SCHEMAS = ["IPairMakerConfigFullPermutationPairMakerConfig", "IPairMakerConfigOnlinePairMakerConfig"]
+IRANKINGCONFIG_ONE_OF_SCHEMAS = ["IRankingConfigBradleyTerryRankingConfig", "IRankingConfigEloConfig"]
 
-class IPairMakerConfig(BaseModel):
+class IRankingConfig(BaseModel):
     """
-    IPairMakerConfig
+    IRankingConfig
     """
-    # data type: IPairMakerConfigFullPermutationPairMakerConfig
-    oneof_schema_1_validator: Optional[IPairMakerConfigFullPermutationPairMakerConfig] = None
-    # data type: IPairMakerConfigOnlinePairMakerConfig
-    oneof_schema_2_validator: Optional[IPairMakerConfigOnlinePairMakerConfig] = None
-    actual_instance: Optional[Union[IPairMakerConfigFullPermutationPairMakerConfig, IPairMakerConfigOnlinePairMakerConfig]] = None
-    one_of_schemas: Set[str] = { "IPairMakerConfigFullPermutationPairMakerConfig", "IPairMakerConfigOnlinePairMakerConfig" }
+    # data type: IRankingConfigBradleyTerryRankingConfig
+    oneof_schema_1_validator: Optional[IRankingConfigBradleyTerryRankingConfig] = None
+    # data type: IRankingConfigEloConfig
+    oneof_schema_2_validator: Optional[IRankingConfigEloConfig] = None
+    actual_instance: Optional[Union[IRankingConfigBradleyTerryRankingConfig, IRankingConfigEloConfig]] = None
+    one_of_schemas: Set[str] = { "IRankingConfigBradleyTerryRankingConfig", "IRankingConfigEloConfig" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -57,25 +57,25 @@ class IPairMakerConfig(BaseModel):
 
     @field_validator('actual_instance')
     def actual_instance_must_validate_oneof(cls, v):
-        instance = IPairMakerConfig.model_construct()
+        instance = IRankingConfig.model_construct()
         error_messages = []
         match = 0
-        # validate data type: IPairMakerConfigFullPermutationPairMakerConfig
-        if not isinstance(v, IPairMakerConfigFullPermutationPairMakerConfig):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IPairMakerConfigFullPermutationPairMakerConfig`")
+        # validate data type: IRankingConfigBradleyTerryRankingConfig
+        if not isinstance(v, IRankingConfigBradleyTerryRankingConfig):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRankingConfigBradleyTerryRankingConfig`")
         else:
             match += 1
-        # validate data type: IPairMakerConfigOnlinePairMakerConfig
-        if not isinstance(v, IPairMakerConfigOnlinePairMakerConfig):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `IPairMakerConfigOnlinePairMakerConfig`")
+        # validate data type: IRankingConfigEloConfig
+        if not isinstance(v, IRankingConfigEloConfig):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IRankingConfigEloConfig`")
         else:
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in IPairMakerConfig with oneOf schemas: IPairMakerConfigFullPermutationPairMakerConfig, IPairMakerConfigOnlinePairMakerConfig. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in IRankingConfig with oneOf schemas: IRankingConfigBradleyTerryRankingConfig, IRankingConfigEloConfig. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in IPairMakerConfig with oneOf schemas: IPairMakerConfigFullPermutationPairMakerConfig, IPairMakerConfigOnlinePairMakerConfig. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in IRankingConfig with oneOf schemas: IRankingConfigBradleyTerryRankingConfig, IRankingConfigEloConfig. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -90,25 +90,25 @@ class IPairMakerConfig(BaseModel):
         error_messages = []
         match = 0
 
-        # deserialize data into IPairMakerConfigFullPermutationPairMakerConfig
+        # deserialize data into IRankingConfigBradleyTerryRankingConfig
         try:
-            instance.actual_instance = IPairMakerConfigFullPermutationPairMakerConfig.from_json(json_str)
+            instance.actual_instance = IRankingConfigBradleyTerryRankingConfig.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # deserialize data into IPairMakerConfigOnlinePairMakerConfig
+        # deserialize data into IRankingConfigEloConfig
         try:
-            instance.actual_instance = IPairMakerConfigOnlinePairMakerConfig.from_json(json_str)
+            instance.actual_instance = IRankingConfigEloConfig.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into IPairMakerConfig with oneOf schemas: IPairMakerConfigFullPermutationPairMakerConfig, IPairMakerConfigOnlinePairMakerConfig. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into IRankingConfig with oneOf schemas: IRankingConfigBradleyTerryRankingConfig, IRankingConfigEloConfig. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into IPairMakerConfig with oneOf schemas: IPairMakerConfigFullPermutationPairMakerConfig, IPairMakerConfigOnlinePairMakerConfig. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into IRankingConfig with oneOf schemas: IRankingConfigBradleyTerryRankingConfig, IRankingConfigEloConfig. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -122,7 +122,7 @@ class IPairMakerConfig(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], IPairMakerConfigFullPermutationPairMakerConfig, IPairMakerConfigOnlinePairMakerConfig]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], IRankingConfigBradleyTerryRankingConfig, IRankingConfigEloConfig]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

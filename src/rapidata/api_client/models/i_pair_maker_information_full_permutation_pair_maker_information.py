@@ -17,18 +17,24 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateFlowItemEndpointInput(BaseModel):
+class IPairMakerInformationFullPermutationPairMakerInformation(BaseModel):
     """
-    CreateFlowItemEndpointInput
+    IPairMakerInformationFullPermutationPairMakerInformation
     """ # noqa: E501
-    dataset_id: StrictStr = Field(alias="datasetId")
-    time_to_live_in_seconds: Optional[StrictInt] = Field(default=None, alias="timeToLiveInSeconds")
-    __properties: ClassVar[List[str]] = ["datasetId", "timeToLiveInSeconds"]
+    t: StrictStr = Field(alias="_t")
+    __properties: ClassVar[List[str]] = ["_t"]
+
+    @field_validator('t')
+    def t_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['FullPermutationPairMakerInformation']):
+            raise ValueError("must be one of enum values ('FullPermutationPairMakerInformation')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -48,7 +54,7 @@ class CreateFlowItemEndpointInput(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateFlowItemEndpointInput from a JSON string"""
+        """Create an instance of IPairMakerInformationFullPermutationPairMakerInformation from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,7 +79,7 @@ class CreateFlowItemEndpointInput(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateFlowItemEndpointInput from a dict"""
+        """Create an instance of IPairMakerInformationFullPermutationPairMakerInformation from a dict"""
         if obj is None:
             return None
 
@@ -81,8 +87,7 @@ class CreateFlowItemEndpointInput(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "datasetId": obj.get("datasetId"),
-            "timeToLiveInSeconds": obj.get("timeToLiveInSeconds")
+            "_t": obj.get("_t")
         })
         return _obj
 

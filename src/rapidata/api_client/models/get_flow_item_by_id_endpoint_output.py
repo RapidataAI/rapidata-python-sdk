@@ -34,10 +34,11 @@ class GetFlowItemByIdEndpointOutput(BaseModel):
     workflow_id: Optional[StrictStr] = Field(default=None, alias="workflowId")
     state: FlowItemState
     failure_message: Optional[StrictStr] = Field(default=None, alias="failureMessage")
+    expires_at: Optional[datetime] = Field(default=None, alias="expiresAt")
     created_at: datetime = Field(alias="createdAt")
     completed_at: Optional[datetime] = Field(default=None, alias="completedAt")
     failed_at: Optional[datetime] = Field(default=None, alias="failedAt")
-    __properties: ClassVar[List[str]] = ["id", "flowId", "datasetId", "workflowId", "state", "failureMessage", "createdAt", "completedAt", "failedAt"]
+    __properties: ClassVar[List[str]] = ["id", "flowId", "datasetId", "workflowId", "state", "failureMessage", "expiresAt", "createdAt", "completedAt", "failedAt"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -88,6 +89,11 @@ class GetFlowItemByIdEndpointOutput(BaseModel):
         if self.failure_message is None and "failure_message" in self.model_fields_set:
             _dict['failureMessage'] = None
 
+        # set to None if expires_at (nullable) is None
+        # and model_fields_set contains the field
+        if self.expires_at is None and "expires_at" in self.model_fields_set:
+            _dict['expiresAt'] = None
+
         # set to None if completed_at (nullable) is None
         # and model_fields_set contains the field
         if self.completed_at is None and "completed_at" in self.model_fields_set:
@@ -116,6 +122,7 @@ class GetFlowItemByIdEndpointOutput(BaseModel):
             "workflowId": obj.get("workflowId"),
             "state": obj.get("state"),
             "failureMessage": obj.get("failureMessage"),
+            "expiresAt": obj.get("expiresAt"),
             "createdAt": obj.get("createdAt"),
             "completedAt": obj.get("completedAt"),
             "failedAt": obj.get("failedAt")

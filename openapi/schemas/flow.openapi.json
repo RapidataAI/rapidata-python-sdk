@@ -106,7 +106,8 @@
             "description": "The 1-based page index.",
             "schema": {
               "type": "integer"
-            }
+            },
+            "x-parameter-group": "page"
           },
           {
             "name": "page_size",
@@ -114,7 +115,8 @@
             "description": "The number of items per page.",
             "schema": {
               "type": "integer"
-            }
+            },
+            "x-parameter-group": "page"
           },
           {
             "name": "sort",
@@ -131,7 +133,8 @@
                 ],
                 "type": "string"
               }
-            }
+            },
+            "x-parameter-group": "sort"
           },
           {
             "name": "name",
@@ -173,7 +176,8 @@
                   "type": "string"
                 }
               }
-            }
+            },
+            "x-parameter-group": "filters"
           },
           {
             "name": "created_at",
@@ -215,7 +219,8 @@
                   "type": "string"
                 }
               }
-            }
+            },
+            "x-parameter-group": "filters"
           }
         ],
         "responses": {
@@ -412,11 +417,126 @@
             }
           },
           {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "state",
+                  "-state",
+                  "created_at",
+                  "-created_at"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
             "name": "state",
             "in": "query",
+            "description": "Filter by state.",
+            "style": "deepObject",
+            "explode": true,
             "schema": {
-              "$ref": "#/components/schemas/FlowItemState"
-            }
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "created_at",
+            "in": "query",
+            "description": "Filter by created_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
           }
         ],
         "responses": {
@@ -550,6 +670,45 @@
           }
         }
       }
+    },
+    "/flow/ranking/item/{flowItemId}/stop": {
+      "post": {
+        "tags": [
+          "RankingFlowItem"
+        ],
+        "summary": "Stops the specified flow item.",
+        "parameters": [
+          {
+            "name": "flowItemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -623,6 +782,10 @@
         "properties": {
           "datasetId": {
             "type": "string"
+          },
+          "timeToLiveInSeconds": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -665,7 +828,9 @@
           "Pending",
           "Running",
           "Completed",
-          "Failed"
+          "Failed",
+          "Stopping",
+          "Stopped"
         ]
       },
       "FlowType": {
@@ -734,6 +899,11 @@
           },
           "failureMessage": {
             "type": "string",
+            "nullable": true
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
             "nullable": true
           },
           "createdAt": {
@@ -1310,6 +1480,7 @@
           "name",
           "type",
           "ownerId",
+          "ownerMail",
           "createdAt"
         ],
         "type": "object",
@@ -1326,6 +1497,9 @@
           "ownerId": {
             "type": "string",
             "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string"
           },
           "createdAt": {
             "type": "string",
