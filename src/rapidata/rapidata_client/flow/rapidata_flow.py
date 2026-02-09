@@ -95,13 +95,8 @@ class RapidataFlow:
                 openapi_service=self._openapi_service,
             )
 
-    def get_flow_items(
-        self, state: FlowItemState | None = None
-    ) -> list[RapidataFlowItem]:
+    def get_flow_items(self) -> list[RapidataFlowItem]:
         """Query flow items for this flow.
-
-        Args:
-            state: Optional state filter (Pending, Running, Completed, Failed).
 
         Returns:
             list[RapidataFlowItem]: A list of flow items.
@@ -111,11 +106,10 @@ class RapidataFlow:
                 RapidataFlowItem,
             )
 
-            logger.debug("Getting flow items for flow '%s', state=%s", self.name, state)
+            logger.debug("Getting flow items for flow '%s'", self.name)
 
             response = self._openapi_service.ranking_flow_item_api.flow_ranking_flow_id_item_get(
                 flow_id=self.id,
-                state=state,
             )
 
             return [

@@ -16,11 +16,12 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import StrictStr
-from typing import Optional
+from pydantic import Field, StrictInt, StrictStr, field_validator
+from typing import List, Optional
+from typing_extensions import Annotated
 from rapidata.api_client.models.create_flow_item_endpoint_input import CreateFlowItemEndpointInput
 from rapidata.api_client.models.create_flow_item_endpoint_output import CreateFlowItemEndpointOutput
-from rapidata.api_client.models.flow_item_state import FlowItemState
+from rapidata.api_client.models.flow_get_name_parameter import FlowGetNameParameter
 from rapidata.api_client.models.get_flow_item_by_id_endpoint_output import GetFlowItemByIdEndpointOutput
 from rapidata.api_client.models.get_ranking_flow_item_results_endpoint_output import GetRankingFlowItemResultsEndpointOutput
 from rapidata.api_client.models.query_flow_items_endpoint_paged_result_of_output import QueryFlowItemsEndpointPagedResultOfOutput
@@ -47,7 +48,11 @@ class RankingFlowItemApi:
     def flow_ranking_flow_id_item_get(
         self,
         flow_id: StrictStr,
-        state: Optional[FlowItemState] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        state: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by state.")] = None,
+        created_at: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -66,8 +71,16 @@ class RankingFlowItemApi:
 
         :param flow_id: (required)
         :type flow_id: str
-        :param state:
-        :type state: FlowItemState
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param state: Filter by state.
+        :type state: FlowGetNameParameter
+        :param created_at: Filter by created_at.
+        :type created_at: FlowGetNameParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -92,7 +105,11 @@ class RankingFlowItemApi:
 
         _param = self._flow_ranking_flow_id_item_get_serialize(
             flow_id=flow_id,
+            page=page,
+            page_size=page_size,
+            sort=sort,
             state=state,
+            created_at=created_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -120,7 +137,11 @@ class RankingFlowItemApi:
     def flow_ranking_flow_id_item_get_with_http_info(
         self,
         flow_id: StrictStr,
-        state: Optional[FlowItemState] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        state: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by state.")] = None,
+        created_at: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -139,8 +160,16 @@ class RankingFlowItemApi:
 
         :param flow_id: (required)
         :type flow_id: str
-        :param state:
-        :type state: FlowItemState
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param state: Filter by state.
+        :type state: FlowGetNameParameter
+        :param created_at: Filter by created_at.
+        :type created_at: FlowGetNameParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -165,7 +194,11 @@ class RankingFlowItemApi:
 
         _param = self._flow_ranking_flow_id_item_get_serialize(
             flow_id=flow_id,
+            page=page,
+            page_size=page_size,
+            sort=sort,
             state=state,
+            created_at=created_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -193,7 +226,11 @@ class RankingFlowItemApi:
     def flow_ranking_flow_id_item_get_without_preload_content(
         self,
         flow_id: StrictStr,
-        state: Optional[FlowItemState] = None,
+        page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
+        page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
+        sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
+        state: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by state.")] = None,
+        created_at: Annotated[Optional[FlowGetNameParameter], Field(description="Filter by created_at.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -212,8 +249,16 @@ class RankingFlowItemApi:
 
         :param flow_id: (required)
         :type flow_id: str
-        :param state:
-        :type state: FlowItemState
+        :param page: The 1-based page index.
+        :type page: int
+        :param page_size: The number of items per page.
+        :type page_size: int
+        :param sort: Sort fields. Prefix with - for descending order (e.g. -created_at).
+        :type sort: List[str]
+        :param state: Filter by state.
+        :type state: FlowGetNameParameter
+        :param created_at: Filter by created_at.
+        :type created_at: FlowGetNameParameter
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -238,7 +283,11 @@ class RankingFlowItemApi:
 
         _param = self._flow_ranking_flow_id_item_get_serialize(
             flow_id=flow_id,
+            page=page,
+            page_size=page_size,
+            sort=sort,
             state=state,
+            created_at=created_at,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -261,7 +310,11 @@ class RankingFlowItemApi:
     def _flow_ranking_flow_id_item_get_serialize(
         self,
         flow_id,
+        page,
+        page_size,
+        sort,
         state,
+        created_at,
         _request_auth,
         _content_type,
         _headers,
@@ -271,6 +324,7 @@ class RankingFlowItemApi:
         _host = None
 
         _collection_formats: Dict[str, str] = {
+            'sort': 'multi',
         }
 
         _path_params: Dict[str, str] = {}
@@ -286,9 +340,25 @@ class RankingFlowItemApi:
         if flow_id is not None:
             _path_params['flowId'] = flow_id
         # process the query parameters
+        if page is not None:
+            
+            _query_params.append(('page', page))
+            
+        if page_size is not None:
+            
+            _query_params.append(('page_size', page_size))
+            
+        if sort is not None:
+            
+            _query_params.append(('sort', sort))
+            
         if state is not None:
             
-            _query_params.append(('state', state.value))
+            _query_params.append(('state', state))
+            
+        if created_at is not None:
+            
+            _query_params.append(('created_at', created_at))
             
         # process the header parameters
         # process the form parameters
@@ -1152,6 +1222,275 @@ class RankingFlowItemApi:
         return self.api_client.param_serialize(
             method='GET',
             resource_path='/flow/ranking/item/{flowItemId}/results',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def flow_ranking_item_flow_item_id_stop_post(
+        self,
+        flow_item_id: StrictStr,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> None:
+        """Stops the specified flow item.
+
+
+        :param flow_item_id: (required)
+        :type flow_item_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._flow_ranking_item_flow_item_id_stop_post_serialize(
+            flow_item_id=flow_item_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def flow_ranking_item_flow_item_id_stop_post_with_http_info(
+        self,
+        flow_item_id: StrictStr,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[None]:
+        """Stops the specified flow item.
+
+
+        :param flow_item_id: (required)
+        :type flow_item_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._flow_ranking_item_flow_item_id_stop_post_serialize(
+            flow_item_id=flow_item_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def flow_ranking_item_flow_item_id_stop_post_without_preload_content(
+        self,
+        flow_item_id: StrictStr,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Stops the specified flow item.
+
+
+        :param flow_item_id: (required)
+        :type flow_item_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._flow_ranking_item_flow_item_id_stop_post_serialize(
+            flow_item_id=flow_item_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '204': None,
+            '400': "ValidationProblemDetails",
+            '401': None,
+            '403': None,
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _flow_ranking_item_flow_item_id_stop_post_serialize(
+        self,
+        flow_item_id,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if flow_item_id is not None:
+            _path_params['flowItemId'] = flow_item_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'OAuth2', 
+            'OpenIdConnect', 
+            'Bearer'
+        ]
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/flow/ranking/item/{flowItemId}/stop',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

@@ -27,9 +27,10 @@ class EloConfig(BaseModel):
     EloConfig
     """ # noqa: E501
     starting_elo: Optional[StrictInt] = Field(default=None, alias="startingElo")
+    starting_score: Optional[StrictInt] = Field(default=None, alias="startingScore")
     k_factor: Optional[StrictInt] = Field(default=None, alias="kFactor")
     scaling_factor: Optional[StrictInt] = Field(default=None, alias="scalingFactor")
-    __properties: ClassVar[List[str]] = ["startingElo", "kFactor", "scalingFactor"]
+    __properties: ClassVar[List[str]] = ["startingElo", "startingScore", "kFactor", "scalingFactor"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -83,6 +84,7 @@ class EloConfig(BaseModel):
 
         _obj = cls.model_validate({
             "startingElo": obj.get("startingElo"),
+            "startingScore": obj.get("startingScore"),
             "kFactor": obj.get("kFactor"),
             "scalingFactor": obj.get("scalingFactor")
         })

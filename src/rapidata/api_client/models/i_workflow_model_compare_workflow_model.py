@@ -22,6 +22,7 @@ from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.elo_config import EloConfig
 from rapidata.api_client.models.i_asset_model import IAssetModel
 from rapidata.api_client.models.i_pair_maker_information import IPairMakerInformation
+from rapidata.api_client.models.i_ranking_config import IRankingConfig
 from rapidata.api_client.models.i_referee_config import IRefereeConfig
 from typing import Optional, Set
 from typing_extensions import Self
@@ -37,11 +38,12 @@ class IWorkflowModelCompareWorkflowModel(BaseModel):
     state: StrictStr
     criteria: StrictStr
     name: StrictStr
-    elo_config: EloConfig = Field(alias="eloConfig")
+    elo_config: Optional[EloConfig] = Field(default=None, alias="eloConfig")
+    ranking_config: Optional[IRankingConfig] = Field(default=None, alias="rankingConfig")
     context: Optional[StrictStr]
     context_asset: Optional[IAssetModel] = Field(alias="contextAsset")
     owner_mail: Optional[StrictStr] = Field(alias="ownerMail")
-    __properties: ClassVar[List[str]] = ["_t", "id", "referee", "pairMakerInformation", "state", "criteria", "name", "eloConfig", "context", "contextAsset", "ownerMail"]
+    __properties: ClassVar[List[str]] = ["_t", "id", "referee", "pairMakerInformation", "state", "criteria", "name", "eloConfig", "rankingConfig", "context", "contextAsset", "ownerMail"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -98,9 +100,17 @@ class IWorkflowModelCompareWorkflowModel(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of elo_config
         if self.elo_config:
             _dict['eloConfig'] = self.elo_config.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of ranking_config
+        if self.ranking_config:
+            _dict['rankingConfig'] = self.ranking_config.to_dict()
         # override the default output from pydantic by calling `to_dict()` of context_asset
         if self.context_asset:
             _dict['contextAsset'] = self.context_asset.to_dict()
+        # set to None if ranking_config (nullable) is None
+        # and model_fields_set contains the field
+        if self.ranking_config is None and "ranking_config" in self.model_fields_set:
+            _dict['rankingConfig'] = None
+
         # set to None if context (nullable) is None
         # and model_fields_set contains the field
         if self.context is None and "context" in self.model_fields_set:
@@ -136,6 +146,7 @@ class IWorkflowModelCompareWorkflowModel(BaseModel):
             "criteria": obj.get("criteria"),
             "name": obj.get("name"),
             "eloConfig": EloConfig.from_dict(obj["eloConfig"]) if obj.get("eloConfig") is not None else None,
+            "rankingConfig": IRankingConfig.from_dict(obj["rankingConfig"]) if obj.get("rankingConfig") is not None else None,
             "context": obj.get("context"),
             "contextAsset": IAssetModel.from_dict(obj["contextAsset"]) if obj.get("contextAsset") is not None else None,
             "ownerMail": obj.get("ownerMail")

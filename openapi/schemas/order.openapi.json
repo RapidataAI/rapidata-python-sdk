@@ -2651,6 +2651,16 @@
           "eloConfig": {
             "$ref": "#/components/schemas/EloConfigModel"
           },
+          "rankingConfig": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IRankingConfigModel"
+              }
+            ]
+          },
           "context": {
             "type": "string",
             "nullable": true
@@ -2724,6 +2734,16 @@
           },
           "eloConfig": {
             "$ref": "#/components/schemas/EloConfigModel"
+          },
+          "rankingConfig": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IRankingConfigModel"
+              }
+            ]
           },
           "contexts": {
             "type": "object",
@@ -3014,6 +3034,69 @@
           }
         }
       },
+      "IRankingConfigModel": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IRankingConfigModelBradleyTerryRankingConfigModel"
+          },
+          {
+            "$ref": "#/components/schemas/IRankingConfigModelEloConfigModel"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "BradleyTerryRankingConfig": "#/components/schemas/IRankingConfigModelBradleyTerryRankingConfigModel",
+            "EloConfig": "#/components/schemas/IRankingConfigModelEloConfigModel"
+          }
+        }
+      },
+      "IRankingConfigModelBradleyTerryRankingConfigModel": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "BradleyTerryRankingConfig"
+            ],
+            "type": "string"
+          },
+          "startingScore": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IRankingConfigModelEloConfigModel": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "EloConfig"
+            ],
+            "type": "string"
+          },
+          "startingElo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "kFactor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "scalingFactor": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "IRapidBlueprint": {
         "required": [
           "_t"
@@ -3273,6 +3356,9 @@
         "type": "object",
         "oneOf": [
           {
+            "$ref": "#/components/schemas/IRefereeModelBudgetRefereeModel"
+          },
+          {
             "$ref": "#/components/schemas/IRefereeModelEarlyStoppingRefereeModel"
           },
           {
@@ -3285,9 +3371,28 @@
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
+            "BudgetReferee": "#/components/schemas/IRefereeModelBudgetRefereeModel",
             "EarlyStoppingReferee": "#/components/schemas/IRefereeModelEarlyStoppingRefereeModel",
             "NaiveReferee": "#/components/schemas/IRefereeModelNaiveRefereeModel",
             "QuorumReferee": "#/components/schemas/IRefereeModelQuorumRefereeModel"
+          }
+        }
+      },
+      "IRefereeModelBudgetRefereeModel": {
+        "required": [
+          "totalBudget",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "BudgetReferee"
+            ],
+            "type": "string"
+          },
+          "totalBudget": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },

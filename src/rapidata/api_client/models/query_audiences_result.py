@@ -31,6 +31,7 @@ class QueryAudiencesResult(BaseModel):
     """ # noqa: E501
     id: StrictStr
     name: StrictStr
+    description: Optional[StrictStr] = None
     status: AudienceStatus
     qualified_user_count: StrictInt = Field(alias="qualifiedUserCount")
     filters: List[IAudienceFilter]
@@ -39,7 +40,7 @@ class QueryAudiencesResult(BaseModel):
     owner_mail: StrictStr = Field(alias="ownerMail")
     is_public: StrictBool = Field(alias="isPublic")
     is_distilling: StrictBool = Field(alias="isDistilling")
-    __properties: ClassVar[List[str]] = ["id", "name", "status", "qualifiedUserCount", "filters", "logo", "createdAt", "ownerMail", "isPublic", "isDistilling"]
+    __properties: ClassVar[List[str]] = ["id", "name", "description", "status", "qualifiedUserCount", "filters", "logo", "createdAt", "ownerMail", "isPublic", "isDistilling"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -87,6 +88,11 @@ class QueryAudiencesResult(BaseModel):
                 if _item_filters:
                     _items.append(_item_filters.to_dict())
             _dict['filters'] = _items
+        # set to None if description (nullable) is None
+        # and model_fields_set contains the field
+        if self.description is None and "description" in self.model_fields_set:
+            _dict['description'] = None
+
         # set to None if logo (nullable) is None
         # and model_fields_set contains the field
         if self.logo is None and "logo" in self.model_fields_set:
@@ -106,6 +112,7 @@ class QueryAudiencesResult(BaseModel):
         _obj = cls.model_validate({
             "id": obj.get("id"),
             "name": obj.get("name"),
+            "description": obj.get("description"),
             "status": obj.get("status"),
             "qualifiedUserCount": obj.get("qualifiedUserCount"),
             "filters": [IAudienceFilter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,

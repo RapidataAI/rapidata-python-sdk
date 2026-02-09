@@ -2588,7 +2588,8 @@
             "description": "The 1-based page index.",
             "schema": {
               "type": "integer"
-            }
+            },
+            "x-parameter-group": "page"
           },
           {
             "name": "page_size",
@@ -2596,7 +2597,8 @@
             "description": "The number of items per page.",
             "schema": {
               "type": "integer"
-            }
+            },
+            "x-parameter-group": "page"
           },
           {
             "name": "sort",
@@ -2613,7 +2615,8 @@
                 ],
                 "type": "string"
               }
-            }
+            },
+            "x-parameter-group": "sort"
           },
           {
             "name": "name",
@@ -2655,7 +2658,8 @@
                   "type": "string"
                 }
               }
-            }
+            },
+            "x-parameter-group": "filters"
           },
           {
             "name": "created_at",
@@ -2697,7 +2701,8 @@
                   "type": "string"
                 }
               }
-            }
+            },
+            "x-parameter-group": "filters"
           }
         ],
         "responses": {
@@ -2954,11 +2959,126 @@
             }
           },
           {
+            "name": "page",
+            "in": "query",
+            "description": "The 1-based page index.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "description": "The number of items per page.",
+            "schema": {
+              "type": "integer"
+            },
+            "x-parameter-group": "page"
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort fields. Prefix with - for descending order (e.g. -created_at).",
+            "schema": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "state",
+                  "-state",
+                  "created_at",
+                  "-created_at"
+                ],
+                "type": "string"
+              }
+            },
+            "x-parameter-group": "sort"
+          },
+          {
             "name": "state",
             "in": "query",
+            "description": "Filter by state.",
+            "style": "deepObject",
+            "explode": true,
             "schema": {
-              "$ref": "#/components/schemas/FlowItemState"
-            }
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
+          },
+          {
+            "name": "created_at",
+            "in": "query",
+            "description": "Filter by created_at.",
+            "style": "deepObject",
+            "explode": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eq": {
+                  "type": "string"
+                },
+                "neq": {
+                  "type": "string"
+                },
+                "gt": {
+                  "type": "string"
+                },
+                "gte": {
+                  "type": "string"
+                },
+                "lt": {
+                  "type": "string"
+                },
+                "lte": {
+                  "type": "string"
+                },
+                "contains": {
+                  "type": "string"
+                },
+                "starts_with": {
+                  "type": "string"
+                },
+                "ends_with": {
+                  "type": "string"
+                },
+                "in": {
+                  "type": "string"
+                }
+              }
+            },
+            "x-parameter-group": "filters"
           }
         ],
         "responses": {
@@ -3119,6 +3239,60 @@
                 }
               }
             }
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
+    "/flow/ranking/item/{flowItemId}/stop": {
+      "post": {
+        "tags": [
+          "RankingFlowItem"
+        ],
+        "summary": "Stops the specified flow item.",
+        "parameters": [
+          {
+            "name": "flowItemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
           }
         },
         "security": [
@@ -12142,6 +12316,10 @@
           "name": {
             "type": "string"
           },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
           "filters": {
             "oneOf": [
               {
@@ -12303,6 +12481,10 @@
           },
           "name": {
             "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
           },
           "status": {
             "$ref": "#/components/schemas/AudienceStatus"
@@ -14162,6 +14344,10 @@
           "name": {
             "type": "string"
           },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
           "status": {
             "$ref": "#/components/schemas/AudienceStatus"
           },
@@ -14446,6 +14632,9 @@
         "type": "object",
         "properties": {
           "name": {
+            "$ref": "#/components/schemas/OptionOfstring"
+          },
+          "description": {
             "$ref": "#/components/schemas/OptionOfstring"
           },
           "filters": {
@@ -15005,6 +15194,10 @@
         "properties": {
           "datasetId": {
             "type": "string"
+          },
+          "timeToLiveInSeconds": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -15039,7 +15232,9 @@
           "Pending",
           "Running",
           "Completed",
-          "Failed"
+          "Failed",
+          "Stopping",
+          "Stopped"
         ]
       },
       "FlowType": {
@@ -15108,6 +15303,11 @@
           },
           "failureMessage": {
             "type": "string",
+            "nullable": true
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
             "nullable": true
           },
           "createdAt": {
@@ -15269,6 +15469,7 @@
           "name",
           "type",
           "ownerId",
+          "ownerMail",
           "createdAt"
         ],
         "type": "object",
@@ -15285,6 +15486,9 @@
           "ownerId": {
             "type": "string",
             "format": "uuid"
+          },
+          "ownerMail": {
+            "type": "string"
           },
           "createdAt": {
             "type": "string",
@@ -18803,6 +19007,16 @@
           "eloConfig": {
             "$ref": "#/components/schemas/EloConfigModel"
           },
+          "rankingConfig": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IRankingConfigModel"
+              }
+            ]
+          },
           "context": {
             "type": "string",
             "nullable": true
@@ -18876,6 +19090,16 @@
           },
           "eloConfig": {
             "$ref": "#/components/schemas/EloConfigModel"
+          },
+          "rankingConfig": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IRankingConfigModel"
+              }
+            ]
           },
           "contexts": {
             "type": "object",
@@ -19166,6 +19390,69 @@
           }
         }
       },
+      "IRankingConfigModel": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IRankingConfigModelBradleyTerryRankingConfigModel"
+          },
+          {
+            "$ref": "#/components/schemas/IRankingConfigModelEloConfigModel"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "BradleyTerryRankingConfig": "#/components/schemas/IRankingConfigModelBradleyTerryRankingConfigModel",
+            "EloConfig": "#/components/schemas/IRankingConfigModelEloConfigModel"
+          }
+        }
+      },
+      "IRankingConfigModelBradleyTerryRankingConfigModel": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "BradleyTerryRankingConfig"
+            ],
+            "type": "string"
+          },
+          "startingScore": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IRankingConfigModelEloConfigModel": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "EloConfig"
+            ],
+            "type": "string"
+          },
+          "startingElo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "kFactor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "scalingFactor": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "IRapidBlueprint": {
         "required": [
           "_t"
@@ -19425,6 +19712,9 @@
         "type": "object",
         "oneOf": [
           {
+            "$ref": "#/components/schemas/IRefereeModelBudgetRefereeModel"
+          },
+          {
             "$ref": "#/components/schemas/IRefereeModelEarlyStoppingRefereeModel"
           },
           {
@@ -19437,9 +19727,28 @@
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
+            "BudgetReferee": "#/components/schemas/IRefereeModelBudgetRefereeModel",
             "EarlyStoppingReferee": "#/components/schemas/IRefereeModelEarlyStoppingRefereeModel",
             "NaiveReferee": "#/components/schemas/IRefereeModelNaiveRefereeModel",
             "QuorumReferee": "#/components/schemas/IRefereeModelQuorumRefereeModel"
+          }
+        }
+      },
+      "IRefereeModelBudgetRefereeModel": {
+        "required": [
+          "totalBudget",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "BudgetReferee"
+            ],
+            "type": "string"
+          },
+          "totalBudget": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -20300,6 +20609,10 @@
             "type": "integer",
             "format": "int32"
           },
+          "startingScore": {
+            "type": "integer",
+            "format": "int32"
+          },
           "kFactor": {
             "type": "integer",
             "format": "int32"
@@ -20578,13 +20891,30 @@
         "type": "object",
         "oneOf": [
           {
+            "$ref": "#/components/schemas/IPairMakerConfigFullPermutationPairMakerConfig"
+          },
+          {
             "$ref": "#/components/schemas/IPairMakerConfigOnlinePairMakerConfig"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
+            "FullPermutationPairMakerConfig": "#/components/schemas/IPairMakerConfigFullPermutationPairMakerConfig",
             "OnlinePairMakerConfig": "#/components/schemas/IPairMakerConfigOnlinePairMakerConfig"
+          }
+        }
+      },
+      "IPairMakerConfigFullPermutationPairMakerConfig": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "FullPermutationPairMakerConfig"
+            ],
+            "type": "string"
           }
         }
       },
@@ -20609,12 +20939,82 @@
           }
         }
       },
+      "IRankingConfig": {
+        "required": [
+          "_t"
+        ],
+        "type": "object",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/IRankingConfigBradleyTerryRankingConfig"
+          },
+          {
+            "$ref": "#/components/schemas/IRankingConfigEloConfig"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "_t",
+          "mapping": {
+            "BradleyTerryRankingConfig": "#/components/schemas/IRankingConfigBradleyTerryRankingConfig",
+            "EloConfig": "#/components/schemas/IRankingConfigEloConfig"
+          }
+        }
+      },
+      "IRankingConfigBradleyTerryRankingConfig": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "BradleyTerryRankingConfig"
+            ],
+            "type": "string"
+          },
+          "startingScore": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "IRankingConfigEloConfig": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "EloConfig"
+            ],
+            "type": "string"
+          },
+          "startingElo": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "startingScore": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "kFactor": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "scalingFactor": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "IRefereeConfig": {
         "required": [
           "_t"
         ],
         "type": "object",
         "oneOf": [
+          {
+            "$ref": "#/components/schemas/IRefereeConfigBudgetRefereeConfig"
+          },
           {
             "$ref": "#/components/schemas/IRefereeConfigNaiveRefereeConfig"
           },
@@ -20631,10 +21031,29 @@
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
+            "BudgetRefereeConfig": "#/components/schemas/IRefereeConfigBudgetRefereeConfig",
             "NaiveRefereeConfig": "#/components/schemas/IRefereeConfigNaiveRefereeConfig",
             "NeverEndingRefereeConfig": "#/components/schemas/IRefereeConfigNeverEndingRefereeConfig",
             "ProbabilisticAttachCategoryRefereeConfig": "#/components/schemas/IRefereeConfigProbabilisticAttachCategoryRefereeConfig",
             "QuorumRefereeConfig": "#/components/schemas/IRefereeConfigQuorumRefereeConfig"
+          }
+        }
+      },
+      "IRefereeConfigBudgetRefereeConfig": {
+        "required": [
+          "totalBudget",
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "BudgetRefereeConfig"
+            ],
+            "type": "string"
+          },
+          "totalBudget": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -20779,6 +21198,16 @@
           "eloConfig": {
             "$ref": "#/components/schemas/EloConfig"
           },
+          "rankingConfig": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IRankingConfig"
+              }
+            ]
+          },
           "pairMakerConfig": {
             "$ref": "#/components/schemas/IPairMakerConfig"
           },
@@ -20862,6 +21291,16 @@
           },
           "eloConfig": {
             "$ref": "#/components/schemas/EloConfig"
+          },
+          "rankingConfig": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IRankingConfig"
+              }
+            ]
           },
           "pairMakerConfig": {
             "$ref": "#/components/schemas/IPairMakerConfig"
@@ -22837,13 +23276,30 @@
         "type": "object",
         "oneOf": [
           {
+            "$ref": "#/components/schemas/IPairMakerInformationFullPermutationPairMakerInformation"
+          },
+          {
             "$ref": "#/components/schemas/IPairMakerInformationOnlinePairMakerInformation"
           }
         ],
         "discriminator": {
           "propertyName": "_t",
           "mapping": {
+            "FullPermutationPairMakerInformation": "#/components/schemas/IPairMakerInformationFullPermutationPairMakerInformation",
             "OnlinePairMakerInformation": "#/components/schemas/IPairMakerInformationOnlinePairMakerInformation"
+          }
+        }
+      },
+      "IPairMakerInformationFullPermutationPairMakerInformation": {
+        "required": [
+          "_t"
+        ],
+        "properties": {
+          "_t": {
+            "enum": [
+              "FullPermutationPairMakerInformation"
+            ],
+            "type": "string"
           }
         }
       },
@@ -22909,7 +23365,6 @@
           "state",
           "criteria",
           "name",
-          "eloConfig",
           "context",
           "contextAsset",
           "ownerMail",
@@ -22942,6 +23397,16 @@
           },
           "eloConfig": {
             "$ref": "#/components/schemas/EloConfig"
+          },
+          "rankingConfig": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IRankingConfig"
+              }
+            ]
           },
           "context": {
             "type": "string",
@@ -23009,7 +23474,6 @@
           "criteria",
           "name",
           "ownerMail",
-          "eloConfig",
           "_t"
         ],
         "properties": {
@@ -23040,6 +23504,16 @@
           },
           "eloConfig": {
             "$ref": "#/components/schemas/EloConfig"
+          },
+          "rankingConfig": {
+            "oneOf": [
+              {
+                "nullable": true
+              },
+              {
+                "$ref": "#/components/schemas/IRankingConfig"
+              }
+            ]
           }
         }
       },

@@ -810,6 +810,10 @@
           "name": {
             "type": "string"
           },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
           "filters": {
             "oneOf": [
               {
@@ -979,6 +983,10 @@
           },
           "name": {
             "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
           },
           "status": {
             "$ref": "#/components/schemas/AudienceStatus"
@@ -2852,6 +2860,10 @@
           "name": {
             "type": "string"
           },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
           "status": {
             "$ref": "#/components/schemas/AudienceStatus"
           },
@@ -3136,6 +3148,9 @@
         "type": "object",
         "properties": {
           "name": {
+            "$ref": "#/components/schemas/OptionOfstring"
+          },
+          "description": {
             "$ref": "#/components/schemas/OptionOfstring"
           },
           "filters": {

@@ -32,6 +32,7 @@ class GetAudienceByIdResult(BaseModel):
     """ # noqa: E501
     id: StrictStr
     name: StrictStr
+    description: Optional[StrictStr] = None
     status: AudienceStatus
     qualified_user_count: StrictInt = Field(alias="qualifiedUserCount")
     filters: List[IAudienceFilter]
@@ -43,7 +44,7 @@ class GetAudienceByIdResult(BaseModel):
     min_graduated_for_distilling_boost: Optional[StrictInt] = Field(default=None, alias="minGraduatedForDistillingBoost")
     min_distilling_for_global_boost: Optional[StrictInt] = Field(default=None, alias="minDistillingForGlobalBoost")
     boost_level: BoostLevel = Field(alias="boostLevel")
-    __properties: ClassVar[List[str]] = ["id", "name", "status", "qualifiedUserCount", "filters", "logo", "createdAt", "ownerMail", "isPublic", "isDistilling", "minGraduatedForDistillingBoost", "minDistillingForGlobalBoost", "boostLevel"]
+    __properties: ClassVar[List[str]] = ["id", "name", "description", "status", "qualifiedUserCount", "filters", "logo", "createdAt", "ownerMail", "isPublic", "isDistilling", "minGraduatedForDistillingBoost", "minDistillingForGlobalBoost", "boostLevel"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -91,6 +92,11 @@ class GetAudienceByIdResult(BaseModel):
                 if _item_filters:
                     _items.append(_item_filters.to_dict())
             _dict['filters'] = _items
+        # set to None if description (nullable) is None
+        # and model_fields_set contains the field
+        if self.description is None and "description" in self.model_fields_set:
+            _dict['description'] = None
+
         # set to None if logo (nullable) is None
         # and model_fields_set contains the field
         if self.logo is None and "logo" in self.model_fields_set:
@@ -110,6 +116,7 @@ class GetAudienceByIdResult(BaseModel):
         _obj = cls.model_validate({
             "id": obj.get("id"),
             "name": obj.get("name"),
+            "description": obj.get("description"),
             "status": obj.get("status"),
             "qualifiedUserCount": obj.get("qualifiedUserCount"),
             "filters": [IAudienceFilter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,

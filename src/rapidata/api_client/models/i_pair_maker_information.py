@@ -17,21 +17,24 @@ import json
 import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
+from rapidata.api_client.models.i_pair_maker_information_full_permutation_pair_maker_information import IPairMakerInformationFullPermutationPairMakerInformation
 from rapidata.api_client.models.i_pair_maker_information_online_pair_maker_information import IPairMakerInformationOnlinePairMakerInformation
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-IPAIRMAKERINFORMATION_ONE_OF_SCHEMAS = ["IPairMakerInformationOnlinePairMakerInformation"]
+IPAIRMAKERINFORMATION_ONE_OF_SCHEMAS = ["IPairMakerInformationFullPermutationPairMakerInformation", "IPairMakerInformationOnlinePairMakerInformation"]
 
 class IPairMakerInformation(BaseModel):
     """
     IPairMakerInformation
     """
+    # data type: IPairMakerInformationFullPermutationPairMakerInformation
+    oneof_schema_1_validator: Optional[IPairMakerInformationFullPermutationPairMakerInformation] = None
     # data type: IPairMakerInformationOnlinePairMakerInformation
-    oneof_schema_1_validator: Optional[IPairMakerInformationOnlinePairMakerInformation] = None
-    actual_instance: Optional[Union[IPairMakerInformationOnlinePairMakerInformation]] = None
-    one_of_schemas: Set[str] = { "IPairMakerInformationOnlinePairMakerInformation" }
+    oneof_schema_2_validator: Optional[IPairMakerInformationOnlinePairMakerInformation] = None
+    actual_instance: Optional[Union[IPairMakerInformationFullPermutationPairMakerInformation, IPairMakerInformationOnlinePairMakerInformation]] = None
+    one_of_schemas: Set[str] = { "IPairMakerInformationFullPermutationPairMakerInformation", "IPairMakerInformationOnlinePairMakerInformation" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -57,6 +60,11 @@ class IPairMakerInformation(BaseModel):
         instance = IPairMakerInformation.model_construct()
         error_messages = []
         match = 0
+        # validate data type: IPairMakerInformationFullPermutationPairMakerInformation
+        if not isinstance(v, IPairMakerInformationFullPermutationPairMakerInformation):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IPairMakerInformationFullPermutationPairMakerInformation`")
+        else:
+            match += 1
         # validate data type: IPairMakerInformationOnlinePairMakerInformation
         if not isinstance(v, IPairMakerInformationOnlinePairMakerInformation):
             error_messages.append(f"Error! Input type `{type(v)}` is not `IPairMakerInformationOnlinePairMakerInformation`")
@@ -64,10 +72,10 @@ class IPairMakerInformation(BaseModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in IPairMakerInformation with oneOf schemas: IPairMakerInformationOnlinePairMakerInformation. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in IPairMakerInformation with oneOf schemas: IPairMakerInformationFullPermutationPairMakerInformation, IPairMakerInformationOnlinePairMakerInformation. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in IPairMakerInformation with oneOf schemas: IPairMakerInformationOnlinePairMakerInformation. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in IPairMakerInformation with oneOf schemas: IPairMakerInformationFullPermutationPairMakerInformation, IPairMakerInformationOnlinePairMakerInformation. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -82,6 +90,12 @@ class IPairMakerInformation(BaseModel):
         error_messages = []
         match = 0
 
+        # deserialize data into IPairMakerInformationFullPermutationPairMakerInformation
+        try:
+            instance.actual_instance = IPairMakerInformationFullPermutationPairMakerInformation.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
         # deserialize data into IPairMakerInformationOnlinePairMakerInformation
         try:
             instance.actual_instance = IPairMakerInformationOnlinePairMakerInformation.from_json(json_str)
@@ -91,10 +105,10 @@ class IPairMakerInformation(BaseModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into IPairMakerInformation with oneOf schemas: IPairMakerInformationOnlinePairMakerInformation. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into IPairMakerInformation with oneOf schemas: IPairMakerInformationFullPermutationPairMakerInformation, IPairMakerInformationOnlinePairMakerInformation. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into IPairMakerInformation with oneOf schemas: IPairMakerInformationOnlinePairMakerInformation. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into IPairMakerInformation with oneOf schemas: IPairMakerInformationFullPermutationPairMakerInformation, IPairMakerInformationOnlinePairMakerInformation. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -108,7 +122,7 @@ class IPairMakerInformation(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], IPairMakerInformationOnlinePairMakerInformation]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], IPairMakerInformationFullPermutationPairMakerInformation, IPairMakerInformationOnlinePairMakerInformation]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

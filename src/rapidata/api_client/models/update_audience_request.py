@@ -29,11 +29,12 @@ class UpdateAudienceRequest(BaseModel):
     UpdateAudienceRequest
     """ # noqa: E501
     name: Optional[StrictStr] = None
+    description: Optional[StrictStr] = None
     filters: Optional[List[IAudienceFilter]] = None
     logo: Optional[ExistingAssetInput] = None
     min_graduated_for_distilling_boost: Optional[StrictInt] = Field(default=None, alias="minGraduatedForDistillingBoost")
     min_distilling_for_global_boost: Optional[StrictInt] = Field(default=None, alias="minDistillingForGlobalBoost")
-    __properties: ClassVar[List[str]] = ["name", "filters", "logo", "minGraduatedForDistillingBoost", "minDistillingForGlobalBoost"]
+    __properties: ClassVar[List[str]] = ["name", "description", "filters", "logo", "minGraduatedForDistillingBoost", "minDistillingForGlobalBoost"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -89,6 +90,11 @@ class UpdateAudienceRequest(BaseModel):
         if self.name is None and "name" in self.model_fields_set:
             _dict['name'] = None
 
+        # set to None if description (nullable) is None
+        # and model_fields_set contains the field
+        if self.description is None and "description" in self.model_fields_set:
+            _dict['description'] = None
+
         # set to None if logo (nullable) is None
         # and model_fields_set contains the field
         if self.logo is None and "logo" in self.model_fields_set:
@@ -117,6 +123,7 @@ class UpdateAudienceRequest(BaseModel):
 
         _obj = cls.model_validate({
             "name": obj.get("name"),
+            "description": obj.get("description"),
             "filters": [IAudienceFilter.from_dict(_item) for _item in obj["filters"]] if obj.get("filters") is not None else None,
             "logo": ExistingAssetInput.from_dict(obj["logo"]) if obj.get("logo") is not None else None,
             "minGraduatedForDistillingBoost": obj.get("minGraduatedForDistillingBoost"),

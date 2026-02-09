@@ -23,6 +23,7 @@ from rapidata.api_client.models.elo_config_model import EloConfigModel
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.i_asset_input import IAssetInput
 from rapidata.api_client.models.i_pair_maker_config_model import IPairMakerConfigModel
+from rapidata.api_client.models.i_ranking_config_model import IRankingConfigModel
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -34,11 +35,12 @@ class IOrderWorkflowModelGroupedRankingWorkflowModel(BaseModel):
     criteria: StrictStr
     pair_maker_config: Optional[IPairMakerConfigModel] = Field(default=None, alias="pairMakerConfig")
     elo_config: Optional[EloConfigModel] = Field(default=None, alias="eloConfig")
+    ranking_config: Optional[IRankingConfigModel] = Field(default=None, alias="rankingConfig")
     contexts: Optional[Dict[str, StrictStr]] = None
     context_assets: Optional[Dict[str, IAssetInput]] = Field(default=None, alias="contextAssets")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
     max_parallelism: Optional[StrictInt] = Field(default=None, alias="maxParallelism")
-    __properties: ClassVar[List[str]] = ["_t", "criteria", "pairMakerConfig", "eloConfig", "contexts", "contextAssets", "featureFlags", "maxParallelism"]
+    __properties: ClassVar[List[str]] = ["_t", "criteria", "pairMakerConfig", "eloConfig", "rankingConfig", "contexts", "contextAssets", "featureFlags", "maxParallelism"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -92,6 +94,9 @@ class IOrderWorkflowModelGroupedRankingWorkflowModel(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of elo_config
         if self.elo_config:
             _dict['eloConfig'] = self.elo_config.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of ranking_config
+        if self.ranking_config:
+            _dict['rankingConfig'] = self.ranking_config.to_dict()
         # override the default output from pydantic by calling `to_dict()` of each value in context_assets (dict)
         _field_dict = {}
         if self.context_assets:
@@ -106,6 +111,11 @@ class IOrderWorkflowModelGroupedRankingWorkflowModel(BaseModel):
                 if _item_feature_flags:
                     _items.append(_item_feature_flags.to_dict())
             _dict['featureFlags'] = _items
+        # set to None if ranking_config (nullable) is None
+        # and model_fields_set contains the field
+        if self.ranking_config is None and "ranking_config" in self.model_fields_set:
+            _dict['rankingConfig'] = None
+
         # set to None if contexts (nullable) is None
         # and model_fields_set contains the field
         if self.contexts is None and "contexts" in self.model_fields_set:
@@ -132,6 +142,7 @@ class IOrderWorkflowModelGroupedRankingWorkflowModel(BaseModel):
             "criteria": obj.get("criteria"),
             "pairMakerConfig": IPairMakerConfigModel.from_dict(obj["pairMakerConfig"]) if obj.get("pairMakerConfig") is not None else None,
             "eloConfig": EloConfigModel.from_dict(obj["eloConfig"]) if obj.get("eloConfig") is not None else None,
+            "rankingConfig": IRankingConfigModel.from_dict(obj["rankingConfig"]) if obj.get("rankingConfig") is not None else None,
             "contexts": obj.get("contexts"),
             "contextAssets": dict(
                 (_k, IAssetInput.from_dict(_v))

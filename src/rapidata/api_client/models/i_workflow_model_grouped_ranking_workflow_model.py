@@ -20,6 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.elo_config import EloConfig
+from rapidata.api_client.models.i_ranking_config import IRankingConfig
 from rapidata.api_client.models.i_referee_config import IRefereeConfig
 from typing import Optional, Set
 from typing_extensions import Self
@@ -35,8 +36,9 @@ class IWorkflowModelGroupedRankingWorkflowModel(BaseModel):
     criteria: StrictStr
     name: StrictStr
     owner_mail: Optional[StrictStr] = Field(alias="ownerMail")
-    elo_config: EloConfig = Field(alias="eloConfig")
-    __properties: ClassVar[List[str]] = ["_t", "id", "referee", "state", "criteria", "name", "ownerMail", "eloConfig"]
+    elo_config: Optional[EloConfig] = Field(default=None, alias="eloConfig")
+    ranking_config: Optional[IRankingConfig] = Field(default=None, alias="rankingConfig")
+    __properties: ClassVar[List[str]] = ["_t", "id", "referee", "state", "criteria", "name", "ownerMail", "eloConfig", "rankingConfig"]
 
     @field_validator('t')
     def t_validate_enum(cls, value):
@@ -90,10 +92,18 @@ class IWorkflowModelGroupedRankingWorkflowModel(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of elo_config
         if self.elo_config:
             _dict['eloConfig'] = self.elo_config.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of ranking_config
+        if self.ranking_config:
+            _dict['rankingConfig'] = self.ranking_config.to_dict()
         # set to None if owner_mail (nullable) is None
         # and model_fields_set contains the field
         if self.owner_mail is None and "owner_mail" in self.model_fields_set:
             _dict['ownerMail'] = None
+
+        # set to None if ranking_config (nullable) is None
+        # and model_fields_set contains the field
+        if self.ranking_config is None and "ranking_config" in self.model_fields_set:
+            _dict['rankingConfig'] = None
 
         return _dict
 
@@ -114,7 +124,8 @@ class IWorkflowModelGroupedRankingWorkflowModel(BaseModel):
             "criteria": obj.get("criteria"),
             "name": obj.get("name"),
             "ownerMail": obj.get("ownerMail"),
-            "eloConfig": EloConfig.from_dict(obj["eloConfig"]) if obj.get("eloConfig") is not None else None
+            "eloConfig": EloConfig.from_dict(obj["eloConfig"]) if obj.get("eloConfig") is not None else None,
+            "rankingConfig": IRankingConfig.from_dict(obj["rankingConfig"]) if obj.get("rankingConfig") is not None else None
         })
         return _obj
 
