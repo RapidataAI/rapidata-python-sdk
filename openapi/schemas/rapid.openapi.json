@@ -16,11 +16,13 @@
         "tags": [
           "Rapid"
         ],
-        "summary": "Rejects a rapid, transitioning it from Done to Rejected state and propagating staleness.",
+        "summary": "Rejects a completed rapid, marking its results as invalid.",
+        "description": "The rapid must be in the Done state. Rejection propagates staleness to dependent entities.",
         "parameters": [
           {
             "name": "rapidId",
             "in": "path",
+            "description": "The identifier of the rapid to reject.",
             "required": true,
             "schema": {
               "type": "string"
@@ -716,46 +718,48 @@
         "type": "object",
         "properties": {
           "key": {
-            "type": "string"
+            "type": "string",
+            "description": "The identifier of the demographic classification."
           },
           "payload": {
-            "$ref": "#/components/schemas/ClassifyPayload"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ClassifyPayload"
+              }
+            ],
+            "description": "The payload for the classification."
           },
           "featureFlags": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/ListOfFeatureFlag"
               }
-            ]
+            ],
+            "description": "Optional feature flags to apply to the rapid."
           },
           "asset": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/IAssetInput"
               }
-            ]
+            ],
+            "description": "An optional asset to associate with the rapid."
           },
           "context": {
             "type": "string",
+            "description": "An optional text context to show to the user.",
             "nullable": true
           },
           "contextAsset": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/IAssetInput"
               }
-            ]
+            ],
+            "description": "An optional asset to use as context to show to the user."
           }
-        }
+        },
+        "description": "The model for creating a demographic rapid."
       },
       "CreateRapidResult": {
         "required": [
@@ -2915,35 +2919,6 @@
           }
         }
       },
-      "OptionOfdouble": {
-        "type": "number",
-        "format": "double",
-        "nullable": true
-      },
-      "OptionOfIAssetInput": {
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/IAssetInput"
-          },
-          {
-            "nullable": true
-          }
-        ]
-      },
-      "OptionOfIValidationTruthModel": {
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/IValidationTruthModel"
-          },
-          {
-            "nullable": true
-          }
-        ]
-      },
-      "OptionOfstring": {
-        "type": "string",
-        "nullable": true
-      },
       "PagedResultOfQueryValidationRapidEligibilityResult": {
         "required": [
           "total",
@@ -3096,26 +3071,23 @@
         "type": "object",
         "properties": {
           "page": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/PageInfo"
               }
-            ]
+            ],
+            "description": "pagination information"
           },
           "filter": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/RootFilter"
               }
-            ]
+            ],
+            "description": "filter information"
           }
-        }
+        },
+        "description": "The Query Model specific to the validation rapid eligibility query."
       },
       "QueryValidationRapidEligibilityResult": {
         "required": [
@@ -3158,7 +3130,8 @@
           "DoNotCare",
           "NotSeeOptionsOrMediaDidntLoad",
           "MyAnswerIsCorrect"
-        ]
+        ],
+        "description": "A streamlined enum representing common issues."
       },
       "RapidModel": {
         "required": [
@@ -3240,12 +3213,19 @@
         "properties": {
           "sessionIndex": {
             "type": "integer",
+            "description": "The index of the session when the result was submitted.",
             "format": "int32"
           },
           "result": {
-            "$ref": "#/components/schemas/IRapidResult"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IRapidResult"
+              }
+            ],
+            "description": "The guess that was submitted."
           }
-        }
+        },
+        "description": "The model for a Rapid result."
       },
       "RapidSkippedModel": {
         "required": [
@@ -3255,13 +3235,16 @@
         "type": "object",
         "properties": {
           "rapidId": {
-            "type": "string"
+            "type": "string",
+            "description": "The ID of the Rapid that was skipped."
           },
           "sessionIndex": {
             "type": "integer",
+            "description": "The index of the session when the Rapid was skipped.",
             "format": "int32"
           }
-        }
+        },
+        "description": "The model for a Rapid skipped."
       },
       "RapidState": {
         "enum": [
@@ -3285,17 +3268,21 @@
           },
           "message": {
             "type": "string",
+            "description": "An optional message typed by the user.",
             "nullable": true
           },
           "dump": {
             "type": "string",
+            "description": "A dump, that the frontend defines and can read again.",
             "nullable": true
           },
           "source": {
             "type": "string",
+            "description": "An optional identifier where the report originated from.",
             "nullable": true
           }
-        }
+        },
+        "description": "The model for reporting an issue with a rapid."
       },
       "RootFilter": {
         "type": "object",
@@ -3389,21 +3376,45 @@
         "type": "object",
         "properties": {
           "truth": {
-            "$ref": "#/components/schemas/OptionOfIValidationTruthModel"
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IValidationTruthModel"
+              },
+              {
+                "nullable": true
+              }
+            ],
+            "description": "The truth for the validation rapid."
           },
           "explanation": {
-            "$ref": "#/components/schemas/OptionOfstring"
+            "type": "string",
+            "description": "The optional explanation that will be shown to the user when answering wrong.",
+            "nullable": true
           },
           "context": {
-            "$ref": "#/components/schemas/OptionOfstring"
+            "type": "string",
+            "description": "An optional text context that will be shown to the user.",
+            "nullable": true
           },
           "contextAsset": {
-            "$ref": "#/components/schemas/OptionOfIAssetInput"
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAssetInput"
+              },
+              {
+                "nullable": true
+              }
+            ],
+            "description": "An optional asset that will be used as context to show to the user."
           },
           "randomCorrectProbability": {
-            "$ref": "#/components/schemas/OptionOfdouble"
+            "type": "number",
+            "description": "The probability that if the user answers at random that he'll be correct.",
+            "format": "double",
+            "nullable": true
           }
-        }
+        },
+        "description": "The model for updating a validation rapid."
       },
       "ValidationProblemDetails": {
         "type": "object",

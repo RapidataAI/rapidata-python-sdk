@@ -1115,11 +1115,11 @@ class BenchmarkApi:
     @validate_call
     def benchmark_benchmark_id_matrix_get(
         self,
-        benchmark_id: StrictStr,
-        tags: Optional[List[StrictStr]] = None,
-        participant_ids: Optional[List[StrictStr]] = None,
-        leaderboard_ids: Optional[List[StrictStr]] = None,
-        use_weighted_scoring: Optional[StrictBool] = None,
+        benchmark_id: Annotated[StrictStr, Field(description="The identifier of the benchmark.")],
+        tags: Annotated[Optional[List[StrictStr]], Field(description="Optional tags to filter the matrix entries.")] = None,
+        participant_ids: Annotated[Optional[List[StrictStr]], Field(description="Optional participant identifiers to include in the matrix.")] = None,
+        leaderboard_ids: Annotated[Optional[List[StrictStr]], Field(description="Optional leaderboard identifiers to scope the matrix.")] = None,
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring to the matrix values.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1135,16 +1135,17 @@ class BenchmarkApi:
     ) -> VoteMatrixResult:
         """Returns the pairwise vote matrix for a benchmark.
 
+        The matrix is returned in pandas split format.
 
-        :param benchmark_id: (required)
+        :param benchmark_id: The identifier of the benchmark. (required)
         :type benchmark_id: str
-        :param tags:
+        :param tags: Optional tags to filter the matrix entries.
         :type tags: List[str]
-        :param participant_ids:
+        :param participant_ids: Optional participant identifiers to include in the matrix.
         :type participant_ids: List[str]
-        :param leaderboard_ids:
+        :param leaderboard_ids: Optional leaderboard identifiers to scope the matrix.
         :type leaderboard_ids: List[str]
-        :param use_weighted_scoring:
+        :param use_weighted_scoring: Whether to apply weighted scoring to the matrix values.
         :type use_weighted_scoring: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1200,11 +1201,11 @@ class BenchmarkApi:
     @validate_call
     def benchmark_benchmark_id_matrix_get_with_http_info(
         self,
-        benchmark_id: StrictStr,
-        tags: Optional[List[StrictStr]] = None,
-        participant_ids: Optional[List[StrictStr]] = None,
-        leaderboard_ids: Optional[List[StrictStr]] = None,
-        use_weighted_scoring: Optional[StrictBool] = None,
+        benchmark_id: Annotated[StrictStr, Field(description="The identifier of the benchmark.")],
+        tags: Annotated[Optional[List[StrictStr]], Field(description="Optional tags to filter the matrix entries.")] = None,
+        participant_ids: Annotated[Optional[List[StrictStr]], Field(description="Optional participant identifiers to include in the matrix.")] = None,
+        leaderboard_ids: Annotated[Optional[List[StrictStr]], Field(description="Optional leaderboard identifiers to scope the matrix.")] = None,
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring to the matrix values.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1220,16 +1221,17 @@ class BenchmarkApi:
     ) -> ApiResponse[VoteMatrixResult]:
         """Returns the pairwise vote matrix for a benchmark.
 
+        The matrix is returned in pandas split format.
 
-        :param benchmark_id: (required)
+        :param benchmark_id: The identifier of the benchmark. (required)
         :type benchmark_id: str
-        :param tags:
+        :param tags: Optional tags to filter the matrix entries.
         :type tags: List[str]
-        :param participant_ids:
+        :param participant_ids: Optional participant identifiers to include in the matrix.
         :type participant_ids: List[str]
-        :param leaderboard_ids:
+        :param leaderboard_ids: Optional leaderboard identifiers to scope the matrix.
         :type leaderboard_ids: List[str]
-        :param use_weighted_scoring:
+        :param use_weighted_scoring: Whether to apply weighted scoring to the matrix values.
         :type use_weighted_scoring: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1285,11 +1287,11 @@ class BenchmarkApi:
     @validate_call
     def benchmark_benchmark_id_matrix_get_without_preload_content(
         self,
-        benchmark_id: StrictStr,
-        tags: Optional[List[StrictStr]] = None,
-        participant_ids: Optional[List[StrictStr]] = None,
-        leaderboard_ids: Optional[List[StrictStr]] = None,
-        use_weighted_scoring: Optional[StrictBool] = None,
+        benchmark_id: Annotated[StrictStr, Field(description="The identifier of the benchmark.")],
+        tags: Annotated[Optional[List[StrictStr]], Field(description="Optional tags to filter the matrix entries.")] = None,
+        participant_ids: Annotated[Optional[List[StrictStr]], Field(description="Optional participant identifiers to include in the matrix.")] = None,
+        leaderboard_ids: Annotated[Optional[List[StrictStr]], Field(description="Optional leaderboard identifiers to scope the matrix.")] = None,
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring to the matrix values.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1305,16 +1307,17 @@ class BenchmarkApi:
     ) -> RESTResponseType:
         """Returns the pairwise vote matrix for a benchmark.
 
+        The matrix is returned in pandas split format.
 
-        :param benchmark_id: (required)
+        :param benchmark_id: The identifier of the benchmark. (required)
         :type benchmark_id: str
-        :param tags:
+        :param tags: Optional tags to filter the matrix entries.
         :type tags: List[str]
-        :param participant_ids:
+        :param participant_ids: Optional participant identifiers to include in the matrix.
         :type participant_ids: List[str]
-        :param leaderboard_ids:
+        :param leaderboard_ids: Optional leaderboard identifiers to scope the matrix.
         :type leaderboard_ids: List[str]
-        :param use_weighted_scoring:
+        :param use_weighted_scoring: Whether to apply weighted scoring to the matrix values.
         :type use_weighted_scoring: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -3157,12 +3160,12 @@ class BenchmarkApi:
     @validate_call
     def benchmark_benchmark_id_standings_get(
         self,
-        benchmark_id: StrictStr,
-        tags: Optional[List[StrictStr]] = None,
-        participant_ids: Optional[List[StrictStr]] = None,
-        leaderboard_ids: Optional[List[StrictStr]] = None,
-        use_weighted_scoring: Optional[StrictBool] = None,
-        include_confidence_intervals: Optional[StrictBool] = None,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark, which standings should be queried")],
+        tags: Annotated[Optional[List[StrictStr]], Field(description="The tags the benchmark should filter for.")] = None,
+        participant_ids: Annotated[Optional[List[StrictStr]], Field(description="The ids of the participants that should be filtered for. leave empty to not filter")] = None,
+        leaderboard_ids: Annotated[Optional[List[StrictStr]], Field(description="The ids of the leaderboards that should be filtered for. leave empty to not filter")] = None,
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)")] = None,
+        include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include the confidence intervals")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3176,20 +3179,20 @@ class BenchmarkApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> StandingsByBenchmarkResult:
-        """benchmark_benchmark_id_standings_get
+        """Queries all the standings for a benchmark by its ID.
 
 
-        :param benchmark_id: (required)
+        :param benchmark_id: The id of the benchmark, which standings should be queried (required)
         :type benchmark_id: str
-        :param tags:
+        :param tags: The tags the benchmark should filter for.
         :type tags: List[str]
-        :param participant_ids:
+        :param participant_ids: The ids of the participants that should be filtered for. leave empty to not filter
         :type participant_ids: List[str]
-        :param leaderboard_ids:
+        :param leaderboard_ids: The ids of the leaderboards that should be filtered for. leave empty to not filter
         :type leaderboard_ids: List[str]
-        :param use_weighted_scoring:
+        :param use_weighted_scoring: Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)
         :type use_weighted_scoring: bool
-        :param include_confidence_intervals:
+        :param include_confidence_intervals: Whether to include the confidence intervals
         :type include_confidence_intervals: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -3243,12 +3246,12 @@ class BenchmarkApi:
     @validate_call
     def benchmark_benchmark_id_standings_get_with_http_info(
         self,
-        benchmark_id: StrictStr,
-        tags: Optional[List[StrictStr]] = None,
-        participant_ids: Optional[List[StrictStr]] = None,
-        leaderboard_ids: Optional[List[StrictStr]] = None,
-        use_weighted_scoring: Optional[StrictBool] = None,
-        include_confidence_intervals: Optional[StrictBool] = None,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark, which standings should be queried")],
+        tags: Annotated[Optional[List[StrictStr]], Field(description="The tags the benchmark should filter for.")] = None,
+        participant_ids: Annotated[Optional[List[StrictStr]], Field(description="The ids of the participants that should be filtered for. leave empty to not filter")] = None,
+        leaderboard_ids: Annotated[Optional[List[StrictStr]], Field(description="The ids of the leaderboards that should be filtered for. leave empty to not filter")] = None,
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)")] = None,
+        include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include the confidence intervals")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3262,20 +3265,20 @@ class BenchmarkApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[StandingsByBenchmarkResult]:
-        """benchmark_benchmark_id_standings_get
+        """Queries all the standings for a benchmark by its ID.
 
 
-        :param benchmark_id: (required)
+        :param benchmark_id: The id of the benchmark, which standings should be queried (required)
         :type benchmark_id: str
-        :param tags:
+        :param tags: The tags the benchmark should filter for.
         :type tags: List[str]
-        :param participant_ids:
+        :param participant_ids: The ids of the participants that should be filtered for. leave empty to not filter
         :type participant_ids: List[str]
-        :param leaderboard_ids:
+        :param leaderboard_ids: The ids of the leaderboards that should be filtered for. leave empty to not filter
         :type leaderboard_ids: List[str]
-        :param use_weighted_scoring:
+        :param use_weighted_scoring: Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)
         :type use_weighted_scoring: bool
-        :param include_confidence_intervals:
+        :param include_confidence_intervals: Whether to include the confidence intervals
         :type include_confidence_intervals: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -3329,12 +3332,12 @@ class BenchmarkApi:
     @validate_call
     def benchmark_benchmark_id_standings_get_without_preload_content(
         self,
-        benchmark_id: StrictStr,
-        tags: Optional[List[StrictStr]] = None,
-        participant_ids: Optional[List[StrictStr]] = None,
-        leaderboard_ids: Optional[List[StrictStr]] = None,
-        use_weighted_scoring: Optional[StrictBool] = None,
-        include_confidence_intervals: Optional[StrictBool] = None,
+        benchmark_id: Annotated[StrictStr, Field(description="The id of the benchmark, which standings should be queried")],
+        tags: Annotated[Optional[List[StrictStr]], Field(description="The tags the benchmark should filter for.")] = None,
+        participant_ids: Annotated[Optional[List[StrictStr]], Field(description="The ids of the participants that should be filtered for. leave empty to not filter")] = None,
+        leaderboard_ids: Annotated[Optional[List[StrictStr]], Field(description="The ids of the leaderboards that should be filtered for. leave empty to not filter")] = None,
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)")] = None,
+        include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include the confidence intervals")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3348,20 +3351,20 @@ class BenchmarkApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """benchmark_benchmark_id_standings_get
+        """Queries all the standings for a benchmark by its ID.
 
 
-        :param benchmark_id: (required)
+        :param benchmark_id: The id of the benchmark, which standings should be queried (required)
         :type benchmark_id: str
-        :param tags:
+        :param tags: The tags the benchmark should filter for.
         :type tags: List[str]
-        :param participant_ids:
+        :param participant_ids: The ids of the participants that should be filtered for. leave empty to not filter
         :type participant_ids: List[str]
-        :param leaderboard_ids:
+        :param leaderboard_ids: The ids of the leaderboards that should be filtered for. leave empty to not filter
         :type leaderboard_ids: List[str]
-        :param use_weighted_scoring:
+        :param use_weighted_scoring: Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)
         :type use_weighted_scoring: bool
-        :param include_confidence_intervals:
+        :param include_confidence_intervals: Whether to include the confidence intervals
         :type include_confidence_intervals: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request

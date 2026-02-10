@@ -1694,7 +1694,7 @@ class DatasetApi:
     @validate_call
     def dataset_post(
         self,
-        create_dataset_endpoint_input: CreateDatasetEndpointInput,
+        create_dataset_endpoint_input: Annotated[CreateDatasetEndpointInput, Field(description="The dataset creation parameters.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1711,7 +1711,7 @@ class DatasetApi:
         """Creates a new empty dataset.
 
 
-        :param create_dataset_endpoint_input: (required)
+        :param create_dataset_endpoint_input: The dataset creation parameters. (required)
         :type create_dataset_endpoint_input: CreateDatasetEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1763,7 +1763,7 @@ class DatasetApi:
     @validate_call
     def dataset_post_with_http_info(
         self,
-        create_dataset_endpoint_input: CreateDatasetEndpointInput,
+        create_dataset_endpoint_input: Annotated[CreateDatasetEndpointInput, Field(description="The dataset creation parameters.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1780,7 +1780,7 @@ class DatasetApi:
         """Creates a new empty dataset.
 
 
-        :param create_dataset_endpoint_input: (required)
+        :param create_dataset_endpoint_input: The dataset creation parameters. (required)
         :type create_dataset_endpoint_input: CreateDatasetEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1832,7 +1832,7 @@ class DatasetApi:
     @validate_call
     def dataset_post_without_preload_content(
         self,
-        create_dataset_endpoint_input: CreateDatasetEndpointInput,
+        create_dataset_endpoint_input: Annotated[CreateDatasetEndpointInput, Field(description="The dataset creation parameters.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1849,7 +1849,7 @@ class DatasetApi:
         """Creates a new empty dataset.
 
 
-        :param create_dataset_endpoint_input: (required)
+        :param create_dataset_endpoint_input: The dataset creation parameters. (required)
         :type create_dataset_endpoint_input: CreateDatasetEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request

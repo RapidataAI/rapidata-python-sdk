@@ -17,17 +17,17 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
 class NewsletterModel(BaseModel):
     """
-    NewsletterModel
+    Model for subscribing and unsubscribing to the newsletter.
     """ # noqa: E501
-    email: StrictStr
-    token: StrictStr
+    email: StrictStr = Field(description="The email of the user to subscribe or unsubscribe.")
+    token: StrictStr = Field(description="The recaptcha token to verify the user is not a bot.")
     __properties: ClassVar[List[str]] = ["email", "token"]
 
     model_config = ConfigDict(

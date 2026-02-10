@@ -28,13 +28,13 @@ from typing_extensions import Self
 
 class CreateJobDefinitionEndpointInput(BaseModel):
     """
-    CreateJobDefinitionEndpointInput
+    The input for the create job definition endpoint.
     """ # noqa: E501
-    definition_name: StrictStr = Field(alias="definitionName")
-    workflow: IOrderWorkflowModel
-    referee: IRefereeModel
-    dataset_id: StrictStr = Field(alias="datasetId")
-    feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
+    definition_name: StrictStr = Field(description="The name of the definition.", alias="definitionName")
+    workflow: IOrderWorkflowModel = Field(description="The workflow configuration.")
+    referee: IRefereeModel = Field(description="The referee configuration.")
+    dataset_id: StrictStr = Field(description="The dataset id.", alias="datasetId")
+    feature_flags: Optional[List[FeatureFlag]] = Field(default=None, description="The feature flags.", alias="featureFlags")
     aggregator_type: Optional[AggregatorType] = Field(default=None, alias="aggregatorType")
     __properties: ClassVar[List[str]] = ["definitionName", "workflow", "referee", "datasetId", "featureFlags", "aggregatorType"]
 

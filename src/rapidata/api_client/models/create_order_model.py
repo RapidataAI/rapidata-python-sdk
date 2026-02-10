@@ -33,24 +33,24 @@ from typing_extensions import Self
 
 class CreateOrderModel(BaseModel):
     """
-    CreateOrderModel
+    This model is used to create a simple order
     """ # noqa: E501
-    order_name: StrictStr = Field(alias="orderName")
-    workflow: IOrderWorkflowModel
-    referee: IRefereeModel
+    order_name: StrictStr = Field(description="The name is used as an identifier for an order and can be freely chosen.", alias="orderName")
+    workflow: IOrderWorkflowModel = Field(description="The workflow helps to determine the tasks that need to be completed by the users.")
+    referee: IRefereeModel = Field(description="The referee is used to determine how many votes will be collected.")
     aggregator: Optional[AggregatorType] = None
-    feature_flags: Optional[List[FeatureFlagModel]] = Field(default=None, alias="featureFlags")
-    priority: Optional[StrictInt] = None
+    feature_flags: Optional[List[FeatureFlagModel]] = Field(default=None, description="The feature flags are used to enable or disable certain features.", alias="featureFlags")
+    priority: Optional[StrictInt] = Field(default=None, description="The priority is used to prioritize over other orders.")
     sticky_state: Optional[StickyState] = Field(default=None, alias="stickyState")
-    sticky_config: Optional[StickyConfig] = Field(default=None, alias="stickyConfig")
+    sticky_config: Optional[StickyConfig] = Field(default=None, description="Configuration for sticky campaign behavior. Takes precedence over StickyState if both are provided.", alias="stickyConfig")
     user_score_dimensions: Optional[List[StrictStr]] = Field(default=None, alias="userScoreDimensions")
     demographic_keys: Optional[List[StrictStr]] = Field(default=None, alias="demographicKeys")
-    user_filters: Optional[List[IUserFilterModel]] = Field(default=None, alias="userFilters")
-    validation_set_id: Optional[StrictStr] = Field(default=None, alias="validationSetId")
-    selections: Optional[List[ISelection]] = None
+    user_filters: Optional[List[IUserFilterModel]] = Field(default=None, description="The user filters are used to restrict the order to only collect votes from a specific demographic.", alias="userFilters")
+    validation_set_id: Optional[StrictStr] = Field(default=None, description="The validation set id can be changed to point to a specific validation set. if not provided a sane default will be  used.", alias="validationSetId")
+    selections: Optional[List[ISelection]] = Field(default=None, description="The selections are used to determine which tasks are shown to a user.")
     retrieval_mode: Optional[RetrievalMode] = Field(default=None, alias="retrievalMode")
-    max_iterations: Optional[StrictInt] = Field(default=None, alias="maxIterations")
-    preceding_order_id: Optional[StrictStr] = Field(default=None, alias="precedingOrderId")
+    max_iterations: Optional[StrictInt] = Field(default=None, description="The maximum number of times a user is allowed to see the same rapid.", alias="maxIterations")
+    preceding_order_id: Optional[StrictStr] = Field(default=None, description="Optional ID of the order that must complete before this order starts processing.", alias="precedingOrderId")
     __properties: ClassVar[List[str]] = ["orderName", "workflow", "referee", "aggregator", "featureFlags", "priority", "stickyState", "stickyConfig", "userScoreDimensions", "demographicKeys", "userFilters", "validationSetId", "selections", "retrievalMode", "maxIterations", "precedingOrderId"]
 
     model_config = ConfigDict(

@@ -52,8 +52,8 @@ class AudienceApi:
     @validate_call
     def audience_audience_id_boost_config_patch(
         self,
-        audience_id: StrictStr,
-        update_boost_config_endpoint_input: UpdateBoostConfigEndpointInput,
+        audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience.")],
+        update_boost_config_endpoint_input: Annotated[UpdateBoostConfigEndpointInput, Field(description="The boost configuration values to update.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -70,9 +70,9 @@ class AudienceApi:
         """Updates the boost configuration for the specified audience.
 
 
-        :param audience_id: (required)
+        :param audience_id: The unique identifier of the audience. (required)
         :type audience_id: str
-        :param update_boost_config_endpoint_input: (required)
+        :param update_boost_config_endpoint_input: The boost configuration values to update. (required)
         :type update_boost_config_endpoint_input: UpdateBoostConfigEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -125,8 +125,8 @@ class AudienceApi:
     @validate_call
     def audience_audience_id_boost_config_patch_with_http_info(
         self,
-        audience_id: StrictStr,
-        update_boost_config_endpoint_input: UpdateBoostConfigEndpointInput,
+        audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience.")],
+        update_boost_config_endpoint_input: Annotated[UpdateBoostConfigEndpointInput, Field(description="The boost configuration values to update.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -143,9 +143,9 @@ class AudienceApi:
         """Updates the boost configuration for the specified audience.
 
 
-        :param audience_id: (required)
+        :param audience_id: The unique identifier of the audience. (required)
         :type audience_id: str
-        :param update_boost_config_endpoint_input: (required)
+        :param update_boost_config_endpoint_input: The boost configuration values to update. (required)
         :type update_boost_config_endpoint_input: UpdateBoostConfigEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -198,8 +198,8 @@ class AudienceApi:
     @validate_call
     def audience_audience_id_boost_config_patch_without_preload_content(
         self,
-        audience_id: StrictStr,
-        update_boost_config_endpoint_input: UpdateBoostConfigEndpointInput,
+        audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience.")],
+        update_boost_config_endpoint_input: Annotated[UpdateBoostConfigEndpointInput, Field(description="The boost configuration values to update.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -216,9 +216,9 @@ class AudienceApi:
         """Updates the boost configuration for the specified audience.
 
 
-        :param audience_id: (required)
+        :param audience_id: The unique identifier of the audience. (required)
         :type audience_id: str
-        :param update_boost_config_endpoint_input: (required)
+        :param update_boost_config_endpoint_input: The boost configuration values to update. (required)
         :type update_boost_config_endpoint_input: UpdateBoostConfigEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -349,7 +349,7 @@ class AudienceApi:
     @validate_call
     def audience_audience_id_delete(
         self,
-        audience_id: StrictStr,
+        audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience to delete.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -366,7 +366,7 @@ class AudienceApi:
         """Deletes the specified audience.
 
 
-        :param audience_id: (required)
+        :param audience_id: The unique identifier of the audience to delete. (required)
         :type audience_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -418,7 +418,7 @@ class AudienceApi:
     @validate_call
     def audience_audience_id_delete_with_http_info(
         self,
-        audience_id: StrictStr,
+        audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience to delete.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -435,7 +435,7 @@ class AudienceApi:
         """Deletes the specified audience.
 
 
-        :param audience_id: (required)
+        :param audience_id: The unique identifier of the audience to delete. (required)
         :type audience_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -487,7 +487,7 @@ class AudienceApi:
     @validate_call
     def audience_audience_id_delete_without_preload_content(
         self,
-        audience_id: StrictStr,
+        audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience to delete.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -504,7 +504,7 @@ class AudienceApi:
         """Deletes the specified audience.
 
 
-        :param audience_id: (required)
+        :param audience_id: The unique identifier of the audience to delete. (required)
         :type audience_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -880,7 +880,7 @@ class AudienceApi:
     @validate_call
     def audience_audience_id_jobs_get(
         self,
-        audience_id: StrictStr,
+        audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -894,10 +894,10 @@ class AudienceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> PagedResultOfQueryJobsResult:
-        """audience_audience_id_jobs_get
+        """Queries jobs for the specified audience.
 
 
-        :param audience_id: (required)
+        :param audience_id: The unique identifier of the audience. (required)
         :type audience_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -949,7 +949,7 @@ class AudienceApi:
     @validate_call
     def audience_audience_id_jobs_get_with_http_info(
         self,
-        audience_id: StrictStr,
+        audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -963,10 +963,10 @@ class AudienceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[PagedResultOfQueryJobsResult]:
-        """audience_audience_id_jobs_get
+        """Queries jobs for the specified audience.
 
 
-        :param audience_id: (required)
+        :param audience_id: The unique identifier of the audience. (required)
         :type audience_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1018,7 +1018,7 @@ class AudienceApi:
     @validate_call
     def audience_audience_id_jobs_get_without_preload_content(
         self,
-        audience_id: StrictStr,
+        audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1032,10 +1032,10 @@ class AudienceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """audience_audience_id_jobs_get
+        """Queries jobs for the specified audience.
 
 
-        :param audience_id: (required)
+        :param audience_id: The unique identifier of the audience. (required)
         :type audience_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1432,7 +1432,7 @@ class AudienceApi:
     @validate_call
     def audience_audience_id_pause_distillation_post(
         self,
-        audience_id: StrictStr,
+        audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1449,7 +1449,7 @@ class AudienceApi:
         """Pauses the distillation campaign for the specified audience.
 
 
-        :param audience_id: (required)
+        :param audience_id: The unique identifier of the audience. (required)
         :type audience_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1501,7 +1501,7 @@ class AudienceApi:
     @validate_call
     def audience_audience_id_pause_distillation_post_with_http_info(
         self,
-        audience_id: StrictStr,
+        audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1518,7 +1518,7 @@ class AudienceApi:
         """Pauses the distillation campaign for the specified audience.
 
 
-        :param audience_id: (required)
+        :param audience_id: The unique identifier of the audience. (required)
         :type audience_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1570,7 +1570,7 @@ class AudienceApi:
     @validate_call
     def audience_audience_id_pause_distillation_post_without_preload_content(
         self,
-        audience_id: StrictStr,
+        audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1587,7 +1587,7 @@ class AudienceApi:
         """Pauses the distillation campaign for the specified audience.
 
 
-        :param audience_id: (required)
+        :param audience_id: The unique identifier of the audience. (required)
         :type audience_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2263,7 +2263,7 @@ class AudienceApi:
     @validate_call
     def audience_audience_id_rebuild_distilling_campaign_post(
         self,
-        audience_id: StrictStr,
+        audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2277,10 +2277,11 @@ class AudienceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Recalculates and updates the audience's distilling campaign filters and selections  based on current audience settings (demographic filters, exit conditions, etc.).
+        """Rebuilds the distilling campaign for the specified audience.
 
+        Recalculates campaign filters and selections based on the audience's current settings  (demographic filters, exit conditions, etc.).
 
-        :param audience_id: (required)
+        :param audience_id: The unique identifier of the audience. (required)
         :type audience_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2332,7 +2333,7 @@ class AudienceApi:
     @validate_call
     def audience_audience_id_rebuild_distilling_campaign_post_with_http_info(
         self,
-        audience_id: StrictStr,
+        audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2346,10 +2347,11 @@ class AudienceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Recalculates and updates the audience's distilling campaign filters and selections  based on current audience settings (demographic filters, exit conditions, etc.).
+        """Rebuilds the distilling campaign for the specified audience.
 
+        Recalculates campaign filters and selections based on the audience's current settings  (demographic filters, exit conditions, etc.).
 
-        :param audience_id: (required)
+        :param audience_id: The unique identifier of the audience. (required)
         :type audience_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2401,7 +2403,7 @@ class AudienceApi:
     @validate_call
     def audience_audience_id_rebuild_distilling_campaign_post_without_preload_content(
         self,
-        audience_id: StrictStr,
+        audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2415,10 +2417,11 @@ class AudienceApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Recalculates and updates the audience's distilling campaign filters and selections  based on current audience settings (demographic filters, exit conditions, etc.).
+        """Rebuilds the distilling campaign for the specified audience.
 
+        Recalculates campaign filters and selections based on the audience's current settings  (demographic filters, exit conditions, etc.).
 
-        :param audience_id: (required)
+        :param audience_id: The unique identifier of the audience. (required)
         :type audience_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2532,7 +2535,7 @@ class AudienceApi:
     @validate_call
     def audience_audience_id_recruit_post(
         self,
-        audience_id: StrictStr,
+        audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2549,7 +2552,7 @@ class AudienceApi:
         """Starts recruiting users for the specified audience.
 
 
-        :param audience_id: (required)
+        :param audience_id: The unique identifier of the audience. (required)
         :type audience_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2601,7 +2604,7 @@ class AudienceApi:
     @validate_call
     def audience_audience_id_recruit_post_with_http_info(
         self,
-        audience_id: StrictStr,
+        audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2618,7 +2621,7 @@ class AudienceApi:
         """Starts recruiting users for the specified audience.
 
 
-        :param audience_id: (required)
+        :param audience_id: The unique identifier of the audience. (required)
         :type audience_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2670,7 +2673,7 @@ class AudienceApi:
     @validate_call
     def audience_audience_id_recruit_post_without_preload_content(
         self,
-        audience_id: StrictStr,
+        audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2687,7 +2690,7 @@ class AudienceApi:
         """Starts recruiting users for the specified audience.
 
 
-        :param audience_id: (required)
+        :param audience_id: The unique identifier of the audience. (required)
         :type audience_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2801,7 +2804,7 @@ class AudienceApi:
     @validate_call
     def audience_audience_id_resume_distillation_post(
         self,
-        audience_id: StrictStr,
+        audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2818,7 +2821,7 @@ class AudienceApi:
         """Resumes the distillation campaign for the specified audience.
 
 
-        :param audience_id: (required)
+        :param audience_id: The unique identifier of the audience. (required)
         :type audience_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2870,7 +2873,7 @@ class AudienceApi:
     @validate_call
     def audience_audience_id_resume_distillation_post_with_http_info(
         self,
-        audience_id: StrictStr,
+        audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2887,7 +2890,7 @@ class AudienceApi:
         """Resumes the distillation campaign for the specified audience.
 
 
-        :param audience_id: (required)
+        :param audience_id: The unique identifier of the audience. (required)
         :type audience_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2939,7 +2942,7 @@ class AudienceApi:
     @validate_call
     def audience_audience_id_resume_distillation_post_without_preload_content(
         self,
-        audience_id: StrictStr,
+        audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2956,7 +2959,7 @@ class AudienceApi:
         """Resumes the distillation campaign for the specified audience.
 
 
-        :param audience_id: (required)
+        :param audience_id: The unique identifier of the audience. (required)
         :type audience_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -3070,7 +3073,7 @@ class AudienceApi:
     @validate_call
     def audience_audience_id_user_metrics_get(
         self,
-        audience_id: StrictStr,
+        audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3087,7 +3090,7 @@ class AudienceApi:
         """Gets the count of users in each state for the specified audience.
 
 
-        :param audience_id: (required)
+        :param audience_id: The unique identifier of the audience. (required)
         :type audience_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -3139,7 +3142,7 @@ class AudienceApi:
     @validate_call
     def audience_audience_id_user_metrics_get_with_http_info(
         self,
-        audience_id: StrictStr,
+        audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3156,7 +3159,7 @@ class AudienceApi:
         """Gets the count of users in each state for the specified audience.
 
 
-        :param audience_id: (required)
+        :param audience_id: The unique identifier of the audience. (required)
         :type audience_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -3208,7 +3211,7 @@ class AudienceApi:
     @validate_call
     def audience_audience_id_user_metrics_get_without_preload_content(
         self,
-        audience_id: StrictStr,
+        audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3225,7 +3228,7 @@ class AudienceApi:
         """Gets the count of users in each state for the specified audience.
 
 
-        :param audience_id: (required)
+        :param audience_id: The unique identifier of the audience. (required)
         :type audience_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request

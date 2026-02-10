@@ -28,7 +28,7 @@
         "tags": [
           "Customer"
         ],
-        "summary": "Queries customers for administrators.",
+        "summary": "Queries customers with filtering and pagination.",
         "responses": {
           "200": {
             "description": "OK",
@@ -607,13 +607,19 @@
           },
           "scope": {
             "type": "string",
+            "description": "String containing a space-separated list of scope values\n that the client can use when requesting access tokens.",
             "nullable": true
           },
           "contacts": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "Array of strings representing ways to contact people responsible for this client,\n typically email addresses."
           },
           "tos_uri": {
             "type": "string",
@@ -637,7 +643,8 @@
               }
             ]
           }
-        }
+        },
+        "description": "The response containing the id and secret of a dynamically registered client.\n Additionally, it contains all registered metadata for the client."
       },
       "ClientsQueryResult": {
         "required": [
@@ -682,9 +689,11 @@
         "properties": {
           "displayName": {
             "type": "string",
+            "description": "An optional display name for the client.",
             "nullable": true
           }
-        }
+        },
+        "description": "The model for creating a new client."
       },
       "CreateCustomerClientResult": {
         "required": [
@@ -740,13 +749,19 @@
           },
           "scope": {
             "type": "string",
+            "description": "String containing a space-separated list of scope values\n that the client can use when requesting access tokens.",
             "nullable": true
           },
           "contacts": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "Array of strings representing ways to contact people responsible for this client,\n typically email addresses."
           },
           "tos_uri": {
             "type": "string",
@@ -761,16 +776,15 @@
             "nullable": true
           },
           "jwks": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/JsonWebKeySet"
               }
-            ]
+            ],
+            "description": "Client's JSON Web Key Set [RFC7517] document value, which contains the client's public keys."
           }
-        }
+        },
+        "description": "The request body for dynamic client registration."
       },
       "Filter": {
         "type": "object",
@@ -812,9 +826,11 @@
         "type": "object",
         "properties": {
           "idToken": {
-            "type": "string"
+            "type": "string",
+            "description": "The id token received from the Google One Tap login."
           }
-        }
+        },
+        "description": "The model for the Google One Tap login."
       },
       "JsonWebKey": {
         "type": "object",
@@ -962,12 +978,15 @@
         "type": "object",
         "properties": {
           "email": {
-            "type": "string"
+            "type": "string",
+            "description": "The email of the user to subscribe or unsubscribe."
           },
           "token": {
-            "type": "string"
+            "type": "string",
+            "description": "The recaptcha token to verify the user is not a bot."
           }
-        }
+        },
+        "description": "Model for subscribing and unsubscribing to the newsletter."
       },
       "NotAvailableYetResult": {
         "required": [
@@ -1038,10 +1057,12 @@
         "properties": {
           "id": {
             "type": "string",
+            "description": "The unique identifier of the customer.",
             "format": "uuid"
           },
           "email": {
             "type": "string",
+            "description": "The email address of the customer.",
             "nullable": true
           }
         }
@@ -1169,9 +1190,11 @@
             "type": "object",
             "additionalProperties": {
               "type": "string"
-            }
+            },
+            "description": "The fields of the survey"
           }
-        }
+        },
+        "description": "The model user for submitting a survey"
       },
       "SortCriterion": {
         "required": [

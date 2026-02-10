@@ -25,11 +25,11 @@ from typing_extensions import Self
 
 class SubmitPromptModel(BaseModel):
     """
-    SubmitPromptModel
+    The model user for submitting a prompt to a benchmark.
     """ # noqa: E501
-    identifier: StrictStr
-    prompt: Optional[StrictStr] = None
-    prompt_asset: Optional[IAssetInput] = Field(default=None, alias="promptAsset")
+    identifier: StrictStr = Field(description="An identifier associated to the prompt")
+    prompt: Optional[StrictStr] = Field(default=None, description="The prompt")
+    prompt_asset: Optional[IAssetInput] = Field(default=None, description="PromptAsset", alias="promptAsset")
     tags: Optional[List[StrictStr]] = None
     __properties: ClassVar[List[str]] = ["identifier", "prompt", "promptAsset", "tags"]
 
@@ -79,11 +79,6 @@ class SubmitPromptModel(BaseModel):
         # and model_fields_set contains the field
         if self.prompt is None and "prompt" in self.model_fields_set:
             _dict['prompt'] = None
-
-        # set to None if prompt_asset (nullable) is None
-        # and model_fields_set contains the field
-        if self.prompt_asset is None and "prompt_asset" in self.model_fields_set:
-            _dict['promptAsset'] = None
 
         return _dict
 

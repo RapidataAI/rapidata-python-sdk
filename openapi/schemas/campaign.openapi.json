@@ -351,12 +351,15 @@
         "type": "object",
         "properties": {
           "isManual": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "If the manual overwrite should be applied"
           },
           "isActive": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "If manual is set to true it will overrule the system with this."
           }
-        }
+        },
+        "description": "The model to update the manual boost status. or putting it back to autopilot."
       },
       "Filter": {
         "type": "object",
@@ -465,15 +468,6 @@
           "Or",
           "Not"
         ]
-      },
-      "OptionOfboolean": {
-        "type": "boolean",
-        "nullable": true
-      },
-      "OptionOfint": {
-        "type": "integer",
-        "format": "int32",
-        "nullable": true
       },
       "PagedResultOfCampaignQueryResult": {
         "required": [
@@ -589,12 +583,18 @@
         "type": "object",
         "properties": {
           "priority": {
-            "$ref": "#/components/schemas/OptionOfint"
+            "type": "integer",
+            "description": "The new priority value for the campaign.",
+            "format": "int32",
+            "nullable": true
           },
           "requiresBooster": {
-            "$ref": "#/components/schemas/OptionOfboolean"
+            "type": "boolean",
+            "description": "Whether the campaign requires booster.",
+            "nullable": true
           }
-        }
+        },
+        "description": "The model to update campaign properties."
       },
       "UpdatePriorityModel": {
         "required": [
@@ -604,9 +604,11 @@
         "properties": {
           "priority": {
             "type": "integer",
+            "description": "The new priority value for the campaign.",
             "format": "int32"
           }
-        }
+        },
+        "description": "The model to update the campaign priority."
       }
     },
     "securitySchemes": {

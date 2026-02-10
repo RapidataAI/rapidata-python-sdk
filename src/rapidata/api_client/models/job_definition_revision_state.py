@@ -20,7 +20,7 @@ from typing_extensions import Self
 
 class JobDefinitionRevisionState(str, Enum):
     """
-    JobDefinitionRevisionState
+    The state of the revision.
     """
 
     """

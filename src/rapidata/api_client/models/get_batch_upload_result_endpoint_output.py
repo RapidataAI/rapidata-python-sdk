@@ -28,12 +28,12 @@ class GetBatchUploadResultEndpointOutput(BaseModel):
     """
     GetBatchUploadResultEndpointOutput
     """ # noqa: E501
-    batch_upload_id: StrictStr = Field(alias="batchUploadId")
+    batch_upload_id: StrictStr = Field(description="The identifier of the batch upload.", alias="batchUploadId")
     status: BatchUploadStatus
-    total_count: StrictInt = Field(alias="totalCount")
-    completed_count: StrictInt = Field(alias="completedCount")
-    failed_count: StrictInt = Field(alias="failedCount")
-    items: List[GetBatchUploadResultEndpointUrlOutput]
+    total_count: StrictInt = Field(description="The total number of URLs in the batch.", alias="totalCount")
+    completed_count: StrictInt = Field(description="The number of URLs that have been successfully processed.", alias="completedCount")
+    failed_count: StrictInt = Field(description="The number of URLs that failed to process.", alias="failedCount")
+    items: List[GetBatchUploadResultEndpointUrlOutput] = Field(description="The individual results for each URL in the batch.")
     __properties: ClassVar[List[str]] = ["batchUploadId", "status", "totalCount", "completedCount", "failedCount", "items"]
 
     model_config = ConfigDict(

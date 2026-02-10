@@ -27,11 +27,11 @@ class UpdateConfigEndpointInput(BaseModel):
     """
     UpdateConfigEndpointInput
     """ # noqa: E501
-    criteria: Optional[StrictStr] = None
-    starting_elo: Optional[StrictInt] = Field(default=None, alias="startingElo")
-    k_factor: Optional[StrictInt] = Field(default=None, alias="kFactor")
-    scaling_factor: Optional[StrictInt] = Field(default=None, alias="scalingFactor")
-    responses_required: Optional[StrictInt] = Field(default=None, alias="responsesRequired")
+    criteria: Optional[StrictStr] = Field(default=None, description="The ranking criteria used to compare items.")
+    starting_elo: Optional[StrictInt] = Field(default=None, description="Initial Elo rating for new items.", alias="startingElo")
+    k_factor: Optional[StrictInt] = Field(default=None, description="K-factor controlling Elo rating sensitivity.", alias="kFactor")
+    scaling_factor: Optional[StrictInt] = Field(default=None, description="Scaling factor for Elo probability calculation.", alias="scalingFactor")
+    responses_required: Optional[StrictInt] = Field(default=None, description="Number of responses required per comparison.", alias="responsesRequired")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
     __properties: ClassVar[List[str]] = ["criteria", "startingElo", "kFactor", "scalingFactor", "responsesRequired", "featureFlags"]
 

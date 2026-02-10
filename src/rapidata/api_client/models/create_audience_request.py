@@ -26,21 +26,21 @@ from typing_extensions import Self
 
 class CreateAudienceRequest(BaseModel):
     """
-    CreateAudienceRequest
+    The body request to create an audience.
     """ # noqa: E501
-    name: StrictStr
-    description: Optional[StrictStr] = None
-    filters: Optional[List[IAudienceFilter]] = None
-    minimum_user_score: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="minimumUserScore")
-    minimum_size_for_activation: Optional[StrictInt] = Field(default=None, alias="minimumSizeForActivation")
-    logo: Optional[ExistingAssetInput] = None
-    max_distilling_responses: Optional[StrictInt] = Field(default=None, alias="maxDistillingResponses")
-    min_distilling_responses: Optional[StrictInt] = Field(default=None, alias="minDistillingResponses")
-    min_distilling_score_floor: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="minDistillingScoreFloor")
-    is_distilling_campaign_sticky: Optional[StrictBool] = Field(default=None, alias="isDistillingCampaignSticky")
-    max_distilling_sessions: Optional[StrictInt] = Field(default=None, alias="maxDistillingSessions")
-    min_distilling_for_global_boost: Optional[StrictInt] = Field(default=None, alias="minDistillingForGlobalBoost")
-    min_graduated_for_distilling_boost: Optional[StrictInt] = Field(default=None, alias="minGraduatedForDistillingBoost")
+    name: StrictStr = Field(description="The name to give the newly created audience.")
+    description: Optional[StrictStr] = Field(default=None, description="An optional markdown-supported description of the audience's purpose.")
+    filters: Optional[List[IAudienceFilter]] = Field(default=None, description="The filters to apply to any orders created for this audience.  A filter can be used to restrict the audience to a specific subset of users.")
+    minimum_user_score: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The minimum user score used to determine whether a user can be included in an audience.", alias="minimumUserScore")
+    minimum_size_for_activation: Optional[StrictInt] = Field(default=None, description="The minimum number of users required for an audience to be activated.", alias="minimumSizeForActivation")
+    logo: Optional[ExistingAssetInput] = Field(default=None, description="An optional logo image for the audience. Must be an existing image asset.")
+    max_distilling_responses: Optional[StrictInt] = Field(default=None, description="Maximum responses before user exits the distilling campaign.  Defaults to 10. Set to null to disable this exit condition.", alias="maxDistillingResponses")
+    min_distilling_responses: Optional[StrictInt] = Field(default=None, description="Minimum responses before the score floor check applies.  Users need at least this many responses before they can be kicked out for low score.  Defaults to 3. Set to null to apply score floor check from the first response.", alias="minDistillingResponses")
+    min_distilling_score_floor: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Minimum user score floor - users below this score exit the distilling campaign  (only after completing MinDistillingResponses).  Defaults to 0.2. Set to null to disable this exit condition.", alias="minDistillingScoreFloor")
+    is_distilling_campaign_sticky: Optional[StrictBool] = Field(default=None, description="Whether the distilling campaign should be sticky (users stay until filters don't match).  Defaults to true (Temporary sticky).", alias="isDistillingCampaignSticky")
+    max_distilling_sessions: Optional[StrictInt] = Field(default=None, description="Maximum sessions (rapid retrievals) before user exits the distilling campaign.  Defaults to null (disabled). Set to a value to enable session-based exit condition.", alias="maxDistillingSessions")
+    min_distilling_for_global_boost: Optional[StrictInt] = Field(default=None, description="Minimum distilling users before disabling global boost.  Defaults to 200. Admin-only override.", alias="minDistillingForGlobalBoost")
+    min_graduated_for_distilling_boost: Optional[StrictInt] = Field(default=None, description="Minimum graduated users before disabling distilling boost.  Defaults to 100. Admin-only override.", alias="minGraduatedForDistillingBoost")
     __properties: ClassVar[List[str]] = ["name", "description", "filters", "minimumUserScore", "minimumSizeForActivation", "logo", "maxDistillingResponses", "minDistillingResponses", "minDistillingScoreFloor", "isDistillingCampaignSticky", "maxDistillingSessions", "minDistillingForGlobalBoost", "minGraduatedForDistillingBoost"]
 
     model_config = ConfigDict(
@@ -96,11 +96,6 @@ class CreateAudienceRequest(BaseModel):
         # and model_fields_set contains the field
         if self.description is None and "description" in self.model_fields_set:
             _dict['description'] = None
-
-        # set to None if logo (nullable) is None
-        # and model_fields_set contains the field
-        if self.logo is None and "logo" in self.model_fields_set:
-            _dict['logo'] = None
 
         return _dict
 

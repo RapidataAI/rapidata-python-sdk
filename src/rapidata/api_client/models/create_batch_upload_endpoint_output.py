@@ -26,7 +26,7 @@ class CreateBatchUploadEndpointOutput(BaseModel):
     """
     CreateBatchUploadEndpointOutput
     """ # noqa: E501
-    batch_upload_id: StrictStr = Field(alias="batchUploadId")
+    batch_upload_id: StrictStr = Field(description="The identifier of the created batch upload.", alias="batchUploadId")
     __properties: ClassVar[List[str]] = ["batchUploadId"]
 
     model_config = ConfigDict(

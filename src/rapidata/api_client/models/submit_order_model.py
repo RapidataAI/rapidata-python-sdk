@@ -24,9 +24,9 @@ from typing_extensions import Self
 
 class SubmitOrderModel(BaseModel):
     """
-    SubmitOrderModel
+    The model for submitting an order.
     """ # noqa: E501
-    ignore_failed_datapoints: Optional[StrictBool] = Field(default=None, alias="ignoreFailedDatapoints")
+    ignore_failed_datapoints: Optional[StrictBool] = Field(default=None, description="whether the order should proceed to be submitted even if certain datapoints failed.", alias="ignoreFailedDatapoints")
     __properties: ClassVar[List[str]] = ["ignoreFailedDatapoints"]
 
     model_config = ConfigDict(

@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.page_info import PageInfo
 from rapidata.api_client.models.root_filter import RootFilter
@@ -26,10 +26,10 @@ from typing_extensions import Self
 
 class QueryValidationRapidEligibilityModelQueryValidationModel(BaseModel):
     """
-    QueryValidationRapidEligibilityModelQueryValidationModel
+    The Query Model specific to the validation rapid eligibility query.
     """ # noqa: E501
-    page: Optional[PageInfo] = None
-    filter: Optional[RootFilter] = None
+    page: Optional[PageInfo] = Field(default=None, description="pagination information")
+    filter: Optional[RootFilter] = Field(default=None, description="filter information")
     __properties: ClassVar[List[str]] = ["page", "filter"]
 
     model_config = ConfigDict(
@@ -77,16 +77,6 @@ class QueryValidationRapidEligibilityModelQueryValidationModel(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of filter
         if self.filter:
             _dict['filter'] = self.filter.to_dict()
-        # set to None if page (nullable) is None
-        # and model_fields_set contains the field
-        if self.page is None and "page" in self.model_fields_set:
-            _dict['page'] = None
-
-        # set to None if filter (nullable) is None
-        # and model_fields_set contains the field
-        if self.filter is None and "filter" in self.model_fields_set:
-            _dict['filter'] = None
-
         return _dict
 
     @classmethod

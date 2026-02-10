@@ -17,7 +17,9 @@
           "Job"
         ],
         "summary": "Creates a new job definition.",
+        "description": "A preview pipeline is automatically created and returned in the response.",
         "requestBody": {
+          "description": "The job definition parameters.",
           "content": {
             "application/json": {
               "schema": {
@@ -63,7 +65,9 @@
           "Job"
         ],
         "summary": "Creates a new job from a job definition and audience.",
+        "description": "If the audience is not already recruiting, recruiting is started automatically.\n The RecruitingStarted field indicates whether this happened.",
         "requestBody": {
+          "description": "The job creation parameters.",
           "content": {
             "application/json": {
               "schema": {
@@ -109,10 +113,12 @@
           "Job"
         ],
         "summary": "Creates a new revision for an existing job definition.",
+        "description": "Unspecified fields are inherited from the previous revision. Workflow and Referee must be\n provided together if either is specified.",
         "parameters": [
           {
             "name": "definitionId",
             "in": "path",
+            "description": "The id of the job definition to create a revision for.",
             "required": true,
             "schema": {
               "type": "string"
@@ -120,6 +126,7 @@
           }
         ],
         "requestBody": {
+          "description": "The revision parameters.",
           "content": {
             "application/json": {
               "schema": {
@@ -167,6 +174,7 @@
           {
             "name": "definitionId",
             "in": "path",
+            "description": "The id of the job definition.",
             "required": true,
             "schema": {
               "type": "string"
@@ -213,6 +221,7 @@
           {
             "name": "definitionId",
             "in": "path",
+            "description": "The id of the job definition to delete.",
             "required": true,
             "schema": {
               "type": "string"
@@ -250,6 +259,7 @@
           {
             "name": "definitionId",
             "in": "path",
+            "description": "The id of the job definition to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -294,6 +304,7 @@
           {
             "name": "definitionId",
             "in": "path",
+            "description": "The id of the job definition to update.",
             "required": true,
             "schema": {
               "type": "string"
@@ -301,6 +312,7 @@
           }
         ],
         "requestBody": {
+          "description": "The fields to update.",
           "content": {
             "application/json": {
               "schema": {
@@ -343,6 +355,7 @@
           {
             "name": "jobId",
             "in": "path",
+            "description": "The id of the job to download results for.",
             "required": true,
             "schema": {
               "type": "string"
@@ -372,6 +385,7 @@
           {
             "name": "jobId",
             "in": "path",
+            "description": "The id of the job to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -416,6 +430,7 @@
           {
             "name": "jobId",
             "in": "path",
+            "description": "The id of the job to update.",
             "required": true,
             "schema": {
               "type": "string"
@@ -423,6 +438,7 @@
           }
         ],
         "requestBody": {
+          "description": "The fields to update.",
           "content": {
             "application/json": {
               "schema": {
@@ -461,10 +477,12 @@
           "Job"
         ],
         "summary": "Gets the results of a job as a JSON string.",
+        "description": "For file download, use the download-results endpoint instead.",
         "parameters": [
           {
             "name": "jobId",
             "in": "path",
+            "description": "The id of the job to get results for.",
             "required": true,
             "schema": {
               "type": "string"
@@ -501,6 +519,7 @@
           {
             "name": "definitionId",
             "in": "path",
+            "description": "The id of the job definition.",
             "required": true,
             "schema": {
               "type": "string"
@@ -509,6 +528,7 @@
           {
             "name": "revisionNumber",
             "in": "path",
+            "description": "The revision number to retrieve.",
             "required": true,
             "schema": {
               "type": "integer",
@@ -1657,7 +1677,8 @@
           "Ranking",
           "MultiRanking",
           null
-        ]
+        ],
+        "description": "The aggregator type."
       },
       "AttachCategoryRapidBlueprint_Category": {
         "required": [
@@ -1694,9 +1715,11 @@
         "type": "object",
         "properties": {
           "orderName": {
-            "type": "string"
+            "type": "string",
+            "description": "The name of the new order"
           }
-        }
+        },
+        "description": "The model for cloning an existing order."
       },
       "CloneOrderResult": {
         "required": [
@@ -1769,19 +1792,28 @@
         "type": "object",
         "properties": {
           "orderName": {
-            "type": "string"
+            "type": "string",
+            "description": "The name of the order"
           },
           "pipeline": {
-            "$ref": "#/components/schemas/IPipelineModel"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IPipelineModel"
+              }
+            ],
+            "description": "The pipeline to use"
           },
           "isDemo": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether the order is public"
           },
           "precedingOrderId": {
             "type": "string",
+            "description": "Optional ID of the order that must complete before this order starts processing.",
             "nullable": true
           }
-        }
+        },
+        "description": "The model for creating a new order with a custom pipeline."
       },
       "CreateComplexOrderResult": {
         "required": [
@@ -1816,19 +1848,36 @@
         "type": "object",
         "properties": {
           "definitionName": {
-            "type": "string"
+            "type": "string",
+            "description": "The name of the definition."
           },
           "workflow": {
-            "$ref": "#/components/schemas/IOrderWorkflowModel"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IOrderWorkflowModel"
+              }
+            ],
+            "description": "The workflow configuration."
           },
           "referee": {
-            "$ref": "#/components/schemas/IRefereeModel"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IRefereeModel"
+              }
+            ],
+            "description": "The referee configuration."
           },
           "datasetId": {
-            "type": "string"
+            "type": "string",
+            "description": "The dataset id."
           },
           "featureFlags": {
-            "$ref": "#/components/schemas/ListOfFeatureFlag"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ListOfFeatureFlag"
+              }
+            ],
+            "description": "The feature flags."
           },
           "aggregatorType": {
             "oneOf": [
@@ -1840,7 +1889,8 @@
               }
             ]
           }
-        }
+        },
+        "description": "The input for the create job definition endpoint."
       },
       "CreateJobDefinitionEndpoint_Output": {
         "required": [
@@ -1850,12 +1900,15 @@
         "type": "object",
         "properties": {
           "definitionId": {
-            "type": "string"
+            "type": "string",
+            "description": "The id of the created job definition."
           },
           "pipelineId": {
-            "type": "string"
+            "type": "string",
+            "description": "The id of the created preview pipeline."
           }
-        }
+        },
+        "description": "The result when a job definition has been created."
       },
       "CreateJobEndpoint_Input": {
         "required": [
@@ -1865,24 +1918,30 @@
         "type": "object",
         "properties": {
           "jobDefinitionId": {
-            "type": "string"
+            "type": "string",
+            "description": "The id of the job definition to use."
           },
           "audienceId": {
-            "type": "string"
+            "type": "string",
+            "description": "The id of the audience to target."
           },
           "revisionNumber": {
             "type": "integer",
+            "description": "The revision number to use. If not specified, the latest revision will be used.",
             "format": "int32"
           },
           "name": {
             "type": "string",
+            "description": "The name of the job. If not specified, defaults to \"{definition name}:{revision number}\".",
             "nullable": true
           },
           "priority": {
             "type": "integer",
+            "description": "The priority of the job. Higher values mean higher priority. Default is 50.",
             "format": "int32"
           }
-        }
+        },
+        "description": "The input for the create job endpoint."
       },
       "CreateJobEndpoint_Output": {
         "required": [
@@ -1892,32 +1951,79 @@
         "type": "object",
         "properties": {
           "jobId": {
-            "type": "string"
+            "type": "string",
+            "description": "The id of the created job."
           },
           "recruitingStarted": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether recruiting was automatically started for the audience."
           }
-        }
+        },
+        "description": "The result when a job has been created."
       },
       "CreateJobRevisionEndpoint_Input": {
         "type": "object",
         "properties": {
           "workflow": {
-            "$ref": "#/components/schemas/OptionOfIOrderWorkflowModel"
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IOrderWorkflowModel"
+              },
+              {
+                "nullable": true
+              }
+            ],
+            "description": "The workflow configuration. If not provided, inherits from the previous revision.\n Must be provided together with Referee if either is specified."
           },
           "referee": {
-            "$ref": "#/components/schemas/OptionOfIRefereeModel"
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IRefereeModel"
+              },
+              {
+                "nullable": true
+              }
+            ],
+            "description": "The referee configuration. If not provided, inherits from the previous revision.\n Must be provided together with Workflow if either is specified."
           },
           "datasetId": {
-            "$ref": "#/components/schemas/OptionOfstring"
+            "type": "string",
+            "description": "The dataset id. If not provided, inherits from the previous revision.",
+            "nullable": true
           },
           "featureFlags": {
-            "$ref": "#/components/schemas/OptionOfIReadOnlyListOfFeatureFlag"
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ListOfFeatureFlag"
+              },
+              {
+                "nullable": true
+              }
+            ],
+            "description": "The feature flags. If not provided, inherits from the previous revision."
           },
           "aggregatorType": {
-            "$ref": "#/components/schemas/OptionOfAggregatorType"
+            "enum": [
+              "NonCommittal",
+              "MajorityVote",
+              "SimpleMatchup",
+              "LocateCluster",
+              "Classification",
+              "Locate",
+              "BoundingBox",
+              "Line",
+              "Transcription",
+              "SinglePointLocate",
+              "FreeText",
+              "Scrub",
+              "Ranking",
+              "MultiRanking",
+              null
+            ],
+            "description": "The aggregator type. If not provided, inherits from the previous revision."
           }
-        }
+        },
+        "description": "The input for the create job revision endpoint."
       },
       "CreateJobRevisionEndpoint_Output": {
         "required": [
@@ -1928,12 +2034,15 @@
         "properties": {
           "revisionNumber": {
             "type": "integer",
+            "description": "The revision number of the created job revision.",
             "format": "int32"
           },
           "pipelineId": {
-            "type": "string"
+            "type": "string",
+            "description": "The id of the created preview pipeline."
           }
-        }
+        },
+        "description": "The result when a job revision has been created."
       },
       "CreateOrderModel": {
         "required": [
@@ -1944,13 +2053,24 @@
         "type": "object",
         "properties": {
           "orderName": {
-            "type": "string"
+            "type": "string",
+            "description": "The name is used as an identifier for an order and can be freely chosen."
           },
           "workflow": {
-            "$ref": "#/components/schemas/IOrderWorkflowModel"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IOrderWorkflowModel"
+              }
+            ],
+            "description": "The workflow helps to determine the tasks that need to be completed by the users."
           },
           "referee": {
-            "$ref": "#/components/schemas/IRefereeModel"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IRefereeModel"
+              }
+            ],
+            "description": "The referee is used to determine how many votes will be collected."
           },
           "aggregator": {
             "oneOf": [
@@ -1963,17 +2083,16 @@
             ]
           },
           "featureFlags": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/ListOfFeatureFlagModel"
               }
-            ]
+            ],
+            "description": "The feature flags are used to enable or disable certain features."
           },
           "priority": {
             "type": "integer",
+            "description": "The priority is used to prioritize over other orders.",
             "format": "int32"
           },
           "stickyState": {
@@ -1987,43 +2106,55 @@
             ]
           },
           "stickyConfig": {
-            "$ref": "#/components/schemas/StickyConfig"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StickyConfig"
+              }
+            ],
+            "description": "Configuration for sticky campaign behavior. Takes precedence over StickyState if both are provided."
           },
           "userScoreDimensions": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "The user score dimensions are used to determine the score of the responses from the user."
           },
           "demographicKeys": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "The demographic keys are used to determine which demographics to store on the responses from the user."
           },
           "userFilters": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/ListOfIUserFilterModel"
               }
-            ]
+            ],
+            "description": "The user filters are used to restrict the order to only collect votes from a specific demographic."
           },
           "validationSetId": {
             "type": "string",
+            "description": "The validation set id can be changed to point to a specific validation set. if not provided a sane default will be\n used.",
             "nullable": true
           },
           "selections": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/ListOfISelection"
               }
-            ]
+            ],
+            "description": "The selections are used to determine which tasks are shown to a user."
           },
           "retrievalMode": {
             "oneOf": [
@@ -2037,13 +2168,16 @@
           },
           "maxIterations": {
             "type": "integer",
+            "description": "The maximum number of times a user is allowed to see the same rapid.",
             "format": "int32"
           },
           "precedingOrderId": {
             "type": "string",
+            "description": "Optional ID of the order that must complete before this order starts processing.",
             "nullable": true
           }
-        }
+        },
+        "description": "This model is used to create a simple order"
       },
       "CreateOrderResult": {
         "required": [
@@ -2077,15 +2211,19 @@
         "type": "object",
         "properties": {
           "orderName": {
-            "type": "string"
+            "type": "string",
+            "description": "The name of the order"
           },
           "dataType": {
-            "type": "string"
+            "type": "string",
+            "description": "The type of the data that was attempted to be ordered"
           },
           "labelType": {
-            "type": "string"
+            "type": "string",
+            "description": "The type of the labels that were attempted to be ordered"
           }
-        }
+        },
+        "description": "The model for creating an order with an unsupported label type or data type."
       },
       "DefinitionType": {
         "enum": [
@@ -2103,7 +2241,8 @@
           "Ranking",
           "GroupedRanking",
           "Evaluation"
-        ]
+        ],
+        "description": "The type of the job definition."
       },
       "EloConfigModel": {
         "type": "object",
@@ -2159,17 +2298,21 @@
         "type": "object",
         "properties": {
           "feedback": {
-            "type": "string"
+            "type": "string",
+            "description": "The feedback"
           },
           "email": {
             "type": "string",
+            "description": "The email of the user submitting the feedback",
             "nullable": true
           },
           "token": {
             "type": "string",
+            "description": "The recaptcha token of the user submitting the feedback",
             "nullable": true
           }
-        }
+        },
+        "description": "The model for submitting feedback."
       },
       "FileStreamResult": {
         "type": "string",
@@ -2222,50 +2365,63 @@
         "type": "object",
         "properties": {
           "jobId": {
-            "type": "string"
+            "type": "string",
+            "description": "The job id."
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "The job name."
           },
           "definitionId": {
-            "type": "string"
+            "type": "string",
+            "description": "The job definition id."
           },
           "audienceId": {
-            "type": "string"
+            "type": "string",
+            "description": "The audience id."
           },
           "revisionNumber": {
             "type": "integer",
+            "description": "The revision number.",
             "format": "int32"
           },
           "pipelineId": {
-            "type": "string"
+            "type": "string",
+            "description": "The pipeline id."
           },
           "status": {
-            "type": "string"
+            "type": "string",
+            "description": "The job status."
           },
           "completedAt": {
             "type": "string",
+            "description": "The timestamp when the job was completed.",
             "format": "date-time",
             "nullable": true
           },
           "resultFileName": {
             "type": "string",
+            "description": "The file name of the result.",
             "nullable": true
           },
           "failedAt": {
             "type": "string",
+            "description": "The timestamp when the job failed.",
             "format": "date-time",
             "nullable": true
           },
           "failureMessage": {
             "type": "string",
+            "description": "The failure message.",
             "nullable": true
           },
           "createdAt": {
             "type": "string",
+            "description": "The creation timestamp.",
             "format": "date-time"
           }
-        }
+        },
+        "description": "The result when a job has been retrieved."
       },
       "GetJobDefinitionByIdEndpoint_Output": {
         "required": [
@@ -2277,19 +2433,23 @@
         "type": "object",
         "properties": {
           "definitionId": {
-            "type": "string"
+            "type": "string",
+            "description": "The job definition id."
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "The name of the job definition."
           },
           "definitionType": {
             "$ref": "#/components/schemas/DefinitionType"
           },
           "createdAt": {
             "type": "string",
+            "description": "The creation timestamp.",
             "format": "date-time"
           }
-        }
+        },
+        "description": "The result when a job definition has been retrieved."
       },
       "GetJobRevisionEndpoint_Output": {
         "required": [
@@ -2308,20 +2468,24 @@
         "type": "object",
         "properties": {
           "definitionId": {
-            "type": "string"
+            "type": "string",
+            "description": "The job definition id."
           },
           "revisionNumber": {
             "type": "integer",
+            "description": "The revision number.",
             "format": "int32"
           },
           "state": {
             "$ref": "#/components/schemas/JobDefinitionRevisionState"
           },
           "pipelineId": {
-            "type": "string"
+            "type": "string",
+            "description": "The pipeline id."
           },
           "datasetId": {
-            "type": "string"
+            "type": "string",
+            "description": "The dataset id."
           },
           "aggregatorType": {
             "oneOf": [
@@ -2334,26 +2498,45 @@
             ]
           },
           "workflow": {
-            "$ref": "#/components/schemas/IOrderWorkflowModel"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IOrderWorkflowModel"
+              }
+            ],
+            "description": "The workflow configuration. Can be used directly to create a new revision."
           },
           "referee": {
-            "$ref": "#/components/schemas/IRefereeModel"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IRefereeModel"
+              }
+            ],
+            "description": "The referee configuration. Can be used directly to create a new revision."
           },
           "featureFlags": {
-            "$ref": "#/components/schemas/ListOfFeatureFlag"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ListOfFeatureFlag"
+              }
+            ],
+            "description": "The feature flags."
           },
           "createdAt": {
             "type": "string",
+            "description": "The creation timestamp.",
             "format": "date-time"
           },
           "createdById": {
             "type": "string",
+            "description": "The id of the user who created the revision.",
             "format": "uuid"
           },
           "createdByMail": {
-            "type": "string"
+            "type": "string",
+            "description": "The email of the user who created the revision."
           }
-        }
+        },
+        "description": "The result when a job revision has been retrieved."
       },
       "GetOrderByIdResult": {
         "required": [
@@ -4059,7 +4242,8 @@
           "Pending",
           "Completed",
           "Failed"
-        ]
+        ],
+        "description": "The state of the revision."
       },
       "ListOfAggregatedOrdersModel": {
         "type": "array",
@@ -4259,59 +4443,6 @@
           ],
           "type": "string"
         }
-      },
-      "OptionOfAggregatorType": {
-        "enum": [
-          "NonCommittal",
-          "MajorityVote",
-          "SimpleMatchup",
-          "LocateCluster",
-          "Classification",
-          "Locate",
-          "BoundingBox",
-          "Line",
-          "Transcription",
-          "SinglePointLocate",
-          "FreeText",
-          "Scrub",
-          "Ranking",
-          "MultiRanking",
-          null
-        ]
-      },
-      "OptionOfIOrderWorkflowModel": {
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/IOrderWorkflowModel"
-          },
-          {
-            "nullable": true
-          }
-        ]
-      },
-      "OptionOfIReadOnlyListOfFeatureFlag": {
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/ListOfFeatureFlag"
-          },
-          {
-            "nullable": true
-          }
-        ]
-      },
-      "OptionOfIRefereeModel": {
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/IRefereeModel"
-          },
-          {
-            "nullable": true
-          }
-        ]
-      },
-      "OptionOfstring": {
-        "type": "string",
-        "nullable": true
       },
       "OrderModel": {
         "required": [
@@ -4537,9 +4668,11 @@
         "properties": {
           "ignoreFailedDatapoints": {
             "type": "boolean",
+            "description": "whether the order should proceed to be submitted even if certain datapoints failed.",
             "nullable": true
           }
-        }
+        },
+        "description": "The model for previewing an order."
       },
       "PublicOrderModel": {
         "required": [
@@ -4756,16 +4889,19 @@
           "Permanent",
           "Passive",
           null
-        ]
+        ],
+        "description": "Indicates if the underlying campaign should be sticky."
       },
       "SubmitOrderModel": {
         "type": "object",
         "properties": {
           "ignoreFailedDatapoints": {
             "type": "boolean",
+            "description": "whether the order should proceed to be submitted even if certain datapoints failed.",
             "nullable": true
           }
-        }
+        },
+        "description": "The model for submitting an order."
       },
       "UnlockOrderResult": {
         "required": [
@@ -4785,28 +4921,39 @@
         "type": "object",
         "properties": {
           "name": {
-            "$ref": "#/components/schemas/OptionOfstring"
+            "type": "string",
+            "description": "The new name for the job definition.",
+            "nullable": true
           }
-        }
+        },
+        "description": "The input for the update job definition endpoint."
       },
       "UpdateJobEndpoint_Input": {
         "type": "object",
         "properties": {
           "name": {
-            "$ref": "#/components/schemas/OptionOfstring"
+            "type": "string",
+            "description": "The new name for the job.",
+            "nullable": true
           }
-        }
+        },
+        "description": "The input for the update job endpoint."
       },
       "UpdateOrderModel": {
         "type": "object",
         "properties": {
           "name": {
-            "$ref": "#/components/schemas/OptionOfstring"
+            "type": "string",
+            "description": "The new name of the order, if specified.",
+            "nullable": true
           },
           "precedingOrderId": {
-            "$ref": "#/components/schemas/OptionOfstring"
+            "type": "string",
+            "description": "The ID of the order that must complete before this order starts processing.\n Set to null to clear an existing preceding order.",
+            "nullable": true
           }
-        }
+        },
+        "description": "The model for updating properties of an order."
       },
       "UpdateOrderNameModel": {
         "required": [
@@ -4815,9 +4962,11 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "The new name of the order."
           }
-        }
+        },
+        "description": "The model for updating the name of an order."
       },
       "ValidationProblemDetails": {
         "type": "object",

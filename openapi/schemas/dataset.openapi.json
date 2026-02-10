@@ -18,6 +18,7 @@
         ],
         "summary": "Creates a new empty dataset.",
         "requestBody": {
+          "description": "The dataset creation parameters.",
           "content": {
             "application/json": {
               "schema": {
@@ -414,32 +415,39 @@
         "type": "object",
         "properties": {
           "asset": {
-            "$ref": "#/components/schemas/IAssetInput"
-          },
-          "context": {
-            "type": "string",
-            "nullable": true
-          },
-          "contextAsset": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/IAssetInput"
               }
-            ]
+            ],
+            "description": "The asset within the datapoint"
+          },
+          "context": {
+            "type": "string",
+            "description": "An additional context to show the users when solving the rapid.",
+            "nullable": true
+          },
+          "contextAsset": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAssetInput"
+              }
+            ],
+            "description": "ContextAsset"
           },
           "sortIndex": {
             "type": "integer",
+            "description": "The sort index represents the order of the datapoint in the dataset",
             "format": "int64"
           },
           "group": {
             "type": "string",
+            "description": "The group a datapoint belongs to.",
             "nullable": true
           },
           "transcription": {
             "type": "string",
+            "description": "For audio or video assets, an optional transcription of the content.",
             "nullable": true
           },
           "privateMetadata": {
@@ -447,9 +455,11 @@
             "additionalProperties": {
               "type": "string"
             },
+            "description": "Private metadata for internal tracking. Not displayed to users.",
             "nullable": true
           }
-        }
+        },
+        "description": "The body request for creating a new datapoint"
       },
       "CreateDatapointResult": {
         "required": [
@@ -469,9 +479,11 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "The name to give to the new dataset."
           }
-        }
+        },
+        "description": "The input for the create dataset endpoint."
       },
       "CreateDatasetEndpoint_Output": {
         "required": [
@@ -480,9 +492,11 @@
         "type": "object",
         "properties": {
           "datasetId": {
-            "type": "string"
+            "type": "string",
+            "description": "The id of the created dataset."
           }
-        }
+        },
+        "description": "The result when a dataset has been created."
       },
       "DatapointState": {
         "enum": [
@@ -1374,9 +1388,11 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "The new name of the dataset."
           }
-        }
+        },
+        "description": "The body request for updating the name of a dataset."
       },
       "ValidationProblemDetails": {
         "type": "object",

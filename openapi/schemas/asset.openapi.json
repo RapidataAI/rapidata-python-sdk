@@ -16,11 +16,13 @@
         "tags": [
           "Asset"
         ],
-        "summary": "Compresses an image and returns the WebP result with compression metrics.",
+        "summary": "Compresses an uploaded image and returns the WebP result.",
+        "description": "Compression metrics are returned in response headers: X-Original-Size, X-Compressed-Size,\n X-Processing-Time-Ms, X-Original-Dimensions, X-Output-Dimensions.",
         "parameters": [
           {
             "name": "library",
             "in": "query",
+            "description": "The compression library to use.",
             "schema": {
               "$ref": "#/components/schemas/CompressionLibrary"
             }
@@ -28,6 +30,7 @@
           {
             "name": "quality",
             "in": "query",
+            "description": "The compression quality from 1 to 100.",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -37,6 +40,7 @@
           {
             "name": "maxdim",
             "in": "query",
+            "description": "The maximum dimension (width or height) of the output image.",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -45,6 +49,7 @@
           }
         ],
         "requestBody": {
+          "description": "The image file to compress.",
           "content": {
             "multipart/form-data": {
               "schema": {
@@ -88,10 +93,12 @@
           "BatchUpload"
         ],
         "summary": "Aborts the specified batch upload.",
+        "description": "URLs already processed will not be reverted. Only remaining URLs are prevented from processing.",
         "parameters": [
           {
             "name": "batchUploadId",
             "in": "path",
+            "description": "The identifier of the batch upload to abort.",
             "required": true,
             "schema": {
               "type": "string"
@@ -127,7 +134,9 @@
           "BatchUpload"
         ],
         "summary": "Creates a batch upload and queues processing for each URL.",
+        "description": "Each URL is processed asynchronously. Use the batch upload status or result endpoints to track progress.",
         "requestBody": {
+          "description": "The list of URLs to include in the batch upload.",
           "content": {
             "application/json": {
               "schema": {
@@ -177,6 +186,7 @@
           {
             "name": "batchUploadId",
             "in": "path",
+            "description": "The identifier of the batch upload to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -218,11 +228,12 @@
         "tags": [
           "BatchUpload"
         ],
-        "summary": "Gets aggregated status (counts) for the specified batch uploads.",
+        "summary": "Gets aggregated status for one or more batch uploads.",
         "parameters": [
           {
             "name": "batchUploadIds",
             "in": "query",
+            "description": "The identifiers of the batch uploads to query.",
             "required": true,
             "schema": {
               "type": "array",
@@ -421,7 +432,8 @@
           "Processing",
           "Completed",
           "Aborted"
-        ]
+        ],
+        "description": "The current status of the batch upload."
       },
       "BatchUploadUrlStatus": {
         "enum": [
@@ -443,7 +455,12 @@
         "type": "object",
         "properties": {
           "urls": {
-            "$ref": "#/components/schemas/ListOfUri"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ListOfUri"
+              }
+            ],
+            "description": "The URLs to download and process."
           }
         }
       },
@@ -454,7 +471,8 @@
         "type": "object",
         "properties": {
           "batchUploadId": {
-            "type": "string"
+            "type": "string",
+            "description": "The identifier of the created batch upload."
           }
         }
       },
@@ -484,25 +502,34 @@
         "type": "object",
         "properties": {
           "batchUploadId": {
-            "type": "string"
+            "type": "string",
+            "description": "The identifier of the batch upload."
           },
           "status": {
             "$ref": "#/components/schemas/BatchUploadStatus"
           },
           "totalCount": {
             "type": "integer",
+            "description": "The total number of URLs in the batch.",
             "format": "int32"
           },
           "completedCount": {
             "type": "integer",
+            "description": "The number of URLs that have been successfully processed.",
             "format": "int32"
           },
           "failedCount": {
             "type": "integer",
+            "description": "The number of URLs that failed to process.",
             "format": "int32"
           },
           "items": {
-            "$ref": "#/components/schemas/GetBatchUploadResultEndpoint_ListOfGetBatchUploadResultEndpoint_UrlOutput"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GetBatchUploadResultEndpoint_ListOfGetBatchUploadResultEndpoint_UrlOutput"
+              }
+            ],
+            "description": "The individual results for each URL in the batch."
           }
         }
       },
@@ -544,21 +571,29 @@
           },
           "totalCount": {
             "type": "integer",
+            "description": "The total number of URLs across all queried batches.",
             "format": "int32"
           },
           "completedCount": {
             "type": "integer",
+            "description": "The number of URLs that have been successfully processed.",
             "format": "int32"
           },
           "failedCount": {
             "type": "integer",
+            "description": "The number of URLs that failed to process.",
             "format": "int32"
           },
           "completedBatches": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "The identifiers of batch uploads that have fully completed."
           }
         }
       },

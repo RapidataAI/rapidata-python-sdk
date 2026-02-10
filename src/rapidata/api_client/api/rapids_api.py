@@ -16,7 +16,8 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import StrictStr
+from pydantic import Field, StrictStr
+from typing_extensions import Annotated
 from rapidata.api_client.models.update_audience_rapid_endpoint_input import UpdateAudienceRapidEndpointInput
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
@@ -40,9 +41,9 @@ class RapidsApi:
     @validate_call
     def audience_audience_id_rapid_rapid_id_patch(
         self,
-        audience_id: StrictStr,
-        rapid_id: StrictStr,
-        update_audience_rapid_endpoint_input: UpdateAudienceRapidEndpointInput,
+        audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience.")],
+        rapid_id: Annotated[StrictStr, Field(description="The unique identifier of the rapid to update.")],
+        update_audience_rapid_endpoint_input: Annotated[UpdateAudienceRapidEndpointInput, Field(description="The rapid validation properties to update.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -59,11 +60,11 @@ class RapidsApi:
         """Updates a rapid's validation properties within an audience.
 
 
-        :param audience_id: (required)
+        :param audience_id: The unique identifier of the audience. (required)
         :type audience_id: str
-        :param rapid_id: (required)
+        :param rapid_id: The unique identifier of the rapid to update. (required)
         :type rapid_id: str
-        :param update_audience_rapid_endpoint_input: (required)
+        :param update_audience_rapid_endpoint_input: The rapid validation properties to update. (required)
         :type update_audience_rapid_endpoint_input: UpdateAudienceRapidEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -117,9 +118,9 @@ class RapidsApi:
     @validate_call
     def audience_audience_id_rapid_rapid_id_patch_with_http_info(
         self,
-        audience_id: StrictStr,
-        rapid_id: StrictStr,
-        update_audience_rapid_endpoint_input: UpdateAudienceRapidEndpointInput,
+        audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience.")],
+        rapid_id: Annotated[StrictStr, Field(description="The unique identifier of the rapid to update.")],
+        update_audience_rapid_endpoint_input: Annotated[UpdateAudienceRapidEndpointInput, Field(description="The rapid validation properties to update.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -136,11 +137,11 @@ class RapidsApi:
         """Updates a rapid's validation properties within an audience.
 
 
-        :param audience_id: (required)
+        :param audience_id: The unique identifier of the audience. (required)
         :type audience_id: str
-        :param rapid_id: (required)
+        :param rapid_id: The unique identifier of the rapid to update. (required)
         :type rapid_id: str
-        :param update_audience_rapid_endpoint_input: (required)
+        :param update_audience_rapid_endpoint_input: The rapid validation properties to update. (required)
         :type update_audience_rapid_endpoint_input: UpdateAudienceRapidEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -194,9 +195,9 @@ class RapidsApi:
     @validate_call
     def audience_audience_id_rapid_rapid_id_patch_without_preload_content(
         self,
-        audience_id: StrictStr,
-        rapid_id: StrictStr,
-        update_audience_rapid_endpoint_input: UpdateAudienceRapidEndpointInput,
+        audience_id: Annotated[StrictStr, Field(description="The unique identifier of the audience.")],
+        rapid_id: Annotated[StrictStr, Field(description="The unique identifier of the rapid to update.")],
+        update_audience_rapid_endpoint_input: Annotated[UpdateAudienceRapidEndpointInput, Field(description="The rapid validation properties to update.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -213,11 +214,11 @@ class RapidsApi:
         """Updates a rapid's validation properties within an audience.
 
 
-        :param audience_id: (required)
+        :param audience_id: The unique identifier of the audience. (required)
         :type audience_id: str
-        :param rapid_id: (required)
+        :param rapid_id: The unique identifier of the rapid to update. (required)
         :type rapid_id: str
-        :param update_audience_rapid_endpoint_input: (required)
+        :param update_audience_rapid_endpoint_input: The rapid validation properties to update. (required)
         :type update_audience_rapid_endpoint_input: UpdateAudienceRapidEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request

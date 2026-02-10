@@ -26,10 +26,10 @@ from typing_extensions import Self
 
 class GetGroupedRankingWorkflowResultsModel(BaseModel):
     """
-    GetGroupedRankingWorkflowResultsModel
+    Model for getting the results of a multi compare workflow.
     """ # noqa: E501
-    page: Optional[PageInfo] = None
-    sort_criteria: Optional[List[SortCriterion]] = Field(default=None, alias="sortCriteria")
+    page: Optional[PageInfo] = Field(default=None, description="The size of the page and the page number to display.")
+    sort_criteria: Optional[List[SortCriterion]] = Field(default=None, description="A list of criteria to sort the results by.", alias="sortCriteria")
     __properties: ClassVar[List[str]] = ["page", "sortCriteria"]
 
     model_config = ConfigDict(
@@ -81,11 +81,6 @@ class GetGroupedRankingWorkflowResultsModel(BaseModel):
                 if _item_sort_criteria:
                     _items.append(_item_sort_criteria.to_dict())
             _dict['sortCriteria'] = _items
-        # set to None if page (nullable) is None
-        # and model_fields_set contains the field
-        if self.page is None and "page" in self.model_fields_set:
-            _dict['page'] = None
-
         return _dict
 
     @classmethod

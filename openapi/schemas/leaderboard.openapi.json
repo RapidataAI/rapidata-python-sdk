@@ -17,10 +17,12 @@
           "Benchmark"
         ],
         "summary": "Returns the pairwise vote matrix for a benchmark.",
+        "description": "The matrix is returned in pandas split format.",
         "parameters": [
           {
             "name": "benchmarkId",
             "in": "path",
+            "description": "The identifier of the benchmark.",
             "required": true,
             "schema": {
               "type": "string"
@@ -29,6 +31,7 @@
           {
             "name": "tags",
             "in": "query",
+            "description": "Optional tags to filter the matrix entries.",
             "schema": {
               "type": "array",
               "items": {
@@ -39,6 +42,7 @@
           {
             "name": "participantIds",
             "in": "query",
+            "description": "Optional participant identifiers to include in the matrix.",
             "schema": {
               "type": "array",
               "items": {
@@ -49,6 +53,7 @@
           {
             "name": "leaderboardIds",
             "in": "query",
+            "description": "Optional leaderboard identifiers to scope the matrix.",
             "schema": {
               "type": "array",
               "items": {
@@ -59,6 +64,7 @@
           {
             "name": "useWeightedScoring",
             "in": "query",
+            "description": "Whether to apply weighted scoring to the matrix values.",
             "schema": {
               "type": "boolean",
               "default": false
@@ -101,10 +107,12 @@
           "Leaderboard"
         ],
         "summary": "Returns the pairwise vote matrix for a leaderboard.",
+        "description": "The matrix is returned in pandas split format.",
         "parameters": [
           {
             "name": "leaderboardId",
             "in": "path",
+            "description": "The identifier of the leaderboard.",
             "required": true,
             "schema": {
               "type": "string"
@@ -113,6 +121,7 @@
           {
             "name": "tags",
             "in": "query",
+            "description": "Optional tags to filter the matrix entries.",
             "schema": {
               "type": "array",
               "items": {
@@ -123,6 +132,7 @@
           {
             "name": "useWeightedScoring",
             "in": "query",
+            "description": "Whether to apply weighted scoring to the matrix values.",
             "schema": {
               "type": "boolean",
               "default": false
@@ -516,10 +526,12 @@
         "tags": [
           "Benchmark"
         ],
+        "summary": "Queries all the standings for a benchmark by its ID.",
         "parameters": [
           {
             "name": "benchmarkId",
             "in": "path",
+            "description": "The id of the benchmark, which standings should be queried",
             "required": true,
             "schema": {
               "type": "string"
@@ -528,6 +540,7 @@
           {
             "name": "tags",
             "in": "query",
+            "description": "The tags the benchmark should filter for.",
             "schema": {
               "type": "array",
               "items": {
@@ -538,6 +551,7 @@
           {
             "name": "participantIds",
             "in": "query",
+            "description": "The ids of the participants that should be filtered for. leave empty to not filter",
             "schema": {
               "type": "array",
               "items": {
@@ -548,6 +562,7 @@
           {
             "name": "leaderboardIds",
             "in": "query",
+            "description": "The ids of the leaderboards that should be filtered for. leave empty to not filter",
             "schema": {
               "type": "array",
               "items": {
@@ -558,6 +573,7 @@
           {
             "name": "useWeightedScoring",
             "in": "query",
+            "description": "Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)",
             "schema": {
               "type": "boolean",
               "default": false
@@ -566,6 +582,7 @@
           {
             "name": "includeConfidenceIntervals",
             "in": "query",
+            "description": "Whether to include the confidence intervals",
             "schema": {
               "type": "boolean",
               "default": false
@@ -1488,10 +1505,12 @@
         "tags": [
           "Leaderboard"
         ],
+        "summary": "queries all the participants connected to leaderboard by its ID.",
         "parameters": [
           {
             "name": "leaderboardId",
             "in": "path",
+            "description": "The id of the leaderboard, which standings should be queried",
             "required": true,
             "schema": {
               "type": "string"
@@ -1500,6 +1519,7 @@
           {
             "name": "tags",
             "in": "query",
+            "description": "The tags the leaderboard should filter for.",
             "schema": {
               "type": "array",
               "items": {
@@ -1510,6 +1530,7 @@
           {
             "name": "useWeightedScoring",
             "in": "query",
+            "description": "Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)",
             "schema": {
               "type": "boolean",
               "default": false
@@ -1518,6 +1539,7 @@
           {
             "name": "includeConfidenceIntervals",
             "in": "query",
+            "description": "Whether to include the confidence intervals",
             "schema": {
               "type": "boolean",
               "default": false
@@ -2345,16 +2367,23 @@
         "type": "object",
         "properties": {
           "participants": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "The participants of the given leaderboard that should be boosted."
           },
           "totalResponses": {
             "type": "integer",
+            "description": "The amount of responses in total that should be added, shared across all participants.",
             "format": "int32"
           }
-        }
+        },
+        "description": "The model for boosting a leaderboard."
       },
       "ComparisonOperator": {
         "enum": [
@@ -2390,9 +2419,11 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "The name of the benchmark"
           }
-        }
+        },
+        "description": "The model for creating a benchmark."
       },
       "CreateBenchmarkParticipantModel": {
         "required": [
@@ -2401,9 +2432,11 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "The name of the participant."
           }
-        }
+        },
+        "description": "The model to create a participant in a leaderboard"
       },
       "CreateBenchmarkParticipantResult": {
         "required": [
@@ -2451,64 +2484,72 @@
         "properties": {
           "benchmarkId": {
             "type": "string",
+            "description": "If a leaderboard should be added to a preexisting benchmark, the benchmark Id can be provided.",
             "nullable": true
           },
           "benchmarkName": {
             "type": "string",
+            "description": "If no BenchmarkId is provided a new benchmark will be created. if no name is supplied the benchmark\n will be called the same as the leaderboard.",
             "nullable": true
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "The name of the leaderboard."
           },
           "instruction": {
-            "type": "string"
+            "type": "string",
+            "description": "The instruction datapoints will be matched up against."
           },
           "showPrompt": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Indicates if the prompt is shown on the rapids."
           },
           "showPromptAsset": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether the prompt asset should be shown on the rapids."
           },
           "responseBudget": {
             "type": "integer",
+            "description": "Total amount of responses that get collected per run",
             "format": "int32"
           },
           "minResponses": {
             "type": "integer",
+            "description": "The minimum amount of responses that need to be collected per comparison.",
             "format": "int32"
           },
           "isInversed": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "If the results should be inversed, meaning people should select the worse model."
           },
           "validationSetId": {
             "type": "string",
+            "description": "The Validation set that should be attached to every run.",
             "nullable": true
           },
           "audienceId": {
             "type": "string",
+            "description": "Optional audience ID. When provided, the leaderboard will target users who have\n graduated from the audience (i.e., users with a score at or above the audience's minimum threshold).\n Cannot be specified together with Filters.",
             "nullable": true
           },
           "filters": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/ListOfIUserFilterModel"
               }
-            ]
+            ],
+            "description": "The filters will be applied on every order that is created by this leaderboard.\n Cannot be specified together with AudienceId."
           },
           "featureFlags": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/ListOfFeatureFlagModel"
               }
-            ]
+            ],
+            "description": "Feature flags that will be applied to every order that is created by this leaderboard."
           }
-        }
+        },
+        "description": "The CreateLeaderboardModel class represents the model for creating a leaderboard."
       },
       "CreateLeaderboardResult": {
         "required": [
@@ -2555,12 +2596,19 @@
         "type": "object",
         "properties": {
           "identifier": {
-            "type": "string"
+            "type": "string",
+            "description": "The identifier used to correlate samples of different participants."
           },
           "asset": {
-            "$ref": "#/components/schemas/IAssetInput"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAssetInput"
+              }
+            ],
+            "description": "The asset input for the sample."
           }
-        }
+        },
+        "description": "The model used to create a sample to a participant."
       },
       "FeatureFlag": {
         "required": [
@@ -4302,19 +4350,6 @@
           "type": "string"
         }
       },
-      "OptionOfboolean": {
-        "type": "boolean",
-        "nullable": true
-      },
-      "OptionOfint": {
-        "type": "integer",
-        "format": "int32",
-        "nullable": true
-      },
-      "OptionOfstring": {
-        "type": "string",
-        "nullable": true
-      },
       "PagedResultOfBenchmarkQueryResult": {
         "required": [
           "total",
@@ -5016,29 +5051,35 @@
         "type": "object",
         "properties": {
           "identifier": {
-            "type": "string"
+            "type": "string",
+            "description": "An identifier associated to the prompt"
           },
           "prompt": {
             "type": "string",
+            "description": "The prompt",
             "nullable": true
           },
           "promptAsset": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/IAssetInput"
               }
-            ]
+            ],
+            "description": "PromptAsset"
           },
           "tags": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "The tags of a given prompt"
           }
-        }
+        },
+        "description": "The model user for submitting a prompt to a benchmark."
       },
       "TagsByBenchmarkResult": {
         "required": [
@@ -5058,12 +5099,17 @@
         "type": "object",
         "properties": {
           "name": {
-            "$ref": "#/components/schemas/OptionOfstring"
+            "type": "string",
+            "description": "The new name of the benchmark.",
+            "nullable": true
           },
           "isPublic": {
-            "$ref": "#/components/schemas/OptionOfboolean"
+            "type": "boolean",
+            "description": "Whether the benchmark should be public (only admins can change this).",
+            "nullable": true
           }
-        }
+        },
+        "description": "The model used to update a benchmark."
       },
       "UpdateBenchmarkNameModel": {
         "required": [
@@ -5072,23 +5118,34 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "The new name of the benchmark."
           }
-        }
+        },
+        "description": "The model used to update the name of a benchmark."
       },
       "UpdateLeaderboardModel": {
         "type": "object",
         "properties": {
           "name": {
-            "$ref": "#/components/schemas/OptionOfstring"
+            "type": "string",
+            "description": "The new name of the leaderboard.",
+            "nullable": true
           },
           "responseBudget": {
-            "$ref": "#/components/schemas/OptionOfint"
+            "type": "integer",
+            "description": "The amount of responses that will be collected when onboarding a new participant.",
+            "format": "int32",
+            "nullable": true
           },
           "minResponses": {
-            "$ref": "#/components/schemas/OptionOfint"
+            "type": "integer",
+            "description": "The amount of responses that will be collected as a minimum on each matchup.",
+            "format": "int32",
+            "nullable": true
           }
-        }
+        },
+        "description": "The model used to update a leaderboard."
       },
       "UpdateLeaderboardNameModel": {
         "required": [
@@ -5097,9 +5154,11 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "The new name of the leaderboard."
           }
-        }
+        },
+        "description": "The model used to update the name of a leaderboard."
       },
       "UpdateLeaderboardResponseConfigModel": {
         "required": [
@@ -5110,21 +5169,27 @@
         "properties": {
           "responseBudget": {
             "type": "integer",
+            "description": "The amount of responses that will be collected when onboarding a new participant.",
             "format": "int32"
           },
           "minResponses": {
             "type": "integer",
+            "description": "The amount of responses that will be collected as a minimum on each matchup.",
             "format": "int32"
           }
-        }
+        },
+        "description": "The model used to update the name of a leaderboard."
       },
       "UpdateParticipantModel": {
         "type": "object",
         "properties": {
           "name": {
-            "$ref": "#/components/schemas/OptionOfstring"
+            "type": "string",
+            "description": "The new name of the participant.",
+            "nullable": true
           }
-        }
+        },
+        "description": "The model used to update a participant."
       },
       "UpdateParticipantNameModel": {
         "required": [
@@ -5133,9 +5198,11 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "The new name of the participant."
           }
-        }
+        },
+        "description": "The model used to update the name of a participant."
       },
       "UpdatePromptTagsModel": {
         "required": [
@@ -5144,12 +5211,18 @@
         "type": "object",
         "properties": {
           "tags": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "The list of tags to be associated with the prompt."
           }
-        }
+        },
+        "description": "The model for updating prompt tags."
       },
       "ValidationProblemDetails": {
         "type": "object",

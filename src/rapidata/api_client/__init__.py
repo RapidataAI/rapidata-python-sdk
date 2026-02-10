@@ -43,6 +43,7 @@ _API_IMPORTS = {
     "EvaluationWorkflowApi": "rapidata.api_client.api.evaluation_workflow_api",
     "FeedbackApi": "rapidata.api_client.api.feedback_api",
     "FlowApi": "rapidata.api_client.api.flow_api",
+    "FlowItemApi": "rapidata.api_client.api.flow_item_api",
     "GroupedRankingWorkflowApi": "rapidata.api_client.api.grouped_ranking_workflow_api",
     "IdentityApi": "rapidata.api_client.api.identity_api",
     "JobApi": "rapidata.api_client.api.job_api",

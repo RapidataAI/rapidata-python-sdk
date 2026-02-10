@@ -17,18 +17,18 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
 class FeedbackModel(BaseModel):
     """
-    FeedbackModel
+    The model for submitting feedback.
     """ # noqa: E501
-    feedback: StrictStr
-    email: Optional[StrictStr] = None
-    token: Optional[StrictStr] = None
+    feedback: StrictStr = Field(description="The feedback")
+    email: Optional[StrictStr] = Field(default=None, description="The email of the user submitting the feedback")
+    token: Optional[StrictStr] = Field(default=None, description="The recaptcha token of the user submitting the feedback")
     __properties: ClassVar[List[str]] = ["feedback", "email", "token"]
 
     model_config = ConfigDict(

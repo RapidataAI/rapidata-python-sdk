@@ -1137,9 +1137,9 @@ class LeaderboardApi:
     @validate_call
     def leaderboard_leaderboard_id_matrix_get(
         self,
-        leaderboard_id: StrictStr,
-        tags: Optional[List[StrictStr]] = None,
-        use_weighted_scoring: Optional[StrictBool] = None,
+        leaderboard_id: Annotated[StrictStr, Field(description="The identifier of the leaderboard.")],
+        tags: Annotated[Optional[List[StrictStr]], Field(description="Optional tags to filter the matrix entries.")] = None,
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring to the matrix values.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1155,12 +1155,13 @@ class LeaderboardApi:
     ) -> VoteMatrixResult:
         """Returns the pairwise vote matrix for a leaderboard.
 
+        The matrix is returned in pandas split format.
 
-        :param leaderboard_id: (required)
+        :param leaderboard_id: The identifier of the leaderboard. (required)
         :type leaderboard_id: str
-        :param tags:
+        :param tags: Optional tags to filter the matrix entries.
         :type tags: List[str]
-        :param use_weighted_scoring:
+        :param use_weighted_scoring: Whether to apply weighted scoring to the matrix values.
         :type use_weighted_scoring: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1214,9 +1215,9 @@ class LeaderboardApi:
     @validate_call
     def leaderboard_leaderboard_id_matrix_get_with_http_info(
         self,
-        leaderboard_id: StrictStr,
-        tags: Optional[List[StrictStr]] = None,
-        use_weighted_scoring: Optional[StrictBool] = None,
+        leaderboard_id: Annotated[StrictStr, Field(description="The identifier of the leaderboard.")],
+        tags: Annotated[Optional[List[StrictStr]], Field(description="Optional tags to filter the matrix entries.")] = None,
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring to the matrix values.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1232,12 +1233,13 @@ class LeaderboardApi:
     ) -> ApiResponse[VoteMatrixResult]:
         """Returns the pairwise vote matrix for a leaderboard.
 
+        The matrix is returned in pandas split format.
 
-        :param leaderboard_id: (required)
+        :param leaderboard_id: The identifier of the leaderboard. (required)
         :type leaderboard_id: str
-        :param tags:
+        :param tags: Optional tags to filter the matrix entries.
         :type tags: List[str]
-        :param use_weighted_scoring:
+        :param use_weighted_scoring: Whether to apply weighted scoring to the matrix values.
         :type use_weighted_scoring: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1291,9 +1293,9 @@ class LeaderboardApi:
     @validate_call
     def leaderboard_leaderboard_id_matrix_get_without_preload_content(
         self,
-        leaderboard_id: StrictStr,
-        tags: Optional[List[StrictStr]] = None,
-        use_weighted_scoring: Optional[StrictBool] = None,
+        leaderboard_id: Annotated[StrictStr, Field(description="The identifier of the leaderboard.")],
+        tags: Annotated[Optional[List[StrictStr]], Field(description="Optional tags to filter the matrix entries.")] = None,
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to apply weighted scoring to the matrix values.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1309,12 +1311,13 @@ class LeaderboardApi:
     ) -> RESTResponseType:
         """Returns the pairwise vote matrix for a leaderboard.
 
+        The matrix is returned in pandas split format.
 
-        :param leaderboard_id: (required)
+        :param leaderboard_id: The identifier of the leaderboard. (required)
         :type leaderboard_id: str
-        :param tags:
+        :param tags: Optional tags to filter the matrix entries.
         :type tags: List[str]
-        :param use_weighted_scoring:
+        :param use_weighted_scoring: Whether to apply weighted scoring to the matrix values.
         :type use_weighted_scoring: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2003,10 +2006,10 @@ class LeaderboardApi:
     @validate_call
     def leaderboard_leaderboard_id_standings_get(
         self,
-        leaderboard_id: StrictStr,
-        tags: Optional[List[StrictStr]] = None,
-        use_weighted_scoring: Optional[StrictBool] = None,
-        include_confidence_intervals: Optional[StrictBool] = None,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard, which standings should be queried")],
+        tags: Annotated[Optional[List[StrictStr]], Field(description="The tags the leaderboard should filter for.")] = None,
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)")] = None,
+        include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include the confidence intervals")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2020,16 +2023,16 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> StandingsByLeaderboardResult:
-        """leaderboard_leaderboard_id_standings_get
+        """queries all the participants connected to leaderboard by its ID.
 
 
-        :param leaderboard_id: (required)
+        :param leaderboard_id: The id of the leaderboard, which standings should be queried (required)
         :type leaderboard_id: str
-        :param tags:
+        :param tags: The tags the leaderboard should filter for.
         :type tags: List[str]
-        :param use_weighted_scoring:
+        :param use_weighted_scoring: Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)
         :type use_weighted_scoring: bool
-        :param include_confidence_intervals:
+        :param include_confidence_intervals: Whether to include the confidence intervals
         :type include_confidence_intervals: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2081,10 +2084,10 @@ class LeaderboardApi:
     @validate_call
     def leaderboard_leaderboard_id_standings_get_with_http_info(
         self,
-        leaderboard_id: StrictStr,
-        tags: Optional[List[StrictStr]] = None,
-        use_weighted_scoring: Optional[StrictBool] = None,
-        include_confidence_intervals: Optional[StrictBool] = None,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard, which standings should be queried")],
+        tags: Annotated[Optional[List[StrictStr]], Field(description="The tags the leaderboard should filter for.")] = None,
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)")] = None,
+        include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include the confidence intervals")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2098,16 +2101,16 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[StandingsByLeaderboardResult]:
-        """leaderboard_leaderboard_id_standings_get
+        """queries all the participants connected to leaderboard by its ID.
 
 
-        :param leaderboard_id: (required)
+        :param leaderboard_id: The id of the leaderboard, which standings should be queried (required)
         :type leaderboard_id: str
-        :param tags:
+        :param tags: The tags the leaderboard should filter for.
         :type tags: List[str]
-        :param use_weighted_scoring:
+        :param use_weighted_scoring: Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)
         :type use_weighted_scoring: bool
-        :param include_confidence_intervals:
+        :param include_confidence_intervals: Whether to include the confidence intervals
         :type include_confidence_intervals: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2159,10 +2162,10 @@ class LeaderboardApi:
     @validate_call
     def leaderboard_leaderboard_id_standings_get_without_preload_content(
         self,
-        leaderboard_id: StrictStr,
-        tags: Optional[List[StrictStr]] = None,
-        use_weighted_scoring: Optional[StrictBool] = None,
-        include_confidence_intervals: Optional[StrictBool] = None,
+        leaderboard_id: Annotated[StrictStr, Field(description="The id of the leaderboard, which standings should be queried")],
+        tags: Annotated[Optional[List[StrictStr]], Field(description="The tags the leaderboard should filter for.")] = None,
+        use_weighted_scoring: Annotated[Optional[StrictBool], Field(description="Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)")] = None,
+        include_confidence_intervals: Annotated[Optional[StrictBool], Field(description="Whether to include the confidence intervals")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2176,16 +2179,16 @@ class LeaderboardApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """leaderboard_leaderboard_id_standings_get
+        """queries all the participants connected to leaderboard by its ID.
 
 
-        :param leaderboard_id: (required)
+        :param leaderboard_id: The id of the leaderboard, which standings should be queried (required)
         :type leaderboard_id: str
-        :param tags:
+        :param tags: The tags the leaderboard should filter for.
         :type tags: List[str]
-        :param use_weighted_scoring:
+        :param use_weighted_scoring: Whether to use weighted scoring based on user scores (defaults to false for backwards compatibility)
         :type use_weighted_scoring: bool
-        :param include_confidence_intervals:
+        :param include_confidence_intervals: Whether to include the confidence intervals
         :type include_confidence_intervals: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request

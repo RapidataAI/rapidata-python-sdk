@@ -328,10 +328,10 @@ class ValidationSetApi:
     @validate_call
     def validation_set_recommended_get(
         self,
-        asset_type: Optional[List[StrictStr]] = None,
-        modality: Optional[List[StrictStr]] = None,
-        prompt_type: Optional[List[StrictStr]] = None,
-        instruction: Optional[StrictStr] = None,
+        asset_type: Annotated[Optional[List[StrictStr]], Field(description="The types of assets that the validation set should contain.  An asset type can be an image, video, audio, text, or any combination of these.    This parameter is a flag, meaning that it can be null or contain multiple values.  If multiple values are provided, a validation set will be chosen that contains at least one of the specified asset types.")] = None,
+        modality: Annotated[Optional[List[StrictStr]], Field(description="The rapid modalities that the validation set should contain.  The modality is the type of rapid such as classify, compare, locate, etc.    This parameter is a flag, meaning that it can be null or contain multiple values.  If multiple values are provided, a validation set will be chosen that contains at least one of the specified modalities.")] = None,
+        prompt_type: Annotated[Optional[List[StrictStr]], Field(description="The prompt types that the validation set should contain.  A prompt type is the additional information that is presented to the user when solving a rapid.  For example, a prompt type can be either text or an asset if the context is an image or video.    This parameter is a flag, meaning that it can be null or contain multiple values.  If multiple values are provided, a validation set will be chosen that contains at least one of the specified prompt types.")] = None,
+        instruction: Annotated[Optional[StrictStr], Field(description="An instruction that can be used to filter for validation sets that have similar instructions.  An instruction is a text that is presented to the user when solving a rapid that explains how to solve the rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -345,16 +345,17 @@ class ValidationSetApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> GetRecommendedValidationSetResult:
-        """validation_set_recommended_get
+        """Gets a validation set that is available to the user and best matches the provided parameters.
 
+        This is not a hard filter, instead it is used to find validation sets that have similar characteristics to the provided instruction.
 
-        :param asset_type:
+        :param asset_type: The types of assets that the validation set should contain.  An asset type can be an image, video, audio, text, or any combination of these.    This parameter is a flag, meaning that it can be null or contain multiple values.  If multiple values are provided, a validation set will be chosen that contains at least one of the specified asset types.
         :type asset_type: List[str]
-        :param modality:
+        :param modality: The rapid modalities that the validation set should contain.  The modality is the type of rapid such as classify, compare, locate, etc.    This parameter is a flag, meaning that it can be null or contain multiple values.  If multiple values are provided, a validation set will be chosen that contains at least one of the specified modalities.
         :type modality: List[str]
-        :param prompt_type:
+        :param prompt_type: The prompt types that the validation set should contain.  A prompt type is the additional information that is presented to the user when solving a rapid.  For example, a prompt type can be either text or an asset if the context is an image or video.    This parameter is a flag, meaning that it can be null or contain multiple values.  If multiple values are provided, a validation set will be chosen that contains at least one of the specified prompt types.
         :type prompt_type: List[str]
-        :param instruction:
+        :param instruction: An instruction that can be used to filter for validation sets that have similar instructions.  An instruction is a text that is presented to the user when solving a rapid that explains how to solve the rapid.
         :type instruction: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -407,10 +408,10 @@ class ValidationSetApi:
     @validate_call
     def validation_set_recommended_get_with_http_info(
         self,
-        asset_type: Optional[List[StrictStr]] = None,
-        modality: Optional[List[StrictStr]] = None,
-        prompt_type: Optional[List[StrictStr]] = None,
-        instruction: Optional[StrictStr] = None,
+        asset_type: Annotated[Optional[List[StrictStr]], Field(description="The types of assets that the validation set should contain.  An asset type can be an image, video, audio, text, or any combination of these.    This parameter is a flag, meaning that it can be null or contain multiple values.  If multiple values are provided, a validation set will be chosen that contains at least one of the specified asset types.")] = None,
+        modality: Annotated[Optional[List[StrictStr]], Field(description="The rapid modalities that the validation set should contain.  The modality is the type of rapid such as classify, compare, locate, etc.    This parameter is a flag, meaning that it can be null or contain multiple values.  If multiple values are provided, a validation set will be chosen that contains at least one of the specified modalities.")] = None,
+        prompt_type: Annotated[Optional[List[StrictStr]], Field(description="The prompt types that the validation set should contain.  A prompt type is the additional information that is presented to the user when solving a rapid.  For example, a prompt type can be either text or an asset if the context is an image or video.    This parameter is a flag, meaning that it can be null or contain multiple values.  If multiple values are provided, a validation set will be chosen that contains at least one of the specified prompt types.")] = None,
+        instruction: Annotated[Optional[StrictStr], Field(description="An instruction that can be used to filter for validation sets that have similar instructions.  An instruction is a text that is presented to the user when solving a rapid that explains how to solve the rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -424,16 +425,17 @@ class ValidationSetApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[GetRecommendedValidationSetResult]:
-        """validation_set_recommended_get
+        """Gets a validation set that is available to the user and best matches the provided parameters.
 
+        This is not a hard filter, instead it is used to find validation sets that have similar characteristics to the provided instruction.
 
-        :param asset_type:
+        :param asset_type: The types of assets that the validation set should contain.  An asset type can be an image, video, audio, text, or any combination of these.    This parameter is a flag, meaning that it can be null or contain multiple values.  If multiple values are provided, a validation set will be chosen that contains at least one of the specified asset types.
         :type asset_type: List[str]
-        :param modality:
+        :param modality: The rapid modalities that the validation set should contain.  The modality is the type of rapid such as classify, compare, locate, etc.    This parameter is a flag, meaning that it can be null or contain multiple values.  If multiple values are provided, a validation set will be chosen that contains at least one of the specified modalities.
         :type modality: List[str]
-        :param prompt_type:
+        :param prompt_type: The prompt types that the validation set should contain.  A prompt type is the additional information that is presented to the user when solving a rapid.  For example, a prompt type can be either text or an asset if the context is an image or video.    This parameter is a flag, meaning that it can be null or contain multiple values.  If multiple values are provided, a validation set will be chosen that contains at least one of the specified prompt types.
         :type prompt_type: List[str]
-        :param instruction:
+        :param instruction: An instruction that can be used to filter for validation sets that have similar instructions.  An instruction is a text that is presented to the user when solving a rapid that explains how to solve the rapid.
         :type instruction: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -486,10 +488,10 @@ class ValidationSetApi:
     @validate_call
     def validation_set_recommended_get_without_preload_content(
         self,
-        asset_type: Optional[List[StrictStr]] = None,
-        modality: Optional[List[StrictStr]] = None,
-        prompt_type: Optional[List[StrictStr]] = None,
-        instruction: Optional[StrictStr] = None,
+        asset_type: Annotated[Optional[List[StrictStr]], Field(description="The types of assets that the validation set should contain.  An asset type can be an image, video, audio, text, or any combination of these.    This parameter is a flag, meaning that it can be null or contain multiple values.  If multiple values are provided, a validation set will be chosen that contains at least one of the specified asset types.")] = None,
+        modality: Annotated[Optional[List[StrictStr]], Field(description="The rapid modalities that the validation set should contain.  The modality is the type of rapid such as classify, compare, locate, etc.    This parameter is a flag, meaning that it can be null or contain multiple values.  If multiple values are provided, a validation set will be chosen that contains at least one of the specified modalities.")] = None,
+        prompt_type: Annotated[Optional[List[StrictStr]], Field(description="The prompt types that the validation set should contain.  A prompt type is the additional information that is presented to the user when solving a rapid.  For example, a prompt type can be either text or an asset if the context is an image or video.    This parameter is a flag, meaning that it can be null or contain multiple values.  If multiple values are provided, a validation set will be chosen that contains at least one of the specified prompt types.")] = None,
+        instruction: Annotated[Optional[StrictStr], Field(description="An instruction that can be used to filter for validation sets that have similar instructions.  An instruction is a text that is presented to the user when solving a rapid that explains how to solve the rapid.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -503,16 +505,17 @@ class ValidationSetApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """validation_set_recommended_get
+        """Gets a validation set that is available to the user and best matches the provided parameters.
 
+        This is not a hard filter, instead it is used to find validation sets that have similar characteristics to the provided instruction.
 
-        :param asset_type:
+        :param asset_type: The types of assets that the validation set should contain.  An asset type can be an image, video, audio, text, or any combination of these.    This parameter is a flag, meaning that it can be null or contain multiple values.  If multiple values are provided, a validation set will be chosen that contains at least one of the specified asset types.
         :type asset_type: List[str]
-        :param modality:
+        :param modality: The rapid modalities that the validation set should contain.  The modality is the type of rapid such as classify, compare, locate, etc.    This parameter is a flag, meaning that it can be null or contain multiple values.  If multiple values are provided, a validation set will be chosen that contains at least one of the specified modalities.
         :type modality: List[str]
-        :param prompt_type:
+        :param prompt_type: The prompt types that the validation set should contain.  A prompt type is the additional information that is presented to the user when solving a rapid.  For example, a prompt type can be either text or an asset if the context is an image or video.    This parameter is a flag, meaning that it can be null or contain multiple values.  If multiple values are provided, a validation set will be chosen that contains at least one of the specified prompt types.
         :type prompt_type: List[str]
-        :param instruction:
+        :param instruction: An instruction that can be used to filter for validation sets that have similar instructions.  An instruction is a text that is presented to the user when solving a rapid that explains how to solve the rapid.
         :type instruction: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request

@@ -26,21 +26,21 @@ from typing_extensions import Self
 
 class CreateLeaderboardModel(BaseModel):
     """
-    CreateLeaderboardModel
+    The CreateLeaderboardModel class represents the model for creating a leaderboard.
     """ # noqa: E501
-    benchmark_id: Optional[StrictStr] = Field(default=None, alias="benchmarkId")
-    benchmark_name: Optional[StrictStr] = Field(default=None, alias="benchmarkName")
-    name: StrictStr
-    instruction: StrictStr
-    show_prompt: StrictBool = Field(alias="showPrompt")
-    show_prompt_asset: Optional[StrictBool] = Field(default=None, alias="showPromptAsset")
-    response_budget: Optional[StrictInt] = Field(default=None, alias="responseBudget")
-    min_responses: Optional[StrictInt] = Field(default=None, alias="minResponses")
-    is_inversed: Optional[StrictBool] = Field(default=None, alias="isInversed")
-    validation_set_id: Optional[StrictStr] = Field(default=None, alias="validationSetId")
-    audience_id: Optional[StrictStr] = Field(default=None, alias="audienceId")
-    filters: Optional[List[IUserFilterModel]] = None
-    feature_flags: Optional[List[FeatureFlagModel]] = Field(default=None, alias="featureFlags")
+    benchmark_id: Optional[StrictStr] = Field(default=None, description="If a leaderboard should be added to a preexisting benchmark, the benchmark Id can be provided.", alias="benchmarkId")
+    benchmark_name: Optional[StrictStr] = Field(default=None, description="If no BenchmarkId is provided a new benchmark will be created. if no name is supplied the benchmark  will be called the same as the leaderboard.", alias="benchmarkName")
+    name: StrictStr = Field(description="The name of the leaderboard.")
+    instruction: StrictStr = Field(description="The instruction datapoints will be matched up against.")
+    show_prompt: StrictBool = Field(description="Indicates if the prompt is shown on the rapids.", alias="showPrompt")
+    show_prompt_asset: Optional[StrictBool] = Field(default=None, description="Whether the prompt asset should be shown on the rapids.", alias="showPromptAsset")
+    response_budget: Optional[StrictInt] = Field(default=None, description="Total amount of responses that get collected per run", alias="responseBudget")
+    min_responses: Optional[StrictInt] = Field(default=None, description="The minimum amount of responses that need to be collected per comparison.", alias="minResponses")
+    is_inversed: Optional[StrictBool] = Field(default=None, description="If the results should be inversed, meaning people should select the worse model.", alias="isInversed")
+    validation_set_id: Optional[StrictStr] = Field(default=None, description="The Validation set that should be attached to every run.", alias="validationSetId")
+    audience_id: Optional[StrictStr] = Field(default=None, description="Optional audience ID. When provided, the leaderboard will target users who have  graduated from the audience (i.e., users with a score at or above the audience's minimum threshold).  Cannot be specified together with Filters.", alias="audienceId")
+    filters: Optional[List[IUserFilterModel]] = Field(default=None, description="The filters will be applied on every order that is created by this leaderboard.  Cannot be specified together with AudienceId.")
+    feature_flags: Optional[List[FeatureFlagModel]] = Field(default=None, description="Feature flags that will be applied to every order that is created by this leaderboard.", alias="featureFlags")
     __properties: ClassVar[List[str]] = ["benchmarkId", "benchmarkName", "name", "instruction", "showPrompt", "showPromptAsset", "responseBudget", "minResponses", "isInversed", "validationSetId", "audienceId", "filters", "featureFlags"]
 
     model_config = ConfigDict(

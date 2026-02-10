@@ -16,11 +16,12 @@
         "tags": [
           "Flow"
         ],
-        "summary": "Soft deletes a flow by its ID.",
+        "summary": "Deletes a flow.",
         "parameters": [
           {
             "name": "flowId",
             "in": "path",
+            "description": "The ID of the flow to delete.",
             "required": true,
             "schema": {
               "type": "string"
@@ -58,6 +59,7 @@
           {
             "name": "flowId",
             "in": "path",
+            "description": "The ID of the flow to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -99,6 +101,7 @@
         "tags": [
           "Flow"
         ],
+        "summary": "Queries flows with filtering and pagination.",
         "parameters": [
           {
             "name": "page",
@@ -253,13 +256,54 @@
         }
       }
     },
+    "/flow/item/{flowItemId}/stop": {
+      "post": {
+        "tags": [
+          "FlowItem"
+        ],
+        "summary": "Stops the specified flow item and triggers partial result processing.",
+        "parameters": [
+          {
+            "name": "flowItemId",
+            "in": "path",
+            "description": "The ID of the flow item to stop.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
     "/flow/ranking": {
       "post": {
         "tags": [
           "RankingFlow"
         ],
-        "summary": "Creates a new flow with the specified parameters.",
+        "summary": "Creates a new ranking flow.",
         "requestBody": {
+          "description": "The ranking flow creation parameters.",
           "content": {
             "application/json": {
               "schema": {
@@ -309,6 +353,7 @@
           {
             "name": "flowId",
             "in": "path",
+            "description": "The ID of the ranking flow to update.",
             "required": true,
             "schema": {
               "type": "string"
@@ -316,6 +361,7 @@
           }
         ],
         "requestBody": {
+          "description": "The configuration fields to update.",
           "content": {
             "application/json": {
               "schema": {
@@ -358,6 +404,7 @@
           {
             "name": "flowId",
             "in": "path",
+            "description": "The ID of the flow to create the item in.",
             "required": true,
             "schema": {
               "type": "string"
@@ -365,6 +412,7 @@
           }
         ],
         "requestBody": {
+          "description": "The flow item creation parameters.",
           "content": {
             "application/json": {
               "schema": {
@@ -407,10 +455,12 @@
         "tags": [
           "RankingFlowItem"
         ],
+        "summary": "Queries flow items for a flow.",
         "parameters": [
           {
             "name": "flowId",
             "in": "path",
+            "description": "The ID of the flow to query items for.",
             "required": true,
             "schema": {
               "type": "string"
@@ -579,6 +629,7 @@
           {
             "name": "flowItemId",
             "in": "path",
+            "description": "The ID of the flow item to retrieve.",
             "required": true,
             "schema": {
               "type": "string"
@@ -620,11 +671,13 @@
         "tags": [
           "RankingFlowItem"
         ],
-        "summary": "Retrieves ranking results (assets with Elo scores) for a completed flow item.\n Returns 409 Conflict if the flow item is not completed or has no associated workflow.",
+        "summary": "Returns ranking results with Elo scores for a completed flow item.",
+        "description": "Returns 409 Conflict if the flow item is not yet completed or has no associated workflow.",
         "parameters": [
           {
             "name": "flowItemId",
             "in": "path",
+            "description": "The ID of the flow item to get results for.",
             "required": true,
             "schema": {
               "type": "string"
@@ -671,16 +724,18 @@
         }
       }
     },
-    "/flow/ranking/item/{flowItemId}/stop": {
-      "post": {
+    "/flow/ranking/item/{flowItemId}/vote-matrix": {
+      "get": {
         "tags": [
           "RankingFlowItem"
         ],
-        "summary": "Stops the specified flow item.",
+        "summary": "Retrieves the pairwise vote matrix for a completed flow item.",
+        "description": "Returns 409 Conflict if the flow item is not completed or has no associated workflow.",
         "parameters": [
           {
             "name": "flowItemId",
             "in": "path",
+            "description": "The ID of the flow item to get the vote matrix for.",
             "required": true,
             "schema": {
               "type": "string"
@@ -688,8 +743,15 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "No Content"
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRankingFlowItemVoteMatrixEndpoint_Output"
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request",
@@ -697,6 +759,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -722,40 +794,45 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "The name of the ranking flow."
           },
           "criteria": {
-            "type": "string"
+            "type": "string",
+            "description": "The ranking criteria used to compare items."
           },
           "validationSetId": {
             "type": "string",
+            "description": "Optional ID of the validation set to use.",
             "nullable": true
           },
           "startingElo": {
             "type": "integer",
+            "description": "Initial Elo rating for new items. Defaults to 1200.",
             "format": "int32"
           },
           "kFactor": {
             "type": "integer",
+            "description": "K-factor controlling Elo rating sensitivity. Defaults to 40.",
             "format": "int32"
           },
           "scalingFactor": {
             "type": "integer",
+            "description": "Scaling factor for Elo probability calculation. Defaults to 400.",
             "format": "int32"
           },
           "responsesRequired": {
             "type": "integer",
+            "description": "Number of responses required per comparison.",
             "format": "int32"
           },
           "featureFlags": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/ListOfFeatureFlag"
               }
-            ]
+            ],
+            "description": "Optional feature flags to enable for this flow."
           }
         }
       },
@@ -766,7 +843,8 @@
         "type": "object",
         "properties": {
           "flowId": {
-            "type": "string"
+            "type": "string",
+            "description": "The ID of the created ranking flow."
           }
         }
       },
@@ -777,14 +855,17 @@
         "type": "object",
         "properties": {
           "datasetId": {
-            "type": "string"
+            "type": "string",
+            "description": "The ID of the dataset to use for this flow item."
           },
           "context": {
             "type": "string",
+            "description": "Optional context to provide additional ranking guidance.",
             "nullable": true
           },
           "timeToLiveInSeconds": {
             "type": "integer",
+            "description": "Optional time-to-live in seconds before the flow item expires.",
             "format": "int32"
           }
         }
@@ -796,7 +877,8 @@
         "type": "object",
         "properties": {
           "flowItemId": {
-            "type": "string"
+            "type": "string",
+            "description": "The ID of the created flow item."
           }
         }
       },
@@ -831,12 +913,14 @@
           "Failed",
           "Stopping",
           "Stopped"
-        ]
+        ],
+        "description": "The current state of the flow item."
       },
       "FlowType": {
         "enum": [
           "Ranking"
-        ]
+        ],
+        "description": "The type of the flow."
       },
       "GetFlowByIdEndpoint_Output": {
         "required": [
@@ -850,23 +934,28 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "The unique identifier of the flow."
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "The name of the flow."
           },
           "type": {
             "$ref": "#/components/schemas/FlowType"
           },
           "ownerId": {
             "type": "string",
+            "description": "The ID of the customer who owns the flow.",
             "format": "uuid"
           },
           "ownerMail": {
-            "type": "string"
+            "type": "string",
+            "description": "The email of the customer who owns the flow."
           },
           "createdAt": {
             "type": "string",
+            "description": "The timestamp when the flow was created.",
             "format": "date-time"
           }
         }
@@ -882,16 +971,20 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "The unique identifier of the flow item."
           },
           "flowId": {
-            "type": "string"
+            "type": "string",
+            "description": "The ID of the flow this item belongs to."
           },
           "datasetId": {
-            "type": "string"
+            "type": "string",
+            "description": "The ID of the dataset used by this flow item."
           },
           "workflowId": {
             "type": "string",
+            "description": "The ID of the workflow created for this flow item.",
             "nullable": true
           },
           "state": {
@@ -899,33 +992,40 @@
           },
           "context": {
             "type": "string",
+            "description": "Optional context associated with this flow item.",
             "nullable": true
           },
           "failureMessage": {
             "type": "string",
+            "description": "The failure message if the flow item failed.",
             "nullable": true
           },
           "expiresAt": {
             "type": "string",
+            "description": "The expiration timestamp of the flow item.",
             "format": "date-time",
             "nullable": true
           },
           "createdAt": {
             "type": "string",
+            "description": "The timestamp when the flow item was created.",
             "format": "date-time"
           },
           "startedAt": {
             "type": "string",
+            "description": "The timestamp when the flow item started processing.",
             "format": "date-time",
             "nullable": true
           },
           "completedAt": {
             "type": "string",
+            "description": "The timestamp when the flow item completed.",
             "format": "date-time",
             "nullable": true
           },
           "failedAt": {
             "type": "string",
+            "description": "The timestamp when the flow item failed.",
             "format": "date-time",
             "nullable": true
           }
@@ -938,7 +1038,52 @@
         "type": "object",
         "properties": {
           "datapoints": {
-            "$ref": "#/components/schemas/Output_ListOfOutput_Datapoint"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Output_ListOfOutput_Datapoint"
+              }
+            ],
+            "description": "The ranked datapoints with their Elo scores."
+          }
+        }
+      },
+      "GetRankingFlowItemVoteMatrixEndpoint_Output": {
+        "required": [
+          "index",
+          "columns",
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "index": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "Row labels of the vote matrix."
+          },
+          "columns": {
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "Column labels of the vote matrix."
+          },
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ListOfListOfDouble"
+              }
+            ],
+            "description": "The vote counts as a two-dimensional matrix where Data[i][j] is the number of times row i was preferred over column j."
           }
         }
       },
@@ -1323,30 +1468,20 @@
           "$ref": "#/components/schemas/IAssetModel"
         }
       },
+      "ListOfListOfDouble": {
+        "type": "array",
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        }
+      },
       "MetadataModelCollection": {
         "type": "object",
         "additionalProperties": {
           "$ref": "#/components/schemas/IMetadataModel"
         }
-      },
-      "OptionOfint": {
-        "type": "integer",
-        "format": "int32",
-        "nullable": true
-      },
-      "OptionOfIReadOnlyListOfFeatureFlag": {
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/ListOfFeatureFlag"
-          },
-          {
-            "nullable": true
-          }
-        ]
-      },
-      "OptionOfstring": {
-        "type": "string",
-        "nullable": true
       },
       "Output_Datapoint": {
         "required": [
@@ -1415,13 +1550,16 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "The unique identifier of the flow item."
           },
           "datasetId": {
-            "type": "string"
+            "type": "string",
+            "description": "The ID of the dataset used by this flow item."
           },
           "workflowId": {
             "type": "string",
+            "description": "The ID of the workflow created for this flow item.",
             "nullable": true
           },
           "state": {
@@ -1429,28 +1567,34 @@
           },
           "context": {
             "type": "string",
+            "description": "Optional context associated with this flow item.",
             "nullable": true
           },
           "failureMessage": {
             "type": "string",
+            "description": "The failure message if the flow item failed.",
             "nullable": true
           },
           "createdAt": {
             "type": "string",
+            "description": "The timestamp when the flow item was created.",
             "format": "date-time"
           },
           "startedAt": {
             "type": "string",
+            "description": "The timestamp when the flow item started processing.",
             "format": "date-time",
             "nullable": true
           },
           "completedAt": {
             "type": "string",
+            "description": "The timestamp when the flow item completed.",
             "format": "date-time",
             "nullable": true
           },
           "failedAt": {
             "type": "string",
+            "description": "The timestamp when the flow item failed.",
             "format": "date-time",
             "nullable": true
           }
@@ -1504,23 +1648,28 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "The unique identifier of the flow."
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "The name of the flow."
           },
           "type": {
             "$ref": "#/components/schemas/FlowType"
           },
           "ownerId": {
             "type": "string",
+            "description": "The ID of the customer who owns the flow.",
             "format": "uuid"
           },
           "ownerMail": {
-            "type": "string"
+            "type": "string",
+            "description": "The email of the customer who owns the flow."
           },
           "createdAt": {
             "type": "string",
+            "description": "The timestamp when the flow was created.",
             "format": "date-time"
           }
         }
@@ -1559,22 +1708,44 @@
         "type": "object",
         "properties": {
           "criteria": {
-            "$ref": "#/components/schemas/OptionOfstring"
+            "type": "string",
+            "description": "The ranking criteria used to compare items.",
+            "nullable": true
           },
           "startingElo": {
-            "$ref": "#/components/schemas/OptionOfint"
+            "type": "integer",
+            "description": "Initial Elo rating for new items.",
+            "format": "int32",
+            "nullable": true
           },
           "kFactor": {
-            "$ref": "#/components/schemas/OptionOfint"
+            "type": "integer",
+            "description": "K-factor controlling Elo rating sensitivity.",
+            "format": "int32",
+            "nullable": true
           },
           "scalingFactor": {
-            "$ref": "#/components/schemas/OptionOfint"
+            "type": "integer",
+            "description": "Scaling factor for Elo probability calculation.",
+            "format": "int32",
+            "nullable": true
           },
           "responsesRequired": {
-            "$ref": "#/components/schemas/OptionOfint"
+            "type": "integer",
+            "description": "Number of responses required per comparison.",
+            "format": "int32",
+            "nullable": true
           },
           "featureFlags": {
-            "$ref": "#/components/schemas/OptionOfIReadOnlyListOfFeatureFlag"
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ListOfFeatureFlag"
+              },
+              {
+                "nullable": true
+              }
+            ],
+            "description": "Feature flags to enable for this flow."
           }
         }
       },

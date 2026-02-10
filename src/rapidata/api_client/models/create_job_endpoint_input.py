@@ -24,13 +24,13 @@ from typing_extensions import Self
 
 class CreateJobEndpointInput(BaseModel):
     """
-    CreateJobEndpointInput
+    The input for the create job endpoint.
     """ # noqa: E501
-    job_definition_id: StrictStr = Field(alias="jobDefinitionId")
-    audience_id: StrictStr = Field(alias="audienceId")
-    revision_number: Optional[StrictInt] = Field(default=None, alias="revisionNumber")
-    name: Optional[StrictStr] = None
-    priority: Optional[StrictInt] = None
+    job_definition_id: StrictStr = Field(description="The id of the job definition to use.", alias="jobDefinitionId")
+    audience_id: StrictStr = Field(description="The id of the audience to target.", alias="audienceId")
+    revision_number: Optional[StrictInt] = Field(default=None, description="The revision number to use. If not specified, the latest revision will be used.", alias="revisionNumber")
+    name: Optional[StrictStr] = Field(default=None, description="The name of the job. If not specified, defaults to \"{definition name}:{revision number}\".")
+    priority: Optional[StrictInt] = Field(default=None, description="The priority of the job. Higher values mean higher priority. Default is 50.")
     __properties: ClassVar[List[str]] = ["jobDefinitionId", "audienceId", "revisionNumber", "name", "priority"]
 
     model_config = ConfigDict(

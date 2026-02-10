@@ -44,7 +44,7 @@ class FlowApi:
     @validate_call
     def flow_flow_id_delete(
         self,
-        flow_id: StrictStr,
+        flow_id: Annotated[StrictStr, Field(description="The ID of the flow to delete.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -58,10 +58,10 @@ class FlowApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Soft deletes a flow by its ID.
+        """Deletes a flow.
 
 
-        :param flow_id: (required)
+        :param flow_id: The ID of the flow to delete. (required)
         :type flow_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -113,7 +113,7 @@ class FlowApi:
     @validate_call
     def flow_flow_id_delete_with_http_info(
         self,
-        flow_id: StrictStr,
+        flow_id: Annotated[StrictStr, Field(description="The ID of the flow to delete.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -127,10 +127,10 @@ class FlowApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Soft deletes a flow by its ID.
+        """Deletes a flow.
 
 
-        :param flow_id: (required)
+        :param flow_id: The ID of the flow to delete. (required)
         :type flow_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -182,7 +182,7 @@ class FlowApi:
     @validate_call
     def flow_flow_id_delete_without_preload_content(
         self,
-        flow_id: StrictStr,
+        flow_id: Annotated[StrictStr, Field(description="The ID of the flow to delete.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -196,10 +196,10 @@ class FlowApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Soft deletes a flow by its ID.
+        """Deletes a flow.
 
 
-        :param flow_id: (required)
+        :param flow_id: The ID of the flow to delete. (required)
         :type flow_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -313,7 +313,7 @@ class FlowApi:
     @validate_call
     def flow_flow_id_get(
         self,
-        flow_id: StrictStr,
+        flow_id: Annotated[StrictStr, Field(description="The ID of the flow to retrieve.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -330,7 +330,7 @@ class FlowApi:
         """Retrieves a flow by its ID.
 
 
-        :param flow_id: (required)
+        :param flow_id: The ID of the flow to retrieve. (required)
         :type flow_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -382,7 +382,7 @@ class FlowApi:
     @validate_call
     def flow_flow_id_get_with_http_info(
         self,
-        flow_id: StrictStr,
+        flow_id: Annotated[StrictStr, Field(description="The ID of the flow to retrieve.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -399,7 +399,7 @@ class FlowApi:
         """Retrieves a flow by its ID.
 
 
-        :param flow_id: (required)
+        :param flow_id: The ID of the flow to retrieve. (required)
         :type flow_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -451,7 +451,7 @@ class FlowApi:
     @validate_call
     def flow_flow_id_get_without_preload_content(
         self,
-        flow_id: StrictStr,
+        flow_id: Annotated[StrictStr, Field(description="The ID of the flow to retrieve.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -468,7 +468,7 @@ class FlowApi:
         """Retrieves a flow by its ID.
 
 
-        :param flow_id: (required)
+        :param flow_id: The ID of the flow to retrieve. (required)
         :type flow_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -600,7 +600,7 @@ class FlowApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> QueryFlowsEndpointPagedResultOfOutput:
-        """flow_get
+        """Queries flows with filtering and pagination.
 
 
         :param page: The 1-based page index.
@@ -685,7 +685,7 @@ class FlowApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[QueryFlowsEndpointPagedResultOfOutput]:
-        """flow_get
+        """Queries flows with filtering and pagination.
 
 
         :param page: The 1-based page index.
@@ -770,7 +770,7 @@ class FlowApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """flow_get
+        """Queries flows with filtering and pagination.
 
 
         :param page: The 1-based page index.

@@ -1505,9 +1505,11 @@
         "type": "object",
         "properties": {
           "sendEmail": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether to email the user when the download is ready."
           }
-        }
+        },
+        "description": "The model for creating a preliminary download."
       },
       "StartPreliminaryDownloadResult": {
         "required": [

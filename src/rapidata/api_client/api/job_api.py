@@ -56,7 +56,7 @@ class JobApi:
     @validate_call
     def job_definition_definition_id_delete(
         self,
-        definition_id: StrictStr,
+        definition_id: Annotated[StrictStr, Field(description="The id of the job definition to delete.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -73,7 +73,7 @@ class JobApi:
         """Deletes a job definition and all its revisions.
 
 
-        :param definition_id: (required)
+        :param definition_id: The id of the job definition to delete. (required)
         :type definition_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -125,7 +125,7 @@ class JobApi:
     @validate_call
     def job_definition_definition_id_delete_with_http_info(
         self,
-        definition_id: StrictStr,
+        definition_id: Annotated[StrictStr, Field(description="The id of the job definition to delete.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -142,7 +142,7 @@ class JobApi:
         """Deletes a job definition and all its revisions.
 
 
-        :param definition_id: (required)
+        :param definition_id: The id of the job definition to delete. (required)
         :type definition_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -194,7 +194,7 @@ class JobApi:
     @validate_call
     def job_definition_definition_id_delete_without_preload_content(
         self,
-        definition_id: StrictStr,
+        definition_id: Annotated[StrictStr, Field(description="The id of the job definition to delete.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -211,7 +211,7 @@ class JobApi:
         """Deletes a job definition and all its revisions.
 
 
-        :param definition_id: (required)
+        :param definition_id: The id of the job definition to delete. (required)
         :type definition_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -325,7 +325,7 @@ class JobApi:
     @validate_call
     def job_definition_definition_id_get(
         self,
-        definition_id: StrictStr,
+        definition_id: Annotated[StrictStr, Field(description="The id of the job definition to retrieve.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -342,7 +342,7 @@ class JobApi:
         """Gets a job definition by its id.
 
 
-        :param definition_id: (required)
+        :param definition_id: The id of the job definition to retrieve. (required)
         :type definition_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -394,7 +394,7 @@ class JobApi:
     @validate_call
     def job_definition_definition_id_get_with_http_info(
         self,
-        definition_id: StrictStr,
+        definition_id: Annotated[StrictStr, Field(description="The id of the job definition to retrieve.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -411,7 +411,7 @@ class JobApi:
         """Gets a job definition by its id.
 
 
-        :param definition_id: (required)
+        :param definition_id: The id of the job definition to retrieve. (required)
         :type definition_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -463,7 +463,7 @@ class JobApi:
     @validate_call
     def job_definition_definition_id_get_without_preload_content(
         self,
-        definition_id: StrictStr,
+        definition_id: Annotated[StrictStr, Field(description="The id of the job definition to retrieve.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -480,7 +480,7 @@ class JobApi:
         """Gets a job definition by its id.
 
 
-        :param definition_id: (required)
+        :param definition_id: The id of the job definition to retrieve. (required)
         :type definition_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -594,8 +594,8 @@ class JobApi:
     @validate_call
     def job_definition_definition_id_patch(
         self,
-        definition_id: StrictStr,
-        update_job_definition_endpoint_input: UpdateJobDefinitionEndpointInput,
+        definition_id: Annotated[StrictStr, Field(description="The id of the job definition to update.")],
+        update_job_definition_endpoint_input: Annotated[UpdateJobDefinitionEndpointInput, Field(description="The fields to update.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -612,9 +612,9 @@ class JobApi:
         """Updates a job definition.
 
 
-        :param definition_id: (required)
+        :param definition_id: The id of the job definition to update. (required)
         :type definition_id: str
-        :param update_job_definition_endpoint_input: (required)
+        :param update_job_definition_endpoint_input: The fields to update. (required)
         :type update_job_definition_endpoint_input: UpdateJobDefinitionEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -667,8 +667,8 @@ class JobApi:
     @validate_call
     def job_definition_definition_id_patch_with_http_info(
         self,
-        definition_id: StrictStr,
-        update_job_definition_endpoint_input: UpdateJobDefinitionEndpointInput,
+        definition_id: Annotated[StrictStr, Field(description="The id of the job definition to update.")],
+        update_job_definition_endpoint_input: Annotated[UpdateJobDefinitionEndpointInput, Field(description="The fields to update.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -685,9 +685,9 @@ class JobApi:
         """Updates a job definition.
 
 
-        :param definition_id: (required)
+        :param definition_id: The id of the job definition to update. (required)
         :type definition_id: str
-        :param update_job_definition_endpoint_input: (required)
+        :param update_job_definition_endpoint_input: The fields to update. (required)
         :type update_job_definition_endpoint_input: UpdateJobDefinitionEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -740,8 +740,8 @@ class JobApi:
     @validate_call
     def job_definition_definition_id_patch_without_preload_content(
         self,
-        definition_id: StrictStr,
-        update_job_definition_endpoint_input: UpdateJobDefinitionEndpointInput,
+        definition_id: Annotated[StrictStr, Field(description="The id of the job definition to update.")],
+        update_job_definition_endpoint_input: Annotated[UpdateJobDefinitionEndpointInput, Field(description="The fields to update.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -758,9 +758,9 @@ class JobApi:
         """Updates a job definition.
 
 
-        :param definition_id: (required)
+        :param definition_id: The id of the job definition to update. (required)
         :type definition_id: str
-        :param update_job_definition_endpoint_input: (required)
+        :param update_job_definition_endpoint_input: The fields to update. (required)
         :type update_job_definition_endpoint_input: UpdateJobDefinitionEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -891,7 +891,7 @@ class JobApi:
     @validate_call
     def job_definition_definition_id_revision_get(
         self,
-        definition_id: StrictStr,
+        definition_id: Annotated[StrictStr, Field(description="The id of the job definition.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -908,7 +908,7 @@ class JobApi:
         """Gets the latest revision for a job definition.
 
 
-        :param definition_id: (required)
+        :param definition_id: The id of the job definition. (required)
         :type definition_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -960,7 +960,7 @@ class JobApi:
     @validate_call
     def job_definition_definition_id_revision_get_with_http_info(
         self,
-        definition_id: StrictStr,
+        definition_id: Annotated[StrictStr, Field(description="The id of the job definition.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -977,7 +977,7 @@ class JobApi:
         """Gets the latest revision for a job definition.
 
 
-        :param definition_id: (required)
+        :param definition_id: The id of the job definition. (required)
         :type definition_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1029,7 +1029,7 @@ class JobApi:
     @validate_call
     def job_definition_definition_id_revision_get_without_preload_content(
         self,
-        definition_id: StrictStr,
+        definition_id: Annotated[StrictStr, Field(description="The id of the job definition.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1046,7 +1046,7 @@ class JobApi:
         """Gets the latest revision for a job definition.
 
 
-        :param definition_id: (required)
+        :param definition_id: The id of the job definition. (required)
         :type definition_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1160,8 +1160,8 @@ class JobApi:
     @validate_call
     def job_definition_definition_id_revision_post(
         self,
-        definition_id: StrictStr,
-        create_job_revision_endpoint_input: CreateJobRevisionEndpointInput,
+        definition_id: Annotated[StrictStr, Field(description="The id of the job definition to create a revision for.")],
+        create_job_revision_endpoint_input: Annotated[CreateJobRevisionEndpointInput, Field(description="The revision parameters.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1177,10 +1177,11 @@ class JobApi:
     ) -> CreateJobRevisionEndpointOutput:
         """Creates a new revision for an existing job definition.
 
+        Unspecified fields are inherited from the previous revision. Workflow and Referee must be  provided together if either is specified.
 
-        :param definition_id: (required)
+        :param definition_id: The id of the job definition to create a revision for. (required)
         :type definition_id: str
-        :param create_job_revision_endpoint_input: (required)
+        :param create_job_revision_endpoint_input: The revision parameters. (required)
         :type create_job_revision_endpoint_input: CreateJobRevisionEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1233,8 +1234,8 @@ class JobApi:
     @validate_call
     def job_definition_definition_id_revision_post_with_http_info(
         self,
-        definition_id: StrictStr,
-        create_job_revision_endpoint_input: CreateJobRevisionEndpointInput,
+        definition_id: Annotated[StrictStr, Field(description="The id of the job definition to create a revision for.")],
+        create_job_revision_endpoint_input: Annotated[CreateJobRevisionEndpointInput, Field(description="The revision parameters.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1250,10 +1251,11 @@ class JobApi:
     ) -> ApiResponse[CreateJobRevisionEndpointOutput]:
         """Creates a new revision for an existing job definition.
 
+        Unspecified fields are inherited from the previous revision. Workflow and Referee must be  provided together if either is specified.
 
-        :param definition_id: (required)
+        :param definition_id: The id of the job definition to create a revision for. (required)
         :type definition_id: str
-        :param create_job_revision_endpoint_input: (required)
+        :param create_job_revision_endpoint_input: The revision parameters. (required)
         :type create_job_revision_endpoint_input: CreateJobRevisionEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1306,8 +1308,8 @@ class JobApi:
     @validate_call
     def job_definition_definition_id_revision_post_without_preload_content(
         self,
-        definition_id: StrictStr,
-        create_job_revision_endpoint_input: CreateJobRevisionEndpointInput,
+        definition_id: Annotated[StrictStr, Field(description="The id of the job definition to create a revision for.")],
+        create_job_revision_endpoint_input: Annotated[CreateJobRevisionEndpointInput, Field(description="The revision parameters.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1323,10 +1325,11 @@ class JobApi:
     ) -> RESTResponseType:
         """Creates a new revision for an existing job definition.
 
+        Unspecified fields are inherited from the previous revision. Workflow and Referee must be  provided together if either is specified.
 
-        :param definition_id: (required)
+        :param definition_id: The id of the job definition to create a revision for. (required)
         :type definition_id: str
-        :param create_job_revision_endpoint_input: (required)
+        :param create_job_revision_endpoint_input: The revision parameters. (required)
         :type create_job_revision_endpoint_input: CreateJobRevisionEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1457,8 +1460,8 @@ class JobApi:
     @validate_call
     def job_definition_definition_id_revision_revision_number_get(
         self,
-        definition_id: StrictStr,
-        revision_number: StrictInt,
+        definition_id: Annotated[StrictStr, Field(description="The id of the job definition.")],
+        revision_number: Annotated[StrictInt, Field(description="The revision number to retrieve.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1475,9 +1478,9 @@ class JobApi:
         """Gets a specific revision for a job definition.
 
 
-        :param definition_id: (required)
+        :param definition_id: The id of the job definition. (required)
         :type definition_id: str
-        :param revision_number: (required)
+        :param revision_number: The revision number to retrieve. (required)
         :type revision_number: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1530,8 +1533,8 @@ class JobApi:
     @validate_call
     def job_definition_definition_id_revision_revision_number_get_with_http_info(
         self,
-        definition_id: StrictStr,
-        revision_number: StrictInt,
+        definition_id: Annotated[StrictStr, Field(description="The id of the job definition.")],
+        revision_number: Annotated[StrictInt, Field(description="The revision number to retrieve.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1548,9 +1551,9 @@ class JobApi:
         """Gets a specific revision for a job definition.
 
 
-        :param definition_id: (required)
+        :param definition_id: The id of the job definition. (required)
         :type definition_id: str
-        :param revision_number: (required)
+        :param revision_number: The revision number to retrieve. (required)
         :type revision_number: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1603,8 +1606,8 @@ class JobApi:
     @validate_call
     def job_definition_definition_id_revision_revision_number_get_without_preload_content(
         self,
-        definition_id: StrictStr,
-        revision_number: StrictInt,
+        definition_id: Annotated[StrictStr, Field(description="The id of the job definition.")],
+        revision_number: Annotated[StrictInt, Field(description="The revision number to retrieve.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1621,9 +1624,9 @@ class JobApi:
         """Gets a specific revision for a job definition.
 
 
-        :param definition_id: (required)
+        :param definition_id: The id of the job definition. (required)
         :type definition_id: str
-        :param revision_number: (required)
+        :param revision_number: The revision number to retrieve. (required)
         :type revision_number: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2020,7 +2023,7 @@ class JobApi:
     @validate_call
     def job_definition_post(
         self,
-        create_job_definition_endpoint_input: CreateJobDefinitionEndpointInput,
+        create_job_definition_endpoint_input: Annotated[CreateJobDefinitionEndpointInput, Field(description="The job definition parameters.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2036,8 +2039,9 @@ class JobApi:
     ) -> CreateJobDefinitionEndpointOutput:
         """Creates a new job definition.
 
+        A preview pipeline is automatically created and returned in the response.
 
-        :param create_job_definition_endpoint_input: (required)
+        :param create_job_definition_endpoint_input: The job definition parameters. (required)
         :type create_job_definition_endpoint_input: CreateJobDefinitionEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2089,7 +2093,7 @@ class JobApi:
     @validate_call
     def job_definition_post_with_http_info(
         self,
-        create_job_definition_endpoint_input: CreateJobDefinitionEndpointInput,
+        create_job_definition_endpoint_input: Annotated[CreateJobDefinitionEndpointInput, Field(description="The job definition parameters.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2105,8 +2109,9 @@ class JobApi:
     ) -> ApiResponse[CreateJobDefinitionEndpointOutput]:
         """Creates a new job definition.
 
+        A preview pipeline is automatically created and returned in the response.
 
-        :param create_job_definition_endpoint_input: (required)
+        :param create_job_definition_endpoint_input: The job definition parameters. (required)
         :type create_job_definition_endpoint_input: CreateJobDefinitionEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2158,7 +2163,7 @@ class JobApi:
     @validate_call
     def job_definition_post_without_preload_content(
         self,
-        create_job_definition_endpoint_input: CreateJobDefinitionEndpointInput,
+        create_job_definition_endpoint_input: Annotated[CreateJobDefinitionEndpointInput, Field(description="The job definition parameters.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2174,8 +2179,9 @@ class JobApi:
     ) -> RESTResponseType:
         """Creates a new job definition.
 
+        A preview pipeline is automatically created and returned in the response.
 
-        :param create_job_definition_endpoint_input: (required)
+        :param create_job_definition_endpoint_input: The job definition parameters. (required)
         :type create_job_definition_endpoint_input: CreateJobDefinitionEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2566,7 +2572,7 @@ class JobApi:
     @validate_call
     def job_job_id_download_results_get(
         self,
-        job_id: StrictStr,
+        job_id: Annotated[StrictStr, Field(description="The id of the job to download results for.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2583,7 +2589,7 @@ class JobApi:
         """Downloads the results of a job as a file attachment.
 
 
-        :param job_id: (required)
+        :param job_id: The id of the job to download results for. (required)
         :type job_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2634,7 +2640,7 @@ class JobApi:
     @validate_call
     def job_job_id_download_results_get_with_http_info(
         self,
-        job_id: StrictStr,
+        job_id: Annotated[StrictStr, Field(description="The id of the job to download results for.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2651,7 +2657,7 @@ class JobApi:
         """Downloads the results of a job as a file attachment.
 
 
-        :param job_id: (required)
+        :param job_id: The id of the job to download results for. (required)
         :type job_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2702,7 +2708,7 @@ class JobApi:
     @validate_call
     def job_job_id_download_results_get_without_preload_content(
         self,
-        job_id: StrictStr,
+        job_id: Annotated[StrictStr, Field(description="The id of the job to download results for.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2719,7 +2725,7 @@ class JobApi:
         """Downloads the results of a job as a file attachment.
 
 
-        :param job_id: (required)
+        :param job_id: The id of the job to download results for. (required)
         :type job_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2825,7 +2831,7 @@ class JobApi:
     @validate_call
     def job_job_id_get(
         self,
-        job_id: StrictStr,
+        job_id: Annotated[StrictStr, Field(description="The id of the job to retrieve.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2842,7 +2848,7 @@ class JobApi:
         """Gets a job by its id.
 
 
-        :param job_id: (required)
+        :param job_id: The id of the job to retrieve. (required)
         :type job_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2894,7 +2900,7 @@ class JobApi:
     @validate_call
     def job_job_id_get_with_http_info(
         self,
-        job_id: StrictStr,
+        job_id: Annotated[StrictStr, Field(description="The id of the job to retrieve.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2911,7 +2917,7 @@ class JobApi:
         """Gets a job by its id.
 
 
-        :param job_id: (required)
+        :param job_id: The id of the job to retrieve. (required)
         :type job_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -2963,7 +2969,7 @@ class JobApi:
     @validate_call
     def job_job_id_get_without_preload_content(
         self,
-        job_id: StrictStr,
+        job_id: Annotated[StrictStr, Field(description="The id of the job to retrieve.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2980,7 +2986,7 @@ class JobApi:
         """Gets a job by its id.
 
 
-        :param job_id: (required)
+        :param job_id: The id of the job to retrieve. (required)
         :type job_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -3094,8 +3100,8 @@ class JobApi:
     @validate_call
     def job_job_id_patch(
         self,
-        job_id: StrictStr,
-        update_job_endpoint_input: UpdateJobEndpointInput,
+        job_id: Annotated[StrictStr, Field(description="The id of the job to update.")],
+        update_job_endpoint_input: Annotated[UpdateJobEndpointInput, Field(description="The fields to update.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3112,9 +3118,9 @@ class JobApi:
         """Updates a job.
 
 
-        :param job_id: (required)
+        :param job_id: The id of the job to update. (required)
         :type job_id: str
-        :param update_job_endpoint_input: (required)
+        :param update_job_endpoint_input: The fields to update. (required)
         :type update_job_endpoint_input: UpdateJobEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -3167,8 +3173,8 @@ class JobApi:
     @validate_call
     def job_job_id_patch_with_http_info(
         self,
-        job_id: StrictStr,
-        update_job_endpoint_input: UpdateJobEndpointInput,
+        job_id: Annotated[StrictStr, Field(description="The id of the job to update.")],
+        update_job_endpoint_input: Annotated[UpdateJobEndpointInput, Field(description="The fields to update.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3185,9 +3191,9 @@ class JobApi:
         """Updates a job.
 
 
-        :param job_id: (required)
+        :param job_id: The id of the job to update. (required)
         :type job_id: str
-        :param update_job_endpoint_input: (required)
+        :param update_job_endpoint_input: The fields to update. (required)
         :type update_job_endpoint_input: UpdateJobEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -3240,8 +3246,8 @@ class JobApi:
     @validate_call
     def job_job_id_patch_without_preload_content(
         self,
-        job_id: StrictStr,
-        update_job_endpoint_input: UpdateJobEndpointInput,
+        job_id: Annotated[StrictStr, Field(description="The id of the job to update.")],
+        update_job_endpoint_input: Annotated[UpdateJobEndpointInput, Field(description="The fields to update.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3258,9 +3264,9 @@ class JobApi:
         """Updates a job.
 
 
-        :param job_id: (required)
+        :param job_id: The id of the job to update. (required)
         :type job_id: str
-        :param update_job_endpoint_input: (required)
+        :param update_job_endpoint_input: The fields to update. (required)
         :type update_job_endpoint_input: UpdateJobEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -3391,7 +3397,7 @@ class JobApi:
     @validate_call
     def job_job_id_results_get(
         self,
-        job_id: StrictStr,
+        job_id: Annotated[StrictStr, Field(description="The id of the job to get results for.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3407,8 +3413,9 @@ class JobApi:
     ) -> str:
         """Gets the results of a job as a JSON string.
 
+        For file download, use the download-results endpoint instead.
 
-        :param job_id: (required)
+        :param job_id: The id of the job to get results for. (required)
         :type job_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -3459,7 +3466,7 @@ class JobApi:
     @validate_call
     def job_job_id_results_get_with_http_info(
         self,
-        job_id: StrictStr,
+        job_id: Annotated[StrictStr, Field(description="The id of the job to get results for.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3475,8 +3482,9 @@ class JobApi:
     ) -> ApiResponse[str]:
         """Gets the results of a job as a JSON string.
 
+        For file download, use the download-results endpoint instead.
 
-        :param job_id: (required)
+        :param job_id: The id of the job to get results for. (required)
         :type job_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -3527,7 +3535,7 @@ class JobApi:
     @validate_call
     def job_job_id_results_get_without_preload_content(
         self,
-        job_id: StrictStr,
+        job_id: Annotated[StrictStr, Field(description="The id of the job to get results for.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3543,8 +3551,9 @@ class JobApi:
     ) -> RESTResponseType:
         """Gets the results of a job as a JSON string.
 
+        For file download, use the download-results endpoint instead.
 
-        :param job_id: (required)
+        :param job_id: The id of the job to get results for. (required)
         :type job_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -3657,7 +3666,7 @@ class JobApi:
     @validate_call
     def job_post(
         self,
-        create_job_endpoint_input: CreateJobEndpointInput,
+        create_job_endpoint_input: Annotated[CreateJobEndpointInput, Field(description="The job creation parameters.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3673,8 +3682,9 @@ class JobApi:
     ) -> CreateJobEndpointOutput:
         """Creates a new job from a job definition and audience.
 
+        If the audience is not already recruiting, recruiting is started automatically.  The RecruitingStarted field indicates whether this happened.
 
-        :param create_job_endpoint_input: (required)
+        :param create_job_endpoint_input: The job creation parameters. (required)
         :type create_job_endpoint_input: CreateJobEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -3726,7 +3736,7 @@ class JobApi:
     @validate_call
     def job_post_with_http_info(
         self,
-        create_job_endpoint_input: CreateJobEndpointInput,
+        create_job_endpoint_input: Annotated[CreateJobEndpointInput, Field(description="The job creation parameters.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3742,8 +3752,9 @@ class JobApi:
     ) -> ApiResponse[CreateJobEndpointOutput]:
         """Creates a new job from a job definition and audience.
 
+        If the audience is not already recruiting, recruiting is started automatically.  The RecruitingStarted field indicates whether this happened.
 
-        :param create_job_endpoint_input: (required)
+        :param create_job_endpoint_input: The job creation parameters. (required)
         :type create_job_endpoint_input: CreateJobEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -3795,7 +3806,7 @@ class JobApi:
     @validate_call
     def job_post_without_preload_content(
         self,
-        create_job_endpoint_input: CreateJobEndpointInput,
+        create_job_endpoint_input: Annotated[CreateJobEndpointInput, Field(description="The job creation parameters.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3811,8 +3822,9 @@ class JobApi:
     ) -> RESTResponseType:
         """Creates a new job from a job definition and audience.
 
+        If the audience is not already recruiting, recruiting is started automatically.  The RecruitingStarted field indicates whether this happened.
 
-        :param create_job_endpoint_input: (required)
+        :param create_job_endpoint_input: The job creation parameters. (required)
         :type create_job_endpoint_input: CreateJobEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request

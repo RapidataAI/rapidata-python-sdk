@@ -16,8 +16,9 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import StrictStr
+from pydantic import Field, StrictStr
 from typing import List
+from typing_extensions import Annotated
 from rapidata.api_client.models.create_batch_upload_endpoint_input import CreateBatchUploadEndpointInput
 from rapidata.api_client.models.create_batch_upload_endpoint_output import CreateBatchUploadEndpointOutput
 from rapidata.api_client.models.get_batch_upload_result_endpoint_output import GetBatchUploadResultEndpointOutput
@@ -44,7 +45,7 @@ class BatchUploadApi:
     @validate_call
     def asset_batch_upload_batch_upload_id_abort_post(
         self,
-        batch_upload_id: StrictStr,
+        batch_upload_id: Annotated[StrictStr, Field(description="The identifier of the batch upload to abort.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -60,8 +61,9 @@ class BatchUploadApi:
     ) -> None:
         """Aborts the specified batch upload.
 
+        URLs already processed will not be reverted. Only remaining URLs are prevented from processing.
 
-        :param batch_upload_id: (required)
+        :param batch_upload_id: The identifier of the batch upload to abort. (required)
         :type batch_upload_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -113,7 +115,7 @@ class BatchUploadApi:
     @validate_call
     def asset_batch_upload_batch_upload_id_abort_post_with_http_info(
         self,
-        batch_upload_id: StrictStr,
+        batch_upload_id: Annotated[StrictStr, Field(description="The identifier of the batch upload to abort.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -129,8 +131,9 @@ class BatchUploadApi:
     ) -> ApiResponse[None]:
         """Aborts the specified batch upload.
 
+        URLs already processed will not be reverted. Only remaining URLs are prevented from processing.
 
-        :param batch_upload_id: (required)
+        :param batch_upload_id: The identifier of the batch upload to abort. (required)
         :type batch_upload_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -182,7 +185,7 @@ class BatchUploadApi:
     @validate_call
     def asset_batch_upload_batch_upload_id_abort_post_without_preload_content(
         self,
-        batch_upload_id: StrictStr,
+        batch_upload_id: Annotated[StrictStr, Field(description="The identifier of the batch upload to abort.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -198,8 +201,9 @@ class BatchUploadApi:
     ) -> RESTResponseType:
         """Aborts the specified batch upload.
 
+        URLs already processed will not be reverted. Only remaining URLs are prevented from processing.
 
-        :param batch_upload_id: (required)
+        :param batch_upload_id: The identifier of the batch upload to abort. (required)
         :type batch_upload_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -313,7 +317,7 @@ class BatchUploadApi:
     @validate_call
     def asset_batch_upload_batch_upload_id_get(
         self,
-        batch_upload_id: StrictStr,
+        batch_upload_id: Annotated[StrictStr, Field(description="The identifier of the batch upload to retrieve.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -330,7 +334,7 @@ class BatchUploadApi:
         """Gets the full result of a batch upload including all items.
 
 
-        :param batch_upload_id: (required)
+        :param batch_upload_id: The identifier of the batch upload to retrieve. (required)
         :type batch_upload_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -382,7 +386,7 @@ class BatchUploadApi:
     @validate_call
     def asset_batch_upload_batch_upload_id_get_with_http_info(
         self,
-        batch_upload_id: StrictStr,
+        batch_upload_id: Annotated[StrictStr, Field(description="The identifier of the batch upload to retrieve.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -399,7 +403,7 @@ class BatchUploadApi:
         """Gets the full result of a batch upload including all items.
 
 
-        :param batch_upload_id: (required)
+        :param batch_upload_id: The identifier of the batch upload to retrieve. (required)
         :type batch_upload_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -451,7 +455,7 @@ class BatchUploadApi:
     @validate_call
     def asset_batch_upload_batch_upload_id_get_without_preload_content(
         self,
-        batch_upload_id: StrictStr,
+        batch_upload_id: Annotated[StrictStr, Field(description="The identifier of the batch upload to retrieve.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -468,7 +472,7 @@ class BatchUploadApi:
         """Gets the full result of a batch upload including all items.
 
 
-        :param batch_upload_id: (required)
+        :param batch_upload_id: The identifier of the batch upload to retrieve. (required)
         :type batch_upload_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -582,7 +586,7 @@ class BatchUploadApi:
     @validate_call
     def asset_batch_upload_post(
         self,
-        create_batch_upload_endpoint_input: CreateBatchUploadEndpointInput,
+        create_batch_upload_endpoint_input: Annotated[CreateBatchUploadEndpointInput, Field(description="The list of URLs to include in the batch upload.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -598,8 +602,9 @@ class BatchUploadApi:
     ) -> CreateBatchUploadEndpointOutput:
         """Creates a batch upload and queues processing for each URL.
 
+        Each URL is processed asynchronously. Use the batch upload status or result endpoints to track progress.
 
-        :param create_batch_upload_endpoint_input: (required)
+        :param create_batch_upload_endpoint_input: The list of URLs to include in the batch upload. (required)
         :type create_batch_upload_endpoint_input: CreateBatchUploadEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -651,7 +656,7 @@ class BatchUploadApi:
     @validate_call
     def asset_batch_upload_post_with_http_info(
         self,
-        create_batch_upload_endpoint_input: CreateBatchUploadEndpointInput,
+        create_batch_upload_endpoint_input: Annotated[CreateBatchUploadEndpointInput, Field(description="The list of URLs to include in the batch upload.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -667,8 +672,9 @@ class BatchUploadApi:
     ) -> ApiResponse[CreateBatchUploadEndpointOutput]:
         """Creates a batch upload and queues processing for each URL.
 
+        Each URL is processed asynchronously. Use the batch upload status or result endpoints to track progress.
 
-        :param create_batch_upload_endpoint_input: (required)
+        :param create_batch_upload_endpoint_input: The list of URLs to include in the batch upload. (required)
         :type create_batch_upload_endpoint_input: CreateBatchUploadEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -720,7 +726,7 @@ class BatchUploadApi:
     @validate_call
     def asset_batch_upload_post_without_preload_content(
         self,
-        create_batch_upload_endpoint_input: CreateBatchUploadEndpointInput,
+        create_batch_upload_endpoint_input: Annotated[CreateBatchUploadEndpointInput, Field(description="The list of URLs to include in the batch upload.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -736,8 +742,9 @@ class BatchUploadApi:
     ) -> RESTResponseType:
         """Creates a batch upload and queues processing for each URL.
 
+        Each URL is processed asynchronously. Use the batch upload status or result endpoints to track progress.
 
-        :param create_batch_upload_endpoint_input: (required)
+        :param create_batch_upload_endpoint_input: The list of URLs to include in the batch upload. (required)
         :type create_batch_upload_endpoint_input: CreateBatchUploadEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -864,7 +871,7 @@ class BatchUploadApi:
     @validate_call
     def asset_batch_upload_status_get(
         self,
-        batch_upload_ids: List[StrictStr],
+        batch_upload_ids: Annotated[List[StrictStr], Field(description="The identifiers of the batch uploads to query.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -878,10 +885,10 @@ class BatchUploadApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> GetBatchUploadStatusEndpointOutput:
-        """Gets aggregated status (counts) for the specified batch uploads.
+        """Gets aggregated status for one or more batch uploads.
 
 
-        :param batch_upload_ids: (required)
+        :param batch_upload_ids: The identifiers of the batch uploads to query. (required)
         :type batch_upload_ids: List[str]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -933,7 +940,7 @@ class BatchUploadApi:
     @validate_call
     def asset_batch_upload_status_get_with_http_info(
         self,
-        batch_upload_ids: List[StrictStr],
+        batch_upload_ids: Annotated[List[StrictStr], Field(description="The identifiers of the batch uploads to query.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -947,10 +954,10 @@ class BatchUploadApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[GetBatchUploadStatusEndpointOutput]:
-        """Gets aggregated status (counts) for the specified batch uploads.
+        """Gets aggregated status for one or more batch uploads.
 
 
-        :param batch_upload_ids: (required)
+        :param batch_upload_ids: The identifiers of the batch uploads to query. (required)
         :type batch_upload_ids: List[str]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1002,7 +1009,7 @@ class BatchUploadApi:
     @validate_call
     def asset_batch_upload_status_get_without_preload_content(
         self,
-        batch_upload_ids: List[StrictStr],
+        batch_upload_ids: Annotated[List[StrictStr], Field(description="The identifiers of the batch uploads to query.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1016,10 +1023,10 @@ class BatchUploadApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Gets aggregated status (counts) for the specified batch uploads.
+        """Gets aggregated status for one or more batch uploads.
 
 
-        :param batch_upload_ids: (required)
+        :param batch_upload_ids: The identifiers of the batch uploads to query. (required)
         :type batch_upload_ids: List[str]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request

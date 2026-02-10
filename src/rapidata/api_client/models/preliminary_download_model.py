@@ -24,9 +24,9 @@ from typing_extensions import Self
 
 class PreliminaryDownloadModel(BaseModel):
     """
-    PreliminaryDownloadModel
+    The model for creating a preliminary download.
     """ # noqa: E501
-    send_email: Optional[StrictBool] = Field(default=None, alias="sendEmail")
+    send_email: Optional[StrictBool] = Field(default=None, description="Whether to email the user when the download is ready.", alias="sendEmail")
     __properties: ClassVar[List[str]] = ["sendEmail"]
 
     model_config = ConfigDict(

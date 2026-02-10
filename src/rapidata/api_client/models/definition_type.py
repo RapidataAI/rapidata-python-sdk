@@ -20,7 +20,7 @@ from typing_extensions import Self
 
 class DefinitionType(str, Enum):
     """
-    DefinitionType
+    The type of the job definition.
     """
 
     """

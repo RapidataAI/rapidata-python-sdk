@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.json_web_key_set import JsonWebKeySet
 from typing import Optional, Set
@@ -25,7 +25,7 @@ from typing_extensions import Self
 
 class ClientModel(BaseModel):
     """
-    ClientModel
+    The response containing the id and secret of a dynamically registered client.  Additionally, it contains all registered metadata for the client.
     """ # noqa: E501
     client_id: StrictStr
     client_secret: Optional[StrictStr]
@@ -37,7 +37,7 @@ class ClientModel(BaseModel):
     client_name: Optional[StrictStr]
     client_uri: Optional[StrictStr]
     logo_uri: Optional[StrictStr]
-    scope: Optional[StrictStr]
+    scope: Optional[StrictStr] = Field(description="String containing a space-separated list of scope values  that the client can use when requesting access tokens.")
     contacts: List[StrictStr]
     tos_uri: Optional[StrictStr]
     policy_uri: Optional[StrictStr]

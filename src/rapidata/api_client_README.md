@@ -58,12 +58,12 @@ with rapidata.api_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = rapidata.api_client.AssetApi(api_client)
     file = None # bytearray | 
-    library = rapidata.api_client.CompressionLibrary() # CompressionLibrary |  (optional)
-    quality = 85 # int |  (optional) (default to 85)
-    maxdim = 800 # int |  (optional) (default to 800)
+    library = rapidata.api_client.CompressionLibrary() # CompressionLibrary | The compression library to use. (optional)
+    quality = 85 # int | The compression quality from 1 to 100. (optional) (default to 85)
+    maxdim = 800 # int | The maximum dimension (width or height) of the output image. (optional) (default to 800)
 
     try:
-        # Compresses an image and returns the WebP result with compression metrics.
+        # Compresses an uploaded image and returns the WebP result.
         api_instance.asset_compress_post(file, library=library, quality=quality, maxdim=maxdim)
     except ApiException as e:
         print("Exception when calling AssetApi->asset_compress_post: %s\n" % e)
@@ -76,19 +76,19 @@ All URIs are relative to *https://api.rabbitdata.ch*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*AssetApi* | [**asset_compress_post**](rapidata/api_client/docs/AssetApi.md#asset_compress_post) | **POST** /asset/compress | Compresses an image and returns the WebP result with compression metrics.
+*AssetApi* | [**asset_compress_post**](rapidata/api_client/docs/AssetApi.md#asset_compress_post) | **POST** /asset/compress | Compresses an uploaded image and returns the WebP result.
 *AssetApi* | [**asset_file_name_metadata_get**](rapidata/api_client/docs/AssetApi.md#asset_file_name_metadata_get) | **GET** /asset/{fileName}/metadata | Gets the metadata for an asset by file name.
 *AssetApi* | [**asset_file_post**](rapidata/api_client/docs/AssetApi.md#asset_file_post) | **POST** /asset/file | Uploads a single asset to S3 and returns the asset details.
 *AssetApi* | [**asset_url_post**](rapidata/api_client/docs/AssetApi.md#asset_url_post) | **POST** /asset/url | Uploads a single asset to S3 and returns the asset details.
 *AudienceApi* | [**audience_audience_id_boost_config_patch**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_boost_config_patch) | **PATCH** /audience/{audienceId}/boost-config | Updates the boost configuration for the specified audience.
 *AudienceApi* | [**audience_audience_id_delete**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_delete) | **DELETE** /audience/{audienceId} | Deletes the specified audience.
 *AudienceApi* | [**audience_audience_id_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_get) | **GET** /audience/{audienceId} | Gets an audience by its Id.
-*AudienceApi* | [**audience_audience_id_jobs_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_jobs_get) | **GET** /audience/{audienceId}/jobs | 
+*AudienceApi* | [**audience_audience_id_jobs_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_jobs_get) | **GET** /audience/{audienceId}/jobs | Queries jobs for the specified audience.
 *AudienceApi* | [**audience_audience_id_patch**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_patch) | **PATCH** /audience/{audienceId} | Patches an existing audience.
 *AudienceApi* | [**audience_audience_id_pause_distillation_post**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_pause_distillation_post) | **POST** /audience/{audienceId}/pause-distillation | Pauses the distillation campaign for the specified audience.
 *AudienceApi* | [**audience_audience_id_rapid_post**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_rapid_post) | **POST** /audience/{audienceId}/rapid | Adds a new rapid to be used to train users for the specified audience.
 *AudienceApi* | [**audience_audience_id_rapids_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_rapids_get) | **GET** /audience/{audienceId}/rapids | Queries all rapids for the specified audience.
-*AudienceApi* | [**audience_audience_id_rebuild_distilling_campaign_post**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_rebuild_distilling_campaign_post) | **POST** /audience/{audienceId}/rebuild-distilling-campaign | Recalculates and updates the audience&#39;s distilling campaign filters and selections  based on current audience settings (demographic filters, exit conditions, etc.).
+*AudienceApi* | [**audience_audience_id_rebuild_distilling_campaign_post**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_rebuild_distilling_campaign_post) | **POST** /audience/{audienceId}/rebuild-distilling-campaign | Rebuilds the distilling campaign for the specified audience.
 *AudienceApi* | [**audience_audience_id_recruit_post**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_recruit_post) | **POST** /audience/{audienceId}/recruit | Starts recruiting users for the specified audience.
 *AudienceApi* | [**audience_audience_id_resume_distillation_post**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_resume_distillation_post) | **POST** /audience/{audienceId}/resume-distillation | Resumes the distillation campaign for the specified audience.
 *AudienceApi* | [**audience_audience_id_user_metrics_get**](rapidata/api_client/docs/AudienceApi.md#audience_audience_id_user_metrics_get) | **GET** /audience/{audienceId}/user-metrics | Gets the count of users in each state for the specified audience.
@@ -97,7 +97,7 @@ Class | Method | HTTP request | Description
 *BatchUploadApi* | [**asset_batch_upload_batch_upload_id_abort_post**](rapidata/api_client/docs/BatchUploadApi.md#asset_batch_upload_batch_upload_id_abort_post) | **POST** /asset/batch-upload/{batchUploadId}/abort | Aborts the specified batch upload.
 *BatchUploadApi* | [**asset_batch_upload_batch_upload_id_get**](rapidata/api_client/docs/BatchUploadApi.md#asset_batch_upload_batch_upload_id_get) | **GET** /asset/batch-upload/{batchUploadId} | Gets the full result of a batch upload including all items.
 *BatchUploadApi* | [**asset_batch_upload_post**](rapidata/api_client/docs/BatchUploadApi.md#asset_batch_upload_post) | **POST** /asset/batch-upload | Creates a batch upload and queues processing for each URL.
-*BatchUploadApi* | [**asset_batch_upload_status_get**](rapidata/api_client/docs/BatchUploadApi.md#asset_batch_upload_status_get) | **GET** /asset/batch-upload/status | Gets aggregated status (counts) for the specified batch uploads.
+*BatchUploadApi* | [**asset_batch_upload_status_get**](rapidata/api_client/docs/BatchUploadApi.md#asset_batch_upload_status_get) | **GET** /asset/batch-upload/status | Gets aggregated status for one or more batch uploads.
 *BenchmarkApi* | [**benchmark_benchmark_id_delete**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_delete) | **DELETE** /benchmark/{benchmarkId} | Deletes a single benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_fork_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_fork_post) | **POST** /benchmark/{benchmarkId}/fork | Creates a copy of a public benchmark and all of its related entities
 *BenchmarkApi* | [**benchmark_benchmark_id_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_get) | **GET** /benchmark/{benchmarkId} | Returns a single benchmark by its ID.
@@ -109,7 +109,7 @@ Class | Method | HTTP request | Description
 *BenchmarkApi* | [**benchmark_benchmark_id_prompt_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_prompt_post) | **POST** /benchmark/{benchmarkId}/prompt | Adds a new prompt to a benchmark.
 *BenchmarkApi* | [**benchmark_benchmark_id_prompts_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_prompts_get) | **GET** /benchmark/{benchmarkId}/prompts | Returns the paged prompts of a benchmark by its ID.
 *BenchmarkApi* | [**benchmark_benchmark_id_samples_identifier_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_samples_identifier_get) | **GET** /benchmark/{benchmarkId}/samples/{identifier} | Returns the paged prompts of a benchmark by its ID.
-*BenchmarkApi* | [**benchmark_benchmark_id_standings_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_standings_get) | **GET** /benchmark/{benchmarkId}/standings | 
+*BenchmarkApi* | [**benchmark_benchmark_id_standings_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_standings_get) | **GET** /benchmark/{benchmarkId}/standings | Queries all the standings for a benchmark by its ID.
 *BenchmarkApi* | [**benchmark_benchmark_id_tags_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_benchmark_id_tags_get) | **GET** /benchmark/{benchmarkId}/tags | Query all tags within a benchmark
 *BenchmarkApi* | [**benchmark_post**](rapidata/api_client/docs/BenchmarkApi.md#benchmark_post) | **POST** /benchmark | Creates a benchmark
 *BenchmarkApi* | [**benchmarks_get**](rapidata/api_client/docs/BenchmarkApi.md#benchmarks_get) | **GET** /benchmarks | Queries all benchmarks of the user.
@@ -126,7 +126,7 @@ Class | Method | HTTP request | Description
 *ClientApi* | [**client_register_post**](rapidata/api_client/docs/ClientApi.md#client_register_post) | **POST** /client/register | Registers a new client dynamically.
 *ClientApi* | [**clients_get**](rapidata/api_client/docs/ClientApi.md#clients_get) | **GET** /clients | Queries the clients for the current customer.
 *CompareWorkflowApi* | [**workflow_compare_workflow_id_results_get**](rapidata/api_client/docs/CompareWorkflowApi.md#workflow_compare_workflow_id_results_get) | **GET** /workflow/compare/{workflowId}/results | Get the result overview for a compare workflow.
-*CustomerApi* | [**customers_get**](rapidata/api_client/docs/CustomerApi.md#customers_get) | **GET** /customers | Queries customers for administrators.
+*CustomerApi* | [**customers_get**](rapidata/api_client/docs/CustomerApi.md#customers_get) | **GET** /customers | Queries customers with filtering and pagination.
 *CustomerRapidApi* | [**rapid_correlation_id_validation_potential_get**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_correlation_id_validation_potential_get) | **GET** /rapid/{correlationId}/validation-potential | Queries rapids that are potentially eligible for validation set creation.
 *CustomerRapidApi* | [**rapid_demographic_post**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_demographic_post) | **POST** /rapid/demographic | Creates a new Demographic Rapid with JSON body.
 *CustomerRapidApi* | [**rapid_global_responses_get**](rapidata/api_client/docs/CustomerRapidApi.md#rapid_global_responses_get) | **GET** /rapid/global-responses | A public endpoint to query the most recent responses globally
@@ -146,9 +146,10 @@ Class | Method | HTTP request | Description
 *DatasetApi* | [**dataset_post**](rapidata/api_client/docs/DatasetApi.md#dataset_post) | **POST** /dataset | Creates a new empty dataset.
 *EvaluationWorkflowApi* | [**workflow_evaluation_workflow_id_results_get**](rapidata/api_client/docs/EvaluationWorkflowApi.md#workflow_evaluation_workflow_id_results_get) | **GET** /workflow/evaluation/{workflowId}/results | Get the results for an evaluation workflow.
 *FeedbackApi* | [**feedback_post**](rapidata/api_client/docs/FeedbackApi.md#feedback_post) | **POST** /feedback | Submits feedback about our services.
-*FlowApi* | [**flow_flow_id_delete**](rapidata/api_client/docs/FlowApi.md#flow_flow_id_delete) | **DELETE** /flow/{flowId} | Soft deletes a flow by its ID.
+*FlowApi* | [**flow_flow_id_delete**](rapidata/api_client/docs/FlowApi.md#flow_flow_id_delete) | **DELETE** /flow/{flowId} | Deletes a flow.
 *FlowApi* | [**flow_flow_id_get**](rapidata/api_client/docs/FlowApi.md#flow_flow_id_get) | **GET** /flow/{flowId} | Retrieves a flow by its ID.
-*FlowApi* | [**flow_get**](rapidata/api_client/docs/FlowApi.md#flow_get) | **GET** /flow | 
+*FlowApi* | [**flow_get**](rapidata/api_client/docs/FlowApi.md#flow_get) | **GET** /flow | Queries flows with filtering and pagination.
+*FlowItemApi* | [**flow_item_flow_item_id_stop_post**](rapidata/api_client/docs/FlowItemApi.md#flow_item_flow_item_id_stop_post) | **POST** /flow/item/{flowItemId}/stop | Stops the specified flow item and triggers partial result processing.
 *GroupedRankingWorkflowApi* | [**workflow_grouped_ranking_workflow_id_results_get**](rapidata/api_client/docs/GroupedRankingWorkflowApi.md#workflow_grouped_ranking_workflow_id_results_get) | **GET** /workflow/grouped-ranking/{workflowId}/results | Get the result overview for a multi compare workflow.
 *IdentityApi* | [**identity_bridge_token_get**](rapidata/api_client/docs/IdentityApi.md#identity_bridge_token_get) | **GET** /identity/bridge-token | Tries to read the bridge token keys for a given read key.  The read key is used to retrieve the authentication result written by the write key.
 *IdentityApi* | [**identity_bridge_token_post**](rapidata/api_client/docs/IdentityApi.md#identity_bridge_token_post) | **POST** /identity/bridge-token | Creates a pair of read and write keys for a client.  The write key is used to store the authentication result.  The read key is used to retrieve the authentication result.
@@ -176,7 +177,7 @@ Class | Method | HTTP request | Description
 *LeaderboardApi* | [**leaderboard_leaderboard_id_matrix_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_matrix_get) | **GET** /leaderboard/{leaderboardId}/matrix | Returns the pairwise vote matrix for a leaderboard.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_patch**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_patch) | **PATCH** /leaderboard/{leaderboardId} | Updates the response config of a leaderboard.
 *LeaderboardApi* | [**leaderboard_leaderboard_id_runs_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_runs_get) | **GET** /leaderboard/{leaderboardId}/runs | Gets the runs related to a leaderboard
-*LeaderboardApi* | [**leaderboard_leaderboard_id_standings_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_standings_get) | **GET** /leaderboard/{leaderboardId}/standings | 
+*LeaderboardApi* | [**leaderboard_leaderboard_id_standings_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_leaderboard_id_standings_get) | **GET** /leaderboard/{leaderboardId}/standings | queries all the participants connected to leaderboard by its ID.
 *LeaderboardApi* | [**leaderboard_post**](rapidata/api_client/docs/LeaderboardApi.md#leaderboard_post) | **POST** /leaderboard | Creates a new leaderboard with the specified name and criteria.
 *LeaderboardApi* | [**leaderboards_get**](rapidata/api_client/docs/LeaderboardApi.md#leaderboards_get) | **GET** /leaderboards | Queries all leaderboards for a specific benchmark.
 *NewsletterApi* | [**newsletter_subscribe_post**](rapidata/api_client/docs/NewsletterApi.md#newsletter_subscribe_post) | **POST** /newsletter/subscribe | Signs a user up to the newsletter.
@@ -215,13 +216,13 @@ Class | Method | HTTP request | Description
 *PipelineApi* | [**pipeline_preliminary_download_preliminary_download_id_get**](rapidata/api_client/docs/PipelineApi.md#pipeline_preliminary_download_preliminary_download_id_get) | **GET** /pipeline/preliminary-download/{preliminaryDownloadId} | Gets the preliminary download.
 *PromptApi* | [**benchmark_prompt_prompt_id_tags_put**](rapidata/api_client/docs/PromptApi.md#benchmark_prompt_prompt_id_tags_put) | **PUT** /benchmark-prompt/{promptId}/tags | Updates the tags associated with a prompt.
 *RankingFlowApi* | [**flow_ranking_flow_id_config_patch**](rapidata/api_client/docs/RankingFlowApi.md#flow_ranking_flow_id_config_patch) | **PATCH** /flow/ranking/{flowId}/config | Updates the configuration of a ranking flow.
-*RankingFlowApi* | [**flow_ranking_post**](rapidata/api_client/docs/RankingFlowApi.md#flow_ranking_post) | **POST** /flow/ranking | Creates a new flow with the specified parameters.
-*RankingFlowItemApi* | [**flow_ranking_flow_id_item_get**](rapidata/api_client/docs/RankingFlowItemApi.md#flow_ranking_flow_id_item_get) | **GET** /flow/ranking/{flowId}/item | 
+*RankingFlowApi* | [**flow_ranking_post**](rapidata/api_client/docs/RankingFlowApi.md#flow_ranking_post) | **POST** /flow/ranking | Creates a new ranking flow.
+*RankingFlowItemApi* | [**flow_ranking_flow_id_item_get**](rapidata/api_client/docs/RankingFlowItemApi.md#flow_ranking_flow_id_item_get) | **GET** /flow/ranking/{flowId}/item | Queries flow items for a flow.
 *RankingFlowItemApi* | [**flow_ranking_flow_id_item_post**](rapidata/api_client/docs/RankingFlowItemApi.md#flow_ranking_flow_id_item_post) | **POST** /flow/ranking/{flowId}/item | Creates a new flow item for the specified flow.
 *RankingFlowItemApi* | [**flow_ranking_item_flow_item_id_get**](rapidata/api_client/docs/RankingFlowItemApi.md#flow_ranking_item_flow_item_id_get) | **GET** /flow/ranking/item/{flowItemId} | Retrieves a flow item by its ID.
-*RankingFlowItemApi* | [**flow_ranking_item_flow_item_id_results_get**](rapidata/api_client/docs/RankingFlowItemApi.md#flow_ranking_item_flow_item_id_results_get) | **GET** /flow/ranking/item/{flowItemId}/results | Retrieves ranking results (assets with Elo scores) for a completed flow item.  Returns 409 Conflict if the flow item is not completed or has no associated workflow.
-*RankingFlowItemApi* | [**flow_ranking_item_flow_item_id_stop_post**](rapidata/api_client/docs/RankingFlowItemApi.md#flow_ranking_item_flow_item_id_stop_post) | **POST** /flow/ranking/item/{flowItemId}/stop | Stops the specified flow item.
-*RapidApi* | [**rapid_rapid_id_reject_post**](rapidata/api_client/docs/RapidApi.md#rapid_rapid_id_reject_post) | **POST** /rapid/{rapidId}/reject | Rejects a rapid, transitioning it from Done to Rejected state and propagating staleness.
+*RankingFlowItemApi* | [**flow_ranking_item_flow_item_id_results_get**](rapidata/api_client/docs/RankingFlowItemApi.md#flow_ranking_item_flow_item_id_results_get) | **GET** /flow/ranking/item/{flowItemId}/results | Returns ranking results with Elo scores for a completed flow item.
+*RankingFlowItemApi* | [**flow_ranking_item_flow_item_id_vote_matrix_get**](rapidata/api_client/docs/RankingFlowItemApi.md#flow_ranking_item_flow_item_id_vote_matrix_get) | **GET** /flow/ranking/item/{flowItemId}/vote-matrix | Retrieves the pairwise vote matrix for a completed flow item.
+*RapidApi* | [**rapid_rapid_id_reject_post**](rapidata/api_client/docs/RapidApi.md#rapid_rapid_id_reject_post) | **POST** /rapid/{rapidId}/reject | Rejects a completed rapid, marking its results as invalid.
 *RapidataIdentityAPIApi* | [**root_get**](rapidata/api_client/docs/RapidataIdentityAPIApi.md#root_get) | **GET** / | 
 *RapidsApi* | [**audience_audience_id_rapid_rapid_id_patch**](rapidata/api_client/docs/RapidsApi.md#audience_audience_id_rapid_rapid_id_patch) | **PATCH** /audience/{audienceId}/rapid/{rapidId} | Updates a rapid&#39;s validation properties within an audience.
 *SampleApi* | [**benchmark_sample_sample_id_get**](rapidata/api_client/docs/SampleApi.md#benchmark_sample_sample_id_get) | **GET** /benchmark-sample/{sampleId} | Gets a sample by its Id.
@@ -233,7 +234,7 @@ Class | Method | HTTP request | Description
 *UserRapidApi* | [**rapid_response_post**](rapidata/api_client/docs/UserRapidApi.md#rapid_response_post) | **POST** /rapid/response | Submits a response for a Rapid.
 *UserRapidApi* | [**rapid_skip_post**](rapidata/api_client/docs/UserRapidApi.md#rapid_skip_post) | **POST** /rapid/skip | Skips a Rapid for the user.
 *ValidationSetApi* | [**validation_set_post**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_post) | **POST** /validation-set | Creates a new empty validation set.
-*ValidationSetApi* | [**validation_set_recommended_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_recommended_get) | **GET** /validation-set/recommended | 
+*ValidationSetApi* | [**validation_set_recommended_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_recommended_get) | **GET** /validation-set/recommended | Gets a validation set that is available to the user and best matches the provided parameters.
 *ValidationSetApi* | [**validation_set_validation_set_id_delete**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_delete) | **DELETE** /validation-set/{validationSetId} | Gets a validation set by the id.
 *ValidationSetApi* | [**validation_set_validation_set_id_export_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_export_get) | **GET** /validation-set/{validationSetId}/export | Exports all rapids of a validation-set to a file.
 *ValidationSetApi* | [**validation_set_validation_set_id_get**](rapidata/api_client/docs/ValidationSetApi.md#validation_set_validation_set_id_get) | **GET** /validation-set/{validationSetId} | Gets a validation set by the id.
@@ -371,6 +372,7 @@ Class | Method | HTTP request | Description
  - [GetPublicResponsesResult](rapidata/api_client/docs/GetPublicResponsesResult.md)
  - [GetPublicResponsesResultResponse](rapidata/api_client/docs/GetPublicResponsesResultResponse.md)
  - [GetRankingFlowItemResultsEndpointOutput](rapidata/api_client/docs/GetRankingFlowItemResultsEndpointOutput.md)
+ - [GetRankingFlowItemVoteMatrixEndpointOutput](rapidata/api_client/docs/GetRankingFlowItemVoteMatrixEndpointOutput.md)
  - [GetRecommendedValidationSetResult](rapidata/api_client/docs/GetRecommendedValidationSetResult.md)
  - [GetResponsesForRapidResult](rapidata/api_client/docs/GetResponsesForRapidResult.md)
  - [GetResponsesForRapidResultResponse](rapidata/api_client/docs/GetResponsesForRapidResultResponse.md)
@@ -607,7 +609,6 @@ Class | Method | HTTP request | Description
  - [NamedClassification](rapidata/api_client/docs/NamedClassification.md)
  - [NewsletterModel](rapidata/api_client/docs/NewsletterModel.md)
  - [NotAvailableYetResult](rapidata/api_client/docs/NotAvailableYetResult.md)
- - [OptionOfAggregatorType](rapidata/api_client/docs/OptionOfAggregatorType.md)
  - [OrderModel](rapidata/api_client/docs/OrderModel.md)
  - [OrderState](rapidata/api_client/docs/OrderState.md)
  - [OutputDatapoint](rapidata/api_client/docs/OutputDatapoint.md)

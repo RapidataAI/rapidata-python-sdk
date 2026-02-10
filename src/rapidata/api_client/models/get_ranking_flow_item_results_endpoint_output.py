@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.output_datapoint import OutputDatapoint
 from typing import Optional, Set
@@ -27,7 +27,7 @@ class GetRankingFlowItemResultsEndpointOutput(BaseModel):
     """
     GetRankingFlowItemResultsEndpointOutput
     """ # noqa: E501
-    datapoints: List[OutputDatapoint]
+    datapoints: List[OutputDatapoint] = Field(description="The ranked datapoints with their Elo scores.")
     __properties: ClassVar[List[str]] = ["datapoints"]
 
     model_config = ConfigDict(

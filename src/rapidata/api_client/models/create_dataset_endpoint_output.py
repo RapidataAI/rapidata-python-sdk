@@ -24,9 +24,9 @@ from typing_extensions import Self
 
 class CreateDatasetEndpointOutput(BaseModel):
     """
-    CreateDatasetEndpointOutput
+    The result when a dataset has been created.
     """ # noqa: E501
-    dataset_id: StrictStr = Field(alias="datasetId")
+    dataset_id: StrictStr = Field(description="The id of the created dataset.", alias="datasetId")
     __properties: ClassVar[List[str]] = ["datasetId"]
 
     model_config = ConfigDict(

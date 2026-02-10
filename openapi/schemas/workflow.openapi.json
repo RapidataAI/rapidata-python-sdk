@@ -632,26 +632,23 @@
         "type": "object",
         "properties": {
           "page": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/PageInfo"
               }
-            ]
+            ],
+            "description": "The size of the page and the page number to display."
           },
           "sortCriteria": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/ListOfSortCriterion"
               }
-            ]
+            ],
+            "description": "A list of criteria to sort the results by."
           }
-        }
+        },
+        "description": "Model for getting the overview of a compare workflow result."
       },
       "GetCompareWorkflowResultsResult": {
         "required": [
@@ -677,65 +674,64 @@
         "type": "object",
         "properties": {
           "page": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/PageInfo"
               }
-            ]
+            ],
+            "description": "The size of the page and the page number to display."
           },
           "states": {
-            "type": "array",
-            "items": {
-              "enum": [
-                "Labeling",
-                "Paused",
-                "Incomplete",
-                "Flagged",
-                "Done",
-                "None",
-                "Rejected"
-              ]
-            }
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "enum": [
+                    "Labeling",
+                    "Paused",
+                    "Incomplete",
+                    "Flagged",
+                    "Done",
+                    "None",
+                    "Rejected"
+                  ]
+                }
+              }
+            ],
+            "description": "An optional list of states to filter the rapids by."
           },
           "sortCriteria": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/ListOfSortCriterion"
               }
-            ]
+            ],
+            "description": "A list of criteria to sort the results by."
           }
-        }
+        },
+        "description": "Model for getting the overview of a simple workflow result."
       },
       "GetGroupedRankingWorkflowResultsModel": {
         "type": "object",
         "properties": {
           "page": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/PageInfo"
               }
-            ]
+            ],
+            "description": "The size of the page and the page number to display."
           },
           "sortCriteria": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/ListOfSortCriterion"
               }
-            ]
+            ],
+            "description": "A list of criteria to sort the results by."
           }
-        }
+        },
+        "description": "Model for getting the results of a multi compare workflow."
       },
       "GetGroupedRankingWorkflowResultsResult": {
         "required": [
@@ -824,40 +820,42 @@
         "type": "object",
         "properties": {
           "page": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/PageInfo"
               }
-            ]
+            ],
+            "description": "The size of the page and the page number to display."
           },
           "states": {
-            "type": "array",
-            "items": {
-              "enum": [
-                "Labeling",
-                "Paused",
-                "Incomplete",
-                "Flagged",
-                "Done",
-                "None",
-                "Rejected"
-              ]
-            }
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "enum": [
+                    "Labeling",
+                    "Paused",
+                    "Incomplete",
+                    "Flagged",
+                    "Done",
+                    "None",
+                    "Rejected"
+                  ]
+                }
+              }
+            ],
+            "description": "An optional list of states to filter the rapids by."
           },
           "sortCriteria": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/ListOfSortCriterion"
               }
-            ]
+            ],
+            "description": "A list of criteria to sort the results by."
           }
-        }
+        },
+        "description": "Model for getting the overview of a simple workflow result."
       },
       "GetWorkflowByIdResult": {
         "required": [

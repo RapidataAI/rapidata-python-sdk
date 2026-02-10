@@ -25,15 +25,15 @@ from typing_extensions import Self
 
 class CreateDatapointModel(BaseModel):
     """
-    CreateDatapointModel
+    The body request for creating a new datapoint
     """ # noqa: E501
-    asset: IAssetInput
-    context: Optional[StrictStr] = None
-    context_asset: Optional[IAssetInput] = Field(default=None, alias="contextAsset")
-    sort_index: Optional[StrictInt] = Field(default=None, alias="sortIndex")
-    group: Optional[StrictStr] = None
-    transcription: Optional[StrictStr] = None
-    private_metadata: Optional[Dict[str, StrictStr]] = Field(default=None, alias="privateMetadata")
+    asset: IAssetInput = Field(description="The asset within the datapoint")
+    context: Optional[StrictStr] = Field(default=None, description="An additional context to show the users when solving the rapid.")
+    context_asset: Optional[IAssetInput] = Field(default=None, description="ContextAsset", alias="contextAsset")
+    sort_index: Optional[StrictInt] = Field(default=None, description="The sort index represents the order of the datapoint in the dataset", alias="sortIndex")
+    group: Optional[StrictStr] = Field(default=None, description="The group a datapoint belongs to.")
+    transcription: Optional[StrictStr] = Field(default=None, description="For audio or video assets, an optional transcription of the content.")
+    private_metadata: Optional[Dict[str, StrictStr]] = Field(default=None, description="Private metadata for internal tracking. Not displayed to users.", alias="privateMetadata")
     __properties: ClassVar[List[str]] = ["asset", "context", "contextAsset", "sortIndex", "group", "transcription", "privateMetadata"]
 
     model_config = ConfigDict(
@@ -85,11 +85,6 @@ class CreateDatapointModel(BaseModel):
         # and model_fields_set contains the field
         if self.context is None and "context" in self.model_fields_set:
             _dict['context'] = None
-
-        # set to None if context_asset (nullable) is None
-        # and model_fields_set contains the field
-        if self.context_asset is None and "context_asset" in self.model_fields_set:
-            _dict['contextAsset'] = None
 
         # set to None if group (nullable) is None
         # and model_fields_set contains the field

@@ -17,16 +17,16 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
 class UpdateParticipantNameModel(BaseModel):
     """
-    UpdateParticipantNameModel
+    The model used to update the name of a participant.
     """ # noqa: E501
-    name: StrictStr
+    name: StrictStr = Field(description="The new name of the participant.")
     __properties: ClassVar[List[str]] = ["name"]
 
     model_config = ConfigDict(

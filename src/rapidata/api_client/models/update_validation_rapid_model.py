@@ -26,13 +26,13 @@ from typing_extensions import Self
 
 class UpdateValidationRapidModel(BaseModel):
     """
-    UpdateValidationRapidModel
+    The model for updating a validation rapid.
     """ # noqa: E501
     truth: Optional[IValidationTruthModel] = None
-    explanation: Optional[StrictStr] = None
-    context: Optional[StrictStr] = None
+    explanation: Optional[StrictStr] = Field(default=None, description="The optional explanation that will be shown to the user when answering wrong.")
+    context: Optional[StrictStr] = Field(default=None, description="An optional text context that will be shown to the user.")
     context_asset: Optional[IAssetInput] = Field(default=None, alias="contextAsset")
-    random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="randomCorrectProbability")
+    random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The probability that if the user answers at random that he'll be correct.", alias="randomCorrectProbability")
     __properties: ClassVar[List[str]] = ["truth", "explanation", "context", "contextAsset", "randomCorrectProbability"]
 
     model_config = ConfigDict(

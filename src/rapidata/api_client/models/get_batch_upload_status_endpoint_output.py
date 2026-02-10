@@ -28,9 +28,9 @@ class GetBatchUploadStatusEndpointOutput(BaseModel):
     GetBatchUploadStatusEndpointOutput
     """ # noqa: E501
     status: BatchUploadStatus
-    total_count: StrictInt = Field(alias="totalCount")
-    completed_count: StrictInt = Field(alias="completedCount")
-    failed_count: StrictInt = Field(alias="failedCount")
+    total_count: StrictInt = Field(description="The total number of URLs across all queried batches.", alias="totalCount")
+    completed_count: StrictInt = Field(description="The number of URLs that have been successfully processed.", alias="completedCount")
+    failed_count: StrictInt = Field(description="The number of URLs that failed to process.", alias="failedCount")
     completed_batches: List[StrictStr] = Field(alias="completedBatches")
     __properties: ClassVar[List[str]] = ["status", "totalCount", "completedCount", "failedCount", "completedBatches"]
 

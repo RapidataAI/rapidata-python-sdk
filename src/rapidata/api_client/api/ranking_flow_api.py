@@ -16,7 +16,8 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import StrictStr
+from pydantic import Field, StrictStr
+from typing_extensions import Annotated
 from rapidata.api_client.models.create_flow_endpoint_input import CreateFlowEndpointInput
 from rapidata.api_client.models.create_flow_endpoint_output import CreateFlowEndpointOutput
 from rapidata.api_client.models.update_config_endpoint_input import UpdateConfigEndpointInput
@@ -42,8 +43,8 @@ class RankingFlowApi:
     @validate_call
     def flow_ranking_flow_id_config_patch(
         self,
-        flow_id: StrictStr,
-        update_config_endpoint_input: UpdateConfigEndpointInput,
+        flow_id: Annotated[StrictStr, Field(description="The ID of the ranking flow to update.")],
+        update_config_endpoint_input: Annotated[UpdateConfigEndpointInput, Field(description="The configuration fields to update.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -60,9 +61,9 @@ class RankingFlowApi:
         """Updates the configuration of a ranking flow.
 
 
-        :param flow_id: (required)
+        :param flow_id: The ID of the ranking flow to update. (required)
         :type flow_id: str
-        :param update_config_endpoint_input: (required)
+        :param update_config_endpoint_input: The configuration fields to update. (required)
         :type update_config_endpoint_input: UpdateConfigEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -115,8 +116,8 @@ class RankingFlowApi:
     @validate_call
     def flow_ranking_flow_id_config_patch_with_http_info(
         self,
-        flow_id: StrictStr,
-        update_config_endpoint_input: UpdateConfigEndpointInput,
+        flow_id: Annotated[StrictStr, Field(description="The ID of the ranking flow to update.")],
+        update_config_endpoint_input: Annotated[UpdateConfigEndpointInput, Field(description="The configuration fields to update.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -133,9 +134,9 @@ class RankingFlowApi:
         """Updates the configuration of a ranking flow.
 
 
-        :param flow_id: (required)
+        :param flow_id: The ID of the ranking flow to update. (required)
         :type flow_id: str
-        :param update_config_endpoint_input: (required)
+        :param update_config_endpoint_input: The configuration fields to update. (required)
         :type update_config_endpoint_input: UpdateConfigEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -188,8 +189,8 @@ class RankingFlowApi:
     @validate_call
     def flow_ranking_flow_id_config_patch_without_preload_content(
         self,
-        flow_id: StrictStr,
-        update_config_endpoint_input: UpdateConfigEndpointInput,
+        flow_id: Annotated[StrictStr, Field(description="The ID of the ranking flow to update.")],
+        update_config_endpoint_input: Annotated[UpdateConfigEndpointInput, Field(description="The configuration fields to update.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -206,9 +207,9 @@ class RankingFlowApi:
         """Updates the configuration of a ranking flow.
 
 
-        :param flow_id: (required)
+        :param flow_id: The ID of the ranking flow to update. (required)
         :type flow_id: str
-        :param update_config_endpoint_input: (required)
+        :param update_config_endpoint_input: The configuration fields to update. (required)
         :type update_config_endpoint_input: UpdateConfigEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -339,7 +340,7 @@ class RankingFlowApi:
     @validate_call
     def flow_ranking_post(
         self,
-        create_flow_endpoint_input: CreateFlowEndpointInput,
+        create_flow_endpoint_input: Annotated[CreateFlowEndpointInput, Field(description="The ranking flow creation parameters.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -353,10 +354,10 @@ class RankingFlowApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> CreateFlowEndpointOutput:
-        """Creates a new flow with the specified parameters.
+        """Creates a new ranking flow.
 
 
-        :param create_flow_endpoint_input: (required)
+        :param create_flow_endpoint_input: The ranking flow creation parameters. (required)
         :type create_flow_endpoint_input: CreateFlowEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -408,7 +409,7 @@ class RankingFlowApi:
     @validate_call
     def flow_ranking_post_with_http_info(
         self,
-        create_flow_endpoint_input: CreateFlowEndpointInput,
+        create_flow_endpoint_input: Annotated[CreateFlowEndpointInput, Field(description="The ranking flow creation parameters.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -422,10 +423,10 @@ class RankingFlowApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[CreateFlowEndpointOutput]:
-        """Creates a new flow with the specified parameters.
+        """Creates a new ranking flow.
 
 
-        :param create_flow_endpoint_input: (required)
+        :param create_flow_endpoint_input: The ranking flow creation parameters. (required)
         :type create_flow_endpoint_input: CreateFlowEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -477,7 +478,7 @@ class RankingFlowApi:
     @validate_call
     def flow_ranking_post_without_preload_content(
         self,
-        create_flow_endpoint_input: CreateFlowEndpointInput,
+        create_flow_endpoint_input: Annotated[CreateFlowEndpointInput, Field(description="The ranking flow creation parameters.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -491,10 +492,10 @@ class RankingFlowApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Creates a new flow with the specified parameters.
+        """Creates a new ranking flow.
 
 
-        :param create_flow_endpoint_input: (required)
+        :param create_flow_endpoint_input: The ranking flow creation parameters. (required)
         :type create_flow_endpoint_input: CreateFlowEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request

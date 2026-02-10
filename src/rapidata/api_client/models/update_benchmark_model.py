@@ -24,10 +24,10 @@ from typing_extensions import Self
 
 class UpdateBenchmarkModel(BaseModel):
     """
-    UpdateBenchmarkModel
+    The model used to update a benchmark.
     """ # noqa: E501
-    name: Optional[StrictStr] = None
-    is_public: Optional[StrictBool] = Field(default=None, alias="isPublic")
+    name: Optional[StrictStr] = Field(default=None, description="The new name of the benchmark.")
+    is_public: Optional[StrictBool] = Field(default=None, description="Whether the benchmark should be public (only admins can change this).", alias="isPublic")
     __properties: ClassVar[List[str]] = ["name", "isPublic"]
 
     model_config = ConfigDict(

@@ -17,16 +17,16 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
 class CreateDatasetEndpointInput(BaseModel):
     """
-    CreateDatasetEndpointInput
+    The input for the create dataset endpoint.
     """ # noqa: E501
-    name: StrictStr
+    name: StrictStr = Field(description="The name to give to the new dataset.")
     __properties: ClassVar[List[str]] = ["name"]
 
     model_config = ConfigDict(

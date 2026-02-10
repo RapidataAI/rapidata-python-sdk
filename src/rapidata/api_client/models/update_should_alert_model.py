@@ -24,9 +24,9 @@ from typing_extensions import Self
 
 class UpdateShouldAlertModel(BaseModel):
     """
-    UpdateShouldAlertModel
+    The model for updating the shouldAlert field of all rapids within a validation set.
     """ # noqa: E501
-    should_alert: StrictBool = Field(alias="shouldAlert")
+    should_alert: StrictBool = Field(description="A flag indicating whether the users should be alerted if they answer incorrectly.", alias="shouldAlert")
     __properties: ClassVar[List[str]] = ["shouldAlert"]
 
     model_config = ConfigDict(

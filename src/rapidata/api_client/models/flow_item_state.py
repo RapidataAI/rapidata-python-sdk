@@ -20,7 +20,7 @@ from typing_extensions import Self
 
 class FlowItemState(str, Enum):
     """
-    FlowItemState
+    The current state of the flow item.
     """
 
     """

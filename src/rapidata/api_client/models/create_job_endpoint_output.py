@@ -24,10 +24,10 @@ from typing_extensions import Self
 
 class CreateJobEndpointOutput(BaseModel):
     """
-    CreateJobEndpointOutput
+    The result when a job has been created.
     """ # noqa: E501
-    job_id: StrictStr = Field(alias="jobId")
-    recruiting_started: StrictBool = Field(alias="recruitingStarted")
+    job_id: StrictStr = Field(description="The id of the created job.", alias="jobId")
+    recruiting_started: StrictBool = Field(description="Whether recruiting was automatically started for the audience.", alias="recruitingStarted")
     __properties: ClassVar[List[str]] = ["jobId", "recruitingStarted"]
 
     model_config = ConfigDict(

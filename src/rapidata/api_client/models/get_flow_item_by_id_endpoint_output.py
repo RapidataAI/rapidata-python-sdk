@@ -28,18 +28,18 @@ class GetFlowItemByIdEndpointOutput(BaseModel):
     """
     GetFlowItemByIdEndpointOutput
     """ # noqa: E501
-    id: StrictStr
-    flow_id: StrictStr = Field(alias="flowId")
-    dataset_id: StrictStr = Field(alias="datasetId")
-    workflow_id: Optional[StrictStr] = Field(default=None, alias="workflowId")
+    id: StrictStr = Field(description="The unique identifier of the flow item.")
+    flow_id: StrictStr = Field(description="The ID of the flow this item belongs to.", alias="flowId")
+    dataset_id: StrictStr = Field(description="The ID of the dataset used by this flow item.", alias="datasetId")
+    workflow_id: Optional[StrictStr] = Field(default=None, description="The ID of the workflow created for this flow item.", alias="workflowId")
     state: FlowItemState
-    context: Optional[StrictStr] = None
-    failure_message: Optional[StrictStr] = Field(default=None, alias="failureMessage")
-    expires_at: Optional[datetime] = Field(default=None, alias="expiresAt")
-    created_at: datetime = Field(alias="createdAt")
-    started_at: Optional[datetime] = Field(default=None, alias="startedAt")
-    completed_at: Optional[datetime] = Field(default=None, alias="completedAt")
-    failed_at: Optional[datetime] = Field(default=None, alias="failedAt")
+    context: Optional[StrictStr] = Field(default=None, description="Optional context associated with this flow item.")
+    failure_message: Optional[StrictStr] = Field(default=None, description="The failure message if the flow item failed.", alias="failureMessage")
+    expires_at: Optional[datetime] = Field(default=None, description="The expiration timestamp of the flow item.", alias="expiresAt")
+    created_at: datetime = Field(description="The timestamp when the flow item was created.", alias="createdAt")
+    started_at: Optional[datetime] = Field(default=None, description="The timestamp when the flow item started processing.", alias="startedAt")
+    completed_at: Optional[datetime] = Field(default=None, description="The timestamp when the flow item completed.", alias="completedAt")
+    failed_at: Optional[datetime] = Field(default=None, description="The timestamp when the flow item failed.", alias="failedAt")
     __properties: ClassVar[List[str]] = ["id", "flowId", "datasetId", "workflowId", "state", "context", "failureMessage", "expiresAt", "createdAt", "startedAt", "completedAt", "failedAt"]
 
     model_config = ConfigDict(

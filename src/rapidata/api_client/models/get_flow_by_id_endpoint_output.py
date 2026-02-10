@@ -28,12 +28,12 @@ class GetFlowByIdEndpointOutput(BaseModel):
     """
     GetFlowByIdEndpointOutput
     """ # noqa: E501
-    id: StrictStr
-    name: StrictStr
+    id: StrictStr = Field(description="The unique identifier of the flow.")
+    name: StrictStr = Field(description="The name of the flow.")
     type: FlowType
-    owner_id: StrictStr = Field(alias="ownerId")
-    owner_mail: StrictStr = Field(alias="ownerMail")
-    created_at: datetime = Field(alias="createdAt")
+    owner_id: StrictStr = Field(description="The ID of the customer who owns the flow.", alias="ownerId")
+    owner_mail: StrictStr = Field(description="The email of the customer who owns the flow.", alias="ownerMail")
+    created_at: datetime = Field(description="The timestamp when the flow was created.", alias="createdAt")
     __properties: ClassVar[List[str]] = ["id", "name", "type", "ownerId", "ownerMail", "createdAt"]
 
     model_config = ConfigDict(

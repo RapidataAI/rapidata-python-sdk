@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
@@ -26,8 +26,8 @@ class QueryCustomersEndpointOutput(BaseModel):
     """
     QueryCustomersEndpointOutput
     """ # noqa: E501
-    id: StrictStr
-    email: Optional[StrictStr]
+    id: StrictStr = Field(description="The unique identifier of the customer.")
+    email: Optional[StrictStr] = Field(description="The email address of the customer.")
     __properties: ClassVar[List[str]] = ["id", "email"]
 
     model_config = ConfigDict(
