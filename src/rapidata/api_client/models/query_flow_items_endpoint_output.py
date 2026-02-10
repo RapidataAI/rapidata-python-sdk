@@ -32,11 +32,13 @@ class QueryFlowItemsEndpointOutput(BaseModel):
     dataset_id: StrictStr = Field(alias="datasetId")
     workflow_id: Optional[StrictStr] = Field(default=None, alias="workflowId")
     state: FlowItemState
+    context: Optional[StrictStr] = None
     failure_message: Optional[StrictStr] = Field(default=None, alias="failureMessage")
     created_at: datetime = Field(alias="createdAt")
+    started_at: Optional[datetime] = Field(default=None, alias="startedAt")
     completed_at: Optional[datetime] = Field(default=None, alias="completedAt")
     failed_at: Optional[datetime] = Field(default=None, alias="failedAt")
-    __properties: ClassVar[List[str]] = ["id", "datasetId", "workflowId", "state", "failureMessage", "createdAt", "completedAt", "failedAt"]
+    __properties: ClassVar[List[str]] = ["id", "datasetId", "workflowId", "state", "context", "failureMessage", "createdAt", "startedAt", "completedAt", "failedAt"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -82,10 +84,20 @@ class QueryFlowItemsEndpointOutput(BaseModel):
         if self.workflow_id is None and "workflow_id" in self.model_fields_set:
             _dict['workflowId'] = None
 
+        # set to None if context (nullable) is None
+        # and model_fields_set contains the field
+        if self.context is None and "context" in self.model_fields_set:
+            _dict['context'] = None
+
         # set to None if failure_message (nullable) is None
         # and model_fields_set contains the field
         if self.failure_message is None and "failure_message" in self.model_fields_set:
             _dict['failureMessage'] = None
+
+        # set to None if started_at (nullable) is None
+        # and model_fields_set contains the field
+        if self.started_at is None and "started_at" in self.model_fields_set:
+            _dict['startedAt'] = None
 
         # set to None if completed_at (nullable) is None
         # and model_fields_set contains the field
@@ -113,8 +125,10 @@ class QueryFlowItemsEndpointOutput(BaseModel):
             "datasetId": obj.get("datasetId"),
             "workflowId": obj.get("workflowId"),
             "state": obj.get("state"),
+            "context": obj.get("context"),
             "failureMessage": obj.get("failureMessage"),
             "createdAt": obj.get("createdAt"),
+            "startedAt": obj.get("startedAt"),
             "completedAt": obj.get("completedAt"),
             "failedAt": obj.get("failedAt")
         })

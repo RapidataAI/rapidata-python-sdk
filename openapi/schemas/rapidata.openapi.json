@@ -15139,10 +15139,6 @@
           "criteria": {
             "type": "string"
           },
-          "context": {
-            "type": "string",
-            "nullable": true
-          },
           "validationSetId": {
             "type": "string",
             "nullable": true
@@ -15194,6 +15190,10 @@
         "properties": {
           "datasetId": {
             "type": "string"
+          },
+          "context": {
+            "type": "string",
+            "nullable": true
           },
           "timeToLiveInSeconds": {
             "type": "integer",
@@ -15301,6 +15301,10 @@
           "state": {
             "$ref": "#/components/schemas/FlowItemState"
           },
+          "context": {
+            "type": "string",
+            "nullable": true
+          },
           "failureMessage": {
             "type": "string",
             "nullable": true
@@ -15313,6 +15317,11 @@
           "createdAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           },
           "completedAt": {
             "type": "string",
@@ -15407,6 +15416,10 @@
           "state": {
             "$ref": "#/components/schemas/FlowItemState"
           },
+          "context": {
+            "type": "string",
+            "nullable": true
+          },
           "failureMessage": {
             "type": "string",
             "nullable": true
@@ -15414,6 +15427,11 @@
           "createdAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           },
           "completedAt": {
             "type": "string",
@@ -15530,9 +15548,6 @@
         "type": "object",
         "properties": {
           "criteria": {
-            "$ref": "#/components/schemas/OptionOfstring"
-          },
-          "context": {
             "$ref": "#/components/schemas/OptionOfstring"
           },
           "startingElo": {
