@@ -1,4 +1,5 @@
 from typing import Protocol, runtime_checkable, Any
+import threading
 import platform
 import sys
 import os
@@ -103,6 +104,7 @@ class RapidataTracer:
     def __init__(self, name: str = __name__):
         self._name = name
         self._otlp_initialized = False
+        self._init_lock = threading.Lock()
         self._tracer_provider = None
         self._real_tracer = None
         self._no_op_tracer = NoOpTracer()
@@ -120,8 +122,15 @@ class RapidataTracer:
         """Update the tracer based on the new configuration."""
         self._enabled = config.enable_otlp
 
-        # Initialize OTLP tracing only once and only if not disabled
-        if not self._otlp_initialized and config.enable_otlp:
+    def _ensure_initialized(self) -> None:
+        """Lazily initialize OTLP tracing on first use."""
+        if self._otlp_initialized:
+            return
+
+        with self._init_lock:
+            if self._otlp_initialized:
+                return
+
             try:
                 resource_attributes = {
                     "service.name": "Rapidata.Python.SDK",
@@ -156,18 +165,22 @@ class RapidataTracer:
 
     def start_span(self, name: str, *args, **kwargs) -> Any:
         """Start a span, or return a no-op span if tracing is disabled."""
-        if self._enabled and self._real_tracer:
-            span = self._real_tracer.start_span(name, *args, **kwargs)
-            return self._add_session_id_to_span(span)
+        if self._enabled:
+            self._ensure_initialized()
+            if self._real_tracer:
+                span = self._real_tracer.start_span(name, *args, **kwargs)
+                return self._add_session_id_to_span(span)
         return self._no_op_tracer.start_span(name, *args, **kwargs)
 
     def start_as_current_span(self, name: str, *args, **kwargs) -> Any:
         """Start a span as current, or return a no-op span if tracing is disabled."""
-        if self._enabled and self._real_tracer:
-            context_manager = self._real_tracer.start_as_current_span(
-                name, *args, **kwargs
-            )
-            return SpanContextManagerWrapper(context_manager, self.session_id)
+        if self._enabled:
+            self._ensure_initialized()
+            if self._real_tracer:
+                context_manager = self._real_tracer.start_as_current_span(
+                    name, *args, **kwargs
+                )
+                return SpanContextManagerWrapper(context_manager, self.session_id)
         return self._no_op_tracer.start_as_current_span(name, *args, **kwargs)
 
     def set_session_id(self, session_id: str) -> None:
@@ -175,8 +188,10 @@ class RapidataTracer:
 
     def __getattr__(self, name: str) -> Any:
         """Delegate attribute access to the appropriate tracer."""
-        if self._enabled and self._real_tracer:
-            return getattr(self._real_tracer, name)
+        if self._enabled:
+            self._ensure_initialized()
+            if self._real_tracer:
+                return getattr(self._real_tracer, name)
         return getattr(self._no_op_tracer, name)
 
 
