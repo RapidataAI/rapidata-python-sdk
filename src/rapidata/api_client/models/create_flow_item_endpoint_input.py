@@ -27,8 +27,9 @@ class CreateFlowItemEndpointInput(BaseModel):
     CreateFlowItemEndpointInput
     """ # noqa: E501
     dataset_id: StrictStr = Field(alias="datasetId")
+    context: Optional[StrictStr] = None
     time_to_live_in_seconds: Optional[StrictInt] = Field(default=None, alias="timeToLiveInSeconds")
-    __properties: ClassVar[List[str]] = ["datasetId", "timeToLiveInSeconds"]
+    __properties: ClassVar[List[str]] = ["datasetId", "context", "timeToLiveInSeconds"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -69,6 +70,11 @@ class CreateFlowItemEndpointInput(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if context (nullable) is None
+        # and model_fields_set contains the field
+        if self.context is None and "context" in self.model_fields_set:
+            _dict['context'] = None
+
         return _dict
 
     @classmethod
@@ -82,6 +88,7 @@ class CreateFlowItemEndpointInput(BaseModel):
 
         _obj = cls.model_validate({
             "datasetId": obj.get("datasetId"),
+            "context": obj.get("context"),
             "timeToLiveInSeconds": obj.get("timeToLiveInSeconds")
         })
         return _obj

@@ -124,21 +124,17 @@ class RapidataFlow:
     def update_config(
         self,
         instruction: str | None = None,
-        context: str | None = None,
         starting_elo: int | None = None,
         k_factor: int | None = None,
         scaling_factor: int | None = None,
-        responses_per_comparison: int | None = None,
     ) -> None:
         """Update the configuration of this ranking flow.
 
         Args:
             instruction: New instruction for comparisons.
-            context: New context shown alongside the instruction.
             starting_elo: New starting ELO rating.
             k_factor: New K-factor for ELO calculations.
             scaling_factor: New scaling factor for ELO calculations.
-            responses_per_comparison: New number of responses per comparison.
         """
         with tracer.start_as_current_span("RapidataFlow.update_config"):
             from rapidata.api_client.models.update_config_endpoint_input import (
@@ -151,11 +147,10 @@ class RapidataFlow:
                 flow_id=self.id,
                 update_config_endpoint_input=UpdateConfigEndpointInput(
                     criteria=instruction,
-                    context=context,
                     startingElo=starting_elo,
                     kFactor=k_factor,
                     scalingFactor=scaling_factor,
-                    responsesRequired=responses_per_comparison,
+                    responsesRequired=100,
                 ),
             )
 
