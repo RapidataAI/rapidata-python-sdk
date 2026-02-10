@@ -42,6 +42,7 @@ class RapidataLogger:
         self._logger = logging.getLogger(name)
         self._otlp_initialized = False
         self._otlp_handler = None
+        self._otlp_enabled = True  # Default to enabled
 
         # Register this logger to receive configuration updates
         register_config_handler(self._handle_config_update)
@@ -50,46 +51,52 @@ class RapidataLogger:
         """Handle configuration updates."""
         self._update_logger(config)
 
+    def _ensure_otlp_initialized(self) -> None:
+        """Lazily initialize OTLP logging on first use."""
+        if self._otlp_initialized:
+            return
+
+        try:
+            logger_provider = LoggerProvider(
+                resource=Resource.create(
+                    {
+                        "service.name": "Rapidata.Python.SDK",
+                        "service.version": __version__,
+                    }
+                ),
+            )
+            set_logger_provider(logger_provider)
+
+            exporter = OTLPLogExporter(
+                endpoint="https://otlp-sdk.rapidata.ai/v1/logs",
+                timeout=30,
+            )
+
+            processor = BatchLogRecordProcessor(
+                exporter,
+                max_queue_size=2048,
+                export_timeout_millis=30000,
+                max_export_batch_size=512,
+            )
+
+            logger_provider.add_log_record_processor(processor)
+
+            # OTLP handler - captures DEBUG and above
+            self._otlp_handler = LoggingHandler(logger_provider=logger_provider)
+            self._otlp_handler.setLevel(logging.DEBUG)  # OTLP gets everything
+
+            self._otlp_initialized = True
+
+        except Exception as e:
+            self._logger.warning(f"Failed to initialize OTLP logging: {e}")
+            import traceback
+
+            traceback.print_exc()
+
     def _update_logger(self, config: LoggingConfig) -> None:
         """Update the logger based on the new configuration."""
-        # Initialize OTLP logging only once and only if not disabled
-        if not self._otlp_initialized and config.enable_otlp:
-            try:
-                logger_provider = LoggerProvider(
-                    resource=Resource.create(
-                        {
-                            "service.name": "Rapidata.Python.SDK",
-                            "service.version": __version__,
-                        }
-                    ),
-                )
-                set_logger_provider(logger_provider)
-
-                exporter = OTLPLogExporter(
-                    endpoint="https://otlp-sdk.rapidata.ai/v1/logs",
-                    timeout=30,
-                )
-
-                processor = BatchLogRecordProcessor(
-                    exporter,
-                    max_queue_size=2048,
-                    export_timeout_millis=30000,
-                    max_export_batch_size=512,
-                )
-
-                logger_provider.add_log_record_processor(processor)
-
-                # OTLP handler - captures DEBUG and above
-                self._otlp_handler = LoggingHandler(logger_provider=logger_provider)
-                self._otlp_handler.setLevel(logging.DEBUG)  # OTLP gets everything
-
-                self._otlp_initialized = True
-
-            except Exception as e:
-                self._logger.warning(f"Failed to initialize OTLP logging: {e}")
-                import traceback
-
-                traceback.print_exc()
+        self._otlp_enabled = config.enable_otlp
+        self._otlp_attached = False
 
         # Console handler with configurable level
         console_handler = logging.StreamHandler()
@@ -101,20 +108,9 @@ class RapidataLogger:
         # Configure the logger
         self._logger.setLevel(logging.DEBUG)  # Logger must allow DEBUG for OTLP
 
-        # Remove any existing handlers (except OTLP when appropriate)
+        # Remove any existing handlers
         for handler in self._logger.handlers[:]:
-            if handler != self._otlp_handler:
-                self._logger.removeHandler(handler)
-            elif handler == self._otlp_handler and not config.enable_otlp:
-                self._logger.removeHandler(handler)
-
-        # Add OTLP handler if initialized and not disabled
-        if (
-            self._otlp_handler
-            and self._otlp_handler not in self._logger.handlers
-            and config.enable_otlp
-        ):
-            self._logger.addHandler(self._otlp_handler)
+            self._logger.removeHandler(handler)
 
         # Add console handler
         self._logger.addHandler(console_handler)
@@ -127,8 +123,19 @@ class RapidataLogger:
             file_handler.setFormatter(file_formatter)
             self._logger.addHandler(file_handler)
 
+    def _maybe_attach_otlp(self) -> None:
+        """Attach OTLP handler to the logger if enabled and not yet attached."""
+        if not self._otlp_enabled or self._otlp_attached:
+            return
+
+        self._ensure_otlp_initialized()
+        if self._otlp_handler and self._otlp_handler not in self._logger.handlers:
+            self._logger.addHandler(self._otlp_handler)
+        self._otlp_attached = True
+
     def __getattr__(self, name: str) -> object:
         """Delegate attribute access to the underlying logger."""
+        self._maybe_attach_otlp()
         return getattr(self._logger, name)
 
 
