@@ -26,17 +26,21 @@ class RapidataFlow:
     def create_new_flow_batch(
         self,
         datapoints: list[str],
+        context: str | None = None,
         data_type: Literal["media", "text"] = "media",
         private_metadata: list[dict[str, str]] | None = None,
         accept_failed_uploads: bool = False,
+        time_to_live: int | None = None,
     ) -> RapidataFlowItem:
         """Create a new flow batch by uploading datapoints to a dataset and submitting it.
 
         Args:
             datapoints: The list of datapoints (paths or URLs) to upload.
+            context: The context shown alongside the instruction.
             data_type: The data type of the datapoints. Defaults to "media".
             private_metadata: Optional key-value metadata per datapoint.
             accept_failed_uploads: If True, continues even if some uploads fail.
+            time_to_live: The time to live for the flow item in seconds. If it takes longer than this to complete, the flow item will be stopped and the results will be returned.
 
         Returns:
             RapidataFlowItem: The created flow item.
@@ -51,6 +55,9 @@ class RapidataFlow:
             from rapidata.rapidata_client.flow.rapidata_flow_item import (
                 RapidataFlowItem,
             )
+
+            if time_to_live is not None and time_to_live < 60:
+                raise ValueError("Time to live must be at least 60 seconds.")
 
             logger.debug("Creating flow item for flow '%s'", self.name)
 
@@ -84,6 +91,8 @@ class RapidataFlow:
                 flow_id=self.id,
                 create_flow_item_endpoint_input=CreateFlowItemEndpointInput(
                     datasetId=rapidata_dataset.id,
+                    context=context,
+                    timeToLiveInSeconds=time_to_live,
                 ),
             )
 
@@ -110,6 +119,9 @@ class RapidataFlow:
 
             response = self._openapi_service.ranking_flow_item_api.flow_ranking_flow_id_item_get(
                 flow_id=self.id,
+                sort=["-created_at"],
+                page=1,
+                page_size=100,
             )
 
             return [

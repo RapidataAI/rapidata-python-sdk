@@ -42,7 +42,11 @@ class RapidataFlowItem:
 
             logger.debug("Getting results for flow item '%s'", self.id)
             self._wait_for_state(
-                target_states=[FlowItemState.COMPLETED, FlowItemState.FAILED],
+                target_states=[
+                    FlowItemState.COMPLETED,
+                    FlowItemState.FAILED,
+                    FlowItemState.STOPPED,
+                ],
                 check_interval=1,
                 status_message="Flow item '%s' is in state %s, waiting for completion...",
             )
