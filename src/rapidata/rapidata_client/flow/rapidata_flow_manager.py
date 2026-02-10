@@ -24,7 +24,6 @@ class RapidataFlowManager:
         self,
         name: str,
         instruction: str,
-        context: str | None = None,
         validation_set_id: str | None = None,
         settings: Sequence[RapidataSetting] | None = None,
     ) -> RapidataFlow:
@@ -33,7 +32,6 @@ class RapidataFlowManager:
         Args:
             name: The name of the flow.
             instruction: The instruction for the ranking comparisons. Will be shown with each matchup.
-            context: Optional context shown alongside the instruction.
             validation_set_id: Optional validation set ID.
             settings: Optional settings for the flow.
 
@@ -52,7 +50,6 @@ class RapidataFlowManager:
                 create_flow_endpoint_input=CreateFlowEndpointInput(
                     name=name,
                     criteria=instruction,
-                    context=context,
                     validationSetId=validation_set_id,
                     responsesRequired=100,
                     featureFlags=(
