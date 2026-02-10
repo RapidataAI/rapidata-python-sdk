@@ -1,4 +1,5 @@
 from typing import Protocol, runtime_checkable, Any
+import threading
 import platform
 import sys
 import os
@@ -103,6 +104,7 @@ class RapidataTracer:
     def __init__(self, name: str = __name__):
         self._name = name
         self._otlp_initialized = False
+        self._init_lock = threading.Lock()
         self._tracer_provider = None
         self._real_tracer = None
         self._no_op_tracer = NoOpTracer()
@@ -125,31 +127,35 @@ class RapidataTracer:
         if self._otlp_initialized:
             return
 
-        try:
-            resource_attributes = {
-                "service.name": "Rapidata.Python.SDK",
-                "service.version": __version__,
-                **get_system_attributes(),
-            }
+        with self._init_lock:
+            if self._otlp_initialized:
+                return
 
-            resource = Resource.create(resource_attributes)
+            try:
+                resource_attributes = {
+                    "service.name": "Rapidata.Python.SDK",
+                    "service.version": __version__,
+                    **get_system_attributes(),
+                }
 
-            self._tracer_provider = TracerProvider(resource=resource)
+                resource = Resource.create(resource_attributes)
 
-            exporter = OTLPSpanExporter(
-                endpoint="https://otlp-sdk.rapidata.ai/v1/traces",
-                timeout=30,
-            )
+                self._tracer_provider = TracerProvider(resource=resource)
 
-            span_processor = BatchSpanProcessor(exporter)
-            self._tracer_provider.add_span_processor(span_processor)
+                exporter = OTLPSpanExporter(
+                    endpoint="https://otlp-sdk.rapidata.ai/v1/traces",
+                    timeout=30,
+                )
 
-            self._real_tracer = self._tracer_provider.get_tracer(self._name)
-            self._otlp_initialized = True
+                span_processor = BatchSpanProcessor(exporter)
+                self._tracer_provider.add_span_processor(span_processor)
 
-        except Exception as e:
-            logger.warning(f"Failed to initialize tracing: {e}")
-            self._enabled = False
+                self._real_tracer = self._tracer_provider.get_tracer(self._name)
+                self._otlp_initialized = True
+
+            except Exception as e:
+                logger.warning(f"Failed to initialize tracing: {e}")
+                self._enabled = False
 
     def _add_session_id_to_span(self, span: Any) -> Any:
         """Add session_id attribute to a span if session_id is set."""

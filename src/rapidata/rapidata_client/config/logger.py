@@ -1,4 +1,5 @@
 import logging
+import threading
 from typing import Protocol, runtime_checkable
 from opentelemetry._logs import set_logger_provider
 from opentelemetry.exporter.otlp.proto.http._log_exporter import OTLPLogExporter
@@ -41,6 +42,7 @@ class RapidataLogger:
     def __init__(self, name: str = "rapidata"):
         self._logger = logging.getLogger(name)
         self._otlp_initialized = False
+        self._init_lock = threading.Lock()
         self._otlp_handler = None
         self._otlp_enabled = True  # Default to enabled
 
@@ -56,42 +58,46 @@ class RapidataLogger:
         if self._otlp_initialized:
             return
 
-        try:
-            logger_provider = LoggerProvider(
-                resource=Resource.create(
-                    {
-                        "service.name": "Rapidata.Python.SDK",
-                        "service.version": __version__,
-                    }
-                ),
-            )
-            set_logger_provider(logger_provider)
+        with self._init_lock:
+            if self._otlp_initialized:
+                return
 
-            exporter = OTLPLogExporter(
-                endpoint="https://otlp-sdk.rapidata.ai/v1/logs",
-                timeout=30,
-            )
+            try:
+                logger_provider = LoggerProvider(
+                    resource=Resource.create(
+                        {
+                            "service.name": "Rapidata.Python.SDK",
+                            "service.version": __version__,
+                        }
+                    ),
+                )
+                set_logger_provider(logger_provider)
 
-            processor = BatchLogRecordProcessor(
-                exporter,
-                max_queue_size=2048,
-                export_timeout_millis=30000,
-                max_export_batch_size=512,
-            )
+                exporter = OTLPLogExporter(
+                    endpoint="https://otlp-sdk.rapidata.ai/v1/logs",
+                    timeout=30,
+                )
 
-            logger_provider.add_log_record_processor(processor)
+                processor = BatchLogRecordProcessor(
+                    exporter,
+                    max_queue_size=2048,
+                    export_timeout_millis=30000,
+                    max_export_batch_size=512,
+                )
 
-            # OTLP handler - captures DEBUG and above
-            self._otlp_handler = LoggingHandler(logger_provider=logger_provider)
-            self._otlp_handler.setLevel(logging.DEBUG)  # OTLP gets everything
+                logger_provider.add_log_record_processor(processor)
 
-            self._otlp_initialized = True
+                # OTLP handler - captures DEBUG and above
+                self._otlp_handler = LoggingHandler(logger_provider=logger_provider)
+                self._otlp_handler.setLevel(logging.DEBUG)  # OTLP gets everything
 
-        except Exception as e:
-            self._logger.warning(f"Failed to initialize OTLP logging: {e}")
-            import traceback
+                self._otlp_initialized = True
 
-            traceback.print_exc()
+            except Exception as e:
+                self._logger.warning(f"Failed to initialize OTLP logging: {e}")
+                import traceback
+
+                traceback.print_exc()
 
     def _update_logger(self, config: LoggingConfig) -> None:
         """Update the logger based on the new configuration."""

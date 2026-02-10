@@ -1,6 +1,14 @@
+from __future__ import annotations
+
+import os
 from typing import Callable
 from pydantic import BaseModel, Field
 from rapidata.rapidata_client.config import logger
+
+
+def _default_enable_otlp() -> bool:
+    """Return the default for enable_otlp, respecting the RAPIDATA_DISABLE_OTLP env var."""
+    return os.environ.get("RAPIDATA_DISABLE_OTLP", "0").lower() not in ("1", "true", "yes")
 
 # Type alias for config update handlers
 ConfigUpdateHandler = Callable[["LoggingConfig"], None]
@@ -30,13 +38,14 @@ class LoggingConfig(BaseModel):
         format (str): The logging format. Defaults to "%(asctime)s - %(name)s - %(levelname)s - %(message)s".
         silent_mode (bool): Whether to disable the prints and progress bars. Does NOT affect the logging. Defaults to False.
         enable_otlp (bool): Whether to enable OpenTelemetry trace logs. Defaults to True.
+            Can also be disabled via the RAPIDATA_DISABLE_OTLP=1 environment variable.
     """
 
     level: str = Field(default="WARNING")
     log_file: str | None = Field(default=None)
     format: str = Field(default="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     silent_mode: bool = Field(default=False)
-    enable_otlp: bool = Field(default=True)
+    enable_otlp: bool = Field(default_factory=_default_enable_otlp)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -44,6 +53,12 @@ class LoggingConfig(BaseModel):
 
     def __setattr__(self, name: str, value) -> None:
         super().__setattr__(name, value)
+        # Sync enable_otlp to env var so child processes (e.g. Ray workers) inherit it
+        if name == "enable_otlp":
+            if value:
+                os.environ.pop("RAPIDATA_DISABLE_OTLP", None)
+            else:
+                os.environ["RAPIDATA_DISABLE_OTLP"] = "1"
         self._notify_handlers()
 
     def _notify_handlers(self) -> None:
