@@ -23,7 +23,7 @@ class RapidataFlowItem:
         """Get the current state of this flow item.
 
         Returns:
-            FlowItemState: The current state (Pending, Running, Completed, Failed).
+            FlowItemState: The current state (Pending, Running, Completed, Failed, Stopped).
         """
         with tracer.start_as_current_span("RapidataFlowItem.get_status"):
             logger.debug("Getting status for flow item '%s'", self.id)

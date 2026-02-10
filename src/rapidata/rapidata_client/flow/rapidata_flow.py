@@ -105,7 +105,7 @@ class RapidataFlow:
             )
 
     def get_flow_items(self) -> list[RapidataFlowItem]:
-        """Query flow items for this flow.
+        """Query flow items for this flow, returning up to 100 most recent items sorted by creation date.
 
         Returns:
             list[RapidataFlowItem]: A list of flow items.
