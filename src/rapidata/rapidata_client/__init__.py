@@ -1,4 +1,5 @@
 from .rapidata_client import RapidataClient
+from rapidata.service.openapi_service import OpenAPIService
 from .audience import (
     RapidataAudience,
     RapidataAudienceManager,
