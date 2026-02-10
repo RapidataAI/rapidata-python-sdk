@@ -24,11 +24,11 @@ from typing_extensions import Self
 
 class UpdateLeaderboardModel(BaseModel):
     """
-    UpdateLeaderboardModel
+    The model used to update a leaderboard.
     """ # noqa: E501
-    name: Optional[StrictStr] = None
-    response_budget: Optional[StrictInt] = Field(default=None, alias="responseBudget")
-    min_responses: Optional[StrictInt] = Field(default=None, alias="minResponses")
+    name: Optional[StrictStr] = Field(default=None, description="The new name of the leaderboard.")
+    response_budget: Optional[StrictInt] = Field(default=None, description="The amount of responses that will be collected when onboarding a new participant.", alias="responseBudget")
+    min_responses: Optional[StrictInt] = Field(default=None, description="The amount of responses that will be collected as a minimum on each matchup.", alias="minResponses")
     __properties: ClassVar[List[str]] = ["name", "responseBudget", "minResponses"]
 
     model_config = ConfigDict(

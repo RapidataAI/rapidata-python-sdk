@@ -20,7 +20,7 @@ from typing_extensions import Self
 
 class BatchUploadStatus(str, Enum):
     """
-    BatchUploadStatus
+    The current status of the batch upload.
     """
 
     """

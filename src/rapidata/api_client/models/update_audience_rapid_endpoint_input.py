@@ -26,14 +26,14 @@ from typing_extensions import Self
 
 class UpdateAudienceRapidEndpointInput(BaseModel):
     """
-    UpdateAudienceRapidEndpointInput
+    Input model for updating an audience rapid.
     """ # noqa: E501
     truth: Optional[IValidationTruthModel] = None
-    explanation: Optional[StrictStr] = None
-    context: Optional[StrictStr] = None
+    explanation: Optional[StrictStr] = Field(default=None, description="The optional explanation that will be shown to the user when answering wrong.")
+    context: Optional[StrictStr] = Field(default=None, description="An optional text context that will be shown to the user.")
     context_asset: Optional[IAssetInput] = Field(default=None, alias="contextAsset")
-    random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="randomCorrectProbability")
-    is_common_sense: Optional[StrictBool] = Field(default=None, alias="isCommonSense")
+    random_correct_probability: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="The probability that if the user answers at random that they'll be correct.", alias="randomCorrectProbability")
+    is_common_sense: Optional[StrictBool] = Field(default=None, description="Whether this rapid should be treated as commonsense validation.  When true, incorrect answers are not accepted and the rapid affects global score.", alias="isCommonSense")
     __properties: ClassVar[List[str]] = ["truth", "explanation", "context", "contextAsset", "randomCorrectProbability", "isCommonSense"]
 
     model_config = ConfigDict(

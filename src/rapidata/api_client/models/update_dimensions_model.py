@@ -24,7 +24,7 @@ from typing_extensions import Self
 
 class UpdateDimensionsModel(BaseModel):
     """
-    UpdateDimensionsModel
+    The model for updating the dimensions of all rapids within a validation set.
     """ # noqa: E501
     dimensions: List[StrictStr]
     __properties: ClassVar[List[str]] = ["dimensions"]

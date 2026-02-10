@@ -24,13 +24,13 @@ from typing_extensions import Self
 
 class UpdateValidationSetModel(BaseModel):
     """
-    UpdateValidationSetModel
+    Allows for specific updates to a validation set without needing to provide all properties.
     """ # noqa: E501
-    name: Optional[StrictStr] = None
+    name: Optional[StrictStr] = Field(default=None, description="The name of the validation set")
     dimensions: Optional[List[StrictStr]] = None
-    should_alert: Optional[StrictBool] = Field(default=None, alias="shouldAlert")
-    is_public: Optional[StrictBool] = Field(default=None, alias="isPublic")
-    is_flag_overruled: Optional[StrictBool] = Field(default=None, alias="isFlagOverruled")
+    should_alert: Optional[StrictBool] = Field(default=None, description="If the user should be alerted or not", alias="shouldAlert")
+    is_public: Optional[StrictBool] = Field(default=None, description="If the validation set is public", alias="isPublic")
+    is_flag_overruled: Optional[StrictBool] = Field(default=None, description="If the flag on validation rapids should be overruled", alias="isFlagOverruled")
     __properties: ClassVar[List[str]] = ["name", "dimensions", "shouldAlert", "isPublic", "isFlagOverruled"]
 
     model_config = ConfigDict(

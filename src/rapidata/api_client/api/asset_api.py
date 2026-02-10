@@ -45,9 +45,9 @@ class AssetApi:
     def asset_compress_post(
         self,
         file: Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]],
-        library: Optional[CompressionLibrary] = None,
-        quality: Optional[StrictInt] = None,
-        maxdim: Optional[StrictInt] = None,
+        library: Annotated[Optional[CompressionLibrary], Field(description="The compression library to use.")] = None,
+        quality: Annotated[Optional[StrictInt], Field(description="The compression quality from 1 to 100.")] = None,
+        maxdim: Annotated[Optional[StrictInt], Field(description="The maximum dimension (width or height) of the output image.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -61,16 +61,17 @@ class AssetApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> None:
-        """Compresses an image and returns the WebP result with compression metrics.
+        """Compresses an uploaded image and returns the WebP result.
 
+        Compression metrics are returned in response headers: X-Original-Size, X-Compressed-Size,  X-Processing-Time-Ms, X-Original-Dimensions, X-Output-Dimensions.
 
         :param file: (required)
         :type file: bytearray
-        :param library:
+        :param library: The compression library to use.
         :type library: CompressionLibrary
-        :param quality:
+        :param quality: The compression quality from 1 to 100.
         :type quality: int
-        :param maxdim:
+        :param maxdim: The maximum dimension (width or height) of the output image.
         :type maxdim: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -125,9 +126,9 @@ class AssetApi:
     def asset_compress_post_with_http_info(
         self,
         file: Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]],
-        library: Optional[CompressionLibrary] = None,
-        quality: Optional[StrictInt] = None,
-        maxdim: Optional[StrictInt] = None,
+        library: Annotated[Optional[CompressionLibrary], Field(description="The compression library to use.")] = None,
+        quality: Annotated[Optional[StrictInt], Field(description="The compression quality from 1 to 100.")] = None,
+        maxdim: Annotated[Optional[StrictInt], Field(description="The maximum dimension (width or height) of the output image.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -141,16 +142,17 @@ class AssetApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[None]:
-        """Compresses an image and returns the WebP result with compression metrics.
+        """Compresses an uploaded image and returns the WebP result.
 
+        Compression metrics are returned in response headers: X-Original-Size, X-Compressed-Size,  X-Processing-Time-Ms, X-Original-Dimensions, X-Output-Dimensions.
 
         :param file: (required)
         :type file: bytearray
-        :param library:
+        :param library: The compression library to use.
         :type library: CompressionLibrary
-        :param quality:
+        :param quality: The compression quality from 1 to 100.
         :type quality: int
-        :param maxdim:
+        :param maxdim: The maximum dimension (width or height) of the output image.
         :type maxdim: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -205,9 +207,9 @@ class AssetApi:
     def asset_compress_post_without_preload_content(
         self,
         file: Union[StrictBytes, StrictStr, Tuple[StrictStr, StrictBytes]],
-        library: Optional[CompressionLibrary] = None,
-        quality: Optional[StrictInt] = None,
-        maxdim: Optional[StrictInt] = None,
+        library: Annotated[Optional[CompressionLibrary], Field(description="The compression library to use.")] = None,
+        quality: Annotated[Optional[StrictInt], Field(description="The compression quality from 1 to 100.")] = None,
+        maxdim: Annotated[Optional[StrictInt], Field(description="The maximum dimension (width or height) of the output image.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -221,16 +223,17 @@ class AssetApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Compresses an image and returns the WebP result with compression metrics.
+        """Compresses an uploaded image and returns the WebP result.
 
+        Compression metrics are returned in response headers: X-Original-Size, X-Compressed-Size,  X-Processing-Time-Ms, X-Original-Dimensions, X-Output-Dimensions.
 
         :param file: (required)
         :type file: bytearray
-        :param library:
+        :param library: The compression library to use.
         :type library: CompressionLibrary
-        :param quality:
+        :param quality: The compression quality from 1 to 100.
         :type quality: int
-        :param maxdim:
+        :param maxdim: The maximum dimension (width or height) of the output image.
         :type maxdim: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request

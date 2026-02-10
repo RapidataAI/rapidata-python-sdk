@@ -24,10 +24,10 @@ from typing_extensions import Self
 
 class UpdateOrderModel(BaseModel):
     """
-    UpdateOrderModel
+    The model for updating properties of an order.
     """ # noqa: E501
-    name: Optional[StrictStr] = None
-    preceding_order_id: Optional[StrictStr] = Field(default=None, alias="precedingOrderId")
+    name: Optional[StrictStr] = Field(default=None, description="The new name of the order, if specified.")
+    preceding_order_id: Optional[StrictStr] = Field(default=None, description="The ID of the order that must complete before this order starts processing.  Set to null to clear an existing preceding order.", alias="precedingOrderId")
     __properties: ClassVar[List[str]] = ["name", "precedingOrderId"]
 
     model_config = ConfigDict(

@@ -24,10 +24,10 @@ from typing_extensions import Self
 
 class RapidSkippedModel(BaseModel):
     """
-    RapidSkippedModel
+    The model for a Rapid skipped.
     """ # noqa: E501
-    rapid_id: StrictStr = Field(alias="rapidId")
-    session_index: StrictInt = Field(alias="sessionIndex")
+    rapid_id: StrictStr = Field(description="The ID of the Rapid that was skipped.", alias="rapidId")
+    session_index: StrictInt = Field(description="The index of the session when the Rapid was skipped.", alias="sessionIndex")
     __properties: ClassVar[List[str]] = ["rapidId", "sessionIndex"]
 
     model_config = ConfigDict(

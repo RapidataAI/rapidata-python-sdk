@@ -17,16 +17,16 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictInt
+from pydantic import BaseModel, ConfigDict, Field, StrictInt
 from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
 class UpdatePriorityModel(BaseModel):
     """
-    UpdatePriorityModel
+    The model to update the campaign priority.
     """ # noqa: E501
-    priority: StrictInt
+    priority: StrictInt = Field(description="The new priority value for the campaign.")
     __properties: ClassVar[List[str]] = ["priority"]
 
     model_config = ConfigDict(

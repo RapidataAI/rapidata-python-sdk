@@ -30,20 +30,20 @@ from typing_extensions import Self
 
 class GetJobRevisionEndpointOutput(BaseModel):
     """
-    GetJobRevisionEndpointOutput
+    The result when a job revision has been retrieved.
     """ # noqa: E501
-    definition_id: StrictStr = Field(alias="definitionId")
-    revision_number: StrictInt = Field(alias="revisionNumber")
+    definition_id: StrictStr = Field(description="The job definition id.", alias="definitionId")
+    revision_number: StrictInt = Field(description="The revision number.", alias="revisionNumber")
     state: JobDefinitionRevisionState
-    pipeline_id: StrictStr = Field(alias="pipelineId")
-    dataset_id: StrictStr = Field(alias="datasetId")
+    pipeline_id: StrictStr = Field(description="The pipeline id.", alias="pipelineId")
+    dataset_id: StrictStr = Field(description="The dataset id.", alias="datasetId")
     aggregator_type: Optional[AggregatorType] = Field(default=None, alias="aggregatorType")
-    workflow: IOrderWorkflowModel
-    referee: IRefereeModel
-    feature_flags: List[FeatureFlag] = Field(alias="featureFlags")
-    created_at: datetime = Field(alias="createdAt")
-    created_by_id: StrictStr = Field(alias="createdById")
-    created_by_mail: StrictStr = Field(alias="createdByMail")
+    workflow: IOrderWorkflowModel = Field(description="The workflow configuration. Can be used directly to create a new revision.")
+    referee: IRefereeModel = Field(description="The referee configuration. Can be used directly to create a new revision.")
+    feature_flags: List[FeatureFlag] = Field(description="The feature flags.", alias="featureFlags")
+    created_at: datetime = Field(description="The creation timestamp.", alias="createdAt")
+    created_by_id: StrictStr = Field(description="The id of the user who created the revision.", alias="createdById")
+    created_by_mail: StrictStr = Field(description="The email of the user who created the revision.", alias="createdByMail")
     __properties: ClassVar[List[str]] = ["definitionId", "revisionNumber", "state", "pipelineId", "datasetId", "aggregatorType", "workflow", "referee", "featureFlags", "createdAt", "createdById", "createdByMail"]
 
     model_config = ConfigDict(

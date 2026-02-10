@@ -24,9 +24,9 @@ from typing_extensions import Self
 
 class GoogleOneTapLoginModel(BaseModel):
     """
-    GoogleOneTapLoginModel
+    The model for the Google One Tap login.
     """ # noqa: E501
-    id_token: StrictStr = Field(alias="idToken")
+    id_token: StrictStr = Field(description="The id token received from the Google One Tap login.", alias="idToken")
     __properties: ClassVar[List[str]] = ["idToken"]
 
     model_config = ConfigDict(

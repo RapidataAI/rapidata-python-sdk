@@ -24,10 +24,10 @@ from typing_extensions import Self
 
 class BoostLeaderboardModel(BaseModel):
     """
-    BoostLeaderboardModel
+    The model for boosting a leaderboard.
     """ # noqa: E501
     participants: List[StrictStr]
-    total_responses: StrictInt = Field(alias="totalResponses")
+    total_responses: StrictInt = Field(description="The amount of responses in total that should be added, shared across all participants.", alias="totalResponses")
     __properties: ClassVar[List[str]] = ["participants", "totalResponses"]
 
     model_config = ConfigDict(

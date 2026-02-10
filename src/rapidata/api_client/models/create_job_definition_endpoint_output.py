@@ -24,10 +24,10 @@ from typing_extensions import Self
 
 class CreateJobDefinitionEndpointOutput(BaseModel):
     """
-    CreateJobDefinitionEndpointOutput
+    The result when a job definition has been created.
     """ # noqa: E501
-    definition_id: StrictStr = Field(alias="definitionId")
-    pipeline_id: StrictStr = Field(alias="pipelineId")
+    definition_id: StrictStr = Field(description="The id of the created job definition.", alias="definitionId")
+    pipeline_id: StrictStr = Field(description="The id of the created preview pipeline.", alias="pipelineId")
     __properties: ClassVar[List[str]] = ["definitionId", "pipelineId"]
 
     model_config = ConfigDict(

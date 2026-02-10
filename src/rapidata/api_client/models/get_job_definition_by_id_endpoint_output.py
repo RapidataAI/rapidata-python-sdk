@@ -26,12 +26,12 @@ from typing_extensions import Self
 
 class GetJobDefinitionByIdEndpointOutput(BaseModel):
     """
-    GetJobDefinitionByIdEndpointOutput
+    The result when a job definition has been retrieved.
     """ # noqa: E501
-    definition_id: StrictStr = Field(alias="definitionId")
-    name: StrictStr
+    definition_id: StrictStr = Field(description="The job definition id.", alias="definitionId")
+    name: StrictStr = Field(description="The name of the job definition.")
     definition_type: DefinitionType = Field(alias="definitionType")
-    created_at: datetime = Field(alias="createdAt")
+    created_at: datetime = Field(description="The creation timestamp.", alias="createdAt")
     __properties: ClassVar[List[str]] = ["definitionId", "name", "definitionType", "createdAt"]
 
     model_config = ConfigDict(

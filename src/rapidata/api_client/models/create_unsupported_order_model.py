@@ -24,11 +24,11 @@ from typing_extensions import Self
 
 class CreateUnsupportedOrderModel(BaseModel):
     """
-    CreateUnsupportedOrderModel
+    The model for creating an order with an unsupported label type or data type.
     """ # noqa: E501
-    order_name: StrictStr = Field(alias="orderName")
-    data_type: StrictStr = Field(alias="dataType")
-    label_type: StrictStr = Field(alias="labelType")
+    order_name: StrictStr = Field(description="The name of the order", alias="orderName")
+    data_type: StrictStr = Field(description="The type of the data that was attempted to be ordered", alias="dataType")
+    label_type: StrictStr = Field(description="The type of the labels that were attempted to be ordered", alias="labelType")
     __properties: ClassVar[List[str]] = ["orderName", "dataType", "labelType"]
 
     model_config = ConfigDict(

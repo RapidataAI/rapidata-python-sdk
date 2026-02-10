@@ -26,9 +26,9 @@ class CreateFlowItemEndpointInput(BaseModel):
     """
     CreateFlowItemEndpointInput
     """ # noqa: E501
-    dataset_id: StrictStr = Field(alias="datasetId")
-    context: Optional[StrictStr] = None
-    time_to_live_in_seconds: Optional[StrictInt] = Field(default=None, alias="timeToLiveInSeconds")
+    dataset_id: StrictStr = Field(description="The ID of the dataset to use for this flow item.", alias="datasetId")
+    context: Optional[StrictStr] = Field(default=None, description="Optional context to provide additional ranking guidance.")
+    time_to_live_in_seconds: Optional[StrictInt] = Field(default=None, description="Optional time-to-live in seconds before the flow item expires.", alias="timeToLiveInSeconds")
     __properties: ClassVar[List[str]] = ["datasetId", "context", "timeToLiveInSeconds"]
 
     model_config = ConfigDict(

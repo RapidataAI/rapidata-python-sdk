@@ -21,6 +21,7 @@
           {
             "name": "audienceId",
             "in": "path",
+            "description": "The unique identifier of the audience to delete.",
             "required": true,
             "schema": {
               "type": "string"
@@ -140,6 +141,7 @@
           {
             "name": "audienceId",
             "in": "path",
+            "description": "The unique identifier of the audience.",
             "required": true,
             "schema": {
               "type": "string"
@@ -186,6 +188,7 @@
           {
             "name": "audienceId",
             "in": "path",
+            "description": "The unique identifier of the audience.",
             "required": true,
             "schema": {
               "type": "string"
@@ -220,10 +223,12 @@
         "tags": [
           "Audience"
         ],
+        "summary": "Queries jobs for the specified audience.",
         "parameters": [
           {
             "name": "audienceId",
             "in": "path",
+            "description": "The unique identifier of the audience.",
             "required": true,
             "schema": {
               "type": "string"
@@ -265,11 +270,13 @@
         "tags": [
           "Audience"
         ],
-        "summary": "Recalculates and updates the audience's distilling campaign filters and selections\n based on current audience settings (demographic filters, exit conditions, etc.).",
+        "summary": "Rebuilds the distilling campaign for the specified audience.",
+        "description": "Recalculates campaign filters and selections based on the audience's current settings\n (demographic filters, exit conditions, etc.).",
         "parameters": [
           {
             "name": "audienceId",
             "in": "path",
+            "description": "The unique identifier of the audience.",
             "required": true,
             "schema": {
               "type": "string"
@@ -309,6 +316,7 @@
           {
             "name": "audienceId",
             "in": "path",
+            "description": "The unique identifier of the audience.",
             "required": true,
             "schema": {
               "type": "string"
@@ -348,6 +356,7 @@
           {
             "name": "audienceId",
             "in": "path",
+            "description": "The unique identifier of the audience.",
             "required": true,
             "schema": {
               "type": "string"
@@ -387,6 +396,7 @@
           {
             "name": "audienceId",
             "in": "path",
+            "description": "The unique identifier of the audience.",
             "required": true,
             "schema": {
               "type": "string"
@@ -394,6 +404,7 @@
           }
         ],
         "requestBody": {
+          "description": "The boost configuration values to update.",
           "content": {
             "application/json": {
               "schema": {
@@ -436,6 +447,7 @@
           {
             "name": "audienceId",
             "in": "path",
+            "description": "The unique identifier of the audience.",
             "required": true,
             "schema": {
               "type": "string"
@@ -444,6 +456,7 @@
           {
             "name": "rapidId",
             "in": "path",
+            "description": "The unique identifier of the rapid to update.",
             "required": true,
             "schema": {
               "type": "string"
@@ -451,6 +464,7 @@
           }
         ],
         "requestBody": {
+          "description": "The rapid validation properties to update.",
           "content": {
             "application/json": {
               "schema": {
@@ -683,58 +697,67 @@
         "type": "object",
         "properties": {
           "asset": {
-            "$ref": "#/components/schemas/IAssetInput"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAssetInput"
+              }
+            ],
+            "description": "The asset to use for the rapid."
           },
           "payload": {
-            "$ref": "#/components/schemas/IRapidPayload"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IRapidPayload"
+              }
+            ],
+            "description": "The payload to use for the rapid."
           },
           "truth": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/IValidationTruth"
               }
-            ]
+            ],
+            "description": "The ground truth for the rapid."
           },
           "randomCorrectProbability": {
             "type": "number",
+            "description": "The probability for an answer to be correct when randomly guessing.",
             "format": "double"
           },
           "explanation": {
             "type": "string",
+            "description": "An explanation for the users if they answer the rapid incorrectly.",
             "nullable": true
           },
           "context": {
             "type": "string",
+            "description": "An optional textual context that provides additional information to the user about the rapid.",
             "nullable": true
           },
           "contextAsset": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/IAssetInput"
               }
-            ]
+            ],
+            "description": "An optional asset that provides additional context to the user about the rapid."
           },
           "featureFlags": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/ListOfFeatureFlagModel"
               }
-            ]
+            ],
+            "description": "The feature flags to enable for the rapid."
           },
           "isCommonSense": {
             "type": "boolean",
+            "description": "Whether this rapid should be treated as commonsense validation.\n When true, incorrect answers are not accepted and the rapid affects global score.\n When null, AI auto-detection will determine if the rapid is common sense (defaults to false initially).\n Defaults to null (AI auto-detection enabled).",
             "nullable": true
           }
-        }
+        },
+        "description": "The model for adding a validation rapid with asset in JSON body."
       },
       "AudienceJobState": {
         "enum": [
@@ -808,68 +831,76 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "The name to give the newly created audience."
           },
           "description": {
             "type": "string",
+            "description": "An optional markdown-supported description of the audience's purpose.",
             "nullable": true
           },
           "filters": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/ListOfIAudienceFilter"
               }
-            ]
+            ],
+            "description": "The filters to apply to any orders created for this audience.\n A filter can be used to restrict the audience to a specific subset of users."
           },
           "minimumUserScore": {
             "type": "number",
+            "description": "The minimum user score used to determine whether a user can be included in an audience.",
             "format": "double"
           },
           "minimumSizeForActivation": {
             "type": "integer",
+            "description": "The minimum number of users required for an audience to be activated.",
             "format": "int64"
           },
           "logo": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/ExistingAssetInput"
               }
-            ]
+            ],
+            "description": "An optional logo image for the audience. Must be an existing image asset."
           },
           "maxDistillingResponses": {
             "type": "integer",
+            "description": "Maximum responses before user exits the distilling campaign.\n Defaults to 10. Set to null to disable this exit condition.",
             "format": "uint32"
           },
           "minDistillingResponses": {
             "type": "integer",
+            "description": "Minimum responses before the score floor check applies.\n Users need at least this many responses before they can be kicked out for low score.\n Defaults to 3. Set to null to apply score floor check from the first response.",
             "format": "uint32"
           },
           "minDistillingScoreFloor": {
             "type": "number",
+            "description": "Minimum user score floor - users below this score exit the distilling campaign\n (only after completing MinDistillingResponses).\n Defaults to 0.2. Set to null to disable this exit condition.",
             "format": "double"
           },
           "isDistillingCampaignSticky": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether the distilling campaign should be sticky (users stay until filters don't match).\n Defaults to true (Temporary sticky)."
           },
           "maxDistillingSessions": {
             "type": "integer",
+            "description": "Maximum sessions (rapid retrievals) before user exits the distilling campaign.\n Defaults to null (disabled). Set to a value to enable session-based exit condition.",
             "format": "uint32"
           },
           "minDistillingForGlobalBoost": {
             "type": "integer",
+            "description": "Minimum distilling users before disabling global boost.\n Defaults to 200. Admin-only override.",
             "format": "int32"
           },
           "minGraduatedForDistillingBoost": {
             "type": "integer",
+            "description": "Minimum graduated users before disabling distilling boost.\n Defaults to 100. Admin-only override.",
             "format": "int32"
           }
-        }
+        },
+        "description": "The body request to create an audience."
       },
       "CreateAudienceResult": {
         "required": [
@@ -2679,64 +2710,6 @@
           }
         }
       },
-      "OptionOfboolean": {
-        "type": "boolean",
-        "nullable": true
-      },
-      "OptionOfdouble": {
-        "type": "number",
-        "format": "double",
-        "nullable": true
-      },
-      "OptionOfExistingAssetInput": {
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/ExistingAssetInput"
-          },
-          {
-            "nullable": true
-          }
-        ]
-      },
-      "OptionOfIAssetInput": {
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/IAssetInput"
-          },
-          {
-            "nullable": true
-          }
-        ]
-      },
-      "OptionOfint": {
-        "type": "integer",
-        "format": "int32",
-        "nullable": true
-      },
-      "OptionOfIReadOnlyListOfIAudienceFilter": {
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/ListOfIAudienceFilter"
-          },
-          {
-            "nullable": true
-          }
-        ]
-      },
-      "OptionOfIValidationTruthModel": {
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/IValidationTruthModel"
-          },
-          {
-            "nullable": true
-          }
-        ]
-      },
-      "OptionOfstring": {
-        "type": "string",
-        "nullable": true
-      },
       "PagedResultOfQueryAudiencesResult": {
         "required": [
           "total",
@@ -3125,57 +3098,112 @@
         "type": "object",
         "properties": {
           "truth": {
-            "$ref": "#/components/schemas/OptionOfIValidationTruthModel"
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IValidationTruthModel"
+              },
+              {
+                "nullable": true
+              }
+            ],
+            "description": "The truth for the validation rapid."
           },
           "explanation": {
-            "$ref": "#/components/schemas/OptionOfstring"
+            "type": "string",
+            "description": "The optional explanation that will be shown to the user when answering wrong.",
+            "nullable": true
           },
           "context": {
-            "$ref": "#/components/schemas/OptionOfstring"
+            "type": "string",
+            "description": "An optional text context that will be shown to the user.",
+            "nullable": true
           },
           "contextAsset": {
-            "$ref": "#/components/schemas/OptionOfIAssetInput"
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/IAssetInput"
+              },
+              {
+                "nullable": true
+              }
+            ],
+            "description": "An optional asset that will be used as context to show to the user."
           },
           "randomCorrectProbability": {
-            "$ref": "#/components/schemas/OptionOfdouble"
+            "type": "number",
+            "description": "The probability that if the user answers at random that they'll be correct.",
+            "format": "double",
+            "nullable": true
           },
           "isCommonSense": {
-            "$ref": "#/components/schemas/OptionOfboolean"
+            "type": "boolean",
+            "description": "Whether this rapid should be treated as commonsense validation.\n When true, incorrect answers are not accepted and the rapid affects global score.",
+            "nullable": true
           }
-        }
+        },
+        "description": "Input model for updating an audience rapid."
       },
       "UpdateAudienceRequest": {
         "type": "object",
         "properties": {
           "name": {
-            "$ref": "#/components/schemas/OptionOfstring"
+            "type": "string",
+            "description": "The new name to give to this audience.",
+            "nullable": true
           },
           "description": {
-            "$ref": "#/components/schemas/OptionOfstring"
+            "type": "string",
+            "description": "The new description for the audience. Supports markdown. Set to null to remove.",
+            "nullable": true
           },
           "filters": {
-            "$ref": "#/components/schemas/OptionOfIReadOnlyListOfIAudienceFilter"
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ListOfIAudienceFilter"
+              },
+              {
+                "nullable": true
+              }
+            ],
+            "description": "The new filters to apply to any orders created for this audience.\n A filter can be used to restrict the audience to a specific subset of users."
           },
           "logo": {
-            "$ref": "#/components/schemas/OptionOfExistingAssetInput"
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ExistingAssetInput"
+              },
+              {
+                "nullable": true
+              }
+            ],
+            "description": "The new logo image for the audience. Must be an existing image asset.\n Set to null to remove the logo."
           },
           "minGraduatedForDistillingBoost": {
-            "$ref": "#/components/schemas/OptionOfint"
+            "type": "integer",
+            "description": "Minimum graduated users before disabling distilling boost.\n When graduated count is below this, KayzenDistillingAudienceId is added to campaign boosting.",
+            "format": "int32",
+            "nullable": true
           },
           "minDistillingForGlobalBoost": {
-            "$ref": "#/components/schemas/OptionOfint"
+            "type": "integer",
+            "description": "Minimum distilling users before disabling global boost.\n When distilling count is below this, RequiresGlobalBoost is set to true.",
+            "format": "int32",
+            "nullable": true
           }
-        }
+        },
+        "description": "The body request to update an audience."
       },
       "UpdateBoostConfigEndpoint_Input": {
         "type": "object",
         "properties": {
           "minDistillingForGlobalBoost": {
             "type": "integer",
+            "description": "Minimum number of distilling users required to activate global boost.",
             "format": "int32"
           },
           "minGraduatedForDistillingBoost": {
             "type": "integer",
+            "description": "Minimum number of graduated users required to activate distilling boost.",
             "format": "int32"
           }
         }

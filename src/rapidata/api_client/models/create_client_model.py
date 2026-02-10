@@ -24,9 +24,9 @@ from typing_extensions import Self
 
 class CreateClientModel(BaseModel):
     """
-    CreateClientModel
+    The model for creating a new client.
     """ # noqa: E501
-    display_name: Optional[StrictStr] = Field(default=None, alias="displayName")
+    display_name: Optional[StrictStr] = Field(default=None, description="An optional display name for the client.", alias="displayName")
     __properties: ClassVar[List[str]] = ["displayName"]
 
     model_config = ConfigDict(

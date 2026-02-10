@@ -28,17 +28,17 @@ from typing_extensions import Self
 
 class AddRapidToAudienceModel(BaseModel):
     """
-    AddRapidToAudienceModel
+    The model for adding a validation rapid with asset in JSON body.
     """ # noqa: E501
-    asset: IAssetInput
-    payload: IRapidPayload
-    truth: Optional[IValidationTruth] = None
-    random_correct_probability: Union[StrictFloat, StrictInt] = Field(alias="randomCorrectProbability")
-    explanation: Optional[StrictStr] = None
-    context: Optional[StrictStr] = None
-    context_asset: Optional[IAssetInput] = Field(default=None, alias="contextAsset")
-    feature_flags: Optional[List[FeatureFlagModel]] = Field(default=None, alias="featureFlags")
-    is_common_sense: Optional[StrictBool] = Field(default=None, alias="isCommonSense")
+    asset: IAssetInput = Field(description="The asset to use for the rapid.")
+    payload: IRapidPayload = Field(description="The payload to use for the rapid.")
+    truth: Optional[IValidationTruth] = Field(default=None, description="The ground truth for the rapid.")
+    random_correct_probability: Union[StrictFloat, StrictInt] = Field(description="The probability for an answer to be correct when randomly guessing.", alias="randomCorrectProbability")
+    explanation: Optional[StrictStr] = Field(default=None, description="An explanation for the users if they answer the rapid incorrectly.")
+    context: Optional[StrictStr] = Field(default=None, description="An optional textual context that provides additional information to the user about the rapid.")
+    context_asset: Optional[IAssetInput] = Field(default=None, description="An optional asset that provides additional context to the user about the rapid.", alias="contextAsset")
+    feature_flags: Optional[List[FeatureFlagModel]] = Field(default=None, description="The feature flags to enable for the rapid.", alias="featureFlags")
+    is_common_sense: Optional[StrictBool] = Field(default=None, description="Whether this rapid should be treated as commonsense validation.  When true, incorrect answers are not accepted and the rapid affects global score.  When null, AI auto-detection will determine if the rapid is common sense (defaults to false initially).  Defaults to null (AI auto-detection enabled).", alias="isCommonSense")
     __properties: ClassVar[List[str]] = ["asset", "payload", "truth", "randomCorrectProbability", "explanation", "context", "contextAsset", "featureFlags", "isCommonSense"]
 
     model_config = ConfigDict(
@@ -99,11 +99,6 @@ class AddRapidToAudienceModel(BaseModel):
                 if _item_feature_flags:
                     _items.append(_item_feature_flags.to_dict())
             _dict['featureFlags'] = _items
-        # set to None if truth (nullable) is None
-        # and model_fields_set contains the field
-        if self.truth is None and "truth" in self.model_fields_set:
-            _dict['truth'] = None
-
         # set to None if explanation (nullable) is None
         # and model_fields_set contains the field
         if self.explanation is None and "explanation" in self.model_fields_set:
@@ -113,11 +108,6 @@ class AddRapidToAudienceModel(BaseModel):
         # and model_fields_set contains the field
         if self.context is None and "context" in self.model_fields_set:
             _dict['context'] = None
-
-        # set to None if context_asset (nullable) is None
-        # and model_fields_set contains the field
-        if self.context_asset is None and "context_asset" in self.model_fields_set:
-            _dict['contextAsset'] = None
 
         # set to None if is_common_sense (nullable) is None
         # and model_fields_set contains the field

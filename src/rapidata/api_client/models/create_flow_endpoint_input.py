@@ -27,14 +27,14 @@ class CreateFlowEndpointInput(BaseModel):
     """
     CreateFlowEndpointInput
     """ # noqa: E501
-    name: StrictStr
-    criteria: StrictStr
-    validation_set_id: Optional[StrictStr] = Field(default=None, alias="validationSetId")
-    starting_elo: Optional[StrictInt] = Field(default=None, alias="startingElo")
-    k_factor: Optional[StrictInt] = Field(default=None, alias="kFactor")
-    scaling_factor: Optional[StrictInt] = Field(default=None, alias="scalingFactor")
-    responses_required: StrictInt = Field(alias="responsesRequired")
-    feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
+    name: StrictStr = Field(description="The name of the ranking flow.")
+    criteria: StrictStr = Field(description="The ranking criteria used to compare items.")
+    validation_set_id: Optional[StrictStr] = Field(default=None, description="Optional ID of the validation set to use.", alias="validationSetId")
+    starting_elo: Optional[StrictInt] = Field(default=None, description="Initial Elo rating for new items. Defaults to 1200.", alias="startingElo")
+    k_factor: Optional[StrictInt] = Field(default=None, description="K-factor controlling Elo rating sensitivity. Defaults to 40.", alias="kFactor")
+    scaling_factor: Optional[StrictInt] = Field(default=None, description="Scaling factor for Elo probability calculation. Defaults to 400.", alias="scalingFactor")
+    responses_required: StrictInt = Field(description="Number of responses required per comparison.", alias="responsesRequired")
+    feature_flags: Optional[List[FeatureFlag]] = Field(default=None, description="Optional feature flags to enable for this flow.", alias="featureFlags")
     __properties: ClassVar[List[str]] = ["name", "criteria", "validationSetId", "startingElo", "kFactor", "scalingFactor", "responsesRequired", "featureFlags"]
 
     model_config = ConfigDict(

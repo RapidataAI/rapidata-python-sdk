@@ -26,7 +26,7 @@ class CreateFlowEndpointOutput(BaseModel):
     """
     CreateFlowEndpointOutput
     """ # noqa: E501
-    flow_id: StrictStr = Field(alias="flowId")
+    flow_id: StrictStr = Field(description="The ID of the created ranking flow.", alias="flowId")
     __properties: ClassVar[List[str]] = ["flowId"]
 
     model_config = ConfigDict(

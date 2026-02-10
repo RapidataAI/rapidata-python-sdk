@@ -24,9 +24,9 @@ from typing_extensions import Self
 
 class CloneOrderModel(BaseModel):
     """
-    CloneOrderModel
+    The model for cloning an existing order.
     """ # noqa: E501
-    order_name: StrictStr = Field(alias="orderName")
+    order_name: StrictStr = Field(description="The name of the new order", alias="orderName")
     __properties: ClassVar[List[str]] = ["orderName"]
 
     model_config = ConfigDict(

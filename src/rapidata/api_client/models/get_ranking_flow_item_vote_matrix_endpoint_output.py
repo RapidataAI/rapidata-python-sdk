@@ -17,17 +17,19 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Union
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateBatchUploadEndpointInput(BaseModel):
+class GetRankingFlowItemVoteMatrixEndpointOutput(BaseModel):
     """
-    CreateBatchUploadEndpointInput
+    GetRankingFlowItemVoteMatrixEndpointOutput
     """ # noqa: E501
-    urls: List[StrictStr] = Field(description="The URLs to download and process.")
-    __properties: ClassVar[List[str]] = ["urls"]
+    index: List[StrictStr]
+    columns: List[StrictStr]
+    data: List[List[Union[StrictFloat, StrictInt]]] = Field(description="The vote counts as a two-dimensional matrix where Data[i][j] is the number of times row i was preferred over column j.")
+    __properties: ClassVar[List[str]] = ["index", "columns", "data"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -47,7 +49,7 @@ class CreateBatchUploadEndpointInput(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateBatchUploadEndpointInput from a JSON string"""
+        """Create an instance of GetRankingFlowItemVoteMatrixEndpointOutput from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -72,7 +74,7 @@ class CreateBatchUploadEndpointInput(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateBatchUploadEndpointInput from a dict"""
+        """Create an instance of GetRankingFlowItemVoteMatrixEndpointOutput from a dict"""
         if obj is None:
             return None
 
@@ -80,7 +82,9 @@ class CreateBatchUploadEndpointInput(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "urls": obj.get("urls")
+            "index": obj.get("index"),
+            "columns": obj.get("columns"),
+            "data": obj.get("data")
         })
         return _obj
 

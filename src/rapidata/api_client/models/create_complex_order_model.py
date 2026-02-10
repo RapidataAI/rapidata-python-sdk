@@ -25,12 +25,12 @@ from typing_extensions import Self
 
 class CreateComplexOrderModel(BaseModel):
     """
-    CreateComplexOrderModel
+    The model for creating a new order with a custom pipeline.
     """ # noqa: E501
-    order_name: StrictStr = Field(alias="orderName")
-    pipeline: IPipelineModel
-    is_demo: Optional[StrictBool] = Field(default=None, alias="isDemo")
-    preceding_order_id: Optional[StrictStr] = Field(default=None, alias="precedingOrderId")
+    order_name: StrictStr = Field(description="The name of the order", alias="orderName")
+    pipeline: IPipelineModel = Field(description="The pipeline to use")
+    is_demo: Optional[StrictBool] = Field(default=None, description="Whether the order is public", alias="isDemo")
+    preceding_order_id: Optional[StrictStr] = Field(default=None, description="Optional ID of the order that must complete before this order starts processing.", alias="precedingOrderId")
     __properties: ClassVar[List[str]] = ["orderName", "pipeline", "isDemo", "precedingOrderId"]
 
     model_config = ConfigDict(

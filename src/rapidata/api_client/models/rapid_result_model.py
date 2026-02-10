@@ -25,10 +25,10 @@ from typing_extensions import Self
 
 class RapidResultModel(BaseModel):
     """
-    RapidResultModel
+    The model for a Rapid result.
     """ # noqa: E501
-    session_index: StrictInt = Field(alias="sessionIndex")
-    result: IRapidResult
+    session_index: StrictInt = Field(description="The index of the session when the result was submitted.", alias="sessionIndex")
+    result: IRapidResult = Field(description="The guess that was submitted.")
     __properties: ClassVar[List[str]] = ["sessionIndex", "result"]
 
     model_config = ConfigDict(

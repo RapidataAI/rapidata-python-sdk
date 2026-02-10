@@ -60,10 +60,13 @@
         "tags": [
           "ValidationSet"
         ],
+        "summary": "Gets a validation set that is available to the user and best matches the provided parameters.",
+        "description": "This is not a hard filter, instead it is used to find validation sets that have similar characteristics to the provided instruction.",
         "parameters": [
           {
             "name": "assetType",
             "in": "query",
+            "description": "The types of assets that the validation set should contain.\n An asset type can be an image, video, audio, text, or any combination of these.\n \n This parameter is a flag, meaning that it can be null or contain multiple values.\n If multiple values are provided, a validation set will be chosen that contains at least one of the specified asset types.",
             "schema": {
               "$ref": "#/components/schemas/AssetType"
             }
@@ -71,6 +74,7 @@
           {
             "name": "modality",
             "in": "query",
+            "description": "The rapid modalities that the validation set should contain.\n The modality is the type of rapid such as classify, compare, locate, etc.\n \n This parameter is a flag, meaning that it can be null or contain multiple values.\n If multiple values are provided, a validation set will be chosen that contains at least one of the specified modalities.",
             "schema": {
               "$ref": "#/components/schemas/RapidModality"
             }
@@ -78,6 +82,7 @@
           {
             "name": "promptType",
             "in": "query",
+            "description": "The prompt types that the validation set should contain.\n A prompt type is the additional information that is presented to the user when solving a rapid.\n For example, a prompt type can be either text or an asset if the context is an image or video.\n \n This parameter is a flag, meaning that it can be null or contain multiple values.\n If multiple values are provided, a validation set will be chosen that contains at least one of the specified prompt types.",
             "schema": {
               "$ref": "#/components/schemas/PromptType"
             }
@@ -85,6 +90,7 @@
           {
             "name": "instruction",
             "in": "query",
+            "description": "An instruction that can be used to filter for validation sets that have similar instructions.\n An instruction is a text that is presented to the user when solving a rapid that explains how to solve the rapid.",
             "schema": {
               "type": "string"
             }
@@ -622,54 +628,62 @@
         "type": "object",
         "properties": {
           "asset": {
-            "$ref": "#/components/schemas/IAssetInput"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IAssetInput"
+              }
+            ],
+            "description": "The asset to use for the rapid."
           },
           "payload": {
-            "$ref": "#/components/schemas/IRapidPayload"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IRapidPayload"
+              }
+            ],
+            "description": "The payload to use for the rapid."
           },
           "truth": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/IValidationTruthModel"
               }
-            ]
+            ],
+            "description": "The ground truth for the rapid."
           },
           "randomCorrectProbability": {
             "type": "number",
+            "description": "The probability for an answer to be correct when randomly guessing.",
             "format": "double"
           },
           "explanation": {
             "type": "string",
+            "description": "An explanation for the users if they answer the rapid incorrectly.",
             "nullable": true
           },
           "context": {
             "type": "string",
+            "description": "An optional textual context that provides additional information to the user about the rapid.",
             "nullable": true
           },
           "contextAsset": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/IAssetInput"
               }
-            ]
+            ],
+            "description": "An optional asset that provides additional context to the user about the rapid."
           },
           "featureFlags": {
-            "oneOf": [
-              {
-                "nullable": true
-              },
+            "allOf": [
               {
                 "$ref": "#/components/schemas/ListOfFeatureFlagModel"
               }
-            ]
+            ],
+            "description": "The feature flags to enable for the rapid."
           }
-        }
+        },
+        "description": "The model for adding a validation rapid with asset in JSON body."
       },
       "AssetType": {
         "type": "array",
@@ -744,9 +758,11 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "The name of the validation set."
           }
-        }
+        },
+        "description": "The body request for creating a new validation set."
       },
       "FeatureFlagModel": {
         "required": [
@@ -2164,27 +2180,6 @@
           }
         }
       },
-      "OptionOfboolean": {
-        "type": "boolean",
-        "nullable": true
-      },
-      "OptionOfIReadOnlyListOfstring": {
-        "oneOf": [
-          {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          {
-            "nullable": true
-          }
-        ]
-      },
-      "OptionOfstring": {
-        "type": "string",
-        "nullable": true
-      },
       "PagedResultOfGetValidationRapidsResult": {
         "required": [
           "total",
@@ -2431,12 +2426,18 @@
         "type": "object",
         "properties": {
           "dimensions": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "allOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ],
+            "description": "The dimensions to set on all rapids within the validation set."
           }
-        }
+        },
+        "description": "The model for updating the dimensions of all rapids within a validation set."
       },
       "UpdateShouldAlertModel": {
         "required": [
@@ -2445,29 +2446,51 @@
         "type": "object",
         "properties": {
           "shouldAlert": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "A flag indicating whether the users should be alerted if they answer incorrectly."
           }
-        }
+        },
+        "description": "The model for updating the shouldAlert field of all rapids within a validation set."
       },
       "UpdateValidationSetModel": {
         "type": "object",
         "properties": {
           "name": {
-            "$ref": "#/components/schemas/OptionOfstring"
+            "type": "string",
+            "description": "The name of the validation set",
+            "nullable": true
           },
           "dimensions": {
-            "$ref": "#/components/schemas/OptionOfIReadOnlyListOfstring"
+            "oneOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              {
+                "nullable": true
+              }
+            ],
+            "description": "The dimensions of the validation set"
           },
           "shouldAlert": {
-            "$ref": "#/components/schemas/OptionOfboolean"
+            "type": "boolean",
+            "description": "If the user should be alerted or not",
+            "nullable": true
           },
           "isPublic": {
-            "$ref": "#/components/schemas/OptionOfboolean"
+            "type": "boolean",
+            "description": "If the validation set is public",
+            "nullable": true
           },
           "isFlagOverruled": {
-            "$ref": "#/components/schemas/OptionOfboolean"
+            "type": "boolean",
+            "description": "If the flag on validation rapids should be overruled",
+            "nullable": true
           }
-        }
+        },
+        "description": "Allows for specific updates to a validation set without needing to provide all properties."
       },
       "ValidationSetModel": {
         "required": [

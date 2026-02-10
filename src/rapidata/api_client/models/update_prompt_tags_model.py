@@ -24,7 +24,7 @@ from typing_extensions import Self
 
 class UpdatePromptTagsModel(BaseModel):
     """
-    UpdatePromptTagsModel
+    The model for updating prompt tags.
     """ # noqa: E501
     tags: List[StrictStr]
     __properties: ClassVar[List[str]] = ["tags"]

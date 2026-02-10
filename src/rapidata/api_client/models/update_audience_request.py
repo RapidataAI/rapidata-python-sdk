@@ -26,14 +26,14 @@ from typing_extensions import Self
 
 class UpdateAudienceRequest(BaseModel):
     """
-    UpdateAudienceRequest
+    The body request to update an audience.
     """ # noqa: E501
-    name: Optional[StrictStr] = None
-    description: Optional[StrictStr] = None
+    name: Optional[StrictStr] = Field(default=None, description="The new name to give to this audience.")
+    description: Optional[StrictStr] = Field(default=None, description="The new description for the audience. Supports markdown. Set to null to remove.")
     filters: Optional[List[IAudienceFilter]] = None
     logo: Optional[ExistingAssetInput] = None
-    min_graduated_for_distilling_boost: Optional[StrictInt] = Field(default=None, alias="minGraduatedForDistillingBoost")
-    min_distilling_for_global_boost: Optional[StrictInt] = Field(default=None, alias="minDistillingForGlobalBoost")
+    min_graduated_for_distilling_boost: Optional[StrictInt] = Field(default=None, description="Minimum graduated users before disabling distilling boost.  When graduated count is below this, KayzenDistillingAudienceId is added to campaign boosting.", alias="minGraduatedForDistillingBoost")
+    min_distilling_for_global_boost: Optional[StrictInt] = Field(default=None, description="Minimum distilling users before disabling global boost.  When distilling count is below this, RequiresGlobalBoost is set to true.", alias="minDistillingForGlobalBoost")
     __properties: ClassVar[List[str]] = ["name", "description", "filters", "logo", "minGraduatedForDistillingBoost", "minDistillingForGlobalBoost"]
 
     model_config = ConfigDict(

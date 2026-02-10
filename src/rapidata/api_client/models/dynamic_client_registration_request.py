@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.json_web_key_set import JsonWebKeySet
 from typing import Optional, Set
@@ -25,7 +25,7 @@ from typing_extensions import Self
 
 class DynamicClientRegistrationRequest(BaseModel):
     """
-    DynamicClientRegistrationRequest
+    The request body for dynamic client registration.
     """ # noqa: E501
     redirect_uris: Optional[List[StrictStr]] = None
     grant_types: Optional[List[StrictStr]] = None
@@ -34,12 +34,12 @@ class DynamicClientRegistrationRequest(BaseModel):
     client_name: Optional[StrictStr] = None
     client_uri: Optional[StrictStr] = None
     logo_uri: Optional[StrictStr] = None
-    scope: Optional[StrictStr] = None
+    scope: Optional[StrictStr] = Field(default=None, description="String containing a space-separated list of scope values  that the client can use when requesting access tokens.")
     contacts: Optional[List[StrictStr]] = None
     tos_uri: Optional[StrictStr] = None
     policy_uri: Optional[StrictStr] = None
     jwks_uri: Optional[StrictStr] = None
-    jwks: Optional[JsonWebKeySet] = None
+    jwks: Optional[JsonWebKeySet] = Field(default=None, description="Client's JSON Web Key Set [RFC7517] document value, which contains the client's public keys.")
     __properties: ClassVar[List[str]] = ["redirect_uris", "grant_types", "response_types", "client_id", "client_name", "client_uri", "logo_uri", "scope", "contacts", "tos_uri", "policy_uri", "jwks_uri", "jwks"]
 
     model_config = ConfigDict(
@@ -123,11 +123,6 @@ class DynamicClientRegistrationRequest(BaseModel):
         # and model_fields_set contains the field
         if self.jwks_uri is None and "jwks_uri" in self.model_fields_set:
             _dict['jwks_uri'] = None
-
-        # set to None if jwks (nullable) is None
-        # and model_fields_set contains the field
-        if self.jwks is None and "jwks" in self.model_fields_set:
-            _dict['jwks'] = None
 
         return _dict
 

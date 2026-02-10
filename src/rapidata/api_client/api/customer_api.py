@@ -52,7 +52,7 @@ class CustomerApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> QueryCustomersEndpointPagedResultOfOutput:
-        """Queries customers for administrators.
+        """Queries customers with filtering and pagination.
 
 
         :param _request_timeout: timeout setting for this request. If one
@@ -117,7 +117,7 @@ class CustomerApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[QueryCustomersEndpointPagedResultOfOutput]:
-        """Queries customers for administrators.
+        """Queries customers with filtering and pagination.
 
 
         :param _request_timeout: timeout setting for this request. If one
@@ -182,7 +182,7 @@ class CustomerApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Queries customers for administrators.
+        """Queries customers with filtering and pagination.
 
 
         :param _request_timeout: timeout setting for this request. If one

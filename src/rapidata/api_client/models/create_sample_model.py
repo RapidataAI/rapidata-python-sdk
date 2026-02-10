@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
 from rapidata.api_client.models.i_asset_input import IAssetInput
 from typing import Optional, Set
@@ -25,10 +25,10 @@ from typing_extensions import Self
 
 class CreateSampleModel(BaseModel):
     """
-    CreateSampleModel
+    The model used to create a sample to a participant.
     """ # noqa: E501
-    identifier: StrictStr
-    asset: IAssetInput
+    identifier: StrictStr = Field(description="The identifier used to correlate samples of different participants.")
+    asset: IAssetInput = Field(description="The asset input for the sample.")
     __properties: ClassVar[List[str]] = ["identifier", "asset"]
 
     model_config = ConfigDict(

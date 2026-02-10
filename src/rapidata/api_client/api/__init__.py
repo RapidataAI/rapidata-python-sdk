@@ -15,6 +15,7 @@ from rapidata.api_client.api.dataset_api import DatasetApi
 from rapidata.api_client.api.evaluation_workflow_api import EvaluationWorkflowApi
 from rapidata.api_client.api.feedback_api import FeedbackApi
 from rapidata.api_client.api.flow_api import FlowApi
+from rapidata.api_client.api.flow_item_api import FlowItemApi
 from rapidata.api_client.api.grouped_ranking_workflow_api import GroupedRankingWorkflowApi
 from rapidata.api_client.api.identity_api import IdentityApi
 from rapidata.api_client.api.job_api import JobApi

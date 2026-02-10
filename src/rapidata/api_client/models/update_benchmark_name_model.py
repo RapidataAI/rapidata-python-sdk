@@ -17,16 +17,16 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
 class UpdateBenchmarkNameModel(BaseModel):
     """
-    UpdateBenchmarkNameModel
+    The model used to update the name of a benchmark.
     """ # noqa: E501
-    name: StrictStr
+    name: StrictStr = Field(description="The new name of the benchmark.")
     __properties: ClassVar[List[str]] = ["name"]
 
     model_config = ConfigDict(

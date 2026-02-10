@@ -20,7 +20,7 @@ from typing_extensions import Self
 
 class StickyState(str, Enum):
     """
-    StickyState
+    Indicates if the underlying campaign should be sticky.
     """
 
     """

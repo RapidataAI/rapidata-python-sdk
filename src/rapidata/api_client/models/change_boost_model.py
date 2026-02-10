@@ -24,10 +24,10 @@ from typing_extensions import Self
 
 class ChangeBoostModel(BaseModel):
     """
-    ChangeBoostModel
+    The model to update the manual boost status. or putting it back to autopilot.
     """ # noqa: E501
-    is_manual: StrictBool = Field(alias="isManual")
-    is_active: StrictBool = Field(alias="isActive")
+    is_manual: StrictBool = Field(description="If the manual overwrite should be applied", alias="isManual")
+    is_active: StrictBool = Field(description="If manual is set to true it will overrule the system with this.", alias="isActive")
     __properties: ClassVar[List[str]] = ["isManual", "isActive"]
 
     model_config = ConfigDict(

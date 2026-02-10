@@ -24,10 +24,10 @@ from typing_extensions import Self
 
 class UpdateCampaignModel(BaseModel):
     """
-    UpdateCampaignModel
+    The model to update campaign properties.
     """ # noqa: E501
-    priority: Optional[StrictInt] = None
-    requires_booster: Optional[StrictBool] = Field(default=None, alias="requiresBooster")
+    priority: Optional[StrictInt] = Field(default=None, description="The new priority value for the campaign.")
+    requires_booster: Optional[StrictBool] = Field(default=None, description="Whether the campaign requires booster.", alias="requiresBooster")
     __properties: ClassVar[List[str]] = ["priority", "requiresBooster"]
 
     model_config = ConfigDict(

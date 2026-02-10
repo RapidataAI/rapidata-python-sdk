@@ -17,25 +17,34 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from rapidata.api_client.models.i_order_workflow_model import IOrderWorkflowModel
 from rapidata.api_client.models.i_referee_model import IRefereeModel
-from rapidata.api_client.models.option_of_aggregator_type import OptionOfAggregatorType
 from typing import Optional, Set
 from typing_extensions import Self
 
 class CreateJobRevisionEndpointInput(BaseModel):
     """
-    CreateJobRevisionEndpointInput
+    The input for the create job revision endpoint.
     """ # noqa: E501
     workflow: Optional[IOrderWorkflowModel] = None
     referee: Optional[IRefereeModel] = None
-    dataset_id: Optional[StrictStr] = Field(default=None, alias="datasetId")
+    dataset_id: Optional[StrictStr] = Field(default=None, description="The dataset id. If not provided, inherits from the previous revision.", alias="datasetId")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
-    aggregator_type: Optional[OptionOfAggregatorType] = Field(default=None, alias="aggregatorType")
+    aggregator_type: Optional[StrictStr] = Field(default=None, description="The aggregator type. If not provided, inherits from the previous revision.", alias="aggregatorType")
     __properties: ClassVar[List[str]] = ["workflow", "referee", "datasetId", "featureFlags", "aggregatorType"]
+
+    @field_validator('aggregator_type')
+    def aggregator_type_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['NonCommittal', 'MajorityVote', 'SimpleMatchup', 'LocateCluster', 'Classification', 'Locate', 'BoundingBox', 'Line', 'Transcription', 'SinglePointLocate', 'FreeText', 'Scrub', 'Ranking', 'MultiRanking']):
+            raise ValueError("must be one of enum values ('NonCommittal', 'MajorityVote', 'SimpleMatchup', 'LocateCluster', 'Classification', 'Locate', 'BoundingBox', 'Line', 'Transcription', 'SinglePointLocate', 'FreeText', 'Scrub', 'Ranking', 'MultiRanking')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -103,6 +112,11 @@ class CreateJobRevisionEndpointInput(BaseModel):
         # and model_fields_set contains the field
         if self.dataset_id is None and "dataset_id" in self.model_fields_set:
             _dict['datasetId'] = None
+
+        # set to None if aggregator_type (nullable) is None
+        # and model_fields_set contains the field
+        if self.aggregator_type is None and "aggregator_type" in self.model_fields_set:
+            _dict['aggregatorType'] = None
 
         return _dict
 

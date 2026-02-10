@@ -25,20 +25,20 @@ from typing_extensions import Self
 
 class GetJobByIdEndpointOutput(BaseModel):
     """
-    GetJobByIdEndpointOutput
+    The result when a job has been retrieved.
     """ # noqa: E501
-    job_id: StrictStr = Field(alias="jobId")
-    name: StrictStr
-    definition_id: StrictStr = Field(alias="definitionId")
-    audience_id: StrictStr = Field(alias="audienceId")
-    revision_number: StrictInt = Field(alias="revisionNumber")
-    pipeline_id: StrictStr = Field(alias="pipelineId")
-    status: StrictStr
-    completed_at: Optional[datetime] = Field(default=None, alias="completedAt")
-    result_file_name: Optional[StrictStr] = Field(default=None, alias="resultFileName")
-    failed_at: Optional[datetime] = Field(default=None, alias="failedAt")
-    failure_message: Optional[StrictStr] = Field(default=None, alias="failureMessage")
-    created_at: datetime = Field(alias="createdAt")
+    job_id: StrictStr = Field(description="The job id.", alias="jobId")
+    name: StrictStr = Field(description="The job name.")
+    definition_id: StrictStr = Field(description="The job definition id.", alias="definitionId")
+    audience_id: StrictStr = Field(description="The audience id.", alias="audienceId")
+    revision_number: StrictInt = Field(description="The revision number.", alias="revisionNumber")
+    pipeline_id: StrictStr = Field(description="The pipeline id.", alias="pipelineId")
+    status: StrictStr = Field(description="The job status.")
+    completed_at: Optional[datetime] = Field(default=None, description="The timestamp when the job was completed.", alias="completedAt")
+    result_file_name: Optional[StrictStr] = Field(default=None, description="The file name of the result.", alias="resultFileName")
+    failed_at: Optional[datetime] = Field(default=None, description="The timestamp when the job failed.", alias="failedAt")
+    failure_message: Optional[StrictStr] = Field(default=None, description="The failure message.", alias="failureMessage")
+    created_at: datetime = Field(description="The creation timestamp.", alias="createdAt")
     __properties: ClassVar[List[str]] = ["jobId", "name", "definitionId", "audienceId", "revisionNumber", "pipelineId", "status", "completedAt", "resultFileName", "failedAt", "failureMessage", "createdAt"]
 
     model_config = ConfigDict(

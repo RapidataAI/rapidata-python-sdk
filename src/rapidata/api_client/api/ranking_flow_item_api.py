@@ -24,6 +24,7 @@ from rapidata.api_client.models.create_flow_item_endpoint_output import CreateFl
 from rapidata.api_client.models.flow_get_name_parameter import FlowGetNameParameter
 from rapidata.api_client.models.get_flow_item_by_id_endpoint_output import GetFlowItemByIdEndpointOutput
 from rapidata.api_client.models.get_ranking_flow_item_results_endpoint_output import GetRankingFlowItemResultsEndpointOutput
+from rapidata.api_client.models.get_ranking_flow_item_vote_matrix_endpoint_output import GetRankingFlowItemVoteMatrixEndpointOutput
 from rapidata.api_client.models.query_flow_items_endpoint_paged_result_of_output import QueryFlowItemsEndpointPagedResultOfOutput
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
@@ -47,7 +48,7 @@ class RankingFlowItemApi:
     @validate_call
     def flow_ranking_flow_id_item_get(
         self,
-        flow_id: StrictStr,
+        flow_id: Annotated[StrictStr, Field(description="The ID of the flow to query items for.")],
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
@@ -66,10 +67,10 @@ class RankingFlowItemApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> QueryFlowItemsEndpointPagedResultOfOutput:
-        """flow_ranking_flow_id_item_get
+        """Queries flow items for a flow.
 
 
-        :param flow_id: (required)
+        :param flow_id: The ID of the flow to query items for. (required)
         :type flow_id: str
         :param page: The 1-based page index.
         :type page: int
@@ -136,7 +137,7 @@ class RankingFlowItemApi:
     @validate_call
     def flow_ranking_flow_id_item_get_with_http_info(
         self,
-        flow_id: StrictStr,
+        flow_id: Annotated[StrictStr, Field(description="The ID of the flow to query items for.")],
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
@@ -155,10 +156,10 @@ class RankingFlowItemApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[QueryFlowItemsEndpointPagedResultOfOutput]:
-        """flow_ranking_flow_id_item_get
+        """Queries flow items for a flow.
 
 
-        :param flow_id: (required)
+        :param flow_id: The ID of the flow to query items for. (required)
         :type flow_id: str
         :param page: The 1-based page index.
         :type page: int
@@ -225,7 +226,7 @@ class RankingFlowItemApi:
     @validate_call
     def flow_ranking_flow_id_item_get_without_preload_content(
         self,
-        flow_id: StrictStr,
+        flow_id: Annotated[StrictStr, Field(description="The ID of the flow to query items for.")],
         page: Annotated[Optional[StrictInt], Field(description="The 1-based page index.")] = None,
         page_size: Annotated[Optional[StrictInt], Field(description="The number of items per page.")] = None,
         sort: Annotated[Optional[List[StrictStr]], Field(description="Sort fields. Prefix with - for descending order (e.g. -created_at).")] = None,
@@ -244,10 +245,10 @@ class RankingFlowItemApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """flow_ranking_flow_id_item_get
+        """Queries flow items for a flow.
 
 
-        :param flow_id: (required)
+        :param flow_id: The ID of the flow to query items for. (required)
         :type flow_id: str
         :param page: The 1-based page index.
         :type page: int
@@ -402,8 +403,8 @@ class RankingFlowItemApi:
     @validate_call
     def flow_ranking_flow_id_item_post(
         self,
-        flow_id: StrictStr,
-        create_flow_item_endpoint_input: CreateFlowItemEndpointInput,
+        flow_id: Annotated[StrictStr, Field(description="The ID of the flow to create the item in.")],
+        create_flow_item_endpoint_input: Annotated[CreateFlowItemEndpointInput, Field(description="The flow item creation parameters.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -420,9 +421,9 @@ class RankingFlowItemApi:
         """Creates a new flow item for the specified flow.
 
 
-        :param flow_id: (required)
+        :param flow_id: The ID of the flow to create the item in. (required)
         :type flow_id: str
-        :param create_flow_item_endpoint_input: (required)
+        :param create_flow_item_endpoint_input: The flow item creation parameters. (required)
         :type create_flow_item_endpoint_input: CreateFlowItemEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -475,8 +476,8 @@ class RankingFlowItemApi:
     @validate_call
     def flow_ranking_flow_id_item_post_with_http_info(
         self,
-        flow_id: StrictStr,
-        create_flow_item_endpoint_input: CreateFlowItemEndpointInput,
+        flow_id: Annotated[StrictStr, Field(description="The ID of the flow to create the item in.")],
+        create_flow_item_endpoint_input: Annotated[CreateFlowItemEndpointInput, Field(description="The flow item creation parameters.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -493,9 +494,9 @@ class RankingFlowItemApi:
         """Creates a new flow item for the specified flow.
 
 
-        :param flow_id: (required)
+        :param flow_id: The ID of the flow to create the item in. (required)
         :type flow_id: str
-        :param create_flow_item_endpoint_input: (required)
+        :param create_flow_item_endpoint_input: The flow item creation parameters. (required)
         :type create_flow_item_endpoint_input: CreateFlowItemEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -548,8 +549,8 @@ class RankingFlowItemApi:
     @validate_call
     def flow_ranking_flow_id_item_post_without_preload_content(
         self,
-        flow_id: StrictStr,
-        create_flow_item_endpoint_input: CreateFlowItemEndpointInput,
+        flow_id: Annotated[StrictStr, Field(description="The ID of the flow to create the item in.")],
+        create_flow_item_endpoint_input: Annotated[CreateFlowItemEndpointInput, Field(description="The flow item creation parameters.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -566,9 +567,9 @@ class RankingFlowItemApi:
         """Creates a new flow item for the specified flow.
 
 
-        :param flow_id: (required)
+        :param flow_id: The ID of the flow to create the item in. (required)
         :type flow_id: str
-        :param create_flow_item_endpoint_input: (required)
+        :param create_flow_item_endpoint_input: The flow item creation parameters. (required)
         :type create_flow_item_endpoint_input: CreateFlowItemEndpointInput
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -699,7 +700,7 @@ class RankingFlowItemApi:
     @validate_call
     def flow_ranking_item_flow_item_id_get(
         self,
-        flow_item_id: StrictStr,
+        flow_item_id: Annotated[StrictStr, Field(description="The ID of the flow item to retrieve.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -716,7 +717,7 @@ class RankingFlowItemApi:
         """Retrieves a flow item by its ID.
 
 
-        :param flow_item_id: (required)
+        :param flow_item_id: The ID of the flow item to retrieve. (required)
         :type flow_item_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -768,7 +769,7 @@ class RankingFlowItemApi:
     @validate_call
     def flow_ranking_item_flow_item_id_get_with_http_info(
         self,
-        flow_item_id: StrictStr,
+        flow_item_id: Annotated[StrictStr, Field(description="The ID of the flow item to retrieve.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -785,7 +786,7 @@ class RankingFlowItemApi:
         """Retrieves a flow item by its ID.
 
 
-        :param flow_item_id: (required)
+        :param flow_item_id: The ID of the flow item to retrieve. (required)
         :type flow_item_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -837,7 +838,7 @@ class RankingFlowItemApi:
     @validate_call
     def flow_ranking_item_flow_item_id_get_without_preload_content(
         self,
-        flow_item_id: StrictStr,
+        flow_item_id: Annotated[StrictStr, Field(description="The ID of the flow item to retrieve.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -854,7 +855,7 @@ class RankingFlowItemApi:
         """Retrieves a flow item by its ID.
 
 
-        :param flow_item_id: (required)
+        :param flow_item_id: The ID of the flow item to retrieve. (required)
         :type flow_item_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -968,7 +969,7 @@ class RankingFlowItemApi:
     @validate_call
     def flow_ranking_item_flow_item_id_results_get(
         self,
-        flow_item_id: StrictStr,
+        flow_item_id: Annotated[StrictStr, Field(description="The ID of the flow item to get results for.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -982,10 +983,11 @@ class RankingFlowItemApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> GetRankingFlowItemResultsEndpointOutput:
-        """Retrieves ranking results (assets with Elo scores) for a completed flow item.  Returns 409 Conflict if the flow item is not completed or has no associated workflow.
+        """Returns ranking results with Elo scores for a completed flow item.
 
+        Returns 409 Conflict if the flow item is not yet completed or has no associated workflow.
 
-        :param flow_item_id: (required)
+        :param flow_item_id: The ID of the flow item to get results for. (required)
         :type flow_item_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1038,7 +1040,7 @@ class RankingFlowItemApi:
     @validate_call
     def flow_ranking_item_flow_item_id_results_get_with_http_info(
         self,
-        flow_item_id: StrictStr,
+        flow_item_id: Annotated[StrictStr, Field(description="The ID of the flow item to get results for.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1052,10 +1054,11 @@ class RankingFlowItemApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[GetRankingFlowItemResultsEndpointOutput]:
-        """Retrieves ranking results (assets with Elo scores) for a completed flow item.  Returns 409 Conflict if the flow item is not completed or has no associated workflow.
+        """Returns ranking results with Elo scores for a completed flow item.
 
+        Returns 409 Conflict if the flow item is not yet completed or has no associated workflow.
 
-        :param flow_item_id: (required)
+        :param flow_item_id: The ID of the flow item to get results for. (required)
         :type flow_item_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1108,7 +1111,7 @@ class RankingFlowItemApi:
     @validate_call
     def flow_ranking_item_flow_item_id_results_get_without_preload_content(
         self,
-        flow_item_id: StrictStr,
+        flow_item_id: Annotated[StrictStr, Field(description="The ID of the flow item to get results for.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1122,10 +1125,11 @@ class RankingFlowItemApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Retrieves ranking results (assets with Elo scores) for a completed flow item.  Returns 409 Conflict if the flow item is not completed or has no associated workflow.
+        """Returns ranking results with Elo scores for a completed flow item.
 
+        Returns 409 Conflict if the flow item is not yet completed or has no associated workflow.
 
-        :param flow_item_id: (required)
+        :param flow_item_id: The ID of the flow item to get results for. (required)
         :type flow_item_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1238,9 +1242,9 @@ class RankingFlowItemApi:
 
 
     @validate_call
-    def flow_ranking_item_flow_item_id_stop_post(
+    def flow_ranking_item_flow_item_id_vote_matrix_get(
         self,
-        flow_item_id: StrictStr,
+        flow_item_id: Annotated[StrictStr, Field(description="The ID of the flow item to get the vote matrix for.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1253,11 +1257,12 @@ class RankingFlowItemApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> None:
-        """Stops the specified flow item.
+    ) -> GetRankingFlowItemVoteMatrixEndpointOutput:
+        """Retrieves the pairwise vote matrix for a completed flow item.
 
+        Returns 409 Conflict if the flow item is not completed or has no associated workflow.
 
-        :param flow_item_id: (required)
+        :param flow_item_id: The ID of the flow item to get the vote matrix for. (required)
         :type flow_item_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1281,7 +1286,7 @@ class RankingFlowItemApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._flow_ranking_item_flow_item_id_stop_post_serialize(
+        _param = self._flow_ranking_item_flow_item_id_vote_matrix_get_serialize(
             flow_item_id=flow_item_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1290,10 +1295,11 @@ class RankingFlowItemApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
+            '200': "GetRankingFlowItemVoteMatrixEndpointOutput",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
+            '409': "ProblemDetails",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1307,9 +1313,9 @@ class RankingFlowItemApi:
 
 
     @validate_call
-    def flow_ranking_item_flow_item_id_stop_post_with_http_info(
+    def flow_ranking_item_flow_item_id_vote_matrix_get_with_http_info(
         self,
-        flow_item_id: StrictStr,
+        flow_item_id: Annotated[StrictStr, Field(description="The ID of the flow item to get the vote matrix for.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1322,11 +1328,12 @@ class RankingFlowItemApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[None]:
-        """Stops the specified flow item.
+    ) -> ApiResponse[GetRankingFlowItemVoteMatrixEndpointOutput]:
+        """Retrieves the pairwise vote matrix for a completed flow item.
 
+        Returns 409 Conflict if the flow item is not completed or has no associated workflow.
 
-        :param flow_item_id: (required)
+        :param flow_item_id: The ID of the flow item to get the vote matrix for. (required)
         :type flow_item_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1350,7 +1357,7 @@ class RankingFlowItemApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._flow_ranking_item_flow_item_id_stop_post_serialize(
+        _param = self._flow_ranking_item_flow_item_id_vote_matrix_get_serialize(
             flow_item_id=flow_item_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1359,10 +1366,11 @@ class RankingFlowItemApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
+            '200': "GetRankingFlowItemVoteMatrixEndpointOutput",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
+            '409': "ProblemDetails",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1376,9 +1384,9 @@ class RankingFlowItemApi:
 
 
     @validate_call
-    def flow_ranking_item_flow_item_id_stop_post_without_preload_content(
+    def flow_ranking_item_flow_item_id_vote_matrix_get_without_preload_content(
         self,
-        flow_item_id: StrictStr,
+        flow_item_id: Annotated[StrictStr, Field(description="The ID of the flow item to get the vote matrix for.")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1392,10 +1400,11 @@ class RankingFlowItemApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Stops the specified flow item.
+        """Retrieves the pairwise vote matrix for a completed flow item.
 
+        Returns 409 Conflict if the flow item is not completed or has no associated workflow.
 
-        :param flow_item_id: (required)
+        :param flow_item_id: The ID of the flow item to get the vote matrix for. (required)
         :type flow_item_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1419,7 +1428,7 @@ class RankingFlowItemApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._flow_ranking_item_flow_item_id_stop_post_serialize(
+        _param = self._flow_ranking_item_flow_item_id_vote_matrix_get_serialize(
             flow_item_id=flow_item_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1428,10 +1437,11 @@ class RankingFlowItemApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '204': None,
+            '200': "GetRankingFlowItemVoteMatrixEndpointOutput",
             '400': "ValidationProblemDetails",
             '401': None,
             '403': None,
+            '409': "ProblemDetails",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -1440,7 +1450,7 @@ class RankingFlowItemApi:
         return response_data.response
 
 
-    def _flow_ranking_item_flow_item_id_stop_post_serialize(
+    def _flow_ranking_item_flow_item_id_vote_matrix_get_serialize(
         self,
         flow_item_id,
         _request_auth,
@@ -1489,8 +1499,8 @@ class RankingFlowItemApi:
         ]
 
         return self.api_client.param_serialize(
-            method='POST',
-            resource_path='/flow/ranking/item/{flowItemId}/stop',
+            method='GET',
+            resource_path='/flow/ranking/item/{flowItemId}/vote-matrix',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

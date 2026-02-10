@@ -26,8 +26,8 @@ class UpdateBoostConfigEndpointInput(BaseModel):
     """
     UpdateBoostConfigEndpointInput
     """ # noqa: E501
-    min_distilling_for_global_boost: Optional[StrictInt] = Field(default=None, alias="minDistillingForGlobalBoost")
-    min_graduated_for_distilling_boost: Optional[StrictInt] = Field(default=None, alias="minGraduatedForDistillingBoost")
+    min_distilling_for_global_boost: Optional[StrictInt] = Field(default=None, description="Minimum number of distilling users required to activate global boost.", alias="minDistillingForGlobalBoost")
+    min_graduated_for_distilling_boost: Optional[StrictInt] = Field(default=None, description="Minimum number of graduated users required to activate distilling boost.", alias="minGraduatedForDistillingBoost")
     __properties: ClassVar[List[str]] = ["minDistillingForGlobalBoost", "minGraduatedForDistillingBoost"]
 
     model_config = ConfigDict(

@@ -24,10 +24,10 @@ from typing_extensions import Self
 
 class CreateJobRevisionEndpointOutput(BaseModel):
     """
-    CreateJobRevisionEndpointOutput
+    The result when a job revision has been created.
     """ # noqa: E501
-    revision_number: StrictInt = Field(alias="revisionNumber")
-    pipeline_id: StrictStr = Field(alias="pipelineId")
+    revision_number: StrictInt = Field(description="The revision number of the created job revision.", alias="revisionNumber")
+    pipeline_id: StrictStr = Field(description="The id of the created preview pipeline.", alias="pipelineId")
     __properties: ClassVar[List[str]] = ["revisionNumber", "pipelineId"]
 
     model_config = ConfigDict(
