@@ -11,6 +11,7 @@ if TYPE_CHECKING:
     from rapidata.api_client.models.get_flow_item_by_id_endpoint_output import (
         GetFlowItemByIdEndpointOutput,
     )
+    import pandas as pd
 
 
 class RapidataFlowItem:
@@ -59,6 +60,41 @@ class RapidataFlowItem:
                 self._extract_asset_key(dp): dp.get("elo", 0)
                 for dp in (datapoint.to_dict() for datapoint in results.datapoints)
             }
+
+    def get_win_loss_matrix(self) -> pd.DataFrame:
+        """Get the win/loss matrix of this flow item from the API.
+
+        The win/loss matrix shows pairwise comparison counts where ``data[i][j]`` is
+        the number of times row ``i`` was preferred over column ``j``.
+
+        Returns:
+            pd.DataFrame: A DataFrame where rows and columns are asset identifiers,
+                and values are win/loss counts.
+        """
+        with tracer.start_as_current_span("RapidataFlowItem.get_win_loss_matrix"):
+            import pandas as pd
+            from rapidata.api_client.models.flow_item_state import FlowItemState
+
+            logger.debug("Getting win/loss matrix for flow item '%s'", self.id)
+            self._wait_for_state(
+                target_states=[
+                    FlowItemState.COMPLETED,
+                    FlowItemState.FAILED,
+                    FlowItemState.STOPPED,
+                ],
+                check_interval=1,
+                status_message="Flow item '%s' is in state %s, waiting for completion...",
+            )
+
+            result = self._openapi_service.ranking_flow_item_api.flow_ranking_item_flow_item_id_vote_matrix_get(
+                flow_item_id=self.id,
+            )
+
+            return pd.DataFrame(
+                data=result.data,
+                index=result.index,
+                columns=result.columns,
+            )
 
     @staticmethod
     def _extract_asset_key(datapoint: dict[str, Any]) -> str:
