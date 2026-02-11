@@ -47,35 +47,35 @@ logger.info("This will be shown")
 
 ## Environment Variables
 
-Every configuration field can also be set through an environment variable **with the same name** as the field. This is useful for CI/CD pipelines, containers, or any context where you want to configure the SDK without changing code.
+Every configuration field can also be set through an environment variable prefixed with `RAPIDATA_` followed by the field name (e.g. `RAPIDATA_maxWorkers`). This is useful for CI/CD pipelines, containers, or any context where you want to configure the SDK without changing code.
 
 Environment variables are applied at initialization and act as defaults — values passed explicitly in code always take precedence.
 
 **Precedence** (highest to lowest):
 
 1. Values set in code (e.g. `rapidata_config.upload.maxWorkers = 10`)
-2. Environment variables
+2. Environment variables (`RAPIDATA_*`)
 3. Built-in defaults
 
 ### Example `.env` file
 
 ```bash
 # --- Upload ---
-maxWorkers=25
-maxRetries=3
-cacheToDisk=true
-cacheTimeout=1
-cacheLocation=~/.cache/rapidata/upload_cache
-cacheShards=128
-batchSize=1000
-batchPollInterval=0.5
+RAPIDATA_maxWorkers=25
+RAPIDATA_maxRetries=3
+RAPIDATA_cacheToDisk=true
+RAPIDATA_cacheTimeout=1
+RAPIDATA_cacheLocation=~/.cache/rapidata/upload_cache
+RAPIDATA_cacheShards=128
+RAPIDATA_batchSize=1000
+RAPIDATA_batchPollInterval=0.5
 
 # --- Logging ---
-level=WARNING
-log_file=
-format=%(asctime)s - %(name)s - %(levelname)s - %(message)s
-silent_mode=false
-enable_otlp=true
+RAPIDATA_level=WARNING
+RAPIDATA_log_file=
+RAPIDATA_format=%(asctime)s - %(name)s - %(levelname)s - %(message)s
+RAPIDATA_silent_mode=false
+RAPIDATA_enable_otlp=true
 ```
 
 ### Boolean values

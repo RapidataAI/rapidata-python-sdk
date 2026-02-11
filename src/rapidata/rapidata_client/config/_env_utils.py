@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, Any, Union, get_args, get_origin
 if TYPE_CHECKING:
     from pydantic.fields import FieldInfo
 
+_ENV_PREFIX = "RAPIDATA_"
 _SIMPLE_SCALARS = frozenset({str, int, float, Path})
 
 
@@ -15,7 +16,7 @@ def apply_env_overrides(model_fields: dict[str, FieldInfo], data: dict[str, Any]
     """Apply environment variable overrides to model data.
 
     For each model field not already in ``data``, checks for an environment
-    variable with the same name as the field.  If found the value is parsed
+    variable named ``RAPIDATA_<fieldName>``.  If found the value is parsed
     and injected into ``data`` so that Pydantic can validate it normally.
 
     Bool fields accept ``"1"`` / ``"true"`` / ``"yes"`` (case-insensitive).
@@ -26,7 +27,7 @@ def apply_env_overrides(model_fields: dict[str, FieldInfo], data: dict[str, Any]
     for field_name, field_info in model_fields.items():
         if field_name in data:
             continue
-        env_value = os.environ.get(field_name)
+        env_value = os.environ.get(f"{_ENV_PREFIX}{field_name}")
         if env_value is None:
             continue
 
