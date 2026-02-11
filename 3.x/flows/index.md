@@ -65,6 +65,14 @@ You can also check the status without blocking:
 status = flow_item.get_status()  # Pending, Running, Completed, Failed, or Stopped
 ```
 
+To get the win/loss matrix per flow item and see what datapoints were preferred over each other:
+
+```python
+matrix = flow_item.get_win_loss_matrix()
+```
+
+This returns a pandas `DataFrame` where `matrix.loc[a, b]` is the number of times item `a` was preferred over item `b`.
+
 To query all flow items for a flow:
 
 ```python
