@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 from time import sleep
 from rapidata.rapidata_client.config import logger, tracer
+from rapidata.rapidata_client.flow.flow_item_result import FlowItemResult
 from rapidata.service.openapi_service import OpenAPIService
 
 
@@ -31,12 +32,12 @@ class RapidataFlowItem:
             details = self._get_details()
             return details.state
 
-    def get_results(self) -> dict[str, int]:
+    def get_results(self) -> FlowItemResult:
         """Get the results of this flow item from the API.
 
         Returns:
-            dict[str, int]: A mapping of asset identifier to elo score.
-                The key is the source URL if available, otherwise the original filename.
+            FlowItemResult: Contains a mapping of asset identifier to elo score
+                and the total number of votes.
         """
         with tracer.start_as_current_span("RapidataFlowItem.get_results"):
             from rapidata.api_client.models.flow_item_state import FlowItemState
@@ -56,10 +57,15 @@ class RapidataFlowItem:
                 flow_item_id=self.id,
             )
 
-            return {
+            datapoints = {
                 self._extract_asset_key(dp): dp.get("elo", 0)
                 for dp in (datapoint.to_dict() for datapoint in results.datapoints)
             }
+
+            return FlowItemResult(
+                datapoints=datapoints,
+                total_votes=results.total_votes,
+            )
 
     def get_win_loss_matrix(self) -> pd.DataFrame:
         """Get the win/loss matrix of this flow item from the API.
