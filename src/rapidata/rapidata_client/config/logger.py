@@ -45,6 +45,7 @@ class RapidataLogger:
         self._init_lock = threading.Lock()
         self._otlp_handler = None
         self._otlp_enabled = True  # Default to enabled
+        self._otlp_attached = False
 
         # Register this logger to receive configuration updates
         register_config_handler(self._handle_config_update)
