@@ -92,8 +92,8 @@ class RapidataFlowItem:
 
             return pd.DataFrame(
                 data=result.data,
-                index=result.index,
-                columns=result.columns,
+                index=pd.Index(result.index),
+                columns=pd.Index(result.columns),
             )
 
     @staticmethod
