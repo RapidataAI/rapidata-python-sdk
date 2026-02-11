@@ -20,6 +20,7 @@ class AssetUploader:
     # File cache: Lazily initialized based on cacheToDisk config
     _url_cache: SingleFlightCache = SingleFlightCache("URL cache", storage={})
     _file_cache: SingleFlightCache | None = None
+    _file_cache_uses_disk: bool | None = None
     _file_cache_lock: threading.Lock = threading.Lock()
 
     @classmethod
@@ -33,16 +34,18 @@ class AssetUploader:
         Returns:
             Configured file cache (disk or memory based on cacheToDisk).
         """
-        if cls._file_cache is not None:
+        cache_to_disk = rapidata_config.upload.cacheToDisk
+
+        if cls._file_cache is not None and cls._file_cache_uses_disk == cache_to_disk:
             return cls._file_cache
 
         with cls._file_cache_lock:
             # Double-check after acquiring lock
-            if cls._file_cache is not None:
+            if cls._file_cache is not None and cls._file_cache_uses_disk == cache_to_disk:
                 return cls._file_cache
 
             # Create cache storage based on current config
-            if rapidata_config.upload.cacheToDisk:
+            if cache_to_disk:
                 storage: dict[str, str] | FanoutCache = FanoutCache(
                     rapidata_config.upload.cacheLocation,
                     shards=rapidata_config.upload.cacheShards,
@@ -54,6 +57,7 @@ class AssetUploader:
                 logger.debug("Initialized file cache with in-memory storage")
 
             cls._file_cache = SingleFlightCache("File cache", storage=storage)
+            cls._file_cache_uses_disk = cache_to_disk
             return cls._file_cache
 
     def __init__(self, openapi_service: OpenAPIService) -> None:
