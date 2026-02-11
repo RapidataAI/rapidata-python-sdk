@@ -3,15 +3,11 @@ from __future__ import annotations
 import re
 import os
 import threading
-from typing import TYPE_CHECKING
 
 from rapidata.service.openapi_service import OpenAPIService
 from rapidata.rapidata_client.config import logger, rapidata_config, tracer
 from rapidata.rapidata_client.datapoints._single_flight_cache import SingleFlightCache
 from diskcache import FanoutCache
-
-if TYPE_CHECKING:
-    from rapidata.api_client.models.i_asset_input import IAssetInput
 
 
 class AssetUploader:
@@ -41,7 +37,10 @@ class AssetUploader:
 
         with cls._file_cache_lock:
             # Double-check after acquiring lock
-            if cls._file_cache is not None and cls._file_cache_uses_disk == cache_to_disk:
+            if (
+                cls._file_cache is not None
+                and cls._file_cache_uses_disk == cache_to_disk
+            ):
                 return cls._file_cache
 
             # Create cache storage based on current config
