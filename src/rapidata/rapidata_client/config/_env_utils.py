@@ -31,12 +31,28 @@ def apply_env_overrides(model_fields: dict[str, FieldInfo], data: dict[str, Any]
         if env_value is None:
             continue
 
+        is_optional = _is_optional(field_info.annotation)
         base_type = _unwrap_optional(field_info.annotation)
+
+        # Treat empty strings as "not set" for optional fields
+        if is_optional and env_value == "":
+            continue
+
         if base_type is bool:
             data[field_name] = env_value.lower() in ("1", "true", "yes")
+        elif base_type is Path:
+            data[field_name] = Path(env_value).expanduser()
         elif base_type in _SIMPLE_SCALARS:
             data[field_name] = env_value
     return data
+
+
+def _is_optional(annotation: Any) -> bool:
+    """Return ``True`` if the annotation is ``Optional[T]`` / ``T | None``."""
+    origin = get_origin(annotation)
+    if origin is Union or origin is _types.UnionType:
+        return type(None) in get_args(annotation)
+    return False
 
 
 def _unwrap_optional(annotation: Any) -> Any:
