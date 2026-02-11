@@ -32,6 +32,7 @@ class FlowItemState(str, Enum):
     FAILED = 'Failed'
     STOPPING = 'Stopping'
     STOPPED = 'Stopped'
+    INCOMPLETE = 'Incomplete'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

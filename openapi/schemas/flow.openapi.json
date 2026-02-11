@@ -788,8 +788,7 @@
       "CreateFlowEndpoint_Input": {
         "required": [
           "name",
-          "criteria",
-          "responsesRequired"
+          "criteria"
         ],
         "type": "object",
         "properties": {
@@ -821,9 +820,19 @@
             "description": "Scaling factor for Elo probability calculation. Defaults to 400.",
             "format": "int32"
           },
+          "maxResponses": {
+            "type": "integer",
+            "description": "Maximum number of responses per comparison.",
+            "format": "int32"
+          },
+          "minResponses": {
+            "type": "integer",
+            "description": "Minimum number of responses per comparison. Defaults to 1.",
+            "format": "int32"
+          },
           "responsesRequired": {
             "type": "integer",
-            "description": "Number of responses required per comparison.",
+            "description": "Deprecated. Use MaxResponses instead.",
             "format": "int32"
           },
           "featureFlags": {
@@ -912,7 +921,8 @@
           "Completed",
           "Failed",
           "Stopping",
-          "Stopped"
+          "Stopped",
+          "Incomplete"
         ],
         "description": "The current state of the flow item."
       },
@@ -1033,7 +1043,8 @@
       },
       "GetRankingFlowItemResultsEndpoint_Output": {
         "required": [
-          "datapoints"
+          "datapoints",
+          "totalVotes"
         ],
         "type": "object",
         "properties": {
@@ -1044,6 +1055,11 @@
               }
             ],
             "description": "The ranked datapoints with their Elo scores."
+          },
+          "totalVotes": {
+            "type": "integer",
+            "description": "The total number of votes across all datapoints.",
+            "format": "int64"
           }
         }
       },
@@ -1730,9 +1746,21 @@
             "format": "int32",
             "nullable": true
           },
+          "minResponses": {
+            "type": "integer",
+            "description": "Minimum number of responses per comparison.",
+            "format": "int32",
+            "nullable": true
+          },
+          "maxResponses": {
+            "type": "integer",
+            "description": "Maximum number of responses per comparison.",
+            "format": "int32",
+            "nullable": true
+          },
           "responsesRequired": {
             "type": "integer",
-            "description": "Number of responses required per comparison.",
+            "description": "Deprecated. Use MaxResponses instead.",
             "format": "int32",
             "nullable": true
           },
