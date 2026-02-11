@@ -1,7 +1,13 @@
+from __future__ import annotations
+
 from pathlib import Path
 import shutil
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from typing import Any
+
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+
 from rapidata.rapidata_client.config import logger
+from rapidata.rapidata_client.config._env_utils import apply_env_overrides
 
 
 class UploadConfig(BaseModel):
@@ -26,6 +32,13 @@ class UploadConfig(BaseModel):
     """
 
     model_config = ConfigDict(validate_assignment=True)
+
+    @model_validator(mode="before")
+    @classmethod
+    def _apply_env_vars(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            return apply_env_overrides(cls.model_fields, data)
+        return data
 
     maxWorkers: int = Field(default=25)
     maxRetries: int = Field(default=3)

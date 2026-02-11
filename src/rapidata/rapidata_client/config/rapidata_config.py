@@ -1,5 +1,10 @@
-from pydantic import BaseModel, Field
+from __future__ import annotations
 
+from typing import Any
+
+from pydantic import BaseModel, Field, model_validator
+
+from rapidata.rapidata_client.config._env_utils import apply_env_overrides
 from rapidata.rapidata_client.config.logging_config import LoggingConfig
 from rapidata.rapidata_client.config.upload_config import UploadConfig
 
@@ -23,6 +28,13 @@ class RapidataConfig(BaseModel):
         rapidata_config.upload.maxUploadWorkers = 20
         ```
     """
+
+    @model_validator(mode="before")
+    @classmethod
+    def _apply_env_vars(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            return apply_env_overrides(cls.model_fields, data)
+        return data
 
     enableBetaFeatures: bool = False
     upload: UploadConfig = Field(default_factory=UploadConfig)

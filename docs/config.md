@@ -31,3 +31,64 @@ logger.info("This will be shown")
 | `enable_otlp` | `bool` | `True` | Enable OpenTelemetry trace logs to Rapidata |
 
 >Note: Rapidata SDK tracking is limited exclusively to SDK-generated logs and traces. No other data is collected.
+
+### Upload Configuration Options
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `maxWorkers` | `int` | `25` | Maximum concurrent upload threads |
+| `maxRetries` | `int` | `3` | Retry attempts for failed uploads |
+| `cacheToDisk` | `bool` | `True` | Enable disk-based caching for file uploads |
+| `cacheTimeout` | `float` | `1` | Cache operation timeout in seconds |
+| `cacheLocation` | `Path` | `~/.cache/rapidata/upload_cache` | Directory for cache storage (immutable) |
+| `cacheShards` | `int` | `128` | Number of cache shards for parallel access (immutable) |
+| `batchSize` | `int` | `1000` | Number of URLs per batch (100–5000) |
+| `batchPollInterval` | `float` | `0.5` | Batch polling interval in seconds |
+
+## Environment Variables
+
+Every configuration field can also be set through an environment variable **with the same name** as the field. This is useful for CI/CD pipelines, containers, or any context where you want to configure the SDK without changing code.
+
+Environment variables are applied at initialization and act as defaults — values passed explicitly in code always take precedence.
+
+**Precedence** (highest to lowest):
+
+1. Values set in code (e.g. `rapidata_config.upload.maxWorkers = 10`)
+2. Environment variables
+3. Built-in defaults
+
+### Example `.env` file
+
+```bash
+# --- Upload ---
+maxWorkers=25
+maxRetries=3
+cacheToDisk=true
+cacheTimeout=1
+cacheLocation=~/.cache/rapidata/upload_cache
+cacheShards=128
+batchSize=1000
+batchPollInterval=0.5
+
+# --- Logging ---
+level=WARNING
+log_file=
+format=%(asctime)s - %(name)s - %(levelname)s - %(message)s
+silent_mode=false
+enable_otlp=true
+```
+
+### Boolean values
+
+Boolean environment variables accept `1`, `true`, or `yes` (case-insensitive) as truthy. Everything else is treated as `false`.
+
+### Loading a `.env` file
+
+The SDK does not load `.env` files automatically. Use a library like [`python-dotenv`](https://pypi.org/project/python-dotenv/) to load them before importing the SDK:
+
+```python
+from dotenv import load_dotenv
+load_dotenv()  # reads .env into os.environ
+
+from rapidata import RapidataClient
+```
