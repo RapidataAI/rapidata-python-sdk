@@ -17,19 +17,20 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List
-from rapidata.api_client.models.output_datapoint import OutputDatapoint
+from rapidata.api_client.models.i_asset_model import IAssetModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class GetRankingFlowItemResultsEndpointOutput(BaseModel):
+class GetCompareWorkflowResultsResultDatapoint(BaseModel):
     """
-    GetRankingFlowItemResultsEndpointOutput
+    GetCompareWorkflowResultsResultDatapoint
     """ # noqa: E501
-    datapoints: List[OutputDatapoint] = Field(description="The ranked datapoints with their Elo scores.")
-    total_votes: StrictInt = Field(description="The total number of votes across all datapoints.", alias="totalVotes")
-    __properties: ClassVar[List[str]] = ["datapoints", "totalVotes"]
+    workflow_datapoint_id: StrictStr = Field(alias="workflowDatapointId")
+    asset: IAssetModel
+    elo: StrictInt
+    __properties: ClassVar[List[str]] = ["workflowDatapointId", "asset", "elo"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -49,7 +50,7 @@ class GetRankingFlowItemResultsEndpointOutput(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of GetRankingFlowItemResultsEndpointOutput from a JSON string"""
+        """Create an instance of GetCompareWorkflowResultsResultDatapoint from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -70,18 +71,14 @@ class GetRankingFlowItemResultsEndpointOutput(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in datapoints (list)
-        _items = []
-        if self.datapoints:
-            for _item_datapoints in self.datapoints:
-                if _item_datapoints:
-                    _items.append(_item_datapoints.to_dict())
-            _dict['datapoints'] = _items
+        # override the default output from pydantic by calling `to_dict()` of asset
+        if self.asset:
+            _dict['asset'] = self.asset.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of GetRankingFlowItemResultsEndpointOutput from a dict"""
+        """Create an instance of GetCompareWorkflowResultsResultDatapoint from a dict"""
         if obj is None:
             return None
 
@@ -89,8 +86,9 @@ class GetRankingFlowItemResultsEndpointOutput(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "datapoints": [OutputDatapoint.from_dict(_item) for _item in obj["datapoints"]] if obj.get("datapoints") is not None else None,
-            "totalVotes": obj.get("totalVotes")
+            "workflowDatapointId": obj.get("workflowDatapointId"),
+            "asset": IAssetModel.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
+            "elo": obj.get("elo")
         })
         return _obj
 

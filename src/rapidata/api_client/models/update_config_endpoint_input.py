@@ -31,9 +31,11 @@ class UpdateConfigEndpointInput(BaseModel):
     starting_elo: Optional[StrictInt] = Field(default=None, description="Initial Elo rating for new items.", alias="startingElo")
     k_factor: Optional[StrictInt] = Field(default=None, description="K-factor controlling Elo rating sensitivity.", alias="kFactor")
     scaling_factor: Optional[StrictInt] = Field(default=None, description="Scaling factor for Elo probability calculation.", alias="scalingFactor")
-    responses_required: Optional[StrictInt] = Field(default=None, description="Number of responses required per comparison.", alias="responsesRequired")
+    min_responses: Optional[StrictInt] = Field(default=None, description="Minimum number of responses per comparison.", alias="minResponses")
+    max_responses: Optional[StrictInt] = Field(default=None, description="Maximum number of responses per comparison.", alias="maxResponses")
+    responses_required: Optional[StrictInt] = Field(default=None, description="Deprecated. Use MaxResponses instead.", alias="responsesRequired")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
-    __properties: ClassVar[List[str]] = ["criteria", "startingElo", "kFactor", "scalingFactor", "responsesRequired", "featureFlags"]
+    __properties: ClassVar[List[str]] = ["criteria", "startingElo", "kFactor", "scalingFactor", "minResponses", "maxResponses", "responsesRequired", "featureFlags"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -101,6 +103,16 @@ class UpdateConfigEndpointInput(BaseModel):
         if self.scaling_factor is None and "scaling_factor" in self.model_fields_set:
             _dict['scalingFactor'] = None
 
+        # set to None if min_responses (nullable) is None
+        # and model_fields_set contains the field
+        if self.min_responses is None and "min_responses" in self.model_fields_set:
+            _dict['minResponses'] = None
+
+        # set to None if max_responses (nullable) is None
+        # and model_fields_set contains the field
+        if self.max_responses is None and "max_responses" in self.model_fields_set:
+            _dict['maxResponses'] = None
+
         # set to None if responses_required (nullable) is None
         # and model_fields_set contains the field
         if self.responses_required is None and "responses_required" in self.model_fields_set:
@@ -122,6 +134,8 @@ class UpdateConfigEndpointInput(BaseModel):
             "startingElo": obj.get("startingElo"),
             "kFactor": obj.get("kFactor"),
             "scalingFactor": obj.get("scalingFactor"),
+            "minResponses": obj.get("minResponses"),
+            "maxResponses": obj.get("maxResponses"),
             "responsesRequired": obj.get("responsesRequired"),
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
         })

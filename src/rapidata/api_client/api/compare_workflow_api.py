@@ -20,7 +20,7 @@ from pydantic import Field, StrictStr
 from typing import Optional
 from typing_extensions import Annotated
 from rapidata.api_client.models.get_compare_workflow_results_model import GetCompareWorkflowResultsModel
-from rapidata.api_client.models.paged_result_of_get_compare_workflow_results_result import PagedResultOfGetCompareWorkflowResultsResult
+from rapidata.api_client.models.get_compare_workflow_results_result import GetCompareWorkflowResultsResult
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -57,7 +57,7 @@ class CompareWorkflowApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> PagedResultOfGetCompareWorkflowResultsResult:
+    ) -> GetCompareWorkflowResultsResult:
         """Get the result overview for a compare workflow.
 
 
@@ -97,7 +97,7 @@ class CompareWorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfGetCompareWorkflowResultsResult",
+            '200': "GetCompareWorkflowResultsResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -127,7 +127,7 @@ class CompareWorkflowApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[PagedResultOfGetCompareWorkflowResultsResult]:
+    ) -> ApiResponse[GetCompareWorkflowResultsResult]:
         """Get the result overview for a compare workflow.
 
 
@@ -167,7 +167,7 @@ class CompareWorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfGetCompareWorkflowResultsResult",
+            '200': "GetCompareWorkflowResultsResult",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -237,7 +237,7 @@ class CompareWorkflowApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "PagedResultOfGetCompareWorkflowResultsResult",
+            '200': "GetCompareWorkflowResultsResult",
         }
         response_data = self.api_client.call_api(
             *_param,

@@ -46,17 +46,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfGetCompareWorkflowResultsResult"
+                  "$ref": "#/components/schemas/GetCompareWorkflowResultsResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfGetCompareWorkflowResultsResult"
+                  "$ref": "#/components/schemas/GetCompareWorkflowResultsResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagedResultOfGetCompareWorkflowResultsResult"
+                  "$ref": "#/components/schemas/GetCompareWorkflowResultsResult"
                 }
               }
             }
@@ -652,6 +652,41 @@
       },
       "GetCompareWorkflowResultsResult": {
         "required": [
+          "totalVotes",
+          "total",
+          "page",
+          "pageSize",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "totalVotes": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "total": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "$ref": "#/components/schemas/GetCompareWorkflowResultsResult_ListOfGetCompareWorkflowResultsResult_Datapoint"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "GetCompareWorkflowResultsResult_Datapoint": {
+        "required": [
           "workflowDatapointId",
           "asset",
           "elo"
@@ -668,6 +703,12 @@
             "type": "integer",
             "format": "int32"
           }
+        }
+      },
+      "GetCompareWorkflowResultsResult_ListOfGetCompareWorkflowResultsResult_Datapoint": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/GetCompareWorkflowResultsResult_Datapoint"
         }
       },
       "GetEvaluationWorkflowResultsModel": {
@@ -2676,12 +2717,6 @@
           "$ref": "#/components/schemas/Filter"
         }
       },
-      "ListOfGetCompareWorkflowResultsResult": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/GetCompareWorkflowResultsResult"
-        }
-      },
       "ListOfGetGroupedRankingWorkflowResultsResult": {
         "type": "array",
         "items": {
@@ -2778,36 +2813,6 @@
           },
           "classification": {
             "type": "string"
-          }
-        }
-      },
-      "PagedResultOfGetCompareWorkflowResultsResult": {
-        "required": [
-          "total",
-          "page",
-          "pageSize",
-          "items"
-        ],
-        "type": "object",
-        "properties": {
-          "total": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "items": {
-            "$ref": "#/components/schemas/ListOfGetCompareWorkflowResultsResult"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
           }
         }
       },

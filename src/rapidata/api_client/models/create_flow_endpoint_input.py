@@ -33,9 +33,11 @@ class CreateFlowEndpointInput(BaseModel):
     starting_elo: Optional[StrictInt] = Field(default=None, description="Initial Elo rating for new items. Defaults to 1200.", alias="startingElo")
     k_factor: Optional[StrictInt] = Field(default=None, description="K-factor controlling Elo rating sensitivity. Defaults to 40.", alias="kFactor")
     scaling_factor: Optional[StrictInt] = Field(default=None, description="Scaling factor for Elo probability calculation. Defaults to 400.", alias="scalingFactor")
-    responses_required: StrictInt = Field(description="Number of responses required per comparison.", alias="responsesRequired")
+    max_responses: Optional[StrictInt] = Field(default=None, description="Maximum number of responses per comparison.", alias="maxResponses")
+    min_responses: Optional[StrictInt] = Field(default=None, description="Minimum number of responses per comparison. Defaults to 1.", alias="minResponses")
+    responses_required: Optional[StrictInt] = Field(default=None, description="Deprecated. Use MaxResponses instead.", alias="responsesRequired")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, description="Optional feature flags to enable for this flow.", alias="featureFlags")
-    __properties: ClassVar[List[str]] = ["name", "criteria", "validationSetId", "startingElo", "kFactor", "scalingFactor", "responsesRequired", "featureFlags"]
+    __properties: ClassVar[List[str]] = ["name", "criteria", "validationSetId", "startingElo", "kFactor", "scalingFactor", "maxResponses", "minResponses", "responsesRequired", "featureFlags"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -106,6 +108,8 @@ class CreateFlowEndpointInput(BaseModel):
             "startingElo": obj.get("startingElo"),
             "kFactor": obj.get("kFactor"),
             "scalingFactor": obj.get("scalingFactor"),
+            "maxResponses": obj.get("maxResponses"),
+            "minResponses": obj.get("minResponses"),
             "responsesRequired": obj.get("responsesRequired"),
             "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
         })
