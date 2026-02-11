@@ -25,6 +25,7 @@ class RapidataFlowManager:
         name: str,
         instruction: str,
         responses_per_flow_batch: int = 100,
+        min_response_threshold: int = 1,
         validation_set_id: str | None = None,
         settings: Sequence[RapidataSetting] | None = None,
     ) -> RapidataFlow:
@@ -34,6 +35,7 @@ class RapidataFlowManager:
             name: The name of the flow.
             instruction: The instruction for the ranking comparisons. Will be shown with each matchup.
             responses_per_flow_batch: The number of responses required per flow batch.
+            min_response_threshold: The minimum number of responses required for the flow to be considered complete in case of a timeout.
             validation_set_id: Optional validation set ID.
             settings: Optional settings for the flow.
 
@@ -53,7 +55,8 @@ class RapidataFlowManager:
                     name=name,
                     criteria=instruction,
                     validationSetId=validation_set_id,
-                    responsesRequired=responses_per_flow_batch,
+                    minResponses=min_response_threshold,
+                    maxResponses=responses_per_flow_batch,
                     featureFlags=(
                         [setting._to_feature_flag() for setting in settings]
                         if settings
