@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 import os
-from typing import Callable
-from pydantic import BaseModel, Field
+from typing import Any, Callable
+
+from pydantic import BaseModel, Field, model_validator
+
 from rapidata.rapidata_client.config import logger
+from rapidata.rapidata_client.config._env_utils import apply_env_overrides
 
 
 def _default_enable_otlp() -> bool:
@@ -40,6 +43,13 @@ class LoggingConfig(BaseModel):
         enable_otlp (bool): Whether to enable OpenTelemetry trace logs. Defaults to True.
             Can also be disabled via the RAPIDATA_DISABLE_OTLP=1 environment variable.
     """
+
+    @model_validator(mode="before")
+    @classmethod
+    def _apply_env_vars(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            return apply_env_overrides(cls.model_fields, data)
+        return data
 
     level: str = Field(default="WARNING")
     log_file: str | None = Field(default=None)
