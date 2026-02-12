@@ -140,7 +140,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetGroupedRankingWorkflowResultsModel"
+                  "$ref": "#/components/schemas/QueryModel"
                 }
               }
             }
@@ -751,28 +751,6 @@
           }
         },
         "description": "Model for getting the overview of a simple workflow result."
-      },
-      "GetGroupedRankingWorkflowResultsModel": {
-        "type": "object",
-        "properties": {
-          "page": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/PageInfo"
-              }
-            ],
-            "description": "The size of the page and the page number to display."
-          },
-          "sortCriteria": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/ListOfSortCriterion"
-              }
-            ],
-            "description": "A list of criteria to sort the results by."
-          }
-        },
-        "description": "Model for getting the results of a multi compare workflow."
       },
       "GetGroupedRankingWorkflowResultsResult": {
         "required": [

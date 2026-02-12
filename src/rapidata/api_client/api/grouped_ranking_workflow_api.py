@@ -19,8 +19,8 @@ from typing_extensions import Annotated
 from pydantic import Field, StrictStr
 from typing import Optional
 from typing_extensions import Annotated
-from rapidata.api_client.models.get_grouped_ranking_workflow_results_model import GetGroupedRankingWorkflowResultsModel
 from rapidata.api_client.models.paged_result_of_get_grouped_ranking_workflow_results_result import PagedResultOfGetGroupedRankingWorkflowResultsResult
+from rapidata.api_client.models.query_model import QueryModel
 
 from rapidata.api_client.api_client import ApiClient, RequestSerialized
 from rapidata.api_client.api_response import ApiResponse
@@ -44,7 +44,7 @@ class GroupedRankingWorkflowApi:
     def workflow_grouped_ranking_workflow_id_results_get(
         self,
         workflow_id: Annotated[StrictStr, Field(description="The ID of the workflow to get the results for.")],
-        model: Annotated[Optional[GetGroupedRankingWorkflowResultsModel], Field(description="The model for the request.")] = None,
+        model: Annotated[Optional[QueryModel], Field(description="The model for the request.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -64,7 +64,7 @@ class GroupedRankingWorkflowApi:
         :param workflow_id: The ID of the workflow to get the results for. (required)
         :type workflow_id: str
         :param model: The model for the request.
-        :type model: GetGroupedRankingWorkflowResultsModel
+        :type model: QueryModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -114,7 +114,7 @@ class GroupedRankingWorkflowApi:
     def workflow_grouped_ranking_workflow_id_results_get_with_http_info(
         self,
         workflow_id: Annotated[StrictStr, Field(description="The ID of the workflow to get the results for.")],
-        model: Annotated[Optional[GetGroupedRankingWorkflowResultsModel], Field(description="The model for the request.")] = None,
+        model: Annotated[Optional[QueryModel], Field(description="The model for the request.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -134,7 +134,7 @@ class GroupedRankingWorkflowApi:
         :param workflow_id: The ID of the workflow to get the results for. (required)
         :type workflow_id: str
         :param model: The model for the request.
-        :type model: GetGroupedRankingWorkflowResultsModel
+        :type model: QueryModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -184,7 +184,7 @@ class GroupedRankingWorkflowApi:
     def workflow_grouped_ranking_workflow_id_results_get_without_preload_content(
         self,
         workflow_id: Annotated[StrictStr, Field(description="The ID of the workflow to get the results for.")],
-        model: Annotated[Optional[GetGroupedRankingWorkflowResultsModel], Field(description="The model for the request.")] = None,
+        model: Annotated[Optional[QueryModel], Field(description="The model for the request.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -204,7 +204,7 @@ class GroupedRankingWorkflowApi:
         :param workflow_id: The ID of the workflow to get the results for. (required)
         :type workflow_id: str
         :param model: The model for the request.
-        :type model: GetGroupedRankingWorkflowResultsModel
+        :type model: QueryModel
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of

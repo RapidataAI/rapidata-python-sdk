@@ -360,7 +360,6 @@ Class | Method | HTTP request | Description
  - [GetFileMetadataResult](rapidata/api_client/docs/GetFileMetadataResult.md)
  - [GetFlowByIdEndpointOutput](rapidata/api_client/docs/GetFlowByIdEndpointOutput.md)
  - [GetFlowItemByIdEndpointOutput](rapidata/api_client/docs/GetFlowItemByIdEndpointOutput.md)
- - [GetGroupedRankingWorkflowResultsModel](rapidata/api_client/docs/GetGroupedRankingWorkflowResultsModel.md)
  - [GetGroupedRankingWorkflowResultsResult](rapidata/api_client/docs/GetGroupedRankingWorkflowResultsResult.md)
  - [GetJobByIdEndpointOutput](rapidata/api_client/docs/GetJobByIdEndpointOutput.md)
  - [GetJobDefinitionByIdEndpointOutput](rapidata/api_client/docs/GetJobDefinitionByIdEndpointOutput.md)
