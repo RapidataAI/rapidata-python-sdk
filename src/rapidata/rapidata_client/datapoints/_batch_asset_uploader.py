@@ -224,9 +224,9 @@ class BatchAssetUploader:
                 # Check if we're done:
                 # 1. All batches have been submitted
                 # 2. All submitted batches have been processed
-                if submission_complete.is_set() and len(
-                    self._processed_batches
-                ) == len(current_batch_ids):
+                if submission_complete.is_set() and len(self._processed_batches) == len(
+                    current_batch_ids
+                ):
                     elapsed = time.time() - start_time
                     logger.info(
                         f"All batches completed in {elapsed:.1f}s: "
@@ -360,8 +360,11 @@ class BatchAssetUploader:
             batch_ids_lock: Lock protecting batch_ids list.
         """
         # Ignore Ctrl+C during abort — cleanup must finish
-        original_handler = signal.getsignal(signal.SIGINT)
-        signal.signal(signal.SIGINT, signal.SIG_IGN)
+        is_main = threading.current_thread() is threading.main_thread()
+        original_handler = None
+        if is_main:
+            original_handler = signal.getsignal(signal.SIGINT)
+            signal.signal(signal.SIGINT, signal.SIG_IGN)
 
         try:
             # Get snapshot of current batch IDs, excluding already-completed batches
@@ -396,4 +399,5 @@ class BatchAssetUploader:
                 f"Batch abort completed: {abort_successes} succeeded, {abort_failures} failed"
             )
         finally:
-            signal.signal(signal.SIGINT, original_handler)
+            if is_main and original_handler is not None:
+                signal.signal(signal.SIGINT, original_handler)
