@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import signal
 import time
 import threading
 from typing import Callable, TYPE_CHECKING
@@ -358,38 +359,41 @@ class BatchAssetUploader:
             batch_ids: Shared list of batch IDs (thread-safe access required).
             batch_ids_lock: Lock protecting batch_ids list.
         """
-        # Get snapshot of current batch IDs, excluding already-completed batches
-        with batch_ids_lock:
-            batches_to_abort = [
-                b for b in batch_ids if b not in self._processed_batches
-            ]
+        # Ignore Ctrl+C during abort — cleanup must finish
+        original_handler = signal.getsignal(signal.SIGINT)
+        signal.signal(signal.SIGINT, signal.SIG_IGN)
 
-        if not batches_to_abort:
-            logger.info("No batches to abort")
-            return
+        try:
+            # Get snapshot of current batch IDs, excluding already-completed batches
+            with batch_ids_lock:
+                batches_to_abort = [
+                    b for b in batch_ids if b not in self._processed_batches
+                ]
 
-        logger.info(
-            f"Aborting {len(batches_to_abort)} batch(es) due to interruption..."
-        )
+            if not batches_to_abort:
+                logger.info("No batches to abort")
+                return
 
-        abort_successes = 0
-        abort_failures = 0
+            logger.info(
+                f"Aborting {len(batches_to_abort)} batch(es) due to interruption..."
+            )
 
-        for batch_id in batches_to_abort:
-            try:
-                self.openapi_service.batch_upload_api.asset_batch_upload_batch_upload_id_abort_post(
-                    batch_upload_id=batch_id
-                )
-                abort_successes += 1
-                logger.debug(f"Successfully aborted batch: {batch_id}")
-            except KeyboardInterrupt:
-                # Suppress additional Ctrl+C during abort — cleanup must finish
-                abort_failures += 1
-                logger.warning(f"Interrupted while aborting batch {batch_id}, continuing abort...")
-            except Exception as e:
-                abort_failures += 1
-                logger.warning(f"Failed to abort batch {batch_id}: {e}")
+            abort_successes = 0
+            abort_failures = 0
 
-        logger.info(
-            f"Batch abort completed: {abort_successes} succeeded, {abort_failures} failed"
-        )
+            for batch_id in batches_to_abort:
+                try:
+                    self.openapi_service.batch_upload_api.asset_batch_upload_batch_upload_id_abort_post(
+                        batch_upload_id=batch_id
+                    )
+                    abort_successes += 1
+                    logger.debug(f"Successfully aborted batch: {batch_id}")
+                except Exception as e:
+                    abort_failures += 1
+                    logger.warning(f"Failed to abort batch {batch_id}: {e}")
+
+            logger.info(
+                f"Batch abort completed: {abort_successes} succeeded, {abort_failures} failed"
+            )
+        finally:
+            signal.signal(signal.SIGINT, original_handler)
