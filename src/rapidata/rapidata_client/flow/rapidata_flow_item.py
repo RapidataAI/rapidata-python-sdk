@@ -20,12 +20,29 @@ class RapidataFlowItem:
         self.id = id
         self.flow_id = flow_id
         self._openapi_service = openapi_service
+        self._response_count: float | int | None = None
+
+    def get_response_count(self) -> float | int:
+        """Get the total number of pairwise comparison responses for this flow item.
+
+        The count is derived from the win/loss matrix by summing all entries.
+        If the matrix hasn't been fetched yet, this will trigger a call to
+        :meth:`get_win_loss_matrix`, which waits for the flow item to finish.
+
+        Returns:
+            float | int: The total number of comparison votes collected.
+        """
+        with tracer.start_as_current_span("RapidataFlowItem.get_response_count"):
+            if self._response_count is None:
+                self.get_win_loss_matrix()
+            assert self._response_count is not None
+            return self._response_count
 
     def get_status(self) -> FlowItemState:
         """Get the current state of this flow item.
 
         Returns:
-            FlowItemState: The current state (Pending, Running, Completed, Failed, Stopped).
+            FlowItemState: The current state (Pending, Running, Completed, Failed, Stopped, or Incomplete).
         """
         with tracer.start_as_current_span("RapidataFlowItem.get_status"):
             logger.debug("Getting status for flow item '%s'", self.id)
@@ -48,6 +65,7 @@ class RapidataFlowItem:
                     FlowItemState.COMPLETED,
                     FlowItemState.FAILED,
                     FlowItemState.STOPPED,
+                    FlowItemState.INCOMPLETE,
                 ],
                 check_interval=1,
                 status_message="Flow item '%s' is in state %s, waiting for completion...",
@@ -87,6 +105,7 @@ class RapidataFlowItem:
                     FlowItemState.COMPLETED,
                     FlowItemState.FAILED,
                     FlowItemState.STOPPED,
+                    FlowItemState.INCOMPLETE,
                 ],
                 check_interval=1,
                 status_message="Flow item '%s' is in state %s, waiting for completion...",
@@ -95,6 +114,7 @@ class RapidataFlowItem:
             result = self._openapi_service.ranking_flow_item_api.flow_ranking_item_flow_item_id_vote_matrix_get(
                 flow_item_id=self.id,
             )
+            self._response_count = sum(sum(row) for row in result.data)
 
             return pd.DataFrame(
                 data=result.data,

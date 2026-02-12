@@ -53,7 +53,7 @@ flow_item = flow.create_new_flow_batch(
 
 ### 3. Get Results
 
-Call `get_results()` on a flow item to retrieve the ranking results. If the flow item is still processing, this will automatically wait until it completes:
+Call `get_results()` on a flow item to retrieve the ranking results. If the flow item is still processing, this will automatically wait until it completes (or becomes incomplete due to `time_to_live`):
 
 ```python
 results = flow_item.get_results()
@@ -62,8 +62,10 @@ results = flow_item.get_results()
 You can also check the status without blocking:
 
 ```python
-status = flow_item.get_status()  # Pending, Running, Completed, Failed, or Stopped
+status = flow_item.get_status()  # Pending, Running, Completed, Failed, Stopped, or Incomplete
 ```
+
+> **Note:** A flow item enters the `Incomplete` state when its `time_to_live` expires before all responses are collected. You can still retrieve partial results from incomplete flow items.
 
 To get the win/loss matrix per flow item and see what datapoints were preferred over each other:
 
@@ -72,6 +74,12 @@ matrix = flow_item.get_win_loss_matrix()
 ```
 
 This returns a pandas `DataFrame` where `matrix.loc[a, b]` is the number of times item `a` was preferred over item `b`.
+
+To get the total number of pairwise comparison responses collected for a flow item:
+
+```python
+response_count = flow_item.get_response_count()
+```
 
 To query all flow items for a flow:
 
