@@ -253,8 +253,6 @@ class RESTClientObject:
             else:
                 return RESTResponse(r)
 
-        raise ApiException(status=0, reason="Request failed after all retry attempts")
-
     def _get_session_defaults(self):
         # Set connection pool limits to support high concurrency uploads
         limits = Limits(max_connections=200, max_keepalive_connections=200)
