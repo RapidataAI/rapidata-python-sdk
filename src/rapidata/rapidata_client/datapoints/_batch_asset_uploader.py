@@ -60,6 +60,10 @@ class BatchAssetUploader:
         if not urls:
             return []
 
+        # Reset state from previous runs
+        self._interrupted = False
+        self._processed_batches = set()
+
         # Split into batches
         batches = self._split_into_batches(urls)
 
