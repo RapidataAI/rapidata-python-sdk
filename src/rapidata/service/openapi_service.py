@@ -43,6 +43,9 @@ class OpenAPIService:
         leeway: int = 60,
     ):
         self.environment = environment
+        self._cert_path = cert_path
+        self._oauth_scope = oauth_scope
+        self._leeway = leeway
         endpoint = f"https://api.{environment}"
         auth_endpoint = f"https://auth.{environment}"
 
@@ -73,6 +76,8 @@ class OpenAPIService:
 
         if token:
             logger.debug("Using token for authentication")
+            self._client_id = client_id
+            self._client_secret = client_secret
             self.api_client.rest_client.setup_oauth_with_token(
                 token=token,
                 token_endpoint=f"{auth_endpoint}/connect/token",
@@ -114,15 +119,37 @@ class OpenAPIService:
                     "Failed to fetch client credentials after reset"
                 ) from e
 
+            client_id = credentials.client_id
+            client_secret = credentials.client_secret
             self.api_client.rest_client.setup_oauth_client_credentials(
-                client_id=credentials.client_id,
-                client_secret=credentials.client_secret,
+                client_id=client_id,
+                client_secret=client_secret,
                 token_endpoint=f"{auth_endpoint}/connect/token",
                 scope=oauth_scope,
             )
             managed_print("Credentials were reset and re-authenticated successfully")
 
+        self._client_id = client_id
+        self._client_secret = client_secret
         logger.debug("Client credentials authentication setup complete")
+
+    def __getstate__(self) -> dict:
+        token = None
+        session = self.api_client.rest_client.session
+        if session is not None and session.token is not None:
+            token = dict(session.token)
+        return {
+            "environment": self.environment,
+            "client_id": self._client_id,
+            "client_secret": self._client_secret,
+            "oauth_scope": self._oauth_scope,
+            "cert_path": self._cert_path,
+            "token": token,
+            "leeway": self._leeway,
+        }
+
+    def __setstate__(self, state: dict) -> None:
+        self.__init__(**state)  # type: ignore[misc]
 
     def reset_credentials(self):
         logger.info("Resetting credentials in OpenAPIService")
