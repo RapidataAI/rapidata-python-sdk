@@ -138,120 +138,109 @@ class RESTClientObject:
                 "OAuth2 session is not initialized. Please initialize it before making requests."
             )
 
-        session = self.session
-
-        timeout = None
-        if _request_timeout:
-            if isinstance(_request_timeout, (int, float)):
-                timeout = Timeout(timeout=_request_timeout)
-            elif isinstance(_request_timeout, tuple) and len(_request_timeout) == 2:
-                connect_timeout, read_timeout = _request_timeout
-                timeout = Timeout(timeout=connect_timeout, read=read_timeout)
+        timeout = self._build_timeout(_request_timeout)
 
         for attempt in range(_TRANSIENT_RETRY_MAX_ATTEMPTS + 1):
             try:
-                if method in ["POST", "PUT", "PATCH", "OPTIONS", "DELETE"]:
-                    content_type = headers.get("Content-Type")
-
-                    if not content_type or re.search("json", content_type, re.IGNORECASE):
-                        request_body = None
-                        if body is not None:
-                            request_body = json.dumps(body)
-                        r = session.request(
-                            method,
-                            url,
-                            content=request_body,
-                            timeout=timeout,
-                            headers=headers,
-                        )
-
-                    elif content_type == "application/x-www-form-urlencoded":
-                        r = session.request(
-                            method, url, data=post_params, timeout=timeout, headers=headers
-                        )
-
-                    elif content_type == "multipart/form-data":
-                        del headers["Content-Type"]
-                        files = []
-                        data = {}
-
-                        for key, value in post_params:
-                            if isinstance(value, tuple) and len(value) >= 2:
-                                # This is a file tuple (filename, file_data, [content_type])
-                                filename, file_data = value[0], value[1]
-                                content_type = value[2] if len(value) > 2 else None
-                                files.append((key, (filename, file_data, content_type)))
-                            elif isinstance(value, dict):
-                                # JSON-serialize dictionary values
-                                if key in data:
-                                    # If we already have this key, handle as needed
-                                    # (convert to list or append to existing list)
-                                    if not isinstance(data[key], list):
-                                        data[key] = [data[key]]
-                                    data[key].append(json.dumps(value))
-                                else:
-                                    data[key] = json.dumps(value)
-                            else:
-                                # Regular form data
-                                if key in data:
-                                    if not isinstance(data[key], list):
-                                        data[key] = [data[key]]
-                                    data[key].append(value)
-                                else:
-                                    data[key] = value
-                        r = session.request(
-                            method,
-                            url,
-                            files=files,
-                            data=data,
-                            timeout=timeout,
-                            headers=headers,
-                        )
-
-                    elif isinstance(body, str) or isinstance(body, bytes):
-                        r = session.request(
-                            method, url, content=body, timeout=timeout, headers=headers
-                        )
-
-                    elif headers["Content-Type"].startswith("text/") and isinstance(
-                        body, bool
-                    ):
-                        request_body = "true" if body else "false"
-                        r = session.request(
-                            method,
-                            url,
-                            content=request_body,
-                            timeout=timeout,
-                            headers=headers,
-                        )
-
-                    else:
-                        msg = """Cannot prepare a request message for provided arguments.
-                                 Please check that your arguments match declared content type."""
-                        raise ApiException(status=0, reason=msg)
-
-                else:
-                    r = session.request(method, url, timeout=timeout, headers=headers)
-
+                r = self._send_request(self.session, method, url, headers, body, post_params, timeout)
             except httpx.HTTPError as e:
-                if isinstance(e, ConnectError) and self._is_certificate_validation_error(e):
-                    exit(self._get_ssl_verify_error_message())
-
-                if self._is_retryable_error(e) and attempt < _TRANSIENT_RETRY_MAX_ATTEMPTS:
-                    delay = _TRANSIENT_RETRY_BASE_DELAY * (2 ** attempt)
-                    _logger.warning(
-                        "Transient network error on %s %s (attempt %d/%d): %s. Retrying in %.1fs...",
-                        method, url, attempt + 1, _TRANSIENT_RETRY_MAX_ATTEMPTS + 1,
-                        type(e).__name__, delay,
-                    )
-                    time.sleep(delay)
-                    continue
-
-                msg = "\n".join([type(e).__name__, str(e)])
-                raise ApiException(status=0, reason=msg)
-
+                self._handle_http_error(e, method, url, attempt)
+                continue
             else:
                 return RESTResponse(r)
+
+    def _send_request(self, session, method, url, headers, body, post_params, timeout):
+        """Dispatch the HTTP request based on method and content type."""
+        if method in ["POST", "PUT", "PATCH", "OPTIONS", "DELETE"]:
+            return self._send_body_request(session, method, url, headers, body, post_params, timeout)
+        return session.request(method, url, timeout=timeout, headers=headers)
+
+    @staticmethod
+    def _send_body_request(session, method, url, headers, body, post_params, timeout):
+        """Send a request that may include a body."""
+        content_type = headers.get("Content-Type")
+
+        if not content_type or re.search("json", content_type, re.IGNORECASE):
+            request_body = json.dumps(body) if body is not None else None
+            return session.request(method, url, content=request_body, timeout=timeout, headers=headers)
+
+        if content_type == "application/x-www-form-urlencoded":
+            return session.request(method, url, data=post_params, timeout=timeout, headers=headers)
+
+        if content_type == "multipart/form-data":
+            del headers["Content-Type"]
+            files, data = RESTClientObject._parse_multipart_params(post_params)
+            return session.request(method, url, files=files, data=data, timeout=timeout, headers=headers)
+
+        if isinstance(body, (str, bytes)):
+            return session.request(method, url, content=body, timeout=timeout, headers=headers)
+
+        if headers["Content-Type"].startswith("text/") and isinstance(body, bool):
+            request_body = "true" if body else "false"
+            return session.request(method, url, content=request_body, timeout=timeout, headers=headers)
+
+        msg = """Cannot prepare a request message for provided arguments.
+                 Please check that your arguments match declared content type."""
+        raise ApiException(status=0, reason=msg)
+
+    @staticmethod
+    def _parse_multipart_params(post_params):
+        """Parse post parameters into files and data for multipart upload."""
+        files = []
+        data = {}
+        for key, value in post_params:
+            if isinstance(value, tuple) and len(value) >= 2:
+                filename, file_data = value[0], value[1]
+                content_type = value[2] if len(value) > 2 else None
+                files.append((key, (filename, file_data, content_type)))
+            elif isinstance(value, dict):
+                if key in data:
+                    if not isinstance(data[key], list):
+                        data[key] = [data[key]]
+                    data[key].append(json.dumps(value))
+                else:
+                    data[key] = json.dumps(value)
+            else:
+                if key in data:
+                    if not isinstance(data[key], list):
+                        data[key] = [data[key]]
+                    data[key].append(value)
+                else:
+                    data[key] = value
+        return files, data
+
+    @staticmethod
+    def _build_timeout(_request_timeout):
+        """Build a Timeout object from the request timeout parameter."""
+        if not _request_timeout:
+            return None
+        if isinstance(_request_timeout, (int, float)):
+            return Timeout(timeout=_request_timeout)
+        if isinstance(_request_timeout, tuple) and len(_request_timeout) == 2:
+            connect_timeout, read_timeout = _request_timeout
+            return Timeout(timeout=connect_timeout, read=read_timeout)
+        return None
+
+    def _handle_http_error(self, error, method, url, attempt):
+        """Handle HTTP errors, retrying transient failures with exponential backoff.
+
+        Returns normally to signal a retry. Raises ApiException for permanent failures.
+        """
+        if isinstance(error, ConnectError) and self._is_certificate_validation_error(error):
+            exit(self._get_ssl_verify_error_message())
+
+        if self._is_retryable_error(error) and attempt < _TRANSIENT_RETRY_MAX_ATTEMPTS:
+            delay = _TRANSIENT_RETRY_BASE_DELAY * (2 ** attempt)
+            _logger.warning(
+                "Transient network error on %s %s (attempt %d/%d): %s. Retrying in %.1fs...",
+                method, url, attempt + 1, _TRANSIENT_RETRY_MAX_ATTEMPTS + 1,
+                type(error).__name__, delay,
+            )
+            time.sleep(delay)
+            return
+
+        msg = "\n".join([type(error).__name__, str(error)])
+        raise ApiException(status=0, reason=msg)
 
     def _get_session_defaults(self):
         # Set connection pool limits to support high concurrency uploads
