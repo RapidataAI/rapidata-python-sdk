@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import signal
 import time
 import threading
 from typing import Callable, TYPE_CHECKING
@@ -33,6 +34,7 @@ class BatchAssetUploader:
         self.asset_uploader = AssetUploader(openapi_service)
         self.url_cache = AssetUploader._url_cache
         self._interrupted = False
+        self._processed_batches: set[str] = set()
 
     def batch_upload_urls(
         self,
@@ -57,6 +59,10 @@ class BatchAssetUploader:
         """
         if not urls:
             return []
+
+        # Reset state from previous runs
+        self._interrupted = False
+        self._processed_batches = set()
 
         # Split into batches
         batches = self._split_into_batches(urls)
@@ -174,7 +180,6 @@ class BatchAssetUploader:
 
         last_completed = 0
         start_time = time.time()
-        processed_batches: set[str] = set()
         all_failures: list[FailedUpload[str]] = []
 
         while True:
@@ -205,11 +210,11 @@ class BatchAssetUploader:
 
                 # Process newly completed batches
                 for batch_id in status.completed_batches:
-                    if batch_id not in processed_batches:
+                    if batch_id not in self._processed_batches:
                         successful_urls, failures = self._process_single_batch(
                             batch_id, batch_to_urls
                         )
-                        processed_batches.add(batch_id)
+                        self._processed_batches.add(batch_id)
                         all_failures.extend(failures)
 
                         # Notify callback with completed URLs
@@ -223,7 +228,7 @@ class BatchAssetUploader:
                 # Check if we're done:
                 # 1. All batches have been submitted
                 # 2. All submitted batches have been processed
-                if submission_complete.is_set() and len(processed_batches) == len(
+                if submission_complete.is_set() and len(self._processed_batches) == len(
                     current_batch_ids
                 ):
                     elapsed = time.time() - start_time
@@ -349,41 +354,54 @@ class BatchAssetUploader:
         batch_ids_lock: threading.Lock,
     ) -> None:
         """
-        Abort all submitted batches by calling the abort endpoint.
+        Abort incomplete batches by calling the abort endpoint.
 
         This method is called during cleanup when the upload process is interrupted.
-        It attempts to abort all batches that were successfully submitted.
+        It attempts to abort all batches that were successfully submitted but not yet completed.
 
         Args:
             batch_ids: Shared list of batch IDs (thread-safe access required).
             batch_ids_lock: Lock protecting batch_ids list.
         """
-        # Get snapshot of current batch IDs
-        with batch_ids_lock:
-            batches_to_abort = batch_ids.copy()
+        # Ignore Ctrl+C during abort — cleanup must finish
+        is_main = threading.current_thread() is threading.main_thread()
+        original_handler = None
+        if is_main:
+            original_handler = signal.getsignal(signal.SIGINT)
+            signal.signal(signal.SIGINT, signal.SIG_IGN)
 
-        if not batches_to_abort:
-            logger.info("No batches to abort")
-            return
+        try:
+            # Get snapshot of current batch IDs, excluding already-completed batches
+            with batch_ids_lock:
+                batches_to_abort = [
+                    b for b in batch_ids if b not in self._processed_batches
+                ]
 
-        logger.info(
-            f"Aborting {len(batches_to_abort)} batch(es) due to interruption..."
-        )
+            if not batches_to_abort:
+                logger.info("No batches to abort")
+                return
 
-        abort_successes = 0
-        abort_failures = 0
+            logger.info(
+                f"Aborting {len(batches_to_abort)} batch(es) due to interruption..."
+            )
 
-        for batch_id in batches_to_abort:
-            try:
-                self.openapi_service.batch_upload_api.asset_batch_upload_batch_upload_id_abort_post(
-                    batch_upload_id=batch_id
-                )
-                abort_successes += 1
-                logger.debug(f"Successfully aborted batch: {batch_id}")
-            except Exception as e:
-                abort_failures += 1
-                logger.warning(f"Failed to abort batch {batch_id}: {e}")
+            abort_successes = 0
+            abort_failures = 0
 
-        logger.info(
-            f"Batch abort completed: {abort_successes} succeeded, {abort_failures} failed"
-        )
+            for batch_id in batches_to_abort:
+                try:
+                    self.openapi_service.batch_upload_api.asset_batch_upload_batch_upload_id_abort_post(
+                        batch_upload_id=batch_id
+                    )
+                    abort_successes += 1
+                    logger.debug(f"Successfully aborted batch: {batch_id}")
+                except Exception as e:
+                    abort_failures += 1
+                    logger.warning(f"Failed to abort batch {batch_id}: {e}")
+
+            logger.info(
+                f"Batch abort completed: {abort_successes} succeeded, {abort_failures} failed"
+            )
+        finally:
+            if is_main and original_handler is not None:
+                signal.signal(signal.SIGINT, original_handler)
