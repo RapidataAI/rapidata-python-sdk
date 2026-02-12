@@ -21,18 +21,27 @@ class RapidataFlowItem:
         self._openapi_service = openapi_service
         self._response_count: float | int | None = None
 
-    @property
-    def response_count(self) -> float | int:
-        if self._response_count is None:
-            self.get_win_loss_matrix()
-        assert self._response_count is not None
-        return self._response_count
+    def get_response_count(self) -> float | int:
+        """Get the total number of pairwise comparison responses for this flow item.
+
+        The count is derived from the win/loss matrix by summing all entries.
+        If the matrix hasn't been fetched yet, this will trigger a call to
+        :meth:`get_win_loss_matrix`, which waits for the flow item to finish.
+
+        Returns:
+            float | int: The total number of comparison votes collected.
+        """
+        with tracer.start_as_current_span("RapidataFlowItem.get_response_count"):
+            if self._response_count is None:
+                self.get_win_loss_matrix()
+            assert self._response_count is not None
+            return self._response_count
 
     def get_status(self) -> FlowItemState:
         """Get the current state of this flow item.
 
         Returns:
-            FlowItemState: The current state (Pending, Running, Completed, Failed, Stopped).
+            FlowItemState: The current state (Pending, Running, Completed, Failed, Stopped, or Incomplete).
         """
         with tracer.start_as_current_span("RapidataFlowItem.get_status"):
             logger.debug("Getting status for flow item '%s'", self.id)
