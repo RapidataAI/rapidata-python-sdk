@@ -31,13 +31,15 @@ def extract_assets_from_datapoint(datapoint: Datapoint) -> set[str]:
     """
     assets: set[str] = set()
 
-    # Main asset(s)
-    if isinstance(datapoint.asset, list):
-        assets.update(datapoint.asset)
-    else:
-        assets.add(datapoint.asset)
+    # Only extract main asset(s) for media datapoints
+    # Text assets are passed directly as text content, not uploaded
+    if datapoint.data_type == "media":
+        if isinstance(datapoint.asset, list):
+            assets.update(datapoint.asset)
+        else:
+            assets.add(datapoint.asset)
 
-    # Context asset
+    # media_context is always a media asset regardless of data_type
     if datapoint.media_context:
         assets.add(datapoint.media_context)
 
