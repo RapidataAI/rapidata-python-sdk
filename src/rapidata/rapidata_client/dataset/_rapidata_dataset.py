@@ -175,6 +175,20 @@ class RapidataDataset:
         )
 
         try:
+            # Submit datapoints that need no asset uploads (e.g., text datapoints)
+            immediately_ready: list[int] = []
+            with lock:
+                for idx in list(datapoint_pending_count.keys()):
+                    if datapoint_pending_count[idx] == 0:
+                        immediately_ready.append(idx)
+                        del datapoint_pending_count[idx]
+
+            if immediately_ready:
+                logger.debug(f"{len(immediately_ready)} datapoint(s) need no asset uploads, submitting immediately")
+                self._submit_datapoints_for_creation(
+                    immediately_ready, datapoints, creation_futures, lock, executor, datapoint_pbar,
+                )
+
             # Create callback that submits datapoints for creation
             on_assets_complete = self._create_asset_completion_callback(
                 datapoints,
