@@ -17,20 +17,20 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List
+from rapidata.api_client.models.i_asset_model import IAssetModel
 from typing import Optional, Set
 from typing_extensions import Self
 
-class CreateFlowItemEndpointInput(BaseModel):
+class OutputDatapoint(BaseModel):
     """
-    CreateFlowItemEndpointInput
+    OutputDatapoint
     """ # noqa: E501
-    dataset_id: StrictStr = Field(description="The ID of the dataset to use for this flow item.", alias="datasetId")
-    context: Optional[StrictStr] = Field(default=None, description="Optional context to provide additional ranking guidance.")
-    time_to_live_in_seconds: Optional[StrictInt] = Field(default=None, description="Optional time-to-live in seconds before the flow item expires.", alias="timeToLiveInSeconds")
-    drain_duration_in_seconds: Optional[StrictInt] = Field(default=None, description="Optional drain duration in seconds. When set, rapids are paused this many seconds before TTL expiry to allow in-flight responses to complete.", alias="drainDurationInSeconds")
-    __properties: ClassVar[List[str]] = ["datasetId", "context", "timeToLiveInSeconds", "drainDurationInSeconds"]
+    id: StrictStr
+    asset: IAssetModel
+    elo: StrictInt
+    __properties: ClassVar[List[str]] = ["id", "asset", "elo"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -50,7 +50,7 @@ class CreateFlowItemEndpointInput(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of CreateFlowItemEndpointInput from a JSON string"""
+        """Create an instance of OutputDatapoint from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -71,16 +71,14 @@ class CreateFlowItemEndpointInput(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # set to None if context (nullable) is None
-        # and model_fields_set contains the field
-        if self.context is None and "context" in self.model_fields_set:
-            _dict['context'] = None
-
+        # override the default output from pydantic by calling `to_dict()` of asset
+        if self.asset:
+            _dict['asset'] = self.asset.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of CreateFlowItemEndpointInput from a dict"""
+        """Create an instance of OutputDatapoint from a dict"""
         if obj is None:
             return None
 
@@ -88,10 +86,9 @@ class CreateFlowItemEndpointInput(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "datasetId": obj.get("datasetId"),
-            "context": obj.get("context"),
-            "timeToLiveInSeconds": obj.get("timeToLiveInSeconds"),
-            "drainDurationInSeconds": obj.get("drainDurationInSeconds")
+            "id": obj.get("id"),
+            "asset": IAssetModel.from_dict(obj["asset"]) if obj.get("asset") is not None else None,
+            "elo": obj.get("elo")
         })
         return _obj
 

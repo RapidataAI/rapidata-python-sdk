@@ -2608,6 +2608,273 @@
         ]
       }
     },
+    "/flow/ranking/{flowId}/completion-time-histogram": {
+      "get": {
+        "tags": [
+          "Flow"
+        ],
+        "summary": "Returns the distribution of completion durations (in seconds) per completed flow item.",
+        "parameters": [
+          {
+            "name": "flowId",
+            "in": "path",
+            "description": "The ID of the flow.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "description": "Optional start of the date range filter (inclusive).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "Optional end of the date range filter (inclusive).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "bucketCount",
+            "in": "query",
+            "description": "Number of histogram buckets (default 10, max 100).",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCompletionTimeHistogramEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
+    "/flow/ranking/{flowId}/response-count-histogram": {
+      "get": {
+        "tags": [
+          "Flow"
+        ],
+        "summary": "Returns the distribution of total votes per completed flow item.",
+        "parameters": [
+          {
+            "name": "flowId",
+            "in": "path",
+            "description": "The ID of the flow.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "description": "Optional start of the date range filter (inclusive).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "Optional end of the date range filter (inclusive).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "bucketCount",
+            "in": "query",
+            "description": "Number of histogram buckets (default 10, max 100).",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetResponseCountHistogramEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
+    "/flow/ranking/{flowId}/response-count-timeseries": {
+      "get": {
+        "tags": [
+          "Flow"
+        ],
+        "summary": "Returns average response counts bucketed over time for completed flow items.",
+        "parameters": [
+          {
+            "name": "flowId",
+            "in": "path",
+            "description": "The ID of the flow.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "description": "Optional start of the date range filter (inclusive).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "description": "Optional end of the date range filter (exclusive).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "datapoints",
+            "in": "query",
+            "description": "Number of time buckets (default 100, max 1000).",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetResponseCountTimeseriesEndpoint_Output"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "Bearer": [],
+            "OpenIdConnect": [
+              "openid",
+              "profile",
+              "email"
+            ],
+            "OAuth2": [
+              "openid",
+              "profile",
+              "email"
+            ]
+          }
+        ]
+      }
+    },
     "/flow": {
       "get": {
         "tags": [
@@ -15447,6 +15714,11 @@
             "type": "integer",
             "description": "Optional time-to-live in seconds before the flow item expires.",
             "format": "int32"
+          },
+          "drainDurationInSeconds": {
+            "type": "integer",
+            "description": "Optional drain duration in seconds. When set, rapids are paused this many seconds before TTL expiry to allow in-flight responses to complete.",
+            "format": "int32"
           }
         }
       },
@@ -15494,6 +15766,22 @@
           "Ranking"
         ],
         "description": "The type of the flow."
+      },
+      "GetCompletionTimeHistogramEndpoint_Output": {
+        "required": [
+          "buckets"
+        ],
+        "type": "object",
+        "properties": {
+          "buckets": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Output_ListOfOutput_Bucket"
+              }
+            ],
+            "description": "The histogram buckets."
+          }
+        }
       },
       "GetFlowByIdEndpoint_Output": {
         "required": [
@@ -15666,6 +15954,38 @@
           }
         }
       },
+      "GetResponseCountHistogramEndpoint_Output": {
+        "required": [
+          "buckets"
+        ],
+        "type": "object",
+        "properties": {
+          "buckets": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Output_ListOfOutput_Bucket"
+              }
+            ],
+            "description": "The histogram buckets."
+          }
+        }
+      },
+      "GetResponseCountTimeseriesEndpoint_Output": {
+        "required": [
+          "datapoints"
+        ],
+        "type": "object",
+        "properties": {
+          "datapoints": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Output_ListOfOutput_DataPoint"
+              }
+            ],
+            "description": "The timeseries data points."
+          }
+        }
+      },
       "ListOfFeatureFlag": {
         "type": "array",
         "items": {
@@ -15678,6 +15998,28 @@
           "type": "array",
           "items": {
             "type": "number"
+          }
+        }
+      },
+      "Output_Bucket": {
+        "required": [
+          "lowerBound",
+          "upperBound",
+          "count"
+        ],
+        "type": "object",
+        "properties": {
+          "lowerBound": {
+            "type": "number",
+            "format": "double"
+          },
+          "upperBound": {
+            "type": "number",
+            "format": "double"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -15701,10 +16043,39 @@
           }
         }
       },
+      "Output_DataPoint": {
+        "required": [
+          "timestamp",
+          "averageResponseCount"
+        ],
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "averageResponseCount": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "Output_ListOfOutput_Bucket": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Output_Bucket"
+        }
+      },
       "Output_ListOfOutput_Datapoint": {
         "type": "array",
         "items": {
           "$ref": "#/components/schemas/Output_Datapoint"
+        }
+      },
+      "Output_ListOfOutput_DataPoint": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Output_DataPoint"
         }
       },
       "QueryFlowItemsEndpoint_ListOfQueryFlowItemsEndpoint_Output": {
@@ -15931,6 +16302,50 @@
               }
             ],
             "description": "Feature flags to enable for this flow."
+          },
+          "targetResponseCount": {
+            "type": "integer",
+            "description": "Target average response count per completed item. Set to null to disable PID control.",
+            "format": "int32",
+            "nullable": true
+          },
+          "pidProportionalGain": {
+            "type": "number",
+            "description": "PID proportional gain.",
+            "format": "double",
+            "nullable": true
+          },
+          "pidIntegralGain": {
+            "type": "number",
+            "description": "PID integral gain.",
+            "format": "double",
+            "nullable": true
+          },
+          "pidDerivativeGain": {
+            "type": "number",
+            "description": "PID derivative gain.",
+            "format": "double",
+            "nullable": true
+          },
+          "pidMinSessionsPerMinute": {
+            "type": "integer",
+            "description": "Minimum sessions per minute the PID can set.",
+            "format": "int32",
+            "nullable": true
+          },
+          "pidMaxSessionsPerMinute": {
+            "type": "integer",
+            "description": "Maximum sessions per minute the PID can set.",
+            "format": "int32",
+            "nullable": true
+          },
+          "pidBatchMode": {
+            "enum": [
+              "Total",
+              "PerBatch",
+              "PerBatchTimeWeighted"
+            ],
+            "description": "How PID output maps to campaign rate. Total: direct rate. PerBatch: multiplied by active batch count. PerBatchTimeWeighted: multiplied by time-weighted batch count."
           }
         }
       },
