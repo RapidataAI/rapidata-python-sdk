@@ -47,9 +47,26 @@ RESTResponseType = RESTResponse
 
 class RESTClientObject:
 
-    def __init__(self, configuration) -> None:
+    def __init__(self, configuration, transport: Optional[httpx.HTTPTransport] = None) -> None:
         self.configuration = configuration
 
+        if transport is not None:
+            self._transport = transport
+            self._owns_transport = False
+        else:
+            limits = Limits(max_connections=20, max_keepalive_connections=10)
+            transport_kwargs: dict = {"limits": limits}
+            if configuration.retries is not None:
+                transport_kwargs["retries"] = configuration.retries
+            self._transport = httpx.HTTPTransport(**transport_kwargs)
+            self._owns_transport = True
+
+        verify = (
+            configuration.ssl_ca_cert
+            if configuration.ssl_ca_cert
+            else configuration.verify_ssl
+        )
+        self.http_client = httpx.Client(transport=self._transport, verify=verify)
         self.session: Optional[OAuth2Client] = None
 
     def setup_oauth_client_credentials(
@@ -89,6 +106,10 @@ class RESTClientObject:
             leeway=leeway,
             **client_args,
         )
+
+    def close(self):
+        if self._owns_transport:
+            self._transport.close()
 
     def request(
         self,
@@ -251,30 +272,17 @@ class RESTClientObject:
         raise ApiException(status=0, reason=msg)
 
     def _get_session_defaults(self):
-        # Set connection pool limits to support high concurrency uploads
-        limits = Limits(max_connections=200, max_keepalive_connections=200)
-
         client_kwargs = {
             "verify": (
                 self.configuration.ssl_ca_cert
                 if self.configuration.ssl_ca_cert
                 else self.configuration.verify_ssl
             ),
-            "limits": limits,
+            "transport": self._transport,
         }
 
         if self.configuration.proxy:
             client_kwargs["proxy"] = self.configuration.proxy
-
-            existing_headers = client_kwargs.pop("headers")
-            if self.configuration.proxy_headers:
-                for key, value in self.configuration.proxy_headers.items():
-                    existing_headers[key] = value
-            client_kwargs["headers"] = existing_headers
-
-        if self.configuration.retries is not None:
-            transport = httpx.HTTPTransport(retries=self.configuration.retries, limits=limits)
-            client_kwargs["transport"] = transport
 
         return client_kwargs
 

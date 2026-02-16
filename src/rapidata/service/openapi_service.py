@@ -11,6 +11,7 @@ from rapidata.rapidata_client.config import logger, managed_print
 from authlib.integrations.httpx_client import OAuthError
 
 if TYPE_CHECKING:
+    import httpx
     from rapidata.api_client.api.job_api import JobApi
     from rapidata.api_client import CustomerRapidApi
     from rapidata.api_client.api.campaign_api import CampaignApi
@@ -41,6 +42,7 @@ class OpenAPIService:
         cert_path: str | None = None,
         token: dict | None = None,
         leeway: int = 60,
+        transport: httpx.HTTPTransport | None = None,
     ):
         self.environment = environment
         endpoint = f"https://api.{environment}"
@@ -55,12 +57,6 @@ class OpenAPIService:
             environment,
             client_id,
         )
-        logger.debug("Initializing OpenAPIService")
-        self.credential_manager = CredentialManager(
-            endpoint=auth_endpoint, cert_path=cert_path
-        )
-        logger.debug("CredentialManager initialized")
-
         logger.debug("Initializing RapidataApiClient")
         client_configuration = Configuration(host=endpoint, ssl_ca_cert=cert_path)
         logger.debug("Client configuration: %s", client_configuration)
@@ -68,8 +64,16 @@ class OpenAPIService:
             configuration=client_configuration,
             header_name="X-Client",
             header_value=f"RapidataPythonSDK/{self._get_rapidata_package_version()}",
+            transport=transport,
         )
         logger.debug("RapidataApiClient initialized")
+
+        logger.debug("Initializing CredentialManager")
+        self.credential_manager = CredentialManager(
+            endpoint=auth_endpoint,
+            http_client=self.api_client.rest_client.http_client,
+        )
+        logger.debug("CredentialManager initialized")
 
         if token:
             logger.debug("Using token for authentication")
@@ -123,6 +127,9 @@ class OpenAPIService:
             managed_print("Credentials were reset and re-authenticated successfully")
 
         logger.debug("Client credentials authentication setup complete")
+
+    def close(self):
+        self.api_client.close()
 
     def reset_credentials(self):
         logger.info("Resetting credentials in OpenAPIService")

@@ -8,7 +8,7 @@ from pathlib import Path
 from socket import gethostname
 from typing import Dict, List, Optional, Tuple
 
-import requests
+import httpx
 from colorama import Fore
 from pydantic import BaseModel
 from rapidata.rapidata_client.config import logger, managed_print
@@ -35,12 +35,12 @@ class CredentialManager:
     def __init__(
         self,
         endpoint: str,
-        cert_path: str | None = None,
+        http_client: httpx.Client,
         poll_timeout: int = 300,
         poll_interval: int = 1,
     ):
         self.endpoint = endpoint
-        self.cert_path = cert_path
+        self._http_client = http_client
         self.poll_timeout = poll_timeout
         self.poll_interval = poll_interval
 
@@ -139,14 +139,14 @@ class CredentialManager:
             bridge_endpoint = (
                 f"{self.endpoint}/identity/bridge-token?clientId=rapidata-cli"
             )
-            response = requests.post(bridge_endpoint, verify=self.cert_path)
-            if not response.ok:
+            response = self._http_client.post(bridge_endpoint)
+            if not response.is_success:
                 logger.error("Failed to get bridge tokens: %s", response.status_code)
                 return None
 
             data = response.json()
             return BridgeToken(read_key=data["readKey"], write_key=data["writeKey"])
-        except requests.RequestException as e:
+        except httpx.HTTPError as e:
             logger.error("Failed to get bridge tokens: %s", e)
             return None
 
@@ -157,8 +157,8 @@ class CredentialManager:
 
         while time.time() - start_time < self.poll_timeout:
             try:
-                response = requests.get(
-                    read_endpoint, params={"readKey": read_key}, verify=self.cert_path
+                response = self._http_client.get(
+                    read_endpoint, params={"readKey": read_key}
                 )
 
                 if response.status_code == 200:
@@ -172,7 +172,7 @@ class CredentialManager:
                     logger.error("Error polling read key: %s", response.status_code)
                     return None
 
-            except requests.RequestException as e:
+            except httpx.HTTPError as e:
                 logger.error("Error polling read key: %s", e)
                 return None
 
@@ -184,7 +184,7 @@ class CredentialManager:
         try:
             # set the display name to the hostname
             display_name = f"{gethostname()} - Python API Client"
-            response = requests.post(
+            response = self._http_client.post(
                 f"{self.endpoint}/Client",
                 headers={
                     "Authorization": f"Bearer {access_token}",
@@ -192,12 +192,11 @@ class CredentialManager:
                     "Accept": "*/*",
                 },
                 json={"displayName": display_name},
-                verify=self.cert_path,
             )
             response.raise_for_status()
             data = response.json()
             return data.get("clientId"), data.get("clientSecret"), display_name
-        except requests.RequestException as e:
+        except httpx.HTTPError as e:
             logger.error("Failed to create client: %s", e)
             return None
 

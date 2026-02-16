@@ -1,11 +1,15 @@
+from __future__ import annotations
+
 import json
-from typing import Any
-import requests
+from typing import Any, TYPE_CHECKING
 from packaging import version
 from rapidata import __version__
 import uuid
 import random
 from rapidata.service.openapi_service import OpenAPIService
+
+if TYPE_CHECKING:
+    import httpx
 
 from rapidata.rapidata_client.benchmark.rapidata_benchmark_manager import (
     RapidataBenchmarkManager,
@@ -44,6 +48,7 @@ class RapidataClient:
         cert_path: str | None = None,
         token: dict | None = None,
         leeway: int = 60,
+        transport: httpx.HTTPTransport | None = None,
     ):
         """Initialize the RapidataClient. If both the client_id and client_secret are None, it will try using your credentials under "~/.config/rapidata/credentials.json".
         If this is not successful, it will open a browser window and ask you to log in, then save your new credentials in said json file.
@@ -56,6 +61,7 @@ class RapidataClient:
             cert_path (str, optional): An optional path to a certificate file useful for development.
             token (dict, optional): If you already have a token that the client should use for authentication. Important, if set, this needs to be the complete token object containing the access token, token type and expiration time.
             leeway (int, optional): An optional leeway to use to determine if a token is expired. Defaults to 60 seconds.
+            transport (httpx.HTTPTransport, optional): An optional shared transport (connection pool). When provided, this client will reuse the given transport instead of creating its own. Useful when creating many clients to share a single connection pool. The caller is responsible for closing the transport.
 
         Attributes:
             order (RapidataOrderManager): The RapidataOrderManager instance.
@@ -70,8 +76,6 @@ class RapidataClient:
         )
 
         with tracer.start_as_current_span("RapidataClient.__init__"):
-            logger.debug("Checking version")
-            self._check_version()
             if environment != "rapidata.ai":
                 rapidata_config.logging.enable_otlp = False
 
@@ -84,7 +88,11 @@ class RapidataClient:
                 cert_path=cert_path,
                 token=token,
                 leeway=leeway,
+                transport=transport,
             )
+
+            logger.debug("Checking version")
+            self._check_version()
 
             self._asset_uploader = AssetUploader(openapi_service=self._openapi_service)
 
@@ -116,6 +124,28 @@ class RapidataClient:
             )
 
         self._check_beta_features()  # can't be in the trace for some reason
+
+    @property
+    def transport(self) -> httpx.HTTPTransport:
+        """The underlying HTTP transport (connection pool).
+
+        Pass this to other ``RapidataClient`` instances via the ``transport``
+        parameter to share a single connection pool across many clients::
+
+            first = RapidataClient()
+            second = RapidataClient(token=..., transport=first.transport)
+        """
+        return self._openapi_service.api_client.rest_client._transport
+
+    def close(self):
+        """Close all HTTP connections held by this client."""
+        self._openapi_service.close()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.close()
 
     def reset_credentials(self):
         """Reset the credentials saved in the configuration file for the current environment."""
@@ -153,7 +183,8 @@ class RapidataClient:
 
     def _check_version(self):
         try:
-            response = requests.get(
+            http_client = self._openapi_service.api_client.rest_client.http_client
+            response = http_client.get(
                 "https://api.github.com/repos/RapidataAI/rapidata-python-sdk/releases/latest",
                 headers={"Accept": "application/vnd.github.v3+json"},
                 timeout=1,
