@@ -16,6 +16,8 @@ A **curated audience** is a pre-existing pool of labelers trained on a specific 
 
 A **custom audience** filters labelers through qualification examples before they can work on your data. Only labelers who demonstrate they understand your tasks will be included, leading to the most accurate results.
 
+> **Note**: You can see the curated audiences along with your own in the [Rapidata Dashboard](https://app.rapidata.ai/audiences).
+
 ## Creating a Custom Audience
 
 ### Step 1: Create the Audience

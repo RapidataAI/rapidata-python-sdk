@@ -148,7 +148,7 @@ audience = client.audience.find_audiences("alignment")[0]
 
 # Create job definition
 job_definition = client.job.create_compare_job_definition(
-    name="Example Image Comparison",
+    name="Example Image Prompt Alignment",
     instruction="Which image matches the description better?",
     datapoints=[
         ["https://assets.rapidata.ai/midjourney-5.2_37_3.jpg",
