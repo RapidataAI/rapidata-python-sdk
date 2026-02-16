@@ -25,7 +25,7 @@ class RapidataFlowManager:
         name: str,
         instruction: str,
         max_response_threshold: int = 100,
-        min_response_threshold: int = 1,
+        min_response_threshold: int | None = None,
         validation_set_id: str | None = None,
         settings: Sequence[RapidataSetting] | None = None,
     ) -> RapidataFlow:
@@ -34,14 +34,17 @@ class RapidataFlowManager:
         Args:
             name: The name of the flow.
             instruction: The instruction for the ranking comparisons. Will be shown with each matchup.
-            max_response_threshold: The maximum number of responses that will be collected per flow item.
-            min_response_threshold: The minimum number of responses required for the flow to be considered complete in case of a timeout.
+            max_response_threshold: The maximum number of responses that will be collected per flow item. Defaults to 100.
+            min_response_threshold: The minimum number of responses required for the flow to be considered complete in case of a timeout. Defaults to max_response_threshold.
             validation_set_id: Optional validation set ID.
             settings: Optional settings for the flow.
 
         Returns:
             RapidataFlow: The created flow instance.
         """
+        if min_response_threshold is None:
+            min_response_threshold = max_response_threshold
+
         with tracer.start_as_current_span("RapidataFlowManager.create_ranking_flow"):
             from rapidata.api_client.models.create_flow_endpoint_input import (
                 CreateFlowEndpointInput,
