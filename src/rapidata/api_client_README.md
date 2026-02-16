@@ -149,6 +149,9 @@ Class | Method | HTTP request | Description
 *FlowApi* | [**flow_flow_id_delete**](rapidata/api_client/docs/FlowApi.md#flow_flow_id_delete) | **DELETE** /flow/{flowId} | Deletes a flow.
 *FlowApi* | [**flow_flow_id_get**](rapidata/api_client/docs/FlowApi.md#flow_flow_id_get) | **GET** /flow/{flowId} | Retrieves a flow by its ID.
 *FlowApi* | [**flow_get**](rapidata/api_client/docs/FlowApi.md#flow_get) | **GET** /flow | Queries flows with filtering and pagination.
+*FlowApi* | [**flow_ranking_flow_id_completion_time_histogram_get**](rapidata/api_client/docs/FlowApi.md#flow_ranking_flow_id_completion_time_histogram_get) | **GET** /flow/ranking/{flowId}/completion-time-histogram | Returns the distribution of completion durations (in seconds) per completed flow item.
+*FlowApi* | [**flow_ranking_flow_id_response_count_histogram_get**](rapidata/api_client/docs/FlowApi.md#flow_ranking_flow_id_response_count_histogram_get) | **GET** /flow/ranking/{flowId}/response-count-histogram | Returns the distribution of total votes per completed flow item.
+*FlowApi* | [**flow_ranking_flow_id_response_count_timeseries_get**](rapidata/api_client/docs/FlowApi.md#flow_ranking_flow_id_response_count_timeseries_get) | **GET** /flow/ranking/{flowId}/response-count-timeseries | Returns average response counts bucketed over time for completed flow items.
 *FlowItemApi* | [**flow_item_flow_item_id_stop_post**](rapidata/api_client/docs/FlowItemApi.md#flow_item_flow_item_id_stop_post) | **POST** /flow/item/{flowItemId}/stop | Stops the specified flow item and triggers partial result processing.
 *GroupedRankingWorkflowApi* | [**workflow_grouped_ranking_workflow_id_results_get**](rapidata/api_client/docs/GroupedRankingWorkflowApi.md#workflow_grouped_ranking_workflow_id_results_get) | **GET** /workflow/grouped-ranking/{workflowId}/results | Get the result overview for a multi compare workflow.
 *IdentityApi* | [**identity_bridge_token_get**](rapidata/api_client/docs/IdentityApi.md#identity_bridge_token_get) | **GET** /identity/bridge-token | Tries to read the bridge token keys for a given read key.  The read key is used to retrieve the authentication result written by the write key.
@@ -351,6 +354,7 @@ Class | Method | HTTP request | Description
  - [GetCompareWorkflowResultsModel](rapidata/api_client/docs/GetCompareWorkflowResultsModel.md)
  - [GetCompareWorkflowResultsResult](rapidata/api_client/docs/GetCompareWorkflowResultsResult.md)
  - [GetCompareWorkflowResultsResultDatapoint](rapidata/api_client/docs/GetCompareWorkflowResultsResultDatapoint.md)
+ - [GetCompletionTimeHistogramEndpointOutput](rapidata/api_client/docs/GetCompletionTimeHistogramEndpointOutput.md)
  - [GetDatapointByIdResult](rapidata/api_client/docs/GetDatapointByIdResult.md)
  - [GetDatasetByIdResult](rapidata/api_client/docs/GetDatasetByIdResult.md)
  - [GetDatasetProgressResult](rapidata/api_client/docs/GetDatasetProgressResult.md)
@@ -374,6 +378,8 @@ Class | Method | HTTP request | Description
  - [GetRankingFlowItemResultsEndpointOutput](rapidata/api_client/docs/GetRankingFlowItemResultsEndpointOutput.md)
  - [GetRankingFlowItemVoteMatrixEndpointOutput](rapidata/api_client/docs/GetRankingFlowItemVoteMatrixEndpointOutput.md)
  - [GetRecommendedValidationSetResult](rapidata/api_client/docs/GetRecommendedValidationSetResult.md)
+ - [GetResponseCountHistogramEndpointOutput](rapidata/api_client/docs/GetResponseCountHistogramEndpointOutput.md)
+ - [GetResponseCountTimeseriesEndpointOutput](rapidata/api_client/docs/GetResponseCountTimeseriesEndpointOutput.md)
  - [GetResponsesForRapidResult](rapidata/api_client/docs/GetResponsesForRapidResult.md)
  - [GetResponsesForRapidResultResponse](rapidata/api_client/docs/GetResponsesForRapidResultResponse.md)
  - [GetResponsesResult](rapidata/api_client/docs/GetResponsesResult.md)
@@ -611,6 +617,8 @@ Class | Method | HTTP request | Description
  - [NotAvailableYetResult](rapidata/api_client/docs/NotAvailableYetResult.md)
  - [OrderModel](rapidata/api_client/docs/OrderModel.md)
  - [OrderState](rapidata/api_client/docs/OrderState.md)
+ - [OutputBucket](rapidata/api_client/docs/OutputBucket.md)
+ - [OutputDataPoint](rapidata/api_client/docs/OutputDataPoint.md)
  - [OutputDatapoint](rapidata/api_client/docs/OutputDatapoint.md)
  - [PageInfo](rapidata/api_client/docs/PageInfo.md)
  - [PagedResultOfAggregatedOrdersModel](rapidata/api_client/docs/PagedResultOfAggregatedOrdersModel.md)

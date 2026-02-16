@@ -17,8 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Optional, Union
 from rapidata.api_client.models.feature_flag import FeatureFlag
 from typing import Optional, Set
 from typing_extensions import Self
@@ -35,7 +35,24 @@ class UpdateConfigEndpointInput(BaseModel):
     max_responses: Optional[StrictInt] = Field(default=None, description="Maximum number of responses per comparison.", alias="maxResponses")
     responses_required: Optional[StrictInt] = Field(default=None, description="Deprecated. Use MaxResponses instead.", alias="responsesRequired")
     feature_flags: Optional[List[FeatureFlag]] = Field(default=None, alias="featureFlags")
-    __properties: ClassVar[List[str]] = ["criteria", "startingElo", "kFactor", "scalingFactor", "minResponses", "maxResponses", "responsesRequired", "featureFlags"]
+    target_response_count: Optional[StrictInt] = Field(default=None, description="Target average response count per completed item. Set to null to disable PID control.", alias="targetResponseCount")
+    pid_proportional_gain: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="PID proportional gain.", alias="pidProportionalGain")
+    pid_integral_gain: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="PID integral gain.", alias="pidIntegralGain")
+    pid_derivative_gain: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="PID derivative gain.", alias="pidDerivativeGain")
+    pid_min_sessions_per_minute: Optional[StrictInt] = Field(default=None, description="Minimum sessions per minute the PID can set.", alias="pidMinSessionsPerMinute")
+    pid_max_sessions_per_minute: Optional[StrictInt] = Field(default=None, description="Maximum sessions per minute the PID can set.", alias="pidMaxSessionsPerMinute")
+    pid_batch_mode: Optional[StrictStr] = Field(default=None, description="How PID output maps to campaign rate. Total: direct rate. PerBatch: multiplied by active batch count. PerBatchTimeWeighted: multiplied by time-weighted batch count.", alias="pidBatchMode")
+    __properties: ClassVar[List[str]] = ["criteria", "startingElo", "kFactor", "scalingFactor", "minResponses", "maxResponses", "responsesRequired", "featureFlags", "targetResponseCount", "pidProportionalGain", "pidIntegralGain", "pidDerivativeGain", "pidMinSessionsPerMinute", "pidMaxSessionsPerMinute", "pidBatchMode"]
+
+    @field_validator('pid_batch_mode')
+    def pid_batch_mode_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['Total', 'PerBatch', 'PerBatchTimeWeighted']):
+            raise ValueError("must be one of enum values ('Total', 'PerBatch', 'PerBatchTimeWeighted')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -118,6 +135,36 @@ class UpdateConfigEndpointInput(BaseModel):
         if self.responses_required is None and "responses_required" in self.model_fields_set:
             _dict['responsesRequired'] = None
 
+        # set to None if target_response_count (nullable) is None
+        # and model_fields_set contains the field
+        if self.target_response_count is None and "target_response_count" in self.model_fields_set:
+            _dict['targetResponseCount'] = None
+
+        # set to None if pid_proportional_gain (nullable) is None
+        # and model_fields_set contains the field
+        if self.pid_proportional_gain is None and "pid_proportional_gain" in self.model_fields_set:
+            _dict['pidProportionalGain'] = None
+
+        # set to None if pid_integral_gain (nullable) is None
+        # and model_fields_set contains the field
+        if self.pid_integral_gain is None and "pid_integral_gain" in self.model_fields_set:
+            _dict['pidIntegralGain'] = None
+
+        # set to None if pid_derivative_gain (nullable) is None
+        # and model_fields_set contains the field
+        if self.pid_derivative_gain is None and "pid_derivative_gain" in self.model_fields_set:
+            _dict['pidDerivativeGain'] = None
+
+        # set to None if pid_min_sessions_per_minute (nullable) is None
+        # and model_fields_set contains the field
+        if self.pid_min_sessions_per_minute is None and "pid_min_sessions_per_minute" in self.model_fields_set:
+            _dict['pidMinSessionsPerMinute'] = None
+
+        # set to None if pid_max_sessions_per_minute (nullable) is None
+        # and model_fields_set contains the field
+        if self.pid_max_sessions_per_minute is None and "pid_max_sessions_per_minute" in self.model_fields_set:
+            _dict['pidMaxSessionsPerMinute'] = None
+
         return _dict
 
     @classmethod
@@ -137,7 +184,14 @@ class UpdateConfigEndpointInput(BaseModel):
             "minResponses": obj.get("minResponses"),
             "maxResponses": obj.get("maxResponses"),
             "responsesRequired": obj.get("responsesRequired"),
-            "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None
+            "featureFlags": [FeatureFlag.from_dict(_item) for _item in obj["featureFlags"]] if obj.get("featureFlags") is not None else None,
+            "targetResponseCount": obj.get("targetResponseCount"),
+            "pidProportionalGain": obj.get("pidProportionalGain"),
+            "pidIntegralGain": obj.get("pidIntegralGain"),
+            "pidDerivativeGain": obj.get("pidDerivativeGain"),
+            "pidMinSessionsPerMinute": obj.get("pidMinSessionsPerMinute"),
+            "pidMaxSessionsPerMinute": obj.get("pidMaxSessionsPerMinute"),
+            "pidBatchMode": obj.get("pidBatchMode")
         })
         return _obj
 
