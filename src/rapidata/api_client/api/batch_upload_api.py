@@ -17,7 +17,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
 from pydantic import Field, StrictStr
-from typing import List
+from typing import List, Optional
 from typing_extensions import Annotated
 from rapidata.api_client.models.create_batch_upload_endpoint_input import CreateBatchUploadEndpointInput
 from rapidata.api_client.models.create_batch_upload_endpoint_output import CreateBatchUploadEndpointOutput
@@ -871,7 +871,8 @@ class BatchUploadApi:
     @validate_call
     def asset_batch_upload_status_get(
         self,
-        batch_upload_ids: Annotated[List[StrictStr], Field(description="The identifiers of the batch uploads to query.")],
+        batch_upload_ids: Annotated[Optional[List[StrictStr]], Field(description="The identifiers of the batch uploads to query.")] = None,
+        correlation_id: Annotated[Optional[StrictStr], Field(description="A client-supplied identifier to look up related batch uploads.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -885,11 +886,13 @@ class BatchUploadApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> GetBatchUploadStatusEndpointOutput:
-        """Gets aggregated status for one or more batch uploads.
+        """Gets aggregated status for batch uploads identified by IDs or a correlation ID.
 
 
-        :param batch_upload_ids: The identifiers of the batch uploads to query. (required)
+        :param batch_upload_ids: The identifiers of the batch uploads to query.
         :type batch_upload_ids: List[str]
+        :param correlation_id: A client-supplied identifier to look up related batch uploads.
+        :type correlation_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -914,6 +917,7 @@ class BatchUploadApi:
 
         _param = self._asset_batch_upload_status_get_serialize(
             batch_upload_ids=batch_upload_ids,
+            correlation_id=correlation_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -940,7 +944,8 @@ class BatchUploadApi:
     @validate_call
     def asset_batch_upload_status_get_with_http_info(
         self,
-        batch_upload_ids: Annotated[List[StrictStr], Field(description="The identifiers of the batch uploads to query.")],
+        batch_upload_ids: Annotated[Optional[List[StrictStr]], Field(description="The identifiers of the batch uploads to query.")] = None,
+        correlation_id: Annotated[Optional[StrictStr], Field(description="A client-supplied identifier to look up related batch uploads.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -954,11 +959,13 @@ class BatchUploadApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[GetBatchUploadStatusEndpointOutput]:
-        """Gets aggregated status for one or more batch uploads.
+        """Gets aggregated status for batch uploads identified by IDs or a correlation ID.
 
 
-        :param batch_upload_ids: The identifiers of the batch uploads to query. (required)
+        :param batch_upload_ids: The identifiers of the batch uploads to query.
         :type batch_upload_ids: List[str]
+        :param correlation_id: A client-supplied identifier to look up related batch uploads.
+        :type correlation_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -983,6 +990,7 @@ class BatchUploadApi:
 
         _param = self._asset_batch_upload_status_get_serialize(
             batch_upload_ids=batch_upload_ids,
+            correlation_id=correlation_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1009,7 +1017,8 @@ class BatchUploadApi:
     @validate_call
     def asset_batch_upload_status_get_without_preload_content(
         self,
-        batch_upload_ids: Annotated[List[StrictStr], Field(description="The identifiers of the batch uploads to query.")],
+        batch_upload_ids: Annotated[Optional[List[StrictStr]], Field(description="The identifiers of the batch uploads to query.")] = None,
+        correlation_id: Annotated[Optional[StrictStr], Field(description="A client-supplied identifier to look up related batch uploads.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1023,11 +1032,13 @@ class BatchUploadApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Gets aggregated status for one or more batch uploads.
+        """Gets aggregated status for batch uploads identified by IDs or a correlation ID.
 
 
-        :param batch_upload_ids: The identifiers of the batch uploads to query. (required)
+        :param batch_upload_ids: The identifiers of the batch uploads to query.
         :type batch_upload_ids: List[str]
+        :param correlation_id: A client-supplied identifier to look up related batch uploads.
+        :type correlation_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1052,6 +1063,7 @@ class BatchUploadApi:
 
         _param = self._asset_batch_upload_status_get_serialize(
             batch_upload_ids=batch_upload_ids,
+            correlation_id=correlation_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1074,6 +1086,7 @@ class BatchUploadApi:
     def _asset_batch_upload_status_get_serialize(
         self,
         batch_upload_ids,
+        correlation_id,
         _request_auth,
         _content_type,
         _headers,
@@ -1100,6 +1113,10 @@ class BatchUploadApi:
         if batch_upload_ids is not None:
             
             _query_params.append(('batchUploadIds', batch_upload_ids))
+            
+        if correlation_id is not None:
+            
+            _query_params.append(('correlationId', correlation_id))
             
         # process the header parameters
         # process the form parameters

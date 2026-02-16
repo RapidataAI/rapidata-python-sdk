@@ -430,18 +430,25 @@
         "tags": [
           "BatchUpload"
         ],
-        "summary": "Gets aggregated status for one or more batch uploads.",
+        "summary": "Gets aggregated status for batch uploads identified by IDs or a correlation ID.",
         "parameters": [
           {
             "name": "batchUploadIds",
             "in": "query",
             "description": "The identifiers of the batch uploads to query.",
-            "required": true,
             "schema": {
               "type": "array",
               "items": {
                 "type": "string"
               }
+            }
+          },
+          {
+            "name": "correlationId",
+            "in": "query",
+            "description": "A client-supplied identifier to look up related batch uploads.",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -12102,6 +12109,11 @@
               }
             ],
             "description": "The URLs to download and process."
+          },
+          "correlationId": {
+            "type": "string",
+            "description": "Optional client-supplied identifier to group related batch uploads.",
+            "nullable": true
           }
         }
       },
