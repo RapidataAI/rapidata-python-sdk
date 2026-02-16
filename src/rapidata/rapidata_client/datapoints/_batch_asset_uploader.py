@@ -3,6 +3,7 @@ from __future__ import annotations
 import signal
 import time
 import threading
+import uuid
 from typing import Callable, TYPE_CHECKING
 
 from rapidata.rapidata_client.config import logger, rapidata_config
@@ -64,6 +65,10 @@ class BatchAssetUploader:
         self._interrupted = False
         self._processed_batches = set()
 
+        # Generate a correlation ID for this upload session so we can poll
+        # by correlation ID instead of passing all batch IDs as query params
+        correlation_id = str(uuid.uuid4())
+
         # Split into batches
         batches = self._split_into_batches(urls)
 
@@ -85,8 +90,8 @@ class BatchAssetUploader:
 
                     try:
                         result = self.openapi_service.batch_upload_api.asset_batch_upload_post(
-                            create_batch_upload_endpoint_input=CreateBatchUploadEndpointInput(
-                                urls=batch
+                            CreateBatchUploadEndpointInput(
+                                urls=batch, correlationId=correlation_id
                             )
                         )
                         batch_id = result.batch_upload_id
@@ -129,6 +134,7 @@ class BatchAssetUploader:
                 batch_to_urls,
                 batch_ids_lock,
                 submission_complete,
+                correlation_id,
                 progress_callback,
                 completion_callback,
             )
@@ -156,6 +162,7 @@ class BatchAssetUploader:
         batch_to_urls: dict[str, list[str]],
         batch_ids_lock: threading.Lock,
         submission_complete: threading.Event,
+        correlation_id: str,
         progress_callback: Callable[[int], None] | None,
         completion_callback: Callable[[list[str]], None] | None,
     ) -> list[FailedUpload[str]]:
@@ -170,6 +177,7 @@ class BatchAssetUploader:
             batch_to_urls: Shared mapping from batch_id to list of URLs in that batch.
             batch_ids_lock: Lock protecting batch_ids and batch_to_urls.
             submission_complete: Event signaling all batches have been submitted.
+            correlation_id: Correlation ID shared by all batches in this upload session.
             progress_callback: Optional callback to report progress.
             completion_callback: Optional callback to notify when URLs complete.
 
@@ -204,7 +212,7 @@ class BatchAssetUploader:
             try:
                 status = (
                     self.openapi_service.batch_upload_api.asset_batch_upload_status_get(
-                        batch_upload_ids=current_batch_ids
+                        correlation_id=correlation_id
                     )
                 )
 
