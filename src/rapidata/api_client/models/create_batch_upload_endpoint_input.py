@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,7 +27,8 @@ class CreateBatchUploadEndpointInput(BaseModel):
     CreateBatchUploadEndpointInput
     """ # noqa: E501
     urls: List[StrictStr] = Field(description="The URLs to download and process.")
-    __properties: ClassVar[List[str]] = ["urls"]
+    correlation_id: Optional[StrictStr] = Field(default=None, description="Optional client-supplied identifier to group related batch uploads.", alias="correlationId")
+    __properties: ClassVar[List[str]] = ["urls", "correlationId"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -68,6 +69,11 @@ class CreateBatchUploadEndpointInput(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if correlation_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.correlation_id is None and "correlation_id" in self.model_fields_set:
+            _dict['correlationId'] = None
+
         return _dict
 
     @classmethod
@@ -80,7 +86,8 @@ class CreateBatchUploadEndpointInput(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "urls": obj.get("urls")
+            "urls": obj.get("urls"),
+            "correlationId": obj.get("correlationId")
         })
         return _obj
 
