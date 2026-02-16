@@ -2,16 +2,21 @@
 
 Custom audiences let you train labelers with qualification examples specific to your task, resulting in higher quality labels.
 
-## Global vs Custom Audiences
+## Audience Types
 
 | Audience Type | Speed | Quality | Best For |
 |---------------|-------|---------|----------|
-| **Global** | Fast | Good | Quick prototyping, simple tasks |
-| **Custom** | Slower initial setup | Higher | Production workloads, nuanced tasks |
+| **Global** | Fastest | Baseline | Quick prototyping, simple tasks |
+| **Curated** | Fast | Good | Tasks with a known domain (e.g. prompt alignment) |
+| **Custom** | Slower initial setup | Highest | Production workloads, nuanced tasks |
 
-The **global audience** is a pre-existing pool of labelers ready to work immediately. Use it when you need results quickly and your task is straightforward.
+The **global audience** is the broadest pool of labelers, ready to work on any task immediately.
 
-A **custom audience** filters labelers through qualification examples before they can work on your data. Only labelers who demonstrate they understand your tasks will be included, leading to more accurate results.
+A **curated audience** is a pre-existing pool of labelers trained on a specific type of task. It offers better quality than the global audience without requiring any setup.
+
+A **custom audience** filters labelers through qualification examples before they can work on your data. Only labelers who demonstrate they understand your tasks will be included, leading to the most accurate results.
+
+> **Note**: You can see the curated audiences along with your own in the [Rapidata Dashboard](https://app.rapidata.ai/audiences).
 
 ## Creating a Custom Audience
 
