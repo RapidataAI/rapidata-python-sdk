@@ -90,7 +90,7 @@ class BatchAssetUploader:
 
                     try:
                         result = self.openapi_service.batch_upload_api.asset_batch_upload_post(
-                            CreateBatchUploadEndpointInput(
+                            create_batch_upload_endpoint_input=CreateBatchUploadEndpointInput(
                                 urls=batch, correlationId=correlation_id
                             )
                         )
