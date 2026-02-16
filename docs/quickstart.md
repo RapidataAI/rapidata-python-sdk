@@ -39,13 +39,13 @@ client = RapidataClient(client_id="Your client ID", client_secret="Your client s
 
 ### Step 1: Get an Audience
 
-The simplest way to get started is with the global audience - a pre-existing pool of labelers ready to work on your tasks:
+The simplest way to get started is with a curated audience - a pre-existing pool of labelers trained on a specific type of task:
 
 ```py
-audience = client.audience.get_audience_by_id("global")
+audience = client.audience.find_audiences("alignment")[0]
 ```
 
-> **Note**: The global audience gets you started quickly, but results may be less accurate than a custom audience trained with examples specific to your task. For higher quality, see [Custom Audiences](audiences.md).
+> **Note**: The curated audience gets you started quickly, but results may be less accurate than a custom audience trained with examples specific to your task. For higher quality, see [Custom Audiences](audiences.md).
 
 ### Step 2: Create a Job Definition
 
@@ -53,7 +53,7 @@ A job definition configures what you want labeled. Here we create a compare job 
 
 ```py
 job_definition = client.job.create_compare_job_definition(
-    name="Example Image Comparison",
+    name="Example Image Prompt Alignment",
     instruction="Which image matches the description better?",
     datapoints=[
         ["https://assets.rapidata.ai/midjourney-5.2_37_3.jpg",
@@ -102,7 +102,7 @@ To understand the results format, see the [Understanding the Results](understand
 
 ```py
 # Find audiences by name
-audiences = client.audience.find_audiences("Image Comparison")
+audiences = client.audience.find_audiences("alignment")
 
 # Get a specific audience by ID
 audience = client.audience.get_audience_by_id("audience_id")
@@ -112,7 +112,7 @@ audience = client.audience.get_audience_by_id("audience_id")
 
 ```py
 # Find job definitions by name
-job_definitions = client.job.find_job_definitions("Prompt Alignment")
+job_definitions = client.job.find_job_definitions("Example Image Prompt Alignment")
 
 # Get a specific job definition by ID
 job_definition = client.job.get_job_defintion_by_id("job_definition_id")
@@ -122,7 +122,7 @@ job_definition = client.job.get_job_defintion_by_id("job_definition_id")
 
 ```py
 # Find jobs by name
-jobs = client.job.find_jobs("Prompt Alignment")
+jobs = client.job.find_jobs("Example Image Prompt Alignment")
 
 # Get a specific job by ID
 job = client.job.get_job_by_id("job_id")
@@ -136,15 +136,15 @@ jobs = audience.find_jobs("Prompt Alignment")
 
 ## Complete Example
 
-Here's the full workflow using the global audience:
+Here's the full workflow using the curated alignment audience:
 
 ```py
 from rapidata import RapidataClient
 
 client = RapidataClient()
 
-# Get the global audience
-audience = client.audience.get_audience_by_id("global")
+# Get the curated alignment audience
+audience = client.audience.find_audiences("alignment")[0]
 
 # Create job definition
 job_definition = client.job.create_compare_job_definition(
